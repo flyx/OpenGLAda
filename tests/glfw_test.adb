@@ -24,43 +24,21 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
+with Glfw.Display;
 
-package Glfw is
+package body Glfw_Test is
 
-   subtype Seconds is Interfaces.C.double;
+   procedure Key_To_Title (Subject : Glfw.Events.Keys.Key;
+                           Action : Glfw.Events.Key_State) is
+      use type Glfw.Events.Key_State;
+   begin
+      if Action = Glfw.Events.Press then
+         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
+                                 & " has been pressed.");
+      else
+         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
+                                 & " has been released.");
+      end if;
+   end Key_To_Title;
 
-   Initialization_Exception : exception;
-
-   procedure Init;
-
-   procedure Terminate_Glfw;
-
-   procedure Version (Major, Minor, Rev : out Natural);
-
-
-   function Time return Seconds;
-
-   procedure Set_Time (Value : Seconds);
-
-
-   function Extension_Supported (Name : String) return Boolean;
-
-   procedure GL_Version (Major, Minor, Rev : out Natural);
-
-   procedure Toggle_Auto_Poll_Events (Enable  : Boolean);
-
-private
-   package C renames Interfaces.C;
-
-   use type Interfaces.C.int;
-
-   type Bool is new Boolean;
-
-
-
-   for Bool use (False => 0, True => 1);
-   for Bool'Size use C.int'Size;
-   pragma Convention (C, Bool);
-
-end Glfw;
+end Glfw_Test;

@@ -117,10 +117,17 @@ package Glfw.Events.Keys is
    -- key's name on the screen. The key name will be in English.
    function Name (Query : Key) return String;
 
+   function Pressed (Query : Key) return Boolean;
+
+   procedure Set_Key_Callback (Callback : Key_Callback);
+
+   procedure Set_Character_Callback (Callback : Character_Callback);
+
+   procedure Toggle_Key_Repeat  (Enable  : Boolean);
+   procedure Toggle_Sticky_Keys (Enable  : Boolean);
+   procedure Toggle_System_Keys (Enable  : Boolean);
+
 private
    for Key'Size use C.int'Size;
    for Unicode_Character'Size use C.int'Size;
-
-   pragma Convention (C, Key_Callback);
-   pragma Convention (C, Character_Callback);
 end Glfw.Events.Keys;

@@ -24,43 +24,17 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
+package Glfw.Display.Modes is
 
-package Glfw is
+   type Mode is record
+      Width, Height : Natural;
+      Red_Bits, Green_Bits, Blue_Bits : Natural;
+   end record;
 
-   subtype Seconds is Interfaces.C.double;
+   type Mode_List is array (Positive range <>) of Mode;
 
-   Initialization_Exception : exception;
+   function Available_Modes return Mode_List;
 
-   procedure Init;
+   function Desktop_Mode return Mode;
 
-   procedure Terminate_Glfw;
-
-   procedure Version (Major, Minor, Rev : out Natural);
-
-
-   function Time return Seconds;
-
-   procedure Set_Time (Value : Seconds);
-
-
-   function Extension_Supported (Name : String) return Boolean;
-
-   procedure GL_Version (Major, Minor, Rev : out Natural);
-
-   procedure Toggle_Auto_Poll_Events (Enable  : Boolean);
-
-private
-   package C renames Interfaces.C;
-
-   use type Interfaces.C.int;
-
-   type Bool is new Boolean;
-
-
-
-   for Bool use (False => 0, True => 1);
-   for Bool'Size use C.int'Size;
-   pragma Convention (C, Bool);
-
-end Glfw;
+end Glfw.Display.Modes;

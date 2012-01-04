@@ -24,6 +24,11 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Glfw.Events.Keys;
+
 package Glfw_Test is
+
+   procedure Key_To_Title (Subject : Glfw.Events.Keys.Key;
+                           Action : Glfw.Events.Key_State);
 
 end Glfw_Test;

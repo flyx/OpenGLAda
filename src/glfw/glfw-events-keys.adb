@@ -24,6 +24,9 @@
 --  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 
+with Glfw.Api;
+with Glfw.Enums;
+
 package body Glfw.Events.Keys is
 
    function Name (Query : Key) return String is
@@ -106,5 +109,81 @@ package body Glfw.Events.Keys is
          when Menu        => return "Menu";
       end case;
    end Name;
+
+   function Pressed (Query : Key) return Boolean is
+   begin
+      return Api.Get_Key (Query) = Press;
+   end Pressed;
+
+   procedure Raw_Key_Callback (Subject : Key; Action : Key_State);
+   procedure Raw_Character_Callback (Unicode_Char : Unicode_Character;
+                                     Action : Glfw.Events.Key_State);
+   pragma Convention (C, Raw_Key_Callback);
+   pragma Convention (C, Raw_Character_Callback);
+
+   User_Key_Callback       : Key_Callback       := null;
+   User_Character_Callback : Character_Callback := null;
+
+   procedure Raw_Key_Callback (Subject : Key; Action : Key_State) is
+   begin
+      if User_Key_Callback /= null then
+         User_Key_Callback (Subject, Action);
+      end if;
+   end Raw_Key_Callback;
+
+   procedure Raw_Character_Callback (Unicode_Char : Unicode_Character;
+                                     Action : Glfw.Events.Key_State) is
+   begin
+      if User_Character_Callback /= null then
+         User_Character_Callback (Unicode_Char, Action);
+      end if;
+   end Raw_Character_Callback;
+
+   procedure Set_Key_Callback (Callback : Key_Callback) is
+   begin
+      User_Key_Callback := Callback;
+      if Callback /= null then
+         Api.Set_Key_Callback (Raw_Key_Callback'Access);
+      else
+         Api.Set_Key_Callback (null);
+      end if;
+   end Set_Key_Callback;
+
+   procedure Set_Character_Callback (Callback : Character_Callback) is
+   begin
+      User_Character_Callback := Callback;
+      if Callback /= null then
+         Api.Set_Char_Callback (Raw_Character_Callback'Access);
+      else
+         Api.Set_Char_Callback (null);
+      end if;
+   end Set_Character_Callback;
+
+   procedure Toggle_Key_Repeat  (Enable  : Boolean) is
+   begin
+      if Enable then
+         Api.Enable (Enums.Key_Repeat);
+      else
+         Api.Disable (Enums.Key_Repeat);
+      end if;
+   end Toggle_Key_Repeat;
+
+   procedure Toggle_Sticky_Keys (Enable  : Boolean) is
+   begin
+      if Enable then
+         Api.Enable (Enums.Sticky_Keys);
+      else
+         Api.Disable (Enums.Sticky_Keys);
+      end if;
+   end Toggle_Sticky_Keys;
+
+   procedure Toggle_System_Keys (Enable  : Boolean) is
+   begin
+      if Enable then
+         Api.Enable (Enums.System_Keys);
+      else
+         Api.Disable (Enums.System_Keys);
+      end if;
+   end Toggle_System_Keys;
 
 end Glfw.Events.Keys;

@@ -31,6 +31,7 @@ with Glfw.Events.Keys;
 with Glfw.Events.Mouse;
 
 with Interfaces.C.Strings;
+with System;
 
 private package Glfw.Api is
 
@@ -38,11 +39,25 @@ private package Glfw.Api is
    type Window_Close_Callback is access function return Bool;
    type Window_Refresh_Callback is access procedure;
 
+   type Key_Callback is access procedure (Subject : Events.Keys.Key;
+                                          Action : Events.Key_State);
+   type Character_Callback is access procedure
+     (Unicode_Char : Events.Keys.Unicode_Character; Action : Events.Key_State);
+   type Button_Callback is access procedure (Subject : Events.Mouse.Button;
+                                             Action  : Events.Key_State);
+   type Position_Callback is access procedure (X, Y : Events.Mouse.Coordinate);
+   type Wheel_Callback is access procedure (Pos : Events.Mouse.Wheel_Position);
+
    pragma Convention (C, Window_Size_Callback);
    pragma Convention (C, Window_Close_Callback);
    pragma Convention (C, Window_Refresh_Callback);
+   pragma Convention (C, Key_Callback);
+   pragma Convention (C, Character_Callback);
+   pragma Convention (C, Button_Callback);
+   pragma Convention (C, Position_Callback);
+   pragma Convention (C, Wheel_Callback);
 
-   type Raw_Video_Mode is array (1 .. 5) of C.int;
+   type Raw_Video_Mode is array (1 .. 5) of aliased C.int;
    pragma Convention (C, Raw_Video_Mode);
 
    type Video_Mode_List is array (Positive range <>) of Raw_Video_Mode;
@@ -127,12 +142,12 @@ private package Glfw.Api is
    pragma Import (Convention => StdCall, Entity => Set_Window_Refresh_Callback,
                   External_Name => "glfwSetWindowCloseCallback");
 
-   function Get_Video_Modes (List : Video_Mode_List;
+   function Get_Video_Modes (List : System.Address;
                              Max_Count : C.int) return C.int;
    pragma Import (Convention => StdCall, Entity => Get_Video_Modes,
                   External_Name => "glfwGetVideoModes");
 
-   procedure Get_Desktop_Mode (Mode : access Raw_Video_Mode);
+   procedure Get_Desktop_Mode (Mode : access C.int);
    pragma Import (Convention => StdCall, Entity => Get_Desktop_Mode,
                   External_Name => "glfwGetDesktopMode");
 
@@ -157,7 +172,11 @@ private package Glfw.Api is
    pragma Import (Convention => StdCall, Entity => Get_Mouse_Pos,
                   External_Name => "glfwGetMousePos");
 
-   function Get_Mouse_Wheel return C.int;
+   procedure Set_Mouse_Pos (XPos, YPos : C.int);
+   pragma Import (Convention => StdCall, Entity => Set_Mouse_Pos,
+                  External_Name => "glfwSetMousePos");
+
+   function Get_Mouse_Wheel return Events.Mouse.Wheel_Position;
    pragma Import (Convention => StdCall, Entity => Get_Mouse_Wheel,
                   External_Name => "glfwGetMouseWheel");
 
@@ -165,23 +184,23 @@ private package Glfw.Api is
    pragma Import (Convention => StdCall, Entity => Set_Mouse_Wheel,
                   External_Name => "glfwSetMouseWheel");
 
-   procedure Set_Key_Callback (CbFun : Glfw.Events.Keys.Key_Callback);
+   procedure Set_Key_Callback (CbFun : Key_Callback);
    pragma Import (Convention => StdCall, Entity => Set_Key_Callback,
                   External_Name => "glfwSetKeyCallback");
 
-   procedure Set_Char_Callback (CbFun : Glfw.Events.Keys.Character_Callback);
+   procedure Set_Char_Callback (CbFun : Character_Callback);
    pragma Import (Convention => StdCall, Entity => Set_Char_Callback,
                   External_Name => "glfwSetCharCallback");
 
-   procedure Set_Mouse_Button_Callback (CbFun : Glfw.Events.Mouse.Button_Callback);
+   procedure Set_Mouse_Button_Callback (CbFun : Button_Callback);
    pragma Import (Convention => StdCall, Entity => Set_Mouse_Button_Callback,
                   External_Name => "glfwSetMouseButtonCallback");
 
-   procedure Set_Mouse_Pos_Callback (CbFun : Glfw.Events.Mouse.Position_Callback);
+   procedure Set_Mouse_Pos_Callback (CbFun : Position_Callback);
    pragma Import (Convention => StdCall, Entity => Set_Mouse_Pos_Callback,
                   External_Name => "glfwSetMousePosCallback");
 
-   procedure Set_Mouse_Wheel_Callback (CbFun : Glfw.Events.Mouse.Wheel_Callback);
+   procedure Set_Mouse_Wheel_Callback (CbFun : Wheel_Callback);
    pragma Import (Convention => StdCall, Entity => Set_Mouse_Wheel_Callback,
                   External_Name => "glfwSetMouseWheelCallback");
 
@@ -197,7 +216,7 @@ private package Glfw.Api is
    pragma Import (Convention => StdCall, Entity => Sleep,
                   External_Name => "glfwSleep");
 
-   function Extension_Supported (Name : C.char_array) return Bool;
+   function Extension_Supported (Name : C.Strings.chars_ptr) return Bool;
    pragma Import (Convention => StdCall, Entity => Extension_Supported,
                   External_Name => "glfwExtensionSupported");
 

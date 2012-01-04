@@ -41,10 +41,25 @@ package Glfw.Events.Mouse is
 
    function Pressed (Query : Button) return Boolean;
 
+   procedure Get_Position (X, Y : out Coordinate);
+
+   procedure Set_Position (X, Y : Coordinate);
+
+   function Wheel return Wheel_Position;
+
+   procedure Set_Wheel (Value : Wheel_Position);
+
+   procedure Set_Button_Callback (Callback : Button_Callback);
+
+   procedure Set_Position_Callback (Callback : Position_Callback);
+
+   procedure Set_Wheel_Callback (Callback : Wheel_Callback);
+
+   procedure Toggle_Mouse_Cursor         (Visible : Boolean);
+   procedure Toggle_Sticky_Mouse_Buttons (Enable : Boolean);
+
 private
    for Button'Size use Interfaces.C.int'Size;
 
-   pragma Convention (C, Button_Callback);
-   pragma Convention (C, Position_Callback);
-   pragma Convention (C, Wheel_Callback);
+
 end Glfw.Events.Mouse;
