@@ -1,0 +1,35 @@
+with "opengl.gpr";
+
+library project Glfw is
+   type Os_Type is
+      ("Windows", "Linux", "MacOSX");
+   Os : Os_Type := external ("OS", "Linux");
+
+   for Library_Name use "GlfwAda";
+   for Source_Dirs use ("src/glfw");
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+
+   package Ide is
+      for Vcs_Kind use "Git";
+   end Ide;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-s");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
+   end Compiler;
+
+   package Linker is
+      case Os is
+         when "MacOSX" =>
+            for Linker_Options use ("-lglfw", "-Wl,-framework,Cocoa");
+         when "Windows" =>
+            for Linker_Options use ("-lglfw", "-lwinmm", "-lgdi32");
+         when "Linux" =>
+            for Linker_Options use ("-lglfw", "-lX11");
+      end case;
+   end Linker;
+end Glfw;
