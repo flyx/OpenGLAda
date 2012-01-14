@@ -4,8 +4,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>OpenGLAda - {{ page.title }}</title>
-		<link href="css/main.css" media="screen" rel="stylesheet" type="text/css"/>
-		<link href="css/syntax.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="/OpenGLAda/css/main.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="/OpenGLAda/css/syntax.css" media="screen" rel="stylesheet" type="text/css"/>
 	</head>
 	
 	<body>
@@ -18,7 +18,11 @@
 			<h3>Navigation</h3>
 			<ul>
 				<li><a href="/OpenGLAda/" {% if page.url == '/index.html'%} class="active" {% endif %}>Home</a></li>
-				<li><a href="/OpenGLAda/documentation.html" {% if page.url == '/documentation.html' %} class="active" {% endif %}>Documentation</a></li>
+				<li><a href="/OpenGLAda/doc/" {% if page.url == '/doc/index.html' %} class="active" {% endif %}>Documentation</a></li>
+				<li class="api"><a href="/OpenGLAda/doc/GL.html" {% if page.url == '/doc/GL.html' %} class="active" {% endif %}>GL</a></li>
+				<li class="api"><a href="/OpenGLAda/doc/VectorTypes.html" {% if page.url == '/doc/VectorTypes.html' %} class="active" {% endif %}>GL.Vectors<br />GL.Normals<br />GL.Colors</a></li>
+				<li class="api"><a href="/OpenGLAda/doc/GL.Matrices.html" {% if page.url == '/doc/GL.Matrices.html' %} class="active" {% endif %}>GL.Matrices</a></li>
+				<li class="api"><a href="/OpenGLAda/doc/GL.Immediate.html" {% if page.url == '/doc/GL.Immediate.html' %} class="active" {% endif %}>GL.Immediate</a></li>
 			</ul>
 			
 			<div class="seeAlso">

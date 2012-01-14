@@ -111,6 +111,10 @@ body > nav ul > li > a:hover, body > nav > ul > li > a:active {
 	background: #8e4;
 }
 
+body > nav ul > li.api {
+	font-family: Menlo,Courier,monospace;
+}
+
 body > nav > div.seeAlso {
 	position: absolute;
 	bottom : 0;

@@ -1,0 +1,40 @@
+---
+layout : default
+title : API - The package GL.Immediate
+---
+
+# The package `GL.Immediate`
+
+This package provides the tools to immediately push OpenGL primitives into the OpenGL
+pipeline. This functionality has been deprecated with OpenGL 3.0 because it has severe
+performance issues. In real software, you want to use Vertex Buffer Objects (VBOs). This
+package is provided to give beginners an easy start with OpenGLAda.
+
+To input vertices into the OpenGL pipeline, you have to create an `Input_Token` that
+defines the connection between the vertices you supply. Creating such a token will tell
+OpenGL to expect vertices. While the token lives, you must not call any OpenCLAda
+subprograms except those in `GL.Immediate` (actually, you may call subprograms that are
+implemented by OpenCLAda itself, like the operators on vectors and matrices).
+
+When the token is destroyed, the connection to the OpenGL pipeline is closed. If any
+errors are encountered during the lifetime of the token, they will be raised when the
+token is destroyed. Here is a example of how using a token looks like:
+
+{% highlight ada %}
+declare
+   Token : Input_Token := Start (Line_Strip);
+begin
+   Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
+   Token.Add_Vertex (Vector'(0.5, 0.5, 0.5, 1.0));
+   Token.Add_Vertex (Vector'(0.5, -0.5, 0.5, 1.0));
+   Token.Add_Vertex (Vector'(-0.5, -0.5, 0.5, 1.0));
+   Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
+end; -- at this point, the token gets destroyed.
+{% endhighlight %}
+
+The token gets destroyed automatically by means of `Ada.Finalization.Limited_Controlled`.
+Calling `Finalize` manually will result in an exception. Declaring multiple tokens at the
+same time also won't work.
+
+The additional setter and getter subprograms in this package can be used without a token,
+but also while a token is active.
