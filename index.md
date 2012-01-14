@@ -6,11 +6,12 @@ title : Home
 ## About
 
 - - -
-** OpenGLAda is currently being developed. Lots of features are not yet implemented,
-and most of the code is untested. Be warned. **
+
+*OpenGLAda is currently being developed. Lots of features are not yet implemented, and most of the code is untested. Be warned.*
+
 - - -
 
-*OpenGLAda* is a thick wrapper for [OpenGL](http://www.opengl.org/) and
+**OpenGLAda** is a thick wrapper for [OpenGL](http://www.opengl.org/) and
 [GLFW](http://www.glfw.org/). It enables you to create complex graphical
 applications in Ada, using the OpenGL industry standard.
 
