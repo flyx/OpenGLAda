@@ -14,17 +14,18 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package Glfw.Display.Modes is
+with GL.Low_Level;
 
-   type Mode is record
-      Width, Height : Natural;
-      Red_Bits, Green_Bits, Blue_Bits : Natural;
-   end record;
+package GL.Colors is
+   type Color_Index is (R, G, B, A);
+   subtype Basic_Color_Index is Color_Index range R .. B;
 
-   type Mode_List is array (Positive range <>) of Mode;
+   subtype Component is Real range 0.0 .. 1.0;
 
-   function Available_Modes return Mode_List;
+   type Color is array (Color_Index) of aliased Component;
+   type Basic_Color is array (Basic_Color_Index) of Component;
 
-   function Desktop_Mode return Mode;
-
-end Glfw.Display.Modes;
+private
+   pragma Convention (C, Color);
+   pragma Convention (C, Basic_Color);
+end GL.Colors;

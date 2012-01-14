@@ -14,17 +14,24 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package Glfw.Display.Modes is
+with GL.Low_Level;
+with GL.Vectors;
 
-   type Mode is record
-      Width, Height : Natural;
-      Red_Bits, Green_Bits, Blue_Bits : Natural;
-   end record;
+package GL.Normals is
 
-   type Mode_List is array (Positive range <>) of Mode;
+   subtype Normal_Index is Vectors.Vector_Index range Vectors.X .. Vectors.Z;
 
-   function Available_Modes return Mode_List;
+   type Normal is array (Normal_Index) of aliased Real;
 
-   function Desktop_Mode return Mode;
+   function "+" (Left, Right : Normal) return Normal;
 
-end Glfw.Display.Modes;
+   function "-" (Left, Right : Normal) return Normal;
+
+   function "*" (Left : Normal;  Right : Real)    return Normal;
+   function "*" (Left : Real;    Right : Normal)  return Normal;
+
+   function "/" (Left : Normal; Right : Real)    return Normal;
+
+private
+   pragma Convention (C, Normal);
+end GL.Normals;

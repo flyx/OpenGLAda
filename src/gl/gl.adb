@@ -14,17 +14,39 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Glfw.Api;
+with GL.API;
+with GL.Enums;
 
-package body Glfw.Events is
-   procedure Poll_Events is
+package body GL is
+
+   procedure Toggle_Error_Checking (Enabled : Boolean) is
    begin
-      Api.Poll_Events;
-   end Poll_Events;
+      Error_Checking_Enabled := Enabled;
+   end Toggle_Error_Checking;
 
-   procedure Wait_For_Events is
+   procedure Toggle_Precision (Precision : Float_Precision) is
    begin
-      Api.Wait_Events;
-   end Wait_For_Events;
+      Requested_Precision := Precision;
+   end Toggle_Precision;
 
-end Glfw.Events;
+   procedure Flush is
+   begin
+      API.Flush;
+   end Flush;
+
+   procedure Check_OpenGL_Error is
+   begin
+      if Error_Checking_Enabled and not Error_Checking_Suspended then
+         case API.Get_Error is
+            when Enums.Invalid_Operation => raise Invalid_Operation;
+            when Enums.Invalid_Value => raise Invalid_Value;
+            when Enums.Out_Of_Memory => raise Out_Of_Memory;
+            when Enums.Invalid_Enum => raise Internal_Error;
+            when Enums.No_Error => null;
+         end case;
+      end if;
+   exception
+         when Constraint_Error => raise Internal_Error;
+   end Check_OpenGL_Error;
+
+end GL;

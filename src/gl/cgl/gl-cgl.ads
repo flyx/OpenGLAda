@@ -17,6 +17,8 @@ with Interfaces.C.Pointers;
 with Interfaces.C.Extensions;
 with Interfaces.C.Strings;
 
+with GL.Low_Level;
+
 package GL.CGL is
 
    --  CGL types and constants
@@ -219,13 +221,16 @@ package GL.CGL is
 
    function CGLChoosePixelFormat (attribs : access CGLPixelFormatAttribute;
                                   pix     : access CGLPixelFormatObject;
-                                  npix    : access GLint) return CGLError;
+                                  npix    : access Low_Level.Int)
+                                  return CGLError;
 
    function CGLDestroyPixelFormat (pix : CGLPixelFormatObject) return CGLError;
 
-   function CGLDescribePixelFormat (pix : CGLPixelFormatObject; pix_num : GLint;
+   function CGLDescribePixelFormat (pix : CGLPixelFormatObject;
+                                    pix_num : Low_Level.Int;
                                     attrib : CGLPixelFormatAttribute;
-                                    value : access GLint) return CGLError;
+                                    value : access Low_Level.Int)
+                                    return CGLError;
 
    procedure CGLReleasePixelFormat (pix : in CGLPixelFormatObject);
 
@@ -233,18 +238,18 @@ package GL.CGL is
                                   return CGLPixelFormatObject;
 
    function CGLGetPixelFormatRetainCount (pix : CGLPixelFormatObject)
-                                          return GLuint;
+                                          return Low_Level.UInt;
 
-   function CGLQueryRendererInfo (display_mask : GLuint;
+   function CGLQueryRendererInfo (display_mask : Low_Level.UInt;
                                   rend : access CGLRendererInfoObject;
-                                  nrend : access GLint) return CGLError;
+                                  nrend : access Low_Level.Int) return CGLError;
 
    function CGLDestroyRendererInfo (rend : CGLRendererInfoObject)
                                     return CGLError;
 
-   function CGLDescribeRenderer (rend : CGLRendererInfoObject; rend_num : GLint;
+   function CGLDescribeRenderer (rend : CGLRendererInfoObject; rend_num : Low_Level.Int;
                                  prop : CGLRendererProperty;
-                                 value : access GLint) return CGLError;
+                                 value : access Low_Level.Int) return CGLError;
 
    function CGLCreateContext (pix : CGLPixelFormatObject;
                               share : CGLContextObject;
@@ -253,66 +258,66 @@ package GL.CGL is
    function CGLDestroyContext (ctx : CGLContextObject) return CGLError;
 
    function CGLCopyContext (src, dst : CGLContextObject;
-                            mask : GLbitfield) return CGLError;
+                            mask : Low_Level.Bitfield) return CGLError;
 
    function CGLRetainContext (ctx : CGLContextObject) return CGLContextObject;
 
    procedure CGLReleaseContext (ctx : in CGLContextObject);
 
-   function CGLGetContextRetainCount (ctx : CGLContextObject) return GLuint;
+   function CGLGetContextRetainCount (ctx : CGLContextObject) return Low_Level.UInt;
 
    function CGLGetPixelFormat (ctx : CGLContextObject) return CGLPixelFormatObject;
 
-   function CGLCreatePBuffer (width, height : GLsizei;
-                              target, internalFormat : GLenum;
-                              max_level : GLint;
+   function CGLCreatePBuffer (width, height : Low_Level.SizeI;
+                              target, internalFormat : Low_Level.Enum;
+                              max_level : Low_Level.Int;
                               pbuffer : access CGLPBufferObject)
                               return CGLError;
 
    function CGLDestroyPBuffer (pbuffer : CGLPBufferObject) return CGLError;
 
    function CGLDescribePBuffer (obj : CGLPBufferObject;
-                                width, height : access GLsizei;
-                                target, internalFormat : access GLenum;
-                                mipmap : access GLint) return CGLError;
+                                width, height : access Low_Level.SizeI;
+                                target, internalFormat : access Low_Level.Enum;
+                                mipmap : access Low_Level.Int) return CGLError;
 
    function CGLTexImagePBuffer (ctx : CGLContextObject;
                                 pbuffer : CGLPBufferObject;
-                                source : GLenum) return CGLError;
+                                source : Low_Level.Enum) return CGLError;
 
    function CGLRetainPBuffer (pbuffer : CGLPBufferObject)
                               return CGLPBufferObject;
 
    procedure CGLReleasePBuffer (pbuffer : in CGLPBufferObject);
 
-   function CGLGetPBufferRetainCount (pbuffer : CGLPBufferObject) return GLuint;
+   function CGLGetPBufferRetainCount (pbuffer : CGLPBufferObject) return Low_Level.UInt;
 
    function CGLSetOffScreen (ctx : CGLContextObject;
-                             width, height : GLsizei;
-                             rowbytes : GLint;
+                             width, height : Low_Level.SizeI;
+                             rowbytes : Low_Level.Int;
                              baseaddr : Interfaces.C.Extensions.void_ptr)
                              return CGLError;
 
    function CGLGetOffScreen (ctx : CGLContextObject;
-                             width, height : access GLsizei;
-                             rowbytes : access GLint;
+                             width, height : access Low_Level.SizeI;
+                             rowbytes : access Low_Level.Int;
                              baseaddr : access Interfaces.C.Extensions.void_ptr)
                              return CGLError;
 
    function CGLSetFullScreen (ctx : CGLContextObject) return CGLError;
 
    function CGLSetFullScreenOnDisplay (ctx : CGLContextObject;
-                                       display_mask : GLuint) return CGLError;
+                                       display_mask : Low_Level.UInt) return CGLError;
 
    function CGLSetPBuffer (ctx : CGLContextObject;
                            pbuffer : CGLPBufferObject;
-                           face : GLenum;
-                           level, screen : GLint) return CGLError;
+                           face : Low_Level.Enum;
+                           level, screen : Low_Level.Int) return CGLError;
 
    function CGLGetPBuffer (ctx : CGLContextObject;
                            pbuffer : access CGLPBufferObject;
-                           face : access GLenum;
-                           level, screen : access GLint) return CGLError;
+                           face : access Low_Level.Enum;
+                           level, screen : access Low_Level.Int) return CGLError;
 
    function CGLClearDrawable (ctx : CGLContextObject) return CGLError;
 
@@ -325,41 +330,41 @@ package GL.CGL is
                         return CGLError;
 
    function CGLIsEnabled (ctx : CGLContextObject; pname : CGLContextEnable;
-                          enable : access GLint) return CGLError;
+                          enable : access Low_Level.Int) return CGLError;
 
    function CGLSetParameter (ctx : CGLContextObject;
                              pname : CGLContextParameter;
-                             params : access constant GLint) return CGLError;
+                             params : access constant Low_Level.Int) return CGLError;
 
    function CGLGetParameter (ctx : CGLContextObject;
                              pname : CGLContextParameter;
-                             params : access GLint) return CGLError;
+                             params : access Low_Level.Int) return CGLError;
 
-   function CGLSetVirtualScreen (ctx : CGLContextObject; screen : GLint)
+   function CGLSetVirtualScreen (ctx : CGLContextObject; screen : Low_Level.Int)
                                  return CGLError;
 
-   function CGLGetVirtualScreen (ctx : CGLContextObject; screen : access GLint)
+   function CGLGetVirtualScreen (ctx : CGLContextObject; screen : access Low_Level.Int)
                                  return CGLError;
 
    function CGLUpdateContext (ctx : CGLContextObject) return CGLError;
 
    function CGLSetGlobalOption (pname : CGLGlobalOption;
-                                params : access constant GLint) return CGLError;
+                                params : access constant Low_Level.Int) return CGLError;
 
    function CGLGetGlobalOption (pname : CGLGlobalOption;
-                                params : access GLint) return CGLError;
+                                params : access Low_Level.Int) return CGLError;
 
-   function CGLSetOption (pname : CGLGlobalOption; param : GLint)
+   function CGLSetOption (pname : CGLGlobalOption; param : Low_Level.Int)
                           return CGLError;
 
    function CGLGetOption (pname : CGLGlobalOption;
-                          param : access GLint) return CGLError;
+                          param : access Low_Level.Int) return CGLError;
 
    function CGLLockContext (ctx : CGLContextObject) return CGLError;
 
    function CGLUnlockContext (ctx : CGLContextObject) return CGLError;
 
-   procedure CGLGetVersion (majorvers, minorvers : out GLint);
+   procedure CGLGetVersion (majorvers, minorvers : out Low_Level.Int);
 
    function CGLErrorString (error : CGLError)
                             return Interfaces.C.Strings.chars_ptr;
