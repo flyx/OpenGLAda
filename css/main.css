@@ -111,8 +111,11 @@ body > nav ul > li > a:hover, body > nav > ul > li > a:active {
 	background: #8e4;
 }
 
-body > nav ul > li.api {
+body > nav ul > li.api > a {
 	font-family: Menlo,Courier,monospace;
+	padding-left : 2em;
+	padding-top : 0.25em;
+	padding-bottom : 0.25em;
 }
 
 body > nav > div.seeAlso {
