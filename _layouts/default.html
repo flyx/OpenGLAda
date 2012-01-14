@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>OpenGLAda - {{ page.title }}</title>
+		<link href="css/main.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="css/syntax.css" media="screen" rel="stylesheet" type="text/css"/>
+	</head>
+	
+	<body>
+		<header>
+			<h1>OpenGLAda</h1>
+			<h2>Thick Ada Binding for OpenGL</h2>
+		</header>
+		
+		<nav>
+			<h3>Navigation</h3>
+			<ul>
+				<li><a href="/OpenGLAda/" {% if page.url == '/index.html'%} class="active" {% endif %}>Home</a></li>
+				<li><a href="/OpenGLAda/documentation.html" {% if page.url == '/documentation.html' %} class="active" {% endif %}>Documentation</a></li>
+			</ul>
+		</nav>
+		
+		<article>
+			{{ content }}
+		</article>
+		
+		<footer>
+			<p>Copyright © 2012 by <a href="http://flyx.org">Felix Krause</a>. Powered by <a href="http://pages.github.com/">GitHub Pages</a></p>
+		</footer>
+	</body>
+</html>

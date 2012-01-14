@@ -1,0 +1,121 @@
+/* Overall Style */
+
+html {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+a:link,a:hover,a:active,a:visited {
+	color: black;
+}
+
+/* Overall Structure */
+
+body > header {
+	position: fixed;
+	margin: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 6em;
+	
+	text-align: center;
+	background: #492;
+}
+
+body > nav {
+	position: fixed;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	top: 6em;
+	bottom: 2em;
+	width: 13em;
+	
+	background: #492;
+}
+
+body > footer {
+	position: fixed;
+	margin: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2em;
+	
+	background: #492;
+	text-align: center;
+}
+
+body > article {
+	margin-left: 13em;
+	margin-top: 6em;
+	margin-right: 0;
+	margin-bottom: 2em;
+	
+	padding: 1em;
+	z-index: -1;
+}
+
+/* Header Style */
+
+body > header > h1 {
+	font-variant: small-caps;
+	margin: 0.5em;
+}
+
+body > header > h2 {
+	font-size: large;
+}
+
+/* Nav Style */
+
+body > nav > h3 {
+	margin-top: 0;
+	text-align: center;
+	font-size: medium;
+}
+
+body > nav > ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+body > nav > ul > li > a {
+	display: inline-block;
+	width: 11em;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+body > nav > ul > li > a.active {
+	background: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+body > nav > ul > li > a:hover, body > nav > ul > li > a:active {
+	background: #adf;
+}
+
+/* Content Style */
+
+body > article h1 {
+	font-size: larger;
+}
+
+body > article h2 {
+	font-size: large;
+}
+
+body > article h3 {
+	font-size: medium;
+}
+
+/* Footer Style */
+body > footer > p {
+	margin: 0;
+	padding: 0;
+	line-height: 2em;
+}
