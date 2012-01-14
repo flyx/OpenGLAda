@@ -11,6 +11,9 @@ a:link,a:hover,a:active,a:visited {
 /* Overall Structure */
 
 body > header {
+	/* fix for browsers that do not support <header> */
+	display: block;
+
 	position: fixed;
 	margin: 0;
 	left: 0;
@@ -23,6 +26,9 @@ body > header {
 }
 
 body > nav {
+	/* fix for browsers that do not support <nav> */
+	display: block;
+
 	position: fixed;
 	margin: 0;
 	padding: 0;
@@ -35,6 +41,9 @@ body > nav {
 }
 
 body > footer {
+	/* fix for browsers that do not support <footer> */
+	display: block;
+
 	position: fixed;
 	margin: 0;
 	left: 0;
@@ -47,6 +56,9 @@ body > footer {
 }
 
 body > article {
+	/* fix for browsers that do not support <article> */
+	display: block;
+
 	margin-left: 13em;
 	margin-top: 6em;
 	margin-right: 0;
