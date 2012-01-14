@@ -18,13 +18,12 @@ with GL.Immediate; use GL.Immediate;
 with GL.Vectors;   use GL.Vectors;
 with GL.Colors;    use GL.Colors;
 with GL.Matrices;  use GL.Matrices;
+with GL.Buffers;   use GL.Buffers;
 
 with Glfw.Display;
 
 procedure Glfw_Test.Immediate is
    use type GL.Real;
-
-   Angle : GL.Real := 2.0;
 begin
    Glfw.Init;
 
@@ -36,18 +35,25 @@ begin
    Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
 
    while not Glfw.Events.Keys.Pressed (Glfw.Events.Keys.Esc) and
-     Glfw.Display.Opened loop
-      Projection.Apply_Rotation (Angle, 0.0, 0.0, 1.0);
-
-      declare
-         Token : Input_Token := Start (Line_Strip);
-      begin
-         Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
-         Token.Add_Vertex (Vector'(0.5, 0.5, 0.5, 1.0));
-         Token.Add_Vertex (Vector'(0.5, -0.5, 0.5, 1.0));
-         Token.Add_Vertex (Vector'(-0.5, -0.5, 0.5, 1.0));
-         Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
-      end;
+         Glfw.Display.Opened loop
+      Clear (Buffer_Bits'(Color => True, others => False));
+         
+      Projection.Push;
+      
+      for I in 1 .. 12 loop
+         declare
+            Token : Input_Token := Start (Line_Strip);
+         begin
+            Token.Add_Vertex (Vector'(0.1, 0.4, 0.0, 1.0));
+            Token.Add_Vertex (Vector'(0.1, 0.6, 0.0, 1.0));
+            Token.Add_Vertex (Vector'(-0.1, 0.6, 0.0, 1.0));
+            Token.Add_Vertex (Vector'(-0.1, 0.4, 0.0, 1.0));
+         end;
+         Projection.Apply_Rotation (360.0 / 12.0, 0.0, 0.0, 1.0);
+      end loop;
+      
+      Projection.Pop;
+      Projection.Apply_Rotation (1.0, 0.0, 0.0, 1.0);
 
       GL.Flush;
 

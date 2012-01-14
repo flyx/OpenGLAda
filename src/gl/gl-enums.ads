@@ -36,9 +36,6 @@ private package GL.Enums is
    type Blending_Factor_Source is (Dst_Color, One_Minus_Dst_Color,
                                    Src_Alpha_Saturate);
 
-   type Draw_Buffer_Mode is (None, Front_Left, Front_Right, Back_Left, Back_Right,
-                             Front, Back, Left, Right, Front_And_Back);
-
    type Error_Code is (No_Error, Invalid_Enum, Invalid_Value, Invalid_Operation,
                        Out_Of_Memory);
 

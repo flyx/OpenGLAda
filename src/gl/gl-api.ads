@@ -22,6 +22,7 @@ with GL.Immediate;
 with GL.Vectors;
 with GL.Colors;
 with GL.Normals;
+with GL.Buffers;
 
 private package GL.API is
 
@@ -135,5 +136,17 @@ private package GL.API is
    procedure Tex_Coord (Value : Vectors.Vector);
    pragma Import (Convention => StdCall, Entity => Tex_Coord,
                   External_Name => "glTexCoord4dv");
+                  
+   -----------------------------------------------------------------------------
+   --                                Buffers                                  --
+   -----------------------------------------------------------------------------
+   
+   procedure Clear (Bits : Low_Level.Bitfield);
+   pragma Import (Convention => StdCall, Entity => Clear,
+                  External_Name => "glClear");
+   
+   procedure Draw_Buffer (Mode : Buffers.Color_Buffer_Selector);
+   pragma Import (Convention => StdCall, Entity => Draw_Buffer,
+                  External_Name => "glDrawBuffer");
 
 end GL.API;
