@@ -19,7 +19,7 @@ body > header {
 	height: 6em;
 	
 	text-align: center;
-	background: #492;
+	background: #4a2;
 }
 
 body > nav {
@@ -31,7 +31,7 @@ body > nav {
 	bottom: 2em;
 	width: 13em;
 	
-	background: #492;
+	background: #4a2;
 }
 
 body > footer {
@@ -42,7 +42,7 @@ body > footer {
 	bottom: 0;
 	height: 2em;
 	
-	background: #492;
+	background: #4a2;
 	text-align: center;
 }
 
@@ -69,18 +69,18 @@ body > header > h2 {
 
 /* Nav Style */
 
-body > nav > h3 {
+body > nav h3 {
 	margin-top: 0;
 	text-align: center;
 	font-size: medium;
 }
 
-body > nav > ul {
+body > nav ul {
 	list-style-type: none;
 	padding: 0;
 }
 
-body > nav > ul > li > a {
+body > nav ul > li > a {
 	display: inline-block;
 	width: 11em;
 	padding-left: 1em;
@@ -89,14 +89,24 @@ body > nav > ul > li > a {
 	padding-bottom: 0.5em;
 }
 
-body > nav > ul > li > a.active {
+body > nav ul > li > a.active {
 	background: white;
 	font-weight: bold;
 	text-decoration: none;
 }
 
-body > nav > ul > li > a:hover, body > nav > ul > li > a:active {
-	background: #adf;
+body > nav ul > li > a:hover, body > nav > ul > li > a:active {
+	background: #8e4;
+}
+
+body > nav > div.seeAlso {
+	position: absolute;
+	bottom : 0;
+	left : 0;
+	right : 0;
+	
+	margin: 0;
+	padding: 0;
 }
 
 /* Content Style */
