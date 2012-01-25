@@ -1,3 +1,4 @@
+with System;
 with Interfaces.C;
 
 package GL.GLX is
