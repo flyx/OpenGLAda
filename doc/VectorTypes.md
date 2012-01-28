@@ -21,4 +21,4 @@ Similar to `GL.Vectors`. Normals do not include the homogeneous component `W`.
 ## The package `GL.Colors`
 
 Similar to `GL.Vectors`. Color values have a range from 0.0 to 1.0. As mathematical
-operations o a whole color vector do not really make sense, they are not provided here.
+operations on a whole color vector do not really make sense, they are not provided here.

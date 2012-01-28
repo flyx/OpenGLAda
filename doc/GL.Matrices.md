@@ -1,6 +1,8 @@
 ---
 layout : default
 title : API - The package GL.Matrices
+versions :
+  - 2.1
 ---
 
 # The package `GL.Matrices`

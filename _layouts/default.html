@@ -23,6 +23,7 @@
 				<li class="api"><a href="/OpenGLAda/doc/VectorTypes.html" {% if page.url == '/doc/VectorTypes.html' %} class="active" {% endif %}><span>GL.Vectors<br />GL.Normals<br />GL.Colors</span></a></li>
 				<li class="api"><a href="/OpenGLAda/doc/GL.Matrices.html" {% if page.url == '/doc/GL.Matrices.html' %} class="active" {% endif %}><span>GL.Matrices</span></a></li>
 				<li class="api"><a href="/OpenGLAda/doc/GL.Immediate.html" {% if page.url == '/doc/GL.Immediate.html' %} class="active" {% endif %}><span>GL.Immediate</span></a></li>
+				<li class="api"><a href="/OpenGLAda/doc/GL.Textures.html" {% if page.url == '/doc/GL.Textures.html' %} class="active" {% endif %}><span>GL.Textures</span></a></li>
 			</ul>
 			
 			<div class="seeAlso">
@@ -34,6 +35,20 @@
 		</nav>
 		
 		<article>
+			{% if page.versions %}
+				<div class="versions">
+					<p>Versions supported by this package:</p>
+					<ul>
+						{% for version in page.versions %}
+							<li><code>{{ version }}</code></li>
+						{% endfor %}
+						{% if page.deprecated %}
+							<li><em>deprecated in</em> <code>{{ page.deprecated }}</code></li>
+						{% endif %}
+					</ul>
+				</div>
+			{% endif %}
+		
 			{{ content }}
 		</article>
 		
