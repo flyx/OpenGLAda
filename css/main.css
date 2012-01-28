@@ -36,6 +36,8 @@ body > nav {
 	position: fixed;
 	margin: 0;
 	padding: 0;
+	padding-bottom: 3em;
+	overflow-y: auto;
 	left: 0;
 	top: 6em;
 	bottom: 2em;
@@ -136,6 +138,8 @@ body > nav > div.seeAlso {
 	
 	margin: 0;
 	padding: 0;
+	
+	background: #4a2;
 }
 
 /* Content Style */
