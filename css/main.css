@@ -131,8 +131,8 @@ body > nav ul > li.api > a > span {
 body > nav > div.scrollable {
 	overflow-y: auto;
 	position: absolute;
-	padding : 0;
-	margin : 0;
+	padding: 0;
+	margin: 0;
 	left: 0;
 	right: 0;
 	top: 0;
