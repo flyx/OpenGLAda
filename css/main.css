@@ -136,6 +136,13 @@ body > nav > div.seeAlso {
 
 /* Content Style */
 
+body > article .versions {
+	float: right;
+	border: 1px solid #333;
+	box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+
 body > article h1 {
 	font-size: larger;
 }
