@@ -8,6 +8,10 @@ a:link,a:hover,a:active,a:visited {
 	color: black;
 }
 
+table {
+	border-collapse: collapse;
+}
+
 /* Overall Structure */
 
 body > header {
@@ -144,6 +148,15 @@ body > article .versions {
 	float: right;
 	border: 1px solid #333;
 	box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+article th, article td {
+	border: 1px solid #aaa;
+	padding: 0.2em;
+}
+
+article thead {
+	background: #cdc;
 }
 
 
