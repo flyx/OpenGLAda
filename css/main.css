@@ -152,7 +152,10 @@ body > article .versions {
 
 article th, article td {
 	border: 1px solid #aaa;
-	padding: 0.66em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	padding-left: 1em;
+	padding-right: 1em;
 }
 
 article thead {
