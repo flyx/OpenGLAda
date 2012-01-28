@@ -139,6 +139,7 @@ body > nav > div.seeAlso {
 body > article .versions {
 	padding-left: 1em;
 	padding-right: 1em;
+	margin-left: 1em;
 	float: right;
 	border: 1px solid #333;
 	box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
