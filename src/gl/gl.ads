@@ -23,7 +23,7 @@ package GL is
    -- Standard.Float is used for simplicity.
    subtype Real is Interfaces.C.double;
 
-   type Float_Precision is (Single, Double);
+   type Float_Precision is (Single, Double);   
 
    -- Enabled by default. If disabled, no exceptions will be raised when OpenGL
    -- encounters an error. Disabling might result in a speed-up because OpenGL
@@ -40,16 +40,11 @@ package GL is
    procedure Toggle_Precision (Precision : Float_Precision);
 
    procedure Flush;
+   
+   procedure Finish;
 
 private
    use type Real;
-
-   -----------------------------------------------------------------------------
-   --                             Primitive types                             --
-   -----------------------------------------------------------------------------
-
-   subtype Clamp_F is C.C_float;
-   subtype Clamp_D is C.double;
 
    -----------------------------------------------------------------------------
    --                              Global state                               --

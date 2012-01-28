@@ -16,6 +16,7 @@
 
 with GL.Enums;
 with GL.Enums.Getter;
+with GL.Enums.Textures;
 with GL.Low_Level;
 with GL.Matrices;
 with GL.Immediate;
@@ -23,6 +24,8 @@ with GL.Vectors;
 with GL.Colors;
 with GL.Normals;
 with GL.Buffers;
+with GL.Textures;
+with GL.Common;
 
 private package GL.API is
 
@@ -33,6 +36,10 @@ private package GL.API is
    procedure Flush;
    pragma Import (Convention => StdCall, Entity => Flush,
                   External_Name => "glFlush");
+
+   procedure Finish;
+   pragma Import (Convention => StdCall, Entity => Finish,
+                  External_Name => "glFinish");
 
    -----------------------------------------------------------------------------
    --                           Parameter Getters                             --
@@ -136,17 +143,136 @@ private package GL.API is
    procedure Tex_Coord (Value : Vectors.Vector);
    pragma Import (Convention => StdCall, Entity => Tex_Coord,
                   External_Name => "glTexCoord4dv");
-                  
+
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
-   
+
    procedure Clear (Bits : Low_Level.Bitfield);
    pragma Import (Convention => StdCall, Entity => Clear,
                   External_Name => "glClear");
-   
+
    procedure Draw_Buffer (Mode : Buffers.Color_Buffer_Selector);
    pragma Import (Convention => StdCall, Entity => Draw_Buffer,
                   External_Name => "glDrawBuffer");
+
+   -----------------------------------------------------------------------------
+   --                                Textures                                 --
+   -----------------------------------------------------------------------------
+
+   procedure Tex_Parameter_Float (Target     : Enums.Textures.Texture_Kind;
+                                  Param_Name : Enums.Textures.Parameter;
+                                  Value      : Low_Level.Single);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Float,
+                  External_Name => "glTexParameterf");
+
+   procedure Tex_Parameter_Int (Target     : Enums.Textures.Texture_Kind;
+                                Param_Name : Enums.Textures.Parameter;
+                                Value      : Low_Level.Int);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Int,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Min_Filter (Target     : Enums.Textures.Texture_Kind;
+                                       Param_Name : Enums.Textures.Parameter;
+                                       Value      : Textures.Minifying_Function);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Min_Filter,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Mag_Filter (Target     : Enums.Textures.Texture_Kind;
+                                       Param_Name : Enums.Textures.Parameter;
+                                       Value      : Textures.Magnifying_Function);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Mag_Filter,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Wrap_Mode (Target     : Enums.Textures.Texture_Kind;
+                                      Param_Name : Enums.Textures.Parameter;
+                                      Value      : Textures.Wrapping_Mode);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Wrap_Mode,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Comp_Mode (Target     : Enums.Textures.Texture_Kind;
+                                      Param_Name : Enums.Textures.Parameter;
+                                      Value      : Enums.Textures.Compare_Kind);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Comp_Mode,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Comp_Func (Target     : Enums.Textures.Texture_Kind;
+                                      Param_Name : Enums.Textures.Parameter;
+                                      Value      : Common.Compare_Function);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Comp_Func,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Depth_Mode (Target     : Enums.Textures.Texture_Kind;
+                                       Param_Name : Enums.Textures.Parameter;
+                                       Value      : Textures.Depth_Mode);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Depth_Mode,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Bool (Target     : Enums.Textures.Texture_Kind;
+                                 Param_Name : Enums.Textures.Parameter;
+                                 Value      : Low_Level.Bool);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Bool,
+                  External_Name => "glTexParameteri");
+
+   procedure Tex_Parameter_Floats (Target     : Enums.Textures.Texture_Kind;
+                                   Param_Name : Enums.Textures.Parameter;
+                                   Values     : Low_Level.Single_Array);
+   pragma Import (Convention => StdCall, Entity => Tex_Parameter_Floats,
+                  External_Name => "glTexParameterfv");
+
+   procedure Get_Tex_Parameter_Float (Target     : Enums.Textures.Texture_Kind;
+                                      Param_Name : Enums.Textures.Parameter;
+                                      Values     : out Low_Level.Single_Array);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Float,
+                  External_Name => "glGetTexParameterfv");
+
+   procedure Get_Tex_Parameter_Int (Target     : Enums.Textures.Texture_Kind;
+                                    Param_Name : Enums.Textures.Parameter;
+                                    Values     : out Low_Level.Int_Array);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Int,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Get_Tex_Parameter_Wrap_Mode (Target     : Enums.Textures.Texture_Kind;
+                                          Param_Name : Enums.Textures.Parameter;
+                                          Values     : out Textures.Wrapping_Mode);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Wrap_Mode,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Get_Tex_Parameter_Comp_Mode (Target     : Enums.Textures.Texture_Kind;
+                                          Param_Name : Enums.Textures.Parameter;
+                                          Values     : out Enums.Textures.Compare_Kind);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Comp_Mode,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Get_Tex_Parameter_Comp_Func (Target     : Enums.Textures.Texture_Kind;
+                                          Param_Name : Enums.Textures.Parameter;
+                                          Values     : out Common.Compare_Function);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Comp_Func,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Get_Tex_Parameter_Depth_Mode (Target     : Enums.Textures.Texture_Kind;
+                                           Param_Name : Enums.Textures.Parameter;
+                                           Values     : out Textures.Depth_Mode);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Depth_Mode,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Get_Tex_Parameter_Bool (Target     : Enums.Textures.Texture_Kind;
+                                     Param_Name : Enums.Textures.Parameter;
+                                     Values     : out Low_Level.Bool);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Bool,
+                  External_Name => "glGetTexParameteriv");
+
+   procedure Gen_Textures (N : Low_Level.SizeI; Textures : out Low_Level.UInt_Array);
+   pragma Import (Convention => StdCall, Entity => Gen_Textures,
+                  External_Name => "glGenTextures");
+
+   procedure Bind_Texture (Target  : Enums.Textures.Texture_Kind;
+                           Texture : Low_Level.UInt);
+   pragma Import (Convention => StdCall, Entity => Bind_Texture,
+                  External_Name => "glBindTexture");
+
+   procedure Delete_Textures (N : Low_Level.SizeI; Textures : Low_Level.UInt_Array);
+   pragma Import (Convention => StdCall, Entity => Delete_Textures,
+                  External_Name => "glDeleteTextures");
 
 end GL.API;

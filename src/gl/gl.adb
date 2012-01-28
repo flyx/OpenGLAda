@@ -33,6 +33,11 @@ package body GL is
    begin
       API.Flush;
    end Flush;
+   
+   procedure Finish is
+   begin
+      API.Finish;
+   end Finish;
 
    procedure Check_OpenGL_Error is
    begin

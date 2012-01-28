@@ -45,6 +45,8 @@ package GL.Low_Level is
 
    subtype Int is C.int;
    subtype UInt is C.unsigned;
+   type Int_Array  is array (Positive range <>) of aliased Int;
+   type UInt_Array is array (Positive range <>) of aliased UInt;
 
    subtype SizeI is C.int;
 

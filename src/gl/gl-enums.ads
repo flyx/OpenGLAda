@@ -24,11 +24,6 @@ private package GL.Enums is
       Color_Buffer   : Boolean;
    end record;
 
-
-
-   type Alpha_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
-                           GEqual, Always);
-
    type Blending_Factor_Destination is (Zero, One, Src_Color, One_Minus_Src_Color,
                                         Src_Alpha, One_Minus_Src_Alpha, Dst_Alpha,
                                         One_Minus_Dst_Alpha);
@@ -51,16 +46,6 @@ private
       Color_Buffer   at 1 range 6 .. 6;
    end record;
    for Attribute_Mask'Size use Low_Level.Bitfield'Size;
-
-
-   for Alpha_Function use (Never     => 16#0200#,
-                           Less      => 16#0201#,
-                           Equal     => 16#0202#,
-                           LEqual    => 16#0203#,
-                           Greater   => 16#0204#,
-                           Not_Equal => 16#0205#,
-                           GEqual    => 16#0206#,
-                           Always    => 16#0207#);
 
    for Blending_Factor_Destination use (Zero                => 0,
                                         One                 => 1,
@@ -93,7 +78,5 @@ private
                         Texture    => 16#1702#,
                         Color      => 16#1800#);
    for Matrix_Mode'Size use Low_Level.Enum'Size;
-
-
 
 end GL.Enums;
