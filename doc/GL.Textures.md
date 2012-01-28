@@ -47,7 +47,7 @@ target type, there is only one instance.
       <tr>
          <td><code>Tex_Cube_Map_Id</code></td>
          <td><code>Tex_Cube_Map_Target</code></td>
-         <td><code>Texture_Cube_Mape</code></td>
+         <td><code>Texture_Cube_Map</code></td>
       </tr>
    </tbody>
 </table>
