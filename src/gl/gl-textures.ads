@@ -73,6 +73,9 @@ package GL.Textures is
    overriding procedure Initialize (Id : in out Tex_3D_id);
    overriding procedure Initialize (Id : in out Tex_Cube_Map_id);
 
+   -- Low level access
+   function Raw_Id (Id : Texture_Id) return Low_Level.UInt;
+
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
    -----------------------------------------------------------------------------

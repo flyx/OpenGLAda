@@ -67,6 +67,11 @@ package body GL.Textures is
       Initialize_Texture (Id);
    end Initialize;
 
+   function Raw_Id (Id : Texture_Id) return Low_Level.UInt is
+   begin
+      return Id.Reference.GL_Id;
+   end Raw_Id;
+
    procedure Set_Minifying_Filter (Target : Texture_Target;
                                    Filter : Minifying_Function) is
    begin

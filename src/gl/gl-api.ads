@@ -25,7 +25,11 @@ with GL.Colors;
 with GL.Normals;
 with GL.Buffers;
 with GL.Textures;
+with GL.Textures.Loader_2D;
+with GL.Textures.Pixel_Data;
 with GL.Common;
+
+with System;
 
 private package GL.API is
 
@@ -274,5 +278,16 @@ private package GL.API is
    procedure Delete_Textures (N : Low_Level.SizeI; Textures : Low_Level.UInt_Array);
    pragma Import (Convention => StdCall, Entity => Delete_Textures,
                   External_Name => "glDeleteTextures");
+
+   procedure Tex_Image_2D (Target : Textures.Loader_2D.Target_Kind;
+                           Level  : Low_Level.Int;
+                           Internal_Format : Textures.Pixel_Data.Internal_Format;
+                           Width, Height : Low_Level.SizeI;
+                           Border : Low_Level.Bool;
+                           Format : Textures.Pixel_Data.Format;
+                           Data_Type : Textures.Pixel_Data.Data_Type;
+                           Data : System.Address);
+   pragma Import (Convention => StdCall, Entity => Tex_Image_2D,
+                  External_Name => "glTexImage2D");
 
 end GL.API;
