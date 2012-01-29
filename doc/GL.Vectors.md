@@ -5,7 +5,7 @@ packages :
   - GL.Vectors
   - GL.Normals
   - GL.Colors
-weight: 5
+weight: 6
 ---
 
 # Vector types

@@ -5,7 +5,7 @@ packages :
   - GL.Matrices
 versions :
   - 2.1
-weight: 3
+weight: 4
 ---
 
 # The package `GL.Matrices`

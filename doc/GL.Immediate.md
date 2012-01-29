@@ -6,7 +6,7 @@ packages :
 versions :
   - 2.1
 deprecated : 3.0
-weight : 2
+weight : 3
 ---
 
 # The package `GL.Immediate`
