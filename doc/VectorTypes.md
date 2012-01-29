@@ -1,6 +1,10 @@
 ---
 layout : default
-title : API - The package GL.Vectors
+title : API - The vector packages
+packages :
+  - GL.Vectors
+  - GL.Normals
+  - GL.Colors
 weight: 5
 ---
 

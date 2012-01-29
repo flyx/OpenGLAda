@@ -1,6 +1,8 @@
 ---
 layout : default
 title : API - The package GL.Matrices
+packages :
+  - GL.Matrices
 versions :
   - 2.1
 weight: 3

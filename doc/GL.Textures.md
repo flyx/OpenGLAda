@@ -1,6 +1,8 @@
 ---
 layout : default
-title : API - The package GL.Vectors
+title : API - The package GL.Textures
+packages :
+  - GL.Textures
 versions:
   - 2.1
 weight: 4

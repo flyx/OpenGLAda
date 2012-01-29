@@ -1,6 +1,8 @@
 ---
 layout : default
-title : Home
+title : API - The Package GL
+packages :
+  - GL
 ---
 
 # The package `GL`

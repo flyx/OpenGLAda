@@ -1,6 +1,8 @@
 ---
 layout : default
 title : API - The package GL.Immediate
+packages :
+  - GL.Immediate
 versions :
   - 2.1
 deprecated : 3.0
