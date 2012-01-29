@@ -1,6 +1,7 @@
 ---
 layout : default
 title : API - The package GL.Vectors
+weight: 5
 ---
 
 # Vector types

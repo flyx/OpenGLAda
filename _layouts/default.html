@@ -18,13 +18,9 @@
 			<div class="scrollable">
 				<h3>Navigation</h3>
 				<ul>
-					<li><a href="/OpenGLAda/" {% if page.url == '/index.html'%} class="active" {% endif %}>Home</a></li>
-					<li><a href="/OpenGLAda/doc/" {% if page.url == '/doc/index.html' %} class="active" {% endif %}>API Documentation</a></li>
-					<li class="api"><a href="/OpenGLAda/doc/GL.html" {% if page.url == '/doc/GL.html' %} class="active" {% endif %}><span>GL</span></a></li>
-					<li class="api"><a href="/OpenGLAda/doc/VectorTypes.html" {% if page.url == '/doc/VectorTypes.html' %} class="active" {% endif %}><span>GL.Vectors<br />GL.Normals<br />GL.Colors</span></a></li>
-					<li class="api"><a href="/OpenGLAda/doc/GL.Matrices.html" {% if page.url == '/doc/GL.Matrices.html' %} class="active" {% endif %}><span>GL.Matrices</span></a></li>
-					<li class="api"><a href="/OpenGLAda/doc/GL.Immediate.html" {% if page.url == '/doc/GL.Immediate.html' %} class="active" {% endif %}><span>GL.Immediate</span></a></li>
-					<li class="api"><a href="/OpenGLAda/doc/GL.Textures.html" {% if page.url == '/doc/GL.Textures.html' %} class="active" {% endif %}><span>GL.Textures</span></a></li>
+					{% for p in (site.pages | sort:weight) %}
+						<li {% if p.url contains '/doc/GL'  %}class="api"{% endif %}><a {% if p.url == page.url %}class="active"{% endif %}href="{{ p.url | prepend: '/OpenGLAda' }}">{{ p.title }}</a></li>
+					{% endfor %}
 				</ul>
 			</div>
 			<div class="seeAlso">

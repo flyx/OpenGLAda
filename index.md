@@ -1,6 +1,7 @@
 ---
 layout : default
 title : Home
+weight: 0
 ---
 
 ## About

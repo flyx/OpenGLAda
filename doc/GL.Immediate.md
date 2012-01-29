@@ -4,6 +4,7 @@ title : API - The package GL.Immediate
 versions :
   - 2.1
 deprecated : 3.0
+weight : 2
 ---
 
 # The package `GL.Immediate`
