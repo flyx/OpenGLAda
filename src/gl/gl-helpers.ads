@@ -15,17 +15,11 @@
 --------------------------------------------------------------------------------
 
 with GL.Low_Level;
+with GL.Colors;
 
-package GL.Colors is
-   type Color_Index is (R, G, B, A);
-   subtype Basic_Color_Index is Color_Index range R .. B;
+private package GL.Helpers is
 
-   subtype Component is Low_Level.Single range 0.0 .. 1.0;
+   function Float_Array (Value : Colors.Color) return Low_Level.Single_Array;
+   function Color (Value : Low_Level.Single_Array) return Colors.Color;
 
-   type Color is array (Color_Index) of aliased Component;
-   type Basic_Color is array (Basic_Color_Index) of Component;
-
-private
-   pragma Convention (C, Color);
-   pragma Convention (C, Basic_Color);
-end GL.Colors;
+end GL.Helpers;

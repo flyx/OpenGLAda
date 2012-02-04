@@ -14,18 +14,22 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
+package body GL.Helpers is
 
-package GL.Colors is
-   type Color_Index is (R, G, B, A);
-   subtype Basic_Color_Index is Color_Index range R .. B;
+   function Float_Array (Value : Colors.Color) return Low_Level.Single_Array is
+      use GL.Colors;
+   begin
+      return Low_Level.Single_Array'(1 => Value (R),
+                                     2 => Value (G),
+                                     3 => Value (B),
+                                     4 => Value (A));
+   end Float_Array;
 
-   subtype Component is Low_Level.Single range 0.0 .. 1.0;
+   function Color (Value : Low_Level.Single_Array) return Colors.Color is
+      use GL.Colors;
+   begin
+      return Colors.Color'(R => Value (1), G => Value (2), B => Value (3),
+                           A => Value (4));
+   end Color;
 
-   type Color is array (Color_Index) of aliased Component;
-   type Basic_Color is array (Basic_Color_Index) of Component;
-
-private
-   pragma Convention (C, Color);
-   pragma Convention (C, Basic_Color);
-end GL.Colors;
+end GL.Helpers;

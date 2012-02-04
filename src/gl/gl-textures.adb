@@ -17,6 +17,7 @@
 with Ada.Unchecked_Conversion;
 
 with GL.API;
+with GL.Helpers;
 
 package body GL.Textures is
    overriding procedure Adjust (Id : in out Texture_Id) is
@@ -228,10 +229,7 @@ package body GL.Textures is
    procedure Set_Border_Color (Target : Texture_Target; Color : Colors.Color) is
       use GL.Colors;
 
-      Raw : Low_Level.Single_Array := (1 => Low_Level.Single (Color (R)),
-                                       2 => Low_Level.Single (Color (G)),
-                                       3 => Low_Level.Single (Color (B)),
-                                       4 => Low_Level.Single (Color (A)));
+      Raw : Low_Level.Single_Array := Helpers.Float_Array (Color);
    begin
       API.Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                 Raw);
@@ -246,8 +244,7 @@ package body GL.Textures is
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Border_Color,
                                    Raw);
       Check_OpenGL_Error;
-      return Color'(R => Component (Raw (1)), G => Component (Raw (2)),
-                    B => Component (Raw (3)), A => Component (Raw (4)));
+      return Helpers.Color (Raw);
    end Border_Color;
 
    procedure Set_Texture_Priority (Target : Texture_Target;
