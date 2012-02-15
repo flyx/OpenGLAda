@@ -60,6 +60,11 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Double,
                   External_Name => "glGetDoublev");
 
+   procedure Get_Color (Name : Enums.Getter.Parameter;
+                        Target : in out Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Get_Color,
+                  External_Name => "glGetFloatv");
+
    procedure Get_Integer (Name   : Enums.Getter.Parameter;
                           Target : access C.int);
    pragma Import (Convention => StdCall, Entity => Get_Integer,

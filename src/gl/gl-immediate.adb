@@ -46,14 +46,11 @@ package body GL.Immediate is
    end Set_Color;
 
    function Current_Color return Colors.Color is
-      Vector : Vectors.Vector;
+      Ret : Colors.Color;
    begin
-      API.Get_Double (Enums.Getter.Current_Color, Vector (Vectors.X)'Access);
+      API.Get_Color (Enums.Getter.Current_Color, Ret);
       Check_OpenGL_Error;
-      return Colors.Color'(Colors.R => Vector (Vectors.X),
-                           Colors.G => Vector (Vectors.Y),
-                           Colors.B => Vector (Vectors.Z),
-                           Colors.A => Vector (Vectors.W));
+      return Ret;
    end Current_Color;
 
    procedure Set_Fog_Distance (Value : Real) is
