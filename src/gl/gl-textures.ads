@@ -62,6 +62,9 @@ package GL.Textures is
 
    -- Decreases reference count. Destroys texture when it reaches zero.
    overriding procedure Finalize (Id : in out Texture_Id);
+   
+   -- Low level access
+   function Raw_Id (Id : Texture_Id) return Low_Level.UInt;
 
    type Tex_1D_Id is new Texture_Id with private;
    type Tex_2D_Id is new Texture_Id with private;
@@ -72,9 +75,6 @@ package GL.Textures is
    overriding procedure Initialize (Id : in out Tex_2D_id);
    overriding procedure Initialize (Id : in out Tex_3D_id);
    overriding procedure Initialize (Id : in out Tex_Cube_Map_id);
-
-   -- Low level access
-   function Raw_Id (Id : Texture_Id) return Low_Level.UInt;
 
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
