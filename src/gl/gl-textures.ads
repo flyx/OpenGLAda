@@ -55,7 +55,7 @@ package GL.Textures is
    -----------------------------------------------------------------------------
 
    -- Pointer to a texture. Will be reference-counted and automatically destroyed.
-   type Texture_Id (<>) is abstract new Ada.Finalization.Controlled with private;
+   type Texture_Id is abstract new Ada.Finalization.Controlled with private;
 
    -- Increases reference count.
    overriding procedure Adjust (Id : in out Texture_Id);
@@ -172,16 +172,16 @@ private
       Reference_Count : Natural;
    end record;
 
-   type Texture_Id (Kind : Enums.Textures.Texture_Kind) is abstract
+   type Texture_Id is abstract
      new Ada.Finalization.Controlled with record
+      Kind      : Enums.Textures.Texture_Kind;
       Reference : access Reference_Counted_Texture;
    end record;
 
-   type Tex_1D_Id is new Texture_Id (Kind => Enums.Textures.TK_1D) with null record;
-   type Tex_2D_Id is new Texture_Id (Kind => Enums.Textures.TK_2D) with null record;
-   type Tex_3D_Id is new Texture_Id (Kind => Enums.Textures.TK_3D) with null record;
-   type Tex_Cube_Map_Id is new Texture_Id (Kind => Enums.Textures.TK_Cube_Map)
-     with null record;
+   type Tex_1D_Id       is new Texture_Id with null record;
+   type Tex_2D_Id       is new Texture_Id with null record;
+   type Tex_3D_Id       is new Texture_Id with null record;
+   type Tex_Cube_Map_Id is new Texture_Id with null record;
 
    type Texture_Target (Kind : Enums.Textures.Texture_Kind) is tagged null record;
    type Tex_1D_Target

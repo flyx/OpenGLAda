@@ -51,21 +51,25 @@ package body GL.Textures is
    overriding procedure Initialize (Id : in out Tex_1D_id) is
    begin
       Initialize_Texture (Id);
+      Id.Kind := Enums.Textures.TK_1D;
    end Initialize;
 
    overriding procedure Initialize (Id : in out Tex_2D_id) is
    begin
       Initialize_Texture (Id);
+      Id.Kind := Enums.Textures.TK_2D;
    end Initialize;
 
    overriding procedure Initialize (Id : in out Tex_3D_id) is
    begin
       Initialize_Texture (Id);
+      Id.Kind := Enums.Textures.TK_3D;
    end Initialize;
 
    overriding procedure Initialize (Id : in out Tex_Cube_Map_id) is
    begin
       Initialize_Texture (Id);
+      Id.Kind := Enums.Textures.TK_Cube_Map;
    end Initialize;
 
    function Raw_Id (Id : Texture_Id) return Low_Level.UInt is
