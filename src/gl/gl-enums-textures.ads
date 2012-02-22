@@ -17,8 +17,8 @@
 private with GL.Low_Level;
 
 package GL.Enums.Textures is
-
-   type Texture_Kind is (TK_1D, TK_2D, TK_3D, TK_Cube_Map);
+   -- Texture_Kind is declared in GL.Low_Level.Enums to be accessible for
+   -- OpenCLAda
 
    type Parameter is (Width, Height, Internal_Format, Border_Color, Border,
                       Mag_Filter, Min_Filter, Wrap_S, Wrap_T, Red_Size,
@@ -69,12 +69,6 @@ package GL.Enums.Textures is
                           Operand1_Alpha, Operand2_Alpha, Coord_Replace);
 
 private
-
-   for Texture_Kind use (TK_1D       => 16#0DE0#,
-                         TK_2D       => 16#0DE1#,
-                         TK_3D       => 16#806F#,
-                         TK_Cube_Map => 16#8513#);
-   for Texture_Kind'Size use Low_Level.Enum'Size;
 
    for Compare_Kind use (None => 0, Compare_R_To_Texture => 16#884E#);
    for Compare_Kind'Size use Low_Level.Enum'Size;

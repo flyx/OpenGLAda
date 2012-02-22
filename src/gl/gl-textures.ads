@@ -17,6 +17,7 @@
 with Ada.Finalization;
 
 with GL.Low_Level;
+with GL.Low_Level.Enums;
 with GL.Colors;
 with GL.Common;
 
@@ -174,7 +175,7 @@ private
 
    type Texture_Id is abstract
      new Ada.Finalization.Controlled with record
-      Kind      : Enums.Textures.Texture_Kind;
+      Kind      : Low_Level.Enums.Texture_Kind;
       Reference : access Reference_Counted_Texture;
    end record;
 
@@ -183,23 +184,23 @@ private
    type Tex_3D_Id       is new Texture_Id with null record;
    type Tex_Cube_Map_Id is new Texture_Id with null record;
 
-   type Texture_Target (Kind : Enums.Textures.Texture_Kind) is tagged null record;
+   type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is tagged null record;
    type Tex_1D_Target
-     is new Texture_Target (Kind => Enums.Textures.TK_1D) with null record;
+     is new Texture_Target (Kind => Low_Level.Enums.TK_1D) with null record;
    type Tex_2D_Target
-     is new Texture_Target (Kind => Enums.Textures.TK_2D) with null record;
+     is new Texture_Target (Kind => Low_Level.Enums.TK_2D) with null record;
    type Tex_3D_Target
-     is new Texture_Target (Kind => Enums.Textures.TK_3D) with null record;
+     is new Texture_Target (Kind => Low_Level.Enums.TK_3D) with null record;
    type Tex_Cube_Map_Target
-     is new Texture_Target (Kind => Enums.Textures.TK_Cube_Map) with null record;
+     is new Texture_Target (Kind => Low_Level.Enums.TK_Cube_Map) with null record;
 
    Texture_1D       : constant Tex_1D_Target
-     := Tex_1D_Target'(Kind => Enums.Textures.TK_1D);
+     := Tex_1D_Target'(Kind => Low_Level.Enums.TK_1D);
    Texture_2D       : constant Tex_2D_Target
-     := Tex_2D_Target'(Kind => Enums.Textures.TK_2D);
+     := Tex_2D_Target'(Kind => Low_Level.Enums.TK_2D);
    Texture_3D       : constant Tex_3D_Target
-     := Tex_3D_Target'(Kind => Enums.Textures.TK_3D);
+     := Tex_3D_Target'(Kind => Low_Level.Enums.TK_3D);
    Texture_Cube_Map : constant Tex_Cube_Map_Target
-     := Tex_Cube_Map_Target'(Kind => Enums.Textures.TK_Cube_Map);
+     := Tex_Cube_Map_Target'(Kind => Low_Level.Enums.TK_Cube_Map);
 
 end GL.Textures;
