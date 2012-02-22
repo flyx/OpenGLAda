@@ -66,3 +66,34 @@ You can `Bind` a texture ID only to its corresponding texture target.
 The package provides setters and getters for parameters of the texture targets.
 You can look up the meaning and impact of those parameters in the corresponding
 section in the [OpenGL API reference](http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml).
+
+The following code example defines a texture ID, binds it to the 2D texture target,
+and sets some properties of the target. It then configures the environment and
+loads an empty texture. After doing something useful with the texture,
+it unregisters it again implicitly at the end of life of the variable `My_Id`.
+
+{% highlight ada %}
+declare
+   My_Id : GL.Textures.Tex_2D_Id;
+   use GL.Textures;
+begin
+   Tex_2D_Target.Bind (My_Id);
+   Tex_2D_Target.Set_X_Wrapping (GL.Textures.Repeat);
+   Tex_2D_Target.Set_Y_Wrapping (GL.Textures.Mirrored_Repeat);
+   Tex_2D_Target.Set_Magnifying_Filter (GL.Textures.Linear);
+   
+   Environment.Set_Tex_Function (Environment.Replace);
+   
+   Loader_2D.Load_Empty_Texture (Target          => Loader_2D.TX_2D,
+                                 Level           => 0,
+                                 Internal_Format => Pixel_Data.RGBA,
+                                 Width           => 400,
+                                 Height          => 400,
+                                 Border          => False,
+                                 Format          => Pixel_Data.RGBA,
+                                 Data_Type       => Pixel_Data.Float);
+   
+   -- ... do something useful here
+end;
+
+{% endhighlight %}
