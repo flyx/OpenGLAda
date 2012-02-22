@@ -77,10 +77,10 @@ declare
    My_Id : GL.Textures.Tex_2D_Id;
    use GL.Textures;
 begin
-   Tex_2D_Target.Bind (My_Id);
-   Tex_2D_Target.Set_X_Wrapping (GL.Textures.Repeat);
-   Tex_2D_Target.Set_Y_Wrapping (GL.Textures.Mirrored_Repeat);
-   Tex_2D_Target.Set_Magnifying_Filter (GL.Textures.Linear);
+   Texture_2D.Bind (My_Id);
+   Texture_2D.Set_X_Wrapping (Repeat);
+   Texture_2D.Set_Y_Wrapping (Mirrored_Repeat);
+   Texture_2D.Set_Magnifying_Filter (Linear);
    
    Environment.Set_Tex_Function (Environment.Replace);
    
