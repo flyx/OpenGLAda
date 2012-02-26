@@ -30,6 +30,7 @@ with GL.Textures.Loader_2D;
 with GL.Textures.Pixel_Data;
 with GL.Textures.Environment;
 with GL.Common;
+with GL.Toggles;
 
 with System;
 
@@ -70,6 +71,22 @@ private package GL.API is
                           Target : access C.int);
    pragma Import (Convention => StdCall, Entity => Get_Integer,
                   External_Name => "glGetIntegerv");
+
+   -----------------------------------------------------------------------------
+   --                                 Toggles                                 --
+   -----------------------------------------------------------------------------
+   
+   procedure Enable (Subject : Toggles.Toggle);
+   pragma Import (Convention => StdCall, Entity => Enable,
+                  External_Name => "glEnable");
+   
+   procedure Disable (Subject : Toggles.Toggle);
+   pragma Import (Convention => StdCall, Entity => Disable,
+                  External_Name => "glDisable");
+   
+   function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool;
+   pragma Import (Convention => StdCall, Entity => Is_Enabled,
+                  External_Name => "glIsEnabled");
 
    -----------------------------------------------------------------------------
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
