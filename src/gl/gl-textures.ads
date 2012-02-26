@@ -172,11 +172,13 @@ private
       GL_Id           : Low_Level.UInt;
       Reference_Count : Natural;
    end record;
+   
+   type RCT_Access is access Reference_Counted_Texture;
 
    type Texture_Id is abstract
      new Ada.Finalization.Controlled with record
       Kind      : Low_Level.Enums.Texture_Kind;
-      Reference : access Reference_Counted_Texture;
+      Reference : RCT_Access;
    end record;
 
    type Tex_1D_Id       is new Texture_Id with null record;

@@ -27,6 +27,7 @@ package GL.CGL is
    subtype CGLPixelFormatObject  is System.Address;
    subtype CGLRendererInfoObject is System.Address;
    subtype CGLPBufferObject      is System.Address;
+   subtype CGLShareGroup         is System.Address;
 
    type CGLPixelFormatAttribute is (Terminator               ,
                                     kCGLPFAAllRenderers      ,
@@ -372,6 +373,8 @@ package GL.CGL is
    function CGLSetCurrentContext (ctx : CGLContextObject) return CGLError;
 
    function CGLGetCurrentContext return CGLContextObject;
+   
+   function CGLGetShareGroup (ctx : CGLContextObject) return CGLShareGroup;
 
 private
    C_Enum_Size : constant := 32;
@@ -585,4 +588,6 @@ private
 
    pragma Import (C, CGLSetCurrentContext, "CGLSetCurrentContext");
    pragma Import (C, CGLGetCurrentContext, "CGLGetCurrentContext");
+   
+   pragma Import (C, CGLGetShareGroup, "CGLGetShareGroup");
 end GL.CGL;

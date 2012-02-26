@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
+with Ada.Unchecked_Deallocation;
 
 with GL.API;
 with GL.Helpers;
@@ -22,11 +23,13 @@ with GL.Helpers;
 package body GL.Textures is
    overriding procedure Adjust (Id : in out Texture_Id) is
    begin
-      Id.Reference.Reference_Count := Id.Reference.Reference_Count - 1;
+      Id.Reference.Reference_Count := Id.Reference.Reference_Count + 1;
    end Adjust;
 
    -- Decreases reference count. Destroys texture when it reaches zero.
    overriding procedure Finalize (Id : in out Texture_Id) is
+      procedure Free is new Ada.Unchecked_Deallocation (Object => Reference_Counted_Texture,
+                                                        Name => RCT_Access);
    begin
       Id.Reference.Reference_Count := Id.Reference.Reference_Count - 1;
       if Id.Reference.Reference_Count = 0 then
@@ -36,16 +39,17 @@ package body GL.Textures is
             API.Delete_Textures (1, Arr);
             Check_OpenGL_Error;
          end;
+         Free (Id.Reference);
       end if;
    end Finalize;
 
    procedure Initialize_Texture (Id : in out Texture_Id'Class) is
-      New_Id : Low_Level.UInt_Array := (1 => 0);
+      New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
    begin
-      API.Gen_Textures (1, New_Id);
+      API.Gen_Textures (1, New_Id (1)'Access);
       Check_OpenGL_Error;
-      Id.Reference.GL_Id := New_Id (1);
-      Id.Reference.Reference_Count := 1;
+      Id.Reference := new Reference_Counted_Texture'
+        (GL_Id => New_Id (1), Reference_Count => 1);
    end Initialize_Texture;
 
    overriding procedure Initialize (Id : in out Tex_1D_id) is

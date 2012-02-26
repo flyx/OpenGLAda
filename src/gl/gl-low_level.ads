@@ -53,4 +53,9 @@ package GL.Low_Level is
 private
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.unsigned_char'Size;
+
+   pragma Convention (C, Single_Array);
+   pragma Convention (C, Double_Array);
+   pragma Convention (C, Int_Array);
+   pragma Convention (C, UInt_Array);
 end GL.Low_Level;

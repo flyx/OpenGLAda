@@ -273,7 +273,7 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Bool,
                   External_Name => "glGetTexParameteriv");
 
-   procedure Gen_Textures (N : Low_Level.SizeI; Textures : out Low_Level.UInt_Array);
+   procedure Gen_Textures (N : Low_Level.SizeI; Textures : access Low_Level.UInt);
    pragma Import (Convention => StdCall, Entity => Gen_Textures,
                   External_Name => "glGenTextures");
 
