@@ -30,22 +30,26 @@ create an object with that name.
 
 Let's have a look at how this API typically gets used in C / C++:
 
-{% highlight c %}
-GLuint texture;
+{% highlight c++ %}
+void setupTexture() {
+   GLuint texture;
 
-// get an unused name for the texture
-glGenTextures(1, &texture);
+   // get an unused name for the texture
+   glGenTextures(1, &texture);
 
-// bind the name as current 2D texture.
-// note that before this call, it was not determined which object the name would
-// actually refer to - we could as well have made it a 3D texture.
-glBindTexture(GL_TEXTURE_2D, texture);
+   // bind the name as current 2D texture.
+   // note that before this call, it was not determined which object the name would
+   // actually refer to - we could as well have made it a 3D texture.
+   glBindTexture(GL_TEXTURE_2D, texture);
+   
+   // set some property value of our object
+   // not that we do not reference the name of the object - we only refer to the
+   // object class (being GL_TEXTURE_2D) while knowing that our object currently
+   // is the active object and therefore gets assigned this property
+   glTexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
-// set some property value of our object
-// not that we do not reference the name of the object - we only refer to the
-// object class (being GL_TEXTURE_2D) while knowing that our object currently
-// is the active object and therefore gets assigned this property
-glTexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+   // ...
+}
 {% endhighlight %}
 
 ## OpenGLAda's approach to objects
