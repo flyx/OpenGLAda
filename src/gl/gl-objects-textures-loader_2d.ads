@@ -14,11 +14,11 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Textures.Pixel_Data;
+with GL.Pixel_Data;
 
 private with GL.Low_Level;
 
-package GL.Textures.Loader_2D is
+package GL.Objects.Textures.Loader_2D is
 
    type Target_Kind is (TX_2D, Proxy_2D, Cube_Map_Positive_X, Cube_Map_Negative_X,
                         Cube_Map_Positive_Y, Cube_Map_Negative_Y,
@@ -45,4 +45,4 @@ private
                         Proxy_Cube_Map      => 16#851B#);
    for Target_Kind'Size use Low_Level.Enum'Size;
 
-end GL.Textures.Loader_2D;
+end GL.Objects.Textures.Loader_2D;

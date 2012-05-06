@@ -17,7 +17,7 @@
 with GL.Low_Level;
 with GL.Colors;
 
-package GL.Textures.Environment is
+package GL.Environment.Textures is
 
    type Texture_Function is (Add, Blend, Replace, Modulate, Decal, Combine);
    type Combine_Function is (Add, Replace, Modulate, Subtract, Add_Signed,
@@ -41,7 +41,6 @@ package GL.Textures.Environment is
    subtype Scaling_Factor is Real range 1.0 .. 4.0;
 
    type Source_Index is range 0 .. 2;
-
 
    procedure Set_Tex_Function (Func : Texture_Function);
    function Tex_Function return Texture_Function;
@@ -88,4 +87,4 @@ private
                         Previous      => 16#8578#);
    for Source_Kind'Size use Low_Level.Enum'Size;
 
-end GL.Textures.Environment;
+end GL.Environment.Textures;

@@ -14,5 +14,5 @@ for basic input handling.
 OpenGLAda supports MacOSX, Windows and Linux with X11. It may also work
 on other X11-based operating systems.
 
-For additional information and documentation, see the project's homepage
-(coming soon).
+For additional information and documentation, see the
+[project's homepage](http://flyx86.github.com/OpenGLAda/ "OpenGLAda homepage").

@@ -18,7 +18,7 @@ with GL.API;
 
 with System;
 
-package body GL.Textures.Loader_2D is
+package body GL.Objects.Textures.Loader_2D is
 
    procedure Load_Empty_Texture (Target: Target_Kind; Level : Integer;
                                  Internal_Format : Pixel_Data.Internal_Format;
@@ -39,4 +39,4 @@ package body GL.Textures.Loader_2D is
       Check_OpenGL_Error;
    end Load_Empty_Texture;
 
-end GL.Textures.Loader_2D;
+end GL.Objects.Textures.Loader_2D;

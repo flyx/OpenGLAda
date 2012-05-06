@@ -16,7 +16,7 @@
 
 private with GL.Low_Level;
 
-package GL.Textures.Pixel_Data is
+package GL.Pixel_Data is
 
    type Internal_Format is (Depth_Component, Alpha, RGB, RGBA, Luminance,
                             Luminance_Alpha, R3_G3_B2, Alpha4, Alpha8, Alpha12,
@@ -155,4 +155,4 @@ private
                       Unsigned_Int_2_10_10_10_Rev => 16#8368#);
    for Data_Type'Size use Low_Level.Enum'Size;
 
-end GL.Textures.Pixel_Data;
+end GL.Pixel_Data;

@@ -14,12 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL.Low_Level.Enums is
-   type Texture_Kind is (TK_1D, TK_2D, TK_3D, TK_Cube_Map);
-private
-   for Texture_Kind use (TK_1D       => 16#0DE0#,
-                         TK_2D       => 16#0DE1#,
-                         TK_3D       => 16#806F#,
-                         TK_Cube_Map => 16#8513#);
-   for Texture_Kind'Size use Low_Level.Enum'Size;
-end GL.Low_Level.Enums;
+package GL.Environment is
+   
+end GL.Environment;
