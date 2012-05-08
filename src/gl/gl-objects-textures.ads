@@ -16,7 +16,7 @@
 
 with Ada.Finalization;
 
-with GL.Low_Level;
+with GL.Low_Level.Enums;
 with GL.Colors;
 with GL.Common;
 
@@ -27,8 +27,6 @@ package GL.Objects.Textures is
    -----------------------------------------------------------------------------
    --                            Basic Types                                  --
    -----------------------------------------------------------------------------
-   
-   type Texture_Kind is (Texture_1D, Texture_2D, Texture_3D, Texture_Cube_Map);
 
    type Minifying_Function is (Nearest, Linear, Nearest_Mipmap_Nearest,
                                Linear_Mipmap_Nearest, Nearest_Mipmap_Linear,
@@ -53,77 +51,87 @@ package GL.Objects.Textures is
    type Depth_Mode is (Alpha, Luminance, Intensity);
 
    -----------------------------------------------------------------------------
+   --                          Texture Targets                                --
+   -----------------------------------------------------------------------------
+   
+   type Texture_Target (<>) is private;
+
+   procedure Set_Minifying_Filter (Target : Texture_Target;
+                                   Filter : Minifying_Function);
+   function Minifying_Filter (Target : Texture_Target) return Minifying_Function;
+
+   procedure Set_Magnifying_Filter (Target : Texture_Target;
+                                    Filter : Magnifying_Function);
+   function Magnifying_Filter (Target : Texture_Target)
+                              return Magnifying_Function;
+
+   procedure Set_Minimum_LoD (Target : Texture_Target; Level : Real);
+   function Minimum_LoD (Target : Texture_Target) return Real;
+
+   procedure Set_Maximum_LoD (Target : Texture_Target; Level : Real);
+   function Maximum_LoD (Target : Texture_Target) return Real;
+
+   procedure Set_Lowest_Mipmap_Level (Target : Texture_Target; Level : Integer);
+   function Lowest_Mipmap_Level (Target : Texture_Target) return Integer;
+
+   procedure Set_Highest_Mipmap_Level (Target : Texture_Target; Level : Integer);
+   function Highest_Mipmap_Level (Target : Texture_Target) return Integer;
+
+   procedure Set_X_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode);
+   function X_Wrapping (Target : Texture_Target) return Wrapping_Mode;
+
+   procedure Set_Y_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode);
+   function Y_Wrapping (Target : Texture_Target) return Wrapping_Mode;
+
+   procedure Set_Z_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode);
+   function Z_Wrapping (Target : Texture_Target) return Wrapping_Mode;
+
+   procedure Set_Border_Color (Target : Texture_Target; Color : Colors.Color);
+   function Border_Color (Target : Texture_Target) return Colors.Color;
+
+   procedure Set_Texture_Priority (Target : Texture_Target;
+                                   Value : Priority);
+   function Texture_Priority (Target : Texture_Target) return Priority;
+
+   procedure Toggle_Compare_X_To_Texture (Target  : Texture_Target;
+                                          Enabled : Boolean);
+   function Compare_X_To_Texture_Enabled (Target : Texture_Target) return Boolean;
+
+   procedure Set_Compare_Function (Target : Texture_Target;
+                                   Func : Common.Compare_Function);
+   function Compare_Function (Target : Texture_Target)
+                             return Common.Compare_Function;
+
+   procedure Set_Depth_Texture_Mode (Target : Texture_Target; Mode : Depth_Mode);
+   function Depth_Texture_Mode (Target : Texture_Target) return Depth_Mode;
+
+   procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target; Enabled : Boolean);
+   function Mipmap_Autoupdate_Enabled (Target : Texture_Target) return Boolean;
+   
+   -----------------------------------------------------------------------------
    --                          Texture Objects                                --
    -----------------------------------------------------------------------------
    
-   type Texture (Kind : Texture_Kind) is
-      new GL_Object with private;
+   type Texture is new GL_Object with private;
    
-   overriding procedure Bind (Object : Texture);
-
-   procedure Set_Minifying_Filter (Target : Texture;
-                                   Filter : Minifying_Function);
-   function Minifying_Filter (Target : Texture) return Minifying_Function;
-
-   procedure Set_Magnifying_Filter (Target : Texture;
-                                    Filter : Magnifying_Function);
-   function Magnifying_Filter (Target : Texture)
-                              return Magnifying_Function;
-
-   procedure Set_Minimum_LoD (Target : Texture; Level : Real);
-   function Minimum_LoD (Target : Texture) return Real;
-
-   procedure Set_Maximum_LoD (Target : Texture; Level : Real);
-   function Maximum_LoD (Target : Texture) return Real;
-
-   procedure Set_Lowest_Mipmap_Level (Target : Texture; Level : Integer);
-   function Lowest_Mipmap_Level (Target : Texture) return Integer;
-
-   procedure Set_Highest_Mipmap_Level (Target : Texture; Level : Integer);
-   function Highest_Mipmap_Level (Target : Texture) return Integer;
-
-   procedure Set_X_Wrapping (Target : Texture; Mode : Wrapping_Mode);
-   function X_Wrapping (Target : Texture) return Wrapping_Mode;
-
-   procedure Set_Y_Wrapping (Target : Texture; Mode : Wrapping_Mode);
-   function Y_Wrapping (Target : Texture) return Wrapping_Mode;
-
-   procedure Set_Z_Wrapping (Target : Texture; Mode : Wrapping_Mode);
-   function Z_Wrapping (Target : Texture) return Wrapping_Mode;
-
-   procedure Set_Border_Color (Target : Texture; Color : Colors.Color);
-   function Border_Color (Target : Texture) return Colors.Color;
-
-   procedure Set_Texture_Priority (Target : Texture;
-                                   Value : Priority);
-   function Texture_Priority (Target : Texture) return Priority;
-
-   procedure Toggle_Compare_X_To_Texture (Target  : Texture;
-                                          Enabled : Boolean);
-   function Compare_X_To_Texture_Enabled (Target : Texture) return Boolean;
-
-   procedure Set_Compare_Function (Target : Texture;
-                                   Func : Common.Compare_Function);
-   function Compare_Function (Target : Texture)
-                             return Common.Compare_Function;
-
-   procedure Set_Depth_Texture_Mode (Target : Texture; Mode : Depth_Mode);
-   function Depth_Texture_Mode (Target : Texture) return Depth_Mode;
-
-   procedure Toggle_Mipmap_Autoupdate (Target : Texture; Enabled : Boolean);
-   function Mipmap_Autoupdate_Enabled (Target : Texture) return Boolean;
-
+   procedure Bind (Object : Texture; Target : Texture_Target);
+   
+   function Current_Texture (Target : Texture_Target) return Texture;
+   
+   -----------------------------------------------------------------------------
+   --                      Texture Target Instances                           --
+   -----------------------------------------------------------------------------
+   
+   Texture_1D       : constant Texture_Target;
+   Texture_2D       : constant Texture_Target;
+   Texture_3D       : constant Texture_Target;
+   Texture_Cube_Map : constant Texture_Target;
+   
 private
    
    procedure Create_Id (Object : in out Texture);
    
    procedure Delete_Id (Object : in out Texture);
-      
-   for Texture_Kind use (Texture_1D       => 16#0DE0#,
-                         Texture_2D       => 16#0DE1#,
-                         Texture_3D       => 16#806F#,
-                         Texture_Cube_Map => 16#8513#);
-   for Texture_Kind'Size use Low_Level.Enum'Size;
 
    for Wrapping_Mode use (Clamp           => 16#2900#,
                           Repeat          => 16#2901#,
@@ -136,8 +144,18 @@ private
                        Luminance => 16#1909#,
                        Intensity => 16#8049#);
    for Depth_Mode'Size use Low_Level.Int'Size;
+   
+   type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is null record;
+   
+   Texture_1D       : constant Texture_Target
+     := Texture_Target'(Kind => Low_Level.Enums.Texture_1D);
+   Texture_2D       : constant Texture_Target
+     := Texture_Target'(Kind => Low_Level.Enums.Texture_2D);
+   Texture_3D       : constant Texture_Target
+     := Texture_Target'(Kind => Low_Level.Enums.Texture_3D);
+   Texture_Cube_Map : constant Texture_Target
+     := Texture_Target'(Kind => Low_Level.Enums.Texture_Cube_Map);
 
-   type Texture (Kind : Texture_Kind) is
-     new GL_Object with null record;
+   type Texture is new GL_Object with null record;
    
 end GL.Objects.Textures;

@@ -23,22 +23,26 @@ package body GL.Objects is
    begin
       Object.Reference := new GL_Object_Reference'(GL_Id => 0,
                                                   Reference_Count => 1);
-      Create_ID (Object);
+      Create_ID (GL_Object'Class (Object));
    end Initialize;
 
    overriding procedure Adjust (Object : in out GL_Object) is
    begin
-      Object.Reference.Reference_Count := Object.Reference.Reference_Count + 1;
+      if Object.Reference /= null then
+         Object.Reference.Reference_Count := Object.Reference.Reference_Count + 1;
+      end if;
    end Adjust;
 
    overriding procedure Finalize (Object : in out GL_Object) is
       procedure Free is new Ada.Unchecked_Deallocation
          (Object => GL_Object_Reference, Name => GL_Object_Reference_Access);
    begin
-      Object.Reference.Reference_Count := Object.Reference.Reference_Count - 1;
-      if Object.Reference.Reference_Count = 0 then
-         Delete_Id (Object);
-         Free (Object.Reference);
+      if Object.Reference /= null then
+         Object.Reference.Reference_Count := Object.Reference.Reference_Count - 1;
+         if Object.Reference.Reference_Count = 0 then
+            Delete_Id (GL_Object'Class (Object));
+            Free (Object.Reference);
+         end if;
       end if;
    end Finalize;
    
@@ -47,7 +51,7 @@ package body GL.Objects is
       return Object.Reference.GL_Id;
    end Raw_Id;
    
-   function "=" (Left, Right : GL_Object) return Boolean is
+   function "=" (Left, Right : GL_Object'Class) return Boolean is
    begin
       return Left.Reference = Right.Reference;
    end "=";

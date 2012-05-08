@@ -22,7 +22,7 @@ with GL.Low_Level;
 package GL.Objects is
    
    type GL_Object is abstract new Ada.Finalization.Controlled with private;
-      
+         
    -- creates the object in OpenGL memory.
    overriding procedure Initialize (Object : in out GL_Object);
       
@@ -32,15 +32,11 @@ package GL.Objects is
    -- Decreases reference count. Destroys texture when it reaches zero.
    overriding procedure Finalize (Object : in out GL_Object);
    
-   -- Permanently make the object the currently active object of its class.
-   -- (There can only be one active object per object class.)
-   procedure Bind (Object : GL_Object) is abstract;
-   
    -- This getter is provided for low-level access. Its primary use is to
    -- interact with other C interfaces (e.g. OpenCL)
    function Raw_Id (Object : GL_Object) return Low_Level.UInt;
    
-   function "=" (Left, Right : GL_Object) return Boolean;
+   function "=" (Left, Right : GL_Object'Class) return Boolean;
 private
    
    -- This method should be overridden by child classes to create
