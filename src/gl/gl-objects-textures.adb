@@ -36,7 +36,7 @@ package body GL.Objects.Textures is
      Low_Level.Enums.Texture_3D       => Cur_Texture_3D'Access,
      Low_Level.Enums.Texture_Cube_Map => Cur_Texture_CM'Access);
    
-   procedure Bind (Object : Texture; Target : Texture_Target) is
+   procedure Bind (Object : Texture; Target : Texture_Target'Class) is
    begin
       if Current_Textures (Target.Kind).all /= Object then
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
@@ -45,7 +45,7 @@ package body GL.Objects.Textures is
       end if;
    end Bind;
    
-   function Current_Texture (Target : Texture_Target) return Texture is
+   function Current_Texture (Target : Texture_Target) return Texture'Class is
    begin
       return Current_Textures (Target.Kind).all;
    end Current_Texture;
