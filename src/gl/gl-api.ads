@@ -75,15 +75,15 @@ private package GL.API is
    -----------------------------------------------------------------------------
    --                                 Toggles                                 --
    -----------------------------------------------------------------------------
-   
+
    procedure Enable (Subject : Toggles.Toggle);
    pragma Import (Convention => StdCall, Entity => Enable,
                   External_Name => "glEnable");
-   
+
    procedure Disable (Subject : Toggles.Toggle);
    pragma Import (Convention => StdCall, Entity => Disable,
                   External_Name => "glDisable");
-   
+
    function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool;
    pragma Import (Convention => StdCall, Entity => Is_Enabled,
                   External_Name => "glIsEnabled");
@@ -160,9 +160,10 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Secondary_Color,
                   External_Name => "glSecondaryColor3dv");
 
-   procedure Fog_Coord (Distance : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Fog_Coord,
-                  External_Name => "glFogCoordd");
+   -- UNAVAILABLE IN SOME DRIVERS
+   --procedure Fog_Coord (Distance : Low_Level.Double);
+   --pragma Import (Convention => StdCall, Entity => Fog_Coord,
+   --               External_Name => "glFogCoordd");
 
    procedure Normal (Value : Normals.Normal);
    pragma Import (Convention => StdCall, Entity => Normal,

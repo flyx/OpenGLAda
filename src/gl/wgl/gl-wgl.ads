@@ -155,7 +155,7 @@ package GL.WGL is
    type Glyph_Metrics_Float_Type is access all Glyph_Metrics_Float;
    type Pixel_Format_Descriptor_Type is access all Pixel_Format_Descriptor;
 
-   type HANDLE is new Interfaces.C.Extensions.void_ptr;
+   type HANDLE is new System.Address;
    subtype HDC is HANDLE;
    subtype HGLRC is HANDLE;
 

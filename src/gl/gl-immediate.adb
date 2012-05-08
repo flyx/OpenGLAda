@@ -53,11 +53,12 @@ package body GL.Immediate is
       return Ret;
    end Current_Color;
 
-   procedure Set_Fog_Distance (Value : Real) is
-   begin
-      API.Fog_Coord (Value);
-      Check_OpenGL_Error;
-   end Set_Fog_Distance;
+   -- UNAVAILABLE IN SOME DRIVERS
+   --procedure Set_Fog_Distance (Value : Real) is
+   --begin
+   --   API.Fog_Coord (Value);
+   --   Check_OpenGL_Error;
+   --end Set_Fog_Distance;
 
    function Current_Fog_Distance return Real is
       Value : aliased Real;

@@ -40,7 +40,8 @@ package GL.Immediate is
    procedure Set_Color (Value : Colors.Color);
    function Current_Color return Colors.Color;
 
-   procedure Set_Fog_Distance (Value : Real);
+   -- UNAVAILABLE IN SOME DRIVERS
+   --procedure Set_Fog_Distance (Value : Real);
    function Current_Fog_Distance return Real;
 
    procedure Set_Normal (Value : Normals.Normal);

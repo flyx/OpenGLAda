@@ -19,7 +19,6 @@ with Ada.Unchecked_Deallocation;
 package body GL.Objects is
 
    overriding procedure Initialize (Object : in out GL_Object) is
-      New_Id : Low_Level.UInt;
    begin
       Object.Reference := new GL_Object_Reference'(GL_Id => 0,
                                                   Reference_Count => 1);
@@ -45,12 +44,12 @@ package body GL.Objects is
          end if;
       end if;
    end Finalize;
-   
+
    function Raw_Id (Object : GL_Object) return Low_Level.UInt is
    begin
       return Object.Reference.GL_Id;
    end Raw_Id;
-   
+
    function "=" (Left, Right : GL_Object'Class) return Boolean is
    begin
       return Left.Reference = Right.Reference;
