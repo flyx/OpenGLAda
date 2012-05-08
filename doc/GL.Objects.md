@@ -3,7 +3,6 @@ layout : default
 title : API - The package GL.Objects
 packages :
   - GL.Objects
-  - GL.Objects.Textures
 versions:
   - 2.1
   - 3.0
