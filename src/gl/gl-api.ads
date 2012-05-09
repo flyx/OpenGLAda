@@ -17,7 +17,7 @@
 with GL.Enums;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
-with GL.Low_Level;
+with GL.Low_Level.Loader;
 with GL.Low_Level.Enums;
 with GL.Matrices;
 with GL.Immediate;
@@ -143,7 +143,7 @@ private package GL.API is
    procedure GL_Begin (Mode : Immediate.Connection_Mode);
    pragma Import (Convention => StdCall, Entity => GL_Begin,
                   External_Name => "glBegin");
-
+   
    procedure GL_End;
    pragma Import (Convention => StdCall, Entity => GL_End,
                   External_Name => "glEnd");

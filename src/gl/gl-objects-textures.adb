@@ -36,12 +36,12 @@ package body GL.Objects.Textures is
      Low_Level.Enums.Texture_3D       => Cur_Texture_3D'Access,
      Low_Level.Enums.Texture_Cube_Map => Cur_Texture_CM'Access);
    
-   procedure Bind (Object : Texture; Target : Texture_Target'Class) is
+   procedure Bind (Target : Texture_Target; Object : Texture'Class) is
    begin
       if Current_Textures (Target.Kind).all /= Object then
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
          Check_OpenGL_Error;
-         Current_Textures (Target.Kind).all := Object;
+         Current_Textures (Target.Kind).all := Texture (Object);
       end if;
    end Bind;
    

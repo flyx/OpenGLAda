@@ -6,9 +6,9 @@ library project OpenGL is
 
    for Library_Name use "OpenGLAda";
    case Os is
-      when "Windows" => for Source_Dirs use ("src/gl", "src/gl/wgl");
-      when "Linux" => for Source_Dirs use ("src/gl", "src/gl/glx");
-      when "MacOSX" => for Source_Dirs use ("src/gl", "src/gl/cgl");
+      when "Windows" => for Source_Dirs use ("src/gl", "src/gl/windows");
+      when "Linux" => for Source_Dirs use ("src/gl", "src/gl/x11");
+      when "MacOSX" => for Source_Dirs use ("src/gl", "src/gl/mac");
    end case;
 
    for Object_Dir use "obj";
@@ -35,7 +35,7 @@ library project OpenGL is
             for Linker_Options use ("-lGL", "-lX11");
 
          when "MacOSX" =>
-            for Linker_Options use ("-Wl,-framework,OpenGL");
+            for Linker_Options use ("-Wl,-framework,OpenGL,-framework,CoreFoundation");
       end case;
    end Linker;
 

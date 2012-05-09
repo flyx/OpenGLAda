@@ -114,7 +114,7 @@ package GL.Objects.Textures is
    
    type Texture is new GL_Object with private;
    
-   procedure Bind (Object : Texture; Target : Texture_Target'Class);
+   procedure Bind (Target : Texture_Target; Object : Texture'Class);
    
    function Current_Texture (Target : Texture_Target) return Texture'Class;
    
