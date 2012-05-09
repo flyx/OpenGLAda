@@ -35,6 +35,11 @@ with GL.Toggles;
 with System;
 
 private package GL.API is
+   -- Everything newer than OpenGL 1.1 will not be statically bound,
+   -- but loaded with GL.Low_Level.Loader at runtime.
+   --
+   -- Also, all functions that have been deprecated with OpenGL 3.0
+   -- will not be statically bound, as they may be omitted by implementors.
 
    function Get_Error return Enums.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_Error,
@@ -92,49 +97,41 @@ private package GL.API is
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
    -----------------------------------------------------------------------------
 
-   procedure Matrix_Mode (Mode : Enums.Matrix_Mode);
-   pragma Import (Convention => StdCall, Entity => Matrix_Mode,
-                  External_Name => "glMatrixMode");
+   procedure Matrix_Mode is new Low_Level.Loader.Procedure_With_1_Param
+      ("glMatrixMode", Enums.Matrix_Mode);
+   
+   procedure Frustum is new Low_Level.Loader.Procedure_With_6_Params
+      ("glFrustum", Low_Level.Double, Low_Level.Double, Low_Level.Double,
+       Low_Level.Double, Low_Level.Double, Low_Level.Double);
 
-   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Frustum,
-                  External_Name => "glFrustum");
+   procedure Ortho is new Low_Level.Loader.Procedure_With_6_Params
+      ("glOrtho", Low_Level.Double, Low_Level.Double, Low_Level.Double,
+       Low_Level.Double, Low_Level.Double, Low_Level.Double);
 
-   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Ortho,
-                  External_Name => "glOrtho");
+   procedure Load_Identity is new Low_Level.Loader.Procedure_Without_Params
+      ("glLoadIdentity");
 
-   procedure Load_Identity;
-   pragma Import (Convention => StdCall, Entity => Load_Identity,
-                  External_Name => "glLoadIdentity");
+   procedure Load_Matrix is new Low_Level.Loader.Procedure_With_1_Param
+      ("glLoadMatrixd", Matrices.Matrix);
+   
+   procedure Mult_Matrix is new Low_Level.Loader.Procedure_With_1_Param
+      ("glMultMatrixd", Matrices.Matrix);
 
-   procedure Load_Matrix (Value : Matrices.Matrix);
-   pragma Import (Convention => StdCall, Entity => Load_Matrix,
-                  External_Name => "glLoadMatrixd");
+   procedure Push_Matrix is new Low_Level.Loader.Procedure_Without_Params
+      ("glPushMatrix");
 
-   procedure Mult_Matrix (Factor : Matrices.Matrix);
-   pragma Import (Convention => StdCall, Entity => Mult_Matrix,
-                  External_Name => "glMultMatrixd");
+   procedure Pop_Matrix is new Low_Level.Loader.Procedure_Without_Params
+      ("glPopMatrix");
 
-   procedure Push_Matrix;
-   pragma Import (Convention => StdCall, Entity => Push_Matrix,
-                  External_Name => "glPushMatrix");
-
-   procedure Pop_Matrix;
-   pragma Import (Convention => StdCall, Entity => Pop_Matrix,
-                  External_Name => "glPopMatrix");
-
-   procedure Rotate (Angle, X, Y, Z : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Rotate,
-                  External_Name => "glRotated");
-
-   procedure Scale (X, Y, Z : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Scale,
-                  External_Name => "glScaled");
-
-   procedure Translate (X, Y, Z : Low_Level.Double);
-   pragma Import (Convention => StdCall, Entity => Translate,
-                  External_Name => "glTranslated");
+   procedure Rotate is new Low_Level.Loader.Procedure_With_4_Params
+      ("glRotated", Low_Level.Double, Low_Level.Double, Low_Level.Double,
+       Low_Level.Double);
+   
+   procedure Scale is new Low_Level.Loader.Procedure_With_3_Params
+      ("glScaled", Low_Level.Double, Low_Level.Double, Low_Level.Double);
+   
+   procedure Translate is new Low_Level.Loader.Procedure_With_3_Params
+      ("glTranslated", Low_Level.Double, Low_Level.Double, Low_Level.Double);
 
    -----------------------------------------------------------------------------
    --              Immediate API (deprecated as of OpenGL 3.0)                --

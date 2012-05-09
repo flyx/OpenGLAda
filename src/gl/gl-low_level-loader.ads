@@ -34,6 +34,7 @@ package GL.Low_Level.Loader is
       type Param1_Type is private;
       type Return_Type is private;
    function Function_With_1_Param (Param1 : Param1_Type) return Return_Type;
+   pragma Inline (Function_With_1_Param);
    
    generic
       GL_Function_Name : String;
@@ -43,11 +44,18 @@ package GL.Low_Level.Loader is
    function Function_With_2_Params (Param1 : Param1_Type;
                                     Param2 : Param2_Type)
                                    return Return_Type;
+   pragma Inline (Function_With_2_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+   procedure Procedure_Without_Params;
+   pragma Inline (Procedure_Without_Params);
    
    generic
       GL_Procedure_Name : String;
       type Param1_Type is private;
    procedure Procedure_With_1_Param (Param1 : Param1_Type);
+   pragma Inline (Procedure_With_1_Param);
    
    generic
       GL_Procedure_Name : String;
@@ -55,6 +63,45 @@ package GL.Low_Level.Loader is
       type Param2_Type is private;
    procedure Procedure_With_2_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type);
+   pragma Inline (Procedure_With_2_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Param3_Type is private;
+   procedure Procedure_With_3_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type);
+   pragma Inline (Procedure_With_3_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Param3_Type is private;
+      type Param4_Type is private;
+   procedure Procedure_With_4_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type);
+   pragma Inline (Procedure_With_4_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Param3_Type is private;
+      type Param4_Type is private;
+      type Param5_Type is private;
+      type Param6_Type is private;
+   procedure Procedure_With_6_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type);
+   pragma Inline (Procedure_With_6_Params);
 
 private
    generic

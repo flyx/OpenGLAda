@@ -80,6 +80,21 @@ package body GL.Low_Level.Loader is
         return Reference (Param1, Param2);
      end if;
    end Function_With_2_Params;
+   
+   procedure Procedure_Without_Params is
+      type Procedure_Reference is
+        access procedure;
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception;
+      else
+         Reference.all;
+      end if;
+   end Procedure_Without_Params;
 
    procedure Procedure_With_1_Param (Param1 : Param1_Type) is
       type Procedure_Reference is
@@ -111,7 +126,64 @@ package body GL.Low_Level.Loader is
         Reference (Param1, Param2);
       end if;
    end Procedure_With_2_Params;
-
-
+   
+   procedure Procedure_With_3_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+   
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+        raise Feature_Not_Supported_Exception;
+      else
+        Reference (Param1, Param2, Param3);
+      end if;
+   end Procedure_With_3_Params;
+   
+   procedure Procedure_With_4_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type; Param4 : Param4_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+   
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+        raise Feature_Not_Supported_Exception;
+      else
+        Reference (Param1, Param2, Param3, Param4);
+      end if;
+   end Procedure_With_4_Params;
+      
+   procedure Procedure_With_6_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type; Param4 : Param4_Type;
+                          Param5 : Param5_Type; Param6 : Param6_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception;
+      else
+         Reference (Param1, Param2, Param3, Param4, Param5, Param6);
+      end if;
+   end Procedure_With_6_Params;
 
 end GL.Low_Level.Loader;
