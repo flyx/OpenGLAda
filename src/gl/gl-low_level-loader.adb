@@ -50,6 +50,7 @@ package body GL.Low_Level.Loader is
    function Function_With_1_Param (Param1 : Param1_Type) return Return_Type is
       type Function_Reference is
         access function (Param1 : Param1_Type) return Return_Type;
+      pragma Convention (StdCall, Function_Reference);
 
       function Load_Function is new Load (Function_Reference);
 
@@ -68,6 +69,7 @@ package body GL.Low_Level.Loader is
      type Function_Reference is
        access function (Param1 : Param1_Type; Param2 : Param2_Type)
        return Return_Type;
+     pragma Convention (StdCall, Function_Reference);
 
      function Load_Function is new Load (Function_Reference);
      Reference : Function_Reference := Load_Function (GL_Function_Name);
@@ -81,22 +83,24 @@ package body GL.Low_Level.Loader is
 
    procedure Procedure_With_1_Param (Param1 : Param1_Type) is
       type Procedure_Reference is
-       access procedure (Param1 : Param1_Type);
+        access procedure (Param1 : Param1_Type);
+      pragma Convention (StdCall, Procedure_Reference);
 
-     function Load_Procedure is new Load (Procedure_Reference);
-     Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
    begin
-     if Reference = null then
-        raise Feature_Not_Supported_Exception;
-     else
-        Reference (Param1);
-     end if;
+      if Reference = null then
+         raise Feature_Not_Supported_Exception;
+      else
+         Reference (Param1);
+      end if;
    end Procedure_With_1_Param;
 
    procedure Procedure_With_2_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type) is
       type Procedure_Reference is
-       access procedure (Param1 : Param1_Type; Param2 : Param2_Type);
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type);
+      pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
       Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
