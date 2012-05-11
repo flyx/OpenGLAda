@@ -102,6 +102,15 @@ package GL.Low_Level.Loader is
                                       Param5 : Param5_Type;
                                       Param6 : Param6_Type);
    pragma Inline (Procedure_With_6_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Value_Type  (<>) is private;
+   procedure Getter_With_3_Params (Param1 : Param1_Type;
+                                   Param2 : Param2_Type;
+                                   Value  : in out Value_Type);
 
 private
    generic

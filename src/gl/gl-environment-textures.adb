@@ -28,7 +28,7 @@ package body GL.Environment.Textures is
    end Set_Tex_Function;
 
    function Tex_Function return Texture_Function is
-      Ret : Texture_Function;
+      Ret : Texture_Function := Texture_Function'Val(0);
    begin
       API.Get_Tex_Env_Tex_Func (Enums.Textures.Texture_Env, Enums.Textures.Env_Mode,
                                 Ret);
@@ -44,7 +44,7 @@ package body GL.Environment.Textures is
    end Set_RGB_Combine;
 
    function RGB_Combine return Combine_Function is
-      Ret : Combine_Function;
+      Ret : Combine_Function := Combine_Function'Val(0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_RGB, Ret);
@@ -60,7 +60,7 @@ package body GL.Environment.Textures is
    end Set_Alpha_Combine;
 
    function Alpha_Combine return Alpha_Combine_Function is
-      Ret : Combine_Function;
+      Ret : Combine_Function := Combine_Function'Val(0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_Alpha, Ret);
@@ -82,7 +82,7 @@ package body GL.Environment.Textures is
 
    function RGB_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind;
+      Ret   : Source_Kind := Source_Kind'Val(0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_RGB;
@@ -108,7 +108,7 @@ package body GL.Environment.Textures is
 
    function Alpha_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind;
+      Ret   : Source_Kind := Source_Kind'Val(0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_Alpha;
@@ -128,7 +128,7 @@ package body GL.Environment.Textures is
    end Set_RGB_Scale;
 
    function RGB_Scale return Scaling_Factor is
-      Ret : Low_Level.Single;
+      Ret : Low_Level.Single := 0.0;
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Texture_Env,
                              Enums.Textures.RGB_Scale, Ret);
@@ -144,7 +144,7 @@ package body GL.Environment.Textures is
    end Set_Alpha_Scale;
 
    function Alpha_Scale return Scaling_Factor is
-      Ret : Low_Level.Single;
+      Ret : Low_Level.Single := 0.0;
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Texture_Env,
                              Enums.Textures.Alpha_Scale, Ret);
@@ -160,7 +160,7 @@ package body GL.Environment.Textures is
    end Set_LoD_Bias;
 
    function LoD_Bias return Real is
-      Ret : Low_Level.Single;
+      Ret : Low_Level.Single := 0.0;
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Filter_Control,
                              Enums.Textures.LoD_Bias, Ret);
@@ -169,9 +169,10 @@ package body GL.Environment.Textures is
    end LoD_Bias;
 
    procedure Set_Env_Color (Value : Colors.Color) is
+      Float_Colors : Low_Level.Single_Array := Helpers.Float_Array (Value);
    begin
       API.Tex_Env_Arr (Enums.Textures.Texture_Env,
-                       Enums.Textures.Env_Color, Helpers.Float_Array (Value));
+                       Enums.Textures.Env_Color, Float_Colors);
       Check_OpenGL_Error;
    end Set_Env_Color;
 
@@ -192,7 +193,7 @@ package body GL.Environment.Textures is
    end Toggle_Point_Sprite_Coord_Replace;
 
    function Point_Sprite_Coord_Replace return Boolean is
-      Ret : Low_Level.Bool;
+      Ret : Low_Level.Bool := Low_Level.False;
    begin
       API.Get_Tex_Env_Bool (Enums.Textures.Point_Sprite,
                             Enums.Textures.Coord_Replace, Ret);
