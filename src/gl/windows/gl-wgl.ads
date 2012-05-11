@@ -31,7 +31,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Interfaces.C;
+with Interfaces.C.Strings;
 with Interfaces.C.Extensions;
 with System;
 
@@ -159,8 +159,6 @@ package GL.WGL is
    subtype HDC is HANDLE;
    subtype HGLRC is HANDLE;
 
-   type PROC is access function return Interfaces.C.int;
-
    function wglDeleteContext (Rendering_Context : HGLRC)
       return Interfaces.C.int;
 
@@ -188,7 +186,8 @@ package GL.WGL is
 
    function wglGetCurrentContext return HANDLE;
 
-   function wglGetProcAddress (Proc_Desc : access Interfaces.C.char) return PROC;
+   function wglGetProcAddress (Proc_Desc : Interfaces.C.Strings.chars_ptr)
+                               return System.Address;
 
    function wglChoosePixelFormat (Device_Context    : HDC;
                                   Pixel_Format_Desc :

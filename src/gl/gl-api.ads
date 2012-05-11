@@ -41,7 +41,7 @@ private package GL.API is
    -- Also, all functions that have been deprecated with OpenGL 3.0
    -- will not be statically bound, as they may be omitted by implementors
    -- when they choose to only implement the OpenGL Core Profile.
-   
+
    subtype Zero is Low_Level.Int range 0 .. 0;
 
    function Get_Error return Enums.Error_Code;
@@ -102,7 +102,7 @@ private package GL.API is
 
    procedure Matrix_Mode is new Low_Level.Loader.Procedure_With_1_Param
       ("glMatrixMode", Enums.Matrix_Mode);
-   
+
    procedure Frustum is new Low_Level.Loader.Procedure_With_6_Params
       ("glFrustum", Low_Level.Double, Low_Level.Double, Low_Level.Double,
        Low_Level.Double, Low_Level.Double, Low_Level.Double);
@@ -116,7 +116,7 @@ private package GL.API is
 
    procedure Load_Matrix is new Low_Level.Loader.Procedure_With_1_Param
       ("glLoadMatrixd", Matrices.Matrix);
-   
+
    procedure Mult_Matrix is new Low_Level.Loader.Procedure_With_1_Param
       ("glMultMatrixd", Matrices.Matrix);
 
@@ -129,10 +129,10 @@ private package GL.API is
    procedure Rotate is new Low_Level.Loader.Procedure_With_4_Params
       ("glRotated", Low_Level.Double, Low_Level.Double, Low_Level.Double,
        Low_Level.Double);
-   
+
    procedure Scale is new Low_Level.Loader.Procedure_With_3_Params
       ("glScaled", Low_Level.Double, Low_Level.Double, Low_Level.Double);
-   
+
    procedure Translate is new Low_Level.Loader.Procedure_With_3_Params
       ("glTranslated", Low_Level.Double, Low_Level.Double, Low_Level.Double);
 
@@ -145,25 +145,25 @@ private package GL.API is
 
    procedure GL_End is new Low_Level.Loader.Procedure_Without_Params
       ("glEnd");
-   
+
    procedure Vertex is new Low_Level.Loader.Procedure_With_1_Param
       ("glVertex4dv", Vectors.Vector);
 
    procedure Color is new Low_Level.Loader.Procedure_With_1_Param
       ("glColor4dv", Colors.Color);
-   
+
    procedure Secondary_Color is new Low_Level.Loader.Procedure_With_1_Param
       ("glSecondaryColor3dv", Colors.Basic_Color);
 
    procedure Fog_Coord is new Low_Level.Loader.Procedure_With_1_Param
       ("glFogCoordd", Low_Level.Double);
-   
+
    procedure Normal is new Low_Level.Loader.Procedure_With_1_Param
       ("glNormal3dv", Normals.Normal);
-   
+
    procedure Tex_Coord is new Low_Level.Loader.Procedure_With_1_Param
       ("glTexCoord4dv", Vectors.Vector);
-   
+
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
@@ -175,49 +175,40 @@ private package GL.API is
    procedure Draw_Buffer (Mode : Buffers.Color_Buffer_Selector);
    pragma Import (Convention => StdCall, Entity => Draw_Buffer,
                   External_Name => "glDrawBuffer");
-   
+
    procedure Clear_Color (Red, Green, Blue, Alpha : Colors.Component);
    pragma Import (Convention => StdCall, Entity => Clear_Color,
                   External_Name => "glClearColor");
-   
+
    procedure Clear_Depth (Depth : Buffers.Depth);
    pragma Import (Convention => StdCall, Entity => Clear_Depth,
                   External_Name => "glClearDepth");
-   
+
    procedure Clear_Stencil (Index : Buffers.Stencil_Index);
    pragma Import (Convention => StdCall, Entity => Clear_Stencil,
                   External_Name => "glClearStencil");
-   
+
    -- dropped in OpenGL 3
    procedure Clear_Accum is new Low_Level.Loader.Procedure_With_4_Params
       ("glClearAccum", Colors.Component, Colors.Component, Colors.Component,
        Colors.Component);
-   
-   procedure Clear_Buffer (Buffer      : Buffers.Color_Buffer_Selector;
-                           Draw_Buffer : Zero;
-                           Value       : Colors.Color);
-   pragma Import (Convention => StdCall, Entity => Clear_Buffer,
-                  External_Name => "glClearBufferfv");
-   
-   procedure Clear_Buffer_Depth (Buffer      : Low_Level.Enums.Only_Depth_Buffer;
-                                 Draw_Buffer : Zero;
-                                 Value       : access constant Buffers.Depth);
-   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Depth,
-                  External_Name => "glClearBufferfv");
-   
-   procedure Clear_Buffer_Stencil (Buffer      : Low_Level.Enums.Only_Stencil_Buffer;
-                                   Draw_Buffer : Zero;
-                                   Value       : access constant Buffers.Stencil_Index);
-   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Stencil,
-                  External_Name => "glClearBufferiv");
-   
-   procedure Clear_Buffer_Depth_Stencil (
-      Buffer      : Low_Level.Enums.Only_Depth_Stencil_Buffer;
-      Draw_Buffer : Zero;
-      Depth       : Buffers.Depth;
-      Stencil     : Buffers.Stencil_Index);
-   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Depth_Stencil,
-                  External_Name => "glClearBufferfi");
+
+   procedure Clear_Buffer is new Low_Level.Loader.Procedure_With_3_Params
+     ("glClearBufferfv", Buffers.Color_Buffer_Selector, Zero, Colors.Color);
+
+   type Depth_Pointer is access constant Buffers.Depth;
+   procedure Clear_Buffer_Depth is new Low_Level.Loader.Procedure_With_3_Params
+     ("glClearBufferfv", Low_Level.Enums.Only_Depth_Buffer, Zero,
+      Depth_Pointer);
+
+   type Stencil_Pointer is access constant Buffers.Stencil_Index;
+   procedure Clear_Buffer_Stencil is new Low_Level.Loader.Procedure_With_3_Params
+     ("glClearBufferiv", Low_Level.Enums.Only_Stencil_Buffer, Zero,
+      Stencil_Pointer);
+
+   procedure Clear_Buffer_Depth_Stencil is new Low_Level.Loader.Procedure_With_4_Params
+     ("glClearBufferfi", Low_Level.Enums.Only_Depth_Stencil_Buffer, Zero,
+      Buffers.Depth, Buffers.Stencil_Index);
 
    -----------------------------------------------------------------------------
    --                                Textures                                 --
@@ -349,11 +340,11 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Tex_Image_2D,
                   External_Name => "glTexImage2D");
 
-   
+
    procedure Tex_Env_Float is new Low_Level.Loader.Procedure_With_3_Params
       ("glTexEnvf", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Low_Level.Single);
-   
+
    procedure Tex_Env_Int is new Low_Level.Loader.Procedure_With_3_Params
       ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Low_Level.Int);
@@ -369,7 +360,7 @@ private package GL.API is
    procedure Tex_Env_Source is new Low_Level.Loader.Procedure_With_3_Params
       ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Environment.Textures.Source_Kind);
-   
+
    -- this is not a getter, but we need to use it here as we have an
    -- indefinite type as parameter
    procedure Tex_Env_Arr is new Low_Level.Loader.Getter_with_3_Params
@@ -383,15 +374,15 @@ private package GL.API is
    procedure Get_Tex_Env_Float is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnvfv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Low_Level.Single);
-   
+
    procedure Get_Tex_Env_Tex_Func is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Environment.Textures.Texture_Function);
-   
+
    procedure Get_Tex_Env_Combine_Func is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Environment.Textures.Combine_Function);
-   
+
    procedure Get_Tex_Env_Source is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Environment.Textures.Source_Kind);
@@ -399,7 +390,7 @@ private package GL.API is
    procedure Get_Tex_Env_Arr is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnvfv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Low_Level.Single_Array);
-   
+
    procedure Get_Tex_Env_Bool is new Low_Level.Loader.Getter_With_3_Params
       ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
        Low_Level.Bool);

@@ -26,24 +26,24 @@ package body GL.Buffers is
       function Convert is new Ada.Unchecked_Conversion (Source => Buffer_Bits,
                                                         Target => Low_Level.Bitfield);
       Raw_Bits : Low_Level.Bitfield := Convert (Bits) and 2#0100011100000000#;
-   begin   
+   begin
       API.Clear (Raw_Bits);
       Check_OpenGL_Error;
    end Clear;
-   
+
    procedure Set_Active_Buffer (Selector : Color_Buffer_Selector) is
    begin
       API.Draw_Buffer (Selector);
       Check_OpenGL_Error;
    end Set_Active_Buffer;
-   
+
    procedure Set_Color_Clear_Value (Value : Colors.Color) is
    begin
       API.Clear_Color (Value (Colors.R), Value (Colors.G), Value (Colors.B),
                        Value (Colors.A));
       Check_OpenGL_Error;
    end Set_Color_Clear_Value;
-   
+
    function Color_Clear_Value return Colors.Color is
       Value : Colors.Color;
    begin
@@ -57,7 +57,7 @@ package body GL.Buffers is
       API.Clear_Depth (Value);
       Check_OpenGL_Error;
    end Set_Depth_Clear_Value;
-      
+
    function Depth_Clear_Value return Depth is
       Value : aliased Low_Level.Double;
    begin
@@ -71,7 +71,7 @@ package body GL.Buffers is
       API.Clear_Stencil (Value);
       Check_OpenGL_Error;
    end Set_Stencil_Clear_Value;
-      
+
    function Stencil_Clear_Value return Stencil_Index is
       Value : aliased Stencil_Index;
    begin
@@ -86,7 +86,7 @@ package body GL.Buffers is
                        Value (Colors.A));
       Check_OpenGL_Error;
    end Set_Accum_Clear_Value;
-      
+
    function Accum_Clear_Value return Colors.Color is
       Value : Colors.Color;
    begin
@@ -106,7 +106,7 @@ package body GL.Buffers is
       Aliased_Value : aliased constant Depth := Value;
    begin
       API.Clear_Buffer_Depth (Low_Level.Enums.Depth_Buffer, 0,
-                              Aliased_Value'Access);
+                              Aliased_Value'Unchecked_Access);
       Check_OpenGL_Error;
    end Clear_Depth_Buffer;
 
@@ -114,7 +114,7 @@ package body GL.Buffers is
       Aliased_Value : aliased constant Stencil_Index := Value;
    begin
       API.Clear_Buffer_Stencil (Low_Level.Enums.Stencil, 0,
-                                Aliased_Value'Access);
+                                Aliased_Value'Unchecked_Access);
       Check_OpenGL_Error;
    end Clear_Stencil_Buffer;
 
