@@ -57,7 +57,7 @@ package body GL.Low_Level.Loader is
       Reference : Function_Reference := Load_Function (GL_Function_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with GL_Function_Name;
       else
          return Reference (Param1);
       end if;
@@ -75,7 +75,7 @@ package body GL.Low_Level.Loader is
      Reference : Function_Reference := Load_Function (GL_Function_Name);
    begin
      if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+        raise Feature_Not_Supported_Exception with GL_Function_Name;
      else
         return Reference (Param1, Param2);
      end if;

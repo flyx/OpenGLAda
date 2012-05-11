@@ -1,10 +1,28 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+--
+-- Permission to use, copy, modify, and/or distribute this software for any
+-- purpose with or without fee is hereby granted, provided that the above
+-- copyright notice and this permission notice appear in all copies.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+-- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+-- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+-- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------------------
+
 with System;
 with Interfaces.C;
 
+-- This package is incomplete. As I do not develop or test under Linux, this
+-- has very low priority. Perhaps someone wants to help out...
 package GL.GLX is
    --  needed types from Xlib
    type XID is new Interfaces.C.unsigned_long;
-   type Bool is new Boolean;
+   subtype Bool is Low_Level.Bool;
 
    type GLX_Context is new System.Address;
    Null_Context : constant GLX_Context := GLX_Context (System.Null_Address);
@@ -49,12 +67,20 @@ package GL.GLX is
                                       Context  : GLX_Context)
                                       return Bool;
 
+   function Get_Current_Context return System.Address;
+
+   function Get_Current_Display return System.Address;
+
+   function Get_Proc_Address (Name : Interfaces.C.Strings.chars_ptr)
+     return System.Address;
+
 private
-   for Bool use (False => 0, True => 1);
-   for Bool'Size use Interfaces.C.int'Size;
 
    pragma Import (C, GLX_Create_Context, "glXCreateContext");
    pragma Import (C, GLX_Make_Current, "glXMakeCurrent");
    pragma Import (C, GLX_Make_Context_Current, "glXMakeContextCurrent");
+   pragma Import (C, Get_Current_Context, "glXGetCurrentContext");
+   pragma Import (C, Get_Current_Display, "glXGetCurrentDisplay");
+   pragma Import (C, Get_Proc_Address, "glXGetProcAddress");
 
 end GL.GLX;

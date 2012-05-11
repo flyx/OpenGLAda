@@ -100,69 +100,86 @@ private package GL.API is
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
    -----------------------------------------------------------------------------
 
-   procedure Matrix_Mode is new Low_Level.Loader.Procedure_With_1_Param
-      ("glMatrixMode", Enums.Matrix_Mode);
+   procedure Matrix_Mode (Mode : Enums.Matrix_Mode);
+   pragma Import (Convention => StdCall, Entity => Matrix_Mode,
+                  External_Name => "glMatrixMode");
 
-   procedure Frustum is new Low_Level.Loader.Procedure_With_6_Params
-      ("glFrustum", Low_Level.Double, Low_Level.Double, Low_Level.Double,
-       Low_Level.Double, Low_Level.Double, Low_Level.Double);
+   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
+   pragma Import (Convention => StdCall, Entity => Frustum,
+                  External_Name => "glFrustum");
 
-   procedure Ortho is new Low_Level.Loader.Procedure_With_6_Params
-      ("glOrtho", Low_Level.Double, Low_Level.Double, Low_Level.Double,
-       Low_Level.Double, Low_Level.Double, Low_Level.Double);
+   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
+   pragma Import (Convention => StdCall, Entity => Ortho,
+                  External_Name => "glOrtho");
 
-   procedure Load_Identity is new Low_Level.Loader.Procedure_Without_Params
-      ("glLoadIdentity");
+   procedure Load_Identity;
+   pragma Import (Convention => StdCall, Entity => Load_Identity,
+                  External_Name => "glLoadIdentity");
 
-   procedure Load_Matrix is new Low_Level.Loader.Procedure_With_1_Param
-      ("glLoadMatrixd", Matrices.Matrix);
+   procedure Load_Matrix (Value : Matrices.Matrix);
+   pragma Import (Convention => StdCall, Entity => Load_Matrix,
+                  External_Name => "glLoadMatrixd");
 
-   procedure Mult_Matrix is new Low_Level.Loader.Procedure_With_1_Param
-      ("glMultMatrixd", Matrices.Matrix);
+   procedure Mult_Matrix (Factor : Matrices.Matrix);
+   pragma Import (Convention => StdCall, Entity => Mult_Matrix,
+                  External_Name => "glMultMatrixd");
 
-   procedure Push_Matrix is new Low_Level.Loader.Procedure_Without_Params
-      ("glPushMatrix");
+   procedure Push_Matrix;
+   pragma Import (Convention => StdCall, Entity => Push_Matrix,
+                  External_Name => "glPushMatrix");
 
-   procedure Pop_Matrix is new Low_Level.Loader.Procedure_Without_Params
-      ("glPopMatrix");
+   procedure Pop_Matrix;
+   pragma Import (Convention => StdCall, Entity => Pop_Matrix,
+                  External_Name => "glPopMatrix");
 
-   procedure Rotate is new Low_Level.Loader.Procedure_With_4_Params
-      ("glRotated", Low_Level.Double, Low_Level.Double, Low_Level.Double,
-       Low_Level.Double);
+   procedure Rotate (Angle, X, Y, Z : Low_Level.Double);
+   pragma Import (Convention => StdCall, Entity => Rotate,
+                  External_Name => "glRotated");
 
-   procedure Scale is new Low_Level.Loader.Procedure_With_3_Params
-      ("glScaled", Low_Level.Double, Low_Level.Double, Low_Level.Double);
+   procedure Scale (X, Y, Z : Low_Level.Double);
+   pragma Import (Convention => StdCall, Entity => Scale,
+                  External_Name => "glScaled");
 
-   procedure Translate is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTranslated", Low_Level.Double, Low_Level.Double, Low_Level.Double);
+   procedure Translate (X, Y, Z : Low_Level.Double);
+   pragma Import (Convention => StdCall, Entity => Translate,
+                  External_Name => "glTranslated");
 
    -----------------------------------------------------------------------------
    --              Immediate API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
-   procedure GL_Begin is new Low_Level.Loader.Procedure_With_1_Param
-      ("glBegin", Immediate.Connection_Mode);
+   procedure GL_Begin (Mode : Immediate.Connection_Mode);
+   pragma Import (Convention => StdCall, Entity => GL_Begin,
+                  External_Name => "glBegin");
 
-   procedure GL_End is new Low_Level.Loader.Procedure_Without_Params
-      ("glEnd");
+   procedure GL_End;
+   pragma Import (Convention => StdCall, Entity => GL_End,
+                  External_Name => "glEnd");
 
-   procedure Vertex is new Low_Level.Loader.Procedure_With_1_Param
-      ("glVertex4dv", Vectors.Vector);
+   procedure Vertex (Value : Vectors.Vector);
+   pragma Import (Convention => StdCall, Entity => Vertex,
+                  External_Name => "glVertex4dv");
 
-   procedure Color is new Low_Level.Loader.Procedure_With_1_Param
-      ("glColor4dv", Colors.Color);
+   procedure Color (Value : Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Color,
+                  External_Name => "glColor4dv");
 
-   procedure Secondary_Color is new Low_Level.Loader.Procedure_With_1_Param
-      ("glSecondaryColor3dv", Colors.Basic_Color);
+   procedure Secondary_Color (Value : Colors.Basic_Color);
+   pragma Import (Convention => StdCall, Entity => Secondary_Color,
+                  External_Name => "glSecondaryColor3dv");
 
-   procedure Fog_Coord is new Low_Level.Loader.Procedure_With_1_Param
-      ("glFogCoordd", Low_Level.Double);
+   -- UNAVAILABLE IN SOME DRIVERS
+   --procedure Fog_Coord (Distance : Low_Level.Double);
+   --pragma Import (Convention => StdCall, Entity => Fog_Coord,
+   --               External_Name => "glFogCoordd");
 
-   procedure Normal is new Low_Level.Loader.Procedure_With_1_Param
-      ("glNormal3dv", Normals.Normal);
+   procedure Normal (Value : Normals.Normal);
+   pragma Import (Convention => StdCall, Entity => Normal,
+                  External_Name => "glNormal3dv");
 
-   procedure Tex_Coord is new Low_Level.Loader.Procedure_With_1_Param
-      ("glTexCoord4dv", Vectors.Vector);
+   procedure Tex_Coord (Value : Vectors.Vector);
+   pragma Import (Convention => StdCall, Entity => Tex_Coord,
+                  External_Name => "glTexCoord4dv");
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
@@ -340,58 +357,81 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Tex_Image_2D,
                   External_Name => "glTexImage2D");
 
+    procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
+                            Param_Name : Enums.Textures.Env_Parameter;
+                            Value      : Low_Level.Single);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Float,
+                  External_Name => "glTexEnvf");
 
-   procedure Tex_Env_Float is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvf", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Single);
+   procedure Tex_Env_Int (Target     : Enums.Textures.Env_Target;
+                          Param_Name : Enums.Textures.Env_Parameter;
+                          Value      : Low_Level.Int);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Int,
+                  External_Name => "glTexEnvi");
 
-   procedure Tex_Env_Int is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Int);
+   procedure Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
+                               Param_Name : Enums.Textures.Env_Parameter;
+                               Value      : Environment.Textures.Texture_Function);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Tex_Func,
+                  External_Name => "glTexEnvi");
 
-   procedure Tex_Env_Tex_Func is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Texture_Function);
+   procedure Tex_Env_Combine_Func (Target     : Enums.Textures.Env_Target;
+                                   Param_Name : Enums.Textures.Env_Parameter;
+                                   Value      : Environment.Textures.Combine_Function);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Combine_Func,
+                  External_Name => "glTexEnvi");
 
-   procedure Tex_Env_Combine_Func is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Combine_Function);
+   procedure Tex_Env_Source (Target     : Enums.Textures.Env_Target;
+                             Param_Name : Enums.Textures.Env_Parameter;
+                             Value      : Environment.Textures.Source_Kind);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Source,
+                  External_Name => "glTexEnvi");
 
-   procedure Tex_Env_Source is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Source_Kind);
+   procedure Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
+                          Param_Name : Enums.Textures.Env_Parameter;
+                          Value      : Low_Level.Single_Array);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Arr,
+                  External_Name => "glTexEnvfv");
 
-   -- this is not a getter, but we need to use it here as we have an
-   -- indefinite type as parameter
-   procedure Tex_Env_Arr is new Low_Level.Loader.Getter_with_3_Params
-      ("glTexEnvfv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Single_Array);
+   procedure Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
+                           Param_Name : Enums.Textures.Env_Parameter;
+                           Value      : Low_Level.Bool);
+   pragma Import (Convention => StdCall, Entity => Tex_Env_Bool,
+                  External_Name => "glTexEnvi");
 
-   procedure Tex_Env_Bool is new Low_Level.Loader.Procedure_With_3_Params
-      ("glTexEnvi", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Bool);
+   procedure Get_Tex_Env_Float (Target     : Enums.Textures.Env_Target;
+                                Param_Name : Enums.Textures.Env_Parameter;
+                                Value      : out Low_Level.Single);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Float,
+                  External_Name => "glGetTexEnvfv");
 
-   procedure Get_Tex_Env_Float is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnvfv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Single);
+   procedure Get_Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
+                                   Param_Name : Enums.Textures.Env_Parameter;
+                                   Value      : out Environment.Textures.Texture_Function);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Tex_Func,
+                  External_Name => "glGetTexEnviv");
 
-   procedure Get_Tex_Env_Tex_Func is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Texture_Function);
+   procedure Get_Tex_Env_Combine_Func (Target     : Enums.Textures.Env_Target;
+                                       Param_Name : Enums.Textures.Env_Parameter;
+                                       Value      : out Environment.Textures.Combine_Function);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Combine_Func,
+                  External_Name => "glGetTexEnviv");
 
-   procedure Get_Tex_Env_Combine_Func is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Combine_Function);
+   procedure Get_Tex_Env_Source (Target     : Enums.Textures.Env_Target;
+                                 Param_Name : Enums.Textures.Env_Parameter;
+                                 Value      : out Environment.Textures.Source_Kind);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Source,
+                  External_Name => "glGetTexEnviv");
 
-   procedure Get_Tex_Env_Source is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Environment.Textures.Source_Kind);
+   procedure Get_Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
+                              Param_Name : Enums.Textures.Env_Parameter;
+                              Value      : in out Low_Level.Single_Array);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Arr,
+                    External_Name => "glGetTexEnvfv");
 
-   procedure Get_Tex_Env_Arr is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnvfv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Single_Array);
-
-   procedure Get_Tex_Env_Bool is new Low_Level.Loader.Getter_With_3_Params
-      ("glGetTexEnviv", Enums.Textures.Env_Target, Enums.Textures.Env_Parameter,
-       Low_Level.Bool);
+   procedure Get_Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
+                               Param_Name : Enums.Textures.Env_Parameter;
+                               Value      : out Low_Level.Bool);
+   pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Bool,
+                  External_Name => "glGetTexEnviv");
 end GL.API;
