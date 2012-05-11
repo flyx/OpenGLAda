@@ -39,7 +39,10 @@ private package GL.API is
    -- but loaded with GL.Low_Level.Loader at runtime.
    --
    -- Also, all functions that have been deprecated with OpenGL 3.0
-   -- will not be statically bound, as they may be omitted by implementors.
+   -- will not be statically bound, as they may be omitted by implementors
+   -- when they choose to only implement the OpenGL Core Profile.
+   
+   subtype Zero is Low_Level.Int range 0 .. 0;
 
    function Get_Error return Enums.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_Error,
@@ -137,39 +140,30 @@ private package GL.API is
    --              Immediate API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
-   procedure GL_Begin (Mode : Immediate.Connection_Mode);
-   pragma Import (Convention => StdCall, Entity => GL_Begin,
-                  External_Name => "glBegin");
+   procedure GL_Begin is new Low_Level.Loader.Procedure_With_1_Param
+      ("glBegin", Immediate.Connection_Mode);
+
+   procedure GL_End is new Low_Level.Loader.Procedure_Without_Params
+      ("glEnd");
    
-   procedure GL_End;
-   pragma Import (Convention => StdCall, Entity => GL_End,
-                  External_Name => "glEnd");
+   procedure Vertex is new Low_Level.Loader.Procedure_With_1_Param
+      ("glVertex4dv", Vectors.Vector);
 
-   procedure Vertex (Value : Vectors.Vector);
-   pragma Import (Convention => StdCall, Entity => Vertex,
-                  External_Name => "glVertex4dv");
+   procedure Color is new Low_Level.Loader.Procedure_With_1_Param
+      ("glColor4dv", Colors.Color);
+   
+   procedure Secondary_Color is new Low_Level.Loader.Procedure_With_1_Param
+      ("glSecondaryColor3dv", Colors.Basic_Color);
 
-   procedure Color (Value : Colors.Color);
-   pragma Import (Convention => StdCall, Entity => Color,
-                  External_Name => "glColor4dv");
-
-   procedure Secondary_Color (Value : Colors.Basic_Color);
-   pragma Import (Convention => StdCall, Entity => Secondary_Color,
-                  External_Name => "glSecondaryColor3dv");
-
-   -- UNAVAILABLE IN SOME DRIVERS
-   --procedure Fog_Coord (Distance : Low_Level.Double);
-   --pragma Import (Convention => StdCall, Entity => Fog_Coord,
-   --               External_Name => "glFogCoordd");
-
-   procedure Normal (Value : Normals.Normal);
-   pragma Import (Convention => StdCall, Entity => Normal,
-                  External_Name => "glNormal3dv");
-
-   procedure Tex_Coord (Value : Vectors.Vector);
-   pragma Import (Convention => StdCall, Entity => Tex_Coord,
-                  External_Name => "glTexCoord4dv");
-
+   procedure Fog_Coord is new Low_Level.Loader.Procedure_With_1_Param
+      ("glFogCoordd", Low_Level.Double);
+   
+   procedure Normal is new Low_Level.Loader.Procedure_With_1_Param
+      ("glNormal3dv", Normals.Normal);
+   
+   procedure Tex_Coord is new Low_Level.Loader.Procedure_With_1_Param
+      ("glTexCoord4dv", Vectors.Vector);
+   
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
@@ -181,6 +175,49 @@ private package GL.API is
    procedure Draw_Buffer (Mode : Buffers.Color_Buffer_Selector);
    pragma Import (Convention => StdCall, Entity => Draw_Buffer,
                   External_Name => "glDrawBuffer");
+   
+   procedure Clear_Color (Red, Green, Blue, Alpha : Colors.Component);
+   pragma Import (Convention => StdCall, Entity => Clear_Color,
+                  External_Name => "glClearColor");
+   
+   procedure Clear_Depth (Depth : Buffers.Depth);
+   pragma Import (Convention => StdCall, Entity => Clear_Depth,
+                  External_Name => "glClearDepth");
+   
+   procedure Clear_Stencil (Index : Buffers.Stencil_Index);
+   pragma Import (Convention => StdCall, Entity => Clear_Stencil,
+                  External_Name => "glClearStencil");
+   
+   -- dropped in OpenGL 3
+   procedure Clear_Accum is new Low_Level.Loader.Procedure_With_4_Params
+      ("glClearAccum", Colors.Component, Colors.Component, Colors.Component,
+       Colors.Component);
+   
+   procedure Clear_Buffer (Buffer      : Buffers.Color_Buffer_Selector;
+                           Draw_Buffer : Zero;
+                           Value       : Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Clear_Buffer,
+                  External_Name => "glClearBufferfv");
+   
+   procedure Clear_Buffer_Depth (Buffer      : Low_Level.Enums.Only_Depth_Buffer;
+                                 Draw_Buffer : Zero;
+                                 Value       : access constant Buffers.Depth);
+   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Depth,
+                  External_Name => "glClearBufferfv");
+   
+   procedure Clear_Buffer_Stencil (Buffer      : Low_Level.Enums.Only_Stencil_Buffer;
+                                   Draw_Buffer : Zero;
+                                   Value       : access constant Buffers.Stencil_Index);
+   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Stencil,
+                  External_Name => "glClearBufferiv");
+   
+   procedure Clear_Buffer_Depth_Stencil (
+      Buffer      : Low_Level.Enums.Only_Depth_Stencil_Buffer;
+      Draw_Buffer : Zero;
+      Depth       : Buffers.Depth;
+      Stencil     : Buffers.Stencil_Index);
+   pragma Import (Convention => StdCall, Entity => Clear_Buffer_Depth_Stencil,
+                  External_Name => "glClearBufferfi");
 
    -----------------------------------------------------------------------------
    --                                Textures                                 --
