@@ -17,12 +17,12 @@ The package provides setters and getters for parameters of the texture targets.
 You can look up the meaning and impact of those parameters in the corresponding
 section in the [OpenGL API reference](http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml).
 
-{% The following code example defines a texture ID, binds it to the 2D texture target,
+{* The following code example defines a texture ID, binds it to the 2D texture target,
 and sets some properties of the target. It then configures the environment and
 loads an empty texture. After doing something useful with the texture,
-it unregisters it again implicitly at the end of life of the variable `My_Id`. %}
+it unregisters it again implicitly at the end of life of the variable `My_Id`. *}
 
-{% TODO: update this code to use the new GL.Objects API
+{* TODO: update this code to use the new GL.Objects API
 declare
    My_Id : GL.Textures.Tex_2D_Id;
    use GL.Textures;
@@ -46,4 +46,4 @@ begin
    -- ... do something useful here
 end;
 
-%}
+*}

@@ -13,7 +13,7 @@ weight: 5
 
 This package is basically a wrapper for all OpenGL APIs that define and use objects.
 
-## Introduction: How OpenGL handles objects
+## Overview
 
 In OpenGL, an object is a set of properties. The OpenGL API for accessing objects
 is purely based on the __state machine__ paradigm: An object has to be __bound__
@@ -22,86 +22,68 @@ object class (e.g. textures), there can only one object be active. The propertie
 of this object can be accessed and modified with functions that do not take a
 reference to the object, as they automatically interact with the active object.
 
-Another curiosity is that we actually never see the object we create and interact
-with. All OpenGL provides is a (numeric) name for that object. We tell OpenGL what
-to do with a texture with some name, and OpenGL decides whether and when to actually
-create an object with that name.
-
-Let's have a look at how this API typically gets used in C / C++:
-
-{% highlight c++ %}
-void setupTexture() {
-   GLuint texture;
-
-   // get an unused name for the texture
-   glGenTextures(1, &texture);
-
-   // bind the name as current 2D texture.
-   // note that before this call, it was not determined which object the name would
-   // actually refer to - we could as well have made it a 3D texture.
-   glBindTexture(GL_TEXTURE_2D, texture);
-   
-   // set some property value of our object
-   // not that we do not reference the name of the object - we only refer to the
-   // object class (being GL_TEXTURE_2D) while knowing that our object currently
-   // is the active object and therefore gets assigned this property
-   glTexParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-
-   // ...
-}
-{% endhighlight %}
+OpenCLAda basically works the same way. Designing an alternative, simpler API has
+been considered and deem not to be suitable for a wrapper library. However, the
+handling of objects and targets is designed in a more object-oriented way.
 
 ## OpenGLAda's approach to objects
-
-OpenGL's API for objects is rather confusing (my personal optinion), so OpenGLAda
-tries to provide a higher-level interface for interacting with objects.
-
-The goals of OpenGLAda's approach to object interaction are:
-
- * Use object orientation as paradigm instead of OpenGL's state-machine paradigm.
- * Automatically handle memory management: When the last reference to an OpenGL
-   object is deleted, the OpenGL object gets destroyed.
- * Keep in mind that the higher level interface to the OpenGL API should not employ
-   mechanisms that would cause a performance loss - usually, performance is a
-   critical attribute of code that uses OpenGL.
 
 In OpenGLAda, OpenGL objects are tagged types derived from the abstract `GL_Object`
 type defined in this package. They implement reference counting to automatically
 delete unused objects from OpenGL memory. This is achieved with controlled types.
 So, actually, all object types are just references and should be handles as such.
+This guide will subsequently refer to instances of these tagged types as
+_object references_, while _OpenGL objects_ are the real allocated memory on the
+graphics card.
+
+The targets where objects can be bound are also implemented as tagged types.
+However, you cannot create any targed instances. Instead, the available target
+instances are provided as constants in the corresponding package.
+
+All targets implement a procedure `Bind`, which binds the object referred by an
+object reference to the target as raw OpenGL would do it. Additionally, `Bind`
+protects the OpenGL object from deletion - as long as an object is bound, it will
+not be deleted, even if there are no more references to the object in your code.
 
 ## Usage
 
-When you define a new variable holding an OpenGL object references and do
+When you define a new variable holding an OpenGL object reference and do
 not initialize it, it automatically gets assigned a unique name from OpenGL.
 Don't worry - there will be no object created as long as you do not bind your
-object reference. Any call to an operation on the object will cause it to be
-bound as active object. You should keep this in mind, as is it a side effect
-of all these operations. You can also explicitly call `Bind`.
+object reference.
 
-The code above might look like this with OpenGLAda:
+To use the object, you have to bind it to a target and use the methods of this
+target to configure the currently bound object. The code might look like this:
 
 {% highlight ada %}
 declare
    use GL.Objects.Textures;
-   My_Texture : Texture (Kind => Texture_1D);
+   My_Texture, My_Other_Texture : Texture;
 begin
-   -- at this call, the texture automatically gets bound
-   My_Texture.Set_Minifying_Filter (Linear_Mipmap_Nearest);
+   -- Bind the texture to a target
+   -- (Note that the texture's type is determined by the target it get
+   -- bound to. You should not bind the texture to another target afterwards)
+   Texture_2D.Bind (My_Texture);
+   
+   Texture_2D.Set_Minifying_Filter (Linear_Mipmap_Nearest);
    -- do something useful here
    -- ...
    
+   Texture_2D.Bind (My_Other_Texture);
+   
    -- if you did not copy the value of My_Texture, the OpenGL texture
-   -- that has been created for My_Texture gets destroyed at this point.
+   -- that is referenced by My_Texture gets destroyed at this point.
+   -- The object referenced by My_Other_Texture lives on, as it is
+   -- the currently bound texture to the target Texture_2D.
 end;
 {% endhighlight %}
+
+You can query a reference to the currently bound object by calling
+`Current_[Descriptor]` on a target, where `[Descriptor]` is the type of the
+actual object (e.g. _Texture_).  
 
 ## Low-level access
 
 If for some reason you need to access the name of the object that is used in
-OpenGL, you can retrieve it with `Raw_Id`. This function is an exception to
-the rule that every operation on the object will cause it to get bound - it
-will not bind the object or do anything else with it.
-
-The raw ID might be useful when you interact with other OpenGL-related
-libraries.
+OpenGL, you can retrieve it with `Raw_Id`. The raw ID might be useful when
+you interact with other OpenGL-related libraries.
