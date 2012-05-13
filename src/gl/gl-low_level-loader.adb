@@ -186,6 +186,40 @@ package body GL.Low_Level.Loader is
       end if;
    end Procedure_With_6_Params;
 
+   procedure Array_Proc_With_2_Params (Param1 : SizeI;
+                                       Param2 : Array_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : SizeI;
+                          Param2 : Array_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+      else
+         Reference (Param1, Param2);
+      end if;
+   end Array_Proc_With_2_Params;                               
+
+   procedure Getter_With_2_Params (Param1 : Param1_Type;
+                                   Value  : in out Value_Type) is
+      type Procedure_Reference is
+         access procedure (Param1 : Param1_Type;
+                           Param2 : in out Value_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+      else
+         Reference (Param1, Value);
+      end if;
+   end Getter_With_2_Params;
+
    procedure Getter_With_3_Params (Param1 : Param1_Type;
                                    Param2 : Param2_Type;
                                    Value  : in out Value_Type) is

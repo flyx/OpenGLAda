@@ -106,11 +106,27 @@ package GL.Low_Level.Loader is
    generic
       GL_Procedure_Name : String;
       type Param1_Type is private;
+      type Value_Type  (<>) is private;
+   procedure Getter_With_2_Params (Param1 : Param1_Type;
+                                   Value  : in out Value_Type);
+   pragma Inline (Getter_With_2_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
       type Param2_Type is private;
       type Value_Type  (<>) is private;
    procedure Getter_With_3_Params (Param1 : Param1_Type;
                                    Param2 : Param2_Type;
                                    Value  : in out Value_Type);
+   pragma Inline (Getter_With_3_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Element_Type is private;
+      type Array_Type is array (Positive range <>) of Element_Type;
+   procedure Array_Proc_With_2_Params (Param1 : SizeI;
+                                       Param2 : Array_Type);
 
 private
    generic

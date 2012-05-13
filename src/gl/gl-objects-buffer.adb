@@ -14,24 +14,56 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package body GL.Objects.Buffer is
+with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Unchecked_Conversion;
 
-   procedure Bind (Object : GL_Object; Target : Buffer_Target) is
+with GL.API;
+
+package body GL.Objects.Buffer is
+   use type Low_Level.Enums.Buffer_Kind;
+   use type Low_Level.UInt;
+
+   function Hash (Key : Low_Level.Enums.Buffer_Kind)
+     return Ada.Containers.Hash_Type is
+      function Value is new Ada.Unchecked_Conversion
+        (Source => Low_Level.Enums.Buffer_Kind, Target => Low_Level.Enum);
    begin
-      -- TODO
-      null;
+      return Ada.Containers.Hash_Type (Value (Key));
+   end Hash;
+   
+   package Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+      (Key_Type     => Low_Level.Enums.Buffer_Kind,
+       Element_Type => Buffer_Object,
+       Hash         => Hash,
+       Equivalent_Keys => Low_Level.Enums."=");
+   use type Buffer_Maps.Cursor;
+   
+   Current_Buffers : Buffer_Maps.Map;
+   
+
+   procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class) is
+      Cursor : Buffer_Maps.Cursor := Current_Buffers.Find (Target.Kind);
+   begin
+      if Cursor /= Buffer_Maps.No_Element and then
+        Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
+         API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
+         Current_Buffers.Replace_Element (Cursor, Buffer_Object (Object));
+      end if;
    end Bind;
 
    overriding procedure Create_Id (Object : in out Buffer_Object) is
+      New_Id : Low_Level.UInt := 0;
    begin
-      -- TODO
-      null;
+      API.Gen_Buffers (1, New_Id);
+      Check_OpenGL_Error;
+      Object.Reference.GL_Id := New_Id;
    end Create_Id;
 
    overriding procedure Delete_Id (Object : in out Buffer_Object) is
    begin
-      -- TODO
-      null;
+      API.Delete_Buffers (1, (1 => Object.Reference.GL_Id));
+      Check_OpenGL_Error;
    end Delete_Id;
 
 end GL.Objects.Buffer;

@@ -434,4 +434,18 @@ private package GL.API is
                                Value      : out Low_Level.Bool);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Bool,
                   External_Name => "glGetTexEnviv");
+   
+   -----------------------------------------------------------------------------
+   --                             Buffer Objects                              --
+   -----------------------------------------------------------------------------
+   
+   procedure Gen_Buffers is new Low_Level.Loader.Getter_With_2_Params
+      ("glGenBuffers", Low_Level.SizeI, Low_Level.UInt);
+   
+   procedure Delete_Buffers is new Low_Level.Loader.Array_Proc_With_2_Params
+      ("glDeleteBuffers", Low_Level.UInt, Low_Level.UInt_Array);
+   
+   procedure Bind_Buffer is new Low_Level.Loader.Procedure_With_2_Params
+      ("glBindBuffer", Low_Level.Enums.Buffer_Kind, Low_Level.UInt);
+   
 end GL.API;

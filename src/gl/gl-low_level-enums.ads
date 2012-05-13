@@ -17,6 +17,12 @@
 package GL.Low_Level.Enums is
    type Texture_Kind is (Texture_1D, Texture_2D, Texture_3D, Texture_Cube_Map);
    
+   type Buffer_Kind is (Array_Buffer, Element_Array_Buffer, Pixel_Pack_Buffer,
+                        Pixel_Unpack_Buffer, Uniform_Buffer, Texture_Buffer,
+                        Transform_Feedback_Buffer, Copy_Read_Buffer,
+                        Copy_Write_Buffer, Draw_Indirect_Buffer,
+                        Atomic_Counter_Buffer);
+   
    type Draw_Buffer_Index is (DB0, DB1, DB2, DB3, DB4, DB5, DB6, DB7,
       DB8, DB9, DB10, DB11, DB12, DB13, DB14, DB15);
       
@@ -29,6 +35,19 @@ private
                          Texture_3D       => 16#806F#,
                          Texture_Cube_Map => 16#8513#);
    for Texture_Kind'Size use Enum'Size;
+   
+   for Buffer_Kind use (Array_Buffer              => 16#8892#,
+                        Element_Array_Buffer      => 16#8893#,
+                        Pixel_Pack_Buffer         => 16#88EB#,
+                        Pixel_Unpack_Buffer       => 16#88EC#,
+                        Uniform_Buffer            => 16#8A11#,
+                        Texture_Buffer            => 16#8C2A#,
+                        Transform_Feedback_Buffer => 16#8C8E#,
+                        Copy_Read_Buffer          => 16#8F36#,
+                        Copy_Write_Buffer         => 16#8F37#,
+                        Draw_Indirect_Buffer      => 16#8F3F#,
+                        Atomic_Counter_Buffer     => 16#92C0#);
+   for Buffer_Kind'Size use Enum'Size;
    
    for Draw_Buffer_Index use (DB0  => 16#8825#,
                               DB1  => 16#8826#,

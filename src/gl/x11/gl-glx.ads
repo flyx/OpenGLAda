@@ -15,7 +15,9 @@
 --------------------------------------------------------------------------------
 
 with System;
-with Interfaces.C;
+with Interfaces.C.Strings;
+
+with GL.Low_Level;
 
 -- This package is incomplete. As I do not develop or test under Linux, this
 -- has very low priority. Perhaps someone wants to help out...

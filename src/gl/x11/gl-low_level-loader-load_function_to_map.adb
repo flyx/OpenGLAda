@@ -23,7 +23,7 @@ procedure Load_Function_To_Map (GL_Function_Name : String;
    GL_Function_Name_C : Interfaces.C.Strings.chars_ptr
      := Interfaces.C.Strings.New_String (GL_Function_Name);
 
-   Result : System.Address := WGL.wglGetProcAddress (GL_Function_Name_C);
+   Result : System.Address := GLX.Get_Proc_Address (GL_Function_Name_C);
 
    Inserted : Boolean;
 begin
