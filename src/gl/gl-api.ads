@@ -27,6 +27,7 @@ with GL.Normals;
 with GL.Buffers;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Loader_2D;
+with GL.Objects.Buffer;
 with GL.Pixel_Data;
 with GL.Environment.Textures;
 with GL.Common;
@@ -447,5 +448,9 @@ private package GL.API is
    
    procedure Bind_Buffer is new Low_Level.Loader.Procedure_With_2_Params
       ("glBindBuffer", Low_Level.Enums.Buffer_Kind, Low_Level.UInt);
+   
+   procedure Buffer_Data is new Low_Level.Loader.Procedure_With_4_Params
+      ("glBufferData", Low_Level.Enums.Buffer_Kind, Low_Level.SizeIPtr,
+       System.Address, Objects.Buffer.Buffer_Usage);
    
 end GL.API;

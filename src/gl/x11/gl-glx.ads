@@ -24,7 +24,6 @@ with GL.Low_Level;
 package GL.GLX is
    --  needed types from Xlib
    type XID is new Interfaces.C.unsigned_long;
-   subtype Bool is Low_Level.Bool;
 
    type GLX_Context is new System.Address;
    Null_Context : constant GLX_Context := GLX_Context (System.Null_Address);
@@ -52,22 +51,22 @@ package GL.GLX is
    type X_Visual_Info_Pointer is access all X_Visual_Info;
    pragma Convention (C, X_Visual_Info_Pointer);
 
-   function GLX_Create_Context (Display    : Display_Pointer;
-                                Visual     : X_Visual_Info_Pointer;
-                                Share_List : GLX_Context;
-                                Direct     : Bool)
-                                return GLX_Context;
+   function Create_Context (Display    : Display_Pointer;
+                            Visual     : X_Visual_Info_Pointer;
+                            Share_List : GLX_Context;
+                            Direct     : Low_Level.Bool)
+                            return GLX_Context;
 
-   function GLX_Make_Current (Display  : Display_Pointer;
-                              Drawable : GLX_Drawable;
-                              Context  : GLX_Context)
-                              return Bool;
+   function Make_Current (Display  : Display_Pointer;
+                          Drawable : GLX_Drawable;
+                          Context  : GLX_Context)
+                          return Low_Level.Bool;
 
-   function GLX_Make_Context_Current (Display  : Display_Pointer;
-                                      Draw     : GLX_Drawable;
-                                      Read     : GLX_Drawable;
-                                      Context  : GLX_Context)
-                                      return Bool;
+   function Make_Context_Current (Display  : Display_Pointer;
+                                  Draw     : GLX_Drawable;
+                                  Read     : GLX_Drawable;
+                                  Context  : GLX_Context)
+                                  return Low_Level.Bool;
 
    function Get_Current_Context return System.Address;
 
@@ -78,9 +77,9 @@ package GL.GLX is
 
 private
 
-   pragma Import (C, GLX_Create_Context, "glXCreateContext");
-   pragma Import (C, GLX_Make_Current, "glXMakeCurrent");
-   pragma Import (C, GLX_Make_Context_Current, "glXMakeContextCurrent");
+   pragma Import (C, Create_Context, "glXCreateContext");
+   pragma Import (C, Make_Current, "glXMakeCurrent");
+   pragma Import (C, Make_Context_Current, "glXMakeContextCurrent");
    pragma Import (C, Get_Current_Context, "glXGetCurrentContext");
    pragma Import (C, Get_Current_Display, "glXGetCurrentDisplay");
    pragma Import (C, Get_Proc_Address, "glXGetProcAddress");

@@ -18,11 +18,26 @@ private with GL.Low_Level.Enums;
 
 package GL.Objects.Buffer is
    
+   type Buffer_Usage is (Stream_Draw, Stream_Read, Stream_Copy,
+                         Static_Draw, Static_Read, Static_Copy,
+                         Dynamic_Draw, Dynamic_Read, Dynamic_Copy);
+   
    type Buffer_Target (<>) is tagged private;
    
    type Buffer_Object is abstract new GL_Object with private;
    
    procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class);
+   
+   -- Element_Type and Array_Type should use the pragma Convention (C).
+   generic
+      type Element_Type is private;
+      type Array_Type is array (Integer range <>) of Element_Type;
+   procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
+                             Usage  : Buffer_Usage);
+   
+   -- Use this instead of Load_To_Buffer when you don't want to copy any data
+   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
+                       Usage  : Buffer_Usage);
    
    Array_Buffer              : constant Buffer_Target;
    Element_Array_Buffer      : constant Buffer_Target;
@@ -37,6 +52,17 @@ package GL.Objects.Buffer is
    Atomic_Counter_Buffer     : constant Buffer_Target;
    
 private
+   for Buffer_Usage use (Stream_Draw  => 16#88E0#,
+                         Stream_Read  => 16#88E1#,
+                         Stream_Copy  => 16#88E2#,
+                         Static_Draw  => 16#88E4#,
+                         Static_Read  => 16#88E5#,
+                         Static_Copy  => 16#88E6#,
+                         Dynamic_Draw => 16#88E8#,
+                         Dynamic_Read => 16#88E9#,
+                         Dynamic_Copy => 16#88EA#);
+   for Buffer_Usage'Size use Low_Level.Enum'Size;
+
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is tagged null record;
 
    type Buffer_Object is new GL_Object with null record;

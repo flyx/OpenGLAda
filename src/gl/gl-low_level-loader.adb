@@ -43,6 +43,12 @@ package body GL.Low_Level.Loader is
    begin
       if Position = Function_Maps.No_Element then
          Load_Function_To_Map (GL_Function_Name, Position);
+         if Position = Function_Maps.No_Element then
+            Load_Function_To_Map (GL_Function_Name & "ARB", Position);
+            if Position = Function_Maps.No_Element then
+               Load_Function_To_Map (GL_Function_Name & "EXT", Position);
+            end if;
+         end if;
       end if;
       return As_Function_Reference (Function_Maps.Element (Position));
    end Load;

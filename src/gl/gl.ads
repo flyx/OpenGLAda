@@ -19,9 +19,10 @@ with Interfaces.C;
 package GL is
    package C renames Interfaces.C;
 
-   -- Used where high precision is wanted. If high precision is not required,
-   -- Standard.Float is used for simplicity.
-   subtype Real is Interfaces.C.double;
+   -- Primary floating point type (double precision)
+   subtype Real is C.double;
+   -- Type for large numbers
+   subtype Long is C.long;
 
    type Float_Precision is (Single, Double);   
 

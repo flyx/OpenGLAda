@@ -17,11 +17,14 @@
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Unchecked_Conversion;
 
+with System;
+
 with GL.API;
 
 package body GL.Objects.Buffer is
    use type Low_Level.Enums.Buffer_Kind;
    use type Low_Level.UInt;
+   use type Long;
 
    function Hash (Key : Low_Level.Enums.Buffer_Kind)
      return Ada.Containers.Hash_Type is
@@ -48,9 +51,27 @@ package body GL.Objects.Buffer is
         Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
         then
          API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
+         Check_OpenGL_Error;
          Current_Buffers.Replace_Element (Cursor, Buffer_Object (Object));
       end if;
    end Bind;
+   
+   procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
+                             Usage  : Buffer_Usage) is
+   begin
+      API.Buffer_Data (Target.Kind,
+        Element_Type'Size * Data'Length / System.Storage_Unit,
+        Data (Data'First)'Address, Usage);
+      Check_OpenGL_Error;
+   end Load_To_Buffer;
+   
+   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
+      Usage  : Buffer_Usage) is
+   begin
+      API.Buffer_Data (Target.Kind, Number_Of_Bytes, System.Null_Address,
+                       Usage);
+      Check_OpenGL_Error;
+   end Allocate;
 
    overriding procedure Create_Id (Object : in out Buffer_Object) is
       New_Id : Low_Level.UInt := 0;
