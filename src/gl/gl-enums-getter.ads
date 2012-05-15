@@ -14,9 +14,9 @@
 -- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -------------------------------------------------------------------------------
----
 
 package GL.Enums.Getter is
+   pragma Preelaborate;
 
    type Parameter is (
       Current_Color,

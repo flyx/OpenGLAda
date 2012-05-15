@@ -17,6 +17,7 @@
 private with GL.Low_Level.Enums;
 
 package GL.Objects.Buffer is
+   pragma Preelaborate;
    
    type Buffer_Usage is (Stream_Draw, Stream_Read, Stream_Copy,
                          Static_Draw, Static_Read, Static_Copy,
@@ -24,9 +25,11 @@ package GL.Objects.Buffer is
    
    type Buffer_Target (<>) is tagged private;
    
-   type Buffer_Object is abstract new GL_Object with private;
+   type Buffer_Object is new GL_Object with private;
    
    procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class);
+   
+   function Current_Object (Target : Buffer_Target) return Buffer_Object'Class;
    
    -- Element_Type and Array_Type should use the pragma Convention (C).
    generic

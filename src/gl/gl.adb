@@ -18,7 +18,28 @@ with GL.API;
 with GL.Enums;
 
 package body GL is
+   -----------------------------------------------------------------------------
+   --                              Global state                               --
+   -----------------------------------------------------------------------------
+   
+   Error_Checking_Enabled   : Boolean := True;
+   Error_Checking_Suspended : Boolean := False;
+   Requested_Precision    : Float_Precision := Double;
+   
+   -----------------------------------------------------------------------------
+   --                            Implementations                              --
+   -----------------------------------------------------------------------------
+   
+   procedure Flush is
+   begin
+      API.Flush;
+   end Flush;
 
+   procedure Finish is
+   begin
+      API.Finish;
+   end Finish;
+   
    procedure Toggle_Error_Checking (Enabled : Boolean) is
    begin
       Error_Checking_Enabled := Enabled;
@@ -28,16 +49,6 @@ package body GL is
    begin
       Requested_Precision := Precision;
    end Toggle_Precision;
-
-   procedure Flush is
-   begin
-      API.Flush;
-   end Flush;
-   
-   procedure Finish is
-   begin
-      API.Finish;
-   end Finish;
 
    procedure Check_OpenGL_Error is
    begin
@@ -53,5 +64,15 @@ package body GL is
    exception
          when Constraint_Error => raise Internal_Error;
    end Check_OpenGL_Error;
+   
+   procedure Suspend_Error_Checking is
+   begin
+      Error_Checking_Suspended := True;
+   end Suspend_Error_Checking;
+   
+   procedure Resume_Error_Checking is
+   begin
+      Error_Checking_Suspended := False;
+   end Resume_Error_Checking;
 
 end GL;

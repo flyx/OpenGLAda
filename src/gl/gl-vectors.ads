@@ -14,33 +14,27 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
-
+generic
+   type Index_Type is (<>);
 package GL.Vectors is
-   type Vector_Index is (X, Y, Z, W);
-
-   -- This is a vector in homogeneous coordinates. All operations on the vector
-   -- consider (X, Y, Z) as the actual 3D-vector and W as the homogeneous
-   -- component. In other words: If W = 1, the operations will work exactly as
-   -- if the input were pure 3D vectors and the W component of the result will
-   -- be 1.
-   type Vector is array (Vector_Index) of aliased Real;
-
+   pragma Preelaborate;
+   
+   type Vector is array (Index_Type) of aliased Real;
+   
    function "+" (Left, Right : Vector) return Vector;
-
+   
    function "-" (Left, Right : Vector) return Vector;
-
-   function "*" (Left : Vector;  Right : Integer) return Vector;
+   function "-" (Left : Vector) return Vector;
+   
    function "*" (Left : Vector;  Right : Real)    return Vector;
-   function "*" (Left : Integer; Right : Vector)  return Vector;
    function "*" (Left : Real;    Right : Vector)  return Vector;
-
-   function "/" (Left : Vector; Right : Integer) return Vector;
+   
    function "/" (Left : Vector; Right : Real) return Vector;
-
-   -- Will raise Constraint_Error when W = 0.
-   function Normalize (Source : Vector) return Vector;
-
-private
+   
+   pragma Inline ("+");
+   pragma Inline ("-");
+   pragma Inline ("*");
+   pragma Inline ("/");
+   
    pragma Convention (C, Vector);
 end GL.Vectors;

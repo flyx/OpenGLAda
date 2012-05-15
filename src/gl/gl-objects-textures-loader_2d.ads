@@ -19,6 +19,7 @@ with GL.Pixel_Data;
 private with GL.Low_Level;
 
 package GL.Objects.Textures.Loader_2D is
+   pragma Preelaborate;
 
    type Target_Kind is (TX_2D, Proxy_2D, Cube_Map_Positive_X, Cube_Map_Negative_X,
                         Cube_Map_Positive_Y, Cube_Map_Negative_Y,

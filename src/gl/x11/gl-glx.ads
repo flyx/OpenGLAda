@@ -22,11 +22,12 @@ with GL.Low_Level;
 -- This package is incomplete. As I do not develop or test under Linux, this
 -- has very low priority. Perhaps someone wants to help out...
 package GL.GLX is
+   pragma Preelaborate;
+
    --  needed types from Xlib
    type XID is new Interfaces.C.unsigned_long;
 
    type GLX_Context is new System.Address;
-   Null_Context : constant GLX_Context := GLX_Context (System.Null_Address);
 
    type GLX_Drawable    is new XID;
    type Screen_Depth    is new Natural;

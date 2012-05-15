@@ -23,6 +23,7 @@ with GL.Common;
 private with GL.Enums.Textures;
 
 package GL.Objects.Textures is
+   pragma Preelaborate;
 
    -----------------------------------------------------------------------------
    --                            Basic Types                                  --

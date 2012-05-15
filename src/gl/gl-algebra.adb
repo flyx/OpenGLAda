@@ -14,20 +14,36 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
-
-package GL.Colors is
-   pragma Preelaborate;
+package body GL.Algebra is
    
-   type Color_Index is (R, G, B, A);
-   subtype Basic_Color_Index is Color_Index range R .. B;
-
-   subtype Component is Low_Level.Single range 0.0 .. 1.0;
-
-   type Color is array (Color_Index) of aliased Component;
-   type Basic_Color is array (Basic_Color_Index) of Component;
-
-private
-   pragma Convention (C, Color);
-   pragma Convention (C, Basic_Color);
-end GL.Colors;
+   function To_Vector2 (Vector : Vector3) return Vector2 is
+   begin
+      return Vector2'(Vector (X), Vector (Y));
+   end To_Vector2;
+   
+   function To_Vector2 (Vector : Vector4) return Vector2 is
+   begin
+      return Vector2'(Vector (X), Vector (Y));
+   end To_Vector2;
+   
+   function To_Vector3 (Vector : Vector2) return Vector3 is
+   begin
+      return Vector3'(Vector (X), Vector (Y), 0.0);
+   end To_Vector3;
+   
+   function To_Vector3 (Vector : Vector4) return Vector3 is
+   begin
+      return Vector3'(Vector (X), Vector (Y), Vector (Z));
+   end To_Vector3;
+   
+   function To_Vector4 (Vector : Vector2) return Vector4 is
+   begin
+      return Vector4'(Vector (X), Vector (Y), 0.0, 1.0);
+   end To_Vector4;
+   
+   function To_Vector4 (Vector : Vector3) return Vector4 is
+   begin
+      return Vector4'(Vector (X), Vector (Y), Vector (Z), 1.0);
+   end To_Vector4;
+   
+end GL.Algebra;

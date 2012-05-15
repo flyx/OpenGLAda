@@ -17,6 +17,8 @@
 with Interfaces.C.Strings;
 with System;
 private package GL.Mac_OS_X is
+   pragma Preelaborate;
+   
    -- package for MacOSX-specific stuff
       
    package IFC renames Interfaces.C.Strings;
@@ -30,9 +32,7 @@ private package GL.Mac_OS_X is
    for CFStringEncoding'Size use 32;
    
    kCFStringEncodingASCII : constant CFStringEncoding := 16#0600#;
-   
-   kCFAllocatorDefault : constant CFAllocatorRef := System.Null_Address;
-   
+      
    function CFBundleGetBundleWithIdentifier (bundleID : CFStringRef)
      return CFBundleRef;
    pragma Import (Convention => C, Entity => CFBundleGetBundleWithIdentifier,
@@ -54,12 +54,8 @@ private package GL.Mac_OS_X is
    procedure CFRelease (cf : System.Address);
    pragma Import (Convention => C, Entity => CFRelease,
                   External_Name => "CFRelease");
+      
+   function OpenGLFramework return CFBundleRef;
    
-   OpenGLFramework_ID : constant CFStringRef
-     := CFStringCreateWithCString (kCFAllocatorDefault,
-                                   IFC.New_String ("com.apple.opengl"),
-                                   kCFStringEncodingASCII);
    
-   OpenGLFramework : constant CFBundleRef
-     := CFBundleGetBundleWithIdentifier (OpenGLFramework_ID);
 end GL.Mac_OS_X;

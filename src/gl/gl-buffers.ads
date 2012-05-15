@@ -18,6 +18,7 @@ with GL.Colors;
 with GL.Low_Level;
 
 package GL.Buffers is
+   pragma Preelaborate;
    
    type Buffer_Bits is record
       Depth   : Boolean := False;
@@ -26,7 +27,7 @@ package GL.Buffers is
       Color   : Boolean := False;
    end record;
    
-   subtype Depth is Low_Level.Double range 0.0 .. 1.0;
+   subtype Depth is Real range 0.0 .. 1.0;
    
    subtype Stencil_Index is Low_Level.Int;
    

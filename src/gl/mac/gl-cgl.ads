@@ -22,6 +22,7 @@ with Interfaces.C.Strings;
 with GL.Low_Level;
 
 package GL.CGL is
+   pragma Preelaborate;
 
    --  CGL types and constants
 

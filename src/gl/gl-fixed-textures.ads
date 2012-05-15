@@ -17,7 +17,8 @@
 with GL.Low_Level;
 with GL.Colors;
 
-package GL.Environment.Textures is
+package GL.Fixed.Textures is
+   pragma Preelaborate;
 
    type Texture_Function is (Add, Blend, Replace, Modulate, Decal, Combine);
    type Combine_Function is (Add, Replace, Modulate, Subtract, Add_Signed,
@@ -87,4 +88,4 @@ private
                         Previous      => 16#8578#);
    for Source_Kind'Size use Low_Level.Enum'Size;
 
-end GL.Environment.Textures;
+end GL.Fixed.Textures;

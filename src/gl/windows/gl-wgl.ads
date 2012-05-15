@@ -36,6 +36,7 @@ with Interfaces.C.Extensions;
 with System;
 
 package GL.WGL is
+   pragma Preelaborate;
 
    WGL_FONT_LINES                 : constant := 8#0000#;
    WGL_FONT_POLYGONS              : constant := 1;

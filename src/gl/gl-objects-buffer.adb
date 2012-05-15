@@ -24,7 +24,6 @@ with GL.API;
 package body GL.Objects.Buffer is
    use type Low_Level.Enums.Buffer_Kind;
    use type Low_Level.UInt;
-   use type Long;
 
    function Hash (Key : Low_Level.Enums.Buffer_Kind)
      return Ada.Containers.Hash_Type is
@@ -33,43 +32,58 @@ package body GL.Objects.Buffer is
    begin
       return Ada.Containers.Hash_Type (Value (Key));
    end Hash;
-   
+
    package Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type     => Low_Level.Enums.Buffer_Kind,
        Element_Type => Buffer_Object,
        Hash         => Hash,
        Equivalent_Keys => Low_Level.Enums."=");
    use type Buffer_Maps.Cursor;
-   
+
    Current_Buffers : Buffer_Maps.Map;
-   
+
 
    procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class) is
       Cursor : Buffer_Maps.Cursor := Current_Buffers.Find (Target.Kind);
    begin
-      if Cursor /= Buffer_Maps.No_Element and then
+      if Cursor = Buffer_Maps.No_Element or else
         Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
         then
          API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
          Check_OpenGL_Error;
-         Current_Buffers.Replace_Element (Cursor, Buffer_Object (Object));
+         if Cursor = Buffer_Maps.No_Element then
+            Current_Buffers.Insert (Target.Kind, Buffer_Object (Object));
+         else
+            Current_Buffers.Replace_Element (Cursor, Buffer_Object (Object));
+         end if;
       end if;
    end Bind;
-   
+
+   function Current_Object (Target : Buffer_Target) return Buffer_Object'Class is
+      Cursor : Buffer_Maps.Cursor := Current_Buffers.Find (Target.Kind);
+   begin
+      if Cursor /= Buffer_Maps.No_Element then
+         return Buffer_Maps.Element (Cursor);
+      else
+         raise No_Object_Bound_Exception with Target.Kind'Img;
+      end if;
+   end Current_Object;
+
    procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
                              Usage  : Buffer_Usage) is
+      use type C.long;
    begin
       API.Buffer_Data (Target.Kind,
         Element_Type'Size * Data'Length / System.Storage_Unit,
         Data (Data'First)'Address, Usage);
       Check_OpenGL_Error;
    end Load_To_Buffer;
-   
+
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
       Usage  : Buffer_Usage) is
    begin
-      API.Buffer_Data (Target.Kind, Number_Of_Bytes, System.Null_Address,
-                       Usage);
+      API.Buffer_Data (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
+                       System.Null_Address, Usage);
       Check_OpenGL_Error;
    end Allocate;
 

@@ -18,7 +18,7 @@ with GL.Enums.Textures;
 with GL.Helpers;
 with GL.API;
 
-package body GL.Environment.Textures is
+package body GL.Fixed.Textures is
 
    procedure Set_Tex_Function (Func : Texture_Function) is
    begin
@@ -201,4 +201,4 @@ package body GL.Environment.Textures is
       return Boolean (Ret);
    end Point_Sprite_Coord_Replace;
 
-end GL.Environment.Textures;
+end GL.Fixed.Textures;

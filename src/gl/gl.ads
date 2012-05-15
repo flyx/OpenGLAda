@@ -17,12 +17,25 @@
 with Interfaces.C;
 
 package GL is
+   pragma Preelaborate;
+   
    package C renames Interfaces.C;
+   
+   -----------------------------------------------------------------------------
+   --                                 Basics                                  --
+   -----------------------------------------------------------------------------
 
    -- Primary floating point type (double precision)
    subtype Real is C.double;
    -- Type for large numbers
    subtype Long is C.long;
+   
+   procedure Flush;
+   procedure Finish;
+   
+   -----------------------------------------------------------------------------
+   --                             Configuration                               --
+   -----------------------------------------------------------------------------
 
    type Float_Precision is (Single, Double);   
 
@@ -40,20 +53,8 @@ package GL is
    -- vertex transfers to OpenGL.
    procedure Toggle_Precision (Precision : Float_Precision);
 
-   procedure Flush;
-   
-   procedure Finish;
-
 private
    use type Real;
-
-   -----------------------------------------------------------------------------
-   --                              Global state                               --
-   -----------------------------------------------------------------------------
-
-   Error_Checking_Enabled   : Boolean := True;
-   Error_Checking_Suspended : Boolean := False;
-   Requested_Precision    : Float_Precision := Double;
 
    -----------------------------------------------------------------------------
    --                           Internal functions                            --
@@ -61,5 +62,11 @@ private
 
    procedure Check_OpenGL_Error;
    pragma Inline (Check_OpenGL_Error);
+   
+   procedure Suspend_Error_Checking;
+   procedure Resume_Error_Checking;
+   
+   pragma Inline (Suspend_Error_Checking);
+   pragma Inline (Resume_Error_Checking);
 
 end GL;

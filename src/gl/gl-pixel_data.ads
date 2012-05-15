@@ -17,6 +17,7 @@
 private with GL.Low_Level;
 
 package GL.Pixel_Data is
+   pragma Preelaborate;
 
    type Internal_Format is (Depth_Component, Alpha, RGB, RGBA, Luminance,
                             Luminance_Alpha, R3_G3_B2, Alpha4, Alpha8, Alpha12,

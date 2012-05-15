@@ -24,7 +24,7 @@ procedure Load_Function_To_Map (GL_Function_Name : String;
    GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (GL_Function_Name);
 
    Symbol_Name : CFStringRef := CFStringCreateWithCString
-     (alloc => kCFAllocatorDefault, cStr => GL_Function_Name_C,
+     (alloc => System.Null_Address, cStr => GL_Function_Name_C,
       encoding => kCFStringEncodingASCII);
    Result : System.Address := CFBundleGetFunctionPointerForName
      (bundle => OpenGLFramework,

@@ -14,95 +14,54 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Matrices;
-
-package body GL.Vectors is
-   use type Matrices.Matrix;
-
+package body GL.Vectors is      
    function "+" (Left, Right : Vector) return Vector is
-      Transformation : Matrices.Matrix := Matrices.Create_Matrix
-        (Vector'(1.0, 0.0, 0.0, 0.0), Vector'(0.0, 1.0, 0.0, 0.0),
-         Vector'(0.0, 0.0, 1.0, 0.0), Left);
+      Ret : Vector;
    begin
-      return Transformation * Right;
+      for I in Index_Type'Range loop
+         Ret (I) := Left (I) + Right (I);
+      end loop;
+      return Ret;
    end "+";
-
+   
    function "-" (Left, Right : Vector) return Vector is
-      Transformation : Matrices.Matrix := Matrices.Create_Matrix
-        (Vector'(1.0, 0.0, 0.0, 0.0), Vector'(0.0, 1.0, 0.0, 0.0),
-         Vector'(0.0, 0.0, 1.0, 0.0), (-1) * Left);
+      Ret : Vector;
    begin
-      return Transformation * Right;
+      for I in Index_Type'Range loop
+         Ret (I) := Left (I) - Right (I);
+      end loop;
+      return Ret;
    end "-";
-
-   function "*" (Left : Vector;  Right : Integer) return Vector is
-      Real_Right : Real := Real (Right);
+   
+   function "-" (Left : Vector) return Vector is
+      Ret : Vector;
    begin
-      return Vector'(X => Left (X) * Real_Right,
-                     Y => Left (Y) * Real_Right,
-                     Z => Left (Z) * Real_Right,
-                     W => Left (W));
-   end "*";
-
-   function "*" (Left : Vector;  Right : Real)    return Vector is
+      for I in Index_Type loop
+         Ret (I) := Left (I) * (-1.0);
+      end loop;
+      return Ret;
+   end "-";
+   
+   function "*" (Left : Vector; Right : Real) return Vector is
+      Ret : Vector;
    begin
-      return Vector'(X => Left (X) * Right,
-                     Y => Left (Y) * Right,
-                     Z => Left (Z) * Right,
-                     W => Left (W));
+      for I in Index_Type'Range loop
+         Ret (I) := Left (I) * Right;
+      end loop;
+      return Ret;
    end "*";
-
-   function "*" (Left : Integer; Right : Vector)  return Vector is
+   
+   function "*" (Left : Real; Right : Vector) return Vector is
    begin
       return Right * Left;
    end "*";
-
-   function "*" (Left : Real;    Right : Vector)  return Vector is
-   begin
-      return Right * Left;
-   end "*";
-
-   function "/" (Left : Vector; Right : Integer) return Vector is
-      Real_Right : Real := Real (Right);
-   begin
-      if Right = 0 then
-         return Vector'(X => Left (X),
-                        Y => Left (Y),
-                        Z => Left (Z),
-                        W => 0.0);
-      else
-         return Vector'(X => Left (X) / Real_Right,
-                        Y => Left (Y) / Real_Right,
-                        Z => Left (Z) / Real_Right,
-                        W => Left (W));
-      end if;
-   end "/";
-
+         
    function "/" (Left : Vector; Right : Real) return Vector is
+      Ret : Vector;
    begin
-      if Right = 0.0 then
-         return Vector'(X => Left (X),
-                        Y => Left (Y),
-                        Z => Left (Z),
-                        W => 0.0);
-      else
-         return Vector'(X => Left (X) / Right,
-                        Y => Left (Y) / Right,
-                        Z => Left (Z) / Right,
-                        W => Left (W));
-      end if;
+      for I in Index_Type'Range loop
+         Ret (I) := Left (I) / Right;
+      end loop;
+      return Ret;
    end "/";
-
-   function Normalize (Source : Vector) return Vector is
-   begin
-      if Source (W) = 0.0 then
-         raise Constraint_Error;
-      end if;
-      return Vector'(X => Source (X) / Source (W),
-                     Y => Source (Y) / Source (W),
-                     Z => Source (Z) / Source (W),
-                     W => 1.0);
-   end Normalize;
-
-
 end GL.Vectors;

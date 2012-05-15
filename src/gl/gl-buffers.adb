@@ -59,7 +59,7 @@ package body GL.Buffers is
    end Set_Depth_Clear_Value;
 
    function Depth_Clear_Value return Depth is
-      Value : aliased Low_Level.Double;
+      Value : aliased Real;
    begin
       API.Get_Double (Enums.Getter.Depth_Clear_Value, Value'Access);
       Check_OpenGL_Error;

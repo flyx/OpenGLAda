@@ -17,6 +17,8 @@
 private with GL.Low_Level;
 
 package GL.Toggles is
+   pragma Preelaborate;
+   
    type Toggle_State is (Disabled, Enabled);
    
    type Toggle is (Point_Smooth, Line_Smooth, Line_Stipple, Polygon_Smooth, Polygon_Stipple,
@@ -42,6 +44,8 @@ package GL.Toggles is
                    Post_Color_Matrix_Color_Table, Color_Sum, Texture_Cube_Map,
                    Vertex_Program_Point_Size, Vertex_Program_Two_Side, Point_Sprite);
    
+   procedure Enable (Subject : Toggle);
+   procedure Disable (Subject : Toggle);
    procedure Set (Subject : Toggle; Value : Toggle_State);
    function State (Subject : Toggle) return Toggle_State;
 private

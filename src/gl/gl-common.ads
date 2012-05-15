@@ -17,9 +17,14 @@
 with GL.Low_Level;
 
 package GL.Common is
+   pragma Preelaborate;
    
    type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
                              GEqual, Always);
+   
+   type Numeric_Type is (Short_Type, Int_Type, Float_Type, Double_Type);
+   
+   type Unsigned_Numeric_Type is (UByte_Type, UShort_Type, UInt_Type);
    
 private
 
@@ -32,5 +37,16 @@ private
                              GEqual    => 16#0206#,
                              Always    => 16#0207#);
    for Compare_Function'Size use Low_Level.Enum'Size;
+   
+   for Numeric_Type use (Short_Type  => 16#1402#,
+                         Int_Type    => 16#1404#,
+                         Float_Type  => 16#1406#,
+                         Double_Type => 16#140A#);
+   for Numeric_Type'Size use Low_Level.Enum'Size;
+   
+   for Unsigned_Numeric_Type use (UByte_Type  => 16#1401#,
+                                  UShort_Type => 16#1403#,
+                                  UInt_Type   => 16#1405#);
+   for Unsigned_Numeric_Type'Size use Low_Level.Enum'Size;
    
 end GL.Common;

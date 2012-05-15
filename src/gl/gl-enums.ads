@@ -17,6 +17,7 @@
 with GL.Low_Level;
 
 private package GL.Enums is
+   pragma Preelaborate;
 
    type Attribute_Mask is record
       Depth_Buffer   : Boolean;
@@ -37,6 +38,8 @@ private package GL.Enums is
    type Front_Face_Direction is (CW, CCW);
 
    type Matrix_Mode is (Modelview, Projection, Texture, Color);
+   
+   
 
 private
 

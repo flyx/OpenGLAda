@@ -14,6 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL.Environment is
-   
-end GL.Environment;
+package GL_Test is
+
+end GL_Test;

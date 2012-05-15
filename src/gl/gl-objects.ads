@@ -20,6 +20,7 @@ with GL.Low_Level;
 
 
 package GL.Objects is
+   pragma Preelaborate;
    
    type GL_Object is abstract new Ada.Finalization.Controlled with private;
          
@@ -37,6 +38,8 @@ package GL.Objects is
    function Raw_Id (Object : GL_Object) return Low_Level.UInt;
    
    function "=" (Left, Right : GL_Object'Class) return Boolean;
+   
+   No_Object_Bound_Exception : exception;
 private
    
    -- This method should be overridden by child classes to create

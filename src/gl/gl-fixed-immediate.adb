@@ -17,26 +17,36 @@
 with GL.API;
 with GL.Enums.Getter;
 
-package body GL.Immediate is
+package body GL.Fixed.Immediate is
 
    overriding procedure Finalize (Token : in out Input_Token) is
    begin
       API.GL_End;
-      Error_Checking_Suspended := False;
+      Resume_Error_Checking;
       Check_OpenGL_Error;
    end Finalize;
 
    function Start (Mode : Connection_Mode) return Input_Token is
    begin
       API.GL_Begin (Mode);
-      Error_Checking_Suspended := True;
+      Suspend_Error_Checking;
       return Input_Token'(Ada.Finalization.Limited_Controlled with
                             Mode => Mode);
    end Start;
 
-   procedure Add_Vertex (Token : Input_Token; Vertex : Vectors.Vector) is
+   procedure Add_Vertex (Token : Input_Token; Vertex : Vector2) is
    begin
-      API.Vertex (Vertex);
+      API.Vertex2 (Vertex);
+   end Add_Vertex;
+   
+   procedure Add_Vertex (Token : Input_Token; Vertex : Vector3) is
+   begin
+      API.Vertex3 (Vertex);
+   end Add_Vertex;
+   
+   procedure Add_Vertex (Token : Input_Token; Vertex : Vector4) is
+   begin
+      API.Vertex4 (Vertex);
    end Add_Vertex;
 
    procedure Set_Color (Value : Colors.Color) is
@@ -53,12 +63,11 @@ package body GL.Immediate is
       return Ret;
    end Current_Color;
 
-   -- UNAVAILABLE IN SOME DRIVERS
-   --procedure Set_Fog_Distance (Value : Real) is
-   --begin
-   --   API.Fog_Coord (Value);
-   --   Check_OpenGL_Error;
-   --end Set_Fog_Distance;
+   procedure Set_Fog_Distance (Value : Real) is
+   begin
+      API.Fog_Coord (Value);
+      Check_OpenGL_Error;
+   end Set_Fog_Distance;
 
    function Current_Fog_Distance return Real is
       Value : aliased Real;
@@ -68,32 +77,44 @@ package body GL.Immediate is
       return Value;
    end Current_Fog_Distance;
 
-   procedure Set_Normal (Value : Normals.Normal) is
+   procedure Set_Normal (Value : Vector3) is
    begin
       API.Normal (Value);
       Check_OpenGL_Error;
    end Set_Normal;
 
-   function Current_Normal return Normals.Normal is
-      Value : Normals.Normal;
+   function Current_Normal return Vector3 is
+      Value : Vector3;
    begin
-      API.Get_Double (Enums.Getter.Current_Normal, Value (Vectors.X)'Access);
+      API.Get_Double (Enums.Getter.Current_Normal, Value (X)'Access);
       Check_OpenGL_Error;
       return Value;
    end Current_Normal;
 
-   procedure Set_Texture_Coordinates (Value : Vectors.Vector) is
+   procedure Set_Texture_Coordinates (Value : Vector4) is
    begin
-      API.Tex_Coord (Value);
+      API.Tex_Coord4 (Value);
+      Check_OpenGL_Error;
+   end Set_Texture_Coordinates;
+   
+   procedure Set_Texture_Coordinates (Value : Vector3) is
+   begin
+      API.Tex_Coord3 (Value);
+      Check_OpenGL_Error;
+   end Set_Texture_Coordinates;
+   
+   procedure Set_Texture_Coordinates (Value : Vector2) is
+   begin
+      API.Tex_Coord2 (Value);
       Check_OpenGL_Error;
    end Set_Texture_Coordinates;
 
-   function Current_Texture_Coordinates return Vectors.Vector is
-      Value : Vectors.Vector;
+   function Current_Texture_Coordinates return Vector4 is
+      Value : Vector4;
    begin
-      API.Get_Double (Enums.Getter.Current_Texture_Coords, Value (Vectors.X)'Access);
+      API.Get_Double (Enums.Getter.Current_Texture_Coords, Value (X)'Access);
       Check_OpenGL_Error;
       return Value;
    end Current_Texture_Coordinates;
 
-end GL.Immediate;
+end GL.Fixed.Immediate;

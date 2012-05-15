@@ -20,6 +20,8 @@ with Ada.Strings.Hash;
 with System;
 
 package GL.Low_Level.Loader is
+   pragma Preelaborate;
+   
    -- this package loads raw OpenGL functions at runtime
    -- (meaning it requests the function pointer of the requested function
    --  at runtime). when a function is not available, it raises a

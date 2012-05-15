@@ -14,34 +14,35 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Algebra;
 with GL.Enums;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
 with GL.Low_Level.Loader;
 with GL.Low_Level.Enums;
-with GL.Matrices;
-with GL.Immediate;
-with GL.Vectors;
+with GL.Fixed.Textures;
 with GL.Colors;
-with GL.Normals;
 with GL.Buffers;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Loader_2D;
 with GL.Objects.Buffer;
 with GL.Pixel_Data;
-with GL.Environment.Textures;
 with GL.Common;
 with GL.Toggles;
 
 with System;
 
 private package GL.API is
+   pragma Preelaborate;
+   
    -- Everything newer than OpenGL 1.1 will not be statically bound,
    -- but loaded with GL.Low_Level.Loader at runtime.
    --
    -- Also, all functions that have been deprecated with OpenGL 3.0
    -- will not be statically bound, as they may be omitted by implementors
    -- when they choose to only implement the OpenGL Core Profile.
+
+   use GL.Algebra;
 
    subtype Zero is Low_Level.Int range 0 .. 0;
 
@@ -67,7 +68,7 @@ private package GL.API is
                   External_Name => "glGetBooleanv");
 
    procedure Get_Double (Name   : Enums.Getter.Parameter;
-                         Target : access Low_Level.Double);
+                         Target : access Real);
    pragma Import (Convention => StdCall, Entity => Get_Double,
                   External_Name => "glGetDoublev");
 
@@ -105,11 +106,11 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Matrix_Mode,
                   External_Name => "glMatrixMode");
 
-   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
+   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Real);
    pragma Import (Convention => StdCall, Entity => Frustum,
                   External_Name => "glFrustum");
 
-   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Low_Level.Double);
+   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Real);
    pragma Import (Convention => StdCall, Entity => Ortho,
                   External_Name => "glOrtho");
 
@@ -117,11 +118,11 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Load_Identity,
                   External_Name => "glLoadIdentity");
 
-   procedure Load_Matrix (Value : Matrices.Matrix);
+   procedure Load_Matrix (Value : Matrix4);
    pragma Import (Convention => StdCall, Entity => Load_Matrix,
                   External_Name => "glLoadMatrixd");
 
-   procedure Mult_Matrix (Factor : Matrices.Matrix);
+   procedure Mult_Matrix (Factor : Matrix4);
    pragma Import (Convention => StdCall, Entity => Mult_Matrix,
                   External_Name => "glMultMatrixd");
 
@@ -133,15 +134,15 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Pop_Matrix,
                   External_Name => "glPopMatrix");
 
-   procedure Rotate (Angle, X, Y, Z : Low_Level.Double);
+   procedure Rotate (Angle, X, Y, Z : Real);
    pragma Import (Convention => StdCall, Entity => Rotate,
                   External_Name => "glRotated");
 
-   procedure Scale (X, Y, Z : Low_Level.Double);
+   procedure Scale (X, Y, Z : Real);
    pragma Import (Convention => StdCall, Entity => Scale,
                   External_Name => "glScaled");
 
-   procedure Translate (X, Y, Z : Low_Level.Double);
+   procedure Translate (X, Y, Z : Real);
    pragma Import (Convention => StdCall, Entity => Translate,
                   External_Name => "glTranslated");
 
@@ -149,7 +150,7 @@ private package GL.API is
    --              Immediate API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
-   procedure GL_Begin (Mode : Immediate.Connection_Mode);
+   procedure GL_Begin (Mode : Fixed.Connection_Mode);
    pragma Import (Convention => StdCall, Entity => GL_Begin,
                   External_Name => "glBegin");
 
@@ -157,30 +158,87 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => GL_End,
                   External_Name => "glEnd");
 
-   procedure Vertex (Value : Vectors.Vector);
-   pragma Import (Convention => StdCall, Entity => Vertex,
+   procedure Vertex4 (Value : Vector4);
+   pragma Import (Convention => StdCall, Entity => Vertex4,
                   External_Name => "glVertex4dv");
+   
+   procedure Vertex3 (Value : Vector3);
+   pragma Import (Convention => StdCall, Entity => Vertex3,
+                  External_Name => "glVertex3dv");
+   
+   procedure Vertex2 (Value : Vector2);
+   pragma Import (Convention => StdCall, Entity => Vertex2,
+                  External_Name => "glVertex2dv");
 
    procedure Color (Value : Colors.Color);
    pragma Import (Convention => StdCall, Entity => Color,
-                  External_Name => "glColor4dv");
+                  External_Name => "glColor4fv");
 
-   procedure Secondary_Color (Value : Colors.Basic_Color);
-   pragma Import (Convention => StdCall, Entity => Secondary_Color,
-                  External_Name => "glSecondaryColor3dv");
+   procedure Secondary_Color is new Low_Level.Loader.Procedure_With_1_Param
+      ("glSecondaryColor3dv", Colors.Basic_Color);
 
-   -- UNAVAILABLE IN SOME DRIVERS
-   --procedure Fog_Coord (Distance : Low_Level.Double);
-   --pragma Import (Convention => StdCall, Entity => Fog_Coord,
-   --               External_Name => "glFogCoordd");
-
-   procedure Normal (Value : Normals.Normal);
+   procedure Fog_Coord is new Low_Level.Loader.Procedure_With_1_Param
+      ("glFogCoordd", Real);
+   
+   procedure Normal (Value : Vector3);
    pragma Import (Convention => StdCall, Entity => Normal,
                   External_Name => "glNormal3dv");
 
-   procedure Tex_Coord (Value : Vectors.Vector);
-   pragma Import (Convention => StdCall, Entity => Tex_Coord,
+   procedure Tex_Coord4 (Value : Vector4);
+   pragma Import (Convention => StdCall, Entity => Tex_Coord4,
                   External_Name => "glTexCoord4dv");
+   
+   procedure Tex_Coord3 (Value : Vector3);
+   pragma Import (Convention => StdCall, Entity => Tex_Coord3,
+                  External_Name => "glTexCoord3dv");
+   
+   procedure Tex_Coord2 (Value : Vector2);
+   pragma Import (Convention => StdCall, Entity => Tex_Coord2,
+                  External_Name => "glTexCoord2dv");
+   
+   -----------------------------------------------------------------------------
+   --        Fixed Function Pipeline (deprecated as of OpenGL 3.0)            --
+   -----------------------------------------------------------------------------
+   
+   procedure Vertex_Pointer (Size      : Low_Level.Int;
+                             Data_Type : Common.Numeric_Type;
+                             Stride    : Low_Level.SizeI;
+                             Pointer   : Low_Level.Int);
+   pragma Import (Convention => StdCall, Entity => Vertex_Pointer,
+                  External_Name => "glVertexPointer");
+   
+   procedure Index_Pointer (Data_Type : Common.Numeric_Type;
+                            Stride    : Low_Level.SizeI;
+                            Pointer   : Low_Level.Int);
+   pragma Import (Convention => StdCall, Entity => Index_Pointer,
+                  External_Name => "glIndexPointer");
+   
+   procedure Color_Pointer (Size      : Low_Level.Int;
+                            Data_Type : Common.Numeric_Type;
+                            Stride    : Low_Level.SizeI;
+                            Pointer   : Zero);
+   pragma Import (Convention => StdCall, Entity => Color_Pointer,
+                  External_Name => "glColorPointer");
+   
+   procedure Enable_Client_State (Cap : Fixed.Client_Side_Capability);
+   pragma Import (Convention => StdCall, Entity => Enable_Client_State,
+                  External_Name => "glEnableClientState");
+   
+   procedure Disable_Client_State (Cap : Fixed.Client_Side_Capability);
+   pragma Import (Convention => StdCall, Entity => Disable_Client_State,
+                  External_Name => "glDisableClientState");
+   
+   procedure Draw_Arrays (Mode  : Fixed.Connection_Mode;
+                          First : Low_Level.Int; Count : Low_Level.SizeI);
+   pragma Import (Convention => StdCall, Entity => Draw_Arrays,
+                  External_Name => "glDrawArrays");
+   
+   procedure Draw_Elements (Mode       : Fixed.Connection_Mode;
+                            Count      : Low_Level.SizeI;
+                            Index_Type : Common.Unsigned_Numeric_Type;
+                            Indices    : Zero);
+   pragma Import (Convention => StdCall, Entity => Draw_Elements,
+                  External_Name => "glDrawElements");
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
@@ -372,19 +430,19 @@ private package GL.API is
 
    procedure Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
                                Param_Name : Enums.Textures.Env_Parameter;
-                               Value      : Environment.Textures.Texture_Function);
+                               Value      : Fixed.Textures.Texture_Function);
    pragma Import (Convention => StdCall, Entity => Tex_Env_Tex_Func,
                   External_Name => "glTexEnvi");
 
    procedure Tex_Env_Combine_Func (Target     : Enums.Textures.Env_Target;
                                    Param_Name : Enums.Textures.Env_Parameter;
-                                   Value      : Environment.Textures.Combine_Function);
+                                   Value      : Fixed.Textures.Combine_Function);
    pragma Import (Convention => StdCall, Entity => Tex_Env_Combine_Func,
                   External_Name => "glTexEnvi");
 
    procedure Tex_Env_Source (Target     : Enums.Textures.Env_Target;
                              Param_Name : Enums.Textures.Env_Parameter;
-                             Value      : Environment.Textures.Source_Kind);
+                             Value      : Fixed.Textures.Source_Kind);
    pragma Import (Convention => StdCall, Entity => Tex_Env_Source,
                   External_Name => "glTexEnvi");
 
@@ -408,19 +466,19 @@ private package GL.API is
 
    procedure Get_Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
                                    Param_Name : Enums.Textures.Env_Parameter;
-                                   Value      : out Environment.Textures.Texture_Function);
+                                   Value      : out Fixed.Textures.Texture_Function);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Tex_Func,
                   External_Name => "glGetTexEnviv");
 
    procedure Get_Tex_Env_Combine_Func (Target     : Enums.Textures.Env_Target;
                                        Param_Name : Enums.Textures.Env_Parameter;
-                                       Value      : out Environment.Textures.Combine_Function);
+                                       Value      : out Fixed.Textures.Combine_Function);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Combine_Func,
                   External_Name => "glGetTexEnviv");
 
    procedure Get_Tex_Env_Source (Target     : Enums.Textures.Env_Target;
                                  Param_Name : Enums.Textures.Env_Parameter;
-                                 Value      : out Environment.Textures.Source_Kind);
+                                 Value      : out Fixed.Textures.Source_Kind);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Source,
                   External_Name => "glGetTexEnviv");
 

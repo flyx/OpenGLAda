@@ -15,6 +15,8 @@
 --------------------------------------------------------------------------------
 
 package GL.Low_Level.Enums is
+   pragma Preelaborate;
+   
    type Texture_Kind is (Texture_1D, Texture_2D, Texture_3D, Texture_Cube_Map);
    
    type Buffer_Kind is (Array_Buffer, Element_Array_Buffer, Pixel_Pack_Buffer,

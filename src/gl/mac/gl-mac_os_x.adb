@@ -14,24 +14,24 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
-with GL.Vectors;
+package body GL.Mac_OS_X is
+   OpenGLFramework_Cached : CFBundleRef;
+  
+   function OpenGLFramework return CFBundleRef is
+      use type System.Address;
+   begin
+      if OpenGLFramework_Cached = System.Null_Address then
+         declare
+            OpenGLFramework_ID : constant CFStringRef
+              := CFStringCreateWithCString (System.Null_Address,
+                                            IFC.New_String ("com.apple.opengl"),
+                                            kCFStringEncodingASCII);
+         begin
+            OpenGLFramework_Cached 
+              := CFBundleGetBundleWithIdentifier (OpenGLFramework_ID);
+         end;
+      end if;
+      return OpenGLFramework_Cached;
+   end OpenGLFramework;
 
-package GL.Normals is
-
-   subtype Normal_Index is Vectors.Vector_Index range Vectors.X .. Vectors.Z;
-
-   type Normal is array (Normal_Index) of aliased Real;
-
-   function "+" (Left, Right : Normal) return Normal;
-
-   function "-" (Left, Right : Normal) return Normal;
-
-   function "*" (Left : Normal;  Right : Real)    return Normal;
-   function "*" (Left : Real;    Right : Normal)  return Normal;
-
-   function "/" (Left : Normal; Right : Real)    return Normal;
-
-private
-   pragma Convention (C, Normal);
-end GL.Normals;
+end GL.Mac_OS_X;

@@ -17,6 +17,8 @@
 private with GL.Low_Level;
 
 package GL.Enums.Textures is
+   pragma Preelaborate;
+   
    -- Texture_Kind is declared in GL.Low_Level.Enums to be accessible for
    -- OpenCLAda
 

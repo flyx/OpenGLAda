@@ -17,6 +17,15 @@
 with GL.API;
 
 package body GL.Toggles is
+   procedure Enable (Subject : Toggle) is
+   begin
+      API.Enable (Subject);
+   end Enable;
+   
+   procedure Disable (Subject : Toggle) is
+   begin
+      API.Disable (Subject);
+   end Disable;
    
    procedure Set (Subject : Toggle; Value : Toggle_State) is
    begin

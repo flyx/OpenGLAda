@@ -15,6 +15,8 @@
 --------------------------------------------------------------------------------
 
 package GL.Low_Level is
+   pragma Preelaborate;
+   
    -- This package contains some low-level types that are used by the raw C
    -- interface of the OpenGL API. They are converted to types that are easier
    -- to handle by the wrapper and thus are not needed for using the wrapper.

@@ -16,40 +16,58 @@
 
 with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
+with Ada.Containers.Indefinite_Hashed_Maps;
 
 with GL.API;
 with GL.Helpers;
 
 package body GL.Objects.Textures is
-   Cur_Texture_1D : aliased Texture := Texture'(
-     Ada.Finalization.Controlled with Reference => null);
-   Cur_Texture_2D : aliased Texture := Texture'(
-     Ada.Finalization.Controlled with Reference => null);
-   Cur_Texture_3D : aliased Texture := Texture'(
-     Ada.Finalization.Controlled with Reference => null);
-   Cur_Texture_CM : aliased Texture := Texture'(
-     Ada.Finalization.Controlled with Reference => null);
-   
-   Current_Textures : constant array (Low_Level.Enums.Texture_Kind) of access Texture := (
-     Low_Level.Enums.Texture_1D       => Cur_Texture_1D'Access,
-     Low_Level.Enums.Texture_2D       => Cur_Texture_2D'Access,
-     Low_Level.Enums.Texture_3D       => Cur_Texture_3D'Access,
-     Low_Level.Enums.Texture_Cube_Map => Cur_Texture_CM'Access);
-   
-   procedure Bind (Target : Texture_Target; Object : Texture'Class) is
+   use type Low_Level.UInt;
+   use type Low_Level.Enums.Texture_Kind;
+
+   function Hash (Key : Low_Level.Enums.Texture_Kind)
+     return Ada.Containers.Hash_Type is
+      function Value is new Ada.Unchecked_Conversion
+        (Source => Low_Level.Enums.Texture_Kind, Target => Low_Level.Enum);
    begin
-      if Current_Textures (Target.Kind).all /= Object then
+      return Ada.Containers.Hash_Type (Value (Key));
+   end Hash;
+
+   package Texture_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+      (Key_Type     => Low_Level.Enums.Texture_Kind,
+       Element_Type => Texture,
+       Hash         => Hash,
+       Equivalent_Keys => Low_Level.Enums."=");
+   use type Texture_Maps.Cursor;
+
+   Current_Textures : Texture_Maps.Map;
+
+   procedure Bind (Target : Texture_Target; Object : Texture'Class) is
+      Cursor : Texture_Maps.Cursor := Current_Textures.Find (Target.Kind);
+   begin
+      if Cursor = Texture_Maps.No_Element or else
+        Texture_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
          Check_OpenGL_Error;
-         Current_Textures (Target.Kind).all := Texture (Object);
+         if Cursor = Texture_Maps.No_Element then
+            Current_Textures.Insert (Target.Kind, Texture (Object));
+         else
+            Current_Textures.Replace_Element (Cursor, Texture (Object));
+         end if;
       end if;
    end Bind;
-   
+
    function Current_Texture (Target : Texture_Target) return Texture'Class is
+      Cursor : Texture_Maps.Cursor := Current_Textures.Find (Target.Kind);
    begin
-      return Current_Textures (Target.Kind).all;
+      if Cursor /= Texture_Maps.No_Element then
+         return Texture_Maps.Element (Cursor);
+      else
+         raise No_Object_Bound_Exception with Target.Kind'Img;
+      end if;
    end Current_Texture;
-   
+
    procedure Create_Id (Object : in out Texture) is
       New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
    begin
@@ -57,7 +75,7 @@ package body GL.Objects.Textures is
       Check_OpenGL_Error;
       Object.Reference.GL_Id := New_Id (1);
    end Create_Id;
-   
+
    procedure Delete_Id (Object : in out Texture) is
       Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
@@ -328,5 +346,5 @@ package body GL.Objects.Textures is
       return Boolean (Value);
    end Mipmap_Autoupdate_Enabled;
 
-   
+
 end GL.Objects.Textures;
