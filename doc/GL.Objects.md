@@ -3,9 +3,6 @@ layout : default
 title : API - The package GL.Objects
 packages :
   - GL.Objects
-versions:
-  - 2.1
-  - 3.0
 weight: 5
 ---
 

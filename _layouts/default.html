@@ -60,20 +60,6 @@
 		</nav>
 		
 		<article>
-			{% if page.versions %}
-				<div class="versions">
-					<p>OpenGL versions supported by this package:</p>
-					<ul>
-						{% for version in page.versions %}
-							<li><code>{{ version }}</code></li>
-						{% endfor %}
-						{% if page.deprecated %}
-							<li><em>deprecated in</em> <code>{{ page.deprecated }}</code></li>
-						{% endif %}
-					</ul>
-				</div>
-			{% endif %}
-		
 			{{ content }}
 		</article>
 		

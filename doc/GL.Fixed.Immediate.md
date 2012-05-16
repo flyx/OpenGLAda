@@ -1,15 +1,12 @@
 ---
 layout : default
-title : API - The package GL.Immediate
+title : API - The package GL.Fixed.Immediate
 packages :
-  - GL.Immediate
-versions :
-  - 2.1
-deprecated : 3.0
-weight : 3
+  - GL.Fixed.Immediate
+weight : 4
 ---
 
-# The package `GL.Immediate`
+# The package `GL.Fixed.Immediate`
 
 This package provides the tools to immediately push OpenGL primitives into the OpenGL
 pipeline. This functionality has been deprecated with OpenGL 3.0 because it has severe

@@ -10,8 +10,8 @@ weight: 2
 
 This is the root package of the core OpenGL wrapper.
 
-The type `Real` is the basic numeric type used in OpenGLAda. It is a double precision
-floating point type, identical to C's `double`.
+The index types for vector and matrix types are defined here because they would cause
+problems with cyclic dependencies when they were defined in `GL.Types`.
 
 With `Toggle_Error_Checking`, you can enable or disable the checking for OpenGL errors.
 When enabled, every call to OpenGL will be succeeded by a check whether an error has

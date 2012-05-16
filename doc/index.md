@@ -10,8 +10,8 @@ weight: 1
 
 OpenGLAda provides an API that aims to be similar to the standard OpenGL API you
 might be familiar with. As a thick binding, the library introduces some additional
-concepts and features which are explained here. On this page, you find some general
-information on the structure and concepts of the API. The documentation of the packages
+concepts and features. On this page, you find some general information on the structure
+and concepts of the OpenGLAda API. The documentation of the packages
 provided by OpenGLAda can be accessed from the navigation menu to the left.
 
 This is not a standalone documentation. For a detailed description of the behaviour of
@@ -32,17 +32,17 @@ alternatives OpenGL 3.0 offers.
 
 ## Types
 
-Most API entry points in OpenGL are provided for a number of different numeric types, like
+Some API entry points in OpenGL are provided for a number of different numeric types, like
 `GLbyte`, `GLshort`, `GLint`, `GLuint`, `GLfloat`, `GLdouble` and so on. The incoming
-types make no difference to OpenGL. The values will be converted to whatever format OpenGL
-uses internally (this may depend on the implementation).
+types often make no difference to OpenGL. The values will be converted to whatever
+format OpenGL uses internally (this may depend on the implementation). These entry
+points may not be wrapped for all available types in OpenGLAda. For example, color
+values are always single-precision floating point values. Other types, like vectors, are
+provided for multiple base types.
 
-To avoid the the massive overhead of providing every functionality for multiple numeric
-types, OpenGLAda provides every operation for only one value type. For vertices, this is
-`GL.Real`, which is a double-precision floating point type. Other operations expect more
-specialized types, like e.g. `GL.Colors.Component`, which is a single-precision value
-constrained to `0.0 .. 1.0`. All types try to implement constraints defined in the OpenGL
-specification.
+Keep in mind that the size and type of values passed to OpenGL only matters on the
+OpenGL side if you directly pass them to shaders or write them into buffers. As mentioned
+above, other calls will convert the values to the internally used type.
 
 ## Exception Handling
 
@@ -65,43 +65,57 @@ Reading lots of documentation can be exhausting, so here is some code that gives
 basic idea of how to use OpenGLAda:
 
 {% highlight ada %}
-with GL.Immediate; use GL.Immediate;
-with GL.Vectors;   use GL.Vectors;
-with GL.Colors;    use GL.Colors;
-with GL.Matrices;  use GL.Matrices;
+with GL.Buffers;         use GL.Buffers;
+with GL.Colors;          use GL.Colors;
+with GL.Fixed.Immediate; use GL.Fixed.Immediate;
+with GL.Fixed.Matrix;    use GL.Fixed.Matrix;
+with GL.Types;           use GL.Types;
+use GL.Fixed;
 
 with Glfw.Display;
-with Glfw.Events;
+with Glfw.Events.Keys;
 
-procedure Glfw_Test.Immediate is
-   use type GL.Real;
+procedure GL_Test.Immediate is
+   use GL.Types.Doubles;
 begin
    Glfw.Init;
 
-   Glfw.Display.Open (Mode => Glfw.Display.Window);
+   Glfw.Display.Open (Mode  => Glfw.Display.Window,
+                      Width => 500, Height => 500);
 
    Projection.Load_Identity;
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
-   Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
-
    while not Glfw.Events.Keys.Pressed (Glfw.Events.Keys.Esc) and
          Glfw.Display.Opened loop
+      Clear (Buffer_Bits'(others => True));
+
       Projection.Push;
-      
-      -- TODO: Fancy stuff here
-      
+
+      for I in 1 .. 12 loop
+         declare
+            Token : Input_Token := Start (Line_Strip);
+         begin
+            Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
+            Token.Add_Vertex (Vector4'(0.1, 0.4, 0.0, 1.0));
+            Token.Add_Vertex (Vector4'(0.1, 0.6, 0.0, 1.0));
+            Token.Add_Vertex (Vector4'(-0.1, 0.6, 0.0, 1.0));
+            Token.Add_Vertex (Vector4'(-0.1, 0.4, 0.0, 1.0));
+         end;
+         Projection.Apply_Rotation (360.0 / 12.0, 0.0, 0.0, 1.0);
+      end loop;
+
       Projection.Pop;
+      Projection.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
 
       GL.Flush;
 
       Glfw.Display.Swap_Buffers;
 
-      delay 0.1;
       Glfw.Events.Poll_Events;
    end loop;
 
    Glfw.Terminate_Glfw;
 
-end Glfw_Test.Immediate;
+end GL_Test.Immediate;
 {% endhighlight %}

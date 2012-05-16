@@ -3,8 +3,6 @@ layout : default
 title : API - The package GL.Objects.Textures
 packages :
   - GL.Objects.Textures
-versions:
-  - 2.1
 weight: 6
 ---
 
