@@ -37,9 +37,7 @@ package GL.Fixed is
                                    Secondary_Color_Array);
    
    procedure Set_Vertex_Pointer (Length : Vertex_Length; Stride, Offset : Natural);
-   procedure Set_Index_Pointer  (Index_Type : Signed_Numeric_Type;
-                                 Stride, Offset : Natural);
-   procedure Set_Color_Pointer  (Stride : Natural);
+   procedure Set_Color_Pointer  (Stride, Offset : Natural);
    
    procedure Enable (Capability : Client_Side_Capability);
    procedure Disable (Capability : Client_Side_Capability);

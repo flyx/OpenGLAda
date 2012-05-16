@@ -24,6 +24,7 @@ with GL.Objects.Buffer;
 with GL.Fixed;
 with GL.Fixed.Matrix;
 with GL.Fixed.Immediate;
+with GL.Toggles;
 with GL.Types;
 
 with Ada.Calendar;
@@ -43,9 +44,24 @@ procedure GL_Test.VBOs is
    
    procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
      (Element_Type => Int, Array_Type => Int_Array);
+   
+   type Colored_Vertex is record
+      Vertex : Vector3;
+      Color  : Colors.Color;
+   end record;
+   for Colored_Vertex'Size use Double'Size * 3 + Single'Size * 4;
+   pragma Convention (C, Colored_Vertex);
+   pragma Pack (Colored_Vertex);
+   
+   type Colored_Vertices is array (Integer range <>) of aliased Colored_Vertex;
+   
+   procedure Load_Colored_Vertex is new GL.Objects.Buffer.Load_To_Buffer
+      (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);
+      
 begin
    Glfw.Init;
-   Glfw.Display.Open (Mode => Glfw.Display.Window);
+   Glfw.Display.Open (Mode => Glfw.Display.Window,
+                      Depth_Bits => 24);
    
    Projection.Load_Identity;
    Projection.Apply_Frustum (-2.0, 2.0, -1.5, 1.5, 3.0, 20.0);
@@ -56,24 +72,24 @@ begin
       use GL.Objects.Buffer;
       use GL.Buffers;
       
-      Cube : constant Vector_Array :=
-        (( 0.9,  0.9,  0.9, 1.0),
-         ( 0.9,  0.9, -0.9, 1.0),
-         ( 0.9, -0.9, -0.9, 1.0),
-         ( 0.9, -0.9,  0.9, 1.0),
-         (-0.9,  0.9,  0.9, 1.0),
-         (-0.9,  0.9, -0.9, 1.0),
-         (-0.9, -0.9, -0.9, 1.0),
-         (-0.9, -0.9,  0.9, 1.0)
+      Cube : constant Colored_Vertices :=
+        ((( 0.9,  0.9,  0.9), (0.0, 0.0, 0.0, 0.0)),
+         (( 0.9,  0.9, -0.9), (1.0, 0.0, 0.0, 0.0)),
+         (( 0.9, -0.9, -0.9), (1.0, 1.0, 0.0, 0.0)),
+         (( 0.9, -0.9,  0.9), (0.0, 1.0, 0.0, 0.0)),
+         ((-0.9,  0.9,  0.9), (0.0, 1.0, 0.0, 0.0)),
+         ((-0.9,  0.9, -0.9), (0.0, 1.0, 1.0, 0.0)),
+         ((-0.9, -0.9, -0.9), (1.0, 1.0, 1.0, 0.0)),
+         ((-0.9, -0.9,  0.9), (0.0, 1.0, 1.0, 0.0))
         );
         
       Indexes : constant Int_Array :=
-        (0, 1, 2, 3,
+        (0, 3, 2, 1,
          4, 5, 6, 7,
          0, 1, 5, 4,
          2, 3, 7, 6,
          0, 3, 7, 4,
-         1, 2, 6, 5);
+         1, 5, 6, 2);
       
       Cube_Buffer  : Buffer_Object;
       Index_Buffer : Buffer_Object;
@@ -84,25 +100,26 @@ begin
       Last_Seconds : Ada.Calendar.Day_Duration := 0.0;
       Frame_Count  : Natural;
    begin
+      GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      Ada.Text_IO.Put_Line (GL.Toggles.State (GL.Toggles.Depth_Test)'Img);
+      
       Array_Buffer.Bind (Cube_Buffer);
-      Load_Vector (Array_Buffer, Cube, Static_Draw);
+      Load_Colored_Vertex (Array_Buffer, Cube, Static_Draw);
       
-      GL.Fixed.Set_Vertex_Pointer (4, 0, 0);
-      
+      GL.Fixed.Set_Vertex_Pointer (3, 40, 0);
       GL.Fixed.Enable (GL.Fixed.Vertex_Array);
+      
+      GL.Fixed.Set_Color_Pointer (40, 24);
+      GL.Fixed.Enable (GL.Fixed.Color_Array);
       
       Element_Array_Buffer.Bind (Index_Buffer);
       Load_Index (Element_Array_Buffer, Indexes, Static_Draw);
       
-      GL.Fixed.Set_Index_Pointer (Int_Type, 0, 0);
-      
-      GL.Fixed.Enable (GL.Fixed.Index_Array);
-      
       while Glfw.Display.Opened loop
-         Clear (Buffer_Bits'(Color => True, others => False));
+         Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
          
          Modelview.Load_Identity;
-         Modelview.Apply_Translation (0.0, -1.0, -4.5);
+         Modelview.Apply_Translation (0.5, -1.5, -6.5);
          Modelview.Apply_Rotation (Rotator, 0.0, 1.0, 0.0);
          Rotator := Rotator + 1.0;
          

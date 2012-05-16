@@ -178,7 +178,7 @@ private package GL.API is
    procedure Color_Pointer (Size      : Int;
                             Data_Type : Signed_Numeric_Type;
                             Stride    : Low_Level.SizeI;
-                            Pointer   : Zero);
+                            Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Color_Pointer,
                   External_Name => "glColorPointer");
    

@@ -28,17 +28,10 @@ package body GL.Fixed is
       Check_OpenGL_Error;
    end Set_Vertex_Pointer;
    
-   procedure Set_Index_Pointer  (Index_Type : Signed_Numeric_Type;
-                                 Stride, Offset : Natural) is
+   procedure Set_Color_Pointer  (Stride, Offset : Natural) is
    begin
-      API.Index_Pointer (Index_Type, Low_Level.SizeI (Stride),
+      API.Color_Pointer (4, Single_Type, Low_Level.SizeI (Stride),
                          Int (Offset));
-      Check_OpenGL_Error;
-   end Set_Index_Pointer;
-   
-   procedure Set_Color_Pointer  (Stride : Natural) is
-   begin
-      API.Color_Pointer (4, Single_Type, Low_Level.SizeI (Stride), 0);
       Check_OpenGL_Error;
    end Set_Color_Pointer;
    
