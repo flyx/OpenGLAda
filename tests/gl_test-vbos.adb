@@ -19,37 +19,36 @@ with Glfw.Events;
 
 with GL.Buffers;
 with GL.Colors;
+with GL.Common;
 with GL.Objects.Buffer;
-with GL.Algebra;
 with GL.Fixed;
 with GL.Fixed.Matrix;
 with GL.Fixed.Immediate;
-with GL.Low_Level;
-with GL.Common;
+with GL.Types;
+
+with Ada.Text_IO;
 
 procedure GL_Test.VBOs is
-   use GL.Algebra;
    use GL.Fixed.Matrix;
-   use type GL.Real;
+   use GL.Types;
+   use GL.Types.Doubles;
    use GL;
    
    type Vector_Array is array (Integer range <>) of aliased Vector4;
-   type Int_Array is array (Integer range <>) of aliased Low_Level.Int;
+   type Int_Array is array (Integer range <>) of aliased Int;
    
    procedure Load_Vector is new GL.Objects.Buffer.Load_To_Buffer
      (Element_Type => Vector4, Array_Type => Vector_Array);
    
    procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
-     (Element_Type => Low_Level.Int, Array_Type => Int_Array);
+     (Element_Type => Int, Array_Type => Int_Array);
 begin
    Glfw.Init;
    Glfw.Display.Open (Mode => Glfw.Display.Window);
    
    Projection.Load_Identity;
    Projection.Apply_Frustum (-2.0, 2.0, -1.5, 1.5, 3.0, 20.0);
-   
-   GL.Buffers.Set_Color_Clear_Value (GL.Colors.Color'(0.0, 1.0, 0.0, 0.0));
-   
+      
    GL.Fixed.Immediate.Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
    
    declare
@@ -78,7 +77,7 @@ begin
       Cube_Buffer  : Buffer_Object;
       Index_Buffer : Buffer_Object;
       
-      Rotator : Real := 0.0;
+      Rotator : Double := 0.0;
    begin
       Array_Buffer.Bind (Cube_Buffer);
       Load_Vector (Array_Buffer, Cube, Static_Draw);
@@ -90,7 +89,7 @@ begin
       Element_Array_Buffer.Bind (Index_Buffer);
       Load_Index (Element_Array_Buffer, Indexes, Static_Draw);
       
-      GL.Fixed.Set_Index_Pointer (Common.Int_Type, 0, 0);
+      GL.Fixed.Set_Index_Pointer (Int_Type, 0, 0);
       
       GL.Fixed.Enable (GL.Fixed.Index_Array);
       
@@ -102,7 +101,7 @@ begin
          Modelview.Apply_Rotation (Rotator, 0.0, 1.0, 0.0);
          Rotator := Rotator + 1.0;
          
-         GL.Fixed.Draw_Elements (GL.Fixed.Quads, 24, Common.UInt_Type);
+         GL.Fixed.Draw_Elements (GL.Fixed.Quads, 24, UInt_Type);
          
          GL.Flush;
          

@@ -1,7 +1,8 @@
 # OpenGLAda - Yet Another OpenGL binding for Ada
 
 **OpenGLAda** is a fat OpenGL binding for the Ada programming language.
-Unlike other bindings (see the project's homepage for a list - coming soon),
+Unlike other bindings (see the
+[project's homepage](http://flyx86.github.com/OpenGLAda/) for a list),
 OpenGLAda enriches the original API with concepts and features provided by
 Ada, like object orientation, type safety and generics.
 

@@ -20,9 +20,12 @@ with Interfaces.C.Extensions;
 with Interfaces.C.Strings;
 
 with GL.Low_Level;
+with GL.Types;
 
 package GL.CGL is
    pragma Preelaborate;
+   
+   use GL.Types;
 
    --  CGL types and constants
 
@@ -225,15 +228,15 @@ package GL.CGL is
 
    function CGLChoosePixelFormat (attribs : access CGLPixelFormatAttribute;
                                   pix     : access CGLPixelFormatObject;
-                                  npix    : access Low_Level.Int)
+                                  npix    : access Int)
                                   return CGLError;
 
    function CGLDestroyPixelFormat (pix : CGLPixelFormatObject) return CGLError;
 
    function CGLDescribePixelFormat (pix : CGLPixelFormatObject;
-                                    pix_num : Low_Level.Int;
+                                    pix_num : Int;
                                     attrib : CGLPixelFormatAttribute;
-                                    value : access Low_Level.Int)
+                                    value : access Int)
                                     return CGLError;
 
    procedure CGLReleasePixelFormat (pix : in CGLPixelFormatObject);
@@ -242,18 +245,18 @@ package GL.CGL is
                                   return CGLPixelFormatObject;
 
    function CGLGetPixelFormatRetainCount (pix : CGLPixelFormatObject)
-                                          return Low_Level.UInt;
+                                          return UInt;
 
-   function CGLQueryRendererInfo (display_mask : Low_Level.UInt;
+   function CGLQueryRendererInfo (display_mask : UInt;
                                   rend : access CGLRendererInfoObject;
-                                  nrend : access Low_Level.Int) return CGLError;
+                                  nrend : access Int) return CGLError;
 
    function CGLDestroyRendererInfo (rend : CGLRendererInfoObject)
                                     return CGLError;
 
-   function CGLDescribeRenderer (rend : CGLRendererInfoObject; rend_num : Low_Level.Int;
+   function CGLDescribeRenderer (rend : CGLRendererInfoObject; rend_num : Int;
                                  prop : CGLRendererProperty;
-                                 value : access Low_Level.Int) return CGLError;
+                                 value : access Int) return CGLError;
 
    function CGLCreateContext (pix : CGLPixelFormatObject;
                               share : CGLContextObject;
@@ -268,13 +271,13 @@ package GL.CGL is
 
    procedure CGLReleaseContext (ctx : in CGLContextObject);
 
-   function CGLGetContextRetainCount (ctx : CGLContextObject) return Low_Level.UInt;
+   function CGLGetContextRetainCount (ctx : CGLContextObject) return UInt;
 
    function CGLGetPixelFormat (ctx : CGLContextObject) return CGLPixelFormatObject;
 
    function CGLCreatePBuffer (width, height : Low_Level.SizeI;
                               target, internalFormat : Low_Level.Enum;
-                              max_level : Low_Level.Int;
+                              max_level : Int;
                               pbuffer : access CGLPBufferObject)
                               return CGLError;
 
@@ -283,7 +286,7 @@ package GL.CGL is
    function CGLDescribePBuffer (obj : CGLPBufferObject;
                                 width, height : access Low_Level.SizeI;
                                 target, internalFormat : access Low_Level.Enum;
-                                mipmap : access Low_Level.Int) return CGLError;
+                                mipmap : access Int) return CGLError;
 
    function CGLTexImagePBuffer (ctx : CGLContextObject;
                                 pbuffer : CGLPBufferObject;
@@ -294,34 +297,34 @@ package GL.CGL is
 
    procedure CGLReleasePBuffer (pbuffer : in CGLPBufferObject);
 
-   function CGLGetPBufferRetainCount (pbuffer : CGLPBufferObject) return Low_Level.UInt;
+   function CGLGetPBufferRetainCount (pbuffer : CGLPBufferObject) return UInt;
 
    function CGLSetOffScreen (ctx : CGLContextObject;
                              width, height : Low_Level.SizeI;
-                             rowbytes : Low_Level.Int;
+                             rowbytes : Int;
                              baseaddr : Interfaces.C.Extensions.void_ptr)
                              return CGLError;
 
    function CGLGetOffScreen (ctx : CGLContextObject;
                              width, height : access Low_Level.SizeI;
-                             rowbytes : access Low_Level.Int;
+                             rowbytes : access Int;
                              baseaddr : access Interfaces.C.Extensions.void_ptr)
                              return CGLError;
 
    function CGLSetFullScreen (ctx : CGLContextObject) return CGLError;
 
    function CGLSetFullScreenOnDisplay (ctx : CGLContextObject;
-                                       display_mask : Low_Level.UInt) return CGLError;
+                                       display_mask : UInt) return CGLError;
 
    function CGLSetPBuffer (ctx : CGLContextObject;
                            pbuffer : CGLPBufferObject;
                            face : Low_Level.Enum;
-                           level, screen : Low_Level.Int) return CGLError;
+                           level, screen : Int) return CGLError;
 
    function CGLGetPBuffer (ctx : CGLContextObject;
                            pbuffer : access CGLPBufferObject;
                            face : access Low_Level.Enum;
-                           level, screen : access Low_Level.Int) return CGLError;
+                           level, screen : access Int) return CGLError;
 
    function CGLClearDrawable (ctx : CGLContextObject) return CGLError;
 
@@ -334,41 +337,41 @@ package GL.CGL is
                         return CGLError;
 
    function CGLIsEnabled (ctx : CGLContextObject; pname : CGLContextEnable;
-                          enable : access Low_Level.Int) return CGLError;
+                          enable : access Int) return CGLError;
 
    function CGLSetParameter (ctx : CGLContextObject;
                              pname : CGLContextParameter;
-                             params : access constant Low_Level.Int) return CGLError;
+                             params : access constant Int) return CGLError;
 
    function CGLGetParameter (ctx : CGLContextObject;
                              pname : CGLContextParameter;
-                             params : access Low_Level.Int) return CGLError;
+                             params : access Int) return CGLError;
 
-   function CGLSetVirtualScreen (ctx : CGLContextObject; screen : Low_Level.Int)
+   function CGLSetVirtualScreen (ctx : CGLContextObject; screen : Int)
                                  return CGLError;
 
-   function CGLGetVirtualScreen (ctx : CGLContextObject; screen : access Low_Level.Int)
+   function CGLGetVirtualScreen (ctx : CGLContextObject; screen : access Int)
                                  return CGLError;
 
    function CGLUpdateContext (ctx : CGLContextObject) return CGLError;
 
    function CGLSetGlobalOption (pname : CGLGlobalOption;
-                                params : access constant Low_Level.Int) return CGLError;
+                                params : access constant Int) return CGLError;
 
    function CGLGetGlobalOption (pname : CGLGlobalOption;
-                                params : access Low_Level.Int) return CGLError;
+                                params : access Int) return CGLError;
 
-   function CGLSetOption (pname : CGLGlobalOption; param : Low_Level.Int)
+   function CGLSetOption (pname : CGLGlobalOption; param : Int)
                           return CGLError;
 
    function CGLGetOption (pname : CGLGlobalOption;
-                          param : access Low_Level.Int) return CGLError;
+                          param : access Int) return CGLError;
 
    function CGLLockContext (ctx : CGLContextObject) return CGLError;
 
    function CGLUnlockContext (ctx : CGLContextObject) return CGLError;
 
-   procedure CGLGetVersion (majorvers, minorvers : out Low_Level.Int);
+   procedure CGLGetVersion (majorvers, minorvers : out Int);
 
    function CGLErrorString (error : CGLError)
                             return Interfaces.C.Strings.chars_ptr;

@@ -18,12 +18,12 @@ with GL.Fixed.Immediate; use GL.Fixed.Immediate;
 with GL.Colors;    use GL.Colors;
 with GL.Fixed.Matrix;  use GL.Fixed.Matrix; use GL.Fixed;
 with GL.Buffers;   use GL.Buffers;
-with GL.Algebra;   use GL.Algebra;
+with GL.Types;   use GL.Types;
 
 with Glfw.Display;
 
 procedure Glfw_Test.Immediate is
-   use type GL.Real;
+   use GL.Types.Doubles;
 begin
    Glfw.Init;
 
