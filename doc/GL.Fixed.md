@@ -2,7 +2,7 @@
 layout : default
 title : API - The package GL.Matrices
 packages :
-  - GL.Matrices
+  - GL.Fixed
 weight: 3
 ---
 
