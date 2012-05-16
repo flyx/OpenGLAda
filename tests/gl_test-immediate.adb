@@ -14,20 +14,23 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Buffers;         use GL.Buffers;
+with GL.Colors;          use GL.Colors;
 with GL.Fixed.Immediate; use GL.Fixed.Immediate;
-with GL.Colors;    use GL.Colors;
-with GL.Fixed.Matrix;  use GL.Fixed.Matrix; use GL.Fixed;
-with GL.Buffers;   use GL.Buffers;
-with GL.Types;   use GL.Types;
+with GL.Fixed.Matrix;    use GL.Fixed.Matrix;
+with GL.Types;           use GL.Types;
+use GL.Fixed;
 
 with Glfw.Display;
+with Glfw.Events.Keys;
 
-procedure Glfw_Test.Immediate is
+procedure GL_Test.Immediate is
    use GL.Types.Doubles;
 begin
    Glfw.Init;
 
-   Glfw.Display.Open (Mode => Glfw.Display.Window);
+   Glfw.Display.Open (Mode  => Glfw.Display.Window,
+                      Width => 500, Height => 500);
 
    Projection.Load_Identity;
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
@@ -52,15 +55,15 @@ begin
       end loop;
       
       Projection.Pop;
-      Projection.Apply_Rotation (1.0, 0.0, 0.0, 1.0);
+      Projection.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
 
       GL.Flush;
 
       Glfw.Display.Swap_Buffers;
-
-      delay 0.1;
+            
+      Glfw.Events.Poll_Events;
    end loop;
 
    Glfw.Terminate_Glfw;
 
-end Glfw_Test.Immediate;
+end GL_Test.Immediate;

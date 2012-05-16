@@ -19,6 +19,6 @@ project Glfw_Test is
       for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
    end Compiler;
 
-   for Main use ("glfw_test-display.adb", "glfw_test-immediate.adb");
+   for Main use ("glfw_test-display.adb");
 end Glfw_Test;
 
