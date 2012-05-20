@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Types;
+with GL.Immediate;
 
 private with GL.Low_Level;
 
@@ -24,9 +25,7 @@ package GL.Fixed is
    
    use GL.Types;
    
-   type Connection_Mode is (Points, Lines, Line_Loop, Line_Strip, Triangles,
-                            Triangle_Strip, Triangle_Fan, Quads, Quad_Strip,
-                            Polygon);
+   
    
    subtype Vertex_Length is Positive range 2 .. 4;
    
@@ -47,18 +46,6 @@ package GL.Fixed is
                             Index_Type : Unsigned_Numeric_Type);
    
 private
-   for Connection_Mode use (Points         => 16#0000#,
-                            Lines          => 16#0001#,
-                            Line_Loop      => 16#0002#,
-                            Line_Strip     => 16#0003#,
-                            Triangles      => 16#0004#,
-                            Triangle_Strip => 16#0005#,
-                            Triangle_Fan   => 16#0006#,
-                            Quads          => 16#0007#,
-                            Quad_Strip     => 16#0008#,
-                            Polygon        => 16#0009#);
-   for Connection_Mode'Size use Low_Level.Enum'Size;
-
    for Client_Side_Capability use (Vertex_Array          => 16#8074#,
                                    Normal_Array          => 16#8075#, 
                                    Color_Array           => 16#8076#,

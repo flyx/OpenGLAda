@@ -155,7 +155,7 @@ private package GL.API is
    --              Immediate API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
-   procedure GL_Begin (Mode : Fixed.Connection_Mode);
+   procedure GL_Begin (Mode : Connection_Mode);
    pragma Import (Convention => StdCall, Entity => GL_Begin,
                   External_Name => "glBegin");
 
@@ -205,12 +205,12 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Disable_Client_State,
                   External_Name => "glDisableClientState");
    
-   procedure Draw_Arrays (Mode  : Fixed.Connection_Mode;
+   procedure Draw_Arrays (Mode  : Connection_Mode;
                           First : Int; Count : Low_Level.SizeI);
    pragma Import (Convention => StdCall, Entity => Draw_Arrays,
                   External_Name => "glDrawArrays");
    
-   procedure Draw_Elements (Mode       : Fixed.Connection_Mode;
+   procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Low_Level.SizeI;
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Zero);

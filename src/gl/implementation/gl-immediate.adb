@@ -17,7 +17,7 @@
 with GL.API.Doubles;
 with GL.Enums.Getter;
 
-package body GL.Fixed.Immediate is
+package body GL.Immediate is
 
    overriding procedure Finalize (Token : in out Input_Token) is
    begin
@@ -117,4 +117,4 @@ package body GL.Fixed.Immediate is
       return Value;
    end Current_Texture_Coordinates;
 
-end GL.Fixed.Immediate;
+end GL.Immediate;

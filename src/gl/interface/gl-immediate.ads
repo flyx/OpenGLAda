@@ -22,7 +22,7 @@ with GL.Low_Level;
 -- This package provides functions to directly insert vertices, colors, normals
 -- etc. into the pipeline. Note that these functions have been deprecated with
 -- OpenGL 3, you should use VBOs instead.
-package GL.Fixed.Immediate is
+package GL.Immediate is
    pragma Preelaborate;
    
    use GL.Types;
@@ -56,5 +56,4 @@ package GL.Fixed.Immediate is
 private
    type Input_Token (Mode : Connection_Mode) is
      new Ada.Finalization.Limited_Controlled with null record;
-
-end GL.Fixed.Immediate;
+end GL.Immediate;

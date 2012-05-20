@@ -47,6 +47,11 @@ package GL.Types is
                                 Single_Type, Double_Type);
    type Unsigned_Numeric_Type is (UByte_Type, UShort_Type, UInt_Type);
    
+   -- doesn't really fit here, but there's no other place it fits better
+   type Connection_Mode is (Points, Lines, Line_Loop, Line_Strip, Triangles,
+                            Triangle_Strip, Triangle_Fan, Quads, Quad_Strip,
+                            Polygon);
+   
    package Bytes is new GL.Algebra (Element_Type => Byte,
                                     Null_Value   => 0,
                                     One_Value    => 1);
@@ -105,4 +110,16 @@ private
                                   UShort_Type => 16#1403#,
                                   UInt_Type   => 16#1405#);
    for Unsigned_Numeric_Type'Size use UInt'Size;
+   
+   for Connection_Mode use (Points         => 16#0000#,
+                            Lines          => 16#0001#,
+                            Line_Loop      => 16#0002#,
+                            Line_Strip     => 16#0003#,
+                            Triangles      => 16#0004#,
+                            Triangle_Strip => 16#0005#,
+                            Triangle_Fan   => 16#0006#,
+                            Quads          => 16#0007#,
+                            Quad_Strip     => 16#0008#,
+                            Polygon        => 16#0009#);
+   for Connection_Mode'Size use UInt'Size;
 end GL.Types;
