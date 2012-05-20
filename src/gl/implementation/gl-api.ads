@@ -20,6 +20,7 @@ with GL.Common;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
 with GL.Fixed.Textures;
+with GL.Fixed.Lighting;
 with GL.Low_Level.Loader;
 with GL.Low_Level.Enums;
 with GL.Objects.Textures.Loader_2D;
@@ -79,6 +80,22 @@ private package GL.API is
                           Target : access Int);
    pragma Import (Convention => StdCall, Entity => Get_Integer,
                   External_Name => "glGetIntegerv");
+   
+   procedure Get_Color_Control (Name   : Enums.Getter.Parameter;
+                                Target : access Fixed.Lighting.Color_Control);
+   pragma Import (Convention => StdCall, Entity => Get_Color_Control,
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Shade_Model (Name   : Enums.Getter.Parameter;
+                              Target : access Fixed.Lighting.Shade_Model);
+   pragma Import (Convention => StdCall, Entity => Get_Shade_Model,
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Light_Color (Name   : Enums.Light_Name;
+                              Pname  : Enums.Light_Param;
+                              Target : in out Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Get_Light_Color,
+                  External_Name => "glGetLightfv");
 
    -----------------------------------------------------------------------------
    --                                 Toggles                                 --
@@ -201,7 +218,35 @@ private package GL.API is
                             Indices    : Zero);
    pragma Import (Convention => StdCall, Entity => Draw_Elements,
                   External_Name => "glDrawElements");
-
+   
+   -----------------------------------------------------------------------------
+   --               Lighting API (deprecated as of OpenGL 3.0)                --
+   -----------------------------------------------------------------------------
+   
+   procedure Light_Model_Color (Param : Enums.Light_Model_Ambient_Parameter;
+                                Color : Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Light_Model_Color,
+                  External_Name => "glLightModelfv");
+   
+   procedure Light_Model_Color_Control (Param : Enums.Light_Model_CC_Parameter;
+     Value : access constant Fixed.Lighting.Color_Control);
+   pragma Import (Convention => StdCall, Entity => Light_Model_Color_Control,
+                  External_Name => "glLightModeliv");
+   
+   procedure Light_Model_Toggles (Param : Enums.Light_Model_Toggle_Parameter;
+                                  Value : access constant Int);
+   pragma Import (Convention => StdCall, Entity => Light_Model_Toggles,
+                  External_Name => "glLightModeliv");
+   
+   procedure Shade_Model (Mode : Fixed.Lighting.Shade_Model);
+   pragma Import (Convention => StdCall, Entity => Shade_Model,
+                  External_Name => "glShadeModel");
+   
+   procedure Light_Color (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
+                          Param : Colors.Color);
+   pragma Import (Convention => StdCall, Entity => Light_Color,
+                  External_Name => "glLightfv");
+   
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------

@@ -1,5 +1,4 @@
 -------------------------------------------------------------------------------
----
 -- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
@@ -228,6 +227,7 @@ package GL.Enums.Getter is
       Feedback_Buffer_Type,
       Selection_Buffer_Pointer,
       Selection_Buffer_Size,
+      Light_Model_Color_Control,
       Current_Fog_Coord);
    for Parameter use
      (Current_Color                 => 16#0B00#,
@@ -439,6 +439,7 @@ package GL.Enums.Getter is
       Feedback_Buffer_Type          => 16#0DF2#,
       Selection_Buffer_Pointer      => 16#0DF3#,
       Selection_Buffer_Size         => 16#0DF4#,
+      Light_Model_Color_Control     => 16#81F8#,
       Current_Fog_Coord             => 16#8453#);
 
 end GL.Enums.Getter;

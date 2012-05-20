@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Toggles;
 with GL.Low_Level;
 
 private package GL.Enums is
@@ -39,7 +40,29 @@ private package GL.Enums is
 
    type Matrix_Mode is (Modelview, Projection, Texture, Color);
    
+   type Light_Model_Parameter is (Local_Viewer, Two_Side,
+                                  Ambient, Color_Control);
    
+   for Light_Model_Parameter use (Local_Viewer  => 16#0B51#,
+                                  Two_Side      => 16#0B52#,
+                                  Ambient       => 16#0B53#,
+                                  Color_Control => 16#81F8#);
+   for Light_Model_Parameter'Size use Low_Level.Enum'Size;                               
+   
+   subtype Light_Model_Ambient_Parameter is Light_Model_Parameter range
+     Ambient .. Ambient;
+   
+   subtype Light_Model_CC_Parameter is Light_Model_Parameter range
+     Color_Control .. Color_Control;
+   
+   subtype Light_Model_Toggle_Parameter is Light_Model_Parameter range
+     Local_Viewer .. Two_Side;
+   
+   type Light_Param is (Ambient, Diffuse, Specular, Position,
+                        Spot_Direction, Spot_Exponent,Spot_Cutoff, Constant_Attenduation,
+                        Linear_Attenduation, Quadratic_Attenduation);
+   
+   subtype Light_Name is Toggles.Toggle range Toggles.Light0 .. Toggles.Light7;
 
 private
 
@@ -81,5 +104,17 @@ private
                         Texture    => 16#1702#,
                         Color      => 16#1800#);
    for Matrix_Mode'Size use Low_Level.Enum'Size;
+   
+   for Light_Param use (Ambient        => 16#1200#,
+                        Diffuse        => 16#1201#,
+                        Specular       => 16#1202#,
+                        Position       => 16#1203#,
+                        Spot_Direction => 16#1204#,
+                        Spot_Exponent  => 16#1205#,
+                        Spot_Cutoff    => 16#1206#,
+                        Constant_Attenduation  => 16#1207#,
+                        Linear_Attenduation    => 16#1208#,
+                        Quadratic_Attenduation => 16#1209#);
+   for Light_Param'Size use Low_Level.Enum'Size;
 
 end GL.Enums;
