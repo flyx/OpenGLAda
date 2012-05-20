@@ -18,14 +18,12 @@ with Glfw.Display;
 with Glfw.Events;
 
 with GL.Buffers;
-with GL.Colors;
-with GL.Common;
 with GL.Objects.Buffer;
 with GL.Fixed;
 with GL.Fixed.Matrix;
 with GL.Fixed.Immediate;
 with GL.Toggles;
-with GL.Types;
+with GL.Types.Colors;
 
 with Ada.Calendar;
 with Ada.Text_IO;
@@ -66,7 +64,7 @@ begin
    Projection.Load_Identity;
    Projection.Apply_Frustum (-2.0, 2.0, -1.5, 1.5, 3.0, 20.0);
       
-   GL.Fixed.Immediate.Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
+   GL.Fixed.Immediate.Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
    
    declare
       use GL.Objects.Buffer;
@@ -98,7 +96,7 @@ begin
       
       Cur_Seconds  : Ada.Calendar.Day_Duration;
       Last_Seconds : Ada.Calendar.Day_Duration := 0.0;
-      Frame_Count  : Natural;
+      Frame_Count  : Natural := 0;
    begin
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
       Ada.Text_IO.Put_Line (GL.Toggles.State (GL.Toggles.Depth_Test)'Img);

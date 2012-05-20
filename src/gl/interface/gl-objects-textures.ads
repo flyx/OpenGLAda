@@ -17,8 +17,7 @@
 with Ada.Finalization;
 
 with GL.Low_Level.Enums;
-with GL.Colors;
-with GL.Common;
+with GL.Types.Colors;
 
 private with GL.Enums.Textures;
 
@@ -50,6 +49,19 @@ package GL.Objects.Textures is
    subtype Priority is Double range 0.0 .. 1.0;
 
    type Depth_Mode is (Alpha, Luminance, Intensity);
+   
+   type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
+                             GEqual, Always);
+   
+   for Compare_Function use (Never     => 16#0200#,
+                             Less      => 16#0201#,
+                             Equal     => 16#0202#,
+                             LEqual    => 16#0203#,
+                             Greater   => 16#0204#,
+                             Not_Equal => 16#0205#,
+                             GEqual    => 16#0206#,
+                             Always    => 16#0207#);
+   for Compare_Function'Size use Low_Level.Enum'Size;
 
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
@@ -99,9 +111,9 @@ package GL.Objects.Textures is
    function Compare_X_To_Texture_Enabled (Target : Texture_Target) return Boolean;
 
    procedure Set_Compare_Function (Target : Texture_Target;
-                                   Func : Common.Compare_Function);
-   function Compare_Function (Target : Texture_Target)
-                             return Common.Compare_Function;
+                                   Func : Compare_Function);
+   function Current_Compare_Function (Target : Texture_Target)
+                                     return Compare_Function;
 
    procedure Set_Depth_Texture_Mode (Target : Texture_Target; Mode : Depth_Mode);
    function Depth_Texture_Mode (Target : Texture_Target) return Depth_Mode;

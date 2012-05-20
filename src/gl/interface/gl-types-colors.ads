@@ -14,22 +14,18 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
-
-package GL.Common is
+package GL.Types.Colors is
    pragma Preelaborate;
-   
-   type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
-                             GEqual, Always);
-private
+      
+   type Color_Index is (R, G, B, A);
+   subtype Basic_Color_Index is Color_Index range R .. B;
 
-   for Compare_Function use (Never     => 16#0200#,
-                             Less      => 16#0201#,
-                             Equal     => 16#0202#,
-                             LEqual    => 16#0203#,
-                             Greater   => 16#0204#,
-                             Not_Equal => 16#0205#,
-                             GEqual    => 16#0206#,
-                             Always    => 16#0207#);
-   for Compare_Function'Size use Low_Level.Enum'Size;
-end GL.Common;
+   subtype Component is Single range 0.0 .. 1.0;
+
+   type Color is array (Color_Index) of aliased Component;
+   type Basic_Color is array (Basic_Color_Index) of Component;
+
+private
+   pragma Convention (C, Color);
+   pragma Convention (C, Basic_Color);
+end GL.Types.Colors;

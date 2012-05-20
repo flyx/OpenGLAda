@@ -14,9 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Colors;
 with GL.Low_Level;
-with GL.Types;
+with GL.Types.Colors;
 
 package GL.Buffers is
    pragma Preelaborate;

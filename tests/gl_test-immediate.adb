@@ -15,10 +15,9 @@
 --------------------------------------------------------------------------------
 
 with GL.Buffers;         use GL.Buffers;
-with GL.Colors;          use GL.Colors;
 with GL.Fixed.Immediate; use GL.Fixed.Immediate;
 with GL.Fixed.Matrix;    use GL.Fixed.Matrix;
-with GL.Types;           use GL.Types;
+with GL.Types.Colors;    use GL.Types;
 use GL.Fixed;
 
 with Glfw.Display;
@@ -45,7 +44,7 @@ begin
          declare
             Token : Input_Token := Start (Line_Strip);
          begin
-            Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
+            Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
             Token.Add_Vertex (Vector4'(0.1, 0.4, 0.0, 1.0));
             Token.Add_Vertex (Vector4'(0.1, 0.6, 0.0, 1.0));
             Token.Add_Vertex (Vector4'(-0.1, 0.6, 0.0, 1.0));

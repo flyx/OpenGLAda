@@ -15,10 +15,12 @@
 --------------------------------------------------------------------------------
 
 with GL.Low_Level;
-with GL.Colors;
+with GL.Types.Colors;
 
 package GL.Fixed.Textures is
    pragma Preelaborate;
+
+   use GL.Types;
 
    type Texture_Function is (Add, Blend, Replace, Modulate, Decal, Combine);
    type Combine_Function is (Add, Replace, Modulate, Subtract, Add_Signed,

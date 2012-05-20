@@ -16,9 +16,8 @@
 
 with Ada.Finalization;
 
-with GL.Types;
+with GL.Types.Colors;
 with GL.Low_Level;
-with GL.Colors;
 
 -- This package provides functions to directly insert vertices, colors, normals
 -- etc. into the pipeline. Note that these functions have been deprecated with

@@ -15,10 +15,12 @@
 --------------------------------------------------------------------------------
 
 with GL.Low_Level;
-with GL.Colors;
+with GL.Types.Colors;
 
 private package GL.Helpers is
    pragma Preelaborate;
+   
+   use GL.Types;
 
    function Float_Array (Value : Colors.Color) return Low_Level.Single_Array;
    function Color (Value : Low_Level.Single_Array) return Colors.Color;

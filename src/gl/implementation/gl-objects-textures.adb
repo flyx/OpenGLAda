@@ -237,7 +237,6 @@ package body GL.Objects.Textures is
    end Z_Wrapping;
 
    procedure Set_Border_Color (Target : Texture_Target; Color : Colors.Color) is
-      use GL.Colors;
 
       Raw : Low_Level.Single_Array := Helpers.Float_Array (Color);
    begin
@@ -247,8 +246,6 @@ package body GL.Objects.Textures is
    end Set_Border_Color;
 
    function Border_Color (Target : Texture_Target) return Colors.Color is
-      use GL.Colors;
-
       Raw : Low_Level.Single_Array (1 .. 4);
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Border_Color,
@@ -299,22 +296,22 @@ package body GL.Objects.Textures is
    end Compare_X_To_Texture_Enabled;
 
    procedure Set_Compare_Function (Target : Texture_Target;
-                                   Func : Common.Compare_Function) is
+                                   Func   : Compare_Function) is
    begin
       API.Tex_Parameter_Comp_Func (Target.Kind, Enums.Textures.Compare_Func,
                                    Func);
       Check_OpenGL_Error;
    end Set_Compare_Function;
 
-   function Compare_Function (Target : Texture_Target)
-                              return Common.Compare_Function is
-      Value : Common.Compare_Function;
+   function Current_Compare_Function (Target : Texture_Target)
+                                     return Compare_Function is
+      Value : Compare_Function;
    begin
       API.Get_Tex_Parameter_Comp_Func (Target.Kind, Enums.Textures.Compare_Func,
                                        Value);
       Check_OpenGL_Error;
       return Value;
-   end Compare_Function;
+   end Current_Compare_Function;
 
    procedure Set_Depth_Texture_Mode (Target : Texture_Target; Mode : Depth_Mode) is
    begin

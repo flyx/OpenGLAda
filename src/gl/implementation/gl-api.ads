@@ -15,8 +15,6 @@
 --------------------------------------------------------------------------------
 
 with GL.Buffers;
-with GL.Colors;
-with GL.Common;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
 with GL.Fixed.Textures;
@@ -27,7 +25,7 @@ with GL.Objects.Textures.Loader_2D;
 with GL.Objects.Buffer;
 with GL.Pixel_Data;
 with GL.Toggles;
-with GL.Types;
+with GL.Types.Colors;
 with System;
 
 private package GL.API is
@@ -335,7 +333,7 @@ private package GL.API is
 
    procedure Tex_Parameter_Comp_Func (Target     : Low_Level.Enums.Texture_Kind;
                                       Param_Name : Enums.Textures.Parameter;
-                                      Value      : Common.Compare_Function);
+                                      Value      : Objects.Textures.Compare_Function);
    pragma Import (Convention => StdCall, Entity => Tex_Parameter_Comp_Func,
                   External_Name => "glTexParameteri");
 
@@ -383,7 +381,7 @@ private package GL.API is
 
    procedure Get_Tex_Parameter_Comp_Func (Target     : Low_Level.Enums.Texture_Kind;
                                           Param_Name : Enums.Textures.Parameter;
-                                          Values     : out Common.Compare_Function);
+                                          Values     : out Objects.Textures.Compare_Function);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Comp_Func,
                   External_Name => "glGetTexParameteriv");
 

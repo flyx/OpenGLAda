@@ -14,8 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -------------------------------------------------------------------------------
 
-with GL.Colors;
-with GL.Types;
+with GL.Types.Colors;
 
 private with GL.Low_Level;
 private with GL.Toggles;
