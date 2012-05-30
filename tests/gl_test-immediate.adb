@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Buffers;         use GL.Buffers;
-with GL.Fixed.Immediate; use GL.Fixed.Immediate;
+with GL.Immediate;       use GL.Immediate;
 with GL.Fixed.Matrix;    use GL.Fixed.Matrix;
 with GL.Types.Colors;    use GL.Types;
 use GL.Fixed;

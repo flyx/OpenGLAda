@@ -21,7 +21,7 @@ with GL.Buffers;
 with GL.Objects.Buffer;
 with GL.Fixed;
 with GL.Fixed.Matrix;
-with GL.Fixed.Immediate;
+with GL.Immediate;
 with GL.Toggles;
 with GL.Types.Colors;
 
@@ -64,7 +64,7 @@ begin
    Projection.Load_Identity;
    Projection.Apply_Frustum (-2.0, 2.0, -1.5, 1.5, 3.0, 20.0);
       
-   GL.Fixed.Immediate.Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
+   GL.Immediate.Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
    
    declare
       use GL.Objects.Buffer;
@@ -121,7 +121,7 @@ begin
          Modelview.Apply_Rotation (Rotator, 0.0, 1.0, 0.0);
          Rotator := Rotator + 1.0;
          
-         GL.Fixed.Draw_Elements (GL.Fixed.Quads, 24, UInt_Type);
+         GL.Fixed.Draw_Elements (GL.Types.Quads, 24, UInt_Type);
          
          GL.Flush;
          
