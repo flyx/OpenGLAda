@@ -54,7 +54,9 @@ package body GL.Objects.Programs is
          API.Get_Program_Info_Log (Subject.Reference.GL_Id,
                                    Low_Level.SizeI (Log_Length),
                                    Actual_Length, C_Info_Log);
-         return C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
+         Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
+         C.Strings.Free (C_Info_Log);
+         return Info_Log;
       end;
    end Info_Log;
 

@@ -37,8 +37,7 @@ package body GL.Objects.Shaders is
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Shader_Source_Length, Source_Length);
       declare
-         Shader_Source : String (1 .. Integer (Source_Length))
-           := (others => ' ');
+         Shader_Source : String (1 .. Integer (Source_Length));
          C_Shader_Source : C.Strings.chars_ptr
            := C.Strings.New_String (Shader_Source);
          Actual_Length : Low_Level.SizeI;
@@ -46,7 +45,10 @@ package body GL.Objects.Shaders is
          API.Get_Shader_Source (Subject.Reference.GL_Id,
                                 Low_Level.SizeI (Source_Length),
                                 Actual_Length, C_Shader_Source);
-         return C.Strings.Value (C_Shader_Source, C.size_t (Actual_Length));
+         Shader_Source
+           := C.Strings.Value (C_Shader_Source, C.size_t (Actual_Length));
+         C.Strings.Free (C_Shader_Source);
+         return Shader_Source;
       end;
    end Source;
 
@@ -69,8 +71,7 @@ package body GL.Objects.Shaders is
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Info_Log_Length, Log_Length);
       declare
-         Info_Log : String (1 .. Integer (Log_Length))
-           := (others => ' ');
+         Info_Log : String (1 .. Integer (Log_Length));
          C_Info_Log : C.Strings.chars_ptr
            := C.Strings.New_String (Info_Log);
          Actual_Length : Low_Level.SizeI;
@@ -78,7 +79,9 @@ package body GL.Objects.Shaders is
          API.Get_Shader_Info_Log (Subject.Reference.GL_Id,
                            Low_Level.SizeI (Log_Length),
                            Actual_Length, C_Info_Log);
-         return C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
+         Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
+         C.Strings.Free (C_Info_Log);
+         return Info_Log;
       end;
    end Info_Log;
    
