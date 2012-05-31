@@ -25,8 +25,6 @@ package GL.Fixed is
    
    use GL.Types;
    
-   
-   
    subtype Vertex_Length is Positive range 2 .. 4;
    
    type Client_Side_Capability is (Vertex_Array, Normal_Array, Color_Array,

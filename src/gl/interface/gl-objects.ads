@@ -38,7 +38,7 @@ package GL.Objects is
    -- interact with other C interfaces (e.g. OpenCL)
    function Raw_Id (Object : GL_Object) return UInt;
    
-   function "=" (Left, Right : GL_Object'Class) return Boolean;
+   function "=" (Left, Right : GL_Object) return Boolean;
    
    No_Object_Bound_Exception : exception;
 private

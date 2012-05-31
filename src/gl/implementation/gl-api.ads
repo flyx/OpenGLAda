@@ -23,9 +23,13 @@ with GL.Low_Level.Loader;
 with GL.Low_Level.Enums;
 with GL.Objects.Textures.Loader_2D;
 with GL.Objects.Buffer;
+with GL.Objects.Shaders;
 with GL.Pixel_Data;
 with GL.Toggles;
 with GL.Types.Colors;
+
+with Interfaces.C.Strings;
+
 with System;
 
 private package GL.API is
@@ -94,6 +98,11 @@ private package GL.API is
                               Target : in out Colors.Color);
    pragma Import (Convention => StdCall, Entity => Get_Light_Color,
                   External_Name => "glGetLightfv");
+   
+   procedure Get_Texture_Unit (Name   : Enums.Getter.Parameter;
+                               Target : access Enums.Textures.Texture_Unit);
+   pragma Import (Convention => StdCall, Entity => Get_Texture_Unit,
+                  External_Name => "glGetIntegerv");
 
    -----------------------------------------------------------------------------
    --                                 Toggles                                 --
@@ -499,6 +508,9 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Bool,
                   External_Name => "glGetTexEnviv");
    
+   procedure Active_Texture is new Low_Level.Loader.Procedure_With_1_Param
+      ("glActiveTexture", Enums.Textures.Texture_Unit);
+   
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
    -----------------------------------------------------------------------------
@@ -516,4 +528,53 @@ private package GL.API is
       ("glBufferData", Low_Level.Enums.Buffer_Kind, Low_Level.SizeIPtr,
        System.Address, Objects.Buffer.Buffer_Usage);
    
+   -----------------------------------------------------------------------------
+   --                                 Shaders                                 --
+   -----------------------------------------------------------------------------
+   
+   procedure Get_Shader_Param is new Low_Level.Loader.Getter_With_3_Params
+     ("glGetShaderiv", UInt, Enums.Shader_Param, Int);
+   
+   function Create_Shader is new Low_Level.Loader.Function_With_1_Param
+     ("glCreateShader", Objects.Shaders.Shader_Type, UInt);
+   
+   procedure Delete_Shader is new Low_Level.Loader.Procedure_With_1_Param
+     ("glDeleteShader", UInt);
+   
+   procedure Shader_Source is new Low_Level.Loader.Procedure_With_4_Params
+     ("glShaderSource", UInt, Low_Level.SizeI, Low_Level.CharPtr_Array,
+      Low_Level.Int_Array);
+   
+   procedure Get_Shader_Source is
+     new Low_Level.Loader.String_Getter_With_4_Params
+     ("glGetShaderSource", UInt);
+   
+   procedure Compile_Shader is new Low_Level.Loader.Procedure_With_1_Param
+     ("glCompileShader", UInt);
+   
+   procedure Get_Shader_Info_Log is
+     new Low_Level.Loader.String_Getter_With_4_Params
+     ("glGetShaderInfoLog", UInt);
+   
+   function Create_Program is new Low_Level.Loader.Function_Without_Params
+     ("glCreateProgram", UInt);
+   
+   procedure Delete_Program is new Low_Level.Loader.Procedure_With_1_Param
+     ("glDeleteProgram", UInt);
+   
+   procedure Get_Program_Param is new Low_Level.Loader.Getter_With_3_Params
+     ("glGetProgramiv", UInt, Enums.Program_Param, Int);
+   
+   procedure Attach_Shader is new Low_Level.Loader.Procedure_With_2_Params
+     ("glAttachShader", UInt, UInt);
+   
+   procedure Link_Program is new Low_Level.Loader.Procedure_With_1_Param
+     ("glLinkProgram", UInt);
+   
+   procedure Get_Program_Info_Log is
+     new Low_Level.Loader.String_Getter_With_4_Params
+     ("glGetProgramInfoLog", UInt);
+   
+   procedure Use_Program is new Low_Level.Loader.Procedure_With_1_Param
+     ("glUseProgram", UInt);
 end GL.API;

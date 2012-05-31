@@ -62,6 +62,12 @@ package GL.Objects.Textures is
                              GEqual    => 16#0206#,
                              Always    => 16#0207#);
    for Compare_Function'Size use Low_Level.Enum'Size;
+   
+   -- Actual range is implementation-defined.
+   --  OpenGL 2.x: At least 2
+   --  OpenGL 3.x: At least 48
+   --  OpenGL 4.x: At least 80
+   subtype Texture_Unit is Natural range 0 .. 31;
 
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
@@ -139,6 +145,15 @@ package GL.Objects.Textures is
    Texture_2D       : constant Texture_Target;
    Texture_3D       : constant Texture_Target;
    Texture_Cube_Map : constant Texture_Target;
+   
+   -----------------------------------------------------------------------------
+   --                            Texture Units                                --
+   -----------------------------------------------------------------------------
+   
+   procedure Set_Active_Unit (Unit : Texture_Unit);
+   function Active_Unit return Texture_Unit;
+   
+   function Texture_Unit_Count return Natural;
    
 private
    

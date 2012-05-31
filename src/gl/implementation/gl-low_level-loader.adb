@@ -52,6 +52,22 @@ package body GL.Low_Level.Loader is
       end if;
       return As_Function_Reference (Function_Maps.Element (Position));
    end Load;
+   
+   function Function_Without_Params return Return_Type is
+      type Function_Reference is
+        access function return Return_Type;
+      pragma Convention (StdCall, Function_Reference);
+      
+      function Load_Function is new Load (Function_Reference);
+      
+      Reference : Function_Reference := Load_Function (GL_Function_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with GL_Function_Name;
+      else
+         return Reference.all;
+      end if;
+   end Function_Without_Params;
 
    function Function_With_1_Param (Param1 : Param1_Type) return Return_Type is
       type Function_Reference is
@@ -244,5 +260,23 @@ package body GL.Low_Level.Loader is
       end if;
    end Getter_With_3_Params;
 
+   procedure String_Getter_With_4_Params (Param1      : Param1_Type;
+                                          Buffer_Size : SizeI;
+                                          Length      : out SizeI;
+                                          Value       : C.Strings.chars_ptr) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Buffer_Size : SizeI;
+                          Length : out SizeI;   Value : C.Strings.chars_ptr);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+      else
+         Reference (Param1, Buffer_Size, Length, Value);
+      end if;
+   end String_Getter_With_4_Params;
 
 end GL.Low_Level.Loader;

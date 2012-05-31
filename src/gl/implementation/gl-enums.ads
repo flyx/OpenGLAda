@@ -59,10 +59,26 @@ private package GL.Enums is
      Local_Viewer .. Two_Side;
    
    type Light_Param is (Ambient, Diffuse, Specular, Position,
-                        Spot_Direction, Spot_Exponent,Spot_Cutoff, Constant_Attenduation,
-                        Linear_Attenduation, Quadratic_Attenduation);
+                        Spot_Direction, Spot_Exponent,Spot_Cutoff,
+                        Constant_Attenduation, Linear_Attenduation,
+                        Quadratic_Attenduation);
    
    subtype Light_Name is Toggles.Toggle range Toggles.Light0 .. Toggles.Light7;
+   
+   type Shader_Param is (Shader_Type, Delete_Status, Compile_Status,
+                         Info_Log_Length, Shader_Source_Length);
+   
+   type Program_Param is (Program_Binary_Length, Geometry_Vertices_Out,
+                          Geometry_Input_Type, Geometry_Output_Type,
+                          Active_Uniform_Block_Max_Name_Length,
+                          Active_Uniform_Blocks, Delete_Status,
+                          Link_Status, Validate_Status, Info_Log_Length,
+                          Attached_Shaders, Active_Uniforms,
+                          Active_Uniform_Max_Length, Active_Attributes, 
+                          Active_Attribute_Max_Length,
+                          Transform_Feedback_Varying_Max_Length,
+                          Transform_Feedback_Buffer_Mode,
+                          Transform_Feedback_Varyings);
 
 private
 
@@ -116,5 +132,31 @@ private
                         Linear_Attenduation    => 16#1208#,
                         Quadratic_Attenduation => 16#1209#);
    for Light_Param'Size use Low_Level.Enum'Size;
-
+   
+   for Shader_Param use (Shader_Type          => 16#8B4F#,
+                         Delete_Status        => 16#8B80#,
+                         Compile_Status       => 16#8B81#,
+                         Info_Log_Length      => 16#8B84#,
+                         Shader_Source_Length => 16#8B88#);
+   for Shader_Param'Size use Low_Level.Enum'Size;
+   
+   for Program_Param use (Program_Binary_Length       => 16#8741#,
+                          Geometry_Vertices_Out       => 16#8916#,
+                          Geometry_Input_Type         => 16#8917#,
+                          Geometry_Output_Type        => 16#8918#,
+                          Active_Uniform_Block_Max_Name_Length  => 16#8A35#,
+                          Active_Uniform_Blocks                 => 16#8A36#,
+                          Delete_Status               => 16#8B4F#,
+                          Link_Status                 => 16#8B82#,
+                          Validate_Status             => 16#8B83#,
+                          Info_Log_Length             => 16#8B84#,
+                          Attached_Shaders            => 16#8B85#,
+                          Active_Uniforms             => 16#8B86#,
+                          Active_Uniform_Max_Length   => 16#8B87#,
+                          Active_Attributes           => 16#8B89#,
+                          Active_Attribute_Max_Length => 16#8B8A#,
+                          Transform_Feedback_Varying_Max_Length => 16#8C76#,
+                          Transform_Feedback_Buffer_Mode        => 16#8C7F#,
+                          Transform_Feedback_Varyings           => 16#8C83#);
+   for Program_Param'Size use Low_Level.Enum'Size;
 end GL.Enums;

@@ -16,6 +16,8 @@
 
 with GL.Types;
 
+with Interfaces.C.Strings;
+
 package GL.Low_Level is
    pragma Preelaborate;
    
@@ -55,7 +57,8 @@ package GL.Low_Level is
    -- These types totally are not pointers. No idea why they are named like this.
    subtype IntPtr is C.long;
    subtype SizeIPtr is C.long;
-
+   
+   type CharPtr_Array is array (Positive range <>) of aliased C.Strings.chars_ptr;
 private
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.unsigned_char'Size;

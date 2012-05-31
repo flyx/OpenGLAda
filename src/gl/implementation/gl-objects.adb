@@ -50,7 +50,7 @@ package body GL.Objects is
       return Object.Reference.GL_Id;
    end Raw_Id;
 
-   function "=" (Left, Right : GL_Object'Class) return Boolean is
+   function "=" (Left, Right : GL_Object) return Boolean is
    begin
       return Left.Reference = Right.Reference;
    end "=";

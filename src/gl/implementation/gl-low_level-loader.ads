@@ -17,6 +17,8 @@
 with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Strings.Hash;
 
+with Interfaces.C.Strings;
+
 with System;
 
 package GL.Low_Level.Loader is
@@ -30,6 +32,11 @@ package GL.Low_Level.Loader is
    Feature_Not_Supported_Exception : exception;
    
    function Available (GL_Function_Name : String) return Boolean;
+   
+   generic
+      GL_Function_Name : String;
+      type Return_Type is private;
+   function Function_Without_Params return Return_Type;
    
    generic
       GL_Function_Name : String;
@@ -81,8 +88,8 @@ package GL.Low_Level.Loader is
       GL_Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
-      type Param3_Type is private;
-      type Param4_Type is private;
+      type Param3_Type (<>) is private;
+      type Param4_Type (<>) is private;
    procedure Procedure_With_4_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type;
                                       Param3 : Param3_Type;
@@ -129,6 +136,13 @@ package GL.Low_Level.Loader is
       type Array_Type is array (Positive range <>) of Element_Type;
    procedure Array_Proc_With_2_Params (Param1 : SizeI;
                                        Param2 : Array_Type);
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+   procedure String_Getter_With_4_Params (Param1      : Param1_Type;
+                                          Buffer_Size : SizeI;
+                                          Length      : out SizeI;
+                                          Value       : C.Strings.chars_ptr);
 
 private
    generic

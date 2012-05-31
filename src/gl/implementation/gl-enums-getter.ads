@@ -228,7 +228,9 @@ package GL.Enums.Getter is
       Selection_Buffer_Pointer,
       Selection_Buffer_Size,
       Light_Model_Color_Control,
-      Current_Fog_Coord);
+      Current_Fog_Coord,
+      Active_Texture,
+      Max_Combined_Texture_Image_Units);
    for Parameter use
      (Current_Color                 => 16#0B00#,
       Current_Index                 => 16#0B01#,
@@ -440,6 +442,8 @@ package GL.Enums.Getter is
       Selection_Buffer_Pointer      => 16#0DF3#,
       Selection_Buffer_Size         => 16#0DF4#,
       Light_Model_Color_Control     => 16#81F8#,
-      Current_Fog_Coord             => 16#8453#);
+      Current_Fog_Coord             => 16#8453#,
+      Active_Texture                => 16#84E0#,
+      Max_Combined_Texture_Image_Units => 16#8B4D#);
 
 end GL.Enums.Getter;
