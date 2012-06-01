@@ -48,6 +48,8 @@ package body GL.Objects.Programs is
                              Log_Length);
       declare
          Info_Log : String (1 .. Integer (Log_Length));
+         -- do not care that string does not get initialized
+         pragma Warnings (Off, Info_Log);
          C_Info_Log : C.Strings.chars_ptr := C.Strings.New_String (Info_Log);
          Actual_Length : Low_Level.SizeI := 0;
       begin

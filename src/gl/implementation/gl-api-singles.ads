@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Uniforms;
+
 package GL.API.Singles is
    pragma Preelaborate;
    
@@ -40,5 +42,41 @@ package GL.API.Singles is
                               Param : Vector3);
    pragma Import (Convention => StdCall, Entity => Light_Direction,
                   External_Name => "glLightfv");
+   
+   procedure Uniform1 is new Low_Level.Loader.Procedure_With_2_Params
+     ("glUniform1f", Uniforms.Uniform, Single);
+   
+   procedure Uniform1v is new Low_Level.Loader.Procedure_With_3_Params
+     ("glUniform1fv", Uniforms.Uniform, Low_Level.SizeI, Single_Array);
+   
+   procedure Uniform2 is new Low_Level.Loader.Procedure_With_3_Params
+     ("glUniform2f", Uniforms.Uniform, Single, Single);
+   
+   procedure Uniform2v is new Low_Level.Loader.Procedure_With_3_Params
+     ("glUniform2fv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
+   
+   procedure Uniform3 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glUniform3f", Uniforms.Uniform, Single, Single, Single);
+   
+   procedure Uniform3v is new Low_Level.Loader.Procedure_With_3_Params
+     ("glUniform3fv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
+   
+   procedure Uniform4 is new Low_Level.Loader.Procedure_With_5_Params
+     ("glUniform4f", Uniforms.Uniform, Single, Single, Single, Single);
+   
+   procedure Uniform4v is new Low_Level.Loader.Procedure_With_3_Params
+     ("glUniform4fv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
+   
+   procedure Uniform_Matrix2 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glUniformMatrix2fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+      Matrix2_Array);
+   
+   procedure Uniform_Matrix3 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glUniformMatrix3fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+      Matrix3_Array);
+   
+   procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glUniformMatrix4fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+      Matrix4_Array);
    
 end GL.API.Singles;

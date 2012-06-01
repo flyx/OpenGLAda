@@ -78,7 +78,7 @@ package GL.Low_Level.Loader is
       GL_Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
-      type Param3_Type is private;
+      type Param3_Type (<>) is private;
    procedure Procedure_With_3_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type;
                                       Param3 : Param3_Type);
@@ -94,6 +94,20 @@ package GL.Low_Level.Loader is
                                       Param2 : Param2_Type;
                                       Param3 : Param3_Type;
                                       Param4 : Param4_Type);
+   pragma Inline (Procedure_With_4_Params);
+   
+   generic
+      GL_Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Param3_Type (<>) is private;
+      type Param4_Type (<>) is private;
+      type Param5_Type (<>) is private;
+   procedure Procedure_With_5_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type);
    pragma Inline (Procedure_With_4_Params);
    
    generic

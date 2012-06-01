@@ -75,9 +75,31 @@ package GL.Algebra is
    type Matrix4 is new Matrices4.Matrix;
    
    Identity2 : constant Matrix2 := ((One_Value, Null_Value), (Null_Value, One_Value));
-   Identity3 : constant Matrix3 := ((One_Value, Null_Value, Null_Value), (Null_Value, One_Value, Null_Value),
+   Identity3 : constant Matrix3 := ((One_Value, Null_Value, Null_Value),
+                                    (Null_Value, One_Value, Null_Value),
                                     (Null_Value, Null_Value, One_Value));
-   Identity4 : constant Matrix4 := ((One_Value, Null_Value, Null_Value, Null_Value), (Null_Value, One_Value, Null_Value, Null_Value),
-                                    (Null_Value, Null_Value, One_Value, Null_Value), (Null_Value, Null_Value, Null_Value, One_Value));
+   Identity4 : constant Matrix4 := ((One_Value, Null_Value, Null_Value, Null_Value),
+                                    (Null_Value, One_Value, Null_Value, Null_Value),
+                                    (Null_Value, Null_Value, One_Value, Null_Value),
+                                    (Null_Value, Null_Value, Null_Value, One_Value));
+   
+   -----------------------------------------------------------------------------
+   --                               Array types                               --
+   -----------------------------------------------------------------------------
+   
+   type Vector2_Array is array (Positive range <>) of Vector2;
+   type Vector3_Array is array (Positive range <>) of Vector3;
+   type Vector4_Array is array (Positive range <>) of Vector4;
+   
+   type Matrix2_Array is array (Positive range <>) of Matrix2;
+   type Matrix3_Array is array (Positive range <>) of Matrix3;
+   type Matrix4_Array is array (Positive range <>) of Matrix4;
+   
+   pragma Convention (C, Vector2_Array);
+   pragma Convention (C, Vector3_Array);
+   pragma Convention (C, Vector4_Array);
+   pragma Convention (C, Matrix2_Array);
+   pragma Convention (C, Matrix3_Array);
+   pragma Convention (C, Matrix4_Array);
 
 end GL.Algebra;

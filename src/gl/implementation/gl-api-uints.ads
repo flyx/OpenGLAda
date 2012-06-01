@@ -16,55 +16,44 @@
 
 with GL.Uniforms;
 
-package GL.API.Ints is
+package GL.API.UInts is
    pragma Preelaborate;
-   
-   use GL.Types.Ints;
-   
-   procedure Get_Light_Position (Name   : Enums.Light_Name;
-                                 Pname  : Enums.Light_Param;
-                                 Target : in out Vector4);
-   pragma Import (Convention => StdCall, Entity => Get_Light_Position,
-                  External_Name => "glGetLightiv");
-   
-   procedure Light_Position (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
-                             Param : Vector4);
-   pragma Import (Convention => StdCall, Entity => Light_Position,
-                  External_Name => "glLightiv");
-   
+
+   use GL.Types.UInts;
+
    procedure Uniform1 is new Low_Level.Loader.Procedure_With_2_Params
-     ("glUniform1i", Uniforms.Uniform, Int);
-   
+     ("glUniform1ui", Uniforms.Uniform, UInt);
+
    procedure Uniform1v is new Low_Level.Loader.Procedure_With_3_Params
-     ("glUniform1iv", Uniforms.Uniform, Low_Level.SizeI, Int_Array);
-   
+     ("glUniform1uiv", Uniforms.Uniform, Low_Level.SizeI, UInt_Array);
+
    procedure Uniform2 is new Low_Level.Loader.Procedure_With_3_Params
-     ("glUniform2i", Uniforms.Uniform, Int, Int);
-   
+     ("glUniform2ui", Uniforms.Uniform, UInt, UInt);
+
    procedure Uniform2v is new Low_Level.Loader.Procedure_With_3_Params
-     ("glUniform2iv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
-   
+     ("glUniform2uiv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
+
    procedure Uniform3 is new Low_Level.Loader.Procedure_With_4_Params
-     ("glUniform3i", Uniforms.Uniform, Int, Int, Int);
-   
+     ("glUniform3ui", Uniforms.Uniform, UInt, UInt, UInt);
+
    procedure Uniform3v is new Low_Level.Loader.Procedure_With_3_Params
-     ("glUniform3iv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
-   
+     ("glUniform3uiv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
+
    procedure Uniform4 is new Low_Level.Loader.Procedure_With_5_Params
-     ("glUniform4i", Uniforms.Uniform, Int, Int, Int, Int);
-   
+     ("glUniform4ui", Uniforms.Uniform, UInt, UInt, UInt, UInt);
+
    procedure Uniform4v is new Low_Level.Loader.Procedure_With_3_Params
-     ("glUniform4iv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
-   
+     ("glUniform4uiv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
+
    procedure Uniform_Matrix2 is new Low_Level.Loader.Procedure_With_4_Params
-     ("glUniformMatrix2iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix2uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix2_Array);
-   
+
    procedure Uniform_Matrix3 is new Low_Level.Loader.Procedure_With_4_Params
-     ("glUniformMatrix3iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix3uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix3_Array);
-   
+
    procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
-     ("glUniformMatrix4iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix4uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
-end GL.API.Ints;
+end GL.API.UInts;

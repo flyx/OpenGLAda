@@ -38,6 +38,8 @@ package body GL.Objects.Shaders is
                             Enums.Shader_Source_Length, Source_Length);
       declare
          Shader_Source : String (1 .. Integer (Source_Length));
+         -- do not care that we do not assign a value.
+         pragma Warnings (Off, Shader_Source);
          C_Shader_Source : C.Strings.chars_ptr
            := C.Strings.New_String (Shader_Source);
          Actual_Length : Low_Level.SizeI;
@@ -72,6 +74,7 @@ package body GL.Objects.Shaders is
                             Enums.Info_Log_Length, Log_Length);
       declare
          Info_Log : String (1 .. Integer (Log_Length));
+         pragma Warnings (Off, Info_Log);
          C_Info_Log : C.Strings.chars_ptr
            := C.Strings.New_String (Info_Log);
          Actual_Length : Low_Level.SizeI;

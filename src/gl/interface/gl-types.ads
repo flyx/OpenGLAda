@@ -39,6 +39,11 @@ package GL.Types is
    type Single is new C.C_float;
    type Double is new C.double;
    
+   -- array types
+   type Int_Array    is array (Positive range <>) of Int;
+   type UInt_Array   is array (Positive range <>) of UInt;
+   type Single_Array is array (Positive range <>) of Single;
+   
    -- type descriptors
    type Numeric_Type is (Byte_Type, UByte_Type, Short_Type,
                          UShort_Type, Int_Type, UInt_Type,
