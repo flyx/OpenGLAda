@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Objects.Shaders;
+with GL.Uniforms;
 
 package GL.Objects.Programs is
    type Program is new GL_Object with private;
@@ -27,6 +28,8 @@ package GL.Objects.Programs is
    
    function Info_Log (Subject : Program) return String;
    
+   function Uniform_Location (Subject : Program; Name : String)
+     return Uniforms.Uniform;
 private
    type Program is new GL_Object with null record;
       

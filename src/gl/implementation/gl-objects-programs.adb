@@ -72,4 +72,15 @@ package body GL.Objects.Programs is
       API.Delete_Program (Object.Reference.GL_Id);
    end Delete_Id;
    
+   function Uniform_Location (Subject : Program; Name : String)
+     return Uniforms.Uniform is
+      C_Name : C.Strings.chars_ptr := C.Strings.New_String (Name);
+      Result : Uniforms.Uniform :=
+        API.Get_Uniform_Location (Subject.Reference.GL_Id, C_Name);
+   begin
+      C.Strings.Free (C_Name);
+      Check_OpenGL_Error;
+      return Result;
+   end Uniform_Location;
+   
 end GL.Objects.Programs;

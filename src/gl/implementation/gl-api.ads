@@ -27,6 +27,7 @@ with GL.Objects.Shaders;
 with GL.Pixel_Data;
 with GL.Toggles;
 with GL.Types.Colors;
+with GL.Uniforms;
 
 with Interfaces.C.Strings;
 
@@ -577,4 +578,7 @@ private package GL.API is
    
    procedure Use_Program is new Low_Level.Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
+   
+   function Get_Uniform_Location is new Low_Level.Loader.Function_With_2_Params
+     ("glGetUniformLocation", Uint, C.Strings.chars_ptr, Uniforms.Uniform);
 end GL.API;
