@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Attributes;
 with GL.Buffers;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
@@ -596,8 +597,26 @@ private package GL.API is
      ("glGetUniformLocation", UInt, C.Strings.chars_ptr, Uniforms.Uniform);
    
    procedure Bind_Attrib_Location is new Low_Level.Loader.Procedure_With_3_Params
-     ("glBindAttribLocation", UInt, UInt, C.Strings.chars_ptr);
+     ("glBindAttribLocation", UInt, Attributes.Attribute, C.Strings.chars_ptr);
    
    function Get_Attrib_Location is new Low_Level.Loader.Function_With_2_Params
-     ("glGetAttribLocation", UInt, C.Strings.chars_ptr, UInt);
+     ("glGetAttribLocation", UInt, C.Strings.chars_ptr, Attributes.Attribute);
+   
+   procedure Vertex_Attrib_Pointer is new Low_Level.Loader.Procedure_With_6_Params
+     ("glVertexAttribPointer", Attributes.Attribute, Component_Count, Numeric_Type,
+      Low_Level.Bool, Low_Level.SizeI, Int);
+   
+   procedure Vertex_AttribI_Pointer is new Low_Level.Loader.Procedure_With_5_Params
+     ("glVertexAttribIPointer", Attributes.Attribute, Component_Count, Numeric_Type,
+      Low_Level.SizeI, Int);
+     
+   procedure Vertex_AttribL_Pointer is new Low_Level.Loader.Procedure_With_5_Params
+     ("glVertexAttribLPointer", Attributes.Attribute, Component_Count, Numeric_Type,
+      Low_Level.SizeI, Int);
+   
+   procedure Enable_Vertex_Attrib_Array is new Low_Level.Loader.Procedure_With_1_Param
+     ("glEnableVertexAttribArray", Attributes.Attribute);
+   
+   procedure Disable_Vertex_Attrib_Array is new Low_Level.Loader.Procedure_With_1_Param
+     ("glDisableVertexAttribArray", Attributes.Attribute);
 end GL.API;

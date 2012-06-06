@@ -90,7 +90,8 @@ package body GL.Objects.Programs is
       return Result;
    end Uniform_Location;
    
-   procedure Bind_Attrib_Location (Subject : Program; Index : UInt;
+   procedure Bind_Attrib_Location (Subject : Program;
+                                   Index : Attributes.Attribute;
                                    Name : String) is
       C_Name : C.Strings.chars_ptr := C.Strings.New_String (Name);
    begin
@@ -99,10 +100,11 @@ package body GL.Objects.Programs is
       Check_OpenGL_Error;
    end Bind_Attrib_Location;
       
-   function Attrib_Location (Subject : Program; Name : String) return UInt is
+   function Attrib_Location (Subject : Program; Name : String)
+     return Attributes.Attribute is
       C_Name   : C.Strings.chars_ptr := C.Strings.New_String (Name);
-      Location : UInt := API.Get_Attrib_Location (Subject.Reference.GL_Id,
-                                                  C_Name);
+      Location : Attributes.Attribute
+        := API.Get_Attrib_Location (Subject.Reference.GL_Id, C_Name);
    begin
       C.Strings.Free (C_Name);
       Check_OpenGL_Error;

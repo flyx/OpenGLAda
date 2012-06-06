@@ -57,6 +57,9 @@ package GL.Types is
                             Triangle_Strip, Triangle_Fan, Quads, Quad_Strip,
                             Polygon);
    
+   -- counts the number of components for vertex attributes
+   subtype Component_Count is Int range 1 .. 4;
+   
    package Bytes is new GL.Algebra (Element_Type => Byte,
                                     Null_Value   => 0,
                                     One_Value    => 1);

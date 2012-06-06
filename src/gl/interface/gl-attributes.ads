@@ -14,24 +14,21 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL.Objects.Vertex_Arrays is
+with GL.Types;
+
+package GL.Attributes is
    pragma Preelaborate;
    
-   type Vertex_Array_Object is new GL_Object with private;
+   use GL.Types;
    
-   procedure Bind (Object : Vertex_Array_Object);
+   type Attribute is new UInt;
    
-   -- bind this object to unbind the current array object.
-   Null_Array_Object : constant Vertex_Array_Object;
-private
-   type Vertex_Array_Object is new GL_Object with null record;
+   procedure Set_Vertex_Attrib_Pointer (Index  : Attribute;
+                                        Size   : Component_Count;
+                                        Kind   : Numeric_Type;
+                                        Stride, Offset : Natural);
    
-   procedure Create_Id (Object : in out Vertex_Array_Object);
+   procedure Enable_Vertex_Attrib_Array  (Index : Attribute);
+   procedure Disable_Vertex_Attrib_Array (Index : Attribute);
    
-   procedure Delete_Id (Object : in out Vertex_Array_Object);
-   
-   Null_Array_Object : constant Vertex_Array_Object
-     := Vertex_Array_Object'(Ada.Finalization.Controlled with
-        Reference => Null_Object_Reference'Access);
-   
-end GL.Objects.Vertex_Arrays;
+end GL.Attributes;

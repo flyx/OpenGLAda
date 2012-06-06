@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Attributes;
 with GL.Objects.Shaders;
 with GL.Uniforms;
 
@@ -33,9 +34,11 @@ package GL.Objects.Programs is
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform;
    
-   procedure Bind_Attrib_Location (Subject : Program; Index : UInt;
+   procedure Bind_Attrib_Location (Subject : Program;
+                                   Index : Attributes.Attribute;
                                    Name : String);
-   function Attrib_Location (Subject : Program; Name : String) return UInt;
+   function Attrib_Location (Subject : Program; Name : String)
+     return Attributes.Attribute;
 private
    type Program is new GL_Object with null record;
       
