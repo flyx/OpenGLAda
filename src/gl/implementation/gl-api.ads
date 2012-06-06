@@ -530,6 +530,19 @@ private package GL.API is
        System.Address, Objects.Buffer.Buffer_Usage);
    
    -----------------------------------------------------------------------------
+   --                           Vertex Array Objects                          --
+   -----------------------------------------------------------------------------
+   
+   procedure Gen_Vertex_Arrays is new Low_Level.Loader.Getter_With_2_Params
+     ("glGenVertexArrays", Low_Level.SizeI, UInt);
+   
+   procedure Delete_Vertex_Arrays is new Low_Level.Loader.Array_Proc_With_2_Params
+     ("glDeleteVertexArrays", UInt, Low_Level.UInt_Array);
+   
+   procedure Bind_Vertex_Array is new Low_Level.Loader.Procedure_With_1_Param
+     ("glBindVertexArray", UInt);
+   
+   -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
    
