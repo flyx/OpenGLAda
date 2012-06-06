@@ -580,5 +580,11 @@ private package GL.API is
      ("glUseProgram", UInt);
    
    function Get_Uniform_Location is new Low_Level.Loader.Function_With_2_Params
-     ("glGetUniformLocation", Uint, C.Strings.chars_ptr, Uniforms.Uniform);
+     ("glGetUniformLocation", UInt, C.Strings.chars_ptr, Uniforms.Uniform);
+   
+   procedure Bind_Attrib_Location is new Low_Level.Loader.Procedure_With_3_Params
+     ("glBindAttribLocation", UInt, UInt, C.Strings.chars_ptr);
+   
+   function Get_Attrib_Location is new Low_Level.Loader.Function_With_2_Params
+     ("glGetAttribLocation", UInt, C.Strings.chars_ptr, UInt);
 end GL.API;

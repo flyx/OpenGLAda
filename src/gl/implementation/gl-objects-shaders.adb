@@ -72,6 +72,8 @@ package body GL.Objects.Shaders is
    begin
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Info_Log_Length, Log_Length);
+      -- Returned length includes null termination character
+      Log_Length := Log_Length - 1;
       declare
          Info_Log : String (1 .. Integer (Log_Length));
          pragma Warnings (Off, Info_Log);
@@ -80,8 +82,13 @@ package body GL.Objects.Shaders is
          Actual_Length : Low_Level.SizeI;
       begin
          API.Get_Shader_Info_Log (Subject.Reference.GL_Id,
-                           Low_Level.SizeI (Log_Length),
+                           Low_Level.SizeI (Log_Length + 1),
                            Actual_Length, C_Info_Log);
+         if (Int (Actual_Length) /= Log_Length) then
+            raise Constraint_Error with "Expected info log length of" &
+                                        Log_Length'Img & ", actually got" &
+                                        Actual_Length'Img & ".";
+         end if;
          Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
          C.Strings.Free (C_Info_Log);
          return Info_Log;

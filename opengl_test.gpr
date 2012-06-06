@@ -10,7 +10,7 @@ project OpenGL_Test is
       ("Windows", "Linux", "MacOSX");
    Os : Os_Type := external ("OS");
    
-   for Main use ("gl_test-vbos", "gl_test-immediate");
+   for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders");
 
    package Ide is
       for Vcs_Kind use "Git";

@@ -46,6 +46,8 @@ package body GL.Objects.Programs is
    begin
       API.Get_Program_Param (Subject.Reference.GL_Id, Enums.Info_Log_Length,
                              Log_Length);
+      -- Returned length includes null termination character
+      Log_Length := Log_Length - 1;
       declare
          Info_Log : String (1 .. Integer (Log_Length));
          -- do not care that string does not get initialized
@@ -54,13 +56,18 @@ package body GL.Objects.Programs is
          Actual_Length : Low_Level.SizeI := 0;
       begin
          API.Get_Program_Info_Log (Subject.Reference.GL_Id,
-                                   Low_Level.SizeI (Log_Length),
+                                   Low_Level.SizeI (Log_Length + 1),
                                    Actual_Length, C_Info_Log);
          Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
          C.Strings.Free (C_Info_Log);
          return Info_Log;
       end;
    end Info_Log;
+   
+   procedure Use_Program (Subject : Program) is
+   begin
+      API.Use_Program (Subject.Reference.GL_Id);
+   end Use_Program;
 
    procedure Create_Id (Object : in out Program) is
    begin
@@ -83,4 +90,23 @@ package body GL.Objects.Programs is
       return Result;
    end Uniform_Location;
    
+   procedure Bind_Attrib_Location (Subject : Program; Index : UInt;
+                                   Name : String) is
+      C_Name : C.Strings.chars_ptr := C.Strings.New_String (Name);
+   begin
+      API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index, C_Name);
+      C.Strings.Free (C_Name);
+      Check_OpenGL_Error;
+   end Bind_Attrib_Location;
+      
+   function Attrib_Location (Subject : Program; Name : String) return UInt is
+      C_Name   : C.Strings.chars_ptr := C.Strings.New_String (Name);
+      Location : UInt := API.Get_Attrib_Location (Subject.Reference.GL_Id,
+                                                  C_Name);
+   begin
+      C.Strings.Free (C_Name);
+      Check_OpenGL_Error;
+      return Location;
+   end Attrib_Location;
+      
 end GL.Objects.Programs;

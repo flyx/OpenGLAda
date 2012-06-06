@@ -14,32 +14,15 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Objects.Shaders;
-with GL.Uniforms;
+with Ada.Text_IO;
 
-package GL.Objects.Programs is
-   type Program is new GL_Object with private;
-      
-   procedure Attach (Subject : Program; Shader : Shaders.Shader);
+with GL.Objects.Shaders;
+
+-- This package is an addition to the original OpenGL API and simplifies
+-- the handling of ressources located in files, like shader sources.
+package GL.Files is
    
-   procedure Link (Subject : Program);
+   procedure Load_Shader_Source_From_File (Object : Objects.Shaders.Shader;
+                                           File_Name : String);
    
-   function Link_Status (Subject : Program) return Boolean;
-   
-   function Info_Log (Subject : Program) return String;
-   
-   procedure Use_Program (Subject : Program);
-   
-   function Uniform_Location (Subject : Program; Name : String)
-     return Uniforms.Uniform;
-   
-   procedure Bind_Attrib_Location (Subject : Program; Index : UInt;
-                                   Name : String);
-   function Attrib_Location (Subject : Program; Name : String) return UInt;
-private
-   type Program is new GL_Object with null record;
-      
-   procedure Create_Id (Object : in out Program);
-   
-   procedure Delete_Id (Object : in out Program);
-end GL.Objects.Programs;
+end GL.Files;
