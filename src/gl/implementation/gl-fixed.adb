@@ -34,13 +34,6 @@ package body GL.Fixed is
                          Int (Offset));
       Check_OpenGL_Error;
    end Set_Color_Pointer;
-   
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
-                            Index_Type : Unsigned_Numeric_Type) is
-   begin
-      API.Draw_Elements (Mode, Low_Level.SizeI (Count), Index_Type, 0);
-      Check_OpenGL_Error;
-   end Draw_Elements;
 
    procedure Enable (Capability : Client_Side_Capability) is
    begin
@@ -53,10 +46,4 @@ package body GL.Fixed is
       API.Disable_Client_State (Capability);
       Check_OpenGL_Error;
    end Disable;
-   
-   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural) is
-   begin
-      API.Draw_Arrays (Mode, Int (First), Low_Level.SizeI (Count));
-      Check_OpenGL_Error;
-   end Draw_Arrays;
 end GL.Fixed;

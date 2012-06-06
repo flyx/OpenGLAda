@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API;
+with GL.API.Singles;
 with GL.Low_Level;
 
 package body GL.Attributes is
@@ -46,4 +46,6 @@ package body GL.Attributes is
    procedure Disable_Vertex_Attrib_Array (Index : Attribute) renames
      API.Disable_Vertex_Attrib_Array;
 
+   procedure Set_Vector3 (Index : Attribute; V1, V2, V3 : Single) renames
+     API.Singles.Vertex_Attrib3;
 end GL.Attributes;

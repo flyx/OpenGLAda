@@ -36,9 +36,9 @@ with System;
 
 private package GL.API is
    pragma Preelaborate;
-   
+
    use GL.Types;
-   
+
    -- Everything newer than OpenGL 1.1 will not be statically bound,
    -- but loaded with GL.Low_Level.Loader at runtime.
    --
@@ -84,23 +84,23 @@ private package GL.API is
                           Target : access Int);
    pragma Import (Convention => StdCall, Entity => Get_Integer,
                   External_Name => "glGetIntegerv");
-   
+
    procedure Get_Color_Control (Name   : Enums.Getter.Parameter;
                                 Target : access Fixed.Lighting.Color_Control);
    pragma Import (Convention => StdCall, Entity => Get_Color_Control,
                   External_Name => "glGetIntegerv");
-   
+
    procedure Get_Shade_Model (Name   : Enums.Getter.Parameter;
                               Target : access Fixed.Lighting.Shade_Model);
    pragma Import (Convention => StdCall, Entity => Get_Shade_Model,
                   External_Name => "glGetIntegerv");
-   
+
    procedure Get_Light_Color (Name   : Enums.Light_Name;
                               Pname  : Enums.Light_Param;
                               Target : in out Colors.Color);
    pragma Import (Convention => StdCall, Entity => Get_Light_Color,
                   External_Name => "glGetLightfv");
-   
+
    procedure Get_Texture_Unit (Name   : Enums.Getter.Parameter;
                                Target : access Enums.Textures.Texture_Unit);
    pragma Import (Convention => StdCall, Entity => Get_Texture_Unit,
@@ -183,79 +183,79 @@ private package GL.API is
 
    procedure Fog_Coord is new Low_Level.Loader.Procedure_With_1_Param
       ("glFogCoordd", Double);
-   
+
    -----------------------------------------------------------------------------
    --        Fixed Function Pipeline (deprecated as of OpenGL 3.0)            --
    -----------------------------------------------------------------------------
-   
+
    procedure Vertex_Pointer (Size      : Int;
                              Data_Type : Signed_Numeric_Type;
                              Stride    : Low_Level.SizeI;
                              Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Vertex_Pointer,
                   External_Name => "glVertexPointer");
-   
+
    procedure Index_Pointer (Data_Type : Signed_Numeric_Type;
                             Stride    : Low_Level.SizeI;
                             Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Index_Pointer,
                   External_Name => "glIndexPointer");
-   
+
    procedure Color_Pointer (Size      : Int;
                             Data_Type : Signed_Numeric_Type;
                             Stride    : Low_Level.SizeI;
                             Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Color_Pointer,
                   External_Name => "glColorPointer");
-   
+
    procedure Enable_Client_State (Cap : Fixed.Client_Side_Capability);
    pragma Import (Convention => StdCall, Entity => Enable_Client_State,
                   External_Name => "glEnableClientState");
-   
+
    procedure Disable_Client_State (Cap : Fixed.Client_Side_Capability);
    pragma Import (Convention => StdCall, Entity => Disable_Client_State,
                   External_Name => "glDisableClientState");
-   
+
    procedure Draw_Arrays (Mode  : Connection_Mode;
                           First : Int; Count : Low_Level.SizeI);
    pragma Import (Convention => StdCall, Entity => Draw_Arrays,
                   External_Name => "glDrawArrays");
-   
+
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Low_Level.SizeI;
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Zero);
    pragma Import (Convention => StdCall, Entity => Draw_Elements,
                   External_Name => "glDrawElements");
-   
+
    -----------------------------------------------------------------------------
    --               Lighting API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
-   
+
    procedure Light_Model_Color (Param : Enums.Light_Model_Ambient_Parameter;
                                 Color : Colors.Color);
    pragma Import (Convention => StdCall, Entity => Light_Model_Color,
                   External_Name => "glLightModelfv");
-   
+
    procedure Light_Model_Color_Control (Param : Enums.Light_Model_CC_Parameter;
      Value : access constant Fixed.Lighting.Color_Control);
    pragma Import (Convention => StdCall, Entity => Light_Model_Color_Control,
                   External_Name => "glLightModeliv");
-   
+
    procedure Light_Model_Toggles (Param : Enums.Light_Model_Toggle_Parameter;
                                   Value : access constant Int);
    pragma Import (Convention => StdCall, Entity => Light_Model_Toggles,
                   External_Name => "glLightModeliv");
-   
+
    procedure Shade_Model (Mode : Fixed.Lighting.Shade_Model);
    pragma Import (Convention => StdCall, Entity => Shade_Model,
                   External_Name => "glShadeModel");
-   
+
    procedure Light_Color (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
                           Param : Colors.Color);
    pragma Import (Convention => StdCall, Entity => Light_Color,
                   External_Name => "glLightfv");
-   
+
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
@@ -509,114 +509,114 @@ private package GL.API is
                                Value      : out Low_Level.Bool);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Bool,
                   External_Name => "glGetTexEnviv");
-   
+
    procedure Active_Texture is new Low_Level.Loader.Procedure_With_1_Param
       ("glActiveTexture", Enums.Textures.Texture_Unit);
-   
+
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
    -----------------------------------------------------------------------------
-   
+
    procedure Gen_Buffers is new Low_Level.Loader.Getter_With_2_Params
       ("glGenBuffers", Low_Level.SizeI, UInt);
-   
+
    procedure Delete_Buffers is new Low_Level.Loader.Array_Proc_With_2_Params
       ("glDeleteBuffers", UInt, Low_Level.UInt_Array);
-   
+
    procedure Bind_Buffer is new Low_Level.Loader.Procedure_With_2_Params
       ("glBindBuffer", Low_Level.Enums.Buffer_Kind, UInt);
-   
+
    procedure Buffer_Data is new Low_Level.Loader.Procedure_With_4_Params
       ("glBufferData", Low_Level.Enums.Buffer_Kind, Low_Level.SizeIPtr,
        System.Address, Objects.Buffer.Buffer_Usage);
-   
+
    -----------------------------------------------------------------------------
    --                           Vertex Array Objects                          --
    -----------------------------------------------------------------------------
-   
+
    procedure Gen_Vertex_Arrays is new Low_Level.Loader.Getter_With_2_Params
      ("glGenVertexArrays", Low_Level.SizeI, UInt);
-   
+
    procedure Delete_Vertex_Arrays is new Low_Level.Loader.Array_Proc_With_2_Params
      ("glDeleteVertexArrays", UInt, Low_Level.UInt_Array);
-   
+
    procedure Bind_Vertex_Array is new Low_Level.Loader.Procedure_With_1_Param
      ("glBindVertexArray", UInt);
-   
+
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
-   
+
    procedure Get_Shader_Param is new Low_Level.Loader.Getter_With_3_Params
      ("glGetShaderiv", UInt, Enums.Shader_Param, Int);
-   
+
    function Create_Shader is new Low_Level.Loader.Function_With_1_Param
      ("glCreateShader", Objects.Shaders.Shader_Type, UInt);
-   
+
    procedure Delete_Shader is new Low_Level.Loader.Procedure_With_1_Param
      ("glDeleteShader", UInt);
-   
+
    procedure Shader_Source is new Low_Level.Loader.Procedure_With_4_Params
      ("glShaderSource", UInt, Low_Level.SizeI, Low_Level.CharPtr_Array,
       Low_Level.Int_Array);
-   
+
    procedure Get_Shader_Source is
      new Low_Level.Loader.String_Getter_With_4_Params
      ("glGetShaderSource", UInt);
-   
+
    procedure Compile_Shader is new Low_Level.Loader.Procedure_With_1_Param
      ("glCompileShader", UInt);
-   
+
    procedure Get_Shader_Info_Log is
      new Low_Level.Loader.String_Getter_With_4_Params
      ("glGetShaderInfoLog", UInt);
-   
+
    function Create_Program is new Low_Level.Loader.Function_Without_Params
      ("glCreateProgram", UInt);
-   
+
    procedure Delete_Program is new Low_Level.Loader.Procedure_With_1_Param
      ("glDeleteProgram", UInt);
-   
+
    procedure Get_Program_Param is new Low_Level.Loader.Getter_With_3_Params
      ("glGetProgramiv", UInt, Enums.Program_Param, Int);
-   
+
    procedure Attach_Shader is new Low_Level.Loader.Procedure_With_2_Params
      ("glAttachShader", UInt, UInt);
-   
+
    procedure Link_Program is new Low_Level.Loader.Procedure_With_1_Param
      ("glLinkProgram", UInt);
-   
+
    procedure Get_Program_Info_Log is
      new Low_Level.Loader.String_Getter_With_4_Params
      ("glGetProgramInfoLog", UInt);
-   
+
    procedure Use_Program is new Low_Level.Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
-   
+
    function Get_Uniform_Location is new Low_Level.Loader.Function_With_2_Params
      ("glGetUniformLocation", UInt, C.Strings.chars_ptr, Uniforms.Uniform);
-   
+
    procedure Bind_Attrib_Location is new Low_Level.Loader.Procedure_With_3_Params
      ("glBindAttribLocation", UInt, Attributes.Attribute, C.Strings.chars_ptr);
-   
+
    function Get_Attrib_Location is new Low_Level.Loader.Function_With_2_Params
      ("glGetAttribLocation", UInt, C.Strings.chars_ptr, Attributes.Attribute);
-   
+
    procedure Vertex_Attrib_Pointer is new Low_Level.Loader.Procedure_With_6_Params
      ("glVertexAttribPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.Bool, Low_Level.SizeI, Int);
-   
+
    procedure Vertex_AttribI_Pointer is new Low_Level.Loader.Procedure_With_5_Params
      ("glVertexAttribIPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.SizeI, Int);
-     
+
    procedure Vertex_AttribL_Pointer is new Low_Level.Loader.Procedure_With_5_Params
      ("glVertexAttribLPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.SizeI, Int);
-   
+
    procedure Enable_Vertex_Attrib_Array is new Low_Level.Loader.Procedure_With_1_Param
      ("glEnableVertexAttribArray", Attributes.Attribute);
-   
+
    procedure Disable_Vertex_Attrib_Array is new Low_Level.Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
 end GL.API;

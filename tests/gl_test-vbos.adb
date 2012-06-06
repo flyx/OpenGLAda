@@ -34,11 +34,8 @@ procedure GL_Test.VBOs is
    use GL.Types.Doubles;
    use GL;
    
-   type Vector_Array is array (Integer range <>) of aliased Vector4;
-   type Int_Array is array (Integer range <>) of aliased Int;
-   
    procedure Load_Vector is new GL.Objects.Buffer.Load_To_Buffer
-     (Element_Type => Vector4, Array_Type => Vector_Array);
+     (Element_Type => Vector4, Array_Type => Vector4_Array);
    
    procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
      (Element_Type => Int, Array_Type => Int_Array);
@@ -51,7 +48,7 @@ procedure GL_Test.VBOs is
    pragma Convention (C, Colored_Vertex);
    pragma Pack (Colored_Vertex);
    
-   type Colored_Vertices is array (Integer range <>) of aliased Colored_Vertex;
+   type Colored_Vertices is array (Positive range <>) of aliased Colored_Vertex;
    
    procedure Load_Colored_Vertex is new GL.Objects.Buffer.Load_To_Buffer
       (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);
@@ -121,7 +118,7 @@ begin
          Modelview.Apply_Rotation (Rotator, 0.0, 1.0, 0.0);
          Rotator := Rotator + 1.0;
          
-         GL.Fixed.Draw_Elements (GL.Types.Quads, 24, UInt_Type);
+         GL.Objects.Buffer.Draw_Elements (GL.Types.Quads, 24, UInt_Type);
          
          GL.Flush;
          

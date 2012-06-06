@@ -38,11 +38,6 @@ package GL.Fixed is
    procedure Enable (Capability : Client_Side_Capability);
    procedure Disable (Capability : Client_Side_Capability);
    
-   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural);
-      
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
-                            Index_Type : Unsigned_Numeric_Type);
-   
 private
    for Client_Side_Capability use (Vertex_Array          => 16#8074#,
                                    Normal_Array          => 16#8075#, 

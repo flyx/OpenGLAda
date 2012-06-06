@@ -34,13 +34,16 @@ package GL.Objects.Buffer is
    -- Element_Type and Array_Type should use the pragma Convention (C).
    generic
       type Element_Type is private;
-      type Array_Type is array (Integer range <>) of Element_Type;
+      type Array_Type is array (Positive range <>) of Element_Type;
    procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
                              Usage  : Buffer_Usage);
    
    -- Use this instead of Load_To_Buffer when you don't want to copy any data
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
                        Usage  : Buffer_Usage);
+   
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
+                            Index_Type : Unsigned_Numeric_Type);
    
    Array_Buffer              : constant Buffer_Target;
    Element_Array_Buffer      : constant Buffer_Target;

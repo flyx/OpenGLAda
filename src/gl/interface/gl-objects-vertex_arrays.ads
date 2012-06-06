@@ -21,6 +21,8 @@ package GL.Objects.Vertex_Arrays is
    
    procedure Bind (Object : Vertex_Array_Object);
    
+   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural);
+   
    -- bind this object to unbind the current array object.
    Null_Array_Object : constant Vertex_Array_Object;
 private
@@ -32,6 +34,6 @@ private
    
    Null_Array_Object : constant Vertex_Array_Object
      := Vertex_Array_Object'(Ada.Finalization.Controlled with
-        Reference => Null_Object_Reference'Access);
+        Reference => null);
    
 end GL.Objects.Vertex_Arrays;

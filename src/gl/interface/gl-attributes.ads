@@ -31,4 +31,6 @@ package GL.Attributes is
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute);
    procedure Disable_Vertex_Attrib_Array (Index : Attribute);
    
+   procedure Set_Vector3 (Index : Attribute; V1, V2, V3     : Single);
+   
 end GL.Attributes;

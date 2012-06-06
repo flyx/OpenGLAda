@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Attributes;
 with GL.Uniforms;
 
 package GL.API.Singles is
@@ -78,5 +79,8 @@ package GL.API.Singles is
    procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
      ("glUniformMatrix4fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
+   
+   procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glVertexAttrib3f", Attributes.Attribute, Single, Single, Single);
    
 end GL.API.Singles;

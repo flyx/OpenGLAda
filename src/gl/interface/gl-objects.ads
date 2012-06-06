@@ -60,10 +60,5 @@ private
    type GL_Object is abstract new Ada.Finalization.Controlled with record
       Reference : GL_Object_Reference_Access;
    end record;
-   
-   -- cannot be constant because code expects to be able to modify the
-   -- Reference value
-   Null_Object_Reference : aliased GL_Object_Reference
-     := GL_Object_Reference'(GL_Id => 0, Reference_Count => 0);
-   
+      
 end GL.Objects;

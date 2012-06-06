@@ -24,6 +24,9 @@ package GL.Types.Colors is
 
    type Color is array (Color_Index) of aliased Component;
    type Basic_Color is array (Basic_Color_Index) of Component;
+   
+   type Color_Array is array (Positive range <>) of aliased Color;
+   type Basic_Color_Array is array (Positive range <>) of aliased Basic_Color;
 
 private
    pragma Convention (C, Color);

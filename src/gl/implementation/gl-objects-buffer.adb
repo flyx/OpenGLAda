@@ -86,6 +86,13 @@ package body GL.Objects.Buffer is
                        System.Null_Address, Usage);
       Check_OpenGL_Error;
    end Allocate;
+   
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
+                            Index_Type : Unsigned_Numeric_Type) is
+   begin
+      API.Draw_Elements (Mode, Low_Level.SizeI (Count), Index_Type, 0);
+      Check_OpenGL_Error;
+   end Draw_Elements;
 
    overriding procedure Create_Id (Object : in out Buffer_Object) is
       New_Id : UInt := 0;

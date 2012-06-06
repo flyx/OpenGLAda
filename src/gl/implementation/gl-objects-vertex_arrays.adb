@@ -21,9 +21,19 @@ package body GL.Objects.Vertex_Arrays is
 
    procedure Bind (Object : Vertex_Array_Object) is
    begin
-      API.Bind_Vertex_Array (Object.Reference.GL_Id);
+      if (Object.Reference = null) then
+         API.Bind_Vertex_Array (0);
+      else
+         API.Bind_Vertex_Array (Object.Reference.GL_Id);
+      end if;
       Check_OpenGL_Error;
    end Bind;
+
+   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural) is
+   begin
+      API.Draw_Arrays (Mode, Int (First), Low_Level.SizeI (Count));
+      Check_OpenGL_Error;
+   end Draw_Arrays;
 
    procedure Create_Id (Object : in out Vertex_Array_Object) is
       New_Id : UInt := 0;
@@ -36,7 +46,9 @@ package body GL.Objects.Vertex_Arrays is
    procedure Delete_Id (Object : in out Vertex_Array_Object) is
       Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
-      API.Delete_Vertex_Arrays (1, Arr);
+      if Object.Reference.GL_Id /= 0 then
+         API.Delete_Vertex_Arrays (1, Arr);
+      end if;
       Check_OpenGL_Error;
    end Delete_Id;
 end GL.Objects.Vertex_Arrays;
