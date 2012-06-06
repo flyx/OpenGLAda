@@ -3,7 +3,7 @@ layout : default
 title : API - The package GL.Matrices
 packages :
   - GL.Fixed
-weight: 3
+weight: 5
 ---
 
 # The package `GL.Fixed`

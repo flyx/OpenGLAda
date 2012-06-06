@@ -2,7 +2,7 @@
 layout : default
 title : API - The package GL.Types
 packages : GL.Types
-weight: 7
+weight: 3
 ---
 
 # The package `GL.Types`
