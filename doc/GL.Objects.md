@@ -20,7 +20,7 @@ of this object can be accessed and modified with functions that do not take a
 reference to the object, as they automatically interact with the active object.
 
 OpenCLAda basically works the same way. Designing an alternative, simpler API has
-been considered and deem not to be suitable for a wrapper library. However, the
+been considered and deemed not to be suitable for a wrapper library. However, the
 handling of objects and targets is designed in a more object-oriented way.
 
 ## OpenGLAda's approach to objects
@@ -34,11 +34,11 @@ _object references_, while _OpenGL objects_ are the real allocated memory on the
 graphics card.
 
 The targets where objects can be bound are also implemented as tagged types.
-However, you cannot create any targed instances. Instead, the available target
+However, you cannot create any target instances. Instead, the available target
 instances are provided as constants in the corresponding package.
 
 All targets implement a procedure `Bind`, which binds the object referred by an
-object reference to the target as raw OpenGL would do it. Additionally, `Bind`
+object reference to the target, as raw OpenGL would do it. Additionally, `Bind`
 protects the OpenGL object from deletion - as long as an object is bound, it will
 not be deleted, even if there are no more references to the object in your code.
 
@@ -48,6 +48,11 @@ When you define a new variable holding an OpenGL object reference and do
 not initialize it, it automatically gets assigned a unique name from OpenGL.
 Don't worry - there will be no object created as long as you do not bind your
 object reference.
+
+**Important note:** At the time you declare a variable holding an object
+reference, you need to have an active OpenGL context. Otherwise, trying to create
+a unique name for this object reference will result in an OpenGL error. So you
+cannot declare your OpenGL objects at library level without initializing them.
 
 To use the object, you have to bind it to a target and use the methods of this
 target to configure the currently bound object. The code might look like this:
