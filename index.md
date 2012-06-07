@@ -39,7 +39,8 @@ are:
 
 ## Getting the Code
 
-You can get the code from the [public GitHub repository](https://github.com/flyx86/OpenGLAda).
+You can get the code from the [public GitHub repository](https://github.com/flyx86/OpenGLAda). Releases are available as [tags](https://github.com/flyx86/OpenGLAda/tags)
+of the git repository.
 
 ## License
 
