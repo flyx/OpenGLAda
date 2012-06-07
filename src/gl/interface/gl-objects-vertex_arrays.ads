@@ -15,13 +15,14 @@
 --------------------------------------------------------------------------------
 
 package GL.Objects.Vertex_Arrays is
-   pragma Preelaborate;
    
    type Vertex_Array_Object is new GL_Object with private;
    
    procedure Bind (Object : Vertex_Array_Object);
    
    procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural);
+   
+   function Current_Array_Object return Vertex_Array_Object;
    
    -- bind this object to unbind the current array object.
    Null_Array_Object : constant Vertex_Array_Object;

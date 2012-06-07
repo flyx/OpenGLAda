@@ -19,12 +19,16 @@ with GL.Low_Level;
 
 package body GL.Objects.Vertex_Arrays is
 
+   Current_Object : Vertex_Array_Object := Null_Array_Object;
+
    procedure Bind (Object : Vertex_Array_Object) is
    begin
-      if (Object.Reference = null) then
+      if Object.Reference = null then
          API.Bind_Vertex_Array (0);
-      else
+         Current_Object := Null_Array_Object;
+      elsif Object /= Current_Array_Object then
          API.Bind_Vertex_Array (Object.Reference.GL_Id);
+         Current_Object := Object;
       end if;
       Check_OpenGL_Error;
    end Bind;
@@ -42,6 +46,11 @@ package body GL.Objects.Vertex_Arrays is
       Check_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
    end Create_Id;
+   
+   function Current_Array_Object return Vertex_Array_Object is
+   begin
+      return Current_Object;
+   end Current_Array_Object;
 
    procedure Delete_Id (Object : in out Vertex_Array_Object) is
       Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);

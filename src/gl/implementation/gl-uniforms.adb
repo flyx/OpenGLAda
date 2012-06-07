@@ -22,235 +22,235 @@ with GL.Low_Level;
 package body GL.Uniforms is
    use type Low_Level.SizeI;
 
-   procedure Set_Value   (Location : Uniform; Value : Single) renames
+   procedure Set_Single (Location : Uniform; Value : Single) renames
      API.Singles.Uniform1;
       
-   procedure Set_Vector2 (Location : Uniform; V1, V2 : Single) renames
+   procedure Set_Single (Location : Uniform; V1, V2 : Single) renames
      API.Singles.Uniform2;
    
-   procedure Set_Vector2 (Location : Uniform; Value : Singles.Vector2) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector2) is
    begin
       API.Singles.Uniform2v (Location, 2, (1 => Value));
-   end Set_Vector2;
+   end Set_Single;
    
-   procedure Set_Vector3 (Location : Uniform; V1, V2, V3 : Single) renames
+   procedure Set_Single (Location : Uniform; V1, V2, V3 : Single) renames
      API.Singles.Uniform3;
    
-   procedure Set_Vector3 (Location : Uniform; Value : Singles.Vector3) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector3) is
    begin
       API.Singles.Uniform3v (Location, 3, (1 => Value));
-   end Set_Vector3;
+   end Set_Single;
    
-   procedure Set_Vector4 (Location : Uniform; V1, V2, V3, V4 : Single) renames
+   procedure Set_Single (Location : Uniform; V1, V2, V3, V4 : Single) renames
      API.Singles.Uniform4;
    
-   procedure Set_Vector4 (Location : Uniform; Value : Singles.Vector4) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector4) is
    begin
       API.Singles.Uniform4v (Location, 4, (1 => Value));
-   end Set_Vector4;
+   end Set_Single;
 
-   procedure Set_Array (Location : Uniform; Value : Single_Array) is
+   procedure Set_Single (Location : Uniform; Value : Single_Array) is
    begin
       API.Singles.Uniform1v (Location, Value'Length, Value);
-   end Set_Array;
+   end Set_Single;
       
-   procedure Set_Vector2_Array (Location : Uniform; Value : Singles.Vector2_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector2_Array) is
    begin
       API.Singles.Uniform2v (Location, Value'Length * 2, Value);
-   end Set_Vector2_Array;
+   end Set_Single;
    
-   procedure Set_Vector3_Array (Location : Uniform; Value : Singles.Vector3_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector3_Array) is
    begin
       API.Singles.Uniform3v (Location, Value'Length * 3, Value);
-   end Set_Vector3_Array;
+   end Set_Single;
    
-   procedure Set_Vector4_Array (Location : Uniform; Value : Singles.Vector4_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Vector4_Array) is
    begin
       API.Singles.Uniform4v (Location, Value'Length * 4, Value);
-   end Set_Vector4_Array;
+   end Set_Single;
 
-   procedure Set_Matrix2 (Location : Uniform; Value : Singles.Matrix2) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix2) is
    begin
       API.Singles.Uniform_Matrix2 (Location, 4, Low_Level.False, (1 => Value));
-   end Set_Matrix2;
+   end Set_Single;
    
-   procedure Set_Matrix3 (Location : Uniform; Value : Singles.Matrix3) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix3) is
    begin
       API.Singles.Uniform_Matrix3 (Location, 9, Low_Level.False, (1 => Value));
-   end Set_Matrix3;
+   end Set_Single;
    
-   procedure Set_Matrix4 (Location : Uniform; Value : Singles.Matrix4) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix4) is
    begin
       API.Singles.Uniform_Matrix4 (Location, 16, Low_Level.False, (1 => Value));
-   end Set_Matrix4;
+   end Set_Single;
    
-   procedure Set_Matrix2_Array (Location : Uniform; Value : Singles.Matrix2_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix2_Array) is
    begin
       API.Singles.Uniform_Matrix2 (Location, Value'Length * 4, Low_Level.False, Value);
-   end Set_Matrix2_Array;
+   end Set_Single;
    
-   procedure Set_Matrix3_Array (Location : Uniform; Value : Singles.Matrix3_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix3_Array) is
    begin
       API.Singles.Uniform_Matrix3 (Location, Value'Length * 9, Low_Level.False, Value);
-   end Set_Matrix3_Array;
+   end Set_Single;
    
-   procedure Set_Matrix4_Array (Location : Uniform; Value : Singles.Matrix4_Array) is
+   procedure Set_Single (Location : Uniform; Value : Singles.Matrix4_Array) is
    begin
       API.Singles.Uniform_Matrix4 (Location, Value'Length * 16, Low_Level.False, Value);
-   end Set_Matrix4_Array;
+   end Set_Single;
 
-   procedure Set_Value   (Location : Uniform; Value : Int) renames
+   procedure Set_Int (Location : Uniform; Value : Int) renames
      API.Ints.Uniform1;
    
-   procedure Set_Vector2 (Location : Uniform; V1, V2 : Int) renames
+   procedure Set_Int (Location : Uniform; V1, V2 : Int) renames
      API.Ints.Uniform2;
    
-   procedure Set_Vector2 (Location : Uniform; Value : Ints.Vector2) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector2) is
    begin
       API.Ints.Uniform2v (Location, 2, (1 => Value));
-   end Set_Vector2;
+   end Set_Int;
    
-   procedure Set_Vector3 (Location : Uniform; V1, V2, V3 : Int) renames
+   procedure Set_Int (Location : Uniform; V1, V2, V3 : Int) renames
      API.Ints.Uniform3;
       
-   procedure Set_Vector3 (Location : Uniform; Value : Ints.Vector3) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector3) is
    begin
       API.Ints.Uniform3v (Location, 3, (1 => Value));
-   end Set_Vector3;
+   end Set_Int;
    
-   procedure Set_Vector4 (Location : Uniform; V1, V2, V3, V4 : Int) renames
+   procedure Set_Int (Location : Uniform; V1, V2, V3, V4 : Int) renames
      API.Ints.Uniform4;
    
-   procedure Set_Vector4 (Location : Uniform; Value : Ints.Vector4) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector4) is
    begin
       API.Ints.Uniform4v (Location, 4, (1 => Value));
-   end Set_Vector4;
+   end Set_Int;
 
-   procedure Set_Array (Location : Uniform; Value : Int_Array) is
+   procedure Set_Int (Location : Uniform; Value : Int_Array) is
    begin
       API.Ints.Uniform1v (Location, Value'Length, Value);
-   end Set_Array;
+   end Set_Int;
       
-   procedure Set_Vector2_Array (Location : Uniform; Value : Ints.Vector2_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector2_Array) is
    begin
       API.Ints.Uniform2v (Location, Value'Length * 2, Value);
-   end Set_Vector2_Array;
+   end Set_Int;
    
-   procedure Set_Vector3_Array (Location : Uniform; Value : Ints.Vector3_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector3_Array) is
    begin
       API.Ints.Uniform3v (Location, Value'Length * 3, Value);
-   end Set_Vector3_Array;
+   end Set_Int;
    
-   procedure Set_Vector4_Array (Location : Uniform; Value : Ints.Vector4_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Vector4_Array) is
    begin
       API.Ints.Uniform4v (Location, Value'Length * 4, Value);
-   end Set_Vector4_Array;
+   end Set_Int;
 
-   procedure Set_Matrix2 (Location : Uniform; Value : Ints.Matrix2) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix2) is
    begin
       API.Ints.Uniform_Matrix2 (Location, 4, Low_Level.False, (1 => Value));
-   end Set_Matrix2;
+   end Set_Int;
    
-   procedure Set_Matrix3 (Location : Uniform; Value : Ints.Matrix3) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix3) is
    begin
       API.Ints.Uniform_Matrix3 (Location, 9, Low_Level.False, (1 => Value));
-   end Set_Matrix3;
+   end Set_Int;
    
-   procedure Set_Matrix4 (Location : Uniform; Value : Ints.Matrix4) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix4) is
    begin
       API.Ints.Uniform_Matrix4 (Location, 16, Low_Level.False, (1 => Value));
-   end Set_Matrix4;
+   end Set_Int;
 
-   procedure Set_Matrix2_Array (Location : Uniform; Value : Ints.Matrix2_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix2_Array) is
    begin
       API.Ints.Uniform_Matrix2 (Location, Value'Length * 4, Low_Level.False, Value);
-   end Set_Matrix2_Array;
+   end Set_Int;
    
-   procedure Set_Matrix3_Array (Location : Uniform; Value : Ints.Matrix3_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix3_Array) is
    begin
       API.Ints.Uniform_Matrix3 (Location, Value'Length * 9, Low_Level.False, Value);
-   end Set_Matrix3_Array;
+   end Set_Int;
    
-   procedure Set_Matrix4_Array (Location : Uniform; Value : Ints.Matrix4_Array) is
+   procedure Set_Int (Location : Uniform; Value : Ints.Matrix4_Array) is
    begin
       API.Ints.Uniform_Matrix4 (Location, Value'Length * 16, Low_Level.False, Value);
-   end Set_Matrix4_Array;
+   end Set_Int;
 
-   procedure Set_Value   (Location : Uniform; Value : UInt) renames
+   procedure Set_UInt (Location : Uniform; Value : UInt) renames
      API.UInts.Uniform1;
    
-   procedure Set_Vector2 (Location : Uniform; V1, V2 : UInt) renames
+   procedure Set_UInt (Location : Uniform; V1, V2 : UInt) renames
      API.UInts.Uniform2;
    
-   procedure Set_Vector2 (Location : Uniform; Value : UInts.Vector2) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector2) is
    begin
       API.UInts.Uniform2v (Location, 2, (1 => Value));
-   end Set_Vector2;
+   end Set_UInt;
    
-   procedure Set_Vector3 (Location : Uniform; V1, V2, V3 : UInt) renames
+   procedure Set_UInt (Location : Uniform; V1, V2, V3 : UInt) renames
      API.UInts.Uniform3;
    
-   procedure Set_Vector3 (Location : Uniform; Value : UInts.Vector3) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector3) is
    begin
       API.UInts.Uniform3v (Location, 3, (1 => Value));
-   end Set_Vector3;
+   end Set_UInt;
    
-   procedure Set_Vector4 (Location : Uniform; V1, V2, V3, V4 : UInt) renames
+   procedure Set_UInt (Location : Uniform; V1, V2, V3, V4 : UInt) renames
      API.UInts.Uniform4;
    
-   procedure Set_Vector4 (Location : Uniform; Value : UInts.Vector4) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector4) is
    begin
       API.UInts.Uniform4v (Location, 4, (1 => Value));
-   end Set_Vector4;
+   end Set_UInt;
 
-   procedure Set_Array (Location : Uniform; Value : UInt_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInt_Array) is
    begin
       API.UInts.Uniform1v (Location, Value'Length, Value);
-   end Set_Array;
+   end Set_UInt;
    
-   procedure Set_Vector2_Array (Location : Uniform; Value : UInts.Vector2_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector2_Array) is
    begin
       API.UInts.Uniform2v (Location, Value'Length * 2, Value);
-   end Set_Vector2_Array;
+   end Set_UInt;
    
-   procedure Set_Vector3_Array (Location : Uniform; Value : UInts.Vector3_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector3_Array) is
    begin
       API.UInts.Uniform3v (Location, Value'Length * 3, Value);
-   end Set_Vector3_Array;
+   end Set_UInt;
    
-   procedure Set_Vector4_Array (Location : Uniform; Value : UInts.Vector4_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Vector4_Array) is
    begin
       API.UInts.Uniform4v (Location, Value'Length * 4, Value);
-   end Set_Vector4_Array;
+   end Set_UInt;
 
-   procedure Set_Matrix2 (Location : Uniform; Value : UInts.Matrix2) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix2) is
    begin
       API.UInts.Uniform_Matrix2 (Location, 4, Low_Level.False, (1 => Value));
-   end Set_Matrix2;
+   end Set_UInt;
    
-   procedure Set_Matrix3 (Location : Uniform; Value : UInts.Matrix3) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix3) is
    begin
       API.UInts.Uniform_Matrix3 (Location, 9, Low_Level.False, (1 => Value));
-   end Set_Matrix3;
+   end Set_UInt;
    
-   procedure Set_Matrix4 (Location : Uniform; Value : UInts.Matrix4) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix4) is
    begin
       API.UInts.Uniform_Matrix4 (Location, 16, Low_Level.False, (1 => Value));
-   end Set_Matrix4;
+   end Set_UInt;
 
-   procedure Set_Matrix2_Array (Location : Uniform; Value : UInts.Matrix2_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix2_Array) is
    begin
       API.UInts.Uniform_Matrix2 (Location, Value'Length * 4, Low_Level.False, Value);
-   end Set_Matrix2_Array;
+   end Set_UInt;
    
-   procedure Set_Matrix3_Array (Location : Uniform; Value : UInts.Matrix3_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix3_Array) is
    begin
       API.UInts.Uniform_Matrix3 (Location, Value'Length * 9, Low_Level.False, Value);
-   end Set_Matrix3_Array;
+   end Set_UInt;
    
-   procedure Set_Matrix4_Array (Location : Uniform; Value : UInts.Matrix4_Array) is
+   procedure Set_UInt (Location : Uniform; Value : UInts.Matrix4_Array) is
    begin
       API.UInts.Uniform_Matrix4 (Location, Value'Length * 16, Low_Level.False, Value);
-   end Set_Matrix4_Array;
+   end Set_UInt;
 
 end GL.Uniforms;

@@ -145,7 +145,7 @@ begin
          GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
          
          Array2.Bind;
-         GL.Attributes.Set_Vector3 (1, 1.0, 0.0, 0.0);
+         GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
          GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
 
          GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;

@@ -79,8 +79,25 @@ package GL.API.Singles is
    procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
      ("glUniformMatrix4fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
+
+   procedure Vertex_Attrib1 is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttrib1f", Attributes.Attribute, Single);
+
+   procedure Vertex_Attrib2 is new Low_Level.Loader.Procedure_With_3_Params
+     ("glVertexAttrib2f", Attributes.Attribute, Single, Single);
+   
+   procedure Vertex_Attrib2v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttrib2fv", Attributes.Attribute, Vector2);
    
    procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
      ("glVertexAttrib3f", Attributes.Attribute, Single, Single, Single);
    
+   procedure Vertex_Attrib3v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttrib3fv", Attributes.Attribute, Vector3);
+   
+   procedure Vertex_Attrib4 is new Low_Level.Loader.Procedure_With_5_Params
+     ("glVertexAttrib4f", Attributes.Attribute, Single, Single, Single, Single);
+   
+   procedure Vertex_Attrib4v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttrib4fv", Attributes.Attribute, Vector4);
 end GL.API.Singles;

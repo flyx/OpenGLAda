@@ -56,4 +56,25 @@ package GL.API.UInts is
    procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
      ("glUniformMatrix4uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
+   
+   procedure Vertex_Attrib1 is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttribI1ui", Attributes.Attribute, UInt);
+   
+   procedure Vertex_Attrib2 is new Low_Level.Loader.Procedure_With_3_Params
+     ("glVertexAttribI2ui", Attributes.Attribute, UInt, UInt);
+   
+   procedure Vertex_Attrib2v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttribI2uiv", Attributes.Attribute, Vector2);
+   
+   procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
+     ("glVertexAttribI3ui", Attributes.Attribute, UInt, UInt, UInt);
+   
+   procedure Vertex_Attrib3v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttribI3uiv", Attributes.Attribute, Vector3);
+   
+   procedure Vertex_Attrib4 is new Low_Level.Loader.Procedure_With_5_Params
+     ("glVertexAttribI4ui", Attributes.Attribute, UInt, UInt, UInt, UInt);
+   
+   procedure Vertex_Attrib4v is new Low_Level.Loader.Procedure_With_2_Params
+     ("glVertexAttrib4Iuiv", Attributes.Attribute, Vector4);
 end GL.API.UInts;
