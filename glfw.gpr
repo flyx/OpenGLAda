@@ -3,7 +3,7 @@ with "opengl.gpr";
 library project Glfw is
    type Os_Type is
       ("Windows", "Linux", "MacOSX");
-   Os : Os_Type := external ("OS", "Linux");
+   Os : Os_Type := external ("GL_Backend", "Linux");
 
    for Library_Name use "GlfwAda";
    for Source_Dirs use ("src/glfw");
