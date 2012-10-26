@@ -21,6 +21,7 @@ with Ada.Containers.Indefinite_Hashed_Maps;
 with GL.API;
 with GL.Helpers;
 with GL.Enums.Getter;
+with GL.Enums.Indexes;
 
 package body GL.Objects.Textures is
    use type UInt;
@@ -345,17 +346,23 @@ package body GL.Objects.Textures is
    end Mipmap_Autoupdate_Enabled;
    
    procedure Set_Active_Unit (Unit : Texture_Unit) is
+      package Texture_Indexing is new Enums.Indexes
+         (Enums.Textures.Texture_Unit_Start_Rep,
+          Enums.Getter.Max_Combined_Texture_Image_Units);
    begin
-      API.Active_Texture (Enums.Textures.Texture_Unit'Val (Unit));
+      API.Active_Texture (Texture_Indexing.Representation (Unit));
       Check_OpenGL_Error;
    end Set_Active_Unit;
    
    function Active_Unit return Texture_Unit is
-      Raw_Unit : aliased Enums.Textures.Texture_Unit
-        := Enums.Textures.Texture0;
+      package Texture_Indexing is new Enums.Indexes
+         (Enums.Textures.Texture_Unit_Start_Rep,
+          Enums.Getter.Max_Combined_Texture_Image_Units);
+      
+      Raw_Unit : aliased Int := Enums.Textures.Texture_Unit_Start_Rep;
    begin
-      API.Get_Texture_Unit (Enums.Getter.Active_Texture, Raw_Unit'Access);
-      return Enums.Textures.Texture_Unit'Pos (Raw_Unit);
+      API.Get_Integer (Enums.Getter.Active_Texture, Raw_Unit'Access);
+      return Texture_Indexing.Value (Raw_Unit);
    end Active_Unit;
 
    function Texture_Unit_Count return Natural is

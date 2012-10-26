@@ -101,11 +101,6 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Light_Color,
                   External_Name => "glGetLightfv");
 
-   procedure Get_Texture_Unit (Name   : Enums.Getter.Parameter;
-                               Target : access Enums.Textures.Texture_Unit);
-   pragma Import (Convention => StdCall, Entity => Get_Texture_Unit,
-                  External_Name => "glGetIntegerv");
-
    -----------------------------------------------------------------------------
    --                                 Toggles                                 --
    -----------------------------------------------------------------------------
@@ -511,7 +506,7 @@ private package GL.API is
                   External_Name => "glGetTexEnviv");
 
    procedure Active_Texture is new Low_Level.Loader.Procedure_With_1_Param
-      ("glActiveTexture", Enums.Textures.Texture_Unit);
+      ("glActiveTexture", Int);
 
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --

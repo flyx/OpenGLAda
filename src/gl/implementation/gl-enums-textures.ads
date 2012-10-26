@@ -70,14 +70,16 @@ package GL.Enums.Textures is
                           Operand1_RGB, Operand2_RGB, Operand0_Alpha,
                           Operand1_Alpha, Operand2_Alpha, Coord_Replace);
    
+   Texture_Unit_Start_Rep : constant := 16#84C0#;
+   
    -- oh god why
-   type Texture_Unit is (Texture0,  Texture1,  Texture2,  Texture3,  Texture4,
-                         Texture5,  Texture6,  Texture7,  Texture8,  Texture9,
-                         Texture10, Texture11, Texture12, Texture13, Texture14,
-                         Texture15, Texture16, Texture17, Texture18, Texture19,
-                         Texture20, Texture21, Texture22, Texture23, Texture24,
-                         Texture25, Texture26, Texture27, Texture28, Texture29,
-                         Texture30, Texture31);
+   --type Texture_Unit is (Texture0,  Texture1,  Texture2,  Texture3,  Texture4,
+   --                      Texture5,  Texture6,  Texture7,  Texture8,  Texture9,
+   --                      Texture10, Texture11, Texture12, Texture13, Texture14,
+   --                      Texture15, Texture16, Texture17, Texture18, Texture19,
+   --                      Texture20, Texture21, Texture22, Texture23, Texture24,
+   --                      Texture25, Texture26, Texture27, Texture28, Texture29,
+   --                      Texture30, Texture31);
 
 private
 
@@ -111,38 +113,38 @@ private
                           Coord_Replace  => 16#8862#);
    for Env_Parameter'Size use Low_Level.Enum'Size;
    
-   for Texture_Unit use (Texture0  => 16#84C0#,
-                         Texture1  => 16#84C1#,
-                         Texture2  => 16#84C2#,
-                         Texture3  => 16#84C3#,
-                         Texture4  => 16#84C4#,
-                         Texture5  => 16#84C5#,
-                         Texture6  => 16#84C6#,
-                         Texture7  => 16#84C7#,
-                         Texture8  => 16#84C8#,
-                         Texture9  => 16#84C9#,
-                         Texture10 => 16#84CA#,
-                         Texture11 => 16#84CB#,
-                         Texture12 => 16#84CC#,
-                         Texture13 => 16#84CD#,
-                         Texture14 => 16#84CE#,
-                         Texture15 => 16#84CF#,
-                         Texture16 => 16#84D0#,
-                         Texture17 => 16#84D1#,
-                         Texture18 => 16#84D2#,
-                         Texture19 => 16#84D3#,
-                         Texture20 => 16#84D4#,
-                         Texture21 => 16#84D5#,
-                         Texture22 => 16#84D6#,
-                         Texture23 => 16#84D7#,
-                         Texture24 => 16#84D8#,
-                         Texture25 => 16#84D9#,
-                         Texture26 => 16#84DA#,
-                         Texture27 => 16#84DB#,
-                         Texture28 => 16#84DC#,
-                         Texture29 => 16#84DD#,
-                         Texture30 => 16#84DE#,
-                         Texture31 => 16#84DF#);
-   for Texture_Unit'Size use Low_Level.Enum'Size;
+   --for Texture_Unit use (Texture0  => 16#84C0#,
+   --                      Texture1  => 16#84C1#,
+   --                      Texture2  => 16#84C2#,
+   --                      Texture3  => 16#84C3#,
+   --                      Texture4  => 16#84C4#,
+   --                      Texture5  => 16#84C5#,
+   --                      Texture6  => 16#84C6#,
+   --                      Texture7  => 16#84C7#,
+   --                      Texture8  => 16#84C8#,
+   --                      Texture9  => 16#84C9#,
+   --                      Texture10 => 16#84CA#,
+   --                      Texture11 => 16#84CB#,
+   --                      Texture12 => 16#84CC#,
+   --                      Texture13 => 16#84CD#,
+   --                      Texture14 => 16#84CE#,
+   --                      Texture15 => 16#84CF#,
+   --                      Texture16 => 16#84D0#,
+   --                      Texture17 => 16#84D1#,
+   --                      Texture18 => 16#84D2#,
+   --                      Texture19 => 16#84D3#,
+   --                      Texture20 => 16#84D4#,
+   --                      Texture21 => 16#84D5#,
+   --                      Texture22 => 16#84D6#,
+   --                      Texture23 => 16#84D7#,
+   --                      Texture24 => 16#84D8#,
+   --                      Texture25 => 16#84D9#,
+   --                      Texture26 => 16#84DA#,
+   --                      Texture27 => 16#84DB#,
+   --                      Texture28 => 16#84DC#,
+   --                      Texture29 => 16#84DD#,
+   --                      Texture30 => 16#84DE#,
+   --                      Texture31 => 16#84DF#);
+   --for Texture_Unit'Size use Low_Level.Enum'Size;
 
 end GL.Enums.Textures;
