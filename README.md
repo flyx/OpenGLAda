@@ -6,10 +6,9 @@ Unlike other bindings (see the
 OpenGLAda enriches the original API with concepts and features provided by
 Ada, like object orientation, type safety and generics.
 
-In addition to the core OpenGL API, wrappers for GLU and GLFW are also
-included. GLU is the standardized OpenGL Utility Library, while GLFW is
-a third-party library that provides functions to create a window or a
-fullscreen display with an OpenGL context on it. GLFW also inlcudes functions
+In addition to the core OpenGL API, a wrapper for GLFW is also
+included. GLFW is a third-party library that provides functions to create a window
+or a fullscreen display with an OpenGL context on it. GLFW also includes functions
 for basic input handling.
 
 OpenGLAda supports MacOSX, Windows and Linux with X11. It may also work
