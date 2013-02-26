@@ -1,5 +1,5 @@
 ifndef PREFIX
-  PREFIX=$(dir $(shell dirname `which gnarls`))
+  PREFIX=$(dir $(shell dirname `which gnatls`))
 endif
 LIBDIR ?= ${PREFIX}/lib
 DESTDIR ?=
