@@ -65,5 +65,26 @@ private package Glfw.Enums is
                     Key_Repeat           => 16#30005#,
                     Auto_Poll_Events     => 16#30006#);
    for Feature'Size use Interfaces.C.int'Size;
+   
+   type Joystick_ID is (
+      Joystick_1, Joystick_2, Joystick_3, Joystick_4, Joystick_5,
+      Joystick_6, Joystick_7, Joystick_8, Joystick_9, Joystick_10,
+      Joystick_11, Joystick_12, Joystick_13, Joystick_14,
+      Joystick_15, Joystick_16);
+   for Joystick_ID use (
+      Joystick_1  =>  0, Joystick_2  =>  1, Joystick_3  =>  2,
+      Joystick_4  =>  3, Joystick_5  =>  4, Joystick_6  =>  5,
+      Joystick_7  =>  6, Joystick_8  =>  7, Joystick_9  =>  8,
+      Joystick_10 =>  9, Joystick_11 => 10, Joystick_12 => 11,
+      Joystick_13 => 12, Joystick_14 => 13, Joystick_15 => 14,
+      Joystick_16 => 15
+   );
+   for Joystick_ID'Size use Interfaces.C.int'Size;
+   
+   type Joystick_Param is (Present, Axis, Buttons);
+   for Joystick_Param use (Present => 16#50001#,
+                           Axis    => 16#50002#,
+                           Buttons => 16#50003#);
+   for Joystick_Param'Size use C.int'Size;
 
 end Glfw.Enums;

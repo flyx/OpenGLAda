@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
-
 package Glfw.Events.Keys is
 
    -- Not all values are actually used.
@@ -99,9 +97,9 @@ package Glfw.Events.Keys is
 
    type Unicode_Character is range 0 .. Interfaces.C.int'Last;
 
-   type Key_Callback is access procedure (Subject : Key; Action : Key_State);
+   type Key_Callback is access procedure (Subject : Key; Action : Button_State);
    type Character_Callback is access procedure (Unicode_Char : Unicode_Character;
-                                                Action : Glfw.Events.Key_State);
+                                                Action       : Button_State);
 
    -- Get a String representation of the key. Can be used for displaying the
    -- key's name on the screen. The key name will be in English.

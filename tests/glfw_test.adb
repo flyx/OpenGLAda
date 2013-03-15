@@ -19,8 +19,8 @@ with Glfw.Display;
 package body Glfw_Test is
 
    procedure Key_To_Title (Subject : Glfw.Events.Keys.Key;
-                           Action : Glfw.Events.Key_State) is
-      use type Glfw.Events.Key_State;
+                           Action : Glfw.Events.Button_State) is
+      use type Glfw.Events.Button_State;
    begin
       if Action = Glfw.Events.Press then
          Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)

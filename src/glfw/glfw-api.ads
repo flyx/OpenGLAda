@@ -19,6 +19,7 @@ with Glfw.Display;
 
 with Glfw.Events.Keys;
 with Glfw.Events.Mouse;
+with Glfw.Events.Joysticks;
 
 with Interfaces.C.Strings;
 with System;
@@ -30,14 +31,14 @@ private package Glfw.Api is
    type Window_Refresh_Callback is access procedure;
 
    type Key_Callback is access procedure (Subject : Events.Keys.Key;
-                                          Action : Events.Key_State);
+                                          Action : Events.Button_State);
    type Character_Callback is access procedure
-     (Unicode_Char : Events.Keys.Unicode_Character; Action : Events.Key_State);
+     (Unicode_Char : Events.Keys.Unicode_Character; Action : Events.Button_State);
    type Button_Callback is access procedure (Subject : Events.Mouse.Button;
-                                             Action  : Events.Key_State);
+                                             Action  : Events.Button_State);
    type Position_Callback is access procedure (X, Y : Events.Mouse.Coordinate);
    type Wheel_Callback is access procedure (Pos : Events.Mouse.Wheel_Position);
-
+   
    pragma Convention (C, Window_Size_Callback);
    pragma Convention (C, Window_Close_Callback);
    pragma Convention (C, Window_Refresh_Callback);
@@ -149,12 +150,12 @@ private package Glfw.Api is
    pragma Import (Convention => C, Entity => Wait_Events,
                   External_Name => "glfwWaitEvents");
 
-   function Get_Key (Key : Glfw.Events.Keys.Key) return Glfw.Events.Key_State;
+   function Get_Key (Key : Glfw.Events.Keys.Key) return Glfw.Events.Button_State;
    pragma Import (Convention => C, Entity => Get_Key,
                   External_Name => "glfwGetKey");
 
    function Get_Mouse_Button (Button : Glfw.Events.Mouse.Button)
-                              return Glfw.Events.Key_State;
+                              return Glfw.Events.Button_State;
    pragma Import (Convention => C, Entity => Get_Mouse_Button,
                   External_Name => "glfwGetMouseButton");
 
@@ -193,6 +194,31 @@ private package Glfw.Api is
    procedure Set_Mouse_Wheel_Callback (CbFun : Wheel_Callback);
    pragma Import (Convention => C, Entity => Set_Mouse_Wheel_Callback,
                   External_Name => "glfwSetMouseWheelCallback");
+   
+   function Get_Joystick_Param (Joy   : Enums.Joystick_ID;
+                                Param : Enums.Joystick_Param)
+                               return Interfaces.C.int;
+   pragma Import (Convention => C, Entity => Get_Joystick_Param,
+                  External_Name => "glfwGetJoystickParam");
+   
+   -- Pos will be modified on the C side. It should be declared
+   -- as 'in out' but Ada 2005 forbids that. Since is works fine this
+   -- way, we don't bother using C pointers instead that wouldn't
+   -- make the API any clearer.
+   function Get_Joystick_Pos (Joy : Enums.Joystick_ID;
+                              Pos : Events.Joysticks.Axis_Positions;
+                              Num_Axis : Interfaces.C.int)
+                             return Interfaces.C.int;
+   pragma Import (Convention => C, Entity => Get_Joystick_Pos,
+                  External_Name => "glfwGetJoystickPos");
+   
+   -- See comment on Get_Joystick_Pos
+   function Get_Joystick_Buttons (Joy : Enums.Joystick_ID;
+                                  Pos : Events.Button_States;
+                                  Num_Buttons : Interfaces.C.int)
+                                 return Interfaces.C.int;
+   pragma Import (Convention => C, Entity => Get_Joystick_Buttons,
+                  External_Name => "glfwGetJoystickButtons");
 
    function Get_Time return C.double;
    pragma Import (Convention => C, Entity => Get_Time,

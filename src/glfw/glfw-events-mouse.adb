@@ -45,7 +45,7 @@ package body Glfw.Events.Mouse is
       Api.Set_Mouse_Wheel (Value);
    end Set_Wheel;
 
-   procedure Raw_Button_Callback (Subject : Button; Action : Key_State);
+   procedure Raw_Button_Callback (Subject : Button; Action : Button_State);
    procedure Raw_Position_Callback (X, Y : Coordinate);
    procedure Raw_Wheel_Callback (Pos : Wheel_Position);
 
@@ -57,7 +57,7 @@ package body Glfw.Events.Mouse is
    User_Position_Callback : Position_Callback;
    User_Wheel_Callback    : Wheel_Callback;
 
-   procedure Raw_Button_Callback (Subject : Button; Action : Key_State) is
+   procedure Raw_Button_Callback (Subject : Button; Action : Button_State) is
    begin
       if User_Button_Callback /= null then
          User_Button_Callback (Subject, Action);

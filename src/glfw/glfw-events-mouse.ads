@@ -25,7 +25,7 @@ package Glfw.Events.Mouse is
    subtype Coordinate is Interfaces.C.int;
    subtype Wheel_Position is Interfaces.C.int;
 
-   type Button_Callback is access procedure (Subject : Button; Action : Key_State);
+   type Button_Callback is access procedure (Subject : Button; Action : Button_State);
    type Position_Callback is access procedure (X, Y : Coordinate);
    type Wheel_Callback is access procedure (Pos : Wheel_Position);
 

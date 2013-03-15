@@ -105,16 +105,16 @@ package body Glfw.Events.Keys is
       return Api.Get_Key (Query) = Press;
    end Pressed;
 
-   procedure Raw_Key_Callback (Subject : Key; Action : Key_State);
+   procedure Raw_Key_Callback (Subject : Key; Action : Button_State);
    procedure Raw_Character_Callback (Unicode_Char : Unicode_Character;
-                                     Action : Glfw.Events.Key_State);
+                                     Action : Glfw.Events.Button_State);
    pragma Convention (C, Raw_Key_Callback);
    pragma Convention (C, Raw_Character_Callback);
 
    User_Key_Callback       : Key_Callback       := null;
    User_Character_Callback : Character_Callback := null;
 
-   procedure Raw_Key_Callback (Subject : Key; Action : Key_State) is
+   procedure Raw_Key_Callback (Subject : Key; Action : Button_State) is
    begin
       if User_Key_Callback /= null then
          User_Key_Callback (Subject, Action);
@@ -122,7 +122,7 @@ package body Glfw.Events.Keys is
    end Raw_Key_Callback;
 
    procedure Raw_Character_Callback (Unicode_Char : Unicode_Character;
-                                     Action : Glfw.Events.Key_State) is
+                                     Action : Glfw.Events.Button_State) is
    begin
       if User_Character_Callback /= null then
          User_Character_Callback (Unicode_Char, Action);
