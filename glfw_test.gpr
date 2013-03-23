@@ -12,11 +12,15 @@ project Glfw_Test is
    end Ide;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s");
+      for Default_Switches ("ada") use ("-s",
+                                        "-gnatE",
+                                        "-g");
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
+      for Default_Switches ("ada") use ("-gnat05",
+                                        "-g",
+                                        "-fstack-check");
    end Compiler;
 
    for Main use ("glfw_test-display.adb", "glfw_test-joystick.adb");

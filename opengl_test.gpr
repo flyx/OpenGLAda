@@ -6,9 +6,6 @@ project OpenGL_Test is
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    for Source_Dirs use ("tests");
-   type Os_Type is
-      ("Windows", "Linux", "MacOSX");
-   Os : Os_Type := external ("GL_Backend");
    
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
                  "gl_test-opengl3");
@@ -18,11 +15,15 @@ project OpenGL_Test is
    end Ide;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s");
+      for Default_Switches ("ada") use ("-s",
+                                        "-gnatE",
+                                        "-g");
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
+      for Default_Switches ("ada") use ("-gnat05",
+                                        "-g",
+                                        "-fstack-check");
    end Compiler;
 
 end OpenGL_Test;

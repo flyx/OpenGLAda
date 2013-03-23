@@ -1,20 +1,23 @@
 library project OpenGL is
 
    type Os_Type is
-      ("Windows", "Linux", "MacOSX");
-   Os : Os_Type := external ("GL_Backend", "Linux");
+      ("windows", "linux", "mac");
+   Os : Os_Type := external ("GL_Backend", "linux");
+   
+   type Mode_Type is ("debug", "release");
+   Mode : Mode_Type := external ("mode", "debug");
 
    for Library_Name use "OpenGLAda";
    case Os is
-      when "Windows" => for Source_Dirs use ("src/gl/interface",
+      when "windows" => for Source_Dirs use ("src/gl/interface",
                                              "src/gl/implementation",
                                              "src/gl/windows");
-      when "Linux" => for Source_Dirs use ("src/gl/interface",
+      when "linux" => for Source_Dirs use ("src/gl/interface",
                                            "src/gl/implementation",
                                            "src/gl/x11");
-      when "MacOSX" => for Source_Dirs use ("src/gl/interface",
-                                            "src/gl/implementation",
-                                            "src/gl/mac");
+      when "mac" => for Source_Dirs use ("src/gl/interface",
+                                         "src/gl/implementation",
+                                         "src/gl/mac");
    end case;
 
    for Object_Dir use "obj";
@@ -25,22 +28,39 @@ library project OpenGL is
    end Ide;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s");
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-s",
+                                              "-gnatE",
+                                              "-g");
+         when "release" =>
+            for Default_Switches ("ada") use ("-s");
+      end case;
    end Builder;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat05", "-gnatn", "-fstack-check");
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-gnat05",
+                                              "-g",
+                                              "-fstack-check");
+         when "release" =>
+            for Default_Switches ("ada") use ("-gnat05",
+                                              "-O2",
+                                              "-gnatn",
+                                              "-fstack-check");
+      end case;
    end Compiler;
 
    package Linker is
       case Os is
-         when "Windows" =>
+         when "windows" =>
             for Linker_Options use ("-lOpenGL32", "-lGdi32");
 
-         when "Linux" =>
+         when "linux" =>
             for Linker_Options use ("-lGL", "-lX11");
 
-         when "MacOSX" =>
+         when "mac" =>
             for Linker_Options use ("-Wl,-framework,OpenGL,-framework,CoreFoundation");
       end case;
    end Linker;
