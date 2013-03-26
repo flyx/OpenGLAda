@@ -95,6 +95,9 @@ begin
       Last_Seconds : Ada.Calendar.Day_Duration := 0.0;
       Frame_Count  : Natural := 0;
    begin
+      Cube_Buffer.Initialize_Id;
+      Index_Buffer.Initialize_Id;
+      
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
       Ada.Text_IO.Put_Line (GL.Toggles.State (GL.Toggles.Depth_Test)'Img);
       

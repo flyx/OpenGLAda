@@ -24,7 +24,7 @@ package GL.Objects is
    use GL.Types;
    
    type GL_Object is abstract new Ada.Finalization.Controlled with private;
-         
+   
    -- creates the object in OpenGL memory.
    overriding procedure Initialize (Object : in out GL_Object);
       
@@ -33,6 +33,19 @@ package GL.Objects is
    
    -- Decreases reference count. Destroys texture when it reaches zero.
    overriding procedure Finalize (Object : in out GL_Object);
+   
+   -- Create an OpenGL ID for this object. This has to be done before
+   -- the object is used in any way. After calling this procedure,
+   -- Initialized will be true.
+   procedure Initialize_Id (Object : in out GL_Object) is abstract;
+   
+   -- Deletes the ID of an object. After calling this procedure,
+   -- Initialized will be false.
+   procedure Delete_Id (Object : in out GL_Object) is abstract;
+   
+   -- Check whether the object is set up to be used with OpenGL
+   -- (i.e. whether Initialize_Id has been called on the object).
+   function Initialized (Object : GL_Object) return Boolean;
    
    -- This getter is provided for low-level access. Its primary use is to
    -- interact with other C interfaces (e.g. OpenCL)
@@ -43,16 +56,10 @@ package GL.Objects is
    No_Object_Bound_Exception : exception;
 private
    
-   -- This method should be overridden by child classes to create
-   -- IDs for the OpenGL object they implement
-   procedure Create_Id (Object : in out GL_Object) is null;
-   
-   -- See above - this method should delete the object-specific id
-   procedure Delete_Id (Object : in out GL_Object) is null;
-   
    type GL_Object_Reference is record
       GL_Id           : UInt;
       Reference_Count : Natural;
+      Initialized     : Boolean := True;
    end record;
    
    type GL_Object_Reference_Access is access all GL_Object_Reference;

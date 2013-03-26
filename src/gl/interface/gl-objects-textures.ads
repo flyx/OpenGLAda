@@ -137,6 +137,12 @@ package GL.Objects.Textures is
    
    function Current_Texture (Target : Texture_Target) return Texture'Class;
    
+   overriding
+   procedure Initialize_Id (Object : in out Texture);
+   
+   overriding
+   procedure Delete_Id (Object : in out Texture);
+   
    -----------------------------------------------------------------------------
    --                      Texture Target Instances                           --
    -----------------------------------------------------------------------------
@@ -156,10 +162,6 @@ package GL.Objects.Textures is
    function Texture_Unit_Count return Natural;
    
 private
-   
-   procedure Create_Id (Object : in out Texture);
-   
-   procedure Delete_Id (Object : in out Texture);
 
    for Wrapping_Mode use (Clamp           => 16#2900#,
                           Repeat          => 16#2901#,

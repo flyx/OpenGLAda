@@ -112,50 +112,58 @@ procedure GL_Test.OpenGL3 is
       Program.Use_Program;
    end Load_Shaders;
 
+
+   Vertex_Shader   : GL.Objects.Shaders.Shader
+     (Kind => GL.Objects.Shaders.Vertex_Shader);
+   Fragment_Shader : GL.Objects.Shaders.Shader
+     (Kind => GL.Objects.Shaders.Fragment_Shader);
+   Program         : GL.Objects.Programs.Program;
+   
+   Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffer.Buffer_Object;
+   Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
    Glfw.Init;
    Glfw.Display.Hint_Minimum_OpenGL_Version (Major => 3, Minor => 2);
    Glfw.Display.Open (Mode  => Glfw.Display.Window,
                       Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
-   declare
-      Vertex_Shader   : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Vertex_Shader);
-      Fragment_Shader : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Fragment_Shader);
-      Program         : GL.Objects.Programs.Program;
+   
+   Vertex_Shader.Initialize_Id;
+   Fragment_Shader.Initialize_Id;
+   Program.Initialize_Id;
+   Vector_Buffer1.Initialize_Id;
+   Vector_Buffer2.Initialize_Id;
+   Color_Buffer.Initialize_Id;
+   Array1.Initialize_Id;
+   Array2.Initialize_Id;
+   
+   Ada.Text_IO.Put_Line ("Initialized objects");
+   
+   Load_Shaders (Vertex_Shader, Fragment_Shader, Program);
+   
+   Ada.Text_IO.Put_Line ("Loaded shaders");
+   
+   Load_Data (Array1, Array2, Vector_Buffer1, Color_Buffer, Vector_Buffer2);
+
+   Ada.Text_IO.Put_Line ("Loaded data");
+
+   while Glfw.Display.Opened loop
+      Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
       
-      Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffer.Buffer_Object;
-      Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   begin
-      Ada.Text_IO.Put_Line ("Initialized objects");
+      Array1.Bind;
+      GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
       
-      Load_Shaders (Vertex_Shader, Fragment_Shader, Program);
-      
-      Ada.Text_IO.Put_Line ("Loaded shaders");
-      
-      Load_Data (Array1, Array2, Vector_Buffer1, Color_Buffer, Vector_Buffer2);
+      Array2.Bind;
+      GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
+      GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
 
-      Ada.Text_IO.Put_Line ("Loaded data");
+      GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
 
-      while Glfw.Display.Opened loop
-         Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
-         
-         Array1.Bind;
-         GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
-         
-         Array2.Bind;
-         GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
-         GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
+      GL.Flush;
+      Glfw.Display.Swap_Buffers;
 
-         GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
+      Glfw.Events.Poll_Events;
+   end loop;
 
-         GL.Flush;
-         Glfw.Display.Swap_Buffers;
-
-         Glfw.Events.Poll_Events;
-      end loop;
-
-   end;
    Glfw.Terminate_Glfw;
 end GL_Test.OpenGL3;

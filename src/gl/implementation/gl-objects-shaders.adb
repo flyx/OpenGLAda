@@ -95,14 +95,16 @@ package body GL.Objects.Shaders is
       end;
    end Info_Log;
    
-   procedure Create_Id (Object : in out Shader) is
+   procedure Initialize_Id (Object : in out Shader) is
    begin
       Object.Reference.GL_Id := API.Create_Shader (Object.Kind);
-   end Create_Id;
+      Object.Reference.Initialized := True;
+   end Initialize_Id;
 
    procedure Delete_Id (Object : in out Shader) is
    begin
       API.Delete_Shader (Object.Reference.GL_Id);
+      Object.Reference.Initialized := False;
    end Delete_Id;
    
 end GL.Objects.Shaders;

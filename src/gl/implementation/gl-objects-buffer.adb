@@ -94,18 +94,20 @@ package body GL.Objects.Buffer is
       Check_OpenGL_Error;
    end Draw_Elements;
 
-   overriding procedure Create_Id (Object : in out Buffer_Object) is
+   overriding procedure Initialize_Id (Object : in out Buffer_Object) is
       New_Id : UInt := 0;
    begin
       API.Gen_Buffers (1, New_Id);
       Check_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
-   end Create_Id;
+      Object.Reference.Initialized := True;
+   end Initialize_Id;
 
    overriding procedure Delete_Id (Object : in out Buffer_Object) is
    begin
       API.Delete_Buffers (1, (1 => Object.Reference.GL_Id));
       Check_OpenGL_Error;
+      Object.Reference.Initialized := False;
    end Delete_Id;
 
 end GL.Objects.Buffer;

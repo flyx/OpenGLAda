@@ -39,13 +39,14 @@ package body GL.Objects.Vertex_Arrays is
       Check_OpenGL_Error;
    end Draw_Arrays;
 
-   procedure Create_Id (Object : in out Vertex_Array_Object) is
+   procedure Initialize_Id (Object : in out Vertex_Array_Object) is
       New_Id : UInt := 0;
    begin
       API.Gen_Vertex_Arrays (1, New_Id);
       Check_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
-   end Create_Id;
+      Object.Reference.Initialized := True;
+   end Initialize_Id;
    
    function Current_Array_Object return Vertex_Array_Object is
    begin
@@ -59,5 +60,6 @@ package body GL.Objects.Vertex_Arrays is
          API.Delete_Vertex_Arrays (1, Arr);
       end if;
       Check_OpenGL_Error;
+      Object.Reference.Initialized := False;
    end Delete_Id;
 end GL.Objects.Vertex_Arrays;

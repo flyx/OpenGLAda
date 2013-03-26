@@ -45,6 +45,12 @@ package GL.Objects.Buffer is
    procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
                             Index_Type : Unsigned_Numeric_Type);
    
+   overriding
+   procedure Initialize_Id (Object : in out Buffer_Object);
+   
+   overriding
+   procedure Delete_Id (Object : in out Buffer_Object);
+   
    Array_Buffer              : constant Buffer_Target;
    Element_Array_Buffer      : constant Buffer_Target;
    Pixel_Pack_Buffer         : constant Buffer_Target;
@@ -72,10 +78,6 @@ private
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is tagged null record;
 
    type Buffer_Object is new GL_Object with null record;
-
-   overriding procedure Create_Id (Object : in out Buffer_Object);
-   
-   overriding procedure Delete_Id (Object : in out Buffer_Object);
    
    Array_Buffer              : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Array_Buffer);

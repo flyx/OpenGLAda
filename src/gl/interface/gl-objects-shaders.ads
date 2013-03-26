@@ -34,12 +34,14 @@ package GL.Objects.Shaders is
    
    function Info_Log (Subject : Shader) return String;
    
+   overriding
+   procedure Initialize_Id (Object : in out Shader);
+   
+   overriding
+   procedure Delete_Id (Object : in out Shader);
+   
 private
    type Shader (Kind : Shader_Type) is new GL_Object with null record;
-   
-   procedure Create_Id (Object : in out Shader);
-   
-   procedure Delete_Id (Object : in out Shader);
 
    for Shader_Type use (Fragment_Shader        => 16#8B30#,
                         Vertex_Shader          => 16#8B31#,

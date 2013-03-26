@@ -70,19 +70,21 @@ package body GL.Objects.Textures is
       end if;
    end Current_Texture;
 
-   procedure Create_Id (Object : in out Texture) is
+   procedure Initialize_Id (Object : in out Texture) is
       New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
    begin
       API.Gen_Textures (1, New_Id (1)'Access);
       Check_OpenGL_Error;
       Object.Reference.GL_Id := New_Id (1);
-   end Create_Id;
+      Object.Reference.Initialized := True;
+   end Initialize_Id;
 
    procedure Delete_Id (Object : in out Texture) is
       Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Textures (1, Arr);
       Check_OpenGL_Error;
+      Object.Reference.Initialized := False;
    end Delete_Id;
 
    procedure Set_Minifying_Filter (Target : Texture_Target;

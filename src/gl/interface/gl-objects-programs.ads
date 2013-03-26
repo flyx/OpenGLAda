@@ -39,10 +39,12 @@ package GL.Objects.Programs is
                                    Name : String);
    function Attrib_Location (Subject : Program; Name : String)
      return Attributes.Attribute;
+   
+   overriding
+   procedure Initialize_Id (Object : in out Program);
+   
+   overriding
+   procedure Delete_Id (Object : in out Program);
 private
    type Program is new GL_Object with null record;
-      
-   procedure Create_Id (Object : in out Program);
-   
-   procedure Delete_Id (Object : in out Program);
 end GL.Objects.Programs;

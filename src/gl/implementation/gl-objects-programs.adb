@@ -69,14 +69,16 @@ package body GL.Objects.Programs is
       API.Use_Program (Subject.Reference.GL_Id);
    end Use_Program;
 
-   procedure Create_Id (Object : in out Program) is
+   procedure Initialize_Id (Object : in out Program) is
    begin
       Object.Reference.GL_Id := API.Create_Program;
-   end Create_Id;
+      Object.Reference.Initialized := True;
+   end Initialize_Id;
 
    procedure Delete_Id (Object : in out Program) is
    begin
       API.Delete_Program (Object.Reference.GL_Id);
+      Object.Reference.Initialized := False;
    end Delete_Id;
    
    function Uniform_Location (Subject : Program; Name : String)

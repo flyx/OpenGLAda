@@ -33,77 +33,78 @@ procedure GL_Test.Shaders is
    use GL.Fixed.Matrix;
    use GL.Immediate;
    
+   Vertex_Shader   : GL.Objects.Shaders.Shader
+     (Kind => GL.Objects.Shaders.Vertex_Shader);
+   Fragment_Shader : GL.Objects.Shaders.Shader
+     (Kind => GL.Objects.Shaders.Fragment_Shader);
+   Program         : GL.Objects.Programs.Program;
 begin
    Glfw.Init;
    Glfw.Display.Open (Mode  => Glfw.Display.Window,
                       Width => 500, Height => 500);
    
-   declare
-      Vertex_Shader   : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Vertex_Shader);
-      Fragment_Shader : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Fragment_Shader);
-      Program         : GL.Objects.Programs.Program;
-   begin
-      -- load shader sources and compile shaders
+   Vertex_Shader.Initialize_Id;
+   Fragment_Shader.Initialize_Id;
+   Program.Initialize_Id;
+   
+   -- load shader sources and compile shaders
+   
+   GL.Files.Load_Shader_Source_From_File
+     (Vertex_Shader, "../tests/gl_test-shaders-vertex.glsl");
+   GL.Files.Load_Shader_Source_From_File
+     (Fragment_Shader, "../tests/gl_test-shaders-fragment.glsl");
+   
+   Vertex_Shader.Compile;
+   Fragment_Shader.Compile;
+   
+   if not Vertex_Shader.Compile_Status then
+      Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
+      Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
+   end if;
+   if not Fragment_Shader.Compile_Status then
+      Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
+      Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
+   end if;
+   
+   -- set up program
+   Program.Attach (Vertex_Shader);
+   Program.Attach (Fragment_Shader);
+   Program.Link;
+   if not Program.Link_Status then
+      Ada.Text_IO.Put_Line ("Program linking failed. Log:");
+      Ada.Text_IO.Put_Line (Program.Info_Log);
+      return;
+   end if;
+   Program.Use_Program;
+   
+   -- set up matrices
+   Projection.Load_Identity;
+   Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+   Modelview.Load_Identity;
+   
+   while Glfw.Display.Opened loop
+      Clear (Buffer_Bits'(Color => True, others => False));
+               
+      declare
+         Token : Input_Token := Start (Quads);
+      begin
+         Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
+         Token.Add_Vertex (Doubles.Vector4'(0.7, 0.7, 0.0, 1.0));
+         Set_Color (Colors.Color'(0.0, 1.0, 0.0, 0.0));
+         Token.Add_Vertex (Doubles.Vector4'(0.7, -0.7, 0.0, 1.0));
+         Set_Color (Colors.Color'(0.0, 0.0, 1.0, 0.0));
+         Token.Add_Vertex (Doubles.Vector4'(-0.7, -0.7, 0.0, 1.0));
+         Set_Color (Colors.Color'(1.0, 0.0, 1.0, 0.0));
+         Token.Add_Vertex (Doubles.Vector4'(-0.7, 0.7, 0.0, 1.0));
+      end;
       
-      GL.Files.Load_Shader_Source_From_File
-        (Vertex_Shader, "../tests/gl_test-shaders-vertex.glsl");
-      GL.Files.Load_Shader_Source_From_File
-        (Fragment_Shader, "../tests/gl_test-shaders-fragment.glsl");
+      Modelview.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
       
-      Vertex_Shader.Compile;
-      Fragment_Shader.Compile;
+      GL.Flush;
+      Glfw.Display.Swap_Buffers;
       
-      if not Vertex_Shader.Compile_Status then
-         Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
-         Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
-      end if;
-      if not Fragment_Shader.Compile_Status then
-         Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
-         Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
-      end if;
+      Glfw.Events.Poll_Events;
+   end loop;
       
-      -- set up program
-      Program.Attach (Vertex_Shader);
-      Program.Attach (Fragment_Shader);
-      Program.Link;
-      if not Program.Link_Status then
-         Ada.Text_IO.Put_Line ("Program linking failed. Log:");
-         Ada.Text_IO.Put_Line (Program.Info_Log);
-         return;
-      end if;
-      Program.Use_Program;
-      
-      -- set up matrices
-      Projection.Load_Identity;
-      Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-      Modelview.Load_Identity;
-      
-      while Glfw.Display.Opened loop
-         Clear (Buffer_Bits'(Color => True, others => False));
-                  
-         declare
-            Token : Input_Token := Start (Quads);
-         begin
-            Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
-            Token.Add_Vertex (Doubles.Vector4'(0.7, 0.7, 0.0, 1.0));
-            Set_Color (Colors.Color'(0.0, 1.0, 0.0, 0.0));
-            Token.Add_Vertex (Doubles.Vector4'(0.7, -0.7, 0.0, 1.0));
-            Set_Color (Colors.Color'(0.0, 0.0, 1.0, 0.0));
-            Token.Add_Vertex (Doubles.Vector4'(-0.7, -0.7, 0.0, 1.0));
-            Set_Color (Colors.Color'(1.0, 0.0, 1.0, 0.0));
-            Token.Add_Vertex (Doubles.Vector4'(-0.7, 0.7, 0.0, 1.0));
-         end;
-         
-         Modelview.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
-         
-         GL.Flush;
-         Glfw.Display.Swap_Buffers;
-         
-         Glfw.Events.Poll_Events;
-      end loop;
-      
-   end;
    Glfw.Terminate_Glfw;
 end GL_Test.Shaders;

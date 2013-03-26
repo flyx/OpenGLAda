@@ -20,9 +20,9 @@ package body GL.Objects is
 
    overriding procedure Initialize (Object : in out GL_Object) is
    begin
-      Object.Reference := new GL_Object_Reference'(GL_Id => 0,
-                                                  Reference_Count => 1);
-      Create_ID (GL_Object'Class (Object));
+      Object.Reference := new GL_Object_Reference'(GL_Id          => 0,
+                                                  Reference_Count => 1,
+                                                  Initialized     => False);
    end Initialize;
 
    overriding procedure Adjust (Object : in out GL_Object) is
@@ -39,11 +39,18 @@ package body GL.Objects is
       if Object.Reference /= null then
          Object.Reference.Reference_Count := Object.Reference.Reference_Count - 1;
          if Object.Reference.Reference_Count = 0 then
-            Delete_Id (GL_Object'Class (Object));
+            if Object.Reference.Initialized then
+               Delete_Id (GL_Object'Class (Object));
+            end if;
             Free (Object.Reference);
          end if;
       end if;
    end Finalize;
+   
+   function Initialized (Object : GL_Object) return Boolean is
+   begin
+      return Object.Reference.Initialized;
+   end Initialized;
 
    function Raw_Id (Object : GL_Object) return UInt is
    begin
