@@ -1,0 +1,13 @@
+v0.2:
+
+ * Added joystick support to GLFW wrapper.
+ * Changed GL.Objects to require explicit initialization so the user
+   can declare variables of derived types at library level.
+   Breaks existing code.
+ * Better handling of texture unit count
+ * Added Makefile
+ * Added proper README
+
+v0.1:
+
+ * Initial release
