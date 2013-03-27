@@ -28,7 +28,7 @@ handling of objects and targets is designed in a more object-oriented way.
 In OpenGLAda, OpenGL objects are tagged types derived from the abstract `GL_Object`
 type defined in this package. They implement reference counting to automatically
 delete unused objects from OpenGL memory. This is achieved with controlled types.
-So, actually, all object types are just references and should be handles as such.
+So, actually, all object types are just references and should be handled as such.
 This guide will subsequently refer to instances of these tagged types as
 _object references_, while _OpenGL objects_ are the real allocated memory on the
 graphics card.
@@ -44,15 +44,23 @@ not be deleted, even if there are no more references to the object in your code.
 
 ## Usage
 
-When you define a new variable holding an OpenGL object reference and do
-not initialize it, it automatically gets assigned a unique name from OpenGL.
-Don't worry - there will be no object created as long as you do not bind your
-object reference.
+When you declare a new variable holding an OpenGL object reference, it will
+be uninitialized. Calling `Bind` with this reference will result in an exception.
+To initialize your reference, you have to call `Initialize_Id` on it. This will
+query an unused ID from OpenGL which will subsequently be used internally to refer
+to the OpenGL object. Some important notes on this:
 
-**Important note:** At the time you declare a variable holding an object
-reference, you need to have an active OpenGL context. Otherwise, trying to create
-a unique name for this object reference will result in an OpenGL error. So you
-cannot declare your OpenGL objects at library level without initializing them.
+ * You cannot initialize the ID before creating an OpenGL context. This is the
+   main reason why IDs are not automatically initialized when the reference is
+   created - this would prevent you from declaring any object references at
+   library level.
+ * You can check the status of an object reference at any time with the function
+   `Initialized`.
+ * You can manually delete an object by calling `Delete_Id`. If you don't, the
+   object will be automatically destroyed when the reference count of the
+   object reaches 0.
+ * The actual OpenGL object will be created when you bind the reference to a
+   target for the first time.
 
 To use the object, you have to bind it to a target and use the methods of this
 target to configure the currently bound object. The code might look like this:
