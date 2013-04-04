@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <flyx@isobeef.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -21,32 +21,32 @@ with Interfaces.C.Strings;
 
 with System;
 
-package GL.Low_Level.Loader is
+package Runtime_Loading is
    pragma Preelaborate;
    
-   -- this package loads raw OpenGL functions at runtime
+   -- this package loads raw API functions at runtime
    -- (meaning it requests the function pointer of the requested function
    --  at runtime). when a function is not available, it raises a
    -- Feature_Not_Supported_Exception
    
    Feature_Not_Supported_Exception : exception;
    
-   function Available (GL_Function_Name : String) return Boolean;
+   function Available (Function_Name : String) return Boolean;
    
    generic
-      GL_Function_Name : String;
+      Function_Name : String;
       type Return_Type is private;
    function Function_Without_Params return Return_Type;
    
    generic
-      GL_Function_Name : String;
+      Function_Name : String;
       type Param1_Type is private;
       type Return_Type is private;
    function Function_With_1_Param (Param1 : Param1_Type) return Return_Type;
    pragma Inline (Function_With_1_Param);
    
    generic
-      GL_Function_Name : String;
+      Function_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Return_Type is private;
@@ -56,18 +56,18 @@ package GL.Low_Level.Loader is
    pragma Inline (Function_With_2_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
    procedure Procedure_Without_Params;
    pragma Inline (Procedure_Without_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
    procedure Procedure_With_1_Param (Param1 : Param1_Type);
    pragma Inline (Procedure_With_1_Param);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
    procedure Procedure_With_2_Params (Param1 : Param1_Type;
@@ -75,7 +75,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Procedure_With_2_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Param3_Type (<>) is private;
@@ -85,7 +85,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Procedure_With_3_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Param3_Type (<>) is private;
@@ -97,7 +97,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Procedure_With_4_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Param3_Type (<>) is private;
@@ -111,7 +111,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Procedure_With_4_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Param3_Type is private;
@@ -127,7 +127,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Procedure_With_6_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Value_Type  (<>) is private;
    procedure Getter_With_2_Params (Param1 : Param1_Type;
@@ -135,7 +135,7 @@ package GL.Low_Level.Loader is
    pragma Inline (Getter_With_2_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
       type Param1_Type is private;
       type Param2_Type is private;
       type Value_Type  (<>) is private;
@@ -145,23 +145,25 @@ package GL.Low_Level.Loader is
    pragma Inline (Getter_With_3_Params);
    
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
+	  type Size_Type is (<>);
       type Element_Type is private;
       type Array_Type is array (Positive range <>) of Element_Type;
-   procedure Array_Proc_With_2_Params (Param1 : SizeI;
+   procedure Array_Proc_With_2_Params (Param1 : Size_Type;
                                        Param2 : Array_Type);
    generic
-      GL_Procedure_Name : String;
+      Procedure_Name : String;
+	  type Size_Type is (<>);
       type Param1_Type is private;
    procedure String_Getter_With_4_Params (Param1      : Param1_Type;
-                                          Buffer_Size : SizeI;
-                                          Length      : out SizeI;
-                                          Value       : C.Strings.chars_ptr);
+                                          Buffer_Size : Size_Type;
+                                          Length      : out Size_Type;
+                                          Value       : Interfaces.C.Strings.chars_ptr);
 
 private
    generic
       type Function_Reference is private;
-   function Load (GL_Function_Name : String) return Function_Reference;
+   function Load (Function_Name : String) return Function_Reference;
    pragma Inline (Load);
    
    package Function_Maps is new Ada.Containers.Indefinite_Hashed_Maps (
@@ -173,4 +175,4 @@ private
    );
    
    Loaded : Function_Maps.Map;
-end GL.Low_Level.Loader;
+end Runtime_Loading;

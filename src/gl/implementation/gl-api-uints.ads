@@ -21,60 +21,60 @@ package GL.API.UInts is
 
    use GL.Types.UInts;
 
-   procedure Uniform1 is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Uniform1 is new Runtime_Loading.Procedure_With_2_Params
      ("glUniform1ui", Uniforms.Uniform, UInt);
 
-   procedure Uniform1v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform1v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform1uiv", Uniforms.Uniform, Low_Level.SizeI, UInt_Array);
 
-   procedure Uniform2 is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform2 is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform2ui", Uniforms.Uniform, UInt, UInt);
 
-   procedure Uniform2v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform2v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform2uiv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
 
-   procedure Uniform3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform3 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniform3ui", Uniforms.Uniform, UInt, UInt, UInt);
 
-   procedure Uniform3v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform3v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform3uiv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
 
-   procedure Uniform4 is new Low_Level.Loader.Procedure_With_5_Params
+   procedure Uniform4 is new Runtime_Loading.Procedure_With_5_Params
      ("glUniform4ui", Uniforms.Uniform, UInt, UInt, UInt, UInt);
 
-   procedure Uniform4v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform4v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform4uiv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
 
-   procedure Uniform_Matrix2 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix2 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix2uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix2_Array);
 
-   procedure Uniform_Matrix3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix3 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix3uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix3_Array);
 
-   procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix4 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix4uiv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
    
-   procedure Vertex_Attrib1 is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib1 is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI1ui", Attributes.Attribute, UInt);
    
-   procedure Vertex_Attrib2 is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Vertex_Attrib2 is new Runtime_Loading.Procedure_With_3_Params
      ("glVertexAttribI2ui", Attributes.Attribute, UInt, UInt);
    
-   procedure Vertex_Attrib2v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib2v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI2uiv", Attributes.Attribute, Vector2);
    
-   procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Vertex_Attrib3 is new Runtime_Loading.Procedure_With_4_Params
      ("glVertexAttribI3ui", Attributes.Attribute, UInt, UInt, UInt);
    
-   procedure Vertex_Attrib3v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib3v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI3uiv", Attributes.Attribute, Vector3);
    
-   procedure Vertex_Attrib4 is new Low_Level.Loader.Procedure_With_5_Params
+   procedure Vertex_Attrib4 is new Runtime_Loading.Procedure_With_5_Params
      ("glVertexAttribI4ui", Attributes.Attribute, UInt, UInt, UInt, UInt);
    
-   procedure Vertex_Attrib4v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib4v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib4Iuiv", Attributes.Attribute, Vector4);
 end GL.API.UInts;

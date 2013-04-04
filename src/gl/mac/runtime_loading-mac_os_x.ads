@@ -16,7 +16,7 @@
 
 with Interfaces.C.Strings;
 with System;
-private package GL.Mac_OS_X is
+private package Runtime_Loading.Mac_OS_X is
    pragma Preelaborate;
    
    -- package for MacOSX-specific stuff
@@ -58,4 +58,4 @@ private package GL.Mac_OS_X is
    function OpenGLFramework return CFBundleRef;
    
    
-end GL.Mac_OS_X;
+end Runtime_Loading.Mac_OS_X;

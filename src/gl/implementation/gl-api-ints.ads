@@ -32,60 +32,60 @@ package GL.API.Ints is
    pragma Import (Convention => StdCall, Entity => Light_Position,
                   External_Name => "glLightiv");
    
-   procedure Uniform1 is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Uniform1 is new Runtime_Loading.Procedure_With_2_Params
      ("glUniform1i", Uniforms.Uniform, Int);
    
-   procedure Uniform1v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform1v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform1iv", Uniforms.Uniform, Low_Level.SizeI, Int_Array);
    
-   procedure Uniform2 is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform2 is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform2i", Uniforms.Uniform, Int, Int);
    
-   procedure Uniform2v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform2v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform2iv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
    
-   procedure Uniform3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform3 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniform3i", Uniforms.Uniform, Int, Int, Int);
    
-   procedure Uniform3v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform3v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform3iv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
    
-   procedure Uniform4 is new Low_Level.Loader.Procedure_With_5_Params
+   procedure Uniform4 is new Runtime_Loading.Procedure_With_5_Params
      ("glUniform4i", Uniforms.Uniform, Int, Int, Int, Int);
    
-   procedure Uniform4v is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Uniform4v is new Runtime_Loading.Procedure_With_3_Params
      ("glUniform4iv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
    
-   procedure Uniform_Matrix2 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix2 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix2iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix2_Array);
    
-   procedure Uniform_Matrix3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix3 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix3iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix3_Array);
    
-   procedure Uniform_Matrix4 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Uniform_Matrix4 is new Runtime_Loading.Procedure_With_4_Params
      ("glUniformMatrix4iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
       Matrix4_Array);
    
-   procedure Vertex_Attrib1 is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib1 is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI1i", Attributes.Attribute, Int);
    
-   procedure Vertex_Attrib2 is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Vertex_Attrib2 is new Runtime_Loading.Procedure_With_3_Params
      ("glVertexAttribI2i", Attributes.Attribute, Int, Int);
    
-   procedure Vertex_Attrib2v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib2v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI2iv", Attributes.Attribute, Vector2);
    
-   procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Vertex_Attrib3 is new Runtime_Loading.Procedure_With_4_Params
      ("glVertexAttribI3i", Attributes.Attribute, Int, Int, Int);
    
-   procedure Vertex_Attrib3v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib3v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttribI3iv", Attributes.Attribute, Vector3);
    
-   procedure Vertex_Attrib4 is new Low_Level.Loader.Procedure_With_5_Params
+   procedure Vertex_Attrib4 is new Runtime_Loading.Procedure_With_5_Params
      ("glVertexAttribI4i", Attributes.Attribute, Int, Int, Int, Int);
    
-   procedure Vertex_Attrib4v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib4v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib4Iiv", Attributes.Attribute, Vector4);
 end GL.API.Ints;

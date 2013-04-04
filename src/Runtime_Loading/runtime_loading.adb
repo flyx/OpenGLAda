@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <flyx@isobeef.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -16,37 +16,37 @@
 
 with Ada.Unchecked_Conversion;
 
-package body GL.Low_Level.Loader is
+package body Runtime_Loading is
    use type Function_Maps.Cursor;
    use type System.Address;
 
-   -- Implementation is platform-dependent
-   procedure Load_Function_To_Map (GL_Function_Name : String;
+   -- Implementation is possibly platform-dependent
+   procedure Load_Function_To_Map (Function_Name : String;
                                    Position : out Function_Maps.Cursor)
                                   is separate;
 
-   function Available (GL_Function_Name : String) return Boolean is
-      Position : Function_Maps.Cursor := Loaded.Find (GL_Function_Name);
+   function Available (Function_Name : String) return Boolean is
+      Position : Function_Maps.Cursor := Loaded.Find (Function_Name);
    begin
       if Position = Function_Maps.No_Element then
-         Load_Function_To_Map (GL_Function_Name, Position);
+         Load_Function_To_Map (Function_Name, Position);
       end if;
       return Function_Maps.Element (Position) /= System.Null_Address;
    end Available;
 
-   function Load (GL_Function_Name : String) return Function_Reference is
+   function Load (Function_Name : String) return Function_Reference is
       function As_Function_Reference is new Ada.Unchecked_Conversion (
         Source => System.Address, Target => Function_Reference
       );
 
-      Position : Function_Maps.Cursor := Loaded.Find (GL_Function_Name);
+      Position : Function_Maps.Cursor := Loaded.Find (Function_Name);
    begin
       if Position = Function_Maps.No_Element then
-         Load_Function_To_Map (GL_Function_Name, Position);
+         Load_Function_To_Map (Function_Name, Position);
          if Position = Function_Maps.No_Element then
-            Load_Function_To_Map (GL_Function_Name & "ARB", Position);
+            Load_Function_To_Map (Function_Name & "ARB", Position);
             if Position = Function_Maps.No_Element then
-               Load_Function_To_Map (GL_Function_Name & "EXT", Position);
+               Load_Function_To_Map (Function_Name & "EXT", Position);
             end if;
          end if;
       end if;
@@ -60,10 +60,10 @@ package body GL.Low_Level.Loader is
       
       function Load_Function is new Load (Function_Reference);
       
-      Reference : Function_Reference := Load_Function (GL_Function_Name);
+      Reference : Function_Reference := Load_Function (Function_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Function_Name;
+         raise Feature_Not_Supported_Exception with Function_Name;
       else
          return Reference.all;
       end if;
@@ -76,10 +76,10 @@ package body GL.Low_Level.Loader is
 
       function Load_Function is new Load (Function_Reference);
 
-      Reference : Function_Reference := Load_Function (GL_Function_Name);
+      Reference : Function_Reference := Load_Function (Function_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Function_Name;
+         raise Feature_Not_Supported_Exception with Function_Name;
       else
          return Reference (Param1);
       end if;
@@ -94,10 +94,10 @@ package body GL.Low_Level.Loader is
      pragma Convention (StdCall, Function_Reference);
 
      function Load_Function is new Load (Function_Reference);
-     Reference : Function_Reference := Load_Function (GL_Function_Name);
+     Reference : Function_Reference := Load_Function (Function_Name);
    begin
      if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Function_Name;
+        raise Feature_Not_Supported_Exception with Function_Name;
      else
         return Reference (Param1, Param2);
      end if;
@@ -109,10 +109,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference.all;
       end if;
@@ -124,10 +124,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference (Param1);
       end if;
@@ -140,10 +140,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+        raise Feature_Not_Supported_Exception with Procedure_Name;
       else
         Reference (Param1, Param2);
       end if;
@@ -158,10 +158,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+        raise Feature_Not_Supported_Exception with Procedure_Name;
       else
         Reference (Param1, Param2, Param3);
       end if;
@@ -177,10 +177,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+        raise Feature_Not_Supported_Exception with Procedure_Name;
       else
         Reference (Param1, Param2, Param3, Param4);
       end if;
@@ -198,10 +198,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else 
          Reference (Param1, Param2, Param3, Param4, Param5);
       end if;
@@ -220,27 +220,27 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference (Param1, Param2, Param3, Param4, Param5, Param6);
       end if;
    end Procedure_With_6_Params;
 
-   procedure Array_Proc_With_2_Params (Param1 : SizeI;
+   procedure Array_Proc_With_2_Params (Param1 : Size_Type;
                                        Param2 : Array_Type) is
       type Procedure_Reference is
-        access procedure (Param1 : SizeI;
+        access procedure (Param1 : Size_Type;
                           Param2 : Array_Type);
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference (Param1, Param2);
       end if;
@@ -254,10 +254,10 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference (Param1, Value);
       end if;
@@ -272,32 +272,33 @@ package body GL.Low_Level.Loader is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-        raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+        raise Feature_Not_Supported_Exception with Procedure_Name;
       else
         Reference (Param1, Param2, Value);
       end if;
    end Getter_With_3_Params;
 
    procedure String_Getter_With_4_Params (Param1      : Param1_Type;
-                                          Buffer_Size : SizeI;
-                                          Length      : out SizeI;
-                                          Value       : C.Strings.chars_ptr) is
+                                          Buffer_Size : Size_Type;
+                                          Length      : out Size_Type;
+                                          Value       : Interfaces.C.Strings.chars_ptr) is
       type Procedure_Reference is
-        access procedure (Param1 : Param1_Type; Buffer_Size : SizeI;
-                          Length : out SizeI;   Value : C.Strings.chars_ptr);
+        access procedure (Param1 : Param1_Type; Buffer_Size : Size_Type;
+                          Length : out Size_Type;
+						  Value : Interfaces.C.Strings.chars_ptr);
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (GL_Procedure_Name);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
-         raise Feature_Not_Supported_Exception with GL_Procedure_Name;
+         raise Feature_Not_Supported_Exception with Procedure_Name;
       else
          Reference (Param1, Buffer_Size, Length, Value);
       end if;
    end String_Getter_With_4_Params;
 
-end GL.Low_Level.Loader;
+end Runtime_Loading;

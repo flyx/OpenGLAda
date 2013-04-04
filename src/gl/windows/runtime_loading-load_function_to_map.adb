@@ -14,26 +14,20 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Mac_OS_X;
-separate (GL.Low_Level.Loader)
-procedure Load_Function_To_Map (GL_Function_Name : String;
-                                Position : out Function_Maps.Cursor) is
-   -- OSX-specific implementation uses CoreFoundation functions
-   use GL.Mac_OS_X;
-   
-   GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (GL_Function_Name);
+with GL.WGL;
+with Interfaces.C.Strings;
 
-   Symbol_Name : CFStringRef := CFStringCreateWithCString
-     (alloc => System.Null_Address, cStr => GL_Function_Name_C,
-      encoding => kCFStringEncodingASCII);
-   Result : System.Address := CFBundleGetFunctionPointerForName
-     (bundle => OpenGLFramework,
-      functionName => Symbol_Name);
-      
+separate (Runtime_Loading)
+procedure Load_Function_To_Map (Function_Name : String;
+                                Position : out Function_Maps.Cursor) is
+   GL_Function_Name_C : Interfaces.C.Strings.chars_ptr
+     := Interfaces.C.Strings.New_String (Function_Name);
+
+   Result : System.Address := GL.WGL.wglGetProcAddress (GL_Function_Name_C);
+
    Inserted : Boolean;
 begin
-   CFRelease (Symbol_Name);
-   IFC.Free (GL_Function_Name_C);
-   
-   Loaded.Insert (GL_Function_Name, Result, Position, Inserted);
+   Interfaces.C.Strings.Free (GL_Function_Name_C);
+   Loaded.Insert (Function_Name, Result, Position, Inserted);
 end Load_Function_To_Map;
+

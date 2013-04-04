@@ -21,25 +21,25 @@ package GL.API.Shorts is
    
    use GL.Types.Shorts;
    
-   procedure Vertex_Attrib1 is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib1 is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib1s", Attributes.Attribute, Short);
    
-   procedure Vertex_Attrib2 is new Low_Level.Loader.Procedure_With_3_Params
+   procedure Vertex_Attrib2 is new Runtime_Loading.Procedure_With_3_Params
      ("glVertexAttrib2s", Attributes.Attribute, Short, Short);
    
-   procedure Vertex_Attrib2v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib2v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib2sv", Attributes.Attribute, Vector2);
    
-   procedure Vertex_Attrib3 is new Low_Level.Loader.Procedure_With_4_Params
+   procedure Vertex_Attrib3 is new Runtime_Loading.Procedure_With_4_Params
      ("glVertexAttrib3s", Attributes.Attribute, Short, Short, Short);
    
-   procedure Vertex_Attrib3v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib3v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib3sv", Attributes.Attribute, Vector3);
    
-   procedure Vertex_Attrib4 is new Low_Level.Loader.Procedure_With_5_Params
+   procedure Vertex_Attrib4 is new Runtime_Loading.Procedure_With_5_Params
      ("glVertexAttrib4s", Attributes.Attribute, Short, Short, Short, Short);
    
-   procedure Vertex_Attrib4v is new Low_Level.Loader.Procedure_With_2_Params
+   procedure Vertex_Attrib4v is new Runtime_Loading.Procedure_With_2_Params
      ("glVertexAttrib4sv", Attributes.Attribute, Vector4);
    
 end GL.API.Shorts;
