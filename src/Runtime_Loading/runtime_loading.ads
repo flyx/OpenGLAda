@@ -21,6 +21,8 @@ with Interfaces.C.Strings;
 
 with System;
 
+generic
+   with function Raw_Subprogram_Reference (Name : String) return System.Address;
 package Runtime_Loading is
    pragma Preelaborate;
    
@@ -146,19 +148,22 @@ package Runtime_Loading is
    
    generic
       Procedure_Name : String;
-	  type Size_Type is (<>);
+      type Size_Type is (<>);
       type Element_Type is private;
       type Array_Type is array (Positive range <>) of Element_Type;
    procedure Array_Proc_With_2_Params (Param1 : Size_Type;
                                        Param2 : Array_Type);
+   pragma Inline(Array_Proc_With_2_Params);
+   
    generic
       Procedure_Name : String;
-	  type Size_Type is (<>);
+      type Size_Type is (<>);
       type Param1_Type is private;
    procedure String_Getter_With_4_Params (Param1      : Param1_Type;
                                           Buffer_Size : Size_Type;
                                           Length      : out Size_Type;
                                           Value       : Interfaces.C.Strings.chars_ptr);
+   pragma Inline(String_Getter_With_4_Params);
 
 private
    generic

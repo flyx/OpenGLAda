@@ -14,24 +14,27 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package body Runtime_Loading.Mac_OS_X is
-   OpenGLFramework_Cached : CFBundleRef;
-  
-   function OpenGLFramework return CFBundleRef is
-      use type System.Address;
-   begin
-      if OpenGLFramework_Cached = System.Null_Address then
-         declare
-            OpenGLFramework_ID : constant CFStringRef
-              := CFStringCreateWithCString (System.Null_Address,
-                                            IFC.New_String ("com.apple.opengl"),
-                                            kCFStringEncodingASCII);
-         begin
-            OpenGLFramework_Cached 
-              := CFBundleGetBundleWithIdentifier (OpenGLFramework_ID);
-         end;
-      end if;
-      return OpenGLFramework_Cached;
-   end OpenGLFramework;
+with GL.API.Mac_OS_X;
+with Interfaces.C.Strings;
 
-end Runtime_Loading.Mac_OS_X;
+package body GL.API is
+   function GL_Subprogram_Reference (Function_Name : String) return System.Address is
+      -- OSX-specific implementation uses CoreFoundation functions
+      use GL.API.Mac_OS_X;
+   
+      package IFC renames Interfaces.C.Strings;
+   
+      GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (Function_Name);
+
+      Symbol_Name : CFStringRef := CFStringCreateWithCString
+        (alloc => System.Null_Address, cStr => GL_Function_Name_C,
+         encoding => kCFStringEncodingASCII);
+      Result : System.Address := CFBundleGetFunctionPointerForName
+        (bundle => OpenGLFramework,
+         functionName => Symbol_Name);
+   begin
+      CFRelease (Symbol_Name);
+      IFC.Free (GL_Function_Name_C);
+      return Result;
+   end GL_Subprogram_Reference;
+end GL.API;

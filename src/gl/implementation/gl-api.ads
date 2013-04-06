@@ -40,12 +40,19 @@ private package GL.API is
 
    use GL.Types;
 
+   -- implementation is platform-specific. Therefore, gl-api.adb is in the
+   -- platform-specific source folders.
+   function GL_Subprogram_Reference (Function_Name : String) return System.Address;
+   
+   package Loader is new Runtime_Loading (GL_Subprogram_Reference);
+
    -- Everything newer than OpenGL 1.1 will not be statically bound,
    -- but loaded with GL.Low_Level.Loader at runtime.
    --
    -- Also, all functions that have been deprecated with OpenGL 3.0
    -- will not be statically bound, as they may be omitted by implementors
    -- when they choose to only implement the OpenGL Core Profile.
+   
 
 
    subtype Zero is Int range 0 .. 0;
@@ -174,10 +181,10 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Color,
                   External_Name => "glColor4fv");
 
-   procedure Secondary_Color is new Runtime_Loading.Procedure_With_1_Param
+   procedure Secondary_Color is new Loader.Procedure_With_1_Param
       ("glSecondaryColor3dv", Colors.Basic_Color);
 
-   procedure Fog_Coord is new Runtime_Loading.Procedure_With_1_Param
+   procedure Fog_Coord is new Loader.Procedure_With_1_Param
       ("glFogCoordd", Double);
 
    -----------------------------------------------------------------------------
@@ -277,24 +284,24 @@ private package GL.API is
                   External_Name => "glClearStencil");
 
    -- dropped in OpenGL 3
-   procedure Clear_Accum is new Runtime_Loading.Procedure_With_4_Params
+   procedure Clear_Accum is new Loader.Procedure_With_4_Params
       ("glClearAccum", Colors.Component, Colors.Component, Colors.Component,
        Colors.Component);
 
-   procedure Clear_Buffer is new Runtime_Loading.Procedure_With_3_Params
+   procedure Clear_Buffer is new Loader.Procedure_With_3_Params
      ("glClearBufferfv", Buffers.Color_Buffer_Selector, Zero, Colors.Color);
 
    type Depth_Pointer is access constant Buffers.Depth;
-   procedure Clear_Buffer_Depth is new Runtime_Loading.Procedure_With_3_Params
+   procedure Clear_Buffer_Depth is new Loader.Procedure_With_3_Params
      ("glClearBufferfv", Low_Level.Enums.Only_Depth_Buffer, Zero,
       Depth_Pointer);
 
    type Stencil_Pointer is access constant Buffers.Stencil_Index;
-   procedure Clear_Buffer_Stencil is new Runtime_Loading.Procedure_With_3_Params
+   procedure Clear_Buffer_Stencil is new Loader.Procedure_With_3_Params
      ("glClearBufferiv", Low_Level.Enums.Only_Stencil_Buffer, Zero,
       Stencil_Pointer);
 
-   procedure Clear_Buffer_Depth_Stencil is new Runtime_Loading.Procedure_With_4_Params
+   procedure Clear_Buffer_Depth_Stencil is new Loader.Procedure_With_4_Params
      ("glClearBufferfi", Low_Level.Enums.Only_Depth_Stencil_Buffer, Zero,
       Buffers.Depth, Buffers.Stencil_Index);
 
@@ -506,23 +513,23 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Tex_Env_Bool,
                   External_Name => "glGetTexEnviv");
 
-   procedure Active_Texture is new Runtime_Loading.Procedure_With_1_Param
+   procedure Active_Texture is new Loader.Procedure_With_1_Param
       ("glActiveTexture", Int);
 
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Buffers is new Runtime_Loading.Getter_With_2_Params
+   procedure Gen_Buffers is new Loader.Getter_With_2_Params
       ("glGenBuffers", Low_Level.SizeI, UInt);
 
-   procedure Delete_Buffers is new Runtime_Loading.Array_Proc_With_2_Params
+   procedure Delete_Buffers is new Loader.Array_Proc_With_2_Params
       ("glDeleteBuffers", Low_Level.SizeI, UInt, Low_Level.UInt_Array);
 
-   procedure Bind_Buffer is new Runtime_Loading.Procedure_With_2_Params
+   procedure Bind_Buffer is new Loader.Procedure_With_2_Params
       ("glBindBuffer", Low_Level.Enums.Buffer_Kind, UInt);
 
-   procedure Buffer_Data is new Runtime_Loading.Procedure_With_4_Params
+   procedure Buffer_Data is new Loader.Procedure_With_4_Params
       ("glBufferData", Low_Level.Enums.Buffer_Kind, Low_Level.SizeIPtr,
        System.Address, Objects.Buffer.Buffer_Usage);
 
@@ -530,89 +537,89 @@ private package GL.API is
    --                           Vertex Array Objects                          --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Vertex_Arrays is new Runtime_Loading.Getter_With_2_Params
+   procedure Gen_Vertex_Arrays is new Loader.Getter_With_2_Params
      ("glGenVertexArrays", Low_Level.SizeI, UInt);
 
-   procedure Delete_Vertex_Arrays is new Runtime_Loading.Array_Proc_With_2_Params
+   procedure Delete_Vertex_Arrays is new Loader.Array_Proc_With_2_Params
      ("glDeleteVertexArrays", Low_Level.SizeI, UInt, Low_Level.UInt_Array);
 
-   procedure Bind_Vertex_Array is new Runtime_Loading.Procedure_With_1_Param
+   procedure Bind_Vertex_Array is new Loader.Procedure_With_1_Param
      ("glBindVertexArray", UInt);
 
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
 
-   procedure Get_Shader_Param is new Runtime_Loading.Getter_With_3_Params
+   procedure Get_Shader_Param is new Loader.Getter_With_3_Params
      ("glGetShaderiv", UInt, Enums.Shader_Param, Int);
 
-   function Create_Shader is new Runtime_Loading.Function_With_1_Param
+   function Create_Shader is new Loader.Function_With_1_Param
      ("glCreateShader", Objects.Shaders.Shader_Type, UInt);
 
-   procedure Delete_Shader is new Runtime_Loading.Procedure_With_1_Param
+   procedure Delete_Shader is new Loader.Procedure_With_1_Param
      ("glDeleteShader", UInt);
 
-   procedure Shader_Source is new Runtime_Loading.Procedure_With_4_Params
+   procedure Shader_Source is new Loader.Procedure_With_4_Params
      ("glShaderSource", UInt, Low_Level.SizeI, Low_Level.CharPtr_Array,
       Low_Level.Int_Array);
 
    procedure Get_Shader_Source is
-     new Runtime_Loading.String_Getter_With_4_Params
+     new Loader.String_Getter_With_4_Params
      ("glGetShaderSource", Low_Level.SizeI, UInt);
 
-   procedure Compile_Shader is new Runtime_Loading.Procedure_With_1_Param
+   procedure Compile_Shader is new Loader.Procedure_With_1_Param
      ("glCompileShader", UInt);
 
    procedure Get_Shader_Info_Log is
-     new Runtime_Loading.String_Getter_With_4_Params
+     new Loader.String_Getter_With_4_Params
      ("glGetShaderInfoLog", Low_Level.SizeI, UInt);
 
-   function Create_Program is new Runtime_Loading.Function_Without_Params
+   function Create_Program is new Loader.Function_Without_Params
      ("glCreateProgram", UInt);
 
-   procedure Delete_Program is new Runtime_Loading.Procedure_With_1_Param
+   procedure Delete_Program is new Loader.Procedure_With_1_Param
      ("glDeleteProgram", UInt);
 
-   procedure Get_Program_Param is new Runtime_Loading.Getter_With_3_Params
+   procedure Get_Program_Param is new Loader.Getter_With_3_Params
      ("glGetProgramiv", UInt, Enums.Program_Param, Int);
 
-   procedure Attach_Shader is new Runtime_Loading.Procedure_With_2_Params
+   procedure Attach_Shader is new Loader.Procedure_With_2_Params
      ("glAttachShader", UInt, UInt);
 
-   procedure Link_Program is new Runtime_Loading.Procedure_With_1_Param
+   procedure Link_Program is new Loader.Procedure_With_1_Param
      ("glLinkProgram", UInt);
 
    procedure Get_Program_Info_Log is
-     new Runtime_Loading.String_Getter_With_4_Params
+     new Loader.String_Getter_With_4_Params
      ("glGetProgramInfoLog", Low_Level.SizeI, UInt);
 
-   procedure Use_Program is new Runtime_Loading.Procedure_With_1_Param
+   procedure Use_Program is new Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
 
-   function Get_Uniform_Location is new Runtime_Loading.Function_With_2_Params
+   function Get_Uniform_Location is new Loader.Function_With_2_Params
      ("glGetUniformLocation", UInt, C.Strings.chars_ptr, Uniforms.Uniform);
 
-   procedure Bind_Attrib_Location is new Runtime_Loading.Procedure_With_3_Params
+   procedure Bind_Attrib_Location is new Loader.Procedure_With_3_Params
      ("glBindAttribLocation", UInt, Attributes.Attribute, C.Strings.chars_ptr);
 
-   function Get_Attrib_Location is new Runtime_Loading.Function_With_2_Params
+   function Get_Attrib_Location is new Loader.Function_With_2_Params
      ("glGetAttribLocation", UInt, C.Strings.chars_ptr, Attributes.Attribute);
 
-   procedure Vertex_Attrib_Pointer is new Runtime_Loading.Procedure_With_6_Params
+   procedure Vertex_Attrib_Pointer is new Loader.Procedure_With_6_Params
      ("glVertexAttribPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.Bool, Low_Level.SizeI, Int);
 
-   procedure Vertex_AttribI_Pointer is new Runtime_Loading.Procedure_With_5_Params
+   procedure Vertex_AttribI_Pointer is new Loader.Procedure_With_5_Params
      ("glVertexAttribIPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.SizeI, Int);
 
-   procedure Vertex_AttribL_Pointer is new Runtime_Loading.Procedure_With_5_Params
+   procedure Vertex_AttribL_Pointer is new Loader.Procedure_With_5_Params
      ("glVertexAttribLPointer", Attributes.Attribute, Component_Count, Numeric_Type,
       Low_Level.SizeI, Int);
 
-   procedure Enable_Vertex_Attrib_Array is new Runtime_Loading.Procedure_With_1_Param
+   procedure Enable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glEnableVertexAttribArray", Attributes.Attribute);
 
-   procedure Disable_Vertex_Attrib_Array is new Runtime_Loading.Procedure_With_1_Param
+   procedure Disable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
 end GL.API;

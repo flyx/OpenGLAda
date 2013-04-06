@@ -55,24 +55,24 @@ package GL.API.Doubles is
    pragma Import (Convention => StdCall, Entity => Tex_Coord2,
                   External_Name => "glTexCoord2dv");
    
-   procedure Vertex_Attrib1 is new Runtime_Loading.Procedure_With_2_Params
+   procedure Vertex_Attrib1 is new Loader.Procedure_With_2_Params
      ("glVertexAttribL1d", Attributes.Attribute, Double);
    
-   procedure Vertex_Attrib2 is new Runtime_Loading.Procedure_With_3_Params
+   procedure Vertex_Attrib2 is new Loader.Procedure_With_3_Params
      ("glVertexAttribL2d", Attributes.Attribute, Double, Double);
    
-   procedure Vertex_Attrib2v is new Runtime_Loading.Procedure_With_2_Params
+   procedure Vertex_Attrib2v is new Loader.Procedure_With_2_Params
      ("glVertexAttribL2dv", Attributes.Attribute, Vector2);
    
-   procedure Vertex_Attrib3 is new Runtime_Loading.Procedure_With_4_Params
+   procedure Vertex_Attrib3 is new Loader.Procedure_With_4_Params
      ("glVertexAttribL3d", Attributes.Attribute, Double, Double, Double);
    
-   procedure Vertex_Attrib3v is new Runtime_Loading.Procedure_With_2_Params
+   procedure Vertex_Attrib3v is new Loader.Procedure_With_2_Params
      ("glVertexAttribL3dv", Attributes.Attribute, Vector3);
    
-   procedure Vertex_Attrib4 is new Runtime_Loading.Procedure_With_5_Params
+   procedure Vertex_Attrib4 is new Loader.Procedure_With_5_Params
      ("glVertexAttribL4d", Attributes.Attribute, Double, Double, Double, Double);
    
-   procedure Vertex_Attrib4v is new Runtime_Loading.Procedure_With_2_Params
+   procedure Vertex_Attrib4v is new Loader.Procedure_With_2_Params
      ("glVertexAttribL4dv", Attributes.Attribute, Vector4);
 end GL.API.Doubles;

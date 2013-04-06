@@ -14,20 +14,24 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.GLX;
-with Interfaces.C.Strings;
+package body GL.API.Mac_OS_X is
+   OpenGLFramework_Cached : CFBundleRef;
+  
+   function OpenGLFramework return CFBundleRef is
+      use type System.Address;
+   begin
+      if OpenGLFramework_Cached = System.Null_Address then
+         declare
+            OpenGLFramework_ID : constant CFStringRef
+              := CFStringCreateWithCString (System.Null_Address,
+                                            IFC.New_String ("com.apple.opengl"),
+                                            kCFStringEncodingASCII);
+         begin
+            OpenGLFramework_Cached 
+              := CFBundleGetBundleWithIdentifier (OpenGLFramework_ID);
+         end;
+      end if;
+      return OpenGLFramework_Cached;
+   end OpenGLFramework;
 
-separate (Runtime_Loading)
-procedure Load_Function_To_Map (Function_Name : String;
-                                Position : out Function_Maps.Cursor) is
-   GL_Function_Name_C : Interfaces.C.Strings.chars_ptr
-     := Interfaces.C.Strings.New_String (Function_Name);
-
-   Result : System.Address := GL.GLX.Get_Proc_Address (GL_Function_Name_C);
-
-   Inserted : Boolean;
-begin
-   Interfaces.C.Strings.Free (GL_Function_Name_C);
-   Loaded.Insert (Function_Name, Result, Position, Inserted);
-end Load_Function_To_Map;
-
+end GL.API.Mac_OS_X;

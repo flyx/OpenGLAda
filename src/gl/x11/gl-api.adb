@@ -14,30 +14,17 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Runtime_Loading.Mac_OS_X;
+with GL.GLX;
 with Interfaces.C.Strings;
 
-separate (Runtime_Loading)
-procedure Load_Function_To_Map (Function_Name : String;
-                                Position : out Function_Maps.Cursor) is
-   -- OSX-specific implementation uses CoreFoundation functions
-   use Runtime_Loading.Mac_OS_X;
-   
-   package IFC renames Interfaces.C.Strings;
-   
-   GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (Function_Name);
+package body GL.API is
+   function GL_Subprogram_Reference (Function_Name : String) return System.Address is
+      GL_Function_Name_C : Interfaces.C.Strings.chars_ptr
+        := Interfaces.C.Strings.New_String (Function_Name);
 
-   Symbol_Name : CFStringRef := CFStringCreateWithCString
-     (alloc => System.Null_Address, cStr => GL_Function_Name_C,
-      encoding => kCFStringEncodingASCII);
-   Result : System.Address := CFBundleGetFunctionPointerForName
-     (bundle => OpenGLFramework,
-      functionName => Symbol_Name);
-      
-   Inserted : Boolean;
-begin
-   CFRelease (Symbol_Name);
-   IFC.Free (GL_Function_Name_C);
-   
-   Loaded.Insert (Function_Name, Result, Position, Inserted);
-end Load_Function_To_Map;
+      Result : System.Address := GL.GLX.Get_Proc_Address (GL_Function_Name_C);
+   begin
+      Interfaces.C.Strings.Free (GL_Function_Name_C);
+      return Result;
+   end GL_Subprogram_Reference;
+end GL.API;

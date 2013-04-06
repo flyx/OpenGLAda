@@ -20,10 +20,16 @@ package body Runtime_Loading is
    use type Function_Maps.Cursor;
    use type System.Address;
 
-   -- Implementation is possibly platform-dependent
    procedure Load_Function_To_Map (Function_Name : String;
-                                   Position : out Function_Maps.Cursor)
-                                  is separate;
+                                   Position : out Function_Maps.Cursor) is
+      Inserted : Boolean;
+   begin
+      Loaded.Insert (Key      => Function_Name,
+                     New_Item => Raw_Subprogram_Reference (Function_Name),
+                     Position => Position,
+                     Inserted => Inserted);
+   end Load_Function_To_Map;
+   pragma Inline (Load_Function_To_Map);
 
    function Available (Function_Name : String) return Boolean is
       Position : Function_Maps.Cursor := Loaded.Find (Function_Name);
