@@ -3,8 +3,7 @@
 ## Overview
 
 **OpenGLAda** is a fat OpenGL binding for the Ada programming language.
-Unlike other bindings (see the
-[project's homepage](http://flyx86.github.com/OpenGLAda/) for a list),
+Unlike other bindings (see the [project's homepage][4] for a list),
 OpenGLAda enriches the original API with concepts and features provided by
 Ada, like object orientation, type safety and generics.
 
@@ -64,21 +63,19 @@ in some dependency folder within your project folder, e.g.:
 If you're using the GPRBuild system, you can then just declare using OpenGLAda in
 your *.gpr file:
 
-    with "dependencies/OpenGLAda/opengl.gpr";
+    with "dependencies/OpenGLAda/opengl";
 
 Alternatively, you can specify the path to the OpenGL project file in as environment
 variable:
 
-    export GNAT_PROJECT_PATH=dependencies/OpenGLAda
+    export ADA_PROJECT_PATH=dependencies/OpenGLAda
 
 ... and then specify the dependency without the path:
 
-    with "opengl.gpr";
+    with "opengl";
 
-_Note_: Prepending a path to `opengl.gpr` will issue a warning, so the second
-method is the preferred one.
-
-If you want to use GLFW, you also need to refer to `glfw.gpr` in your project file.
+If you want to use GLFW, you also need to refer to the project  `glfw.gpr` in your project file
+the same way as you referred to `opengl.gpr`.
 
 The project files `opengl.gpr` and `glfw.gpr` take the following scenario parameters:
 
@@ -117,10 +114,11 @@ files from the source directory by using relative paths, so they only work with
 
 
 For additional information and documentation, see the
-[project's homepage](http://flyx86.github.com/OpenGLAda/ "OpenGLAda homepage").
+[project's homepage][4].
 
 
 
  [1]: http://libre.adacore.com/
  [2]: http://www.adacore.com/gnatpro/toolsuite/gprbuild/
  [3]: http://www.glfw.org/
+ [4]: http://flyx.github.io/OpenGLAda/

@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Runtime_Loading;
+with GL.Runtime_Loading;
 
 with GL.Attributes;
 with GL.Buffers;
