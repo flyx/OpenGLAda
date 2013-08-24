@@ -228,6 +228,10 @@ package GL.Enums.Getter is
       Selection_Buffer_Pointer,
       Selection_Buffer_Size,
       Light_Model_Color_Control,
+      Major_Version,
+      Minor_Version,
+      Num_Extensions,
+      Num_Shading_Language_Versions,
       Current_Fog_Coord,
       Active_Texture,
       Max_Combined_Texture_Image_Units);
@@ -442,8 +446,24 @@ package GL.Enums.Getter is
       Selection_Buffer_Pointer      => 16#0DF3#,
       Selection_Buffer_Size         => 16#0DF4#,
       Light_Model_Color_Control     => 16#81F8#,
+      Major_Version                 => 16#821B#,
+      Minor_Version                 => 16#821C#,
+      Num_Extensions                => 16#821D#,
+      Num_Shading_Language_Versions => 16#82E9#,
       Current_Fog_Coord             => 16#8453#,
       Active_Texture                => 16#84E0#,
       Max_Combined_Texture_Image_Units => 16#8B4D#);
+   for Parameter'Size use Low_Level.Enum'Size;
+
+   type String_Parameter is
+     (Vendor, Renderer, Version, Extensions, Shading_Language_Version);
+   for String_Parameter use
+     (Vendor                   => 16#1F00#,
+      Renderer                 => 16#1F01#,
+      Version                  => 16#1F02#,
+      Extensions               => 16#1F03#,
+      Shading_Language_Version => 16#8B8C#);
+   for String_Parameter'Size use Low_Level.Enum'Size;
+
 
 end GL.Enums.Getter;

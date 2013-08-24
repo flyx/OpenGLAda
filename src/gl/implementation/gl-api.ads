@@ -108,6 +108,14 @@ private package GL.API is
                               Target : in out Colors.Color);
    pragma Import (Convention => StdCall, Entity => Get_Light_Color,
                   External_Name => "glGetLightfv");
+   
+   function Get_String (Name : Enums.Getter.String_Parameter) 
+                        return C.Strings.chars_ptr;  
+   pragma Import (Convention => StdCall, Entity => Get_String,
+                  External_Name => "glGetString");
+   
+   function Get_String_I is new Loader.Function_With_2_Params
+     ("glGetStringi", Enums.Getter.String_Parameter, UInt, C.Strings.chars_ptr);
 
    -----------------------------------------------------------------------------
    --                                 Toggles                                 --
