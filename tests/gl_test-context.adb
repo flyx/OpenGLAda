@@ -41,7 +41,14 @@ procedure GL_Test.Context is
          List : GL.Context.String_List := GL.Context.Extensions;
       begin
          for I in List'Range loop
-            Put_Line ("  " & To_String (List (I)));
+            declare
+               Name : String := To_String (List (I));
+            begin
+               Put_Line ("  " & Name);
+               if not GL.Context.Has_Extension (Name) then
+                  Put_Line ("!!! Has_Extension returns false (should not happen)");
+               end if;
+            end;
          end loop;
       end;
       Put_Line ("Primary shading language version: " &
@@ -52,7 +59,14 @@ procedure GL_Test.Context is
          begin
             Put_Line ("Supported shading language versions:");
             for I in List'Range loop
-               Put_Line ("  " & To_String (List (I)));
+               declare
+                  Version : String := To_String (List (I));
+               begin
+                  Put_Line ("  " & Version);
+                  if not GL.Context.Supports_Shading_Language_Version (Version) then
+                     Put_Line ("!!! Supports_Shading_Language_Version returns false (should not happen)");
+                  end if;
+               end;
             end loop;
          end;
       exception when others =>

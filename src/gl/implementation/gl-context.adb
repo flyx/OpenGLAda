@@ -121,7 +121,7 @@ package body GL.Context is
             Raw : String := C.Strings.Value (API.Get_String
                                              (Enums.Getter.Extensions));
             Cur_Pos : Positive := Raw'First;
-            Next_Space : Positive;
+            Next_Space : Natural;
          begin
             if Raw'Length = 0 then
                return False;
@@ -134,6 +134,7 @@ package body GL.Context is
                if Raw (Cur_Pos .. Next_Space - 1) = Name then
                   return True;
                end if;
+               Cur_Pos := Next_Space + 1;
             end loop;
          end;
       end if;
