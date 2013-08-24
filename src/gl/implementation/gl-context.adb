@@ -74,7 +74,7 @@ package body GL.Context is
             Raw : String := C.Strings.Value (API.Get_String
                                              (Enums.Getter.Extensions));
             Cur_Pos : Positive := Raw'First;
-            Next_Space : Positive;
+            Next_Space : Natural;
          begin
             if Raw'Length = 0 then
                return Null_String_List;
@@ -140,20 +140,23 @@ package body GL.Context is
       return False;
    end Has_Extension;
 
-   function Primary_Shader_Version return String is
+   function Primary_Shading_Language_Version return String is
       Result : String := C.Strings.Value
         (API.Get_String (Enums.Getter.Shading_Language_Version));
    begin
       Check_OpenGL_Error;
       return Result;
-   end Primary_Shader_Version;
+   end Primary_Shading_Language_Version;
 
-   function Supported_Shader_Versions return String_List is
+   function Supported_Shading_Language_Versions return String_List is
       use Ada.Strings.Unbounded;
+      use type Enums.Error_Code;
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Shading_Language_Versions, Count'Access);
-      Check_OpenGL_Error;
+      if API.Get_Error = Enums.Invalid_Enum then
+         raise Feature_Not_Supported_Exception;
+      end if;
       return List : String_List (1 .. Positive (Count)) do
          for I in List'Range loop
             List (I) := To_Unbounded_String
@@ -161,9 +164,9 @@ package body GL.Context is
                Enums.Getter.Shading_Language_Version, UInt (I))));
          end loop;
       end return;
-   end Supported_Shader_Versions;
+   end Supported_Shading_Language_Versions;
 
-   function Supports_Shader_Version (Name : String) return Boolean is
+   function Supports_Shading_Language_Version (Name : String) return Boolean is
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Shading_Language_Versions, Count'Access);
@@ -176,6 +179,6 @@ package body GL.Context is
          end if;
       end loop;
       return False;
-   end Supports_Shader_Version;
+   end Supports_Shading_Language_Version;
 
 end GL.Context;

@@ -43,9 +43,9 @@ package GL.Context is
    function Extensions return String_List;
    function Has_Extension (Name : String) return Boolean;
 
-   function Primary_Shader_Version return String;
+   function Primary_Shading_Language_Version return String;
 
    -- available since OpenGL 4.3:
-   function Supported_Shader_Versions return String_List;
-   function Supports_Shader_Version (Name : String) return Boolean;
+   function Supported_Shading_Language_Versions return String_List;
+   function Supports_Shading_Language_Version (Name : String) return Boolean;
 end GL.Context;

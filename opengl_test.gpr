@@ -8,7 +8,7 @@ project OpenGL_Test is
    for Source_Dirs use ("tests");
    
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
-                 "gl_test-opengl3");
+                 "gl_test-opengl3", "gl_test-context");
    
    package Ide is
       for Vcs_Kind use "Git";

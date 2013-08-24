@@ -31,8 +31,6 @@ package GL.Runtime_Loading is
    --  at runtime). when a function is not available, it raises a
    -- Feature_Not_Supported_Exception
    
-   Feature_Not_Supported_Exception : exception;
-   
    function Available (Function_Name : String) return Boolean;
    
    generic

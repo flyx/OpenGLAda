@@ -46,6 +46,10 @@ package GL is
    Out_Of_Memory     : exception;
    Invalid_Value     : exception;
    Internal_Error    : exception;
+   
+   -- raised when a function that is not available for the current context
+   -- is called.
+   Feature_Not_Supported_Exception : exception;
 
 private
 
