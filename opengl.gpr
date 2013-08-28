@@ -11,15 +11,12 @@ library project OpenGL is
    case Os is
       when "windows" => for Source_Dirs use ("src/gl/interface",
                                              "src/gl/implementation",
-											 "src/Runtime_Loading",
                                              "src/gl/windows");
       when "linux" => for Source_Dirs use ("src/gl/interface",
                                            "src/gl/implementation",
-										   "src/Runtime_Loading",
                                            "src/gl/x11");
       when "mac" => for Source_Dirs use ("src/gl/interface",
                                          "src/gl/implementation",
-										 "src/Runtime_Loading",
                                          "src/gl/mac");
    end case;
 
