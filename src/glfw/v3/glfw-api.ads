@@ -23,6 +23,7 @@ with Glfw.Input.Mouse;
 with Glfw.Monitors;
 with Glfw.Errors;
 with Glfw.Enums;
+with Glfw.Windows;
 
 private package Glfw.API is
 
@@ -198,5 +199,105 @@ private package Glfw.API is
                              Value   : access constant Raw_Gamma_Ramp);
    pragma Import (Convention => StdCall, Entity => Set_Gamma_Ramp,
                   External_Name => "glfwSetGammaRamp");
+
+   -----------------------------------------------------------------------------
+   -- Windows
+   -----------------------------------------------------------------------------
+
+   procedure Default_Window_Hints;
+   pragma Import (Convention => StdCall, Entity => Default_Window_Hints,
+                  External_Name => "glfwDefaultWindowHints");
+
+   procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : C.int);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : Bool);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+                          Info   : Windows.OpenGL_Profile_Kind);
+   pragma Import (Convention => StdCall, Entity => Window_Hint,
+                  External_Name => "glfwOpenWindowHint");
+
+   function Create_Window (Width, Height : Interfaces.C.int;
+                           Title         : Interfaces.C.Strings.chars_ptr;
+                           Monitor       : System.Address;
+                           Share         : System.Address)
+                           return System.Address;
+   pragma Import (Convention => StdCall, Entity => Create_Window,
+                  External_Name => "glfwCreateWindow");
+
+   procedure Destroy_Window (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Destroy_Window,
+                  External_Name => "glfwDestroyWindow");
+
+   function Window_Should_Close (Window : System.Address)
+                                 return Interfaces.C.int;
+   pragma Import (Convention => StdCall, Entity => Window_Should_Close,
+                  External_Name => "glfwWindowShouldClose");
+
+   procedure Set_Window_Should_Close (Window : System.Address;
+                                      Value  : Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Set_Window_Should_Close,
+                  External_Name => "glfwSetWindowShouldClose");
+
+   procedure Set_Window_Title (Window : System.Address;
+                               Title  : Interfaces.C.Strings.chars_ptr);
+   pragma Import (Convention => StdCall, Entity => Set_Window_Title,
+                  External_Name => "glfwSetWindowTitle");
+
+   procedure Get_Window_Pos (Window : System.Address;
+                             Xpos, Ypos : out Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Get_Window_Pos,
+                  External_Name => "glfwGetWindowPos");
+
+   procedure Set_Window_Pos (Window : System.Address;
+                             Xpos, Ypos : Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Set_Window_Pos,
+                  External_Name => "glfwSetWindowPos");
+
+   procedure Get_Window_Size (Window : System.Address;
+                              Width, Height : out Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Get_Window_Size,
+                  External_Name => "glfwGetWindowSize");
+
+   procedure Set_Window_Size (Window : System.Address;
+                              Width, Height : Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Set_Window_Size,
+                  External_Name => "glfwSetWindowSize");
+
+   procedure Get_Framebuffer_Size (Window : System.Address;
+                                   Width, Height : out Interfaces.C.int);
+   pragma Import (Convention => StdCall, Entity => Get_Framebuffer_Size,
+                  External_Name => "glfwGetFramebufferSize");
+
+   procedure Iconify_Window (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Iconify_Window,
+                  External_Name => "glfwIconifyWindow");
+
+   procedure Restore_Window (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Restore_Window,
+                  External_Name => "glfwRestoreWindow");
+
+   procedure Show_Window (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Show_Window,
+                  External_Name => "glfwShowWindow");
+
+   procedure Hide_Window (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Hide_Window,
+                  External_Name => "glfwHideWindow");
+
+   function Get_Window_Monitor (Window : System.Address) return System.Address;
+   pragma Import (Convention => StdCall, Entity => Get_Window_Monitor,
+                  External_Name => "glfwGetWindowMonitor");
+
+   function Get_Window_Attrib (Window : System.Address;
+                               Attrib : Enums.Window_Info) return C.int;
+   function Get_Window_Attrib (Window : System.Address;
+                               Attrib : Enums.Window_Info) return Bool;
+   function Get_Window_Attrib (Window : System.Address;
+                               Attrib : Enums.Window_Info)
+                               return Windows.API_Kind;
+   function Get_Window_Attrib (Window : System.Address;
+                               Attrib : Enums.Window_Info)
+                               return Windows.OpenGL_Profile_Kind;
+   pragma Import (Convention => StdCall, Entity => Get_Window_Attrib,
+                  External_Name => "glfwGetWindowAttrib");
 
 end Glfw.API;

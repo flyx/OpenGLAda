@@ -44,8 +44,6 @@ private
 
    type Bool is new Boolean;
 
-
-
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.int'Size;
    pragma Convention (C, Bool);

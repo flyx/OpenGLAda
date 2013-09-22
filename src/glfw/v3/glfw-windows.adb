@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Glfw.API;
+with Glfw.Enums;
 
 package body Glfw.Windows is
 
@@ -39,5 +41,17 @@ package body Glfw.Windows is
       pragma Compile_Time_Warning (Standard.True, "Enable_Callback unimplemented");
       raise Program_Error with "Unimplemented procedure Enable_Callback";
    end Enable_Callback;
+
+   procedure Get_OpenGL_Version (Object : not null access Window;
+                                 Major, Minor, Revision : out Natural) is
+      Value : Interfaces.C.int;
+   begin
+      Value := API.Get_Window_Attrib (Object.Handle, Enums.Context_Version_Major);
+      Major := Natural (Value);
+      Value := API.Get_Window_Attrib (Object.Handle, Enums.Context_Version_Minor);
+      Minor := Natural (Value);
+      Value := API.Get_Window_Attrib (Object.Handle, Enums.Context_Revision);
+      Revision := Natural (Value);
+   end Get_OpenGL_Version;
 
 end Glfw.Windows;

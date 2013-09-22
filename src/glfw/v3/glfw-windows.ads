@@ -30,11 +30,17 @@ package Glfw.Windows is
                      Framebuffer_Size, Mouse_Button, Mouse_Position,
                      Mouse_Scroll, Mouse_Enter, Key, Char);
 
+   type OpenGL_Profile_Kind is (System_Default, Core_Profile, Compat_Profile);
+   type API_Kind is (OpenGL, OpenGL_ES);
+
    procedure Init (Object        : not null access Window;
                    Width, Height : Natural;
                    Title         : String; -- interpreted as UTF-8
                    Monitor       : Monitors.Monitor;
                    Share_Resources_With : access Window'Class := null);
+
+   procedure Get_OpenGL_Version (Object : not null access Window;
+                                 Major, Minor, Revision : out Natural);
 
    procedure Enable_Callback (Object : not null access Window;
                               Subject : Callback);
@@ -72,4 +78,13 @@ private
    type Window is new Ada.Finalization.Controlled with record
       Handle : System.Address;
    end record;
+
+   for OpenGL_Profile_Kind use (System_Default => 0,
+                                Core_Profile   => 16#50001#,
+                                Compat_Profile => 16#50002#);
+   for OpenGL_Profile_Kind'Size use Interfaces.C.int'Size;
+
+   for API_Kind use (OpenGL    => 16#30001#,
+                     OpenGL_ES => 16#30002#);
+   for API_Kind'Size use Interfaces.C.int'Size;
 end Glfw.Windows;
