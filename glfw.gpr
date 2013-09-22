@@ -55,7 +55,12 @@ library project Glfw is
    package Linker is
       case Os is
          when "mac" =>
-            for Linker_Options use ("-lglfw", "-Wl,-framework,Cocoa");
+            case GLFW_Version is
+               when "2" =>
+                  for Linker_Options use ("-lglfw", "-Wl,-framework,Cocoa");
+               when "3" =>
+                  for Linker_Options use ("-lglfw3", "-Wl,-framework,Cocoa");
+            end case;
          when "windows" =>
             for Linker_Options use ("-lglfw", "-lwinmm", "-lgdi32");
          when "linux" =>

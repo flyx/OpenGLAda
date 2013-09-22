@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,36 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Glfw.Display;
+with Interfaces.C.Strings;
 
-package body Glfw_Test is
+with Glfw.API;
 
-   procedure Key_To_Title (Subject : Glfw.Events.Keys.Key;
-                           Action : Glfw.Events.Button_State) is
-      use type Glfw.Events.Button_State;
+package body Glfw.Errors is
+
+   Cur_Callback : Callback := null;
+
+   procedure Raw_Handler (Code : Kind;
+                          Description : Interfaces.C.Strings.chars_ptr);
+   pragma Convention (C, Raw_Handler);
+
+   procedure Raw_Handler (Code : Kind;
+                          Description : Interfaces.C.Strings.chars_ptr) is
    begin
-      if Action = Glfw.Events.Press then
-         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
-                                 & " has been pressed.");
-      else
-         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
-                                 & " has been released.");
+      if Cur_Callback /= null then
+         Cur_Callback.all (Code, Interfaces.C.Strings.Value (Description));
       end if;
-   end Key_To_Title;
+   end Raw_Handler;
 
-end Glfw_Test;
+   procedure Set_Callback (Handler : Callback) is
+      use type API.Error_Callback;
+      Previous : API.Error_Callback;
+   begin
+      Cur_Callback := Handler;
+      if Handler = null then
+         Previous := API.Set_Error_Callback (null);
+      else
+         Previous := API.Set_Error_Callback (Raw_Handler'Access);
+      end if;
+   end Set_Callback;
+
+end Glfw.Errors;

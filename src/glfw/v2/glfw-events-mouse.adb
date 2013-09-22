@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -20,7 +20,6 @@ with Glfw.Enums;
 package body Glfw.Events.Mouse is
 
    function Pressed (Query : Button) return Boolean is
-
    begin
       return Api.Get_Mouse_Button (Query) = Events.Press;
    end Pressed;

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,18 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C;
+with Glfw.Errors;
+with Ada.Text_IO;
 
-package Glfw.Events is
+package body Glfw_Test is
 
-   type Button_State is (Release, Press);
-   type Button_States is array (Positive range <>) of Button_State;
+   procedure Print_Error (Code : Glfw.Errors.Kind; Description : String) is
+   begin
+      Ada.Text_IO.Put_Line ("Error occured (" & Code'Img & "): " & Description);
+   end Print_Error;
 
-   procedure Poll_Events;
-
-   procedure Wait_For_Events;
-
-private
-   for Button_State use (Release => 0, Press => 1);
-   for Button_State'Size use Interfaces.C.int'Size;
-   
-   for Button_States'Component_Size use Interfaces.C.char'Size;
-   pragma Convention (C, Button_States);
-end Glfw.Events;
+   procedure Enable_Print_Errors is
+   begin
+      Glfw.Errors.Set_Callback (Print_Error'Access);
+   end Enable_Print_Errors;
+end Glfw_Test;

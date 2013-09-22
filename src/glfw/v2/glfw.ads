@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,43 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
+with Interfaces.C;
 
-with Glfw.Events.Keys;
+package Glfw is
 
-package Glfw.API.V3 is
-   type Character_Callback is access procedure
-     (Window : System.Address; Unicode_Char : Events.Keys.Unicode_Character);
-end Glfw.API.V3;
+   subtype Seconds is Interfaces.C.double;
+
+   Initialization_Exception : exception;
+
+   procedure Init;
+
+   procedure Terminate_Glfw;
+
+   procedure Version (Major, Minor, Rev : out Natural);
+
+
+   function Time return Seconds;
+
+   procedure Set_Time (Value : Seconds);
+
+
+   function Extension_Supported (Name : String) return Boolean;
+
+   procedure GL_Version (Major, Minor, Rev : out Natural);
+
+   procedure Toggle_Auto_Poll_Events (Enable  : Boolean);
+
+private
+   package C renames Interfaces.C;
+
+   use type Interfaces.C.int;
+
+   type Bool is new Boolean;
+
+
+
+   for Bool use (False => 0, True => 1);
+   for Bool'Size use C.int'Size;
+   pragma Convention (C, Bool);
+
+end Glfw;

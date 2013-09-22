@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +25,26 @@ with Interfaces.C.Strings;
 with System;
 
 private package Glfw.Api is
+
+   type Raw_Video_Mode is array (1 .. 5) of aliased C.int;
+   pragma Convention (C, Raw_Video_Mode);
+
+   type Video_Mode_List is array (Positive range <>) of Raw_Video_Mode;
+   pragma Convention (C, Video_Mode_List);
    
+   type Window_Size_Callback is access procedure (Width, Height : C.int);
+   type Window_Close_Callback is access function return Bool;
+   type Window_Refresh_Callback is access procedure;
+
+   type Key_Callback is access procedure (Subject : Events.Keys.Key;
+                                          Action : Events.Button_State);
+   type Character_Callback is access procedure
+     (Unicode_Char : Events.Keys.Unicode_Character; Action : Events.Button_State);
+   type Button_Callback is access procedure (Subject : Events.Mouse.Button;
+                                             Action  : Events.Button_State);
+   type Position_Callback is access procedure (X, Y : Events.Mouse.Coordinate);
+   type Wheel_Callback is access procedure (Pos : Events.Mouse.Wheel_Position);
+
    pragma Convention (C, Window_Size_Callback);
    pragma Convention (C, Window_Close_Callback);
    pragma Convention (C, Window_Refresh_Callback);
@@ -34,12 +53,6 @@ private package Glfw.Api is
    pragma Convention (C, Button_Callback);
    pragma Convention (C, Position_Callback);
    pragma Convention (C, Wheel_Callback);
-
-   type Raw_Video_Mode is array (1 .. 5) of aliased C.int;
-   pragma Convention (C, Raw_Video_Mode);
-
-   type Video_Mode_List is array (Positive range <>) of Raw_Video_Mode;
-   pragma Convention (C, Video_Mode_List);
 
    function Init return C.int;
    pragma Import (Convention => C, Entity => Init,

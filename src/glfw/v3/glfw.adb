@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -56,23 +56,5 @@ package body Glfw is
    begin
       return Boolean (Api.Extension_Supported (C.Strings.New_String (Name)));
    end Extension_Supported;
-
-   procedure GL_Version (Major, Minor, Rev : out Natural) is
-      Raw_Major, Raw_Minor, Raw_Rev : C.int;
-   begin
-      Api.Get_GL_Version (Raw_Major, Raw_Minor, Raw_Rev);
-      Major := Natural (Raw_Major);
-      Minor := Natural (Raw_Minor);
-      Rev   := Natural (Raw_Rev);
-   end GL_Version;
-
-   procedure Toggle_Auto_Poll_Events (Enable  : Boolean) is
-   begin
-      if Enable then
-         Api.Enable (Enums.Auto_Poll_Events);
-      else
-         Api.Disable (Enums.Auto_Poll_Events);
-      end if;
-   end Toggle_Auto_Poll_Events;
 
 end Glfw;

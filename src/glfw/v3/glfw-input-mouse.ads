@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,9 +14,28 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package Glfw.Window is
+package Glfw.Input.Mouse is
 
+   type Button is new Interfaces.C.int range 0 .. 7;
 
+   type Button_Action is (Release, Press);
 
+   type Enter_Action is (Leaving, Entering);
 
-end Glfw.Window;
+   Left_Button   : constant := 0;
+   Right_Button  : constant := 1;
+   Middle_Button : constant := 2;
+
+   subtype Coordinate is Interfaces.C.double;
+   subtype Scroll_Offset is Interfaces.C.double;
+
+private
+   for Button'Size use Interfaces.C.int'Size;
+
+   for Button_Action use (Release => 0, Press => 1);
+   for Button_Action'Size use Interfaces.C.int'Size;
+
+   for Enter_Action use (Leaving  => 0,
+                         Entering => 1);
+   for Enter_Action'Size use C.int'Size;
+end Glfw.Input.Mouse;

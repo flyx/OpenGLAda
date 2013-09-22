@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,20 +14,17 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Glfw.Api;
 
-package Glfw.API.V2 is
-   type Window_Size_Callback is access procedure (Width, Height : C.int);
-   type Window_Close_Callback is access function return Bool;
-   type Window_Refresh_Callback is access procedure;
+package body Glfw.Events is
+   procedure Poll_Events is
+   begin
+      Api.Poll_Events;
+   end Poll_Events;
 
-   type Key_Callback is access procedure (Subject : Events.Keys.Key;
-                                          Action : Events.Button_State);
-   type Character_Callback is access procedure
-     (Unicode_Char : Events.Keys.Unicode_Character; Action : Events.Button_State);
-   type Button_Callback is access procedure (Subject : Events.Mouse.Button;
-                                             Action  : Events.Button_State);
-   type Position_Callback is access procedure (X, Y : Events.Mouse.Coordinate);
-   type Wheel_Callback is access procedure (Pos : Events.Mouse.Wheel_Position);
+   procedure Wait_For_Events is
+   begin
+      Api.Wait_Events;
+   end Wait_For_Events;
 
-
-end Glfw.API.V2;
+end Glfw.Events;

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,17 +14,21 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package Glfw.Display.Modes is
+with Glfw.Display;
 
-   type Mode is record
-      Width, Height : Natural;
-      Red_Bits, Green_Bits, Blue_Bits : Natural;
-   end record;
+package body Glfw_Test is
 
-   type Mode_List is array (Positive range <>) of Mode;
+   procedure Key_To_Title (Subject : Glfw.Events.Keys.Key;
+                           Action : Glfw.Events.Button_State) is
+      use type Glfw.Events.Button_State;
+   begin
+      if Action = Glfw.Events.Press then
+         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
+                                 & " has been pressed.");
+      else
+         Glfw.Display.Set_Title ("Key " & Glfw.Events.Keys.Name (Subject)
+                                 & " has been released.");
+      end if;
+   end Key_To_Title;
 
-   function Available_Modes return Mode_List;
-
-   function Desktop_Mode return Mode;
-
-end Glfw.Display.Modes;
+end Glfw_Test;
