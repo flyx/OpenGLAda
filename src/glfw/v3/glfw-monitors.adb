@@ -132,4 +132,9 @@ package body Glfw.Monitors is
       API.Set_Gamma_Ramp (Object.Handle, Raw'Access);
    end Set_Gamma_Ramp;
 
+   function Raw_Pointer (Object : Monitor) return System.Address is
+   begin
+      return Object.Handle;
+   end Raw_Pointer;
+
 end Glfw.Monitors;

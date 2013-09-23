@@ -52,14 +52,14 @@ package Glfw.Windows is
    procedure Closing (Object : not null access Window) is null;
    procedure Refresh (Object : not null access Window) is null;
    procedure Focus_Changed (Object : not null access Window;
-                            Focussed : Boolean) is null;
+                            Focused : Boolean) is null;
    procedure Iconification_Changed (Object : not null access Window;
                                     Iconified : Boolean) is null;
    procedure Framebuffer_Size_Changed (Object : not null access Window;
                                        Width, Height : Natural) is null;
    procedure Mouse_Button_Changed (Object  : not null access Window;
                                    Button  : Input.Mouse.Button;
-                                   Action  : Input.Mouse.Button_Action;
+                                   State   : Input.Button_State;
                                    Mods    : Input.Keys.Modifiers) is null;
    procedure Mouse_Position_Changed (Object : not null access Window;
                                      X, Y   : Input.Mouse.Coordinate) is null;

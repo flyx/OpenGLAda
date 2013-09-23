@@ -16,4 +16,9 @@
 
 package Glfw.Input is
 
+   type Button_State is (Released, Pressed);
+private
+   for Button_State use (Released => 0, Pressed => 1);
+   for Button_State'Size use Interfaces.C.int'Size;
+
 end Glfw.Input;

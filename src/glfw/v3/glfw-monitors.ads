@@ -50,6 +50,8 @@ package Glfw.Monitors is
    function Current_Gamma_Ramp (Object : Monitor) return Gamma_Ramp;
    procedure Set_Gamma_Ramp (Object : Monitor; Value : Gamma_Ramp);
 
+   -- used internally
+   function Raw_Pointer (Object : Monitor) return System.Address;
 private
    type Monitor is tagged record
       Handle : System.Address;

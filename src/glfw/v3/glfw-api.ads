@@ -20,6 +20,7 @@ with System;
 
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
+with Glfw.Input.Joysticks;
 with Glfw.Monitors;
 with Glfw.Errors;
 with Glfw.Enums;
@@ -39,6 +40,14 @@ private package Glfw.API is
 
    package VMode_List_Pointers is new Interfaces.C.Pointers
      (Positive, Monitors.Video_Mode, Monitors.Video_Mode_List, (others => 0));
+
+   package Axis_Position_List_Pointers is new Interfaces.C.Pointers
+     (Positive, Input.Joysticks.Axis_Position, Input.Joysticks.Axis_Positions,
+      0.0);
+
+   package Joystick_Button_State_List_Pointers is new Interfaces.C.Pointers
+     (Positive, Input.Joysticks.Joystick_Button_State,
+      Input.Joysticks.Joystick_Button_States, Input.Joysticks.Released);
 
    type Unsigned_Short_List is array (Positive range <>) of aliased
      Interfaces.C.unsigned_short;
@@ -74,12 +83,14 @@ private package Glfw.API is
      (Window : System.Address; Width, Height : C.int);
    type Mouse_Button_Callback is access procedure (Window : System.Address;
                                                    Button : Input.Mouse.Button;
-                                                   Action : Input.Mouse.Button_Action;
+                                                   State  : Input.Button_State;
                                                    Mods   : Input.Keys.Modifiers);
    type Cursor_Position_Callback is access procedure
      (Window : System.Address; X, Y : Input.Mouse.Coordinate);
    type Cursor_Enter_Callback is access procedure
      (Window : System.Address; Action : Input.Mouse.Enter_Action);
+   type Scroll_Callback is access procedure
+     (Window : System.Address; X, Y : Input.Mouse.Scroll_Offset);
    type Key_Callback is access procedure (Window   : System.Address;
                                           Key      : Input.Keys.Key;
                                           Scancode : Input.Keys.Scancode;
@@ -101,6 +112,7 @@ private package Glfw.API is
    pragma Convention (C, Mouse_Button_Callback);
    pragma Convention (C, Cursor_Position_Callback);
    pragma Convention (C, Cursor_Enter_Callback);
+   pragma Convention (C, Scroll_Callback);
    pragma Convention (C, Key_Callback);
    pragma Convention (C, Character_Callback);
    pragma Convention (C, Monitor_Callback);
@@ -299,5 +311,169 @@ private package Glfw.API is
                                return Windows.OpenGL_Profile_Kind;
    pragma Import (Convention => StdCall, Entity => Get_Window_Attrib,
                   External_Name => "glfwGetWindowAttrib");
+
+   procedure Set_Window_User_Pointer (Window  : System.Address;
+                                      Pointer : not null access Windows.Window);
+   pragma Import (Convention => StdCall, Entity => Set_Window_User_Pointer,
+                  External_Name => "glfwSetWindowUserPointer");
+
+   function Get_Window_User_Pointer (Window  : System.Address)
+                                     return not null access Windows.Window;
+   pragma Import (Convention => StdCall, Entity => Get_Window_User_Pointer,
+                  External_Name => "glfwGetWindowUserPointer");
+
+   -- The callback setters in the C header are defined as returning the
+   -- previous callback pointer. This is rather low-level and not applicable
+   -- in the object-oriented interface of this binding. So we define the setters
+   -- as procedures, the return value will just get thrown away.
+
+   procedure Set_Window_Pos_Callback (Window : System.Address;
+                                     CB_Fun : Window_Position_Callback);
+                                     --return Window_Position_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Pos_Callback,
+                  External_Name => "glfwSetWindowPosCallback");
+
+   procedure Set_Window_Size_Callback (Window : System.Address;
+                                      CB_Fun : Window_Size_Callback);
+                                      --return Window_Size_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Size_Callback,
+                  External_Name => "glfwSetWindowSizeCallback");
+
+   procedure Set_Window_Close_Callback (Window : System.Address;
+                                       CB_Fun : Window_Close_Callback);
+                                       --return Window_Close_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Close_Callback,
+                  External_Name => "glfwSetWindowCloseCallback");
+
+   procedure Set_Window_Refresh_Callback (Window : System.Address;
+                                         CB_Fun : Window_Refresh_Callback);
+                                         --return Window_Refresh_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Refresh_Callback,
+                  External_Name => "glfwSetWindowRefreshCallback");
+
+   procedure Set_Window_Focus_Callback (Window : System.Address;
+                                       CB_Fun : Window_Focus_Callback);
+                                       --return Window_Focus_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Focus_Callback,
+                  External_Name => "glfwSetWindowFocusCallback");
+
+   procedure Set_Window_Iconify_Callback (Window : System.Address;
+                                         CB_Fun : Window_Iconify_Callback);
+                                         --return Window_Iconify_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Window_Iconify_Callback,
+                  External_Name => "glfwSetWindowIconifyCallback");
+
+   procedure Set_Framebuffer_Size_Callback (Window : System.Address;
+                                           CB_Fun : Framebuffer_Size_Callback);
+                                           --return Framebuffer_Size_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Framebuffer_Size_Callback,
+                  External_Name => "glfwSetFramebufferSizeCallback");
+
+   -----------------------------------------------------------------------------
+   -- Input
+   -----------------------------------------------------------------------------
+
+   function Get_Input_Mode (Window : System.Address;
+                            Mode : Enums.Input_Toggle) return Bool;
+   function Get_Input_Mode (Window : System.Address;
+                            Mode : Enums.Input_Toggle)
+                            return Input.Mouse.Cursor_Mode;
+   pragma Import (Convention => StdCall, Entity => Get_Input_Mode,
+                  External_Name => "glfwGetInputMode");
+
+   procedure Set_Input_Mode (Window : System.Address;
+                             Mode   : Enums.Input_Toggle;
+                             Value  : Bool);
+   procedure Set_Input_Mode (Window : System.Address;
+                             Mode   : Enums.Input_Toggle;
+                             Value  : Input.Mouse.Cursor_Mode);
+   pragma Import (Convention => StdCall, Entity => Set_Input_Mode,
+                  External_Name => "glfwSetInputMode");
+
+   function Get_Key (Window : System.Address; Key : Input.Keys.Key)
+                     return Input.Button_State;
+   pragma Import (Convention => StdCall, Entity => Get_Key,
+                  External_Name => "glfwGetKey");
+
+   function Get_Mouse_Button (Window : System.Address;
+                              Button : Input.Mouse.Button)
+                              return Input.Button_State;
+   pragma Import (Convention => StdCall, Entity => Get_Mouse_Button,
+                  External_Name => "glfwGetMouseButton");
+
+   procedure Get_Cursor_Pos (Window : System.Address;
+                             Xpos, Ypos : out Interfaces.C.double);
+   pragma Import (Convention => StdCall, Entity => Get_Cursor_Pos,
+                  External_Name => "glfwGetCursorPos");
+
+   procedure Set_Cursor_Pos (Window : System.Address;
+                             Xpos, Ypos : Interfaces.C.double);
+   pragma Import (Convention => StdCall, Entity => Set_Cursor_Pos,
+                  External_Name => "glfwSetCursorPos");
+
+   procedure Set_Key_Callback (Window : System.Address;
+                               CB_Fun : Key_Callback);
+                               --return Key_Callback
+   pragma Import (Convention => StdCall, Entity => Set_Key_Callback,
+                  External_Name => "glfwSetKeyCallback");
+
+   procedure Set_Char_Callback (Window : System.Address;
+                                CB_Fun : Character_Callback);
+                                --return Character_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Char_Callback,
+                  External_Name => "glfwSetCharCallback");
+
+   procedure Set_Mouse_Button_Callback (Window : System.Address;
+                                        CB_Fun : Mouse_Button_Callback);
+                                        --return Mouse_Button_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Mouse_Button_Callback,
+                  External_Name => "glfwSetMouseButtonCallback");
+
+   procedure Set_Cursor_Pos_Callback (Window : System.Address;
+                                      CB_Fun : Cursor_Position_Callback);
+                                      --return Cursor_Position_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Cursor_Pos_Callback,
+                  External_Name => "glfwSetCursorPosCallback");
+
+   procedure Set_Cursor_Enter_Callback (Window : System.Address;
+                                        CB_Fun : Cursor_Enter_Callback);
+                                        --return Cursor_Enter_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Cursor_Enter_Callback,
+                  External_Name => "glfwSetCursorEnterCallback");
+
+   procedure Set_Scroll_Callback (Window : System.Address;
+                                  CB_Fun : Scroll_Callback);
+                                  --return Scroll_Callback;
+   pragma Import (Convention => StdCall, Entity => Set_Scroll_Callback,
+                  External_Name => "glfwSetScrollCallback");
+
+   function Joystick_Present (Joy : Enums.Joystick_ID) return Bool;
+   pragma Import (Convention => StdCall, Entity => Joystick_Present,
+                  External_Name => "glfwJoystickPresent");
+
+   function Get_Joystick_Axes (Joy : Enums.Joystick_ID;
+                               Count : access Interfaces.C.int)
+                               return Axis_Position_List_Pointers.Pointer;
+   pragma Import (Convention => StdCall, Entity => Get_Joystick_Axes,
+                  External_Name => "glfwGetJoystickAxes");
+
+   function Get_Joystick_Buttons (Joy : Enums.Joystick_ID;
+                                  Count : access Interfaces.C.int)
+                                  return Joystick_Button_State_List_Pointers.Pointer;
+   pragma Import (Convention => StdCall, Entity => Get_Joystick_Buttons,
+                  External_Name => "glfwGetJoystickButtons");
+
+   function Get_Joystick_Name (Joy : Enums.Joystick_ID)
+                               return Interfaces.C.Strings.chars_ptr;
+   pragma Import (Convention => StdCall, Entity => Get_Joystick_Name,
+                  External_Name => "glfwGetJoystickName");
+
+   procedure Poll_Events;
+   pragma Import (Convention => StdCall, Entity => Poll_Events,
+                  External_Name => "glfwPollEvents");
+
+   procedure Wait_Events;
+   pragma Import (Convention => StdCall, Entity => Wait_Events,
+                  External_Name => "glfwWaitEvents");
 
 end Glfw.API;

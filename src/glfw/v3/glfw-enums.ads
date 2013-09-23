@@ -61,15 +61,11 @@ private package Glfw.Enums is
 
    subtype Window_Hint is Window_Info range Refresh_Rate .. OpenGL_Profile;
 
-   type Feature is (Mouse_Cursor, Sticky_Keys, Sticky_Mouse_Buttons, System_Keys,
-                    Key_Repeat, Auto_Poll_Events);
-   for Feature use (Mouse_Cursor         => 16#30001#,
-                    Sticky_Keys          => 16#30002#,
-                    Sticky_Mouse_Buttons => 16#30003#,
-                    System_Keys          => 16#30004#,
-                    Key_Repeat           => 16#30005#,
-                    Auto_Poll_Events     => 16#30006#);
-   for Feature'Size use Interfaces.C.int'Size;
+   type Input_Toggle is (Mouse_Cursor, Sticky_Keys, Sticky_Mouse_Buttons);
+   for Input_Toggle use (Mouse_Cursor         => 16#33001#,
+                         Sticky_Keys          => 16#33002#,
+                         Sticky_Mouse_Buttons => 16#33003#);
+   for Input_Toggle'Size use Interfaces.C.int'Size;
    
    type Joystick_ID is (
       Joystick_1, Joystick_2, Joystick_3, Joystick_4, Joystick_5,
