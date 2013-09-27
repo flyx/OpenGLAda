@@ -7,13 +7,19 @@ Unlike other bindings (see the [project's homepage][4] for a list),
 OpenGLAda enriches the original API with concepts and features provided by
 Ada, like object orientation, type safety and generics.
 
-In addition to the core OpenGL API, a wrapper for GLFW is also
-included. GLFW is a third-party library that provides functions to create a window
-or a fullscreen display with an OpenGL context on it. GLFW also includes functions
-for basic input handling.
+Besides standard OpenGL functionality, OpenGLAda optionally provides
+bindings to the following OpenGL-related libraries:
 
-OpenGLAda supports MacOSX, Windows and Linux with X11. It may also work
-on other X11-based operating systems.
+ * [GLFW][3]: This is a library for creating windows with an OpenGL context
+   on them. It also provides functionality for capturing user input on
+   keyboard, mouse and joystick. Having a window with an OpenGL context
+   is the prerequisite for using any OpenGL functionality. The GLFW binding
+   comes in two flavors: One for GLFW 2.x and one for GLFW 3+. There are
+   significant differences between these two, the most prominent being that
+   GLFW 3 can handle multiple windows. You can set the desired GLFW version
+   for the binding at compile time.
+   
+OpenGLAda supports MacOSX, Windows and X11-based systems.
 
 ## Prerequisites
 
@@ -39,8 +45,17 @@ A Makefile is provided mainly for building the tests:
 If you're on Windows and do not have the `make` utility available, you can build
 the test by executing
 
-    $ gprbuild -P glfw_test.gpr   -XGL_Backend=Windows
-    $ gprbuild -P opengl_test.gpr -XGL_Backend=Windows
+    $ gprbuild -P glfw_test.gpr   -XGL_Backend=windows
+    $ gprbuild -P opengl_test.gpr -XGL_Backend=windows
+
+The tests require GLFW, because they need to create windows. By default, they
+try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
+by executing:
+
+    $ gprbuild -P opengl_test.gpr -XGL_Backend=windows -XGLFW_Version=2
+    $ gprbuild -P glfw_test.gpr   -XGL_Backend=windows -XGLFW_Version=2
+
+(Substitute `windows` with `linux` or `mac` if needed.)
 
 ## Using OpenGLAda in your project
 
@@ -74,14 +89,15 @@ variable:
 
     with "opengl";
 
-If you want to use GLFW, you also need to refer to the project  `glfw.gpr` in your project file
-the same way as you referred to `opengl.gpr`.
+If you want to use GLFW, you also need to refer to the project
+`glfw.gpr` in your project file the same way as you referred to `opengl.gpr`.
 
 The project files `opengl.gpr` and `glfw.gpr` take the following scenario parameters:
 
  * `GL_Backend`: May take one of the following values: `linux`, `windows`, `mac`.
    Default is `linux`.
  * `mode`: May take one of the following values: `debug`, `release`. Default is `debug`.
+ * `GLFW_Version`: (GLFW only) `2` or `3`, the latter being the default.
 
 ### With other build systems
 
@@ -92,8 +108,9 @@ you want. Just make sure that you link properly to your OpenGL implementation:
  * Windows: `-lOpenGL32 -lGdi32`
  * Linux / X11-based: `-lGL -lX11`
 
-If you're using GLFW, add `-lglfw`. If you're on Windows and link against GLFW
-as dynamic library, you also need to add `-lwinmm`.
+If you're using GLFW, add `-lglfw` for GLFW 2 or `-glfw3` for GLFW 3. If you're
+on Windows and link against GLFW as dynamic library, you also need to add
+`-lwinmm`.
 
 ## Installation
 
