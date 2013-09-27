@@ -27,24 +27,65 @@ package Glfw.Windows is
    type Window is tagged private;
    type Window_Reference is not null access all Window;
 
-   type Callback is (Position, Size, Close, Refresh, Focus, Iconify,
-                     Framebuffer_Size, Mouse_Button, Mouse_Position,
-                     Mouse_Scroll, Mouse_Enter, Key, Char);
+   package Callbacks is
+      -- avoid pollution of Glfw.Windows package with symbols
+
+      type Kind is (Position, Size, Close, Refresh, Focus, Iconify,
+                    Framebuffer_Size, Mouse_Button, Mouse_Position,
+                    Mouse_Scroll, Mouse_Enter, Key, Char);
+   end Callbacks;
 
    type OpenGL_Profile_Kind is (System_Default, Core_Profile, Compat_Profile);
    type API_Kind is (OpenGL, OpenGL_ES);
 
+   subtype Coordinate is Interfaces.C.int;
+
    procedure Init (Object        : not null access Window;
-                   Width, Height : Natural;
+                   Width, Height : Size;
                    Title         : String; -- interpreted as UTF-8
                    Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                    Share_Resources_With : access Window'Class := null);
+   function Initialized (Object : not null access Window) return Boolean;
+   procedure Destroy (Object : not null access Window);
+
+   procedure Show (Object : not null access Window);
+   procedure Hide (Object : not null access Window);
+
+   procedure Set_Title (Object : not null access Window; Value : String);
 
    procedure Get_OpenGL_Version (Object : not null access Window;
                                  Major, Minor, Revision : out Natural);
 
+   function Key_State (Object : not null access Window; Key : Input.Keys.Key)
+                       return Input.Button_State;
+
+   function Mouse_Button_State (Object : not null access Window;
+                                Button : Input.Mouse.Button)
+                                return Input.Button_State;
+
+   procedure Get_Position (Object : not null access Window;
+                           X, Y : out Coordinate);
+   procedure Set_Position (Object : not null access Window;
+                           X, Y : Coordinate);
+
+   procedure Get_Size (Object : not null access Window;
+                       Width, Height : out Size);
+   procedure Set_Size (Object : not null access Window;
+                       Width, Height : Size);
+
+   procedure Get_Framebuffer_Size (Object : not null access Window;
+                                   Width, Height : out Size);
+
+   function Visible   (Object : not null access Window) return Boolean;
+   function Iconified (Object : not null access Window) return Boolean;
+   function Focused   (Object : not null access Window) return Boolean;
+
+   -----------------------------------------------------------------------------
+   -- Event API
+   -----------------------------------------------------------------------------
+
    procedure Enable_Callback (Object : not null access Window;
-                              Subject : Callback);
+                              Subject : Callbacks.Kind);
 
    procedure Position_Changed (Object : not null access Window;
                                X, Y : Integer) is null;
@@ -82,8 +123,8 @@ private
    end record;
 
    for OpenGL_Profile_Kind use (System_Default => 0,
-                                Core_Profile   => 16#50001#,
-                                Compat_Profile => 16#50002#);
+                                Core_Profile   => 16#32001#,
+                                Compat_Profile => 16#32002#);
    for OpenGL_Profile_Kind'Size use Interfaces.C.int'Size;
 
    for API_Kind use (OpenGL    => 16#30001#,

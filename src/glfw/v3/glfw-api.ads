@@ -24,7 +24,7 @@ with Glfw.Input.Joysticks;
 with Glfw.Monitors;
 with Glfw.Errors;
 with Glfw.Enums;
-with Glfw.Windows;
+with Glfw.Windows.Context;
 
 private package Glfw.API is
 
@@ -224,8 +224,12 @@ private package Glfw.API is
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : Bool);
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
                           Info   : Windows.OpenGL_Profile_Kind);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+                          Info   : Windows.API_Kind);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+                          Info   : Glfw.Windows.Context.Robustness);
    pragma Import (Convention => StdCall, Entity => Window_Hint,
-                  External_Name => "glfwOpenWindowHint");
+                  External_Name => "glfwWindowHint");
 
    function Create_Window (Width, Height : Interfaces.C.int;
                            Title         : Interfaces.C.Strings.chars_ptr;
@@ -255,27 +259,27 @@ private package Glfw.API is
                   External_Name => "glfwSetWindowTitle");
 
    procedure Get_Window_Pos (Window : System.Address;
-                             Xpos, Ypos : out Interfaces.C.int);
+                             Xpos, Ypos : out Windows.Coordinate);
    pragma Import (Convention => StdCall, Entity => Get_Window_Pos,
                   External_Name => "glfwGetWindowPos");
 
    procedure Set_Window_Pos (Window : System.Address;
-                             Xpos, Ypos : Interfaces.C.int);
+                             Xpos, Ypos : Windows.Coordinate);
    pragma Import (Convention => StdCall, Entity => Set_Window_Pos,
                   External_Name => "glfwSetWindowPos");
 
    procedure Get_Window_Size (Window : System.Address;
-                              Width, Height : out Interfaces.C.int);
+                              Width, Height : out Size);
    pragma Import (Convention => StdCall, Entity => Get_Window_Size,
                   External_Name => "glfwGetWindowSize");
 
    procedure Set_Window_Size (Window : System.Address;
-                              Width, Height : Interfaces.C.int);
+                              Width, Height : Size);
    pragma Import (Convention => StdCall, Entity => Set_Window_Size,
                   External_Name => "glfwSetWindowSize");
 
    procedure Get_Framebuffer_Size (Window : System.Address;
-                                   Width, Height : out Interfaces.C.int);
+                                   Width, Height : out Size);
    pragma Import (Convention => StdCall, Entity => Get_Framebuffer_Size,
                   External_Name => "glfwGetFramebufferSize");
 
@@ -402,12 +406,12 @@ private package Glfw.API is
                   External_Name => "glfwGetMouseButton");
 
    procedure Get_Cursor_Pos (Window : System.Address;
-                             Xpos, Ypos : out Interfaces.C.double);
+                             Xpos, Ypos : out Input.Mouse.Coordinate);
    pragma Import (Convention => StdCall, Entity => Get_Cursor_Pos,
                   External_Name => "glfwGetCursorPos");
 
    procedure Set_Cursor_Pos (Window : System.Address;
-                             Xpos, Ypos : Interfaces.C.double);
+                             Xpos, Ypos : Input.Mouse.Coordinate);
    pragma Import (Convention => StdCall, Entity => Set_Cursor_Pos,
                   External_Name => "glfwSetCursorPos");
 
@@ -475,5 +479,21 @@ private package Glfw.API is
    procedure Wait_Events;
    pragma Import (Convention => StdCall, Entity => Wait_Events,
                   External_Name => "glfwWaitEvents");
+
+   -----------------------------------------------------------------------------
+   -- Context
+   -----------------------------------------------------------------------------
+
+   procedure Make_Context_Current (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Make_Context_Current,
+                  External_Name => "glfwMakeContextCurrent");
+
+   function Get_Current_Context return System.Address;
+   pragma Import (Convention => StdCall, Entity => Get_Current_Context,
+                  External_Name => "glfwGetCurrentContext");
+
+   procedure Swap_Buffers (Window : System.Address);
+   pragma Import (Convention => StdCall, Entity => Swap_Buffers,
+                  External_Name => "glfwSwapBuffers");
 
 end Glfw.API;

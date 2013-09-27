@@ -281,7 +281,9 @@ private
       Alt     at 0 range 2 .. 2;
       Super   at 0 range 3 .. 3;
    end record;
+   pragma Warnings (Off);
    for Modifiers'Size use Interfaces.C.int'Size;
+   pragma Warnings (On);
    pragma Convention (C_Pass_By_Copy, Modifiers);
 
    for Scancode'Size use Interfaces.C.int'Size;

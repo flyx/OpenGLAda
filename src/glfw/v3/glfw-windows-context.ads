@@ -14,6 +14,19 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL_Test is
-   
-end GL_Test;
+package Glfw.Windows.Context is
+
+   type Robustness is (No_Robustness, No_Reset_Notification,
+                       Lose_Context_On_Reset);
+
+   procedure Make_Current (Window : access Glfw.Windows.Window'Class);
+
+   function Current return access Glfw.Windows.Window'Class;
+
+   procedure Swap_Buffers (Window : not null access Glfw.Windows.Window'Class);
+private
+   for Robustness use (No_Robustness => 0,
+                       No_Reset_Notification => 16#31001#,
+                       Lose_Context_On_Reset => 16#31002#);
+   for Robustness'Size use Interfaces.C.int'Size;
+end Glfw.Windows.Context;

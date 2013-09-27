@@ -20,12 +20,15 @@ package Glfw is
 
    subtype Seconds is Interfaces.C.double;
 
+   subtype Size is Interfaces.C.int range 0 .. Interfaces.C.int'Last;
+
    Initialization_Exception : exception;
    Operation_Exception      : exception;
 
    procedure Init;
 
-   procedure Terminate_Glfw;
+   -- because terminate is a keyword in Ada
+   procedure Shutdown;
 
    procedure Version (Major, Minor, Rev : out Natural);
 

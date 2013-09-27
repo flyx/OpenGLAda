@@ -28,10 +28,10 @@ package body Glfw is
       end if;
    end Init;
 
-   procedure Terminate_Glfw is
+   procedure Shutdown is
    begin
       Api.Glfw_Terminate;
-   end Terminate_Glfw;
+   end Shutdown;
 
    procedure Version (Major, Minor, Rev : out Natural) is
       Raw_Major, Raw_Minor, Raw_Rev : C.int;

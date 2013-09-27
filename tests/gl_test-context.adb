@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -19,7 +19,7 @@ with Ada.Text_IO;
 
 with GL.Context;
 
-with Glfw.Display;
+with GL_Test.Display_Backend;
 
 procedure GL_Test.Context is
 
@@ -89,44 +89,38 @@ procedure GL_Test.Context is
    end Display_Context_Information;
 
 begin
-   Glfw.Init;
+   Display_Backend.Init;
    
    Ada.Text_IO.Put_Line
      ("Getting information without request for OpenGL version.");
    
    -- create a window so we have a context
-   Glfw.Display.Open (Mode   => Glfw.Display.Window,
-                      Width  => 500,
-                      Height => 500);
+   Display_Backend.Open_Window (Width  => 500, Height => 500);
  
    Display_Context_Information;
    Ada.Text_IO.New_Line;
  
-   Glfw.Display.Close;
+   Display_Backend.Close_Window;
 
    Ada.Text_IO.Put_Line
      ("Getting information with requested OpenGL version 2.1:");
 
-   Glfw.Display.Hint_Minimum_OpenGL_Version (Major => 2, Minor => 1);
+   Display_Backend.Configure_Minimum_OpenGL_Version (Major => 2, Minor => 1);
 
-   Glfw.Display.Open (Mode   => Glfw.Display.Window,
-                      Width  => 500,
-                      Height => 500);
+   Display_Backend.Open_Window (Width  => 500, Height => 500);
 
    Display_Context_Information;
 
-   Glfw.Display.Close;
+   Display_Backend.Close_Window;
 
    Ada.Text_IO.Put_Line
      ("Getting information with requested OpenGL version 3.2:");
 
-   Glfw.Display.Hint_Minimum_OpenGL_Version (Major => 3, Minor => 2);
+   Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
 
-   Glfw.Display.Open (Mode   => Glfw.Display.Window,
-                      Width  => 500,
-                      Height => 500);
+   Display_Backend.Open_Window (Width  => 500, Height => 500);
 
    Display_Context_Information;
 
-   Glfw.Terminate_Glfw;
+   Display_Backend.Shutdown;
 end GL_Test.Context;

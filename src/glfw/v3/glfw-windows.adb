@@ -153,7 +153,7 @@ package body Glfw.Windows is
    end Raw_Character_Callback;
 
    procedure Init(Object        : not null access Window;
-                  Width, Height : Natural;
+                  Width, Height : Size;
                   Title         : String;
                   Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                   Share_Resources_With : access Window'Class := null) is
@@ -178,23 +178,114 @@ package body Glfw.Windows is
       API.Set_Window_User_Pointer (Object.Handle, Object);
    end Init;
 
+   function Initialized (Object : not null access Window) return Boolean is
+      use type System.Address;
+   begin
+      return Object.Handle /= System.Null_Address;
+   end Initialized;
+
+   procedure Destroy (Object : not null access Window) is
+   begin
+      API.Destroy_Window (Object.Handle);
+      Object.Handle := System.Null_Address;
+   end Destroy;
+
+   procedure Show (Object : not null access Window) is
+   begin
+      API.Show_Window (Object.Handle);
+   end Show;
+
+   procedure Hide (Object : not null access Window) is
+   begin
+      API.Hide_Window (Object.Handle);
+   end Hide;
+
+   procedure Set_Title (Object : not null access Window; Value : String) is
+      C_Title : Interfaces.C.Strings.chars_ptr
+        := Interfaces.C.Strings.New_String (Value);
+   begin
+      API.Set_Window_Title (Object.Handle, C_Title);
+      Interfaces.C.Strings.Free (C_Title);
+   end Set_Title;
+
+   function Key_State (Object : not null access Window; Key : Input.Keys.Key)
+                       return Input.Button_State is
+   begin
+      return API.Get_Key (Object.Handle, Key);
+   end Key_State;
+
+   function Mouse_Button_State (Object : not null access Window;
+                                Button : Input.Mouse.Button)
+                                return Input.Button_State is
+   begin
+      return API.Get_Mouse_Button (Object.Handle, Button);
+   end Mouse_Button_State;
+
+   procedure Get_Position (Object : not null access Window;
+                           X, Y : out Coordinate) is
+   begin
+      API.Get_Window_Pos (Object.Handle, X, Y);
+   end Get_Position;
+
+   procedure Set_Position (Object : not null access Window;
+                           X, Y : Coordinate) is
+   begin
+      API.Set_Window_Pos (Object.Handle, X, Y);
+   end Set_Position;
+
+   procedure Get_Size (Object : not null access Window;
+                       Width, Height : out Size) is
+   begin
+      API.Get_Window_Size (Object.Handle, Width, Height);
+   end Get_Size;
+
+   procedure Set_Size (Object : not null access Window;
+                       Width, Height : Size) is
+   begin
+      API.Set_Window_Size (Object.Handle, Width, Height);
+   end Set_Size;
+
+   procedure Get_Framebuffer_Size (Object : not null access Window;
+                                   Width, Height : out Size) is
+   begin
+      API.Get_Framebuffer_Size (Object.Handle, Width, Height);
+   end Get_Framebuffer_Size;
+
+   function Visible (Object : not null access Window) return Boolean is
+   begin
+      return Boolean
+        (Bool'(API.Get_Window_Attrib (Object.Handle, Enums.Visible)));
+   end Visible;
+
+   function Iconified (Object : not null access Window) return Boolean is
+   begin
+      return Boolean
+        (Bool'(API.Get_Window_Attrib (Object.Handle, Enums.Iconified)));
+   end Iconified;
+
+   function Focused (Object : not null access Window) return Boolean is
+   begin
+      return Boolean
+        (Bool'(API.Get_Window_Attrib (Object.Handle, Enums.Focused)));
+   end Focused;
+
    procedure Enable_Callback (Object  : not null access Window;
-                              Subject : Callback) is
+                              Subject : Callbacks.Kind) is
    begin
       case Subject is
-         when Position => API.Set_Window_Pos_Callback (Object.Handle, Raw_Position_Callback'Access);
-         when Size => API.Set_Window_Size_Callback (Object.Handle, Raw_Size_Callback'Access);
-         when Close => API.Set_Window_Close_Callback (Object.Handle, Raw_Close_Callback'Access);
-         when Refresh => API.Set_Window_Refresh_Callback (Object.Handle, Raw_Refresh_Callback'Access);
-         when Focus => API.Set_Window_Focus_Callback (Object.Handle, Raw_Focus_Callback'Access);
-         when Iconify => API.Set_Window_Iconify_Callback (Object.Handle, Raw_Iconify_Callback'Access);
-         when Framebuffer_Size => API.Set_Framebuffer_Size_Callback (Object.Handle, Raw_Framebuffer_Size_Callback'Access);
-         when Mouse_Button => API.Set_Mouse_Button_Callback (Object.Handle, Raw_Mouse_Button_Callback'Access);
-         when Mouse_Position => API.Set_Cursor_Pos_Callback (Object.Handle, Raw_Mouse_Position_Callback'Access);
-         when Mouse_Scroll => API.Set_Scroll_Callback (Object.Handle, Raw_Mouse_Scroll_Callback'Access);
-         when Mouse_Enter => API.Set_Cursor_Enter_Callback (Object.Handle, Raw_Mouse_Enter_Callback'Access);
-         when Key => API.Set_Key_Callback (Object.Handle, Raw_Key_Callback'Access);
-         when Char => API.Set_Char_Callback (Object.Handle, Raw_Character_Callback'Access);
+         when Callbacks.Position => API.Set_Window_Pos_Callback (Object.Handle, Raw_Position_Callback'Access);
+         when Callbacks.Size => API.Set_Window_Size_Callback (Object.Handle, Raw_Size_Callback'Access);
+         when Callbacks.Close => API.Set_Window_Close_Callback (Object.Handle, Raw_Close_Callback'Access);
+         when Callbacks.Refresh => API.Set_Window_Refresh_Callback (Object.Handle, Raw_Refresh_Callback'Access);
+         when Callbacks.Focus => API.Set_Window_Focus_Callback (Object.Handle, Raw_Focus_Callback'Access);
+         when Callbacks.Iconify => API.Set_Window_Iconify_Callback (Object.Handle, Raw_Iconify_Callback'Access);
+         when Callbacks.Framebuffer_Size => API.Set_Framebuffer_Size_Callback (Object.Handle, Raw_Framebuffer_Size_Callback'Access);
+         when Callbacks.Mouse_Button => API.Set_Mouse_Button_Callback (Object.Handle, Raw_Mouse_Button_Callback'Access);
+         when Callbacks.Mouse_Position => API.Set_Cursor_Pos_Callback (Object.Handle, Raw_Mouse_Position_Callback'Access);
+         when Callbacks.Mouse_Scroll => API.Set_Scroll_Callback (Object.Handle, Raw_Mouse_Scroll_Callback'Access);
+         when Callbacks.Mouse_Enter => API.Set_Cursor_Enter_Callback (Object.Handle, Raw_Mouse_Enter_Callback'Access);
+         when Callbacks.Key => API.Set_Key_Callback (Object.Handle, Raw_Key_Callback'Access);
+         when Callbacks.Char => API.Set_Char_Callback (Object.Handle, Raw_Character_Callback'Access);
       end case;
    end Enable_Callback;
 

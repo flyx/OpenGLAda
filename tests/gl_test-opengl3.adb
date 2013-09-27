@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -25,8 +25,7 @@ with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Types.Colors;
 
-with Glfw.Display;
-with Glfw.Events;
+with GL_Test.Display_Backend;
 
 procedure GL_Test.OpenGL3 is
    use GL.Buffers;
@@ -122,10 +121,9 @@ procedure GL_Test.OpenGL3 is
    Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffer.Buffer_Object;
    Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
-   Glfw.Init;
-   Glfw.Display.Hint_Minimum_OpenGL_Version (Major => 3, Minor => 2);
-   Glfw.Display.Open (Mode  => Glfw.Display.Window,
-                      Width => 500, Height => 500);
+   Display_Backend.Init;
+   Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
+   Display_Backend.Open_Window (Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
    
    Vertex_Shader.Initialize_Id;
@@ -147,7 +145,7 @@ begin
 
    Ada.Text_IO.Put_Line ("Loaded data");
 
-   while Glfw.Display.Opened loop
+   while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
       
       Array1.Bind;
@@ -160,10 +158,10 @@ begin
       GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
 
       GL.Flush;
-      Glfw.Display.Swap_Buffers;
+      Display_Backend.Swap_Buffers;
 
-      Glfw.Events.Poll_Events;
+      Display_Backend.Poll_Events;
    end loop;
 
-   Glfw.Terminate_Glfw;
+   Display_Backend.Shutdown;
 end GL_Test.OpenGL3;

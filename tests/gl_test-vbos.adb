@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,8 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Glfw.Display;
-with Glfw.Events;
+with Ada.Calendar;
+with Ada.Text_IO;
 
 with GL.Buffers;
 with GL.Objects.Buffer;
@@ -25,8 +25,7 @@ with GL.Immediate;
 with GL.Toggles;
 with GL.Types.Colors;
 
-with Ada.Calendar;
-with Ada.Text_IO;
+with GL_Test.Display_Backend;
 
 procedure GL_Test.VBOs is
    use GL.Fixed.Matrix;
@@ -54,9 +53,8 @@ procedure GL_Test.VBOs is
       (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);
       
 begin
-   Glfw.Init;
-   Glfw.Display.Open (Mode => Glfw.Display.Window,
-                      Depth_Bits => 24);
+   Display_Backend.Init;
+   Display_Backend.Open_Window (640, 480, Depth_Bits => 24);
    
    Projection.Load_Identity;
    Projection.Apply_Frustum (-2.0, 2.0, -1.5, 1.5, 3.0, 20.0);
@@ -113,7 +111,7 @@ begin
       Element_Array_Buffer.Bind (Index_Buffer);
       Load_Index (Element_Array_Buffer, Indexes, Static_Draw);
       
-      while Glfw.Display.Opened loop
+      while Display_Backend.Window_Opened loop
          Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
          
          Modelview.Load_Identity;
@@ -125,20 +123,21 @@ begin
          
          GL.Flush;
          
-         Glfw.Display.Swap_Buffers;
+         Display_Backend.Swap_Buffers;
          
          Cur_Seconds := Ada.Calendar.Seconds (Ada.Calendar.Clock);
          Frame_Count := Frame_Count + 1;
          
          if Cur_Seconds > Last_Seconds + 1.0 or Cur_Seconds < Last_Seconds then
             Last_Seconds := Cur_Seconds;
-            Glfw.Display.Set_Title ("FPS:" & Frame_Count'Img);
+            Display_Backend.Set_Window_Title ("FPS:" & Frame_Count'Img);
             Frame_Count := 0;
          end if;
          
-         Glfw.Events.Poll_Events;
+         Display_Backend.Poll_Events;
+         delay 0.01;
       end loop;
    end;
    
-   Glfw.Terminate_Glfw;
+   Display_Backend.Shutdown;
 end GL_Test.VBOs;

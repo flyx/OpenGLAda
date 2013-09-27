@@ -59,7 +59,7 @@ private package Glfw.Enums is
                         OpenGL_Profile         => 16#22008#);
    for Window_Info'Size use Interfaces.C.int'Size;
 
-   subtype Window_Hint is Window_Info range Refresh_Rate .. OpenGL_Profile;
+   subtype Window_Hint is Window_Info range Resizable .. OpenGL_Profile;
 
    type Input_Toggle is (Mouse_Cursor, Sticky_Keys, Sticky_Mouse_Buttons);
    for Input_Toggle use (Mouse_Cursor         => 16#33001#,

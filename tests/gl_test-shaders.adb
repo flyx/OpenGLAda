@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -24,8 +24,7 @@ with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Types.Colors;
 
-with Glfw.Display;
-with Glfw.Events;
+with GL_Test.Display_Backend;
 
 procedure GL_Test.Shaders is
    use GL.Buffers;
@@ -39,9 +38,8 @@ procedure GL_Test.Shaders is
      (Kind => GL.Objects.Shaders.Fragment_Shader);
    Program         : GL.Objects.Programs.Program;
 begin
-   Glfw.Init;
-   Glfw.Display.Open (Mode  => Glfw.Display.Window,
-                      Width => 500, Height => 500);
+   Display_Backend.Init;
+   Display_Backend.Open_Window (Width => 500, Height => 500);
    
    Vertex_Shader.Initialize_Id;
    Fragment_Shader.Initialize_Id;
@@ -82,7 +80,7 @@ begin
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
    Modelview.Load_Identity;
    
-   while Glfw.Display.Opened loop
+   while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, others => False));
                
       declare
@@ -101,10 +99,10 @@ begin
       Modelview.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
       
       GL.Flush;
-      Glfw.Display.Swap_Buffers;
+      Display_Backend.Swap_Buffers;
       
-      Glfw.Events.Poll_Events;
+      Display_Backend.Poll_Events;
    end loop;
       
-   Glfw.Terminate_Glfw;
+   Display_Backend.Shutdown;
 end GL_Test.Shaders;
