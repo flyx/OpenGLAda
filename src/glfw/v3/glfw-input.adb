@@ -14,18 +14,12 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package Glfw.Input is
+with Glfw.API;
 
-   type Button_State is (Released, Pressed);
+package body Glfw.Input is
 
-   procedure Poll_Events;
-   procedure Wait_For_Events;
-private
-   for Button_State use (Released => 0, Pressed => 1);
-   for Button_State'Size use Interfaces.C.int'Size;
+   procedure Poll_Events renames API.Poll_Events;
 
-   -- just so we can implement them with rename
-   pragma Convention (StdCall, Poll_Events);
-   pragma Convention (StdCall, Wait_For_Events);
+   procedure Wait_For_Events renames API.Wait_Events;
 
 end Glfw.Input;

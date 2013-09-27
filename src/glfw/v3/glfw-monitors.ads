@@ -35,8 +35,13 @@ package Glfw.Monitors is
 
    type Monitor is tagged private;
 
+   No_Monitor : constant Monitor;
+
    type Monitor_List is array (Positive range <>) of Monitor;
    type Video_Mode_List is array (Positive range <>) of aliased Video_Mode;
+
+   pragma Convention (C, Video_Mode);
+   pragma Convention (C, Video_Mode_List);
 
    function Monitors return Monitor_List;
    function Primary_Monitor return Monitor;
@@ -57,10 +62,11 @@ private
       Handle : System.Address;
    end record;
 
+   No_Monitor : constant Monitor := (Handle => System.Null_Address);
+
    for Event use (Connected    => 16#00040001#,
                   Disconnected => 16#00040002#);
    for Event'Size use Interfaces.C.int'Size;
 
-   pragma Convention (C, Video_Mode);
-   pragma Convention (C, Video_Mode_List);
+
 end Glfw.Monitors;

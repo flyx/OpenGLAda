@@ -25,6 +25,7 @@ private with Ada.Finalization;
 package Glfw.Windows is
 
    type Window is tagged private;
+   type Window_Reference is not null access all Window;
 
    type Callback is (Position, Size, Close, Refresh, Focus, Iconify,
                      Framebuffer_Size, Mouse_Button, Mouse_Position,
@@ -36,7 +37,7 @@ package Glfw.Windows is
    procedure Init (Object        : not null access Window;
                    Width, Height : Natural;
                    Title         : String; -- interpreted as UTF-8
-                   Monitor       : Monitors.Monitor;
+                   Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                    Share_Resources_With : access Window'Class := null);
 
    procedure Get_OpenGL_Version (Object : not null access Window;
@@ -70,13 +71,14 @@ package Glfw.Windows is
    procedure Key_Changed (Object   : not null access Window;
                           Key      : Input.Keys.Key;
                           Scancode : Input.Keys.Scancode;
-                          Action   : Input.Keys.Action) is null;
+                          Action   : Input.Keys.Action;
+                          Mods     : Input.Keys.Modifiers) is null;
    procedure Character_Entered (Object : not null access Window;
                                 Char   : Wide_Wide_Character) is null;
 
 private
    type Window is new Ada.Finalization.Controlled with record
-      Handle : System.Address;
+      Handle : System.Address := System.Null_Address;
    end record;
 
    for OpenGL_Profile_Kind use (System_Default => 0,

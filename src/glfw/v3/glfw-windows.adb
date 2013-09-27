@@ -45,7 +45,8 @@ package body Glfw.Windows is
    procedure Raw_Key_Callback (Raw : System.Address;
                                Key : Input.Keys.Key;
                                Scancode : Input.Keys.Scancode;
-                               Action   : Input.Keys.Action);
+                               Action   : Input.Keys.Action;
+                               Mods     : Input.Keys.Modifiers);
    procedure Raw_Character_Callback (Raw  : System.Address;
                                      Char : Interfaces.C.unsigned);
 
@@ -137,9 +138,10 @@ package body Glfw.Windows is
    procedure Raw_Key_Callback (Raw : System.Address;
                                Key : Input.Keys.Key;
                                Scancode : Input.Keys.Scancode;
-                               Action   : Input.Keys.Action) is
+                               Action   : Input.Keys.Action;
+                               Mods     : Input.Keys.Modifiers) is
    begin
-      API.Get_Window_User_Pointer (Raw).Key_Changed (Key, Scancode, Action);
+      API.Get_Window_User_Pointer (Raw).Key_Changed (Key, Scancode, Action, Mods);
    end Raw_Key_Callback;
 
    procedure Raw_Character_Callback (Raw  : System.Address;
@@ -153,7 +155,7 @@ package body Glfw.Windows is
    procedure Init(Object        : not null access Window;
                   Width, Height : Natural;
                   Title         : String;
-                  Monitor       : Monitors.Monitor;
+                  Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                   Share_Resources_With : access Window'Class := null) is
       use type System.Address;
       C_Title : Interfaces.C.Strings.chars_ptr
@@ -190,9 +192,9 @@ package body Glfw.Windows is
          when Mouse_Button => API.Set_Mouse_Button_Callback (Object.Handle, Raw_Mouse_Button_Callback'Access);
          when Mouse_Position => API.Set_Cursor_Pos_Callback (Object.Handle, Raw_Mouse_Position_Callback'Access);
          when Mouse_Scroll => API.Set_Scroll_Callback (Object.Handle, Raw_Mouse_Scroll_Callback'Access);
-         when Mouse_Enter => null;
-         when Key => null;
-         when Char => null;
+         when Mouse_Enter => API.Set_Cursor_Enter_Callback (Object.Handle, Raw_Mouse_Enter_Callback'Access);
+         when Key => API.Set_Key_Callback (Object.Handle, Raw_Key_Callback'Access);
+         when Char => API.Set_Char_Callback (Object.Handle, Raw_Character_Callback'Access);
       end case;
    end Enable_Callback;
 
