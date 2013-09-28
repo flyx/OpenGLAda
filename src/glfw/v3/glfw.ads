@@ -32,6 +32,8 @@ package Glfw is
 
    procedure Version (Major, Minor, Rev : out Natural);
 
+   function Version_String return String;
+
 
    function Time return Seconds;
 

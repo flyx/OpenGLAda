@@ -42,6 +42,11 @@ package body Glfw is
       Rev   := Natural (Raw_Rev);
    end Version;
 
+   function Version_String return String is
+   begin
+      return Interfaces.C.Strings.Value (API.Get_Version_String);
+   end Version_String;
+
    function Time return Seconds is
    begin
       return Api.Get_Time;

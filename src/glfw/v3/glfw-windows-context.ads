@@ -21,11 +21,15 @@ package Glfw.Windows.Context is
    type Robustness_Kind is (No_Robustness, No_Reset_Notification,
                             Lose_Context_On_Reset);
 
+   subtype Swap_Interval is Interfaces.C.int;
+
    procedure Make_Current (Window : access Glfw.Windows.Window'Class);
 
    function Current return access Glfw.Windows.Window'Class;
 
    procedure Swap_Buffers (Window : not null access Glfw.Windows.Window'Class);
+
+   procedure Set_Swap_Interval (Value : Swap_Interval);
 
    function Client_API (Window : not null access Glfw.Windows.Window'Class)
                         return API_Kind;
@@ -61,4 +65,7 @@ private
                             No_Reset_Notification => 16#31001#,
                             Lose_Context_On_Reset => 16#31002#);
    for Robustness_Kind'Size use Interfaces.C.int'Size;
+
+   -- implemented with renames
+   pragma Convention (StdCall, Set_Swap_Interval);
 end Glfw.Windows.Context;

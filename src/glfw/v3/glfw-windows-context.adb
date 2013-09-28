@@ -51,6 +51,9 @@ package body Glfw.Windows.Context is
       API.Swap_Buffers (Window.Handle);
    end Swap_Buffers;
 
+   procedure Set_Swap_Interval (Value : Swap_Interval) renames
+     API.Swap_Interval;
+
    function Client_API (Window : not null access Glfw.Windows.Window'Class)
                         return API_Kind is
    begin

@@ -133,6 +133,10 @@ private package Glfw.API is
    pragma Import (Convention => StdCall, Entity => Get_Version,
                   External_Name => "glfwGetVersion");
 
+   function Get_Version_String return C.Strings.chars_ptr;
+   pragma Import (Convention => StdCall, Entity => Get_Version_String,
+                  External_Name => "glfwGetVersionString");
+
    function Get_Time return C.double;
    pragma Import (Convention => StdCall, Entity => Get_Time,
                   External_Name => "glfwGetTime");
@@ -498,6 +502,10 @@ private package Glfw.API is
    procedure Swap_Buffers (Window : System.Address);
    pragma Import (Convention => StdCall, Entity => Swap_Buffers,
                   External_Name => "glfwSwapBuffers");
+
+   procedure Swap_Interval (Value : Windows.Context.Swap_Interval);
+   pragma Import (Convention => StdCall, Entity => Swap_Interval,
+                  External_Name => "glfwSwapInterval");
 
    -----------------------------------------------------------------------------
    -- Clipboard
