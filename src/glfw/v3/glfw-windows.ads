@@ -35,9 +35,6 @@ package Glfw.Windows is
                     Mouse_Scroll, Mouse_Enter, Key, Char);
    end Callbacks;
 
-   type OpenGL_Profile_Kind is (System_Default, Core_Profile, Compat_Profile);
-   type API_Kind is (OpenGL, OpenGL_ES);
-
    subtype Coordinate is Interfaces.C.int;
 
    procedure Init (Object        : not null access Window;
@@ -80,6 +77,10 @@ package Glfw.Windows is
    function Iconified (Object : not null access Window) return Boolean;
    function Focused   (Object : not null access Window) return Boolean;
 
+   function Should_Close (Object : not null access Window) return Boolean;
+   procedure Set_Should_Close (Object : not null access Window;
+                               Value  : Boolean);
+
    -----------------------------------------------------------------------------
    -- Event API
    -----------------------------------------------------------------------------
@@ -91,7 +92,7 @@ package Glfw.Windows is
                                X, Y : Integer) is null;
    procedure Size_Changed (Object : not null access Window;
                            Width, Height : Natural) is null;
-   procedure Closing (Object : not null access Window) is null;
+   procedure Close_Requested (Object : not null access Window) is null;
    procedure Refresh (Object : not null access Window) is null;
    procedure Focus_Changed (Object : not null access Window;
                             Focused : Boolean) is null;
@@ -121,13 +122,4 @@ private
    type Window is new Ada.Finalization.Controlled with record
       Handle : System.Address := System.Null_Address;
    end record;
-
-   for OpenGL_Profile_Kind use (System_Default => 0,
-                                Core_Profile   => 16#32001#,
-                                Compat_Profile => 16#32002#);
-   for OpenGL_Profile_Kind'Size use Interfaces.C.int'Size;
-
-   for API_Kind use (OpenGL    => 16#30001#,
-                     OpenGL_ES => 16#30002#);
-   for API_Kind'Size use Interfaces.C.int'Size;
 end Glfw.Windows;

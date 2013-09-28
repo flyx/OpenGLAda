@@ -53,17 +53,17 @@ package Glfw.Windows.Hints is
    -- Context related
    -----------------------------------------------------------------------------
 
-   procedure Set_Client_API (Value : API_Kind);
+   procedure Set_Client_API (Value : Context.API_Kind);
 
    procedure Set_Minimum_OpenGL_Version (Major : Positive; Minor : Natural);
 
-   procedure Set_Robustness (Value : Context.Robustness);
+   procedure Set_Robustness (Value : Context.Robustness_Kind);
 
    procedure Set_Forward_Compat (Value : Boolean);
 
    procedure Set_Debug_Context (Value : Boolean);
 
-   procedure Set_Profile (Value : OpenGL_Profile_Kind);
+   procedure Set_Profile (Value : Context.OpenGL_Profile_Kind);
 private
    -- to be able to use renames
    pragma Convention (StdCall, Reset_To_Defaults);

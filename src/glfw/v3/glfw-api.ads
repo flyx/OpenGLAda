@@ -223,11 +223,11 @@ private package Glfw.API is
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : C.int);
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : Bool);
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
-                          Info   : Windows.OpenGL_Profile_Kind);
+                          Info   : Windows.Context.OpenGL_Profile_Kind);
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
-                          Info   : Windows.API_Kind);
+                          Info   : Windows.Context.API_Kind);
    procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
-                          Info   : Glfw.Windows.Context.Robustness);
+                          Info   : Glfw.Windows.Context.Robustness_Kind);
    pragma Import (Convention => StdCall, Entity => Window_Hint,
                   External_Name => "glfwWindowHint");
 
@@ -244,12 +244,12 @@ private package Glfw.API is
                   External_Name => "glfwDestroyWindow");
 
    function Window_Should_Close (Window : System.Address)
-                                 return Interfaces.C.int;
+                                 return Bool;
    pragma Import (Convention => StdCall, Entity => Window_Should_Close,
                   External_Name => "glfwWindowShouldClose");
 
    procedure Set_Window_Should_Close (Window : System.Address;
-                                      Value  : Interfaces.C.int);
+                                      Value  : Bool);
    pragma Import (Convention => StdCall, Entity => Set_Window_Should_Close,
                   External_Name => "glfwSetWindowShouldClose");
 
@@ -309,10 +309,13 @@ private package Glfw.API is
                                Attrib : Enums.Window_Info) return Bool;
    function Get_Window_Attrib (Window : System.Address;
                                Attrib : Enums.Window_Info)
-                               return Windows.API_Kind;
+                               return Windows.Context.API_Kind;
    function Get_Window_Attrib (Window : System.Address;
                                Attrib : Enums.Window_Info)
-                               return Windows.OpenGL_Profile_Kind;
+                               return Windows.Context.OpenGL_Profile_Kind;
+   function Get_Window_Attrib (Window : System.Address;
+                               Attrib : Enums.Window_Info)
+                               return Windows.Context.Robustness_Kind;
    pragma Import (Convention => StdCall, Entity => Get_Window_Attrib,
                   External_Name => "glfwGetWindowAttrib");
 

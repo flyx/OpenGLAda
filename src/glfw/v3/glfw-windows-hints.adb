@@ -88,7 +88,7 @@ package body Glfw.Windows.Hints is
       API.Window_Hint (Enums.Refresh_Rate, Interfaces.C.int (Value));
    end Set_Refresh_Rate;
 
-   procedure Set_Client_API (Value : API_Kind) is
+   procedure Set_Client_API (Value : Context.API_Kind) is
    begin
       API.Window_Hint (Enums.Client_API, Value);
    end Set_Client_API;
@@ -99,7 +99,7 @@ package body Glfw.Windows.Hints is
       API.Window_Hint (Enums.Context_Version_Minor, Interfaces.C.int (Minor));
    end Set_Minimum_OpenGL_Version;
 
-   procedure Set_Robustness (Value : Context.Robustness) is
+   procedure Set_Robustness (Value : Context.Robustness_Kind) is
    begin
       API.Window_Hint (Enums.Context_Robustness, Value);
    end Set_Robustness;
@@ -114,7 +114,7 @@ package body Glfw.Windows.Hints is
       API.Window_Hint (Enums.OpenGL_Debug_Context, Bool (Value));
    end Set_Debug_Context;
 
-   procedure Set_Profile (Value : OpenGL_Profile_Kind) is
+   procedure Set_Profile (Value : Context.OpenGL_Profile_Kind) is
    begin
       API.Window_Hint (Enums.OpenGL_Profile, Value);
    end Set_Profile;

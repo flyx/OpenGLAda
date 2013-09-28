@@ -80,7 +80,7 @@ package body Glfw.Windows is
 
    procedure Raw_Close_Callback (Raw  : System.Address) is
    begin
-      API.Get_Window_User_Pointer (Raw).Closing;
+      API.Get_Window_User_Pointer (Raw).Close_Requested;
    end Raw_Close_Callback;
 
    procedure Raw_Refresh_Callback (Raw  : System.Address) is
@@ -268,6 +268,17 @@ package body Glfw.Windows is
       return Boolean
         (Bool'(API.Get_Window_Attrib (Object.Handle, Enums.Focused)));
    end Focused;
+
+   function Should_Close (Object : not null access Window) return Boolean is
+   begin
+      return Boolean (API.Window_Should_Close (Object.Handle));
+   end Should_Close;
+
+   procedure Set_Should_Close (Object : not null access Window;
+                               Value : Boolean) is
+   begin
+      API.Set_Window_Should_Close (Object.Handle, Bool (Value));
+   end Set_Should_Close;
 
    procedure Enable_Callback (Object  : not null access Window;
                               Subject : Callbacks.Kind) is

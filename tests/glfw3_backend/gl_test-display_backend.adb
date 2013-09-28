@@ -22,7 +22,15 @@ with Glfw.Input.Keys;
 with Glfw.Errors;
 
 package body GL_Test.Display_Backend is
-   Main_Window : Glfw.Windows.Window_Reference := new Glfw.Windows.Window;
+   type Test_Window is new Glfw.Windows.Window with null record;
+
+   overriding
+   procedure Close_Requested (Object : not null access Test_Window) is
+   begin
+      Object.Destroy;
+   end Close_Requested;
+
+   Main_Window : not null access Test_Window := new Test_Window;
 
    procedure Print_Error (Code : Glfw.Errors.Kind; Description : String) is
    begin
@@ -47,6 +55,7 @@ package body GL_Test.Display_Backend is
                            "Test Window");
       end if;
       Main_Window.Show;
+      Main_Window.Enable_Callback (Glfw.Windows.Callbacks.Close);
       Glfw.Windows.Context.Make_Current (Main_Window);
    end Open_Window;
 
@@ -68,13 +77,13 @@ package body GL_Test.Display_Backend is
    function Escape_Pressed return Boolean is
       use type Glfw.Input.Button_State;
    begin
-      return Main_Window.Key_State (Glfw.Input.Keys.Escape)
-        = Glfw.Input.Pressed;
+      return Main_Window.Initialized and then
+        Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed;
    end Escape_Pressed;
 
    function Window_Opened return Boolean is
    begin
-      return Main_Window.Visible;
+      return Main_Window.Initialized and then Main_Window.Visible;
    end Window_Opened;
 
    procedure Close_Window is
@@ -90,7 +99,7 @@ package body GL_Test.Display_Backend is
       -- needed for OSX
       if Major >= 3 then
          Glfw.Windows.Hints.Set_Forward_Compat (True);
-         Glfw.Windows.Hints.Set_Profile (Glfw.Windows.Core_Profile);
+         Glfw.Windows.Hints.Set_Profile (Glfw.Windows.Context.Core_Profile);
       end if;
    end Configure_Minimum_OpenGL_Version;
 
