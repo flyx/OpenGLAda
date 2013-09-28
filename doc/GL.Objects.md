@@ -61,6 +61,8 @@ to the OpenGL object. Some important notes on this:
    object reaches 0.
  * The actual OpenGL object will be created when you bind the reference to a
    target for the first time.
+ * Do not confuse `Initialize_Id` with `Initialize`, which is inherited from
+   `Ada.Finalization.Controlled` and mustn't be called manually.
 
 To use the object, you have to bind it to a target and use the methods of this
 target to configure the currently bound object. The code might look like this:
@@ -70,6 +72,10 @@ declare
    use GL.Objects.Textures;
    My_Texture, My_Other_Texture : Texture;
 begin
+   -- Create IDs for the textures
+   My_Texture.Initialize_Id;
+   My_Other_Texture.Initialize_Id;
+
    -- Bind the texture to a target
    -- (Note that the texture's type is determined by the target it get
    -- bound to. You should not bind the texture to another target afterwards)

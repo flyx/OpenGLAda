@@ -9,7 +9,7 @@ weight : 9
 
 # Setting Shader Input Values
 
-Shaders have to kinds of input parameters: Uniform values and attribute values. Attribute
+Shaders have two kinds of input parameters: Uniform values and attribute values. Attribute
 values are the same as vertices, normals or colors in the fixed pixel pipeline, i.e.
 their value varies with every call. They are only available to the vertex shader.
 Uniform values are available to both the vertex and the fragment shader. They may be
