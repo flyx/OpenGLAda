@@ -499,4 +499,18 @@ private package Glfw.API is
    pragma Import (Convention => StdCall, Entity => Swap_Buffers,
                   External_Name => "glfwSwapBuffers");
 
+   -----------------------------------------------------------------------------
+   -- Clipboard
+   -----------------------------------------------------------------------------
+
+   function Get_Clipboard_String (Window : System.Address)
+                                  return Interfaces.C.Strings.chars_ptr;
+   pragma Import (Convention => StdCall, Entity => Get_Clipboard_String,
+                  External_Name => "glfwGetClipboardString");
+
+   procedure Set_Clipboard_String (Window : System.Address;
+                                   Value  : Interfaces.C.Strings.chars_ptr);
+   pragma Import (Convention => StdCall, Entity => Set_Clipboard_String,
+                  External_Name => "glfwSetClipboardString");
+
 end Glfw.API;

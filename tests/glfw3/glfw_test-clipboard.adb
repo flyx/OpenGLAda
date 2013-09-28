@@ -14,11 +14,11 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Glfw.Windows;
+with Glfw.Windows.Clipboard;
 with Glfw.Monitors;
-with Glfw.Input.Keys;
+with Glfw.Input;
 
-procedure Glfw_Test.Windows is
+procedure Glfw_Test.Clipboard is
 
    type My_Window is new Glfw.Windows.Window with null record;
 
@@ -30,11 +30,8 @@ procedure Glfw_Test.Windows is
                    Share   : access Glfw.Windows.Window'Class := null);
 
    overriding
-   procedure Key_Changed (Object   : not null access My_Window;
-                          Key      : Glfw.Input.Keys.Key;
-                          Scancode : Glfw.Input.Keys.Scancode;
-                          Action   : Glfw.Input.Keys.Action;
-                          Mods     : Glfw.Input.Keys.Modifiers);
+   procedure Focus_Changed (Object : not null access My_Window;
+                            Focused : Boolean);
 
    procedure Init (Object : not null access My_Window;
                    Width, Height : Glfw.Size;
@@ -45,34 +42,32 @@ procedure Glfw_Test.Windows is
         := Glfw.Windows.Window (Object.all)'Access;
    begin
       Upcast.Init (Width, Height, Title, Monitor, Share);
-      Object.Enable_Callback (Glfw.Windows.Callbacks.Key);
+      Glfw.Windows.Clipboard.Set
+        (Object, "Unfocus to change clipboard contents to window title");
+      Object.Enable_Callback (Glfw.Windows.Callbacks.Focus);
    end Init;
 
-   procedure Key_Changed (Object   : not null access My_Window;
-                          Key      : Glfw.Input.Keys.Key;
-                          Scancode : Glfw.Input.Keys.Scancode;
-                          Action   : Glfw.Input.Keys.Action;
-                          Mods     : Glfw.Input.Keys.Modifiers) is
-      use type Glfw.Input.Keys.Key;
+   procedure Focus_Changed (Object : not null access My_Window;
+                            Focused : Boolean) is
    begin
-      If Key = Glfw.Input.Keys.Escape then
-         Object.Set_Should_Close (True);
+      if Focused then
+         Object.Set_Title (Glfw.Windows.Clipboard.Get (Object));
+      else
+         Glfw.Windows.Clipboard.Set
+           (Object, Glfw.Windows.Clipboard.Get (Object) & " | focus lost");
       end if;
-   end Key_Changed;
+   end Focus_Changed;
 
-
-   W1 : aliased Glfw.Windows.Window;
-   W2 : aliased My_Window;
+   W : aliased My_Window;
 begin
    Glfw.Init;
    Enable_Print_Errors;
 
-   W1'Access.Init (640, 480, "Window 1");
-   W2'Access.Init (640, 480, "Window 2");
+   W'Access.Init (640, 480, "");
 
-   while not W2'Access.Should_Close loop
+   while not W'Access.Should_Close loop
       Glfw.Input.Wait_For_Events;
    end loop;
 
    Glfw.Shutdown;
-end Glfw_Test.Windows;
+end Glfw_Test.Clipboard;

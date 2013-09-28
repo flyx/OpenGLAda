@@ -80,5 +80,5 @@ begin
          Ada.Text_IO.Put_Line ("--------------------------------------------");
       end loop;
    end;
-   Glfw.Terminate_Glfw;
+   Glfw.Shutdown;
 end Glfw_Test.Monitors;
