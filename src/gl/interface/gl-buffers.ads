@@ -33,11 +33,12 @@ package GL.Buffers is
    
    subtype Stencil_Index is Int;
    
-   -- Aux buffer support was dropped with OpenGL 3
+   -- Aux buffer support was dropped with OpenGL 3.
+   -- this type allows selection of multiple buffers at once
+   -- (Front => Front_Left and Front_Right and so on)
    type Color_Buffer_Selector is (None, Front_Left,
                                   Front_Right, Back_Left, Back_Right,
-                                  Front, Back, Left, Right, Front_And_Back,
-                                  Aux0, Aux1, Aux2, Aux3);
+                                  Front, Back, Left, Right, Front_And_Back);
    
    -- defined here because of following subtype declaration
    for Color_Buffer_Selector use (None           => 0,
@@ -49,19 +50,40 @@ package GL.Buffers is
                                   Back           => 16#0405#,
                                   Left           => 16#0406#,
                                   Right          => 16#0407#,
-                                  Front_And_Back => 16#0408#,
-                                  Aux0           => 16#0409#,
-                                  Aux1           => 16#040A#,
-                                  Aux2           => 16#040B#,
-                                  Aux3           => 16#040C#);
+                                  Front_And_Back => 16#0408#);
    for Color_Buffer_Selector'Size use Low_Level.Enum'Size;
    
    subtype Base_Color_Buffer_Selector is Color_Buffer_Selector
-      range Front .. Front_And_Back;
+     range Front .. Front_And_Back;
+   
+   -- misses Front, Right etc. from above because they may map to multiple
+   -- buffers.
+   type Explicit_Color_Buffer_Selector is (None, Front_Left, Front_Right,
+                                           Back_Left, Back_Right,
+                                           Color_Attachment0,
+                                           Color_Attachment1,
+                                           Color_Attachment2,
+                                           Color_Attachment3,
+                                           Color_Attachment4,
+                                           Color_Attachment5,
+                                           Color_Attachment6,
+                                           Color_Attachment7,
+                                           Color_Attachment8,
+                                           Color_Attachment9,
+                                           Color_Attachment10,
+                                           Color_Attachment11,
+                                           Color_Attachment12,
+                                           Color_Attachment13,
+                                           Color_Attachment14,
+                                           Color_Attachment15);
+   subtype Draw_Buffer_Index is UInt range 0 .. 15;
+   type Explicit_Color_Buffer_List is array (Draw_Buffer_Index range <>)
+     of Explicit_Color_Buffer_Selector;
    
    procedure Clear (Bits : Buffer_Bits);
    
-   procedure Set_Active_Buffer (Selector : Color_Buffer_Selector);
+   procedure Set_Active_Buffer (Selector : Explicit_Color_Buffer_Selector);
+   procedure Set_Active_Buffers (List : Explicit_Color_Buffer_List);
    
    procedure Set_Color_Clear_Value (Value : Colors.Color);
    function Color_Clear_Value return Colors.Color;
@@ -78,8 +100,13 @@ package GL.Buffers is
    
    -- The following procedures are available since OpenGL 3.0
    
-   procedure Clear_Color_Buffer (Selector : Base_Color_Buffer_Selector;
-                                 Value    : Colors.Color);
+   -- for one or multiple color buffers
+   procedure Clear_Color_Buffers (Selector : Base_Color_Buffer_Selector;
+                                  Value    : Colors.Color);
+   
+   -- for one specific draw buffer
+   procedure Clear_Draw_Buffer (Index : Draw_Buffer_Index;
+                                Value : Colors.Color);
    
    procedure Clear_Depth_Buffer (Value : Depth);
    
@@ -97,5 +124,29 @@ private
    end record;
    for Buffer_Bits'Size use Low_Level.Bitfield'Size;
    
+   for Explicit_Color_Buffer_Selector use (None               => 0,
+                                           Front_Left         => 16#0400#,
+                                           Front_Right        => 16#0401#,
+                                           Back_Left          => 16#0402#,
+                                           Back_Right         => 16#0403#,
+                                           Color_Attachment0  => 16#8CE0#,
+                                           Color_Attachment1  => 16#8CE1#,
+                                           Color_Attachment2  => 16#8CE2#,
+                                           Color_Attachment3  => 16#8CE3#,
+                                           Color_Attachment4  => 16#8CE4#,
+                                           Color_Attachment5  => 16#8CE5#,
+                                           Color_Attachment6  => 16#8CE6#,
+                                           Color_Attachment7  => 16#8CE7#,
+                                           Color_Attachment8  => 16#8CE8#,
+                                           Color_Attachment9  => 16#8CE9#,
+                                           Color_Attachment10 => 16#8CEA#,
+                                           Color_Attachment11 => 16#8CEB#,
+                                           Color_Attachment12 => 16#8CEC#,
+                                           Color_Attachment13 => 16#8CED#,
+                                           Color_Attachment14 => 16#8CEE#,
+                                           Color_Attachment15 => 16#8CEF#);
+   for Explicit_Color_Buffer_Selector'Size use Low_Level.Enum'Size;
+   
+   pragma Convention (C, Explicit_Color_Buffer_List);
    
 end GL.Buffers;

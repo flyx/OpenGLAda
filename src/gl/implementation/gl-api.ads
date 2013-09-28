@@ -17,6 +17,7 @@
 with GL.Runtime_Loading;
 
 with GL.Attributes;
+with GL.Blending;
 with GL.Buffers;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
@@ -266,7 +267,20 @@ private package GL.API is
                           Param : Colors.Color);
    pragma Import (Convention => StdCall, Entity => Light_Color,
                   External_Name => "glLightfv");
+   
+   -----------------------------------------------------------------------------
+   --                               Blending                                  --
+   -----------------------------------------------------------------------------
 
+   procedure Blend_Func (Src_Factor, Dst_Factor : Blending.Blend_Factor);
+   pragma Import (Convention => StdCall, Entity => Blend_Func,
+                  External_Name => "glBlendFunc");
+   
+   procedure Blend_Func_I (Buf : Buffers.Draw_Buffer_Index;
+                           Src_Factor, Dst_Factor : Blending.Blend_Factor);
+   pragma Import (Convention => StdCall, Entity => Blend_Func_I,
+                  External_Name => "glBlendFunci");
+   
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
@@ -275,9 +289,12 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Clear,
                   External_Name => "glClear");
 
-   procedure Draw_Buffer (Mode : Buffers.Color_Buffer_Selector);
+   procedure Draw_Buffer (Mode : Buffers.Explicit_Color_Buffer_Selector);
    pragma Import (Convention => StdCall, Entity => Draw_Buffer,
                   External_Name => "glDrawBuffer");
+   
+   procedure Draw_Buffers is new Loader.Procedure_With_2_Params
+     ("glDrawBuffers", UInt, Buffers.Explicit_Color_Buffer_List);
 
    procedure Clear_Color (Red, Green, Blue, Alpha : Colors.Component);
    pragma Import (Convention => StdCall, Entity => Clear_Color,
@@ -299,6 +316,10 @@ private package GL.API is
    procedure Clear_Buffer is new Loader.Procedure_With_3_Params
      ("glClearBufferfv", Buffers.Color_Buffer_Selector, Zero, Colors.Color);
 
+   procedure Clear_Draw_Buffer is new Loader.Procedure_With_3_Params
+     ("glClearBufferfv", Low_Level.Enums.Only_Color_Buffer,
+      Buffers.Draw_Buffer_Index, Colors.Color);
+   
    type Depth_Pointer is access constant Buffers.Depth;
    procedure Clear_Buffer_Depth is new Loader.Procedure_With_3_Params
      ("glClearBufferfv", Low_Level.Enums.Only_Depth_Buffer, Zero,

@@ -31,11 +31,17 @@ package body GL.Buffers is
       Check_OpenGL_Error;
    end Clear;
 
-   procedure Set_Active_Buffer (Selector : Color_Buffer_Selector) is
+   procedure Set_Active_Buffer (Selector : Explicit_Color_Buffer_Selector) is
    begin
       API.Draw_Buffer (Selector);
       Check_OpenGL_Error;
    end Set_Active_Buffer;
+
+   procedure Set_Active_Buffers (List : Explicit_Color_Buffer_List) is
+   begin
+      API.Draw_Buffers (List'Length, List);
+      Check_OpenGL_Error;
+   end Set_Active_Buffers;
 
    procedure Set_Color_Clear_Value (Value : Colors.Color) is
    begin
@@ -95,12 +101,19 @@ package body GL.Buffers is
       return Value;
    end Accum_Clear_Value;
 
-   procedure Clear_Color_Buffer (Selector : Base_Color_Buffer_Selector;
-                                 Value    : Colors.Color) is
+   procedure Clear_Color_Buffers (Selector : Base_Color_Buffer_Selector;
+                                  Value    : Colors.Color) is
    begin
       API.Clear_Buffer (Selector, 0, Value);
       Check_OpenGL_Error;
-   end Clear_Color_Buffer;
+   end Clear_Color_Buffers;
+
+   procedure Clear_Draw_Buffer (Index : Draw_Buffer_Index;
+                                Value : Colors.Color) is
+   begin
+      API.Clear_Draw_Buffer (Low_Level.Enums.Color, Index, Value);
+      Check_OpenGL_Error;
+   end Clear_Draw_Buffer;
 
    procedure Clear_Depth_Buffer (Value : Depth) is
       Aliased_Value : aliased constant Depth := Value;

@@ -60,6 +60,11 @@ package Glfw.Windows is
                                 Button : Input.Mouse.Button)
                                 return Input.Button_State;
 
+   procedure Get_Cursor_Pos (Object : not null access Window;
+                             X, Y   : out Input.Mouse.Coordinate);
+   procedure Set_Cursor_Pos (Object : not null access Window;
+                             X, Y   : Input.Mouse.Coordinate);
+
    procedure Get_Position (Object : not null access Window;
                            X, Y : out Coordinate);
    procedure Set_Position (Object : not null access Window;

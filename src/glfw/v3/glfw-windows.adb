@@ -221,6 +221,18 @@ package body Glfw.Windows is
       return API.Get_Mouse_Button (Object.Handle, Button);
    end Mouse_Button_State;
 
+   procedure Get_Cursor_Pos (Object : not null access Window;
+                             X, Y   : out Input.Mouse.Coordinate) is
+   begin
+      API.Get_Cursor_Pos (Object.Handle, X, Y);
+   end Get_Cursor_Pos;
+
+   procedure Set_Cursor_Pos (Object : not null access Window;
+                             X, Y   : Input.Mouse.Coordinate) is
+   begin
+      API.Set_Cursor_Pos (Object.Handle, X, Y);
+   end Set_Cursor_Pos;
+
    procedure Get_Position (Object : not null access Window;
                            X, Y : out Coordinate) is
    begin

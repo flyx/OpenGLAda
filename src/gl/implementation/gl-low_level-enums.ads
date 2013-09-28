@@ -31,6 +31,7 @@ package GL.Low_Level.Enums is
    type Only_Depth_Buffer is (Depth_Buffer);
    type Only_Stencil_Buffer is (Stencil);
    type Only_Depth_Stencil_Buffer is (Depth_Stencil);
+   type Only_Color_Buffer is (Color);
 private
    for Texture_Kind use (Texture_1D       => 16#0DE0#,
                          Texture_2D       => 16#0DE1#,
@@ -77,4 +78,7 @@ private
    
    for Only_Depth_Stencil_Buffer use (Depth_Stencil => 16#84F9#);
    for Only_Depth_Stencil_Buffer'Size use Enum'Size;
+   
+   for Only_Color_Buffer use (Color => 16#1800#);
+   for Only_Color_Buffer'Size use Enum'Size;
 end GL.Low_Level.Enums;
