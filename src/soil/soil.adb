@@ -23,14 +23,14 @@ package body SOIL is
 
    procedure Load_File_To_Texture
      (File_Name : String;
-      Texture   : in out GL.Objects.Textures.Texture;
-      Format    : Image_Format  := Auto;
+      Texture   : in out GL.Objects.Textures.Texture'Class;
+      Channels  : Image_Format  := Auto;
       Flags     : Texture_Flags := (others => False)) is
 
       C_File_Name : Interfaces.C.Strings.chars_ptr
         := Interfaces.C.Strings.New_String (File_Name);
       Raw_Id : GL.Types.UInt
-        := API.Load_OGL_Texture (C_File_Name, Format, Texture.Raw_Id, Flags);
+        := API.Load_OGL_Texture (C_File_Name, Channels, Texture.Raw_Id, Flags);
    begin
       Interfaces.C.Strings.Free (C_File_Name);
       if Raw_Id = 0 then
@@ -42,9 +42,9 @@ package body SOIL is
    procedure Load_Files_To_Cubemap
      (Pos_X_File, Neg_X_File, Pos_Y_File, Neg_Y_File,
       Pos_Z_File, Neg_Z_File : String;
-      Texture : in out GL.Objects.Textures.Texture;
-      Format  : Image_Format  := Auto;
-      Flags   : Texture_Flags := (others => False)) is
+      Texture  : in out GL.Objects.Textures.Texture'Class;
+      Channels : Image_Format  := Auto;
+      Flags    : Texture_Flags := (others => False)) is
 
       use Interfaces.C.Strings;
 
@@ -56,7 +56,7 @@ package body SOIL is
       C_Neg_Z : chars_ptr := New_String (Neg_Z_File);
 
       Raw_Id : GL.Types.UInt := API.Load_OGL_Cubemap
-        (C_Pos_X, C_Neg_X, C_Pos_Y, C_Neg_Y, C_Pos_Z, C_Neg_Z, Format,
+        (C_Pos_X, C_Neg_X, C_Pos_Y, C_Neg_Y, C_Pos_Z, C_Neg_Z, Channels,
          Texture.Raw_Id, Flags);
    begin
       Free (C_Pos_X);
@@ -73,15 +73,15 @@ package body SOIL is
 
    procedure Load_File_To_Cubemap
      (File_Name  : String;
-      Texture    : in out GL.Objects.Textures.Texture;
+      Texture    : in out GL.Objects.Textures.Texture'Class;
       Face_Order : Cubemap_Layout := "EWUDNS";
-      Format     : Image_Format   := Auto;
+      Channels   : Image_Format   := Auto;
       Flags      : Texture_Flags  := (others => False)) is
 
       C_File_Name : Interfaces.C.Strings.chars_ptr
         := Interfaces.C.Strings.New_String (File_Name);
       Raw_Id : GL.Types.UInt
-        := API.Load_OGL_Single_Cubemap (C_File_Name, Face_Order, Format,
+        := API.Load_OGL_Single_Cubemap (C_File_Name, Face_Order, Channels,
                                         Texture.Raw_Id, Flags);
    begin
       Interfaces.C.Strings.Free (C_File_Name);
@@ -93,7 +93,7 @@ package body SOIL is
 
    procedure Load_HDR_Texture
      (File_Name      : String;
-      Texture        : in out GL.Objects.Textures.Texture;
+      Texture        : in out GL.Objects.Textures.Texture'Class;
       Format         : Fake_HDR_Representation;
       Rescale_To_Max : Boolean;
       Flags          : Texture_Flags := (others => False)) is

@@ -59,27 +59,27 @@ package SOIL is
 
    procedure Load_File_To_Texture
      (File_Name : String;
-      Texture   : in out GL.Objects.Textures.Texture;
-      Format    : Image_Format  := Auto;
+      Texture   : in out GL.Objects.Textures.Texture'Class;
+      Channels  : Image_Format  := Auto;
       Flags     : Texture_Flags := (others => False));
 
    procedure Load_Files_To_Cubemap
      (Pos_X_File, Neg_X_File, Pos_Y_File, Neg_Y_File,
       Pos_Z_File, Neg_Z_File : String;
-      Texture : in out GL.Objects.Textures.Texture;
-      Format  : Image_Format  := Auto;
-      Flags   : Texture_Flags := (others => False));
+      Texture  : in out GL.Objects.Textures.Texture'Class;
+      Channels : Image_Format  := Auto;
+      Flags    : Texture_Flags := (others => False));
 
    procedure Load_File_To_Cubemap
      (File_Name  : String;
-      Texture    : in out GL.Objects.Textures.Texture;
+      Texture    : in out GL.Objects.Textures.Texture'Class;
       Face_Order : Cubemap_Layout := "EWUDNS";
-      Format     : Image_Format   := Auto;
+      Channels   : Image_Format   := Auto;
       Flags      : Texture_Flags  := (others => False));
 
    procedure Load_HDR_Texture
      (File_Name      : String;
-      Texture        : in out GL.Objects.Textures.Texture;
+      Texture        : in out GL.Objects.Textures.Texture'Class;
       Format         : Fake_HDR_Representation;
       Rescale_To_Max : Boolean;
       Flags          : Texture_Flags := (others => False));

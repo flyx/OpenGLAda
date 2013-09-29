@@ -95,7 +95,7 @@ private package SOIL.API is
                   External_Name => "SOIL_load_single_cubemap_from_memory");
 
    function Create_OGL_Texture (Data : System.Address;
-                                Width, Height : C.int;
+                                Width, Height : GL.Types.Int;
                                 Channels : Explicit_Image_Format;
                                 Reuse_Texture_Id : GL.Types.UInt;
                                 Flags : Texture_Flags) return GL.Types.UInt;
@@ -103,7 +103,7 @@ private package SOIL.API is
                   External_Name => "SOIL_create_OGL_texture");
 
    function Create_OGL_Single_Cubemap (Data : System.Address;
-                                       Width, Height : C.int;
+                                       Width, Height : GL.Types.Int;
                                        Channels : Image_Format;
                                        Face_Order : Cubemap_Layout;
                                        Reuse_Texture_Id : GL.Types.UInt;
@@ -119,7 +119,7 @@ private package SOIL.API is
                   External_Name => "SOIL_save_screenshot");
 
    function Load_Image (Filename   : C.Strings.chars_ptr;
-                        Width, Height : access C.int;
+                        Width, Height : access GL.Types.Int;
                         Channels : access Explicit_Image_Format;
                         Force_Channels : Image_Format) return System.Address;
    pragma Import (Convention => C, Entity => Load_Image,
@@ -127,7 +127,7 @@ private package SOIL.API is
 
    function Load_Image_From_Memory (Buffer : System.Address;
                                     Buffer_Length : C.int;
-                                    Width, Height : access C.int;
+                                    Width, Height : access GL.Types.Int;
                                     Channels : access Explicit_Image_Format;
                                     Force_Channels : Image_Format)
                                     return System.Address;
@@ -136,7 +136,7 @@ private package SOIL.API is
 
    function Save_Image (Filename      : C.Strings.chars_ptr;
                         Image_Type    : Image_Save_Type;
-                        Width, Height : C.int;
+                        Width, Height : GL.Types.Int;
                         Channels      : Image_Format;
                         Data          : System.Address) return Bool;
    pragma Import (Convention => C, Entity => Save_Image,

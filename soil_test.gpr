@@ -8,7 +8,7 @@ project Soil_Test is
    for Exec_Dir use "bin";
 
    for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/soil";
-   for Main use ("soil_test-basic.adb");
+   for Main use ("soil_test-basic.adb", "soil_test-image.adb");
 
    package Ide renames OpenGL_Shared.Ide;
    package Builder renames OpenGL_Shared.Builder;
