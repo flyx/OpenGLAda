@@ -1,12 +1,11 @@
-with "opengl.gpr";
-with "glfw.gpr";
+with "opengl-glfw";
 
 project OpenGL_Test is
 
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    
-   case Glfw.GLFW_Version is
+   case OpenGL.Glfw.GLFW_Version is
       when "2" => for Source_Dirs use ("tests", "tests/glfw2_backend");
       when "3" => for Source_Dirs use ("tests", "tests/glfw3_backend");
    end case;
@@ -14,21 +13,9 @@ project OpenGL_Test is
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
                  "gl_test-opengl3", "gl_test-context");
    
-   package Ide is
-      for Vcs_Kind use "Git";
-   end Ide;
-
-   package Builder is
-      for Default_Switches ("ada") use ("-s",
-                                        "-gnatE",
-                                        "-g");
-   end Builder;
-
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnat05",
-                                        "-g",
-                                        "-fstack-check");
-   end Compiler;
+   package Ide renames OpenGL_Shared.Ide;
+   package Builder renames OpenGL_Shared.Builder;
+   package Compiler renames OpenGL_Shared.Compiler;
 
 end OpenGL_Test;
 

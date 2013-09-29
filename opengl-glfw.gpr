@@ -1,0 +1,39 @@
+with "opengl_shared";
+with "opengl";
+
+library project OpenGL.Glfw is
+   for Library_Name use "GlfwAda";
+   
+   type GLFW_Version_Type is ("2", "3");
+   GLFW_Version : GLFW_Version_Type := external ("GLFW_Version", "3");
+   
+   GLFW_Sources := ("src/glfw");
+   case GLFW_Version is
+      when "2" => GLFW_Sources := GLFW_Sources & "src/glfw/v2";
+      when "3" => GLFW_Sources := GLFW_Sources & "src/glfw/v3";
+   end case;
+   
+   for Source_Dirs use GLFW_Sources;
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+
+   package Ide renames OpenGL_Shared.Ide;
+   package Builder renames OpenGL_Shared.Builder;
+   package Compiler renames OpenGL_Shared.Compiler;
+
+   package Linker is
+      case OpenGL_Shared.Windowing_System is
+         when "quartz" =>
+            case GLFW_Version is
+               when "2" =>
+                  for Linker_Options use ("-lglfw", "-Wl,-framework,Cocoa");
+               when "3" =>
+                  for Linker_Options use ("-lglfw3", "-Wl,-framework,Cocoa");
+            end case;
+         when "windows" =>
+            for Linker_Options use ("-lglfw", "-lwinmm", "-lgdi32");
+         when "x11" =>
+            for Linker_Options use ("-lglfw", "-lX11");
+      end case;
+   end Linker;
+end OpenGL.Glfw;

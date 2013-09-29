@@ -1,8 +1,9 @@
-with "glfw.gpr";
+with "opengl_shared";
+with "opengl-glfw";
 
 project Glfw_Test is
 
-   case Glfw.GLFW_Version is
+   case OpenGL.Glfw.GLFW_Version is
       when "2" =>
          for Source_Dirs use ("tests/glfw2");
          for Main use ("glfw_test-display.adb", "glfw_test-joystick.adb");
@@ -16,22 +17,9 @@ project Glfw_Test is
    for Library_Dir use "lib";
    for Exec_Dir use "bin";
 
-   package Ide is
-      for Vcs_Kind use "Git";
-   end Ide;
-
-   package Builder is
-      for Default_Switches ("ada") use ("-s",
-                                        "-gnatE",
-                                        "-g");
-   end Builder;
-
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnat05",
-                                        "-g",
-                                        "-fstack-check");
-   end Compiler;
-
+   package Ide renames OpenGL_Shared.Ide;
+   package Builder renames OpenGL_Shared.Builder;
+   package Compiler renames OpenGL_Shared.Compiler;
 
 end Glfw_Test;
 

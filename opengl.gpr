@@ -1,66 +1,34 @@
+with "opengl_shared";
+
 library project OpenGL is
 
-   type Os_Type is
-      ("windows", "linux", "mac");
-   Os : Os_Type := external ("GL_Backend", "linux");
-   
-   type Mode_Type is ("debug", "release");
-   Mode : Mode_Type := external ("mode", "debug");
-
    for Library_Name use "OpenGLAda";
-   case Os is
-      when "windows" => for Source_Dirs use ("src/gl/interface",
-                                             "src/gl/implementation",
-                                             "src/gl/windows");
-      when "linux" => for Source_Dirs use ("src/gl/interface",
-                                           "src/gl/implementation",
-                                           "src/gl/x11");
-      when "mac" => for Source_Dirs use ("src/gl/interface",
-                                         "src/gl/implementation",
-                                         "src/gl/mac");
+   
+   OpenGL_Sources := ("src/gl/interface",
+                      "src/gl/implementation");
+   case OpenGL_Shared.Windowing_System is
+      when "windows" => OpenGL_Sources := OpenGL_Sources & "src/gl/windows";
+      when "x11"     => OpenGL_Sources := OpenGL_Sources & "src/gl/x11";
+      when "quartz"  => OpenGL_Sources := OpenGL_Sources & "src/gl/mac";
    end case;
-
+   
+   for Source_Dirs use OpenGL_Sources;
    for Object_Dir use "obj";
    for Library_Dir use "lib";
 
-   package Ide is
-      for Vcs_Kind use "Git";
-   end Ide;
-
-   package Builder is
-      case Mode is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-s",
-                                              "-gnatE",
-                                              "-g");
-         when "release" =>
-            for Default_Switches ("ada") use ("-s");
-      end case;
-   end Builder;
-
-   package Compiler is
-      case Mode is
-         when "debug" =>
-            for Default_Switches ("ada") use ("-gnat05",
-                                              "-g",
-                                              "-fstack-check");
-         when "release" =>
-            for Default_Switches ("ada") use ("-gnat05",
-                                              "-O2",
-                                              "-gnatn",
-                                              "-fstack-check");
-      end case;
-   end Compiler;
+   package Ide renames OpenGL_Shared.Ide;
+   package Builder renames OpenGL_Shared.Builder;
+   package Compiler renames OpenGL_Shared.Compiler;
 
    package Linker is
-      case Os is
+      case OpenGL_Shared.Windowing_System is
          when "windows" =>
             for Linker_Options use ("-lOpenGL32", "-lGdi32");
 
-         when "linux" =>
+         when "x11" =>
             for Linker_Options use ("-lGL", "-lX11");
 
-         when "mac" =>
+         when "quartz" =>
             for Linker_Options use ("-Wl,-framework,OpenGL,-framework,CoreFoundation");
       end case;
    end Linker;

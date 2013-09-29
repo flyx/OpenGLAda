@@ -1,3 +1,11 @@
+v0.3 (upcoming):
+ * Added packages:
+   - GL.Context
+   - GL.Blending
+ * Added support for GLFW 3
+ * Fixed GLFW 2 imports (calling convention) on Windows
+ * Sanitized and cleaned up build system
+
 v0.2:
 
  * Added joystick support to GLFW wrapper.

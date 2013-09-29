@@ -1,0 +1,50 @@
+project OpenGL_Shared is
+   
+   for Source_Files use ();
+   
+   -- Different operating systems need different linker
+   -- flags. Moreover, some features (such as WGL, GLX,
+   -- CGL) are only available on one specific platform.
+   -- Supported values:
+   --  * windows : Microsoft Windows
+   --  * x11     : X Window System
+   --  * quartz  : Quartz Compositor (OS X)
+   type Windowing_System_Type is
+      ("windows", "x11", "quartz");
+   Windowing_System : Windowing_System_Type
+     := external ("Windowing_System", "x11");
+   
+   type Mode_Type is ("debug", "release");
+   Mode : Mode_Type := external ("mode", "debug");
+   
+   package Ide is
+      for Vcs_Kind use "Git";
+   end Ide;
+   
+   package Builder is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-s",
+                                              "-gnatE",
+                                              "-g");
+         when "release" =>
+            for Default_Switches ("ada") use ("-s");
+      end case;
+   end Builder;
+   
+   package Compiler is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-gnat05",
+                                              "-g",
+                                              "-fstack-check");
+         when "release" =>
+            for Default_Switches ("ada") use ("-gnat05",
+                                              "-O2",
+                                              "-gnatn2",
+                                              "-fstack-check");
+      end case;
+   end Compiler;
+   
+   
+end OpenGL_Shared;
