@@ -50,6 +50,8 @@ package GL.Objects is
    -- This getter is provided for low-level access. Its primary use is to
    -- interact with other C interfaces (e.g. OpenCL)
    function Raw_Id (Object : GL_Object) return UInt;
+   -- Setter for low-level access
+   procedure Set_Raw_Id (Object : GL_Object; Id : UInt);
    
    function "=" (Left, Right : GL_Object) return Boolean;
    
@@ -67,5 +69,8 @@ private
    type GL_Object is abstract new Ada.Finalization.Controlled with record
       Reference : GL_Object_Reference_Access;
    end record;
+   
+   pragma Inline (Raw_Id);
+   pragma Inline (Set_Raw_Id);
       
 end GL.Objects;

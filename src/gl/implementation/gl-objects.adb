@@ -56,6 +56,11 @@ package body GL.Objects is
    begin
       return Object.Reference.GL_Id;
    end Raw_Id;
+   
+   procedure Set_Raw_Id (Object : GL_Object; Id : UInt) is
+   begin
+      Object.Reference.GL_Id := Id;
+   end Set_Raw_Id;
 
    function "=" (Left, Right : GL_Object) return Boolean is
    begin
