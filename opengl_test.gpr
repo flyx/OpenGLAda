@@ -5,10 +5,7 @@ project OpenGL_Test is
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    
-   case OpenGL.Glfw.GLFW_Version is
-      when "2" => for Source_Dirs use ("tests", "tests/glfw2_backend");
-      when "3" => for Source_Dirs use ("tests", "tests/glfw3_backend");
-   end case;
+   for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/gl";
    
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
                  "gl_test-opengl3", "gl_test-context");

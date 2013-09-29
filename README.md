@@ -2,7 +2,7 @@
 
 ## Overview
 
-**OpenGLAda** is a thick OpenGL binding for the Ada programming language.
+**OpenGLAda** is a thick OpenGL binding for the Ada 2005 programming language.
 Unlike other, thin, bindings (see the [project's homepage][4] for a list),
 OpenGLAda enriches the original API with concepts and features provided by
 Ada, like object orientation, type safety and generics.
@@ -18,6 +18,10 @@ bindings to the following OpenGL-related libraries:
    significant differences between these two, the most prominent being that
    GLFW 3 can handle multiple windows. You can set the desired GLFW version
    for the binding at compile time.
+ * [SOIL][10]: The *Simple OpenGL Image Library*. This is a very tiny library
+   for loading image files into OpenGL textures. It is public domain. Because
+   it's so tiny, it is linked directly into OpenGLAda. Its source is included
+   in the OpenGLAda sources.
    
 OpenGLAda supports MacOSX, Windows and X11-based systems.
 
@@ -151,9 +155,19 @@ files from the source directory by using relative paths, so they only work with
 For additional information and documentation, see the
 [project's homepage][4].
 
+## License
+
+OpenGLAda is distributed under the terms of the [ISC License][7]. The Ada 2012
+logo that is used in the SOIL tests is distributed under the terms of the
+[CC BY-ND 3.0][8] license, the original author is [AdaCore][9].
+
  [1]: http://libre.adacore.com/
  [2]: http://www.adacore.com/gnatpro/toolsuite/gprbuild/
  [3]: http://www.glfw.org/
  [4]: http://flyx.github.io/OpenGLAda/
  [5]: http://gcc.gnu.org/wiki/GNAT
  [6]: http://www.glfw.org/docs/3.0/moving.html
+ [7]: http://opensource.org/licenses/ISC
+ [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
+ [9]: http://www.ada2012.org/#the_logo
+ [10]: http://www.lonesock.net/soil.html

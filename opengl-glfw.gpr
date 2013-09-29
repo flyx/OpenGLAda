@@ -8,9 +8,20 @@ library project OpenGL.Glfw is
    GLFW_Version : GLFW_Version_Type := external ("GLFW_Version", "3");
    
    GLFW_Sources := ("src/glfw");
+   
+   -- Most tests need a GLFW window. An abstraction layer is provided
+   -- so that the test work with GLFW 2 and 3. Test project can reference
+   -- this variable in order to include the appropriate sources for
+   -- the defined GLFW version.
+   Shared_Test_Sources := ("tests/shared");
+   
    case GLFW_Version is
-      when "2" => GLFW_Sources := GLFW_Sources & "src/glfw/v2";
-      when "3" => GLFW_Sources := GLFW_Sources & "src/glfw/v3";
+      when "2" =>
+         GLFW_Sources := GLFW_Sources & "src/glfw/v2";
+         Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw2_backend";
+      when "3" =>
+         GLFW_Sources := GLFW_Sources & "src/glfw/v3";
+         Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw3_backend";
    end case;
    
    for Source_Dirs use GLFW_Sources;

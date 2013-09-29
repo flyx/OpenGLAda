@@ -48,9 +48,9 @@ begin
    -- load shader sources and compile shaders
    
    GL.Files.Load_Shader_Source_From_File
-     (Vertex_Shader, "../tests/gl_test-shaders-vertex.glsl");
+     (Vertex_Shader, "../tests/gl/gl_test-shaders-vertex.glsl");
    GL.Files.Load_Shader_Source_From_File
-     (Fragment_Shader, "../tests/gl_test-shaders-fragment.glsl");
+     (Fragment_Shader, "../tests/gl/gl_test-shaders-fragment.glsl");
    
    Vertex_Shader.Compile;
    Fragment_Shader.Compile;
