@@ -83,11 +83,9 @@ package body GL.Objects.Programs is
    
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform is
-      C_Name : C.Strings.chars_ptr := C.Strings.New_String (Name);
-      Result : Uniforms.Uniform :=
-        API.Get_Uniform_Location (Subject.Reference.GL_Id, C_Name);
+      Result : Uniforms.Uniform := API.Get_Uniform_Location
+        (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
-      C.Strings.Free (C_Name);
       Check_OpenGL_Error;
       return Result;
    end Uniform_Location;
@@ -95,20 +93,17 @@ package body GL.Objects.Programs is
    procedure Bind_Attrib_Location (Subject : Program;
                                    Index : Attributes.Attribute;
                                    Name : String) is
-      C_Name : C.Strings.chars_ptr := C.Strings.New_String (Name);
    begin
-      API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index, C_Name);
-      C.Strings.Free (C_Name);
+      API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index,
+                               Interfaces.C.To_C (Name));
       Check_OpenGL_Error;
    end Bind_Attrib_Location;
       
    function Attrib_Location (Subject : Program; Name : String)
      return Attributes.Attribute is
-      C_Name   : C.Strings.chars_ptr := C.Strings.New_String (Name);
-      Location : Attributes.Attribute
-        := API.Get_Attrib_Location (Subject.Reference.GL_Id, C_Name);
+      Location : Attributes.Attribute := API.Get_Attrib_Location
+        (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
-      C.Strings.Free (C_Name);
       Check_OpenGL_Error;
       return Location;
    end Attrib_Location;

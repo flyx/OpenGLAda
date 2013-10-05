@@ -59,7 +59,7 @@ package body Glfw is
 
    function Extension_Supported (Name : String) return Boolean is
    begin
-      return Boolean (Api.Extension_Supported (C.Strings.New_String (Name)));
+      return Boolean (Api.Extension_Supported (Interfaces.C.To_C (Name)));
    end Extension_Supported;
 
 end Glfw;

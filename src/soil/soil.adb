@@ -27,12 +27,10 @@ package body SOIL is
       Channels  : Image_Format  := Auto;
       Flags     : Texture_Flags := (others => False)) is
 
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
       Raw_Id : GL.Types.UInt
-        := API.Load_OGL_Texture (C_File_Name, Channels, Texture.Raw_Id, Flags);
+        := API.Load_OGL_Texture (Interfaces.C.To_C (File_Name),
+                                 Channels, Texture.Raw_Id, Flags);
    begin
-      Interfaces.C.Strings.Free (C_File_Name);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
       end if;
@@ -46,25 +44,15 @@ package body SOIL is
       Channels : Image_Format  := Auto;
       Flags    : Texture_Flags := (others => False)) is
 
-      use Interfaces.C.Strings;
-
-      C_Pos_X : chars_ptr := New_String (Pos_X_File);
-      C_Neg_X : chars_ptr := New_String (Neg_X_File);
-      C_Pos_Y : chars_ptr := New_String (Pos_Y_File);
-      C_Neg_Y : chars_ptr := New_String (Neg_Y_File);
-      C_Pos_Z : chars_ptr := New_String (Pos_Z_File);
-      C_Neg_Z : chars_ptr := New_String (Neg_Z_File);
-
       Raw_Id : GL.Types.UInt := API.Load_OGL_Cubemap
-        (C_Pos_X, C_Neg_X, C_Pos_Y, C_Neg_Y, C_Pos_Z, C_Neg_Z, Channels,
+        (Interfaces.C.To_C (Pos_X_File),
+         Interfaces.C.To_C (Neg_X_File),
+         Interfaces.C.To_C (Pos_Y_File),
+         Interfaces.C.To_C (Neg_Y_File),
+         Interfaces.C.To_C (Pos_Z_File),
+         Interfaces.C.To_C (Neg_Z_File), Channels,
          Texture.Raw_Id, Flags);
    begin
-      Free (C_Pos_X);
-      Free (C_Neg_X);
-      Free (C_Pos_Y);
-      Free (C_Neg_Y);
-      Free (C_Pos_Z);
-      Free (C_Neg_Z);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
       end if;
@@ -78,13 +66,11 @@ package body SOIL is
       Channels   : Image_Format   := Auto;
       Flags      : Texture_Flags  := (others => False)) is
 
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
       Raw_Id : GL.Types.UInt
-        := API.Load_OGL_Single_Cubemap (C_File_Name, Face_Order, Channels,
+        := API.Load_OGL_Single_Cubemap (Interfaces.C.To_C (File_Name),
+                                        Face_Order, Channels,
                                         Texture.Raw_Id, Flags);
    begin
-      Interfaces.C.Strings.Free (C_File_Name);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
       end if;
@@ -98,12 +84,10 @@ package body SOIL is
       Rescale_To_Max : Boolean;
       Flags          : Texture_Flags := (others => False)) is
 
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
       Raw_Id : GL.Types.UInt := API.Load_OGL_HDR_Texture
-        (C_File_Name, Format, Bool (Rescale_To_Max), Texture.Raw_Id, Flags);
+        (Interfaces.C.To_C (File_Name), Format, Bool (Rescale_To_Max),
+         Texture.Raw_Id, Flags);
    begin
-      Interfaces.C.Strings.Free (C_File_Name);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
       end if;
@@ -113,12 +97,9 @@ package body SOIL is
    procedure Save_Screenshot (File_Name  : String;
                               Image_Type : Image_Save_Type;
                               X, Y, Width, Height : GL.Types.Int) is
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
       Result : Bool := API.Save_Screenshot
-        (C_File_Name, Image_Type, X, Y, Width, Height);
+        (Interfaces.C.To_C (File_Name), Image_Type, X, Y, Width, Height);
    begin
-      Interfaces.C.Strings.Free (C_File_Name);
       if not Result then
          raise SOIL_Error with Last_Error;
       end if;

@@ -149,7 +149,7 @@ private package Glfw.API is
    pragma Import (Convention => StdCall, Entity => Sleep,
                   External_Name => "glfwSleep");
 
-   function Extension_Supported (Name : C.Strings.chars_ptr) return Bool;
+   function Extension_Supported (Name : C.char_array) return Bool;
    pragma Import (Convention => StdCall, Entity => Extension_Supported,
                   External_Name => "glfwExtensionSupported");
 
@@ -236,7 +236,7 @@ private package Glfw.API is
                   External_Name => "glfwWindowHint");
 
    function Create_Window (Width, Height : Interfaces.C.int;
-                           Title         : Interfaces.C.Strings.chars_ptr;
+                           Title         : Interfaces.C.char_array;
                            Monitor       : System.Address;
                            Share         : System.Address)
                            return System.Address;
@@ -258,7 +258,7 @@ private package Glfw.API is
                   External_Name => "glfwSetWindowShouldClose");
 
    procedure Set_Window_Title (Window : System.Address;
-                               Title  : Interfaces.C.Strings.chars_ptr);
+                               Title  : Interfaces.C.char_array);
    pragma Import (Convention => StdCall, Entity => Set_Window_Title,
                   External_Name => "glfwSetWindowTitle");
 
@@ -517,7 +517,7 @@ private package Glfw.API is
                   External_Name => "glfwGetClipboardString");
 
    procedure Set_Clipboard_String (Window : System.Address;
-                                   Value  : Interfaces.C.Strings.chars_ptr);
+                                   Value  : Interfaces.C.char_array);
    pragma Import (Convention => StdCall, Entity => Set_Clipboard_String,
                   External_Name => "glfwSetClipboardString");
 

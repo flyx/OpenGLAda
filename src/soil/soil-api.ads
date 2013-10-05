@@ -24,7 +24,7 @@ private package SOIL.API is
 
    package C renames Interfaces.C;
 
-   function Load_OGL_Texture (Filename : C.Strings.chars_ptr;
+   function Load_OGL_Texture (Filename : C.char_array;
                               Force_Channels : Image_Format;
                               Reuse_Texture_Id : GL.Types.UInt;
                               Flags : Texture_Flags) return GL.Types.UInt;
@@ -32,14 +32,14 @@ private package SOIL.API is
                   External_Name => "SOIL_load_OGL_texture");
 
    function Load_OGL_Cubemap (X_Pos_File, X_Neg_File, Y_Pos_File, Y_Neg_File,
-                              Z_Pos_File, Z_Neg_File : C.Strings.chars_ptr;
+                              Z_Pos_File, Z_Neg_File : C.char_array;
                               Force_Channels : Image_Format;
                               Reuse_Texture_Id : GL.Types.UInt;
                               Flags : Texture_Flags) return GL.Types.UInt;
    pragma Import (Convention => C, Entity => Load_OGL_Cubemap,
                   External_Name => "SOIL_load_OGL_cubemap");
 
-   function Load_OGL_Single_Cubemap (Filename : C.Strings.chars_ptr;
+   function Load_OGL_Single_Cubemap (Filename : C.char_array;
                                      Face_Order : Cubemap_Layout;
                                      Force_Channels : Image_Format;
                                      Reuse_Texture_Id : GL.Types.UInt;
@@ -48,7 +48,7 @@ private package SOIL.API is
                   External_Name => "SOIL_load_OGL_single_cubemap");
 
    function Load_OGL_HDR_Texture
-     (Filename         : C.Strings.chars_ptr;
+     (Filename         : C.char_array;
       Format           : Fake_HDR_Representation;
       Rescale_To_Max   : Bool;
       Reuse_Texture_Id : GL.Types.UInt;
@@ -112,13 +112,13 @@ private package SOIL.API is
    pragma Import (Convention => C, Entity => Create_OGL_Single_Cubemap,
                   External_Name => "SOIL_create_OGL_single_cubemap");
 
-   function Save_Screenshot (Filename   : C.Strings.chars_ptr;
+   function Save_Screenshot (Filename   : C.char_array;
                              Image_Type : Image_Save_Type;
                              X, Y, Width, Height : GL.Types.Int) return Bool;
    pragma Import (Convention => C, Entity => Save_Screenshot,
                   External_Name => "SOIL_save_screenshot");
 
-   function Load_Image (Filename   : C.Strings.chars_ptr;
+   function Load_Image (Filename   : C.char_array;
                         Width, Height : access GL.Types.Int;
                         Channels : access Explicit_Image_Format;
                         Force_Channels : Image_Format) return System.Address;
@@ -134,7 +134,7 @@ private package SOIL.API is
    pragma Import (Convention => C, Entity => Load_Image_From_Memory,
                   External_Name => "SOIL_load_image_from_memory");
 
-   function Save_Image (Filename      : C.Strings.chars_ptr;
+   function Save_Image (Filename      : C.char_array;
                         Image_Type    : Image_Save_Type;
                         Width, Height : GL.Types.Int;
                         Channels      : Image_Format;

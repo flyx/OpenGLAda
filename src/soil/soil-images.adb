@@ -51,18 +51,14 @@ package body SOIL.Images is
 
    procedure Load (Object : in out Image; File_Name : String) is
       use type System.Address;
-
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
    begin
       if Object.Reference.Pointer /= System.Null_Address then
          API.Free_Image_Data (Object.Reference.Pointer);
       end if;
       Object.Reference.Pointer := API.Load_Image
-        (C_File_Name, Object.Reference.Width'Access,
+        (Interfaces.C.To_C (File_Name), Object.Reference.Width'Access,
          Object.Reference.Height'Access,
          Object.Reference.Channels'Access, Auto);
-      Interfaces.C.Strings.Free (C_File_Name);
       if Object.Reference.Pointer = System.Null_Address then
          raise SOIL_Error with Last_Error;
       end if;
@@ -74,19 +70,16 @@ package body SOIL.Images is
                    Original_Format : out Explicit_Image_Format) is
       use type System.Address;
 
-      C_File_Name : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (File_Name);
       Tmp_Original_Format : aliased Explicit_Image_Format;
    begin
       if Object.Reference.Pointer /= System.Null_Address then
          API.Free_Image_Data (Object.Reference.Pointer);
       end if;
       Object.Reference.Pointer := API.Load_Image
-        (C_File_Name, Object.Reference.Width'Access,
+        (Interfaces.C.To_C (File_Name), Object.Reference.Width'Access,
          Object.Reference.Height'Access,
          Tmp_Original_Format'Access, Auto);
       Original_Format := Tmp_Original_Format;
-      Interfaces.C.Strings.Free (C_File_Name);
       if Object.Reference.Pointer = System.Null_Address then
          raise SOIL_Error with Last_Error;
       end if;
@@ -102,16 +95,10 @@ package body SOIL.Images is
       if Object.Reference.Pointer = System.Null_Address then
          raise SOIL_Error with "No image loaded!";
       end if;
-      declare
-         C_File_Name : Interfaces.C.Strings.chars_ptr
-           := Interfaces.C.Strings.New_String (File_Name);
-      begin
-         Result := API.Save_Image
-           (C_File_Name, Image_Type, Object.Reference.Width,
-            Object.Reference.Height, Object.Reference.Channels,
-            Object.Reference.Pointer);
-         Interfaces.C.Strings.Free (C_File_Name);
-      end;
+      Result := API.Save_Image
+        (Interfaces.C.To_C (File_Name), Image_Type, Object.Reference.Width,
+         Object.Reference.Height, Object.Reference.Channels,
+         Object.Reference.Pointer);
       if not Result then
          raise SOIL_Error with Last_Error;
       end if;

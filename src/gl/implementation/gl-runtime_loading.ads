@@ -40,15 +40,15 @@ package GL.Runtime_Loading is
    
    generic
       Function_Name : String;
-      type Param1_Type is private;
+      type Param1_Type (<>) is private;
       type Return_Type is private;
    function Function_With_1_Param (Param1 : Param1_Type) return Return_Type;
    pragma Inline (Function_With_1_Param);
    
    generic
       Function_Name : String;
-      type Param1_Type is private;
-      type Param2_Type is private;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
       type Return_Type is private;
    function Function_With_2_Params (Param1 : Param1_Type;
                                     Param2 : Param2_Type)
@@ -62,13 +62,13 @@ package GL.Runtime_Loading is
    
    generic
       Procedure_Name : String;
-      type Param1_Type is private;
+      type Param1_Type (<>) is private;
    procedure Procedure_With_1_Param (Param1 : Param1_Type);
    pragma Inline (Procedure_With_1_Param);
    
    generic
       Procedure_Name : String;
-      type Param1_Type is private;
+      type Param1_Type (<>) is private;
       type Param2_Type (<>) is private;
    procedure Procedure_With_2_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type);
@@ -76,8 +76,8 @@ package GL.Runtime_Loading is
    
    generic
       Procedure_Name : String;
-      type Param1_Type is private;
-      type Param2_Type is private;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
       type Param3_Type (<>) is private;
    procedure Procedure_With_3_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type;
@@ -98,8 +98,8 @@ package GL.Runtime_Loading is
    
    generic
       Procedure_Name : String;
-      type Param1_Type is private;
-      type Param2_Type is private;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
       type Param3_Type (<>) is private;
       type Param4_Type (<>) is private;
       type Param5_Type (<>) is private;

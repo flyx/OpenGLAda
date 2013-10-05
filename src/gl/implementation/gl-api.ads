@@ -626,13 +626,13 @@ private package GL.API is
      ("glUseProgram", UInt);
 
    function Get_Uniform_Location is new Loader.Function_With_2_Params
-     ("glGetUniformLocation", UInt, C.Strings.chars_ptr, Uniforms.Uniform);
+     ("glGetUniformLocation", UInt, C.char_array, Uniforms.Uniform);
 
    procedure Bind_Attrib_Location is new Loader.Procedure_With_3_Params
-     ("glBindAttribLocation", UInt, Attributes.Attribute, C.Strings.chars_ptr);
+     ("glBindAttribLocation", UInt, Attributes.Attribute, C.char_array);
 
    function Get_Attrib_Location is new Loader.Function_With_2_Params
-     ("glGetAttribLocation", UInt, C.Strings.chars_ptr, Attributes.Attribute);
+     ("glGetAttribLocation", UInt, C.char_array, Attributes.Attribute);
 
    procedure Vertex_Attrib_Pointer is new Loader.Procedure_With_6_Params
      ("glVertexAttribPointer", Attributes.Attribute, Component_Count, Numeric_Type,

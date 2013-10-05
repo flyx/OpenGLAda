@@ -158,8 +158,7 @@ package body Glfw.Windows is
                   Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                   Share_Resources_With : access Window'Class := null) is
       use type System.Address;
-      C_Title : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (Title);
+      C_Title : Interfaces.C.char_array := Interfaces.C.To_C (Title);
       Share : System.Address;
    begin
       if Object.Handle /= System.Null_Address then
@@ -174,7 +173,6 @@ package body Glfw.Windows is
       Object.Handle := API.Create_Window (Interfaces.C.int (Width),
                                           Interfaces.C.int (Height),
                                           C_Title, Monitor.Raw_Pointer, Share);
-      Interfaces.C.Strings.Free (C_Title);
       API.Set_Window_User_Pointer (Object.Handle, Object);
    end Init;
 
@@ -201,11 +199,8 @@ package body Glfw.Windows is
    end Hide;
 
    procedure Set_Title (Object : not null access Window; Value : String) is
-      C_Title : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (Value);
    begin
-      API.Set_Window_Title (Object.Handle, C_Title);
-      Interfaces.C.Strings.Free (C_Title);
+      API.Set_Window_Title (Object.Handle, Interfaces.C.To_C (Value));
    end Set_Title;
 
    function Key_State (Object : not null access Window; Key : Input.Keys.Key)

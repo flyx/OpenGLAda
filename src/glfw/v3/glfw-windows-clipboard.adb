@@ -33,11 +33,8 @@ package body Glfw.Windows.Clipboard is
    end Get;
 
    procedure Set (Object : not null access Window'Class; Value : String) is
-      C_Value : Interfaces.C.Strings.chars_ptr
-        := Interfaces.C.Strings.New_String (Value);
    begin
-      API.Set_Clipboard_String (Object.Handle, C_Value);
-      Interfaces.C.Strings.Free (C_Value);
+      API.Set_Clipboard_String (Object.Handle, Interfaces.C.To_C (Value));
    end Set;
 
 end Glfw.Windows.Clipboard;

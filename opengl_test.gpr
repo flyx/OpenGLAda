@@ -1,3 +1,4 @@
+with "opengl_shared";
 with "opengl-glfw";
 
 project OpenGL_Test is
