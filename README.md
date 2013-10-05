@@ -22,6 +22,12 @@ bindings to the following OpenGL-related libraries:
    for loading image files into OpenGL textures. It is public domain. Because
    it's so tiny, it is linked directly into OpenGLAda. Its source is included
    in the OpenGLAda sources.
+ * [FTGL][11]: A library built on top of FreeType that provides an API to
+   load TrueType fonts and render text with OpenGL. The Ada wrapper only
+   provides basic functionality to load fonts and render text. As it does not
+   include a wrapper to FreeType, the more low-level functionality has been
+   excluded, it may be available as part of a more complete wrapper included
+   in [Lumen][12] in the future.
    
 OpenGLAda supports MacOSX, Windows and X11-based systems.
 
@@ -36,6 +42,7 @@ In order to build OpenGLAda, you need to have:
    not use `gnatmake` to build the project files, it won't work.
  * An OpenGL implementation (usually comes bundled with your graphics driver)
  * Optionally [GLFW][3]
+ * Optionally [FTGL][11]
 
 _Note_: You may also be able to build OpenGLAda with another Ada compiler and/or
 without using the *.gpr files. You just have to import the sources to your
@@ -134,7 +141,7 @@ implementation:
 
 If you're using GLFW, add `-lglfw` for GLFW 2 or `-lglfw3` for GLFW 3. If you're
 on Windows and link against GLFW as dynamic library, you also need to add
-`-lwinmm`.
+`-lwinmm`. If you're using FTGL, add `-lftgl`.
 
 ## Installation
 
@@ -171,3 +178,5 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
  [10]: http://www.lonesock.net/soil.html
+ [11]: https://sourceforge.net/projects/ftgl/
+ [12]: https://github.com/karakalo/lumen
