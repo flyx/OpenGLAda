@@ -55,6 +55,18 @@ package GL.API.Doubles is
    pragma Import (Convention => StdCall, Entity => Tex_Coord2,
                   External_Name => "glTexCoord2dv");
    
+   procedure Raster_Pos4 (Value : Vector4);
+   pragma Import (Convention => StdCall, Entity => Raster_Pos4,
+                  External_Name => "glRasterPos4dv");
+   
+   procedure Raster_Pos3 (Value : Vector3);
+   pragma Import (Convention => StdCall, Entity => Raster_Pos3,
+                  External_Name => "glRasterPos3dv");
+   
+   procedure Raster_Pos2 (Value : Vector2);
+   pragma Import (Convention => StdCall, Entity => Raster_Pos2,
+                  External_Name => "glRasterPos2dv");
+   
    procedure Vertex_Attrib1 is new Loader.Procedure_With_2_Params
      ("glVertexAttribL1d", Attributes.Attribute, Double);
    

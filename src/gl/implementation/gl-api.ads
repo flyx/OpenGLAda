@@ -651,4 +651,10 @@ private package GL.API is
 
    procedure Disable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
+   
+   -----------------------------------------------------------------------------
+   --           Raster Operations (deprecated as of OpenGL 3.0)               --
+   -----------------------------------------------------------------------------
+   
+   
 end GL.API;
