@@ -66,5 +66,5 @@ package Glfw.Windows.Hints is
    procedure Set_Profile (Value : Context.OpenGL_Profile_Kind);
 private
    -- to be able to use renames
-   pragma Convention (StdCall, Reset_To_Defaults);
+   pragma Convention (C, Reset_To_Defaults);
 end Glfw.Windows.Hints;

@@ -25,7 +25,7 @@ private
    for Button_State'Size use Interfaces.C.int'Size;
 
    -- just so we can implement them with rename
-   pragma Convention (StdCall, Poll_Events);
-   pragma Convention (StdCall, Wait_For_Events);
+   pragma Convention (C, Poll_Events);
+   pragma Convention (C, Wait_For_Events);
 
 end Glfw.Input;

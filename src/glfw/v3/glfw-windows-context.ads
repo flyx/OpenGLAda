@@ -67,5 +67,5 @@ private
    for Robustness_Kind'Size use Interfaces.C.int'Size;
 
    -- implemented with renames
-   pragma Convention (StdCall, Set_Swap_Interval);
+   pragma Convention (C, Set_Swap_Interval);
 end Glfw.Windows.Context;

@@ -15,13 +15,16 @@ library project OpenGL.Glfw is
    -- the defined GLFW version.
    Shared_Test_Sources := ("tests/shared");
    
+   GLFW_Lib := "";
    case GLFW_Version is
       when "2" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v2";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw2_backend";
+         GLFW_Lib := "-lglfw";
       when "3" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v3";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw3_backend";
+         GLFW_Lib := "-lglfw3";
    end case;
    
    for Source_Dirs use GLFW_Sources;
@@ -31,20 +34,15 @@ library project OpenGL.Glfw is
    package Ide renames OpenGL_Shared.Ide;
    package Builder renames OpenGL_Shared.Builder;
    package Compiler renames OpenGL_Shared.Compiler;
-
+   
    package Linker is
       case OpenGL_Shared.Windowing_System is
          when "quartz" =>
-            case GLFW_Version is
-               when "2" =>
-                  for Linker_Options use ("-lglfw", "-Wl,-framework,Cocoa");
-               when "3" =>
-                  for Linker_Options use ("-lglfw3", "-Wl,-framework,Cocoa");
-            end case;
+            for Linker_Options use (GLFW_Lib, "-Wl,-framework,Cocoa");
          when "windows" =>
-            for Linker_Options use ("-lglfw", "-lwinmm", "-lgdi32");
+            for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>
-            for Linker_Options use ("-lglfw", "-lX11");
+            for Linker_Options use (GLFW_Lib, "-lX11");
       end case;
    end Linker;
 end OpenGL.Glfw;

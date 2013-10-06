@@ -55,150 +55,150 @@ private package Glfw.Api is
    pragma Convention (C, Wheel_Callback);
 
    function Init return C.int;
-   pragma Import (Convention => StdCall, Entity => Init,
+   pragma Import (Convention => C, Entity => Init,
                   External_Name => "glfwInit");
 
    procedure Glfw_Terminate;
-   pragma Import (Convention => StdCall, Entity => Glfw_Terminate,
+   pragma Import (Convention => C, Entity => Glfw_Terminate,
                   External_Name => "glfwTerminate");
 
    procedure Get_Version (Major, Minor, Revision : out C.int);
-   pragma Import (Convention => StdCall, Entity => Get_Version,
+   pragma Import (Convention => C, Entity => Get_Version,
                   External_Name => "glfwGetVersion");
 
    function Open_Window (Width, Height, Red_Bits, Green_Bits, Blue_Bits,
                          Alpha_Bits, Depth_Bits, Stencil_Bits : C.int;
                          Mode : Display.Display_Mode) return Bool;
-   pragma Import (Convention => StdCall, Entity => Open_Window,
+   pragma Import (Convention => C, Entity => Open_Window,
                   External_Name => "glfwOpenWindow");
 
    procedure Open_Window_Hint (Target : Glfw.Enums.Window_Hint; Info : C.int);
    procedure Open_Window_Hint (Target : Glfw.Enums.Window_Hint; Info : Bool);
    procedure Open_Window_Hint (Target : Glfw.Enums.Window_Hint;
                                Info : Display.OpenGL_Profile_Kind);
-   pragma Import (Convention => StdCall, Entity => Open_Window_Hint,
+   pragma Import (Convention => C, Entity => Open_Window_Hint,
                   External_Name => "glfwOpenWindowHint");
 
    procedure Close_Window;
-   pragma Import (Convention => StdCall, Entity => Close_Window,
+   pragma Import (Convention => C, Entity => Close_Window,
                   External_Name => "glfwCloseWindow");
 
    procedure Set_Window_Title (Title : C.Strings.chars_ptr);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Title,
+   pragma Import (Convention => C, Entity => Set_Window_Title,
                   External_Name => "glfwSetWindowTitle");
 
    procedure Get_Window_Size (Width, Height : out C.int);
-   pragma Import (Convention => StdCall, Entity => Get_Window_Size,
+   pragma Import (Convention => C, Entity => Get_Window_Size,
                   External_Name => "glfwGetWindowSize");
 
    procedure Set_Window_Size (Width, Height : C.int);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Size,
+   pragma Import (Convention => C, Entity => Set_Window_Size,
                   External_Name => "glfwSetWindowSize");
 
    procedure Set_Window_Pos (X, Y : C.int);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Pos,
+   pragma Import (Convention => C, Entity => Set_Window_Pos,
                   External_Name => "glfwSetWindowPos");
 
    procedure Iconify_Window;
-   pragma Import (Convention => StdCall, Entity => Iconify_Window,
+   pragma Import (Convention => C, Entity => Iconify_Window,
                   External_Name => "glfwIconifyWindow");
 
    procedure Restore_Window;
-   pragma Import (Convention => StdCall, Entity => Restore_Window,
+   pragma Import (Convention => C, Entity => Restore_Window,
                   External_Name => "glfwRestoreWindow");
 
    procedure Swap_Buffers;
-   pragma Import (Convention => StdCall, Entity => Swap_Buffers,
+   pragma Import (Convention => C, Entity => Swap_Buffers,
                   External_Name => "glfwSwapBuffers");
 
    procedure Swap_Interval (Interval : C.int);
-   pragma Import (Convention => StdCall, Entity => Swap_Interval,
+   pragma Import (Convention => C, Entity => Swap_Interval,
                   External_Name => "glfwSwapInterval");
 
    function Get_Window_Param (Param : Enums.Window_Info) return C.int;
    function Get_Window_Param (Param : Enums.Window_Info) return Bool;
    function Get_Window_Param (Param : Enums.Window_Info) return Display.OpenGL_Profile_Kind;
-   pragma Import (Convention => StdCall, Entity => Get_Window_Param,
+   pragma Import (Convention => C, Entity => Get_Window_Param,
                   External_Name => "glfwGetWindowParam");
 
    procedure Set_Window_Size_Callback (Cb : Window_Size_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Size_Callback,
+   pragma Import (Convention => C, Entity => Set_Window_Size_Callback,
                   External_Name => "glfwSetWindowSizeCallback");
 
    procedure Set_Window_Close_Callback (Cb : Window_Close_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Close_Callback,
+   pragma Import (Convention => C, Entity => Set_Window_Close_Callback,
                   External_Name => "glfwSetWindowCloseCallback");
 
    procedure Set_Window_Refresh_Callback (Cb : Window_Refresh_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Window_Refresh_Callback,
+   pragma Import (Convention => C, Entity => Set_Window_Refresh_Callback,
                   External_Name => "glfwSetWindowCloseCallback");
 
    function Get_Video_Modes (List : System.Address;
                              Max_Count : C.int) return C.int;
-   pragma Import (Convention => StdCall, Entity => Get_Video_Modes,
+   pragma Import (Convention => C, Entity => Get_Video_Modes,
                   External_Name => "glfwGetVideoModes");
 
    procedure Get_Desktop_Mode (Mode : access C.int);
-   pragma Import (Convention => StdCall, Entity => Get_Desktop_Mode,
+   pragma Import (Convention => C, Entity => Get_Desktop_Mode,
                   External_Name => "glfwGetDesktopMode");
 
    procedure Poll_Events;
-   pragma Import (Convention => StdCall, Entity => Poll_Events,
+   pragma Import (Convention => C, Entity => Poll_Events,
                   External_Name => "glfwPollEvents");
 
    procedure Wait_Events;
-   pragma Import (Convention => StdCall, Entity => Wait_Events,
+   pragma Import (Convention => C, Entity => Wait_Events,
                   External_Name => "glfwWaitEvents");
 
    function Get_Key (Key : Glfw.Events.Keys.Key) return Glfw.Events.Button_State;
-   pragma Import (Convention => StdCall, Entity => Get_Key,
+   pragma Import (Convention => C, Entity => Get_Key,
                   External_Name => "glfwGetKey");
 
    function Get_Mouse_Button (Button : Glfw.Events.Mouse.Button)
                               return Glfw.Events.Button_State;
-   pragma Import (Convention => StdCall, Entity => Get_Mouse_Button,
+   pragma Import (Convention => C, Entity => Get_Mouse_Button,
                   External_Name => "glfwGetMouseButton");
 
    procedure Get_Mouse_Pos (XPos, YPos : out C.int);
-   pragma Import (Convention => StdCall, Entity => Get_Mouse_Pos,
+   pragma Import (Convention => C, Entity => Get_Mouse_Pos,
                   External_Name => "glfwGetMousePos");
 
    procedure Set_Mouse_Pos (XPos, YPos : C.int);
-   pragma Import (Convention => StdCall, Entity => Set_Mouse_Pos,
+   pragma Import (Convention => C, Entity => Set_Mouse_Pos,
                   External_Name => "glfwSetMousePos");
 
    function Get_Mouse_Wheel return Events.Mouse.Wheel_Position;
-   pragma Import (Convention => StdCall, Entity => Get_Mouse_Wheel,
+   pragma Import (Convention => C, Entity => Get_Mouse_Wheel,
                   External_Name => "glfwGetMouseWheel");
 
    procedure Set_Mouse_Wheel (Position : C.int);
-   pragma Import (Convention => StdCall, Entity => Set_Mouse_Wheel,
+   pragma Import (Convention => C, Entity => Set_Mouse_Wheel,
                   External_Name => "glfwSetMouseWheel");
 
    procedure Set_Key_Callback (CbFun : Key_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Key_Callback,
+   pragma Import (Convention => C, Entity => Set_Key_Callback,
                   External_Name => "glfwSetKeyCallback");
 
    procedure Set_Char_Callback (CbFun : Character_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Char_Callback,
+   pragma Import (Convention => C, Entity => Set_Char_Callback,
                   External_Name => "glfwSetCharCallback");
 
    procedure Set_Mouse_Button_Callback (CbFun : Button_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Mouse_Button_Callback,
+   pragma Import (Convention => C, Entity => Set_Mouse_Button_Callback,
                   External_Name => "glfwSetMouseButtonCallback");
 
    procedure Set_Mouse_Pos_Callback (CbFun : Position_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Mouse_Pos_Callback,
+   pragma Import (Convention => C, Entity => Set_Mouse_Pos_Callback,
                   External_Name => "glfwSetMousePosCallback");
 
    procedure Set_Mouse_Wheel_Callback (CbFun : Wheel_Callback);
-   pragma Import (Convention => StdCall, Entity => Set_Mouse_Wheel_Callback,
+   pragma Import (Convention => C, Entity => Set_Mouse_Wheel_Callback,
                   External_Name => "glfwSetMouseWheelCallback");
    
    function Get_Joystick_Param (Joy   : Enums.Joystick_ID;
                                 Param : Enums.Joystick_Param)
                                return Interfaces.C.int;
-   pragma Import (Convention => StdCall, Entity => Get_Joystick_Param,
+   pragma Import (Convention => C, Entity => Get_Joystick_Param,
                   External_Name => "glfwGetJoystickParam");
    
    -- Pos will be modified on the C side. It should be declared
@@ -209,7 +209,7 @@ private package Glfw.Api is
                               Pos : Events.Joysticks.Axis_Positions;
                               Num_Axis : Interfaces.C.int)
                              return Interfaces.C.int;
-   pragma Import (Convention => StdCall, Entity => Get_Joystick_Pos,
+   pragma Import (Convention => C, Entity => Get_Joystick_Pos,
                   External_Name => "glfwGetJoystickPos");
    
    -- See comment on Get_Joystick_Pos
@@ -217,35 +217,35 @@ private package Glfw.Api is
                                   Pos : Events.Button_States;
                                   Num_Buttons : Interfaces.C.int)
                                  return Interfaces.C.int;
-   pragma Import (Convention => StdCall, Entity => Get_Joystick_Buttons,
+   pragma Import (Convention => C, Entity => Get_Joystick_Buttons,
                   External_Name => "glfwGetJoystickButtons");
 
    function Get_Time return C.double;
-   pragma Import (Convention => StdCall, Entity => Get_Time,
+   pragma Import (Convention => C, Entity => Get_Time,
                   External_Name => "glfwGetTime");
 
    procedure Set_Time (Value : C.double);
-   pragma Import (Convention => StdCall, Entity => Set_Time,
+   pragma Import (Convention => C, Entity => Set_Time,
                   External_Name => "glfwSetTime");
 
    procedure Sleep (Time : C.double);
-   pragma Import (Convention => StdCall, Entity => Sleep,
+   pragma Import (Convention => C, Entity => Sleep,
                   External_Name => "glfwSleep");
 
    function Extension_Supported (Name : C.Strings.chars_ptr) return Bool;
-   pragma Import (Convention => StdCall, Entity => Extension_Supported,
+   pragma Import (Convention => C, Entity => Extension_Supported,
                   External_Name => "glfwExtensionSupported");
 
    procedure Get_GL_Version (Major, Minor, Rev : out C.int);
-   pragma Import (Convention => StdCall, Entity => Get_GL_Version,
+   pragma Import (Convention => C, Entity => Get_GL_Version,
                   External_Name => "glfwGetGLVersion");
 
    procedure Enable (Target : Enums.Feature);
-   pragma Import (Convention => StdCall, Entity => Enable,
+   pragma Import (Convention => C, Entity => Enable,
                   External_Name => "glfwEnable");
 
    procedure Disable (Target : Enums.Feature);
-   pragma Import (Convention => StdCall, Entity => Disable,
+   pragma Import (Convention => C, Entity => Disable,
                   External_Name => "glfwDisable");
 
 end Glfw.Api;

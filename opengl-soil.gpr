@@ -13,7 +13,9 @@ library project OpenGL.Soil is
    package Ide renames OpenGL_Shared.Ide;
    package Builder renames OpenGL_Shared.Builder;
    package Compiler is
-      for Default_Switches ("c") use ("-O2", "-s");
+      -- disable preprocessor warning for C (this is 3rd party code, we just
+      -- want to compile it and hope it doesn't contain any actual bugs)
+      for Default_Switches ("c") use ("-O2", "-s", "-Wp,-w");
       for Default_Switches ("ada") use OpenGL_Shared.Compiler'Default_Switches ("ada");
    end Compiler;
 end OpenGL.Soil;
