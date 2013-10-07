@@ -23,7 +23,7 @@
 						{% for p in site.pages %}
 							{% if p.weight == weight %}
 						
-								{% if p.url contains '/doc/GL' %}
+								{% if p.url contains '/doc/GL' or p.api %}
 									{% assign api = true %}
 								{% else %}
 									{% assign api = false %}

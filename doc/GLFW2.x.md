@@ -3,7 +3,7 @@ layout : default
 title : API - GLFW 2.x Binding
 packages :
   - GLFW (2.x)
-weight: 10
+weight: 11
 ---
 
 # The GLFW 2.x Binding

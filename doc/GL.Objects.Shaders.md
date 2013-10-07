@@ -4,7 +4,7 @@ title : API - Working with Shaders
 packages :
   - GL.Objects.Shaders
   - GL.Objects.Programs
-weight : 8
+weight : 9
 ---
 
 # Working with Shaders

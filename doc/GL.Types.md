@@ -1,7 +1,9 @@
 ---
 layout : default
 title : API - The package GL.Types
-packages : GL.Types
+packages :
+  - GL.Types
+  - GL.Types.Colors
 weight: 3
 ---
 
@@ -15,3 +17,8 @@ For each type, an instance of `GL.Algebra` is available. These instances provide
 vector and matrix types for that base type. The usual mathematical operations on
 vectors and matrices are also available. The vectors and matrices use the indexes
 `X`, `Y`, `Z` and `W`. The `W` value is used in the homogeneous coordinate system.
+
+The child package `GL.Types.Colors` provides the special `Color` type which consists
+of four components which are indexed with `R`, `G`, `B` and `A`. A `Basic_Color`
+without the alpha value is also available. Each color component is a single-precision
+floating point value between `0.0` and `1.0`.

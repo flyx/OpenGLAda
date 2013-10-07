@@ -3,15 +3,19 @@ layout : default
 title : API - The package GL.Matrices
 packages :
   - GL.Fixed
-weight: 5
+  - GL.Fixed.Lighting
+  - GL.Fixed.Matrix
+  - GL.Fixed.Textures
+weight: 6
 ---
 
 # The package `GL.Fixed`
 
 This package includes all functionality related to the fixed function pipeline,
-which has been deprecated with OpenGL 3.0.
+which has been deprecated with OpenGL 3.0. These include:
 
-With the functions of this package, you can enable vertex buffer object functionality
-and draw VBOs. Note that the functionality of passing vertex arrays directly to
-OpenGL is not included here as it offers a very tiny performance gain compared to the
-immediate API.
+ * Vertex buffer object handling (see `gl_test-vbos.adb` in tests)
+ * Lighting configuration (`GL.Fixed.Lighting`)
+ * Modelview, projection, texture and color matrix stacks (`GL.Fixed.Matrix`)
+ * Texture handling (`GL.Fixed.Texture`)
+

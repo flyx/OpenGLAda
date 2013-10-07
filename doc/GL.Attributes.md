@@ -4,7 +4,7 @@ title : API - Setting Shader Input Values
 packages :
   - GL.Attributes
   - GL.Uniforms
-weight : 9
+weight : 10
 ---
 
 # Setting Shader Input Values

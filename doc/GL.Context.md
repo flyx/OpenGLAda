@@ -1,0 +1,25 @@
+---
+layout : default
+title : API - The package GL.Context
+packages :
+  - GL.Context
+weight: 4
+---
+
+# The package `GL.Context`
+
+This package lets you query various information about the current OpenGL
+context:
+
+ * Major and minor OpenGL version (since OpenGL 3)
+ * Version string (legacy for OpenGL 1/2)
+ * Vendor
+ * Renderer
+ * List of supported extensions
+ * Primary shading language version
+ * List of supported shading language versions
+
+There is also `Has_Extension`, which checks whether a given extension
+name is part of the extension list (in case when you're wondering why
+the corresponding GLFW function has not been wrapped; this function
+provides the same functionality).

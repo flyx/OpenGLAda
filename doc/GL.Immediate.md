@@ -3,7 +3,7 @@ layout : default
 title : API - The package GL.Immediate
 packages :
   - GL.Immediate
-weight : 4
+weight : 5
 ---
 
 # The package `GL.Immediate`

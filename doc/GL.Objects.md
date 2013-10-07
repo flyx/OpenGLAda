@@ -3,7 +3,7 @@ layout : default
 title : API - The package GL.Objects
 packages :
   - GL.Objects
-weight: 6
+weight: 7
 ---
 
 # The package `GL.Objects`
