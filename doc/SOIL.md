@@ -2,7 +2,7 @@
 layout : default
 title : API - Simple OpenGL Image Loader
 packages : SOIL
-weight: 13
+weight: 14
 api: true
 ---
 

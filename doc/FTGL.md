@@ -2,7 +2,7 @@
 layout : default
 title : API - FTGL
 packages : FTGL
-weight: 14
+weight: 15
 api : true
 ---
 
