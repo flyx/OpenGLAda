@@ -97,7 +97,6 @@ begin
       Index_Buffer.Initialize_Id;
       
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      Ada.Text_IO.Put_Line (GL.Toggles.State (GL.Toggles.Depth_Test)'Img);
       
       Array_Buffer.Bind (Cube_Buffer);
       Load_Colored_Vertex (Array_Buffer, Cube, Static_Draw);

@@ -42,7 +42,8 @@ library project OpenGL.Glfw is
          when "windows" =>
             for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>
-            for Linker_Options use (GLFW_Lib, "-lX11");
+		    -- -lX11 is already set in opengl.gpr
+            for Linker_Options use (GLFW_Lib);
       end case;
    end Linker;
 end OpenGL.Glfw;
