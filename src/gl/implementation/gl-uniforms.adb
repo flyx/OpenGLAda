@@ -20,7 +20,6 @@ with GL.API.UInts;
 with GL.Low_Level;
 
 package body GL.Uniforms is
-   use type Low_Level.SizeI;
 
    procedure Set_Single (Location : Uniform; Value : Single) renames
      API.Singles.Uniform1;

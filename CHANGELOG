@@ -2,8 +2,12 @@ v0.3 (upcoming):
  * Added packages:
    - GL.Context
    - GL.Blending
+   - GL.Raster
+   - GL.Objects.Framebuffers
+   - GL.Objects.Renderbuffers
  * Added support for GLFW 3
- * Fixed GLFW 2 imports (calling convention) on Windows
+ * Added support for SOIL
+ * Added support for FTGL
  * Sanitized and cleaned up build system
 
 v0.2:

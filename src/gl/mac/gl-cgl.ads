@@ -275,7 +275,7 @@ package GL.CGL is
 
    function CGLGetPixelFormat (ctx : CGLContextObject) return CGLPixelFormatObject;
 
-   function CGLCreatePBuffer (width, height : Low_Level.SizeI;
+   function CGLCreatePBuffer (width, height : Size;
                               target, internalFormat : Low_Level.Enum;
                               max_level : Int;
                               pbuffer : access CGLPBufferObject)
@@ -284,7 +284,7 @@ package GL.CGL is
    function CGLDestroyPBuffer (pbuffer : CGLPBufferObject) return CGLError;
 
    function CGLDescribePBuffer (obj : CGLPBufferObject;
-                                width, height : access Low_Level.SizeI;
+                                width, height : access Size;
                                 target, internalFormat : access Low_Level.Enum;
                                 mipmap : access Int) return CGLError;
 
@@ -300,13 +300,13 @@ package GL.CGL is
    function CGLGetPBufferRetainCount (pbuffer : CGLPBufferObject) return UInt;
 
    function CGLSetOffScreen (ctx : CGLContextObject;
-                             width, height : Low_Level.SizeI;
+                             width, height : Size;
                              rowbytes : Int;
                              baseaddr : Interfaces.C.Extensions.void_ptr)
                              return CGLError;
 
    function CGLGetOffScreen (ctx : CGLContextObject;
-                             width, height : access Low_Level.SizeI;
+                             width, height : access Size;
                              rowbytes : access Int;
                              baseaddr : access Interfaces.C.Extensions.void_ptr)
                              return CGLError;

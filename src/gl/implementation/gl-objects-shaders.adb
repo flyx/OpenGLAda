@@ -32,7 +32,7 @@ package body GL.Objects.Shaders is
    end Set_Source;
    
    function Source (Subject : Shader) return String is
-      Source_Length : Int := 0;
+      Source_Length : Size := 0;
    begin
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Shader_Source_Length, Source_Length);
@@ -42,10 +42,9 @@ package body GL.Objects.Shaders is
          pragma Warnings (Off, Shader_Source);
          C_Shader_Source : C.Strings.chars_ptr
            := C.Strings.New_String (Shader_Source);
-         Actual_Length : Low_Level.SizeI;
+         Actual_Length : Size;
       begin
-         API.Get_Shader_Source (Subject.Reference.GL_Id,
-                                Low_Level.SizeI (Source_Length),
+         API.Get_Shader_Source (Subject.Reference.GL_Id, Source_Length,
                                 Actual_Length, C_Shader_Source);
          Shader_Source
            := C.Strings.Value (C_Shader_Source, C.size_t (Actual_Length));
@@ -68,7 +67,7 @@ package body GL.Objects.Shaders is
    end Compile_Status;
 
    function Info_Log (Subject : Shader) return String is
-      Log_Length : Int := 0;
+      Log_Length : Size := 0;
    begin
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Info_Log_Length, Log_Length);
@@ -79,10 +78,9 @@ package body GL.Objects.Shaders is
          pragma Warnings (Off, Info_Log);
          C_Info_Log : C.Strings.chars_ptr
            := C.Strings.New_String (Info_Log);
-         Actual_Length : Low_Level.SizeI;
+         Actual_Length : Size;
       begin
-         API.Get_Shader_Info_Log (Subject.Reference.GL_Id,
-                           Low_Level.SizeI (Log_Length + 1),
+         API.Get_Shader_Info_Log (Subject.Reference.GL_Id,Log_Length + 1,
                            Actual_Length, C_Info_Log);
          if (Int (Actual_Length) /= Log_Length) then
             raise Constraint_Error with "Expected info log length of" &

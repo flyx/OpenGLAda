@@ -20,17 +20,17 @@ with GL.API;
 -- Fixed function pipeline. Deprecated in OpenGL 3.0.
 package body GL.Fixed is
    procedure Set_Vertex_Pointer (Length : Vertex_Length;
-                                 Stride, Offset : Natural) is
+                                 Stride, Offset : Size) is
       
    begin
       API.Vertex_Pointer (Int (Length), Double_Type,
-                          Low_Level.SizeI (Stride), Int (Offset));
+                          Stride, Offset);
       Check_OpenGL_Error;
    end Set_Vertex_Pointer;
    
-   procedure Set_Color_Pointer  (Stride, Offset : Natural) is
+   procedure Set_Color_Pointer  (Stride, Offset : Size) is
    begin
-      API.Color_Pointer (4, Single_Type, Low_Level.SizeI (Stride),
+      API.Color_Pointer (4, Single_Type, Stride,
                          Int (Offset));
       Check_OpenGL_Error;
    end Set_Color_Pointer;

@@ -32,8 +32,8 @@ package GL.Fixed is
                                    Edge_Flag_Array, Fog_Coord_Array,
                                    Secondary_Color_Array);
    
-   procedure Set_Vertex_Pointer (Length : Vertex_Length; Stride, Offset : Natural);
-   procedure Set_Color_Pointer  (Stride, Offset : Natural);
+   procedure Set_Vertex_Pointer (Length : Vertex_Length; Stride, Offset : Size);
+   procedure Set_Color_Pointer  (Stride, Offset : Size);
    
    procedure Enable (Capability : Client_Side_Capability);
    procedure Disable (Capability : Client_Side_Capability);

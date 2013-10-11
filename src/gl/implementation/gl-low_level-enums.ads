@@ -17,7 +17,14 @@
 package GL.Low_Level.Enums is
    pragma Preelaborate;
    
+   -- Unlike GL.Enums, this package is not private and hosts enum types that may
+   -- be needed by third-party code or wrappers.
+   
    type Texture_Kind is (Texture_1D, Texture_2D, Texture_3D, Texture_Cube_Map);
+   
+   type Renderbuffer_Kind is (Renderbuffer);
+   
+   type Framebuffer_Kind is (Read, Draw, Read_Draw);
    
    type Buffer_Kind is (Array_Buffer, Element_Array_Buffer, Pixel_Pack_Buffer,
                         Pixel_Unpack_Buffer, Uniform_Buffer, Texture_Buffer,
@@ -27,7 +34,7 @@ package GL.Low_Level.Enums is
    
    type Draw_Buffer_Index is (DB0, DB1, DB2, DB3, DB4, DB5, DB6, DB7,
       DB8, DB9, DB10, DB11, DB12, DB13, DB14, DB15);
-      
+   
    type Only_Depth_Buffer is (Depth_Buffer);
    type Only_Stencil_Buffer is (Stencil);
    type Only_Depth_Stencil_Buffer is (Depth_Stencil);
@@ -38,6 +45,14 @@ private
                          Texture_3D       => 16#806F#,
                          Texture_Cube_Map => 16#8513#);
    for Texture_Kind'Size use Enum'Size;
+   
+   for Renderbuffer_Kind use (Renderbuffer => 16#8D41#);
+   for Renderbuffer_Kind'Size use Enum'Size;
+   
+   for Framebuffer_Kind use (Read      => 16#8CA8#,
+                             Draw      => 16#8CA9#,
+                             Read_Draw => 16#8D40#);
+   for Framebuffer_Kind'Size use Enum'Size;
    
    for Buffer_Kind use (Array_Buffer              => 16#8892#,
                         Element_Array_Buffer      => 16#8893#,

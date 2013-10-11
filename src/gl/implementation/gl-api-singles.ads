@@ -48,36 +48,36 @@ package GL.API.Singles is
      ("glUniform1f", Uniforms.Uniform, Single);
    
    procedure Uniform1v is new Loader.Procedure_With_3_Params
-     ("glUniform1fv", Uniforms.Uniform, Low_Level.SizeI, Single_Array);
+     ("glUniform1fv", Uniforms.Uniform, Size, Single_Array);
    
    procedure Uniform2 is new Loader.Procedure_With_3_Params
      ("glUniform2f", Uniforms.Uniform, Single, Single);
    
    procedure Uniform2v is new Loader.Procedure_With_3_Params
-     ("glUniform2fv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
+     ("glUniform2fv", Uniforms.Uniform, Size, Vector2_Array);
    
    procedure Uniform3 is new Loader.Procedure_With_4_Params
      ("glUniform3f", Uniforms.Uniform, Single, Single, Single);
    
    procedure Uniform3v is new Loader.Procedure_With_3_Params
-     ("glUniform3fv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
+     ("glUniform3fv", Uniforms.Uniform, Size, Vector3_Array);
    
    procedure Uniform4 is new Loader.Procedure_With_5_Params
      ("glUniform4f", Uniforms.Uniform, Single, Single, Single, Single);
    
    procedure Uniform4v is new Loader.Procedure_With_3_Params
-     ("glUniform4fv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
+     ("glUniform4fv", Uniforms.Uniform, Size, Vector4_Array);    
    
    procedure Uniform_Matrix2 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix2fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix2fv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix2_Array);
    
    procedure Uniform_Matrix3 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix3fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix3fv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix3_Array);
    
    procedure Uniform_Matrix4 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix4fv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix4fv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix4_Array);
 
    procedure Vertex_Attrib1 is new Loader.Procedure_With_2_Params

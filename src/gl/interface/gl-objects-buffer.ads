@@ -23,7 +23,7 @@ package GL.Objects.Buffer is
                          Static_Draw, Static_Read, Static_Copy,
                          Dynamic_Draw, Dynamic_Read, Dynamic_Copy);
    
-   type Buffer_Target (<>) is tagged private;
+   type Buffer_Target (<>) is tagged limited private;
    
    type Buffer_Object is new GL_Object with private;
    
@@ -42,7 +42,7 @@ package GL.Objects.Buffer is
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
                        Usage  : Buffer_Usage);
    
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Size;
                             Index_Type : Unsigned_Numeric_Type);
    
    overriding
@@ -75,7 +75,8 @@ private
                          Dynamic_Copy => 16#88EA#);
    for Buffer_Usage'Size use Low_Level.Enum'Size;
 
-   type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is tagged null record;
+   type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
+     tagged limited null record;
 
    type Buffer_Object is new GL_Object with null record;
    

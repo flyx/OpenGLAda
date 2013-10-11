@@ -51,8 +51,6 @@ package GL.Low_Level is
 
    type Int_Array  is array (Positive range <>) of aliased Int;
    type UInt_Array is array (Positive range <>) of aliased UInt;
-
-   subtype SizeI is C.int;
    
    -- These types totally are not pointers. No idea why they are named like this.
    subtype IntPtr is C.long;

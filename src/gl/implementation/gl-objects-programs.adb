@@ -53,10 +53,10 @@ package body GL.Objects.Programs is
          -- do not care that string does not get initialized
          pragma Warnings (Off, Info_Log);
          C_Info_Log : C.Strings.chars_ptr := C.Strings.New_String (Info_Log);
-         Actual_Length : Low_Level.SizeI := 0;
+         Actual_Length : Size := 0;
       begin
          API.Get_Program_Info_Log (Subject.Reference.GL_Id,
-                                   Low_Level.SizeI (Log_Length + 1),
+                                   Log_Length + 1,
                                    Actual_Length, C_Info_Log);
          Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
          C.Strings.Free (C_Info_Log);

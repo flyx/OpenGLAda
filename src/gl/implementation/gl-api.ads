@@ -200,22 +200,22 @@ private package GL.API is
    --        Fixed Function Pipeline (deprecated as of OpenGL 3.0)            --
    -----------------------------------------------------------------------------
 
-   procedure Vertex_Pointer (Size      : Int;
+   procedure Vertex_Pointer (Count     : Int;
                              Data_Type : Signed_Numeric_Type;
-                             Stride    : Low_Level.SizeI;
+                             Stride    : Size;
                              Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Vertex_Pointer,
                   External_Name => "glVertexPointer");
 
    procedure Index_Pointer (Data_Type : Signed_Numeric_Type;
-                            Stride    : Low_Level.SizeI;
+                            Stride    : Size;
                             Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Index_Pointer,
                   External_Name => "glIndexPointer");
 
-   procedure Color_Pointer (Size      : Int;
+   procedure Color_Pointer (Count     : Int;
                             Data_Type : Signed_Numeric_Type;
-                            Stride    : Low_Level.SizeI;
+                            Stride    : Size;
                             Pointer   : Int);
    pragma Import (Convention => StdCall, Entity => Color_Pointer,
                   External_Name => "glColorPointer");
@@ -229,12 +229,12 @@ private package GL.API is
                   External_Name => "glDisableClientState");
 
    procedure Draw_Arrays (Mode  : Connection_Mode;
-                          First : Int; Count : Low_Level.SizeI);
+                          First : Int; Count : Size);
    pragma Import (Convention => StdCall, Entity => Draw_Arrays,
                   External_Name => "glDrawArrays");
 
    procedure Draw_Elements (Mode       : Connection_Mode;
-                            Count      : Low_Level.SizeI;
+                            Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Zero);
    pragma Import (Convention => StdCall, Entity => Draw_Elements,
@@ -440,7 +440,7 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Bool,
                   External_Name => "glGetTexParameteriv");
 
-   procedure Gen_Textures (N : Low_Level.SizeI; Textures : access UInt);
+   procedure Gen_Textures (N : Size; Textures : access UInt);
    pragma Import (Convention => StdCall, Entity => Gen_Textures,
                   External_Name => "glGenTextures");
 
@@ -449,14 +449,14 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Bind_Texture,
                   External_Name => "glBindTexture");
 
-   procedure Delete_Textures (N : Low_Level.SizeI; Textures : Low_Level.UInt_Array);
+   procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array);
    pragma Import (Convention => StdCall, Entity => Delete_Textures,
                   External_Name => "glDeleteTextures");
 
    procedure Tex_Image_2D (Target : Objects.Textures.Loader_2D.Target_Kind;
                            Level  : Int;
                            Internal_Format : Pixel_Data.Internal_Format;
-                           Width, Height : Low_Level.SizeI;
+                           Width, Height : Size;
                            Border : Low_Level.Bool;
                            Format : Pixel_Data.Format;
                            Data_Type : Pixel_Data.Data_Type;
@@ -550,10 +550,10 @@ private package GL.API is
    -----------------------------------------------------------------------------
 
    procedure Gen_Buffers is new Loader.Getter_With_2_Params
-      ("glGenBuffers", Low_Level.SizeI, UInt);
+      ("glGenBuffers", Size, UInt);
 
    procedure Delete_Buffers is new Loader.Array_Proc_With_2_Params
-      ("glDeleteBuffers", Low_Level.SizeI, UInt, Low_Level.UInt_Array);
+      ("glDeleteBuffers", Size, UInt, Low_Level.UInt_Array);
 
    procedure Bind_Buffer is new Loader.Procedure_With_2_Params
       ("glBindBuffer", Low_Level.Enums.Buffer_Kind, UInt);
@@ -567,13 +567,45 @@ private package GL.API is
    -----------------------------------------------------------------------------
 
    procedure Gen_Vertex_Arrays is new Loader.Getter_With_2_Params
-     ("glGenVertexArrays", Low_Level.SizeI, UInt);
+     ("glGenVertexArrays", Size, UInt);
 
    procedure Delete_Vertex_Arrays is new Loader.Array_Proc_With_2_Params
-     ("glDeleteVertexArrays", Low_Level.SizeI, UInt, Low_Level.UInt_Array);
+     ("glDeleteVertexArrays", Size, UInt, Low_Level.UInt_Array);
 
    procedure Bind_Vertex_Array is new Loader.Procedure_With_1_Param
      ("glBindVertexArray", UInt);
+   
+   -----------------------------------------------------------------------------
+   --                        Renderbuffer objects                             --
+   -----------------------------------------------------------------------------
+   
+   procedure Gen_Renderbuffers is new Loader.Getter_With_2_Params
+     ("glGenRenderbuffers", Size, UInt);
+   
+   procedure Delete_Renderbuffers is new Loader.Array_Proc_With_2_Params
+     ("glDeleteBuffers", Size, UInt, Low_Level.UInt_Array);
+   
+   procedure Renderbuffer_Storage is new Loader.Procedure_With_4_Params
+     ("glRenderbufferStorage", Low_Level.Enums.Renderbuffer_Kind,
+      Pixel_Data.Internal_Format, Size, Size);
+   
+   procedure Renderbuffer_Storage_Multisample is new
+     Loader.Procedure_With_5_Params ("glRenderbufferStorageMultisample",
+                                     Low_Level.Enums.Renderbuffer_Kind, Size,
+                                     Pixel_Data.Internal_Format, Size, Size);
+   
+   procedure Bind_Renderbuffer is new Loader.Procedure_With_2_Params
+     ("glBindRenderbuffer", Low_Level.Enums.Renderbuffer_Kind, UInt);
+   
+   procedure Get_Renderbuffer_Parameter_Int is new Loader.Getter_With_3_Params
+     ("glGetRenderbufferParameteriv", Low_Level.Enums.Renderbuffer_Kind,
+      Enums.Getter.Renderbuffer_Parameter, Int);
+   
+   procedure Get_Renderbuffer_Parameter_Internal_Format is new
+     Loader.Getter_With_3_Params ("glGetRenderbufferParameteriv",
+                                  Low_Level.Enums.Renderbuffer_Kind,
+                                  Enums.Getter.Renderbuffer_Parameter,
+                                  Pixel_Data.Internal_Format);
 
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
@@ -589,19 +621,19 @@ private package GL.API is
      ("glDeleteShader", UInt);
 
    procedure Shader_Source is new Loader.Procedure_With_4_Params
-     ("glShaderSource", UInt, Low_Level.SizeI, Low_Level.CharPtr_Array,
+     ("glShaderSource", UInt, Size, Low_Level.CharPtr_Array,
       Low_Level.Int_Array);
 
    procedure Get_Shader_Source is
      new Loader.String_Getter_With_4_Params
-     ("glGetShaderSource", Low_Level.SizeI, UInt);
+     ("glGetShaderSource", Size, UInt);
 
    procedure Compile_Shader is new Loader.Procedure_With_1_Param
      ("glCompileShader", UInt);
 
    procedure Get_Shader_Info_Log is
      new Loader.String_Getter_With_4_Params
-     ("glGetShaderInfoLog", Low_Level.SizeI, UInt);
+     ("glGetShaderInfoLog", Size, UInt);
 
    function Create_Program is new Loader.Function_Without_Params
      ("glCreateProgram", UInt);
@@ -620,7 +652,7 @@ private package GL.API is
 
    procedure Get_Program_Info_Log is
      new Loader.String_Getter_With_4_Params
-     ("glGetProgramInfoLog", Low_Level.SizeI, UInt);
+     ("glGetProgramInfoLog", Size, UInt);
 
    procedure Use_Program is new Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
@@ -636,25 +668,20 @@ private package GL.API is
 
    procedure Vertex_Attrib_Pointer is new Loader.Procedure_With_6_Params
      ("glVertexAttribPointer", Attributes.Attribute, Component_Count, Numeric_Type,
-      Low_Level.Bool, Low_Level.SizeI, Int);
+      Low_Level.Bool, Size, Int);
 
    procedure Vertex_AttribI_Pointer is new Loader.Procedure_With_5_Params
      ("glVertexAttribIPointer", Attributes.Attribute, Component_Count, Numeric_Type,
-      Low_Level.SizeI, Int);
+      Size, Int);
 
    procedure Vertex_AttribL_Pointer is new Loader.Procedure_With_5_Params
      ("glVertexAttribLPointer", Attributes.Attribute, Component_Count, Numeric_Type,
-      Low_Level.SizeI, Int);
+      Size, Int);
 
    procedure Enable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glEnableVertexAttribArray", Attributes.Attribute);
 
    procedure Disable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
-   
-   -----------------------------------------------------------------------------
-   --           Raster Operations (deprecated as of OpenGL 3.0)               --
-   -----------------------------------------------------------------------------
-   
    
 end GL.API;

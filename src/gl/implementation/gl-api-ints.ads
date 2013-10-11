@@ -36,36 +36,36 @@ package GL.API.Ints is
      ("glUniform1i", Uniforms.Uniform, Int);
    
    procedure Uniform1v is new Loader.Procedure_With_3_Params
-     ("glUniform1iv", Uniforms.Uniform, Low_Level.SizeI, Int_Array);
+     ("glUniform1iv", Uniforms.Uniform, Size, Int_Array);
    
    procedure Uniform2 is new Loader.Procedure_With_3_Params
      ("glUniform2i", Uniforms.Uniform, Int, Int);
    
    procedure Uniform2v is new Loader.Procedure_With_3_Params
-     ("glUniform2iv", Uniforms.Uniform, Low_Level.SizeI, Vector2_Array);
+     ("glUniform2iv", Uniforms.Uniform, Size, Vector2_Array);
    
    procedure Uniform3 is new Loader.Procedure_With_4_Params
      ("glUniform3i", Uniforms.Uniform, Int, Int, Int);
    
    procedure Uniform3v is new Loader.Procedure_With_3_Params
-     ("glUniform3iv", Uniforms.Uniform, Low_Level.SizeI, Vector3_Array);
+     ("glUniform3iv", Uniforms.Uniform, Size, Vector3_Array);
    
    procedure Uniform4 is new Loader.Procedure_With_5_Params
      ("glUniform4i", Uniforms.Uniform, Int, Int, Int, Int);
    
    procedure Uniform4v is new Loader.Procedure_With_3_Params
-     ("glUniform4iv", Uniforms.Uniform, Low_Level.SizeI, Vector4_Array);    
+     ("glUniform4iv", Uniforms.Uniform, Size, Vector4_Array);    
    
    procedure Uniform_Matrix2 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix2iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix2iv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix2_Array);
    
    procedure Uniform_Matrix3 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix3iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix3iv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix3_Array);
    
    procedure Uniform_Matrix4 is new Loader.Procedure_With_4_Params
-     ("glUniformMatrix4iv", Uniforms.Uniform, Low_Level.SizeI, Low_Level.Bool,
+     ("glUniformMatrix4iv", Uniforms.Uniform, Size, Low_Level.Bool,
       Matrix4_Array);
    
    procedure Vertex_Attrib1 is new Loader.Procedure_With_2_Params

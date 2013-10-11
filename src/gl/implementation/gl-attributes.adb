@@ -23,23 +23,18 @@ with GL.Low_Level;
 
 package body GL.Attributes is
    procedure Set_Vertex_Attrib_Pointer (Index  : Attribute;
-                                        Size   : Component_Count;
+                                        Count  : Component_Count;
                                         Kind   : Numeric_Type;
-                                        Stride, Offset : Natural) is
+                                        Stride, Offset : Size) is
    begin
       case Kind is
          when Single_Type => 
-            API.Vertex_Attrib_Pointer (Index, Size, Kind, Low_Level.False,
-                                       Low_Level.SizeI (Stride),
-                                       Int (Offset));
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.False,
+                                       Stride, Offset);
          when Double_Type =>
-            API.Vertex_AttribL_Pointer (Index, Size, Kind,
-                                        Low_Level.SizeI (Stride),
-                                        Int (Offset));
+            API.Vertex_AttribL_Pointer (Index, Count, Kind, Stride, Offset);
          when others =>
-            API.Vertex_AttribI_Pointer (Index, Size, Kind,
-                                        Low_Level.SizeI (Stride),
-                                        Int (Offset));
+            API.Vertex_AttribI_Pointer (Index, Count, Kind, Stride, Offset);
       end case;
       Check_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;

@@ -37,7 +37,7 @@ package body GL.Objects.Textures is
 
    package Texture_Maps is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type     => Low_Level.Enums.Texture_Kind,
-       Element_Type => Texture,
+       Element_Type => Texture'Class,
        Hash         => Hash,
        Equivalent_Keys => Low_Level.Enums."=");
    use type Texture_Maps.Cursor;
@@ -53,9 +53,9 @@ package body GL.Objects.Textures is
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
          Check_OpenGL_Error;
          if Cursor = Texture_Maps.No_Element then
-            Current_Textures.Insert (Target.Kind, Texture (Object));
+            Current_Textures.Insert (Target.Kind, Object);
          else
-            Current_Textures.Replace_Element (Cursor, Texture (Object));
+            Current_Textures.Replace_Element (Cursor, Object);
          end if;
       end if;
    end Bind;

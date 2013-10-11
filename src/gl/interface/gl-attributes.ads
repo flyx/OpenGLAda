@@ -24,9 +24,9 @@ package GL.Attributes is
    type Attribute is new UInt;
    
    procedure Set_Vertex_Attrib_Pointer (Index  : Attribute;
-                                        Size   : Component_Count;
+                                        Count  : Component_Count;
                                         Kind   : Numeric_Type;
-                                        Stride, Offset : Natural);
+                                        Stride, Offset : Size);
    
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute);
    procedure Disable_Vertex_Attrib_Array (Index : Attribute);

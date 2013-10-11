@@ -33,9 +33,9 @@ package body GL.Objects.Vertex_Arrays is
       Check_OpenGL_Error;
    end Bind;
 
-   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Natural) is
+   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Size) is
    begin
-      API.Draw_Arrays (Mode, Int (First), Low_Level.SizeI (Count));
+      API.Draw_Arrays (Mode, First, Count);
       Check_OpenGL_Error;
    end Draw_Arrays;
 

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,29 +14,28 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL.Objects.Vertex_Arrays is
-   
-   type Vertex_Array_Object is new GL_Object with private;
-   
-   procedure Bind (Object : Vertex_Array_Object);
-   
-   procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Size);
-   
-   function Current_Array_Object return Vertex_Array_Object;
-   
-   overriding
-   procedure Initialize_Id (Object : in out Vertex_Array_Object);
-   
-   overriding
-   procedure Delete_Id (Object : in out Vertex_Array_Object);
-   
-   -- bind this object to unbind the current array object.
-   Null_Array_Object : constant Vertex_Array_Object;
+private with GL.Low_Level.Enums;
+
+package GL.Objects.Framebuffers is
+
+   type Framebuffer_Target (<>) is tagged limited private;
+
+
+
+   Read_Target  : constant Framebuffer_Target;
+   Draw_Target : constant Framebuffer_Target;
+   Read_And_Draw_Target : constant Framebuffer_Target;
+
 private
-   type Vertex_Array_Object is new GL_Object with null record;
-   
-   Null_Array_Object : constant Vertex_Array_Object
-     := Vertex_Array_Object'(Ada.Finalization.Controlled with
-        Reference => null);
-   
-end GL.Objects.Vertex_Arrays;
+
+   type Framebuffer_Target (Kind : Low_Level.Enums.Framebuffer_Kind) is
+     tagged limited null record;
+
+   Read_Target  : constant Framebuffer_Target :=
+     Framebuffer_Target'(Kind => Low_Level.Enums.Read);
+   Draw_Target : constant Framebuffer_Target :=
+     Framebuffer_Target'(Kind => Low_Level.Enums.Draw);
+   Read_And_Draw_Target : constant Framebuffer_Target :=
+     Framebuffer_Target'(Kind => Low_Level.Enums.Read_Draw);
+
+end GL.Objects.Framebuffers;

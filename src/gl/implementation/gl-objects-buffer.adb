@@ -35,7 +35,7 @@ package body GL.Objects.Buffer is
 
    package Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
       (Key_Type     => Low_Level.Enums.Buffer_Kind,
-       Element_Type => Buffer_Object,
+       Element_Type => Buffer_Object'Class,
        Hash         => Hash,
        Equivalent_Keys => Low_Level.Enums."=");
    use type Buffer_Maps.Cursor;
@@ -52,9 +52,9 @@ package body GL.Objects.Buffer is
          API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
          Check_OpenGL_Error;
          if Cursor = Buffer_Maps.No_Element then
-            Current_Buffers.Insert (Target.Kind, Buffer_Object (Object));
+            Current_Buffers.Insert (Target.Kind, Object);
          else
-            Current_Buffers.Replace_Element (Cursor, Buffer_Object (Object));
+            Current_Buffers.Replace_Element (Cursor, Object);
          end if;
       end if;
    end Bind;
@@ -87,10 +87,10 @@ package body GL.Objects.Buffer is
       Check_OpenGL_Error;
    end Allocate;
    
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Natural;
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Size;
                             Index_Type : Unsigned_Numeric_Type) is
    begin
-      API.Draw_Elements (Mode, Low_Level.SizeI (Count), Index_Type, 0);
+      API.Draw_Elements (Mode, Count, Index_Type, 0);
       Check_OpenGL_Error;
    end Draw_Elements;
 

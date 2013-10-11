@@ -27,7 +27,7 @@ package GL.Objects.Textures.Loader_2D is
 
    procedure Load_Empty_Texture (Target: Target_Kind; Level : Integer;
                                  Internal_Format : Pixel_Data.Internal_Format;
-                                 Width, Height : Natural;
+                                 Width, Height : Types.Size;
                                  Border : Boolean;
                                  Format : Pixel_Data.Format;
                                  Data_Type : Pixel_Data.Data_Type);

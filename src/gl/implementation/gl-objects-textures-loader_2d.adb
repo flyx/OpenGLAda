@@ -22,7 +22,7 @@ package body GL.Objects.Textures.Loader_2D is
 
    procedure Load_Empty_Texture (Target: Target_Kind; Level : Integer;
                                  Internal_Format : Pixel_Data.Internal_Format;
-                                 Width, Height : Natural;
+                                 Width, Height : Size;
                                  Border : Boolean;
                                  Format : Pixel_Data.Format;
                                  Data_Type : Pixel_Data.Data_Type) is
@@ -30,8 +30,8 @@ package body GL.Objects.Textures.Loader_2D is
       API.Tex_Image_2D (Target          => Target,
                         Level           => Int (Level),
                         Internal_Format => Internal_Format,
-                        Width           => Low_Level.SizeI (Width),
-                        Height          => Low_Level.SizeI (Height),
+                        Width           => Width,
+                        Height          => Height,
                         Border          => Low_Level.Bool (Border),
                         Format          => Format,
                         Data_Type       => Data_Type,

@@ -73,7 +73,7 @@ package GL.Objects.Textures is
    --                          Texture Targets                                --
    -----------------------------------------------------------------------------
    
-   type Texture_Target (<>) is tagged private;
+   type Texture_Target (<>) is tagged limited private;
 
    procedure Set_Minifying_Filter (Target : Texture_Target;
                                    Filter : Minifying_Function);
@@ -175,7 +175,8 @@ private
                        Intensity => 16#8049#);
    for Depth_Mode'Size use Int'Size;
    
-   type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is tagged null record;
+   type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is
+     tagged limited null record;
    
    Texture_1D       : constant Texture_Target
      := Texture_Target'(Kind => Low_Level.Enums.Texture_1D);
