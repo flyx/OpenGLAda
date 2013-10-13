@@ -234,6 +234,35 @@ package body GL.Runtime_Loading is
          Reference (Param1, Param2, Param3, Param4, Param5, Param6);
       end if;
    end Procedure_With_6_Params;
+   
+   procedure Procedure_With_10_Params (Param1 : Param1_Type;
+                                       Param2 : Param2_Type;
+                                       Param3 : Param3_Type;
+                                       Param4 : Param4_Type;
+                                       Param5 : Param5_Type;
+                                       Param6 : Param6_Type;
+                                       Param7 : Param7_Type;
+                                       Param8 : Param8_Type;
+                                       Param9 : Param9_Type;
+                                       Param10 : Param10_Type) is
+      type Procedure_Reference is
+      access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                        Param3 : Param3_Type; Param4 : Param4_Type;
+                        Param5 : Param5_Type; Param6 : Param6_Type;
+                        Param7 : Param7_Type; Param8 : Param8_Type;
+                        Param9 : Param9_Type; Param10 : Param10_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      else
+         Reference (Param1, Param2, Param3, Param4, Param5, Param6, Param7,
+                    Param8, Param9, Param10);
+      end if;
+   end Procedure_With_10_Params;
 
    procedure Array_Proc_With_2_Params (Param1 : Size_Type;
                                        Param2 : Array_Type) is
@@ -250,7 +279,25 @@ package body GL.Runtime_Loading is
       else
          Reference (Param1, Param2);
       end if;
-   end Array_Proc_With_2_Params;                               
+   end Array_Proc_With_2_Params;
+   
+   procedure Array_Proc_With_3_Params (Param1 : Param1_Type;
+                                       Param2 : Size_Type;
+                                       Param3 : Array_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Size_Type;
+                          Param3 : Array_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      else
+         Reference (Param1, Param2, Param3);
+      end if;
+   end Array_Proc_With_3_Params;
 
    procedure Getter_With_2_Params (Param1 : Param1_Type;
                                    Value  : in out Value_Type) is

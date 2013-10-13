@@ -102,6 +102,7 @@ package body GL.Objects.Shaders is
    procedure Delete_Id (Object : in out Shader) is
    begin
       API.Delete_Shader (Object.Reference.GL_Id);
+      Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
    

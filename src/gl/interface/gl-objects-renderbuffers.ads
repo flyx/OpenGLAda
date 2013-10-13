@@ -19,6 +19,7 @@ with GL.Pixel_Data;
 private with GL.Low_Level.Enums;
 
 package GL.Objects.Renderbuffers is
+   pragma Preelaborate;
 
    type Renderbuffer_Target (<>) is tagged limited private;
 

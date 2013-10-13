@@ -68,6 +68,8 @@ package GL.Objects.Textures is
    --  OpenGL 3.x: At least 48
    --  OpenGL 4.x: At least 80
    subtype Texture_Unit is Int range 0 .. Int'Last;
+   
+   subtype Mipmap_Level is Int range 0 .. Int'Last;
 
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
@@ -90,11 +92,13 @@ package GL.Objects.Textures is
    procedure Set_Maximum_LoD (Target : Texture_Target; Level : Double);
    function Maximum_LoD (Target : Texture_Target) return Double;
 
-   procedure Set_Lowest_Mipmap_Level (Target : Texture_Target; Level : Integer);
-   function Lowest_Mipmap_Level (Target : Texture_Target) return Integer;
+   procedure Set_Lowest_Mipmap_Level (Target : Texture_Target;
+                                      Level : Mipmap_Level);
+   function Lowest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level;
 
-   procedure Set_Highest_Mipmap_Level (Target : Texture_Target; Level : Integer);
-   function Highest_Mipmap_Level (Target : Texture_Target) return Integer;
+   procedure Set_Highest_Mipmap_Level (Target : Texture_Target;
+                                       Level : Mipmap_Level);
+   function Highest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level;
 
    procedure Set_X_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode);
    function X_Wrapping (Target : Texture_Target) return Wrapping_Mode;

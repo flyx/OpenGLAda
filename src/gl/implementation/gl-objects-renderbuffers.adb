@@ -169,6 +169,7 @@ package body GL.Objects.Renderbuffers is
    begin
       API.Delete_Renderbuffers (1, Arr);
       Check_OpenGL_Error;
+      Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
 

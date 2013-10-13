@@ -84,6 +84,7 @@ package body GL.Objects.Textures is
    begin
       API.Delete_Textures (1, Arr);
       Check_OpenGL_Error;
+      Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
 
@@ -160,36 +161,37 @@ package body GL.Objects.Textures is
       return Double (Arr (1));
    end Maximum_LoD;
 
-   procedure Set_Lowest_Mipmap_Level (Target : Texture_Target; Level : Integer) is
+   procedure Set_Lowest_Mipmap_Level (Target : Texture_Target;
+                                      Level : Mipmap_Level) is
    begin
-      API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level,
-                             Int (Level));
+      API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level, Level);
       Check_OpenGL_Error;
    end Set_Lowest_Mipmap_Level;
 
-   function Lowest_Mipmap_Level (Target : Texture_Target) return Integer is
+   function Lowest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level is
       Arr : Low_Level.Int_Array (1 .. 1);
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level,
                                  Arr);
       Check_OpenGL_Error;
-      return Integer (Arr (1));
+      return Arr (1);
    end Lowest_Mipmap_Level;
 
-   procedure Set_Highest_Mipmap_Level (Target : Texture_Target; Level : Integer) is
+   procedure Set_Highest_Mipmap_Level (Target : Texture_Target;
+                                       Level : Mipmap_Level) is
    begin
-      API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level,
-                             Int (Level));
+      API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level, Level);
       Check_OpenGL_Error;
    end Set_Highest_Mipmap_Level;
 
-   function Highest_Mipmap_Level (Target : Texture_Target) return Integer is
+   function Highest_Mipmap_Level (Target : Texture_Target)
+                                  return Mipmap_Level is
       Arr : Low_Level.Int_Array (1 .. 1);
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level,
                                  Arr);
       Check_OpenGL_Error;
-      return Integer (Arr (1));
+      return Arr (1);
    end Highest_Mipmap_Level;
 
    procedure Set_X_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode) is

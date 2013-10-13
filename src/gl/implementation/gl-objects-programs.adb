@@ -78,6 +78,7 @@ package body GL.Objects.Programs is
    procedure Delete_Id (Object : in out Program) is
    begin
       API.Delete_Program (Object.Reference.GL_Id);
+      Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
    

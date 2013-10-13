@@ -26,6 +26,7 @@ with GL.Fixed.Lighting;
 with GL.Low_Level.Enums;
 with GL.Objects.Textures.Loader_2D;
 with GL.Objects.Buffer;
+with GL.Objects.Framebuffers;
 with GL.Objects.Shaders;
 with GL.Pixel_Data;
 with GL.Toggles;
@@ -606,7 +607,48 @@ private package GL.API is
                                   Low_Level.Enums.Renderbuffer_Kind,
                                   Enums.Getter.Renderbuffer_Parameter,
                                   Pixel_Data.Internal_Format);
+   
+   -----------------------------------------------------------------------------
+   --                         Framebuffer objects                             --
+   -----------------------------------------------------------------------------
 
+   procedure Gen_Framebuffers is new Loader.Getter_With_2_Params
+     ("glGenFramebuffers", Size, UInt);
+   
+   procedure Delete_Framebuffers is new Loader.Array_Proc_With_2_Params
+     ("glDeleteFramebuffers", Size, UInt, Low_Level.UInt_Array);
+   
+   procedure Bind_Framebuffer is new Loader.Procedure_With_2_Params
+     ("glBindFramebuffer", Low_Level.Enums.Framebuffer_Kind, UInt);
+   
+   function Check_Framebuffer_Status is new Loader.Function_With_1_Param
+     ("glCheckFramebufferStatus", Low_Level.Enums.Framebuffer_Kind,
+      Objects.Framebuffers.Framebuffer_Status);
+   
+   procedure Framebuffer_Renderbuffer is new Loader.Procedure_With_4_Params
+     ("glFramebufferRenderbuffer", Low_Level.Enums.Framebuffer_Kind,
+      Objects.Framebuffers.Attachment_Point,
+      Low_Level.Enums.Renderbuffer_Kind, UInt);
+   
+   procedure Framebuffer_Texture is new Loader.Procedure_With_4_Params
+     ("glFramebufferTexture", Low_Level.Enums.Framebuffer_Kind,
+      Objects.Framebuffers.Attachment_Point, UInt,
+      Objects.Textures.Mipmap_Level);
+   
+   procedure Framebuffer_Texture_Layer is new Loader.Procedure_With_5_Params
+     ("glFramebufferTextureLayer", Low_Level.Enums.Framebuffer_Kind,
+      Objects.Framebuffers.Attachment_Point, UInt,
+      Objects.Textures.Mipmap_Level, Int);
+   
+   procedure Blit_Framebuffer is new Loader.Procedure_With_10_Params
+     ("glBlitFramebuffer", Int, Int, Int, Int, Int, Int, Int, Int,
+      Low_Level.Bitfield, Objects.Textures.Magnifying_Function);
+   
+   procedure Invalidate_Framebuffer is new Loader.Array_Proc_With_3_Params
+     ("glInvalidateFramebuffer", Low_Level.Enums.Framebuffer_Kind, Size,
+      Objects.Framebuffers.Attachment_Point,
+      Objects.Framebuffers.Attachment_List);
+   
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
