@@ -38,7 +38,7 @@ package body GL.Objects.Renderbuffers is
 
    Current_Renderbuffers : Renderbuffer_Maps.Map;
 
-   procedure Allocate (Object : in out Renderbuffer_Target;
+   procedure Allocate (Object : Renderbuffer_Target;
                        Format : Pixel_Data.Internal_Format;
                        Width, Height : Size;
                        Samples : Size := 0) is

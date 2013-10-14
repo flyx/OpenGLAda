@@ -25,7 +25,7 @@ package GL.Objects.Textures.Loader_2D is
                         Cube_Map_Positive_Y, Cube_Map_Negative_Y,
                         Cube_Map_Positive_Z, Cube_Map_Negative_Z, Proxy_Cube_Map);
 
-   procedure Load_Empty_Texture (Target: Target_Kind; Level : Integer;
+   procedure Load_Empty_Texture (Target: Target_Kind; Level : Mipmap_Level;
                                  Internal_Format : Pixel_Data.Internal_Format;
                                  Width, Height : Types.Size;
                                  Border : Boolean;

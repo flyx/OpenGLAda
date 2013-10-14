@@ -27,7 +27,7 @@ package body GL.Objects.Framebuffers is
       return API.Check_Framebuffer_Status (Target.Kind);
    end Status;
 
-   procedure Attach_Renderbuffer (Target : in out Framebuffer_Target;
+   procedure Attach_Renderbuffer (Target : Framebuffer_Target;
                                   Attachment : Attachment_Point;
                                   Object : Renderbuffers.Renderbuffer'Class) is
    begin
@@ -37,7 +37,7 @@ package body GL.Objects.Framebuffers is
       Check_OpenGL_Error;
    end Attach_Renderbuffer;
 
-   procedure Attach_Texture (Target : in out Framebuffer_Target;
+   procedure Attach_Texture (Target : Framebuffer_Target;
                              Attachment : Attachment_Point;
                              Object : Textures.Texture'Class;
                              Level  : Textures.Mipmap_Level) is
@@ -120,7 +120,7 @@ package body GL.Objects.Framebuffers is
    end Backend_Framebuffer_Targets;
    pragma Inline (Backend_Framebuffer_Targets);
 
-   procedure Bind (Target : in out Framebuffer_Target;
+   procedure Bind (Target : Framebuffer_Target;
                    Object : Framebuffer'Class) is
       -- Read_Draw bind to both read and draw framebuffer, we need to set
       -- the current framebuffer objects accordingly.
@@ -134,7 +134,7 @@ package body GL.Objects.Framebuffers is
       for Index in Targets'Range loop
          Cursor := Current_Framebuffers.Find (Targets (Index));
          if Cursor = Framebuffer_Maps.No_Element then
-            Current_Framebuffers.Insert (Target.Kind, Object);
+            Current_Framebuffers.Insert (Targets (Index), Object);
          elsif Framebuffer_Maps.Element (Cursor).Reference.GL_Id
            /= Object.Reference.GL_Id then
             Current_Framebuffers.Replace_Element (Cursor, Object);

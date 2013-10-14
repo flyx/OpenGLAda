@@ -46,11 +46,11 @@ package GL.Objects.Framebuffers is
 
    function Status (Target : Framebuffer_Target) return Framebuffer_Status;
 
-   procedure Attach_Renderbuffer (Target : in out Framebuffer_Target;
+   procedure Attach_Renderbuffer (Target : Framebuffer_Target;
                                   Attachment : Attachment_Point;
                                   Object : Renderbuffers.Renderbuffer'Class);
 
-   procedure Attach_Texture (Target : in out Framebuffer_Target;
+   procedure Attach_Texture (Target :  Framebuffer_Target;
                              Attachment : Attachment_Point;
                              Object : Textures.Texture'Class;
                              Level  : Textures.Mipmap_Level);
@@ -72,7 +72,7 @@ package GL.Objects.Framebuffers is
    overriding
    procedure Delete_Id (Object : in out Framebuffer);
 
-   procedure Bind (Target : in out Framebuffer_Target;
+   procedure Bind (Target : Framebuffer_Target;
                    Object : Framebuffer'Class);
 
    function Current (Target : Framebuffer_Target) return Framebuffer'Class;
@@ -81,6 +81,7 @@ package GL.Objects.Framebuffers is
    Draw_Target : constant Framebuffer_Target;
    Read_And_Draw_Target : constant Framebuffer_Target;
 
+   Default_Framebuffer : constant Framebuffer;
 private
    for Framebuffer_Status use (Undefined                     => 16#8219#,
                                Complete                      => 16#8CD5#,
@@ -128,4 +129,6 @@ private
    Read_And_Draw_Target : constant Framebuffer_Target :=
      Framebuffer_Target'(Kind => Low_Level.Enums.Read_Draw);
 
+   Default_Framebuffer : constant Framebuffer :=
+     Framebuffer'(GL_Object with null record);
 end GL.Objects.Framebuffers;

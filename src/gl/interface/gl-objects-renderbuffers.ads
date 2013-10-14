@@ -23,7 +23,7 @@ package GL.Objects.Renderbuffers is
 
    type Renderbuffer_Target (<>) is tagged limited private;
 
-   procedure Allocate (Object : in out Renderbuffer_Target;
+   procedure Allocate (Object : Renderbuffer_Target;
                        Format : Pixel_Data.Internal_Format;
                        Width, Height : Size;
                        Samples : Size := 0);
@@ -53,6 +53,7 @@ package GL.Objects.Renderbuffers is
    overriding
    procedure Delete_Id (Object : in out Renderbuffer);
 
+   No_Renderbuffer : constant Renderbuffer;
 private
 
    type Renderbuffer is new GL_Object with null record;
@@ -63,4 +64,6 @@ private
    Active_Renderbuffer : constant Renderbuffer_Target
      := Renderbuffer_Target'(Kind => Low_Level.Enums.Renderbuffer);
 
+   No_Renderbuffer : constant Renderbuffer :=
+     Renderbuffer'(GL_Object with null record);
 end GL.Objects.Renderbuffers;

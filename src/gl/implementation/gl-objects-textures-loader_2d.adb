@@ -20,7 +20,7 @@ with System;
 
 package body GL.Objects.Textures.Loader_2D is
 
-   procedure Load_Empty_Texture (Target: Target_Kind; Level : Integer;
+   procedure Load_Empty_Texture (Target: Target_Kind; Level : Mipmap_Level;
                                  Internal_Format : Pixel_Data.Internal_Format;
                                  Width, Height : Size;
                                  Border : Boolean;
@@ -28,7 +28,7 @@ package body GL.Objects.Textures.Loader_2D is
                                  Data_Type : Pixel_Data.Data_Type) is
    begin
       API.Tex_Image_2D (Target          => Target,
-                        Level           => Int (Level),
+                        Level           => Level,
                         Internal_Format => Internal_Format,
                         Width           => Width,
                         Height          => Height,

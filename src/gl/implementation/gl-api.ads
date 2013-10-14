@@ -85,6 +85,12 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Double,
                   External_Name => "glGetDoublev");
 
+   
+   procedure Get_Double_Vec2 (Name   : Enums.Getter.Parameter;
+                              Target : in out Doubles.Vector2);
+   pragma Import (Convention => StdCall, Entity => Get_Double_Vec2,
+                  External_Name => "glGetDoublev");
+   
    procedure Get_Color (Name : Enums.Getter.Parameter;
                         Target : in out Colors.Color);
    pragma Import (Convention => StdCall, Entity => Get_Color,
@@ -93,6 +99,11 @@ private package GL.API is
    procedure Get_Integer (Name   : Enums.Getter.Parameter;
                           Target : access Int);
    pragma Import (Convention => StdCall, Entity => Get_Integer,
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Int_Vec4 (Name   : Enums.Getter.Parameter;
+                           Target : in out Ints.Vector4);
+   pragma Import (Convention => StdCall, Entity => Get_Int_Vec4,
                   External_Name => "glGetIntegerv");
 
    procedure Get_Color_Control (Name   : Enums.Getter.Parameter;
@@ -455,7 +466,7 @@ private package GL.API is
                   External_Name => "glDeleteTextures");
 
    procedure Tex_Image_2D (Target : Objects.Textures.Loader_2D.Target_Kind;
-                           Level  : Int;
+                           Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixel_Data.Internal_Format;
                            Width, Height : Size;
                            Border : Low_Level.Bool;
@@ -725,5 +736,17 @@ private package GL.API is
 
    procedure Disable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
+   
+   -----------------------------------------------------------------------------
+   --                  Transformation to window coordinates                   --
+   -----------------------------------------------------------------------------
+   
+   procedure Depth_Range (Near, Far : Double);
+   pragma Import (Convention => StdCall, Entity => Depth_Range,
+                  External_Name => "glDepthRange");
+   
+   procedure Viewport (X, Y : Int; Width, Height : Size);
+   pragma Import (Convention => StdCall, Entity => Viewport,
+                  External_Name => "glViewport");
    
 end GL.API;
