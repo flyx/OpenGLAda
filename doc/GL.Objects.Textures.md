@@ -3,14 +3,67 @@ layout : default
 title : API - The package GL.Objects.Textures
 packages :
   - GL.Objects.Textures
+  - GL.Objects.Textures.Targets
 weight: 8
 ---
 
 # The package `GL.Objects.Textures`
 
-***TODO:*** Most of the content here became obsolete with
-the introduction of `GL.Objects`. Write something useful here.
+Textures are basically images stored in OpenGL memory. They have tons of features,
+therefore this package is quite big.
 
-The package provides setters and getters for parameters of the texture targets.
-You can look up the meaning and impact of those parameters in the corresponding
-section in the [OpenGL API reference](http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml).
+## Targets
+
+Texture targets are defined in the package `GL.Objects.Textures.Targets`. The basic
+texture target type is `Texture_Proxy`. A texture proxy is something that has some
+method to create it in OpenGL memory, and you can then query its parameters. A *pure*
+texture proxy does not actually allocate any memory, but instead just tells you the
+dimensions and other attributes a texture would created with *if* you created it with
+the parameters you gave. So for example, if you call:
+
+    GL.Objects.Textures.Targets.Texture_2D_Proxy.Load_Empty_Texture
+
+You can afterwards query the parameters a texture would have if you created it with:
+
+    GL.Objects.Textures.Targets.Texture_2D.Load_Empty_Texture
+
+You cannot bind a texture object to a pure proxy texture, only to an actual
+`Texture_Target`, which derives from `Texture_Proxy`. In the second code line from
+above, `Texture_2D` is such an actual texture target.
+
+For cube map textures, there are special targets:
+
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Positive_X
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Negative_X
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Positive_Y
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Negative_Y
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Positive_Z
+    GL.Objects.Textures.Targets.Texture_Cube_Map_Negative_Z
+
+These are proxy textures as you cannot bind any texture to them, *but* you can
+actually create parts of the texture currently bound to
+
+    GL.Objects.Textures.Targets.Texture_Cube_Map
+
+with them, so they are not *pure* proxy textures.
+
+**Note:** The definition of `Texture_Proxy` and `Texture_Target` are currently fully
+exposed due to a [bug in GNAT][1]. Please use them as if they were indefinite private
+types; don't instantiate own variables with these types.
+
+## Textures
+
+As with all OpenGL objects, you first have to call `Initialize_Id` before you can use
+a texture object. Afterwards, you can bind it to any of the available texture targets
+(be aware that it depends on the OpenGL version of your OpenGL context which targets
+are available).
+
+You can use the SOIL library which is an optional part of OpenGLAda to load image files
+into texture objects. Keep in mind that with the (deprecated) fixed pixel pipeline, you
+need to do
+
+    GL.Toggles.Enable (GL.Toggles.Texture_2D)
+
+to use 2D textures, same for other texture types.
+
+ [1]: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58881
