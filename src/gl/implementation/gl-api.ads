@@ -288,10 +288,9 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Blend_Func,
                   External_Name => "glBlendFunc");
    
-   procedure Blend_Func_I (Buf : Buffers.Draw_Buffer_Index;
-                           Src_Factor, Dst_Factor : Blending.Blend_Factor);
-   pragma Import (Convention => StdCall, Entity => Blend_Func_I,
-                  External_Name => "glBlendFunci");
+   procedure Blend_Func_I is new Loader.Procedure_With_3_Params
+     ("glBlendFunci", Buffers.Draw_Buffer_Index, Blending.Blend_Factor,
+      Blending.Blend_Factor);
    
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
