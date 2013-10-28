@@ -66,7 +66,7 @@ package body GL.Runtime_Loading is
       
       function Load_Function is new Load (Function_Reference);
       
-      Reference : Function_Reference := Load_Function (Function_Name);
+      Reference : constant Function_Reference := Load_Function (Function_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Function_Name;
@@ -82,7 +82,7 @@ package body GL.Runtime_Loading is
 
       function Load_Function is new Load (Function_Reference);
 
-      Reference : Function_Reference := Load_Function (Function_Name);
+      Reference : constant Function_Reference := Load_Function (Function_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Function_Name;
@@ -100,7 +100,7 @@ package body GL.Runtime_Loading is
      pragma Convention (StdCall, Function_Reference);
 
      function Load_Function is new Load (Function_Reference);
-     Reference : Function_Reference := Load_Function (Function_Name);
+     Reference : constant Function_Reference := Load_Function (Function_Name);
    begin
      if Reference = null then
         raise Feature_Not_Supported_Exception with Function_Name;
@@ -115,7 +115,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -130,7 +131,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -146,7 +148,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference 
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
         raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -164,7 +167,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
         raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -183,7 +187,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
         raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -204,7 +209,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -226,7 +232,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -254,7 +261,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -272,7 +280,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -290,7 +299,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -307,7 +317,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -325,7 +336,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
 
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
         raise Feature_Not_Supported_Exception with Procedure_Name;
@@ -345,7 +357,8 @@ package body GL.Runtime_Loading is
       pragma Convention (StdCall, Procedure_Reference);
       
       function Load_Procedure is new Load (Procedure_Reference);
-      Reference : Procedure_Reference := Load_Procedure (Procedure_Name);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
    begin
       if Reference = null then
          raise Feature_Not_Supported_Exception with Procedure_Name;

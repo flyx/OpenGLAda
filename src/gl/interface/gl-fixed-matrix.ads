@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Low_Level;
 with GL.Types;
 
 private with GL.Enums;
@@ -22,7 +21,6 @@ private with GL.Enums;
 -- Matrix stack API. This API is deprecated as of OpenGL 3.0.
 package GL.Fixed.Matrix is
    
-   use GL.Types;
    use GL.Types.Doubles;
 
    type Matrix_Stack (<>) is tagged private;

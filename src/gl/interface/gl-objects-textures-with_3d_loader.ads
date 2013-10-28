@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,27 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API.Mac_OS_X;
+with System;
 
-package body GL.API is
-   function GL_Subprogram_Reference (Function_Name : String) return System.Address is
-      -- OSX-specific implementation uses CoreFoundation functions
-      use GL.API.Mac_OS_X;
-   
-      package IFC renames Interfaces.C.Strings;
-   
-      GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (Function_Name);
+generic
+   type Base (<>) is new Texture_Proxy with private;
+package GL.Objects.Textures.With_3D_Loader is
+   pragma Preelaborate;
 
-      Symbol_Name : constant CFStringRef := CFStringCreateWithCString
-        (alloc => System.Null_Address, cStr => GL_Function_Name_C,
-         encoding => kCFStringEncodingASCII);
-      Result : constant System.Address := CFBundleGetFunctionPointerForName
-        (bundle => OpenGLFramework,
-         functionName => Symbol_Name);
-   begin
-      CFRelease (Symbol_Name);
-      IFC.Free (GL_Function_Name_C);
-      return Result;
-   end GL_Subprogram_Reference;
-end GL.API;
+   type Target is new Base with null record;
+
+   procedure Load_Empty_Texture
+     (Object: Target; Level : Mipmap_Level;
+      Internal_Format : Pixel_Data.Internal_Format;
+      Width, Height, Depth : Types.Size);
+
+   type Fillable_Target is new Target with null record;
+
+   procedure Load_From_Data
+     (Object : Fillable_Target; Level : Mipmap_Level;
+      Internal_Format : Pixel_Data.Internal_Format;
+      Width, Height, Depth : Types.Size;
+      Source_Format : Pixel_Data.Format;
+      Source_Type   : Pixel_Data.Data_Type;
+      Source        : System.Address);
+end GL.Objects.Textures.With_3D_Loader;

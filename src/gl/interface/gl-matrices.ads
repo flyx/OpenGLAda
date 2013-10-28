@@ -21,7 +21,8 @@ generic
    with function "-" (Left, Right : Element_Type) return Element_Type is <>;
    with function "-" (Left        : Element_Type) return Element_Type is <>;
    with function "*" (Left, Right : Element_Type) return Element_Type is <>;
-   with function "/" (Left, Right : Element_Type) return Element_Type is <>;
+   -- not needed currently
+   --with function "/" (Left, Right : Element_Type) return Element_Type is <>;
    type Vector_Type is array (Index_Type) of aliased Element_Type;
 package GL.Matrices is
    pragma Preelaborate;

@@ -23,7 +23,6 @@ with GL.API;
 
 package body GL.Objects.Buffer is
    use type Low_Level.Enums.Buffer_Kind;
-   use type UInt;
 
    function Hash (Key : Low_Level.Enums.Buffer_Kind)
      return Ada.Containers.Hash_Type is
@@ -44,7 +43,8 @@ package body GL.Objects.Buffer is
 
 
    procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class) is
-      Cursor : Buffer_Maps.Cursor := Current_Buffers.Find (Target.Kind);
+      Cursor : constant Buffer_Maps.Cursor
+        := Current_Buffers.Find (Target.Kind);
    begin
       if Cursor = Buffer_Maps.No_Element or else
         Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
@@ -60,7 +60,8 @@ package body GL.Objects.Buffer is
    end Bind;
 
    function Current_Object (Target : Buffer_Target) return Buffer_Object'Class is
-      Cursor : Buffer_Maps.Cursor := Current_Buffers.Find (Target.Kind);
+      Cursor : constant Buffer_Maps.Cursor
+        := Current_Buffers.Find (Target.Kind);
    begin
       if Cursor /= Buffer_Maps.No_Element then
          return Buffer_Maps.Element (Cursor);

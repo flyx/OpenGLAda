@@ -22,29 +22,18 @@ package GL.Enums.Textures is
    -- Texture_Kind is declared in GL.Low_Level.Enums to be accessible for
    -- OpenCLAda
 
-   type Parameter is (Width, Height, Internal_Format, Border_Color, Border,
-                      Mag_Filter, Min_Filter, Wrap_S, Wrap_T, Red_Size,
-                      Green_Size, Blue_Size, Alpha_Size, Luminance_Size,
-                      Intensity_Size, Priority, Resident, Wrap_R,
+   type Parameter is (Border_Color, Border, Mag_Filter, Min_Filter, Wrap_S,
+                      Wrap_T, Priority, Resident, Wrap_R,
                       Min_LoD, Max_LoD, Base_Level, Max_Level, Generate_Mipmap,
                       Depth, Compare_Mode, Compare_Func);
 
    -- needs to be declared here because of subtypes
-   for Parameter use (Width           => 16#1000#,
-                      Height          => 16#1001#,
-                      Internal_Format => 16#1002#,
-                      Border_Color    => 16#1003#,
+   for Parameter use (Border_Color    => 16#1003#,
                       Border          => 16#1004#,
                       Mag_Filter      => 16#2800#,
                       Min_Filter      => 16#2801#,
                       Wrap_S          => 16#2802#,
                       Wrap_T          => 16#2803#,
-                      Red_Size        => 16#805C#,
-                      Green_Size      => 16#805D#,
-                      Blue_Size       => 16#805E#,
-                      Alpha_Size      => 16#805F#,
-                      Luminance_Size  => 16#8060#,
-                      Intensity_Size  => 16#8061#,
                       Priority        => 16#8066#,
                       Resident        => 16#8067#,
                       Wrap_R          => 16#8072#,
@@ -69,6 +58,12 @@ package GL.Enums.Textures is
                           Src0_Alpha, Src1_Alpha, Src2_Alpha, Operand0_RGB,
                           Operand1_RGB, Operand2_RGB, Operand0_Alpha,
                           Operand1_Alpha, Operand2_Alpha, Coord_Replace);
+   
+   type Level_Parameter is (Width, Height, Internal_Format, Red_Size,
+                            Green_Size, Blue_Size, Alpha_Size, Luminance_Size,
+                            Intensity_Size,  Compressed_Image_Size, Compressed,
+                            Depth_Size, Red_Type, Green_Type, Blue_Type,
+                            Alpha_Type, Depth_Type, Buffer_Offset, Buffer_Size);
    
    Texture_Unit_Start_Rep : constant := 16#84C0#;
    
@@ -112,6 +107,27 @@ private
                           Operand2_Alpha => 16#859A#,
                           Coord_Replace  => 16#8862#);
    for Env_Parameter'Size use Low_Level.Enum'Size;
+   
+   for Level_Parameter use (Width           => 16#1000#,
+                            Height          => 16#1001#,
+                            Internal_Format => 16#1002#,
+                            Red_Size        => 16#805C#,
+                            Green_Size      => 16#805D#,
+                            Blue_Size       => 16#805E#,
+                            Alpha_Size      => 16#805F#,
+                            Luminance_Size  => 16#8060#,
+                            Intensity_Size  => 16#8061#,
+                            Compressed_Image_Size => 16#86A0#,
+                            Compressed      => 16#86A1#,
+                            Depth_Size      => 16#884A#,
+                            Red_Type        => 16#8C10#,
+                            Green_Type      => 16#8C11#,
+                            Blue_Type       => 16#8C12#,
+                            Alpha_Type      => 16#8C13#,
+                            Depth_Type      => 16#8C14#,
+                            Buffer_Offset   => 16#919D#,
+                            Buffer_Size     => 16#919E#);
+   for Level_Parameter'Size use Low_Level.Enum'Size;
    
    --for Texture_Unit use (Texture0  => 16#84C0#,
    --                      Texture1  => 16#84C1#,

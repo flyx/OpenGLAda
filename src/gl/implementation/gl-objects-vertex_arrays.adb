@@ -54,7 +54,7 @@ package body GL.Objects.Vertex_Arrays is
    end Current_Array_Object;
 
    procedure Delete_Id (Object : in out Vertex_Array_Object) is
-      Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
+      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Vertex_Arrays (1, Arr);
       Check_OpenGL_Error;

@@ -127,7 +127,7 @@ package body GL.Objects.Renderbuffers is
    end Stencil_Size;
 
    procedure Bind (Target : Renderbuffer_Target; Object : Renderbuffer'Class) is
-      Cursor : Renderbuffer_Maps.Cursor
+      Cursor : constant Renderbuffer_Maps.Cursor
         := Current_Renderbuffers.Find (Target.Kind);
    begin
       if Cursor = Renderbuffer_Maps.No_Element or else
@@ -145,7 +145,7 @@ package body GL.Objects.Renderbuffers is
    end Bind;
 
    function Current (Target : Renderbuffer_Target) return Renderbuffer'Class is
-      Cursor : Renderbuffer_Maps.Cursor
+      Cursor : constant Renderbuffer_Maps.Cursor
         := Current_Renderbuffers.Find (Target.Kind);
    begin
       if Cursor = Renderbuffer_Maps.No_Element then
@@ -165,7 +165,7 @@ package body GL.Objects.Renderbuffers is
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Renderbuffer) is
-      Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
+      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Renderbuffers (1, Arr);
       Check_OpenGL_Error;

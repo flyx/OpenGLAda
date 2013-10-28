@@ -60,7 +60,8 @@ package body GL.Objects.Framebuffers is
       use type Low_Level.Bitfield;
       function Convert is new Ada.Unchecked_Conversion
         (Buffers.Buffer_Bits, Low_Level.Bitfield);
-      Raw_Bits : Low_Level.Bitfield := Convert (Mask) and 2#0100010100000000#;
+      Raw_Bits : constant Low_Level.Bitfield
+        := Convert (Mask) and 2#0100010100000000#;
 
    begin
       API.Blit_Framebuffer (Src_X0, Src_Y0, Src_X1, Src_Y1,
@@ -79,7 +80,7 @@ package body GL.Objects.Framebuffers is
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Framebuffer) is
-      Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
+      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Framebuffers (1, Arr);
       Check_OpenGL_Error;
@@ -124,7 +125,7 @@ package body GL.Objects.Framebuffers is
                    Object : Framebuffer'Class) is
       -- Read_Draw bind to both read and draw framebuffer, we need to set
       -- the current framebuffer objects accordingly.
-      Targets : Framebuffer_Kind_Array
+      Targets : constant Framebuffer_Kind_Array
         := Backend_Framebuffer_Targets (Target.Kind);
 
       Cursor : Framebuffer_Maps.Cursor;
@@ -143,14 +144,14 @@ package body GL.Objects.Framebuffers is
    end Bind;
 
    function Current (Target : Framebuffer_Target) return Framebuffer'Class is
-      Targets : Framebuffer_Kind_Array
+      Targets : constant Framebuffer_Kind_Array
         := Backend_Framebuffer_Targets (Target.Kind);
 
       -- If target is Read_Draw, return the draw framebuffer
       -- (Note: this is necessary because distinct read/draw framebuffers
       -- were added later to the API and therefore might not be available
       -- in the context. So everything needs to work with just Read_Draw).
-      Cursor : Framebuffer_Maps.Cursor
+      Cursor : constant Framebuffer_Maps.Cursor
         := Current_Framebuffers.Find (Targets (1));
    begin
       if Cursor = Framebuffer_Maps.No_Element then

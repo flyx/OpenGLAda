@@ -23,9 +23,10 @@ with GL.Low_Level.Enums;
 package body GL.Buffers is
    procedure Clear (Bits : Buffer_Bits) is
       use type Low_Level.Bitfield;
-      function Convert is new Ada.Unchecked_Conversion (Source => Buffer_Bits,
-                                                        Target => Low_Level.Bitfield);
-      Raw_Bits : Low_Level.Bitfield := Convert (Bits) and 2#0100011100000000#;
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Buffer_Bits, Target => Low_Level.Bitfield);
+      Raw_Bits : constant Low_Level.Bitfield :=
+        Convert (Bits) and 2#0100011100000000#;
    begin
       API.Clear (Raw_Bits);
       Check_OpenGL_Error;

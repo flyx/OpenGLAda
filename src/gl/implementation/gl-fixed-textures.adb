@@ -169,7 +169,8 @@ package body GL.Fixed.Textures is
    end LoD_Bias;
 
    procedure Set_Env_Color (Value : Colors.Color) is
-      Float_Colors : Low_Level.Single_Array := Helpers.Float_Array (Value);
+      Float_Colors : constant Low_Level.Single_Array
+        := Helpers.Float_Array (Value);
    begin
       API.Tex_Env_Arr (Enums.Textures.Texture_Env,
                        Enums.Textures.Env_Color, Float_Colors);

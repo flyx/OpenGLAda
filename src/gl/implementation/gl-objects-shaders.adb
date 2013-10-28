@@ -19,12 +19,12 @@ with Interfaces.C.Strings;
 with GL.API;
 with GL.Enums;
 
-
 package body GL.Objects.Shaders is
+   
    procedure Set_Source (Subject : Shader; Source : String) is
-      C_Source : Low_Level.CharPtr_Array
+      C_Source : constant Low_Level.CharPtr_Array
         := (1 => C.Strings.New_String (Source));
-      Lengths : Low_Level.Int_Array
+      Lengths : constant Low_Level.Int_Array
         := (1 => Source'Length);
    begin
       API.Shader_Source (Subject.Reference.GL_Id, 1, C_Source, Lengths);

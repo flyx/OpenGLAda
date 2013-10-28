@@ -15,7 +15,6 @@
 --------------------------------------------------------------------------------
 
 with System;
-with Interfaces.C.Pointers;
 with Interfaces.C.Extensions;
 with Interfaces.C.Strings;
 

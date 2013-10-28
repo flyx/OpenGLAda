@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,26 +14,29 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API.Mac_OS_X;
+with GL.API;
+with GL.Enums.Textures;
 
-package body GL.API is
-   function GL_Subprogram_Reference (Function_Name : String) return System.Address is
-      -- OSX-specific implementation uses CoreFoundation functions
-      use GL.API.Mac_OS_X;
-   
-      package IFC renames Interfaces.C.Strings;
-   
-      GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (Function_Name);
+package body GL.Objects.Textures.Targets is
 
-      Symbol_Name : constant CFStringRef := CFStringCreateWithCString
-        (alloc => System.Null_Address, cStr => GL_Function_Name_C,
-         encoding => kCFStringEncodingASCII);
-      Result : constant System.Address := CFBundleGetFunctionPointerForName
-        (bundle => OpenGLFramework,
-         functionName => Symbol_Name);
+   function Buffer_Offset (Object : Texture_Buffer_Target;
+                           Level : Mipmap_Level) return Size is
+      Ret : Size;
    begin
-      CFRelease (Symbol_Name);
-      IFC.Free (GL_Function_Name_C);
-      return Result;
-   end GL_Subprogram_Reference;
-end GL.API;
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Buffer_Offset, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Buffer_Offset;
+
+   function Buffer_Size (Object : Texture_Buffer_Target;
+                         Level : Mipmap_Level) return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Buffer_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Buffer_Size;
+
+end GL.Objects.Textures.Targets;

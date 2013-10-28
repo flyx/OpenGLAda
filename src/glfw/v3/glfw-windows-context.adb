@@ -37,7 +37,7 @@ package body Glfw.Windows.Context is
    function Current return access Glfw.Windows.Window'Class is
       use type System.Address;
 
-      Raw : System.Address := API.Get_Current_Context;
+      Raw : constant System.Address := API.Get_Current_Context;
    begin
       if Raw = System.Null_Address then
          return null;

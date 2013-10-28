@@ -21,9 +21,12 @@ package body GL.Immediate is
 
    overriding procedure Finalize (Token : in out Input_Token) is
    begin
-      API.GL_End;
-      Resume_Error_Checking;
-      Check_OpenGL_Error;
+      if not Token.Finalized then
+         API.GL_End;
+         Resume_Error_Checking;
+         Check_OpenGL_Error;
+         Token.Finalized := True;
+      end if;
    end Finalize;
 
    function Start (Mode : Connection_Mode) return Input_Token is
@@ -31,20 +34,23 @@ package body GL.Immediate is
       API.GL_Begin (Mode);
       Suspend_Error_Checking;
       return Input_Token'(Ada.Finalization.Limited_Controlled with
-                            Mode => Mode);
+                            Mode => Mode, Finalized => False);
    end Start;
 
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector2) is
+      pragma Unreferenced (Token);
    begin
       API.Doubles.Vertex2 (Vertex);
    end Add_Vertex;
    
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector3) is
+      pragma Unreferenced (Token);
    begin
       API.Doubles.Vertex3 (Vertex);
    end Add_Vertex;
    
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector4) is
+      pragma Unreferenced (Token);
    begin
       API.Doubles.Vertex4 (Vertex);
    end Add_Vertex;

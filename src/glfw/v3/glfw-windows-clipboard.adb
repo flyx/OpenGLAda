@@ -23,7 +23,7 @@ package body Glfw.Windows.Clipboard is
    function Get (Object : not null access Window'Class) return String is
       use type Interfaces.C.Strings.chars_ptr;
 
-      Raw : Interfaces.C.Strings.chars_ptr
+      Raw : constant Interfaces.C.Strings.chars_ptr
         := API.Get_Clipboard_String (Object.Handle);
    begin
       if Raw = Interfaces.C.Strings.Null_Ptr then

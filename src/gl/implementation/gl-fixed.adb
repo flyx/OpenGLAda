@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Enums;
 with GL.API;
 
 -- Fixed function pipeline. Deprecated in OpenGL 3.0.

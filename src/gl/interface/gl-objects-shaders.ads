@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Types; use GL.Types;
 private with GL.Low_Level;
 
 package GL.Objects.Shaders is

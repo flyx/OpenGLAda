@@ -21,7 +21,7 @@ with GL.Immediate;       use GL.Immediate;
 with GL.Fixed.Matrix;    use GL.Fixed.Matrix; use GL.Fixed;
 with GL.Fixed.Textures;
 with GL.Types.Colors;    use GL.Types;
-with GL.Objects.Textures.Loader_2D;
+with GL.Objects.Textures.Targets;
 with GL.Objects.Renderbuffers;
 with GL.Objects.Framebuffers;
 with GL.Pixel_Data;
@@ -44,7 +44,7 @@ begin
 
    -- draw stuff to a texture
    declare
-      use GL.Objects.Textures;
+      use GL.Objects.Textures.Targets;
       use type GL.Objects.Framebuffers.Framebuffer_Status;
 
       Framebuffer  : GL.Objects.Framebuffers.Framebuffer;
@@ -52,13 +52,11 @@ begin
    begin
       Target_Texture.Initialize_Id;
       Texture_2D.Bind (Target_Texture);
-      Texture_2D.Set_X_Wrapping (Repeat);
-      Texture_2D.Set_Y_Wrapping (Repeat);
-      Texture_2D.Set_Minifying_Filter (Nearest);
-      Texture_2D.Set_Magnifying_Filter (Nearest);
-      Loader_2D.Load_Empty_Texture (Loader_2D.TX_2D, 0, GL.Pixel_Data.RGB8,
-                                    256, 256, False, GL.Pixel_Data.BGRA,
-                                    GL.Pixel_Data.Unsigned_Byte);
+      Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Repeat);
+      Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Repeat);
+      Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Nearest);
+      Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Nearest);
+      Texture_2D.Load_Empty_Texture (0, GL.Pixel_Data.RGB8, 256, 256);
 
       Framebuffer.Initialize_Id;
       GL.Objects.Framebuffers.Read_And_Draw_Target.Bind (Framebuffer);

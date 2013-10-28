@@ -38,7 +38,7 @@ package body GL.Files is
          package File_String_IO is new Ada.Direct_IO (File_String);
          
          File         : File_String_IO.File_Type;
-         Raw_Contents : C.Strings.char_array_access
+         Raw_Contents : constant C.Strings.char_array_access
            := new C.char_array (1 .. C.size_t (File_Size + 1));
       begin
          File_String_IO.Open (File, Mode => File_String_IO.In_File,

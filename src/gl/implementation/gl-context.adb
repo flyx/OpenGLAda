@@ -71,8 +71,8 @@ package body GL.Context is
       else
          -- OpenGL 2 fallback
          declare
-            Raw : String := C.Strings.Value (API.Get_String
-                                             (Enums.Getter.Extensions));
+            Raw : constant String := C.Strings.Value
+              (API.Get_String (Enums.Getter.Extensions));
             Cur_Pos : Positive := Raw'First;
             Next_Space : Natural;
          begin
@@ -107,7 +107,7 @@ package body GL.Context is
          -- we are on OpenGL 3
          for i in 1 .. Count loop
             declare
-               Extension : String := C.Strings.Value
+               Extension : constant String := C.Strings.Value
                  (API.Get_String_I (Enums.Getter.Extensions, UInt (I - 1)));
             begin
                if Extension = Name then
@@ -118,8 +118,8 @@ package body GL.Context is
       else
          -- OpenGL 2 fallback
          declare
-            Raw : String := C.Strings.Value (API.Get_String
-                                             (Enums.Getter.Extensions));
+            Raw : constant String := C.Strings.Value
+              (API.Get_String (Enums.Getter.Extensions));
             Cur_Pos : Positive := Raw'First;
             Next_Space : Natural;
          begin
@@ -142,7 +142,7 @@ package body GL.Context is
    end Has_Extension;
 
    function Primary_Shading_Language_Version return String is
-      Result : String := C.Strings.Value
+      Result : constant String := C.Strings.Value
         (API.Get_String (Enums.Getter.Shading_Language_Version));
    begin
       Check_OpenGL_Error;

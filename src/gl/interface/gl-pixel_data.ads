@@ -70,6 +70,9 @@ package GL.Pixel_Data is
                       Unsigned_Int_8_8_8_8_Rev,
                       Unsigned_Int_2_10_10_10_Rev);
 
+   type Channel_Data_Type is (None, Int_Type, Unsigned_Int_Type, Float_Type,
+                              Unsigned_Normalized, Signed_Normalized);
+
 private
    for Internal_Format use (Depth_Component => 16#1902#,
                             Alpha           => 16#1906#,
@@ -242,5 +245,13 @@ private
                       Unsigned_Int_8_8_8_8_Rev    => 16#8367#,
                       Unsigned_Int_2_10_10_10_Rev => 16#8368#);
    for Data_Type'Size use Low_Level.Enum'Size;
+
+   for Channel_Data_Type use (None                => 0,
+                              Int_Type            => 16#1404#,
+                              Unsigned_Int_Type   => 16#1405#,
+                              Float_Type          => 16#1406#,
+                              Unsigned_Normalized => 16#8C17#,
+                              Signed_Normalized   => 16#8F9C#);
+   for Channel_Data_Type'Size use Low_Level.Enum'Size;
 
 end GL.Pixel_Data;

@@ -15,7 +15,6 @@
 --------------------------------------------------------------------------------
 
 with Ada.Calendar;
-with Ada.Text_IO;
 
 with GL.Buffers;
 with GL.Objects.Buffer;
@@ -32,9 +31,6 @@ procedure GL_Test.VBOs is
    use GL.Types;
    use GL.Types.Doubles;
    use GL;
-   
-   procedure Load_Vector is new GL.Objects.Buffer.Load_To_Buffer
-     (Element_Type => Vector4, Array_Type => Vector4_Array);
    
    procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
      (Element_Type => Int, Array_Type => Int_Array);

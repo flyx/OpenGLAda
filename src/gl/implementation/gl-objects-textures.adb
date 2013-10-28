@@ -15,18 +15,181 @@
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
-with Ada.Unchecked_Deallocation;
 with Ada.Containers.Indefinite_Hashed_Maps;
 
 with GL.API;
 with GL.Helpers;
 with GL.Enums.Getter;
 with GL.Enums.Indexes;
+with GL.Enums.Textures;
 
 package body GL.Objects.Textures is
-   use type UInt;
    use type Low_Level.Enums.Texture_Kind;
 
+   function Width (Object : Texture_Proxy; Level : Mipmap_Level) return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Width, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Width;
+   
+   function Height (Object : Texture_Proxy; Level : Mipmap_Level) return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Height, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Height;
+   
+   function Depth (Object : Texture_Proxy; Level : Mipmap_Level) return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Depth_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Depth;
+   
+   function Format (Object : Texture_Proxy; Level : Mipmap_Level)
+                    return Pixel_Data.Internal_Format is
+      Ret : Pixel_Data.Internal_Format;
+   begin
+      API.Get_Tex_Level_Parameter_Format (Object.Kind, Level,
+                                          Enums.Textures.Internal_Format, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Format;
+   
+   function Red_Type (Object : Texture_Proxy; Level : Mipmap_Level)
+                      return Pixel_Data.Channel_Data_Type is
+      Ret : Pixel_Data.Channel_Data_Type;
+   begin
+      API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                        Enums.Textures.Red_Type, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Red_Type;
+   
+   function Green_Type (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Pixel_Data.Channel_Data_Type is
+      Ret : Pixel_Data.Channel_Data_Type;
+   begin
+      API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                        Enums.Textures.Green_Type, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Green_Type;
+   
+   function Blue_Type (Object : Texture_Proxy; Level : Mipmap_Level)
+                       return Pixel_Data.Channel_Data_Type is
+      Ret : Pixel_Data.Channel_Data_Type;
+   begin
+        API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                          Enums.Textures.Blue_Type, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Blue_Type;
+   
+   function Alpha_Type (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Pixel_Data.Channel_Data_Type is
+      Ret : Pixel_Data.Channel_Data_Type;
+   begin
+      API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                        Enums.Textures.Alpha_Type, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Alpha_Type;
+   
+   function Depth_Type (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Pixel_Data.Channel_Data_Type is
+      Ret : Pixel_Data.Channel_Data_Type;
+   begin
+      API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                        Enums.Textures.Depth_Type, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Depth_Type;
+   
+   function Red_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                      return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Red_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Red_Size;
+   
+   function Green_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Green_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Green_Size;
+   
+   function Blue_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                       return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Blue_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Blue_Size;
+   
+   function Alpha_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Alpha_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Alpha_Size;
+   
+   function Depth_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Depth_Size, Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Depth_Size;
+   
+   function Compressed (Object : Texture_Proxy; Level : Mipmap_Level)
+                        return Boolean is
+      Ret : Low_Level.Bool;
+   begin
+      API.Get_Tex_Level_Parameter_Bool (Object.Kind, Level,
+                                        Enums.Textures.Compressed, Ret);
+      Check_OpenGL_Error;
+      return Boolean (Ret);
+   end Compressed;
+   
+   function Compressed_Image_Size (Object : Texture_Proxy; Level : Mipmap_Level)
+                                   return Size is
+      Ret : Size;
+   begin
+      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
+                                        Enums.Textures.Compressed_Image_Size,
+                                        Ret);
+      Check_OpenGL_Error;
+      return Ret;
+   end Compressed_Image_Size;
+   
+   function Raw_Kind (Object : Texture_Proxy)
+                      return Low_Level.Enums.Texture_Kind is
+   begin
+      return Object.Kind;
+   end Raw_Kind;
+   
    function Hash (Key : Low_Level.Enums.Texture_Kind)
      return Ada.Containers.Hash_Type is
       function Value is new Ada.Unchecked_Conversion
@@ -43,9 +206,10 @@ package body GL.Objects.Textures is
    use type Texture_Maps.Cursor;
 
    Current_Textures : Texture_Maps.Map;
-
+   
    procedure Bind (Target : Texture_Target; Object : Texture'Class) is
-      Cursor : Texture_Maps.Cursor := Current_Textures.Find (Target.Kind);
+      Cursor : constant Texture_Maps.Cursor
+        := Current_Textures.Find (Target.Kind);
    begin
       if Cursor = Texture_Maps.No_Element or else
         Texture_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
@@ -61,7 +225,8 @@ package body GL.Objects.Textures is
    end Bind;
 
    function Current_Texture (Target : Texture_Target) return Texture'Class is
-      Cursor : Texture_Maps.Cursor := Current_Textures.Find (Target.Kind);
+      Cursor : constant Texture_Maps.Cursor
+        := Current_Textures.Find (Target.Kind);
    begin
       if Cursor /= Texture_Maps.No_Element then
          return Texture_Maps.Element (Cursor);
@@ -80,7 +245,7 @@ package body GL.Objects.Textures is
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Texture) is
-      Arr : Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
+      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Textures (1, Arr);
       Check_OpenGL_Error;
@@ -96,16 +261,17 @@ package body GL.Objects.Textures is
       Check_OpenGL_Error;
    end Set_Minifying_Filter;
 
-   function Minifying_Filter (Target : Texture_Target) return Minifying_Function is
-      function Convert is new Ada.Unchecked_Conversion (Source => Int,
-                                                        Target => Minifying_Function);
+   function Minifying_Filter (Target : Texture_Target)
+                              return Minifying_Function is
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Int, Target => Minifying_Function);
 
-      Arr : Low_Level.Int_Array (1 .. 1);
+      Ret : Int;
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Min_Filter,
-                                 Arr);
+                                 Ret);
       Check_OpenGL_Error;
-      return Convert (Arr (1));
+      return Convert (Ret);
    end Minifying_Filter;
 
    procedure Set_Magnifying_Filter (Target : Texture_Target;
@@ -118,15 +284,15 @@ package body GL.Objects.Textures is
 
    function Magnifying_Filter (Target : Texture_Target)
                                return Magnifying_Function is
-      function Convert is new Ada.Unchecked_Conversion (Source => Int,
-                                                        Target => Minifying_Function);
+      function Convert is new Ada.Unchecked_Conversion
+        (Source => Int, Target => Minifying_Function);
 
-      Arr : Low_Level.Int_Array (1 .. 1);
+      Ret : Int;
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Mag_Filter,
-                                 Arr);
+                                 Ret);
       Check_OpenGL_Error;
-      return Convert (Arr (1));
+      return Convert (Ret);
    end Magnifying_Filter;
 
    procedure Set_Minimum_LoD (Target : Texture_Target; Level : Double) is
@@ -137,12 +303,12 @@ package body GL.Objects.Textures is
    end Set_Minimum_LoD;
 
    function Minimum_LoD (Target : Texture_Target) return Double is
-      Arr : Low_Level.Single_Array (1 .. 1);
+      Ret : Single;
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Min_LoD,
-                                   Arr);
+                                   Ret);
       Check_OpenGL_Error;
-      return Double (Arr (1));
+      return Double (Ret);
    end Minimum_LoD;
 
    procedure Set_Maximum_LoD (Target : Texture_Target; Level : Double) is
@@ -153,12 +319,12 @@ package body GL.Objects.Textures is
    end Set_Maximum_LoD;
 
    function Maximum_LoD (Target : Texture_Target) return Double is
-      Arr : Low_Level.Single_Array (1 .. 1);
+      Ret : Single;
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Max_LoD,
-                                   Arr);
+                                   Ret);
       Check_OpenGL_Error;
-      return Double (Arr (1));
+      return Double (Ret);
    end Maximum_LoD;
 
    procedure Set_Lowest_Mipmap_Level (Target : Texture_Target;
@@ -169,12 +335,12 @@ package body GL.Objects.Textures is
    end Set_Lowest_Mipmap_Level;
 
    function Lowest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level is
-      Arr : Low_Level.Int_Array (1 .. 1);
+      Ret : Int;
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level,
-                                 Arr);
+                                 Ret);
       Check_OpenGL_Error;
-      return Arr (1);
+      return Ret;
    end Lowest_Mipmap_Level;
 
    procedure Set_Highest_Mipmap_Level (Target : Texture_Target;
@@ -186,12 +352,12 @@ package body GL.Objects.Textures is
 
    function Highest_Mipmap_Level (Target : Texture_Target)
                                   return Mipmap_Level is
-      Arr : Low_Level.Int_Array (1 .. 1);
+      Ret : Int;
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level,
-                                 Arr);
+                                 Ret);
       Check_OpenGL_Error;
-      return Arr (1);
+      return Ret;
    end Highest_Mipmap_Level;
 
    procedure Set_X_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode) is
@@ -244,7 +410,7 @@ package body GL.Objects.Textures is
 
    procedure Set_Border_Color (Target : Texture_Target; Color : Colors.Color) is
 
-      Raw : Low_Level.Single_Array := Helpers.Float_Array (Color);
+      Raw : constant Low_Level.Single_Array := Helpers.Float_Array (Color);
    begin
       API.Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                 Raw);
@@ -254,8 +420,8 @@ package body GL.Objects.Textures is
    function Border_Color (Target : Texture_Target) return Colors.Color is
       Raw : Low_Level.Single_Array (1 .. 4);
    begin
-      API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Border_Color,
-                                   Raw);
+      API.Get_Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
+                                    Raw);
       Check_OpenGL_Error;
       return Helpers.Color (Raw);
    end Border_Color;
@@ -269,11 +435,11 @@ package body GL.Objects.Textures is
    end Set_Texture_Priority;
 
    function Texture_Priority (Target : Texture_Target) return Priority is
-      Arr : Low_Level.Single_Array (1 .. 1);
+      Ret : Single;
    begin
-      API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Priority, Arr);
+      API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Priority, Ret);
       Check_OpenGL_Error;
-      return Priority (Arr (1));
+      return Priority (Ret);
    end Texture_Priority;
 
    procedure Toggle_Compare_X_To_Texture (Target  : Texture_Target;
@@ -290,7 +456,8 @@ package body GL.Objects.Textures is
       Check_OpenGL_Error;
    end Toggle_Compare_X_To_Texture;
 
-   function Compare_X_To_Texture_Enabled (Target : Texture_Target) return Boolean is
+   function Compare_X_To_Texture_Enabled (Target : Texture_Target)
+                                          return Boolean is
       use type Enums.Textures.Compare_Kind;
 
       Value : Enums.Textures.Compare_Kind;
@@ -319,7 +486,8 @@ package body GL.Objects.Textures is
       return Value;
    end Current_Compare_Function;
 
-   procedure Set_Depth_Texture_Mode (Target : Texture_Target; Mode : Depth_Mode) is
+   procedure Set_Depth_Texture_Mode (Target : Texture_Target;
+                                     Mode : Depth_Mode) is
    begin
       API.Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth, Mode);
       Check_OpenGL_Error;
@@ -328,19 +496,22 @@ package body GL.Objects.Textures is
    function Depth_Texture_Mode (Target : Texture_Target) return Depth_Mode is
       Value : Depth_Mode;
    begin
-      API.Get_Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth, Value);
+      API.Get_Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth,
+                                        Value);
       Check_OpenGL_Error;
       return Value;
    end Depth_Texture_Mode;
 
-   procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target; Enabled : Boolean) is
+   procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target;
+                                       Enabled : Boolean) is
    begin
       API.Tex_Parameter_Bool (Target.Kind, Enums.Textures.Generate_Mipmap,
                               Low_Level.Bool (Enabled));
       Check_OpenGL_Error;
    end Toggle_Mipmap_Autoupdate;
 
-   function Mipmap_Autoupdate_Enabled (Target : Texture_Target) return Boolean is
+   function Mipmap_Autoupdate_Enabled (Target : Texture_Target)
+                                       return Boolean is
       Value : Low_Level.Bool;
    begin
       API.Get_Tex_Parameter_Bool (Target.Kind, Enums.Textures.Generate_Mipmap,

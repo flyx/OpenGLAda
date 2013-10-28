@@ -108,7 +108,7 @@ package GL.Runtime_Loading is
                                       Param3 : Param3_Type;
                                       Param4 : Param4_Type;
                                       Param5 : Param5_Type);
-   pragma Inline (Procedure_With_4_Params);
+   pragma Inline (Procedure_With_5_Params);
    
    generic
       Procedure_Name : String;

@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Ada.Text_IO;
-
 with GL.Objects.Shaders;
 
 -- This package is an addition to the original OpenGL API and simplifies

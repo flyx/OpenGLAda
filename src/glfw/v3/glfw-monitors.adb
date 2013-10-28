@@ -23,12 +23,12 @@ package body Glfw.Monitors is
    function Monitors return Monitor_List is
       use type API.Address_List_Pointers.Pointer;
       Count : aliased Interfaces.C.int;
-      Raw : API.Address_List_Pointers.Pointer :=
+      Raw : constant API.Address_List_Pointers.Pointer :=
         API.Get_Monitors (Count'Access);
    begin
       if Raw /= null then
          declare
-            List : API.Address_List := API.Address_List_Pointers.Value
+            List : constant API.Address_List := API.Address_List_Pointers.Value
               (Raw, Interfaces.C.ptrdiff_t (Count));
             Ret : Monitor_List (List'Range);
          begin
@@ -44,7 +44,7 @@ package body Glfw.Monitors is
 
    function Primary_Monitor return Monitor is
       use type System.Address;
-      Raw : System.Address := API.Get_Primary_Monitor;
+      Raw : constant System.Address := API.Get_Primary_Monitor;
    begin
       if Raw /= System.Null_Address then
          return Monitor'(Handle => Raw);
@@ -61,7 +61,8 @@ package body Glfw.Monitors is
       Y := Integer (Y_Raw);
    end Get_Position;
 
-   procedure Get_Physical_Size (Object : Monitor; Width, Height : out Integer) is
+   procedure Get_Physical_Size (Object : Monitor;
+                                Width, Height : out Integer) is
       Width_Raw, Height_Raw : Interfaces.C.int;
    begin
       API.Get_Monitor_Physical_Size (Object.Handle, Width_Raw, Height_Raw);
@@ -77,11 +78,12 @@ package body Glfw.Monitors is
    function Video_Modes (Object : Monitor) return Video_Mode_List is
       use type API.VMode_List_Pointers.Pointer;
       Count : aliased Interfaces.C.int;
-      Raw   : API.VMode_List_Pointers.Pointer
+      Raw   : constant API.VMode_List_Pointers.Pointer
         := API.Get_Video_Modes (Object.Handle, Count'Access);
    begin
       if Raw /= null then
-         return API.VMode_List_Pointers.Value (Raw, Interfaces.C.ptrdiff_t (Count));
+         return API.VMode_List_Pointers.Value (Raw,
+                                               Interfaces.C.ptrdiff_t (Count));
       else
          raise Operation_Exception;
       end if;
@@ -98,7 +100,8 @@ package body Glfw.Monitors is
    end Set_Gamma;
 
    function Current_Gamma_Ramp (Object : Monitor) return Gamma_Ramp is
-      Raw : access constant API.Raw_Gamma_Ramp := API.Get_Gamma_Ramp (Object.Handle);
+      Raw : constant access constant API.Raw_Gamma_Ramp
+        := API.Get_Gamma_Ramp (Object.Handle);
 
       procedure UShort_To_Gamma_List (Source : API.Unsigned_Short_List;
                                       Target : in out Gamma_Value_Array) is

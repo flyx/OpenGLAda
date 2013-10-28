@@ -35,7 +35,7 @@ package body Glfw.Input.Joysticks is
    
    function Positions (Source : Joystick) return Axis_Positions is
       Count : aliased Interfaces.C.int;
-      Raw : API.Axis_Position_List_Pointers.Pointer
+      Raw : constant API.Axis_Position_List_Pointers.Pointer
         := API.Get_Joystick_Axes (Source.Raw_Index, Count'Access);
    begin
       return API.Axis_Position_List_Pointers.Value
@@ -44,7 +44,7 @@ package body Glfw.Input.Joysticks is
       
    function Button_States (Source : Joystick) return Joystick_Button_States is
       Count : aliased Interfaces.C.int;
-      Raw : API.Joystick_Button_State_List_Pointers.Pointer
+      Raw : constant API.Joystick_Button_State_List_Pointers.Pointer
         := API.Get_Joystick_Buttons (Source.Raw_Index, Count'Access);
    begin
       return API.Joystick_Button_State_List_Pointers.Value

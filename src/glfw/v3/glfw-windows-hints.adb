@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Glfw.Windows.Context;
 with Glfw.API;
 with Glfw.Enums;
 

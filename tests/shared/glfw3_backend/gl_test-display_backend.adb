@@ -30,7 +30,7 @@ package body GL_Test.Display_Backend is
       Object.Destroy;
    end Close_Requested;
 
-   Main_Window : not null access Test_Window := new Test_Window;
+   Main_Window : constant not null access Test_Window := new Test_Window;
 
    procedure Print_Error (Code : Glfw.Errors.Kind; Description : String) is
    begin
@@ -51,6 +51,7 @@ package body GL_Test.Display_Backend is
    procedure Open_Window (Width, Height : Natural; Depth_Bits : Natural := 0) is
    begin
       if not Main_Window.Initialized then
+         Glfw.Windows.Hints.Set_Depth_Bits (Depth_Bits);
          Main_Window.Init (Glfw.Size (Width), Glfw.Size (Height),
                            "Test Window");
       end if;

@@ -17,7 +17,6 @@
 with Ada.Finalization;
 
 with GL.Types.Colors;
-with GL.Low_Level;
 
 -- This package provides functions to directly insert vertices, colors, normals
 -- etc. into the pipeline. Note that these functions have been deprecated with
@@ -55,5 +54,7 @@ package GL.Immediate is
 
 private
    type Input_Token (Mode : Connection_Mode) is
-     new Ada.Finalization.Limited_Controlled with null record;
+     new Ada.Finalization.Limited_Controlled with record
+      Finalized : Boolean := True;
+   end record;
 end GL.Immediate;

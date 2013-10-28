@@ -20,7 +20,16 @@ package GL.Low_Level.Enums is
    -- Unlike GL.Enums, this package is not private and hosts enum types that may
    -- be needed by third-party code or wrappers.
    
-   type Texture_Kind is (Texture_1D, Texture_2D, Texture_3D, Texture_Cube_Map);
+   type Texture_Kind is (Texture_1D, Texture_2D, Proxy_Texture_1D,
+                         Proxy_Texture_2D, Texture_3D, Proxy_Texture_3D,
+                         Texture_Cube_Map, Texture_Cube_Map_Positive_X,
+                         Texture_Cube_Map_Negative_X,
+                         Texture_Cube_Map_Positive_Y,
+                         Texture_Cube_Map_Negative_Y,
+                         Texture_Cube_Map_Positive_Z,
+                         Texture_Cube_Map_Negative_Z, Texture_1D_Array,
+                         Proxy_Texture_1D_Array, Texture_2D_Array,
+                         Proxy_Texture_2D_Array, Texture_Buffer);
    
    type Renderbuffer_Kind is (Renderbuffer);
    
@@ -42,8 +51,22 @@ package GL.Low_Level.Enums is
 private
    for Texture_Kind use (Texture_1D       => 16#0DE0#,
                          Texture_2D       => 16#0DE1#,
+                         Proxy_Texture_1D => 16#8063#,
+                         Proxy_Texture_2D => 16#8064#,
                          Texture_3D       => 16#806F#,
-                         Texture_Cube_Map => 16#8513#);
+                         Proxy_Texture_3D => 16#8070#,
+                         Texture_Cube_Map => 16#8513#,
+                         Texture_Cube_Map_Positive_X => 16#8515#,
+                         Texture_Cube_Map_Negative_X => 16#8516#,
+                         Texture_Cube_Map_Positive_Y => 16#8517#,
+                         Texture_Cube_Map_Negative_Y => 16#8518#,
+                         Texture_Cube_Map_Positive_Z => 16#8519#,
+                         Texture_Cube_Map_Negative_Z => 16#851A#,
+                         Texture_1D_Array       => 16#8C18#,
+                         Proxy_Texture_1D_Array => 16#8C19#,
+                         Texture_2D_Array       => 16#8C1A#,
+                         Proxy_Texture_2D_Array => 16#8C1B#,
+                         Texture_Buffer         => 16#8C2A#);
    for Texture_Kind'Size use Enum'Size;
    
    for Renderbuffer_Kind use (Renderbuffer => 16#8D41#);

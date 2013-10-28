@@ -15,7 +15,6 @@
 --------------------------------------------------------------------------------
 
 with GL.Types;
-with GL.Immediate;
 
 private with GL.Low_Level;
 

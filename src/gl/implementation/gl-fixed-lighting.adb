@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -------------------------------------------------------------------------------
 
-with GL.Toggles;
 with GL.Enums.Getter;
 with GL.API.Singles;
 with GL.API.Ints;

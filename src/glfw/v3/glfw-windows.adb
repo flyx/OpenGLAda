@@ -16,8 +16,6 @@
 
 with Ada.Unchecked_Conversion;
 
-with Interfaces.C.Strings;
-
 with Glfw.API;
 with Glfw.Enums;
 
@@ -158,7 +156,7 @@ package body Glfw.Windows is
                   Monitor       : Monitors.Monitor := Monitors.No_Monitor;
                   Share_Resources_With : access Window'Class := null) is
       use type System.Address;
-      C_Title : Interfaces.C.char_array := Interfaces.C.To_C (Title);
+      C_Title : constant Interfaces.C.char_array := Interfaces.C.To_C (Title);
       Share : System.Address;
    begin
       if Object.Handle /= System.Null_Address then

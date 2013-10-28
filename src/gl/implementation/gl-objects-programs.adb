@@ -16,7 +16,6 @@
 
 with GL.API;
 with GL.Enums;
-with GL.Low_Level;
 
 with Interfaces.C.Strings;
 
@@ -84,7 +83,7 @@ package body GL.Objects.Programs is
    
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform is
-      Result : Uniforms.Uniform := API.Get_Uniform_Location
+      Result : constant Uniforms.Uniform := API.Get_Uniform_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
       Check_OpenGL_Error;
@@ -102,7 +101,7 @@ package body GL.Objects.Programs is
       
    function Attrib_Location (Subject : Program; Name : String)
      return Attributes.Attribute is
-      Location : Attributes.Attribute := API.Get_Attrib_Location
+      Location : constant Attributes.Attribute := API.Get_Attrib_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
       Check_OpenGL_Error;

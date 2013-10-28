@@ -15,7 +15,6 @@
 --------------------------------------------------------------------------------
 
 with Glfw.Api;
-with Glfw.Enums;
 
 with Interfaces.C.Strings;
 
