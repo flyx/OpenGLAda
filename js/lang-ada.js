@@ -30,7 +30,7 @@ PR.registerLangHandler(
          [PR.PR_KEYWORD, /^\b(?:abort|abs|abstract|accept|access|aliased|all|and|array|at|begin|body|case|constant|declare|delay|delta|digits|do|else|elsif|end|entry|exception|exit|for|function|generic|goto|if|in|interface|is|limited|loop|mod|new|not|null|of|or|others|out|overriding|package|pragma|private|procedure|protected|raise|range|record|rem|renames|requeue|return|reverse|select|separate|some|subtype|synchronized|tagged|task|terminate|then|type|until|use|when|while|with|xor)\b/i, null],
          // numeric literals are quite complex,
          // like 2_000_000, 1.34E-12, or 16#9A4E#.
-         [PR.PR_LITERAL, /^([0-9](_?[0-9])*((#[0-9a-f](_?[0-9a-f])*#((e(\+|-)?[0-9](_?[0-9])*\b)|\B))|((\.[0-9](_?[0-9])*)?(e(\+|-)?[0-9](_?[0-9])*)?\b)))/i, null],
+         [PR.PR_LITERAL, /^\b([0-9](_?[0-9])*((#[0-9a-f](_?[0-9a-f])*#((e(\+|-)?[0-9](_?[0-9])*\b)|\B))|((\.[0-9](_?[0-9])*)?(e(\+|-)?[0-9](_?[0-9])*)?\b)))\b/i, null],
          // the box is a special literal of sorts.
          [PR.PR_LITERAL, /<>/, null],
          [PR.PR_PLAIN, /^\b[a-zA-Z](_|[a-zA-Z0-9])\b/, null],
