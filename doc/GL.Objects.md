@@ -67,32 +67,32 @@ to the OpenGL object. Some important notes on this:
 To use the object, you have to bind it to a target and use the methods of this
 target to configure the currently bound object. The code might look like this:
 
-{% highlight ada %}
-declare
-   use GL.Objects.Textures;
-   My_Texture, My_Other_Texture : Texture;
-begin
-   -- Create IDs for the textures
-   My_Texture.Initialize_Id;
-   My_Other_Texture.Initialize_Id;
+<?prettify lang=ada?>
 
-   -- Bind the texture to a target
-   -- (Note that the texture's type is determined by the target it get
-   -- bound to. You should not bind the texture to another target afterwards)
-   Texture_2D.Bind (My_Texture);
-   
-   Texture_2D.Set_Minifying_Filter (Linear_Mipmap_Nearest);
-   -- do something useful here
-   -- ...
-   
-   Texture_2D.Bind (My_Other_Texture);
-   
-   -- if you did not copy the value of My_Texture, the OpenGL texture
-   -- that is referenced by My_Texture gets destroyed at this point.
-   -- The object referenced by My_Other_Texture lives on, as it is
-   -- the currently bound texture to the target Texture_2D.
-end;
-{% endhighlight %}
+    declare
+       use GL.Objects.Textures;
+       My_Texture, My_Other_Texture : Texture;
+    begin
+       -- Create IDs for the textures
+       My_Texture.Initialize_Id;
+       My_Other_Texture.Initialize_Id;
+    
+       -- Bind the texture to a target
+       -- (Note that the texture's type is determined by the target it get
+       -- bound to. You should not bind the texture to another target afterwards)
+       Texture_2D.Bind (My_Texture);
+       
+       Texture_2D.Set_Minifying_Filter (Linear_Mipmap_Nearest);
+       -- do something useful here
+       -- ...
+       
+       Texture_2D.Bind (My_Other_Texture);
+       
+       -- if you did not copy the value of My_Texture, the OpenGL texture
+       -- that is referenced by My_Texture gets destroyed at this point.
+       -- The object referenced by My_Other_Texture lives on, as it is
+       -- the currently bound texture to the target Texture_2D.
+    end;
 
 You can query a reference to the currently bound object by calling
 `Current_[Descriptor]` on a target, where `[Descriptor]` is the type of the

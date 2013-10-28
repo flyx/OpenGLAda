@@ -46,42 +46,42 @@ Interaction with attribute parameters is not fully implemented yet.
 
 ## Basic example
 
-{% highlight ada %}
-declare
-   Vertex_Shader   : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Vertex_Shader);
-   Fragment_Shader : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Fragment_Shader);
-   Program         : GL.Objects.Programs.Program;
-begin
+<?prettify lang=ada?>
 
-   -- load and compile shaders
-   GL.Files.Load_Shader_Source_From_File (Vertex_Shader, "vertex.glsl");
-   GL.Files.Load_Shader_Source_From_File (Fragment_Shader, "fragment.glsl");
-   
-   Vertex_Shader.Compile;
-   Fragment_Shader.Compile;
-   
-   if not Vertex_Shader.Compile_Status then
-      Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
-      Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
-   end if;
-   if not Fragment_Shader.Compile_Status then
-      Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
-      Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
-   end if;
-   
-   -- set up program
-   Program.Attach (Vertex_Shader);
-   Program.Attach (Fragment_Shader);
-   Program.Link;
-   if not Program.Link_Status then
-      Ada.Text_IO.Put_Line ("Program linking failed. Log:");
-      Ada.Text_IO.Put_Line (Program.Info_Log);
-      return;
-   end if;
-   Program.Use_Program;
-   
-   -- do something useful here
-end;
-{% endhighlight %}
+    declare
+       Vertex_Shader   : GL.Objects.Shaders.Shader
+         (Kind => GL.Objects.Shaders.Vertex_Shader);
+       Fragment_Shader : GL.Objects.Shaders.Shader
+         (Kind => GL.Objects.Shaders.Fragment_Shader);
+       Program         : GL.Objects.Programs.Program;
+    begin
+    
+       -- load and compile shaders
+       GL.Files.Load_Shader_Source_From_File (Vertex_Shader, "vertex.glsl");
+       GL.Files.Load_Shader_Source_From_File (Fragment_Shader, "fragment.glsl");
+       
+       Vertex_Shader.Compile;
+       Fragment_Shader.Compile;
+       
+       if not Vertex_Shader.Compile_Status then
+          Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
+          Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
+       end if;
+       if not Fragment_Shader.Compile_Status then
+          Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
+          Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
+       end if;
+       
+       -- set up program
+       Program.Attach (Vertex_Shader);
+       Program.Attach (Fragment_Shader);
+       Program.Link;
+       if not Program.Link_Status then
+          Ada.Text_IO.Put_Line ("Program linking failed. Log:");
+          Ada.Text_IO.Put_Line (Program.Info_Log);
+          return;
+       end if;
+       Program.Use_Program;
+       
+       -- do something useful here
+    end;

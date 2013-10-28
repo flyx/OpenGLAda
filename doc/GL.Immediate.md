@@ -23,17 +23,17 @@ When the token is destroyed, the connection to the OpenGL pipeline is closed. If
 errors are encountered during the lifetime of the token, they will be raised when the
 token is destroyed. Here is a example of how using a token looks like:
 
-{% highlight ada %}
-declare
-   Token : Input_Token := Start (Line_Strip);
-begin
-   Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
-   Token.Add_Vertex (Vector'(0.5, 0.5, 0.5, 1.0));
-   Token.Add_Vertex (Vector'(0.5, -0.5, 0.5, 1.0));
-   Token.Add_Vertex (Vector'(-0.5, -0.5, 0.5, 1.0));
-   Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
-end; -- at this point, the token gets destroyed.
-{% endhighlight %}
+<?prettify lang=ada?>
+
+    declare
+       Token : Input_Token := Start (Line_Strip);
+    begin
+       Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
+       Token.Add_Vertex (Vector'(0.5, 0.5, 0.5, 1.0));
+       Token.Add_Vertex (Vector'(0.5, -0.5, 0.5, 1.0));
+       Token.Add_Vertex (Vector'(-0.5, -0.5, 0.5, 1.0));
+       Token.Add_Vertex (Vector'(-0.5, 0.5, 0.5, 1.0));
+    end; -- at this point, the token gets destroyed.
 
 The token gets destroyed automatically by means of `Ada.Finalization.Limited_Controlled`.
 Calling `Finalize` manually will result in an exception. Declaring multiple tokens at the

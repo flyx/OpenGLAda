@@ -33,8 +33,8 @@ buffer and test (use `GL.Toggles.Stencil_Test`).
 `GL.Blending` enables you to setup alpha blending in the color buffer. A
 typical setup would be:
 
-{% highlight ada %}
-GL.Toggles.Enable (GL.Toggles.Blend);
-GL.Blending.Set_Blend_Func
-  (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
-{% endhighlight %}
+<?prettify lang=ada?>
+
+    GL.Toggles.Enable (GL.Toggles.Blend);
+    GL.Blending.Set_Blend_Func
+      (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);

@@ -30,49 +30,47 @@ any callback functions you want to handle, and enable those
 callbacks. As an example, here is some code that defines a new
 window type which closes itself when the user presses `Escape`:
 
-{% highlight ada %}
+<?prettify lang=ada?>
 
-type My_Window is new Glfw.Windows.Window with null record;
-
-overriding
-procedure Init (Object : not null access My_Window;
-                Width, Height : Glfw.Size;
-                Title   : String;
-                Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
-                Share   : access Glfw.Windows.Window'Class := null);
-
-overriding
-procedure Key_Changed (Object   : not null access My_Window;
-                       Key      : Glfw.Input.Keys.Key;
-                       Scancode : Glfw.Input.Keys.Scancode;
-                       Action   : Glfw.Input.Keys.Action;
-                       Mods     : Glfw.Input.Keys.Modifiers);
-
-procedure Init (Object : not null access My_Window;
-                Width, Height : Glfw.Size;
-                Title   : String;
-                Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
-                Share   : access Glfw.Windows.Window'Class := null) is
-   Upcast : Glfw.Windows.Window_Reference
-     := Glfw.Windows.Window (Object.all)'Access;
-begin
-   Upcast.Init (Width, Height, Title, Monitor, Share);
-   Object.Enable_Callback (Glfw.Windows.Callbacks.Key);
-end Init;
-
-procedure Key_Changed (Object   : not null access My_Window;
-                       Key      : Glfw.Input.Keys.Key;
-                       Scancode : Glfw.Input.Keys.Scancode;
-                       Action   : Glfw.Input.Keys.Action;
-                       Mods     : Glfw.Input.Keys.Modifiers) is
-   use type Glfw.Input.Keys.Key;
-begin
-   If Key = Glfw.Input.Keys.Escape then
-      Object.Set_Should_Close (True);
-   end if;
-end Key_Changed;
-
-{% endhighlight %}
+    type My_Window is new Glfw.Windows.Window with null record;
+    
+    overriding
+    procedure Init (Object : not null access My_Window;
+                    Width, Height : Glfw.Size;
+                    Title   : String;
+                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
+                    Share   : access Glfw.Windows.Window'Class := null);
+    
+    overriding
+    procedure Key_Changed (Object   : not null access My_Window;
+                           Key      : Glfw.Input.Keys.Key;
+                           Scancode : Glfw.Input.Keys.Scancode;
+                           Action   : Glfw.Input.Keys.Action;
+                           Mods     : Glfw.Input.Keys.Modifiers);
+    
+    procedure Init (Object : not null access My_Window;
+                    Width, Height : Glfw.Size;
+                    Title   : String;
+                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
+                    Share   : access Glfw.Windows.Window'Class := null) is
+       Upcast : Glfw.Windows.Window_Reference
+         := Glfw.Windows.Window (Object.all)'Access;
+    begin
+       Upcast.Init (Width, Height, Title, Monitor, Share);
+       Object.Enable_Callback (Glfw.Windows.Callbacks.Key);
+    end Init;
+    
+    procedure Key_Changed (Object   : not null access My_Window;
+                           Key      : Glfw.Input.Keys.Key;
+                           Scancode : Glfw.Input.Keys.Scancode;
+                           Action   : Glfw.Input.Keys.Action;
+                           Mods     : Glfw.Input.Keys.Modifiers) is
+       use type Glfw.Input.Keys.Key;
+    begin
+       If Key = Glfw.Input.Keys.Escape then
+          Object.Set_Should_Close (True);
+       end if;
+    end Key_Changed;
 
 The package `GLFW.Windows` has three child packages:
 

@@ -5,10 +5,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>OpenGLAda - {{ page.title }}</title>
 		<link href="/OpenGLAda/css/main.css" media="screen" rel="stylesheet" type="text/css"/>
-		<link href="/OpenGLAda/css/syntax.css" media="screen" rel="stylesheet" type="text/css"/>
+		<link href="/OpenGLAda/css/prettify.css" media="screen" rel="stylesheet" type="text/css"/>
+		<script type="text/javascript" src="/OpenGLAda/js/prettify.js"></script>
+		<script type="text/javascript" src="/OpenGLAda/js/lang-ada.js"></script>
 	</head>
 	
-	<body>
+	<body onload="prettyPrint()">
 		<header>
 			<h1>OpenGLAda</h1>
 			<h2>Thick Ada Binding for OpenGL</h2>
