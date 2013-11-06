@@ -12,7 +12,7 @@ project OpenGL_Shared is
    type Windowing_System_Type is
       ("windows", "x11", "quartz");
    Windowing_System : Windowing_System_Type
-     := external ("Windowing_System", "x11");
+     := external ("Windowing_System");
    
    type Mode_Type is ("debug", "release");
    Mode : Mode_Type := external ("mode", "debug");
