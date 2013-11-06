@@ -80,13 +80,13 @@ target to configure the currently bound object. The code might look like this:
        -- Bind the texture to a target
        -- (Note that the texture's type is determined by the target it get
        -- bound to. You should not bind the texture to another target afterwards)
-       Texture_2D.Bind (My_Texture);
+       Targets.Texture_2D.Bind (My_Texture);
        
-       Texture_2D.Set_Minifying_Filter (Linear_Mipmap_Nearest);
+       Targets.Texture_2D.Set_Minifying_Filter (Linear_Mipmap_Nearest);
        -- do something useful here
        -- ...
        
-       Texture_2D.Bind (My_Other_Texture);
+       Targets.Texture_2D.Bind (My_Other_Texture);
        
        -- if you did not copy the value of My_Texture, the OpenGL texture
        -- that is referenced by My_Texture gets destroyed at this point.

@@ -47,10 +47,10 @@ above, other calls will convert the values to the internally used type.
 ## Exception Handling
 
 OpenGL provides a polling mechanism for discovering errors, i.e. you have to ask OpenGL
-whether an error has occured. OpenGLAda does this automatically in most calls that are
-relayed to OpenGL. If it discovers an error, it raises an appropriate exception (see 
-[GL](/OpenGLAda/doc/GL.html) for details). This behaviour can be disabled for performance
-reasons, but then you won't notice any errors coming from OpenGL.
+whether an error has occured. OpenGLAda can do this automatically in most calls that are
+relayed to OpenGL. If this feature is enabled, an appropriate exception is raised any time
+OpenGL sets an error flag. You can disable this behavior by setting the scenario variable
+`Auto_Exceptions` to `disabled` when compiling OpenGLAda.
 
 ## Runtime Binding
 
