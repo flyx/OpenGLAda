@@ -28,7 +28,7 @@ package body GL.Objects.Shaders is
         := (1 => Source'Length);
    begin
       API.Shader_Source (Subject.Reference.GL_Id, 1, C_Source, Lengths);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Source;
    
    function Source (Subject : Shader) return String is

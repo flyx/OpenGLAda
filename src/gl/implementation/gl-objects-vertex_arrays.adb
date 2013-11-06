@@ -30,20 +30,20 @@ package body GL.Objects.Vertex_Arrays is
          API.Bind_Vertex_Array (Object.Reference.GL_Id);
          Current_Object := Object;
       end if;
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Bind;
 
    procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Size) is
    begin
       API.Draw_Arrays (Mode, First, Count);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Draw_Arrays;
 
    procedure Initialize_Id (Object : in out Vertex_Array_Object) is
       New_Id : UInt := 0;
    begin
       API.Gen_Vertex_Arrays (1, New_Id);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
       Object.Reference.Initialized := True;
    end Initialize_Id;
@@ -57,7 +57,7 @@ package body GL.Objects.Vertex_Arrays is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Vertex_Arrays (1, Arr);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;

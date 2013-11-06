@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2012, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,29 +14,22 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API;
-with GL.Enums.Textures;
+with GL.Errors;
 
-package body GL.Objects.Textures.Targets is
-
-   function Buffer_Offset (Object : Texture_Buffer_Target;
-                           Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Offset, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Offset;
-
-   function Buffer_Size (Object : Texture_Buffer_Target;
-                         Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Size, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Size;
-
-end GL.Objects.Textures.Targets;
+separate (GL)
+procedure Raise_Exception_On_OpenGL_Error is
+begin
+   case Errors.Error_Flag is
+      when Errors.Invalid_Operation => raise Errors.Invalid_Operation_Error;
+      when Errors.Invalid_Value => raise Errors.Invalid_Value_Error;
+      when Errors.Invalid_Framebuffer_Operation =>
+         raise Errors.Invalid_Framebuffer_Operation_Error;
+      when Errors.Out_Of_Memory => raise Errors.Out_Of_Memory_Error;
+      when Errors.Stack_Overflow => raise Errors.Stack_Overflow_Error;
+      when Errors.Stack_Underflow => raise Errors.Stack_Underflow_Error;
+      when Errors.Invalid_Enum => raise Errors.Internal_Error;
+      when Errors.No_Error => null;
+   end case;
+exception
+   when Constraint_Error => raise Errors.Internal_Error;
+end Raise_Exception_On_OpenGL_Error;

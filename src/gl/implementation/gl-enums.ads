@@ -33,9 +33,6 @@ private package GL.Enums is
    type Blending_Factor_Source is (Dst_Color, One_Minus_Dst_Color,
                                    Src_Alpha_Saturate);
 
-   type Error_Code is (No_Error, Invalid_Enum, Invalid_Value, Invalid_Operation,
-                       Out_Of_Memory);
-
    type Front_Face_Direction is (CW, CCW);
 
    type Matrix_Mode is (Modelview, Projection, Texture, Color);
@@ -103,13 +100,6 @@ private
                                    One_Minus_Dst_Color => 16#0307#,
                                    Src_Alpha_Saturate  => 16#0308#);
    for Blending_Factor_Source'Size use Low_Level.Enum'Size;
-
-   for Error_Code use (No_Error          => 0,
-                       Invalid_Enum      => 16#0500#,
-                       Invalid_Value     => 16#0501#,
-                       Invalid_Operation => 16#0502#,
-                       Out_Of_Memory     => 16#0505#);
-   for Error_Code'Size use Low_Level.Enum'Size;
 
    for Front_Face_Direction use (CW  => 16#0900#,
                                  CCW => 16#0901#);

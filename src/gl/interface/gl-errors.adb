@@ -15,28 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.API;
-with GL.Enums.Textures;
 
-package body GL.Objects.Textures.Targets is
-
-   function Buffer_Offset (Object : Texture_Buffer_Target;
-                           Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Offset, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Offset;
-
-   function Buffer_Size (Object : Texture_Buffer_Target;
-                         Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Size, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Size;
-
-end GL.Objects.Textures.Targets;
+package body GL.Errors is
+   function Error_Flag return Error_Code renames API.Get_Error;
+end GL.Errors;

@@ -26,7 +26,7 @@ package body GL.Objects.Textures.With_2D_Loader is
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, 0, Pixel_Data.Format'First,
                         Pixel_Data.Data_Type'First, System.Null_Address);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 
    procedure Load_From_Data (Object : Fillable_Target;
@@ -39,7 +39,7 @@ package body GL.Objects.Textures.With_2D_Loader is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, 0, Source_Format, Source_Type, Source);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
 
 end GL.Objects.Textures.With_2D_Loader;

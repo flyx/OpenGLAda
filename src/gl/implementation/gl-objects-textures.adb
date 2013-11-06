@@ -31,7 +31,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Width, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Width;
    
@@ -40,7 +40,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Height, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Height;
    
@@ -49,7 +49,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Depth_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth;
    
@@ -59,7 +59,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Format (Object.Kind, Level,
                                           Enums.Textures.Internal_Format, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Format;
    
@@ -69,7 +69,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Red_Type, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Red_Type;
    
@@ -79,7 +79,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Green_Type, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Green_Type;
    
@@ -89,7 +89,7 @@ package body GL.Objects.Textures is
    begin
         API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                           Enums.Textures.Blue_Type, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Blue_Type;
    
@@ -99,7 +99,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Alpha_Type, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Type;
    
@@ -109,7 +109,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Depth_Type, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth_Type;
    
@@ -119,7 +119,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Red_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Red_Size;
    
@@ -129,7 +129,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Green_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Green_Size;
    
@@ -139,7 +139,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Blue_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Blue_Size;
    
@@ -149,7 +149,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Alpha_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Size;
    
@@ -159,7 +159,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Depth_Size, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth_Size;
    
@@ -169,7 +169,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Level_Parameter_Bool (Object.Kind, Level,
                                         Enums.Textures.Compressed, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Boolean (Ret);
    end Compressed;
    
@@ -180,7 +180,7 @@ package body GL.Objects.Textures is
       API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
                                         Enums.Textures.Compressed_Image_Size,
                                         Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Compressed_Image_Size;
    
@@ -215,7 +215,7 @@ package body GL.Objects.Textures is
         Texture_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
         then
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
-         Check_OpenGL_Error;
+         Raise_Exception_On_OpenGL_Error;
          if Cursor = Texture_Maps.No_Element then
             Current_Textures.Insert (Target.Kind, Object);
          else
@@ -239,7 +239,7 @@ package body GL.Objects.Textures is
       New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
    begin
       API.Gen_Textures (1, New_Id (1)'Access);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id (1);
       Object.Reference.Initialized := True;
    end Initialize_Id;
@@ -248,7 +248,7 @@ package body GL.Objects.Textures is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Textures (1, Arr);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
@@ -258,7 +258,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Min_Filter (Target.Kind, Enums.Textures.Min_Filter,
                                     Filter);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Minifying_Filter;
 
    function Minifying_Filter (Target : Texture_Target)
@@ -270,7 +270,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Min_Filter,
                                  Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Convert (Ret);
    end Minifying_Filter;
 
@@ -279,7 +279,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Mag_Filter (Target.Kind, Enums.Textures.Mag_Filter,
                                     Filter);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Magnifying_Filter;
 
    function Magnifying_Filter (Target : Texture_Target)
@@ -291,7 +291,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Mag_Filter,
                                  Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Convert (Ret);
    end Magnifying_Filter;
 
@@ -299,7 +299,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Float (Target.Kind, Enums.Textures.Min_LoD,
                                Single (Level));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Minimum_LoD;
 
    function Minimum_LoD (Target : Texture_Target) return Double is
@@ -307,7 +307,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Min_LoD,
                                    Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Double (Ret);
    end Minimum_LoD;
 
@@ -315,7 +315,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Float (Target.Kind, Enums.Textures.Max_LoD,
                                Single (Level));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Maximum_LoD;
 
    function Maximum_LoD (Target : Texture_Target) return Double is
@@ -323,7 +323,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Max_LoD,
                                    Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Double (Ret);
    end Maximum_LoD;
 
@@ -331,7 +331,7 @@ package body GL.Objects.Textures is
                                       Level : Mipmap_Level) is
    begin
       API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level, Level);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Lowest_Mipmap_Level;
 
    function Lowest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level is
@@ -339,7 +339,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level,
                                  Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Lowest_Mipmap_Level;
 
@@ -347,7 +347,7 @@ package body GL.Objects.Textures is
                                        Level : Mipmap_Level) is
    begin
       API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level, Level);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Highest_Mipmap_Level;
 
    function Highest_Mipmap_Level (Target : Texture_Target)
@@ -356,7 +356,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level,
                                  Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Highest_Mipmap_Level;
 
@@ -364,7 +364,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_S,
                                    Mode);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_X_Wrapping;
 
    function X_Wrapping (Target : Texture_Target) return Wrapping_Mode is
@@ -372,7 +372,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_S,
                                        Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end X_Wrapping;
 
@@ -380,7 +380,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_T,
                                    Mode);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Y_Wrapping;
 
    function Y_Wrapping (Target : Texture_Target) return Wrapping_Mode is
@@ -388,7 +388,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_T,
                                        Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Y_Wrapping;
 
@@ -396,7 +396,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_R,
                                    Mode);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Z_Wrapping;
 
    function Z_Wrapping (Target : Texture_Target) return Wrapping_Mode is
@@ -404,7 +404,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Wrap_Mode (Target.Kind, Enums.Textures.Wrap_R,
                                        Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Z_Wrapping;
 
@@ -414,7 +414,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                 Raw);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Border_Color;
 
    function Border_Color (Target : Texture_Target) return Colors.Color is
@@ -422,7 +422,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                     Raw);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Helpers.Color (Raw);
    end Border_Color;
 
@@ -431,14 +431,14 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Float (Target.Kind, Enums.Textures.Priority,
                                Single (Value));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Texture_Priority;
 
    function Texture_Priority (Target : Texture_Target) return Priority is
       Ret : Single;
    begin
       API.Get_Tex_Parameter_Float (Target.Kind, Enums.Textures.Priority, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Priority (Ret);
    end Texture_Priority;
 
@@ -453,7 +453,7 @@ package body GL.Objects.Textures is
       end if;
       API.Tex_Parameter_Comp_Mode (Target.Kind, Enums.Textures.Compare_Mode,
                                    Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Toggle_Compare_X_To_Texture;
 
    function Compare_X_To_Texture_Enabled (Target : Texture_Target)
@@ -464,7 +464,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Comp_Mode (Target.Kind, Enums.Textures.Compare_Mode,
                                        Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Value = Enums.Textures.Compare_R_To_Texture;
    end Compare_X_To_Texture_Enabled;
 
@@ -473,7 +473,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Comp_Func (Target.Kind, Enums.Textures.Compare_Func,
                                    Func);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Compare_Function;
 
    function Current_Compare_Function (Target : Texture_Target)
@@ -482,7 +482,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Comp_Func (Target.Kind, Enums.Textures.Compare_Func,
                                        Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Value;
    end Current_Compare_Function;
 
@@ -490,7 +490,7 @@ package body GL.Objects.Textures is
                                      Mode : Depth_Mode) is
    begin
       API.Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth, Mode);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Depth_Texture_Mode;
 
    function Depth_Texture_Mode (Target : Texture_Target) return Depth_Mode is
@@ -498,7 +498,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth,
                                         Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Value;
    end Depth_Texture_Mode;
 
@@ -507,7 +507,7 @@ package body GL.Objects.Textures is
    begin
       API.Tex_Parameter_Bool (Target.Kind, Enums.Textures.Generate_Mipmap,
                               Low_Level.Bool (Enabled));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Toggle_Mipmap_Autoupdate;
 
    function Mipmap_Autoupdate_Enabled (Target : Texture_Target)
@@ -516,7 +516,7 @@ package body GL.Objects.Textures is
    begin
       API.Get_Tex_Parameter_Bool (Target.Kind, Enums.Textures.Generate_Mipmap,
                                   Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Boolean (Value);
    end Mipmap_Autoupdate_Enabled;
    
@@ -526,7 +526,7 @@ package body GL.Objects.Textures is
           Enums.Getter.Max_Combined_Texture_Image_Units);
    begin
       API.Active_Texture (Texture_Indexing.Representation (Unit));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Active_Unit;
    
    function Active_Unit return Texture_Unit is

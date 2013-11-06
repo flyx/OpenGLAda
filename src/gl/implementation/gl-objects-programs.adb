@@ -23,13 +23,13 @@ package body GL.Objects.Programs is
    procedure Attach(Subject : Program; Shader : Shaders.Shader) is
    begin
       API.Attach_Shader (Subject.Reference.GL_Id, Shader.Raw_Id);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Attach;
 
    procedure Link (Subject : Program) is
    begin
       API.Link_Program (Subject.Reference.GL_Id);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Link;
 
    function Link_Status (Subject : Program) return Boolean is
@@ -86,7 +86,7 @@ package body GL.Objects.Programs is
       Result : constant Uniforms.Uniform := API.Get_Uniform_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Result;
    end Uniform_Location;
    
@@ -96,7 +96,7 @@ package body GL.Objects.Programs is
    begin
       API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index,
                                Interfaces.C.To_C (Name));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Bind_Attrib_Location;
       
    function Attrib_Location (Subject : Program; Name : String)
@@ -104,7 +104,7 @@ package body GL.Objects.Programs is
       Location : constant Attributes.Attribute := API.Get_Attrib_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Location;
    end Attrib_Location;
       

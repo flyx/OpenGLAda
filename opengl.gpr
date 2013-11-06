@@ -12,6 +12,13 @@ library project OpenGL is
       when "quartz"  => OpenGL_Sources := OpenGL_Sources & "src/gl/mac";
    end case;
    
+   case OpenGL_Shared.Auto_Exceptions is
+      when "enabled" => OpenGL_Sources :=
+        OpenGL_Sources & "src/gl/implementation/auto_exceptions";
+      when "disabled" => OpenGL_Sources :=
+        OpenGL_Sources & "src/gl/implementation/no_auto_exceptions";
+   end case;
+   
    for Source_Dirs use OpenGL_Sources;
    for Object_Dir use "obj";
    for Library_Dir use "lib";

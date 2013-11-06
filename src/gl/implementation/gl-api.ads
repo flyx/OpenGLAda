@@ -21,6 +21,7 @@ with GL.Blending;
 with GL.Buffers;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
+with GL.Errors;
 with GL.Fixed.Textures;
 with GL.Fixed.Lighting;
 with GL.Low_Level.Enums;
@@ -59,7 +60,7 @@ private package GL.API is
 
    subtype Zero is Int range 0 .. 0;
 
-   function Get_Error return Enums.Error_Code;
+   function Get_Error return Errors.Error_Code;
    pragma Import (Convention => StdCall, Entity => Get_Error,
                   External_Name => "glGetError");
 

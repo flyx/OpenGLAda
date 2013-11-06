@@ -15,7 +15,10 @@ project OpenGL_Shared is
      := external ("Windowing_System");
    
    type Mode_Type is ("debug", "release");
-   Mode : Mode_Type := external ("mode", "debug");
+   Mode : Mode_Type := external ("Mode", "debug");
+   
+   type Toggle_Type is ("enabled", "disabled");
+   Auto_Exceptions : Toggle_Type := external ("Auto_Exceptions", "enabled");
    
    package Ide is
       for Vcs_Kind use "Git";

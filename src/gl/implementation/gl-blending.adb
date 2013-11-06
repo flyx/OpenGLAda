@@ -21,14 +21,14 @@ package body GL.Blending is
    procedure Set_Blend_Func (Src_Factor, Dst_Factor : Blend_Factor) is
    begin
       API.Blend_Func (Src_Factor, Dst_Factor);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Blend_Func;
 
    procedure Set_Blend_Func (Draw_Buffer : Buffers.Draw_Buffer_Index;
                              Src_Factor, Dst_Factor : Blend_Factor) is
    begin
       API.Blend_Func_I (Draw_Buffer, Src_Factor, Dst_Factor);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Blend_Func;
 
 end GL.Blending;

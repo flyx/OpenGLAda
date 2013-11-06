@@ -50,7 +50,7 @@ package body GL.Objects.Buffer is
         Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
         then
          API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
-         Check_OpenGL_Error;
+         Raise_Exception_On_OpenGL_Error;
          if Cursor = Buffer_Maps.No_Element then
             Current_Buffers.Insert (Target.Kind, Object);
          else
@@ -77,7 +77,7 @@ package body GL.Objects.Buffer is
       API.Buffer_Data (Target.Kind,
         Element_Type'Size * Data'Length / System.Storage_Unit,
         Data (Data'First)'Address, Usage);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
 
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
@@ -85,21 +85,21 @@ package body GL.Objects.Buffer is
    begin
       API.Buffer_Data (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
                        System.Null_Address, Usage);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Allocate;
    
    procedure Draw_Elements (Mode : Connection_Mode; Count : Size;
                             Index_Type : Unsigned_Numeric_Type) is
    begin
       API.Draw_Elements (Mode, Count, Index_Type, 0);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
    overriding procedure Initialize_Id (Object : in out Buffer_Object) is
       New_Id : UInt := 0;
    begin
       API.Gen_Buffers (1, New_Id);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
       Object.Reference.Initialized := True;
    end Initialize_Id;
@@ -107,7 +107,7 @@ package body GL.Objects.Buffer is
    overriding procedure Delete_Id (Object : in out Buffer_Object) is
    begin
       API.Delete_Buffers (1, (1 => Object.Reference.GL_Id));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.Initialized := False;
    end Delete_Id;
 

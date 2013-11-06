@@ -60,7 +60,7 @@ package body GL.Files is
    begin
       Read_Whole_File (File_Name, Sizes (1), Sources (1));
       API.Shader_Source (Object.Raw_Id, 1, Sources, Sizes);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_Shader_Source_From_File;
 
 end GL.Files;

@@ -19,6 +19,7 @@ with Interfaces.C.Strings;
 
 with GL.API;
 with GL.Enums.Getter;
+with GL.Errors;
 
 package body GL.Context is
 
@@ -26,7 +27,7 @@ package body GL.Context is
       Result : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Major_Version, Result'Access);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Result;
    end Major_Version;
 
@@ -34,7 +35,7 @@ package body GL.Context is
       Result : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Minor_Version, Result'Access);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Result;
    end Minor_Version;
 
@@ -55,11 +56,11 @@ package body GL.Context is
 
    function Extensions return String_List is
       use Ada.Strings.Unbounded;
-      use type Enums.Error_Code;
+      use type Errors.Error_Code;
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Extensions, Count'Access);
-      if API.Get_Error = Enums.No_Error then
+      if API.Get_Error = Errors.No_Error then
          -- we are on OpenGL 3
          return List : String_List (1 .. Positive (Count)) do
             for I in List'Range loop
@@ -99,11 +100,11 @@ package body GL.Context is
 
 
    function Has_Extension (Name : String) return Boolean is
-      use type Enums.Error_Code;
+      use type Errors.Error_Code;
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Extensions, Count'Access);
-      if API.Get_Error = Enums.No_Error then
+      if API.Get_Error = Errors.No_Error then
          -- we are on OpenGL 3
          for i in 1 .. Count loop
             declare
@@ -145,17 +146,17 @@ package body GL.Context is
       Result : constant String := C.Strings.Value
         (API.Get_String (Enums.Getter.Shading_Language_Version));
    begin
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Result;
    end Primary_Shading_Language_Version;
 
    function Supported_Shading_Language_Versions return String_List is
       use Ada.Strings.Unbounded;
-      use type Enums.Error_Code;
+      use type Errors.Error_Code;
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Shading_Language_Versions, Count'Access);
-      if API.Get_Error = Enums.Invalid_Enum then
+      if API.Get_Error = Errors.Invalid_Enum then
          raise Feature_Not_Supported_Exception;
       end if;
       return List : String_List (1 .. Positive (Count)) do
@@ -171,7 +172,7 @@ package body GL.Context is
       Count : aliased Int;
    begin
       API.Get_Integer (Enums.Getter.Num_Shading_Language_Versions, Count'Access);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       for I in 1 .. Count loop
          if C.Strings.Value
            (API.Get_String_I (Enums.Getter.Shading_Language_Version,

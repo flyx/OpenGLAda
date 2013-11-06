@@ -33,20 +33,6 @@ package GL is
    subtype Index_3D is Index_Homogeneous range X .. Z;
    subtype Index_2D is Index_Homogeneous range X .. Y;
    
-   -----------------------------------------------------------------------------
-   --                             Configuration                               --
-   -----------------------------------------------------------------------------
-
-   -- Enabled by default. If disabled, no exceptions will be raised when OpenGL
-   -- encounters an error. Disabling might result in a speed-up because OpenGL
-   -- errors have to be polled.
-   procedure Toggle_Error_Checking (Enabled : Boolean);
-
-   Invalid_Operation : exception;
-   Out_Of_Memory     : exception;
-   Invalid_Value     : exception;
-   Internal_Error    : exception;
-   
    -- raised when a function that is not available for the current context
    -- is called.
    Feature_Not_Supported_Exception : exception;
@@ -57,13 +43,7 @@ private
    --                           Internal functions                            --
    -----------------------------------------------------------------------------
 
-   procedure Check_OpenGL_Error;
-   pragma Inline (Check_OpenGL_Error);
-   
-   procedure Suspend_Error_Checking;
-   procedure Resume_Error_Checking;
-   
-   pragma Inline (Suspend_Error_Checking);
-   pragma Inline (Resume_Error_Checking);
+   procedure Raise_Exception_On_OpenGL_Error;
+   pragma Inline (Raise_Exception_On_OpenGL_Error);
 
 end GL;

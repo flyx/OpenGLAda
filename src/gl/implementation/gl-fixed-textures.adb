@@ -24,7 +24,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Tex_Func (Enums.Textures.Texture_Env, Enums.Textures.Env_Mode,
                                 Func);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Tex_Function;
 
    function Tex_Function return Texture_Function is
@@ -32,7 +32,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Tex_Func (Enums.Textures.Texture_Env, Enums.Textures.Env_Mode,
                                 Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Tex_Function;
 
@@ -40,7 +40,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Combine_Func (Enums.Textures.Texture_Env, Enums.Textures.Combine_RGB,
                                 Func);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_RGB_Combine;
 
    function RGB_Combine return Combine_Function is
@@ -48,7 +48,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_RGB, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end RGB_Combine;
 
@@ -56,7 +56,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                 Enums.Textures.Combine_Alpha, Func);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Alpha_Combine;
 
    function Alpha_Combine return Alpha_Combine_Function is
@@ -64,7 +64,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_Alpha, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Combine;
 
@@ -77,7 +77,7 @@ package body GL.Fixed.Textures is
          when 2 => Param := Enums.Textures.Src2_RGB;
       end case;
       API.Tex_Env_Source (Enums.Textures.Texture_Env, Param, Source);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_RGB_Source;
 
    function RGB_Source (Index : Source_Index) return Source_Kind is
@@ -90,7 +90,7 @@ package body GL.Fixed.Textures is
          when 2 => Param := Enums.Textures.Src2_RGB;
       end case;
       API.Get_Tex_Env_Source (Enums.Textures.Texture_Env, Param, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end RGB_Source;
 
@@ -103,7 +103,7 @@ package body GL.Fixed.Textures is
          when 2 => Param := Enums.Textures.Src2_Alpha;
       end case;
       API.Tex_Env_Source (Enums.Textures.Texture_Env, Param, Source);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Alpha_Source;
 
    function Alpha_Source (Index : Source_Index) return Source_Kind is
@@ -116,7 +116,7 @@ package body GL.Fixed.Textures is
          when 2 => Param := Enums.Textures.Src2_Alpha;
       end case;
       API.Get_Tex_Env_Source (Enums.Textures.Texture_Env, Param, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Source;
 
@@ -124,7 +124,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Float (Enums.Textures.Texture_Env,
                          Enums.Textures.RGB_Scale, Single (Value));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_RGB_Scale;
 
    function RGB_Scale return Scaling_Factor is
@@ -132,7 +132,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Texture_Env,
                              Enums.Textures.RGB_Scale, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Double (Ret);
    end RGB_Scale;
 
@@ -140,7 +140,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Float (Enums.Textures.Texture_Env,
                          Enums.Textures.Alpha_Scale, Single (Value));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Alpha_Scale;
 
    function Alpha_Scale return Scaling_Factor is
@@ -148,7 +148,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Texture_Env,
                              Enums.Textures.Alpha_Scale, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Double (Ret);
    end Alpha_Scale;
 
@@ -156,7 +156,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Float (Enums.Textures.Filter_Control,
                          Enums.Textures.LoD_Bias, Single (Value));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_LoD_Bias;
 
    function LoD_Bias return Double is
@@ -164,7 +164,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Float (Enums.Textures.Filter_Control,
                              Enums.Textures.LoD_Bias, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Double (Ret);
    end LoD_Bias;
 
@@ -174,7 +174,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Arr (Enums.Textures.Texture_Env,
                        Enums.Textures.Env_Color, Float_Colors);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Env_Color;
 
    function Env_Color return Colors.Color is
@@ -182,7 +182,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Arr (Enums.Textures.Texture_Env,
                            Enums.Textures.Env_Color, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Helpers.Color (Ret);
    end Env_Color;
 
@@ -190,7 +190,7 @@ package body GL.Fixed.Textures is
    begin
       API.Tex_Env_Bool (Enums.Textures.Point_Sprite,
                         Enums.Textures.Coord_Replace, Low_Level.Bool (Enabled));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Toggle_Point_Sprite_Coord_Replace;
 
    function Point_Sprite_Coord_Replace return Boolean is
@@ -198,7 +198,7 @@ package body GL.Fixed.Textures is
    begin
       API.Get_Tex_Env_Bool (Enums.Textures.Point_Sprite,
                             Enums.Textures.Coord_Replace, Ret);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       return Boolean (Ret);
    end Point_Sprite_Coord_Replace;
 

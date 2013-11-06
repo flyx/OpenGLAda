@@ -23,7 +23,7 @@ package body GL.Fixed.Matrix is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Frustum (Left, Right, Bottom, Top, Near, Far);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Frustum;
 
    procedure Apply_Orthogonal (Stack : Matrix_Stack;
@@ -31,49 +31,49 @@ package body GL.Fixed.Matrix is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Ortho (Left, Right, Bottom, Top, Near, Far);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Orthogonal;
 
    procedure Load_Identity (Stack : Matrix_Stack) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Load_Identity;
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_Identity;
 
    procedure Load_Matrix (Stack : Matrix_Stack; Value : Matrix4) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Doubles.Load_Matrix (Value);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Load_Matrix;
 
    procedure Apply_Multiplication (Stack : Matrix_Stack; Factor : Matrix4) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Doubles.Mult_Matrix (Factor);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Multiplication;
 
    procedure Apply_Multiplication (Stack : Matrix_Stack; Factor : Double) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Doubles.Mult_Matrix (Identity4 * Factor);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Multiplication;
 
    procedure Push (Stack : Matrix_Stack) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Push_Matrix;
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Push;
 
    procedure Pop  (Stack : Matrix_Stack) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Pop_Matrix;
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Pop;
 
    procedure Apply_Rotation (Stack : Matrix_Stack; Angle : Double;
@@ -81,34 +81,34 @@ package body GL.Fixed.Matrix is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Rotate (Angle, Axis (X), Axis (Y), Axis (Z));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Rotation;
 
    procedure Apply_Rotation (Stack : Matrix_Stack; Angle, X, Y, Z : Double) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Rotate (Angle, X, Y, Z);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Rotation;
 
    procedure Apply_Scaling  (Stack : Matrix_Stack; X, Y, Z : Double) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Scale (X, Y, Z);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Scaling;
 
    procedure Apply_Translation (Stack : Matrix_Stack; Along : Vector3) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Translate (Along (X), Along (Y), Along (Z));
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Translation;
 
    procedure Apply_Translation (Stack : Matrix_Stack; X, Y, Z : Double) is
    begin
       API.Matrix_Mode (Stack.Mode);
       API.Translate (X, Y, Z);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Apply_Translation;
 end GL.Fixed.Matrix;

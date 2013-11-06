@@ -36,7 +36,7 @@ package body GL.Attributes is
          when others =>
             API.Vertex_AttribI_Pointer (Index, Count, Kind, Stride, Offset);
       end case;
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;
 
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute) renames

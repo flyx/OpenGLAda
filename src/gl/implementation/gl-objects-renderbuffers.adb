@@ -45,7 +45,7 @@ package body GL.Objects.Renderbuffers is
    begin
       if Samples = 0 then
          API.Renderbuffer_Storage (Object.Kind, Format, Width, Height);
-         Check_OpenGL_Error;
+         Raise_Exception_On_OpenGL_Error;
       else
          API.Renderbuffer_Storage_Multisample (Object.Kind, Samples, Format,
                                                Width, Height);
@@ -135,7 +135,7 @@ package body GL.Objects.Renderbuffers is
           (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
         then
          API.Bind_Renderbuffer (Target.Kind, Object.Reference.GL_Id);
-         Check_OpenGL_Error;
+         Raise_Exception_On_OpenGL_Error;
          if Cursor = Renderbuffer_Maps.No_Element then
             Current_Renderbuffers.Insert (Target.Kind, Object);
          else
@@ -159,7 +159,7 @@ package body GL.Objects.Renderbuffers is
       New_Id : UInt := 0;
    begin
       API.Gen_Renderbuffers (1, New_Id);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
       Object.Reference.Initialized := True;
    end Initialize_Id;
@@ -168,7 +168,7 @@ package body GL.Objects.Renderbuffers is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Renderbuffers (1, Arr);
-      Check_OpenGL_Error;
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;

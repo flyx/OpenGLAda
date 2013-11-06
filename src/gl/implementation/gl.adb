@@ -15,19 +15,8 @@
 --------------------------------------------------------------------------------
 
 with GL.API;
-with GL.Enums;
 
 package body GL is
-   -----------------------------------------------------------------------------
-   --                              Global state                               --
-   -----------------------------------------------------------------------------
-   
-   Error_Checking_Enabled   : Boolean := True;
-   Error_Checking_Suspended : Boolean := False;
-   
-   -----------------------------------------------------------------------------
-   --                            Implementations                              --
-   -----------------------------------------------------------------------------
    
    procedure Flush is
    begin
@@ -38,35 +27,7 @@ package body GL is
    begin
       API.Finish;
    end Finish;
-   
-   procedure Toggle_Error_Checking (Enabled : Boolean) is
-   begin
-      Error_Checking_Enabled := Enabled;
-   end Toggle_Error_Checking;
 
-   procedure Check_OpenGL_Error is
-   begin
-      if Error_Checking_Enabled and not Error_Checking_Suspended then
-         case API.Get_Error is
-            when Enums.Invalid_Operation => raise Invalid_Operation;
-            when Enums.Invalid_Value => raise Invalid_Value;
-            when Enums.Out_Of_Memory => raise Out_Of_Memory;
-            when Enums.Invalid_Enum => raise Internal_Error;
-            when Enums.No_Error => null;
-         end case;
-      end if;
-   exception
-         when Constraint_Error => raise Internal_Error;
-   end Check_OpenGL_Error;
-   
-   procedure Suspend_Error_Checking is
-   begin
-      Error_Checking_Suspended := True;
-   end Suspend_Error_Checking;
-   
-   procedure Resume_Error_Checking is
-   begin
-      Error_Checking_Suspended := False;
-   end Resume_Error_Checking;
-
+   -- implementation depends on whether Auto_Exceptions has been enabled.
+   procedure Raise_Exception_On_OpenGL_Error is separate;
 end GL;

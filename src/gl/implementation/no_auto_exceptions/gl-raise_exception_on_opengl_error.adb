@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2012, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,29 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API;
-with GL.Enums.Textures;
-
-package body GL.Objects.Textures.Targets is
-
-   function Buffer_Offset (Object : Texture_Buffer_Target;
-                           Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Offset, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Offset;
-
-   function Buffer_Size (Object : Texture_Buffer_Target;
-                         Level : Mipmap_Level) return Size is
-      Ret : Size;
-   begin
-      API.Get_Tex_Level_Parameter_Size (Object.Kind, Level,
-                                        Enums.Textures.Buffer_Size, Ret);
-      Raise_Exception_On_OpenGL_Error;
-      return Ret;
-   end Buffer_Size;
-
-end GL.Objects.Textures.Targets;
+separate (GL)
+procedure Raise_Exception_On_OpenGL_Error is
+begin
+   null;
+end Raise_Exception_On_OpenGL_Error;
