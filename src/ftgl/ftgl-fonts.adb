@@ -53,8 +53,8 @@ package body FTGL.Fonts is
 
    procedure Loader (Object : in out Font_Type; Path : String) is
       use type System.Address;
-      C_Path : API.C.char_array := API.C.To_C (Path);
-      Raw    : System.Address := Creator (C_Path);
+      C_Path : constant API.C.char_array := API.C.To_C (Path);
+      Raw    : constant System.Address := Creator (C_Path);
    begin
       if Raw = System.Null_Address then
          raise FTGL_Error with "Could not load font " & Path;
@@ -208,7 +208,7 @@ package body FTGL.Fonts is
 
    function Bounds (Object : Font; Text : String) return Bounding_Box is
       Result : Bounding_Box;
-      C_Text : API.C.char_array := API.C.To_C (Text, False);
+      C_Text : constant API.C.char_array := API.C.To_C (Text, False);
    begin
       if Object.Data = null then
          raise FTGL_Error with "Font uninitialized!";
@@ -219,7 +219,7 @@ package body FTGL.Fonts is
 
    function Advance_Width (Object : Font; Text : String) return GL.Types.Single
    is
-      C_Text : API.C.char_array := API.C.To_C (Text);
+      C_Text : constant API.C.char_array := API.C.To_C (Text);
    begin
       if Object.Data = null then
          raise FTGL_Error with "Font uninitialized!";
@@ -228,7 +228,7 @@ package body FTGL.Fonts is
    end Advance_Width;
 
    procedure Render (Object : Font; Value : String; Mode : Render_Mode) is
-      C_Value : API.C.char_array := API.C.To_C (Value);
+      C_Value : constant API.C.char_array := API.C.To_C (Value);
    begin
       if Object.Data = null then
          raise FTGL_Error with "Font uninitialized!";

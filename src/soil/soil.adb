@@ -27,7 +27,7 @@ package body SOIL is
       Channels  : Image_Format  := Auto;
       Flags     : Texture_Flags := (others => False)) is
 
-      Raw_Id : GL.Types.UInt
+      Raw_Id : constant GL.Types.UInt
         := API.Load_OGL_Texture (Interfaces.C.To_C (File_Name),
                                  Channels, Texture.Raw_Id, Flags);
    begin
@@ -44,7 +44,7 @@ package body SOIL is
       Channels : Image_Format  := Auto;
       Flags    : Texture_Flags := (others => False)) is
 
-      Raw_Id : GL.Types.UInt := API.Load_OGL_Cubemap
+      Raw_Id : constant GL.Types.UInt := API.Load_OGL_Cubemap
         (Interfaces.C.To_C (Pos_X_File),
          Interfaces.C.To_C (Neg_X_File),
          Interfaces.C.To_C (Pos_Y_File),
@@ -66,7 +66,7 @@ package body SOIL is
       Channels   : Image_Format   := Auto;
       Flags      : Texture_Flags  := (others => False)) is
 
-      Raw_Id : GL.Types.UInt
+      Raw_Id : constant GL.Types.UInt
         := API.Load_OGL_Single_Cubemap (Interfaces.C.To_C (File_Name),
                                         Face_Order, Channels,
                                         Texture.Raw_Id, Flags);
@@ -84,7 +84,7 @@ package body SOIL is
       Rescale_To_Max : Boolean;
       Flags          : Texture_Flags := (others => False)) is
 
-      Raw_Id : GL.Types.UInt := API.Load_OGL_HDR_Texture
+      Raw_Id : constant GL.Types.UInt := API.Load_OGL_HDR_Texture
         (Interfaces.C.To_C (File_Name), Format, Bool (Rescale_To_Max),
          Texture.Raw_Id, Flags);
    begin
@@ -97,7 +97,7 @@ package body SOIL is
    procedure Save_Screenshot (File_Name  : String;
                               Image_Type : Image_Save_Type;
                               X, Y, Width, Height : GL.Types.Int) is
-      Result : Bool := API.Save_Screenshot
+      Result : constant Bool := API.Save_Screenshot
         (Interfaces.C.To_C (File_Name), Image_Type, X, Y, Width, Height);
    begin
       if not Result then

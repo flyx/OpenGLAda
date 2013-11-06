@@ -20,7 +20,7 @@ with GL.Buffers;
 with GL.Types.Colors;
 with GL.Fixed.Matrix;
 with GL.Immediate;
-with GL.Objects.Textures;
+with GL.Objects.Textures.Targets;
 with GL.Toggles;
 with GL.Types;
 
@@ -35,8 +35,6 @@ procedure SOIL_Test.Image is
    use GL.Types.Doubles;
 
    use Ada.Text_IO;
-
-   use type GL.Types.Double;
 
    Texture : GL.Objects.Textures.Texture;
    Image   : SOIL.Images.Image;
@@ -63,7 +61,7 @@ begin
       GL.Buffers.Clear ((others => True));
 
       GL.Toggles.Enable (GL.Toggles.Texture_2D);
-      GL.Objects.Textures.Texture_2D.Bind (Texture);
+      GL.Objects.Textures.Targets.Texture_2D.Bind (Texture);
       declare
          Token : GL.Immediate.Input_Token := GL.Immediate.Start (Quads);
       begin

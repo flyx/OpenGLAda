@@ -78,7 +78,7 @@ begin
    end;
    
    declare
-      List : FTGL.Fonts.Charset_List := Bitmap_Font.Get_Char_Map_List;
+      List : constant FTGL.Fonts.Charset_List := Bitmap_Font.Get_Char_Map_List;
    begin
       Ada.Text_IO.Put_Line ("Charsets:");
       for I in List'Range loop
