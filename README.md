@@ -112,7 +112,7 @@ scenario parameters:
  * `Windowing_System`: Sets the backend windowing system. Used for GLFW and also
                        for system-dependent parts of the API (GLX, WGL, CGL):
     
-    - `x11` (default): X Windowing System (Linux, BSD, etc)
+    - `x11`: X Windowing System (Linux, BSD, etc)
     - `windows`: Microsoft Windows
     - `quartz`: Quartz Compositor (OS X)
     
@@ -127,7 +127,14 @@ scenario parameters:
                                of the two API versions.
     
     - `2`: GLFW 2.x. Only one window.
-    - `3` (default): GLFW 3+. Multiple windows, multiple monitor support, etc.
+    - `3`: GLFW 3+. Multiple windows, multiple monitor support, etc.
+
+ * `Auto_Exceptions`: Configures exception handling:
+
+    - `enabled` (default): After each call to OpenGL, OpenGLAda checks whether
+      OpenGL has set an error flag and if it had, raises the corresponding
+      exception.
+    - `disabled`: The user has to query the error flag on his own.
 
 ### With other build systems
 
