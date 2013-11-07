@@ -1,11 +1,45 @@
 /* Overall Style */
 
+/* using solarized colors:
+ $base03:    #002b36;
+ $base02:    #073642;
+ $base01:    #586e75;
+ $base00:    #657b83;
+ $base0:     #839496;
+ $base1:     #93a1a1;
+ $base2:     #eee8d5;
+ $base3:     #fdf6e3;
+ $yellow:    #b58900;
+ $orange:    #cb4b16;
+ $red:       #dc322f;
+ $magenta:   #d33682;
+ $violet:    #6c71c4;
+ $blue:      #268bd2;
+ $cyan:      #2aa198;
+ $green:     #859900;
+ */
+
 html {
 	font-family: Helvetica, Arial, sans-serif;
+	background: black;
+	height: 100%;
+}
+
+body {
+	background: #073642;
+	color: #839496;
+	margin: 0;
+	padding: 0;
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 100%;
+	position: relative;
 }
 
 a:link,a:hover,a:active,a:visited {
-	color: black;
+	color: #268bd2;
+	text-decoration: none;
 }
 
 table {
@@ -14,65 +48,26 @@ table {
 
 /* Overall Structure */
 
-body > header {
-	/* fix for browsers that do not support <header> */
-	display: block;
-
-	position: fixed;
-	margin: 0;
-	left: 0;
-	right: 0;
-	top: 0;
-	height: 6em;
-	
-	text-align: center;
-	background: #4a2;
-}
-
-body > nav {
-	/* fix for browsers that do not support <nav> */
-	display: block;
-
-	position: fixed;
-	margin: 0;
-	padding: 0;
-	left: 0;
-	top: 6em;
-	bottom: 2em;
-	width: 13em;
-	
-	background: #4a2;
-}
-
 body > footer {
 	/* fix for browsers that do not support <footer> */
 	display: block;
 
-	position: fixed;
-	margin: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
 	height: 2em;
 	
-	background: #4a2;
 	text-align: center;
 }
 
-body > article {
-	/* fix for browsers that do not support <article> */
+/* Header Style */
+
+body > header {
+	/* fix for browsers that do not support <header> */
 	display: block;
 
-	margin-left: 13em;
-	margin-top: 6em;
-	margin-right: 0;
-	margin-bottom: 2em;
-	
 	padding: 1em;
-	z-index: -1;
-}
 
-/* Header Style */
+	text-align: center;
+	background: #073642;
+}
 
 body > header > h1 {
 	font-variant: small-caps;
@@ -83,21 +78,35 @@ body > header > h2 {
 	font-size: large;
 }
 
+body > #main-row {
+	display: table;
+	width: 100%;
+}
+
 /* Nav Style */
 
-body > nav h3 {
+body > #main-row > nav {
+	/* fix for browsers that do not support <nav> */
+	display: table-cell;
+	vertical-align: top;
+	padding: 0 0 2em 0;
+
+	background: #073642;
+}
+
+body > #main-row > nav h3 {
 	margin-top: 0;
 	text-align: center;
 	font-size: medium;
 }
 
-body > nav ul {
+body > #main-row > nav ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
 
-body > nav ul > li > a {
+body > #main-row > nav ul > li > a {
 	display: inline-block;
 	width: 11em;
 	padding-left: 1em;
@@ -106,22 +115,24 @@ body > nav ul > li > a {
 	padding-bottom: 0.5em;
 }
 
-body > nav ul > li > a.active {
-	background: white;
+body > #main-row > nav ul > li > a.active {
+	background: #002b36;
 	font-weight: bold;
 	text-decoration: none;
 }
 
-body > nav ul > li > a:hover, body > nav > ul > li > a:active {
-	background: #8e4;
+body > #main-row > nav ul > li > a:hover,
+body > #main-row > nav > ul > li > a:active {
+	background: #586e75;
+	color: #002b36;
 }
 
-body > nav ul > li.api > a {
+body > #main-row > nav ul > li.api > a {
 	padding-top : 0.25em;
 	padding-bottom : 0.25em;
 }
 
-body > nav ul > li.api > a > span {
+body > #main-row > nav ul > li.api > a > span {
 	display: inline-block;
 	font-family: Menlo,Courier,monospace;
 	font-size: small;
@@ -129,19 +140,12 @@ body > nav ul > li.api > a > span {
 	margin-left: 1em;
 }
 
-body > nav > div.scrollable {
+body > #main-row > nav > div.mainNav {
 	overflow-y: auto;
-	position: absolute;
-	padding: 0;
-	margin: 0;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
 	padding-bottom: 5em;
 }
 
-body > nav > div.seeAlso {
+body > #main-row > nav > div.seeAlso {
 	position: absolute;
 	bottom : 0;
 	left : 0;
@@ -154,6 +158,23 @@ body > nav > div.seeAlso {
 }
 
 /* Content Style */
+
+body > #main-row > article {
+	/* fix for browsers that do not support <article> */
+	display: table-cell;
+	vertical-align: top;
+	width: 100%;
+	background: #002b36;
+
+	margin: 0;
+
+	padding: 1em;
+	z-index: -1;
+}
+
+article pre {
+	display: table;
+}
 
 article th, article td {
 	border: 1px solid #aaa;
@@ -168,15 +189,16 @@ article thead {
 }
 
 
-body > article h1 {
+body > #main-row > article h1 {
 	font-size: larger;
+	margin-top: 0;
 }
 
-body > article h2 {
+body > #main-row > article h2 {
 	font-size: large;
 }
 
-body > article h3 {
+body > #main-row > article h3 {
 	font-size: medium;
 }
 

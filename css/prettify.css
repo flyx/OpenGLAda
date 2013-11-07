@@ -1,39 +1,27 @@
-.pln{color:#000}
+.pln{color:#839496}
 
 @media screen {
 
-.str{color:#090}
-.kwd{color:#008; font-weight : bold}
-.com{color:#888; font-style : italic}
+.str{color:#859900}
+.kwd{color:#93a1a1; font-weight : bold}
+.com{color:#586e75; font-style : italic}
 .typ{color:#909}
-.lit{color:#099}
+.lit{color:#6c71c4}
 .pun,
 .opn,
-.clo{color:#660}
+.clo{color:#93a1a1}
 .tag{color:#008}
-.atn{color:#844}
+.atn{color:#2aa198}
 .atv{color:#080}
 .dec,.var{color:#606}
-.fun{color:red}
-
-}
-@media print,projection{
-
-.str{color:#060}
-.kwd{color:#006; font-weight:bold}
-.com{color:#600; font-style:italic}
-.typ{color:#404; font-weight:bold}
-.lit{color:#044}
-.pun,.opn,.clo{color:#440}
-.tag{color:#006;font-weight:bold}
-.atn{color:#404}
-.atv{color:#060}
+.fun{color:#dc322f}
 
 }
 
 pre.prettyprinted {
-   padding : 2px;
-   background-color: #eee;
+   padding : 5px;
+   border-radius: 5px;
+   background-color: #073642;
 }
 ol.linenums{
     margin-top : 0;
