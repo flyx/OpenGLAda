@@ -20,43 +20,36 @@
 			<div class="scrollable">
 				<h3>Navigation</h3>
 				<ul>
-					{% for weight in (0..20) %}
-				
-						{% for p in site.pages %}
-							{% if p.weight == weight %}
-						
-								{% if p.url contains '/doc/GL' or p.api %}
-									{% assign api = true %}
+					{% assign sorted_pages = site.pages | sort:"name" %}
+					{% for p in sorted_pages %}
+						{% if p.url contains '/doc/gl' or p.api %}
+							{% assign api = true %}
+						{% else %}
+							{% assign api = false %}
+						{% endif %}
+						<li {% if api == true %}class="api"{% endif %}>
+							<a {% if p.url == page.url %}class="active"{% endif %}href="{{ p.url }}">
+								{% if api == true %}
+									<span>
+										{% for package in p.packages %}
+											{% unless forloop.first %}
+												<br />
+											{% endunless %}
+											{{ package }}
+										{% endfor %}
+									</span>
 								{% else %}
-									{% assign api = false %}
+									{{ p.title }}
 								{% endif %}
-								<li {% if api == true %}class="api"{% endif %}>
-									<a {% if p.url == page.url %}class="active"{% endif %}href="{{ p.url | prepend: '/OpenGLAda' }}">
-										{% if api == true %}
-											<span>
-												{% for package in p.packages %}
-													{% unless forloop.first %}
-														<br />
-													{% endunless %}
-													{{ package }}
-												{% endfor %}
-											</span>
-										{% else %}
-											{{ p.title }}
-										{% endif %}
-									</a>
-								</li>
-							
-							{% endif %}
-						{% endfor %}
-					
+							</a>
+						</li>
 					{% endfor %}
 				</ul>
 			</div>
 			<div class="seeAlso">
 				<h3>See Also</h3>
 				<ul>
-					<li><a href="http://flyx86.github.com/OpenCLAda/">OpenCLAda</a></li>
+					<li><a href="http://flyx.github.com/OpenCLAda/">OpenCLAda</a></li>
 				</ul>
 			</div>
 		</nav>

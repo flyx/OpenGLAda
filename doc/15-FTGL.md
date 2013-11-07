@@ -2,8 +2,8 @@
 layout : default
 title : API - FTGL
 packages : FTGL
-weight: 15
 api : true
+permalink: ftgl.html
 ---
 
 # The FTGL binding

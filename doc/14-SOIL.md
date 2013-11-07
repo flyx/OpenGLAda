@@ -2,8 +2,8 @@
 layout : default
 title : API - Simple OpenGL Image Loader
 packages : SOIL
-weight: 14
 api: true
+permalink: soil.html
 ---
 
 # The Simple OpenGL Image Loader (SOIL)
