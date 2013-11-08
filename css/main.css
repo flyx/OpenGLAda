@@ -63,7 +63,9 @@ body > header {
 	/* fix for browsers that do not support <header> */
 	display: block;
 
-	padding: 1em;
+	/* because CSS is stupid shit. This setting leads to
+	   the header wrapping the margin of the contained h1. */
+	overflow: auto;
 
 	text-align: center;
 	background: #073642;
@@ -140,21 +142,9 @@ body > #main-row > nav ul > li.api > a > span {
 	margin-left: 1em;
 }
 
-body > #main-row > nav > div.mainNav {
+body > #main-row > nav > div#main-nav {
 	overflow-y: auto;
 	padding-bottom: 5em;
-}
-
-body > #main-row > nav > div.seeAlso {
-	position: absolute;
-	bottom : 0;
-	left : 0;
-	right : 0;
-	
-	margin: 0;
-	padding: 0;
-	
-	background: #4a2;
 }
 
 /* Content Style */
