@@ -48,6 +48,16 @@ table {
 
 /* Overall Structure */
 
+body > .ie-warning {
+	background: #dc322f;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	text-align: center;
+	color: #b58900;
+}
+
 body > footer {
 	/* fix for browsers that do not support <footer> */
 	display: block;
