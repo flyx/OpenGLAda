@@ -126,6 +126,12 @@ package body GL.Objects.Renderbuffers is
       return Value;
    end Stencil_Size;
 
+   function Raw_Kind (Object : Renderbuffer_Target)
+                      return Low_Level.Enums.Renderbuffer_Kind is
+   begin
+      return Object.Kind;
+   end Raw_Kind;
+
    procedure Bind (Target : Renderbuffer_Target; Object : Renderbuffer'Class) is
       Cursor : constant Renderbuffer_Maps.Cursor
         := Current_Renderbuffers.Find (Target.Kind);

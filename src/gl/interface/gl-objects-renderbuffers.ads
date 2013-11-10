@@ -16,7 +16,7 @@
 
 with GL.Pixel_Data;
 
-private with GL.Low_Level.Enums;
+with GL.Low_Level.Enums;
 
 package GL.Objects.Renderbuffers is
    pragma Preelaborate;
@@ -38,6 +38,9 @@ package GL.Objects.Renderbuffers is
    function Alpha_Size   (Object : Renderbuffer_Target) return Size;
    function Depth_Size   (Object : Renderbuffer_Target) return Size;
    function Stencil_Size (Object : Renderbuffer_Target) return Size;
+
+   function Raw_Kind (Object : Renderbuffer_Target)
+                      return Low_Level.Enums.Renderbuffer_Kind;
 
    Active_Renderbuffer : constant Renderbuffer_Target;
 
