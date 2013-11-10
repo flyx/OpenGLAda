@@ -520,6 +520,12 @@ package body GL.Objects.Textures is
       return Boolean (Value);
    end Mipmap_Autoupdate_Enabled;
    
+   function Raw_Type (Target : Texture_Target)
+                      return Low_Level.Enums.Texture_Kind is
+   begin
+      return Target.Kind;
+   end Raw_Type;
+   
    procedure Set_Active_Unit (Unit : Texture_Unit) is
       package Texture_Indexing is new Enums.Indexes
          (Enums.Textures.Texture_Unit_Start_Rep,

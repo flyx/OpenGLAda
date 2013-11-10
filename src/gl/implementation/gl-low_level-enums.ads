@@ -27,7 +27,9 @@ package GL.Low_Level.Enums is
                          Texture_Cube_Map_Positive_Y,
                          Texture_Cube_Map_Negative_Y,
                          Texture_Cube_Map_Positive_Z,
-                         Texture_Cube_Map_Negative_Z, Texture_1D_Array,
+                         Texture_Cube_Map_Negative_Z,
+                         Proxy_Texture_Cube_Map,
+                         Texture_1D_Array,
                          Proxy_Texture_1D_Array, Texture_2D_Array,
                          Proxy_Texture_2D_Array, Texture_Buffer);
    
@@ -62,6 +64,7 @@ private
                          Texture_Cube_Map_Negative_Y => 16#8518#,
                          Texture_Cube_Map_Positive_Z => 16#8519#,
                          Texture_Cube_Map_Negative_Z => 16#851A#,
+                         Proxy_Texture_Cube_Map      => 16#851B#,
                          Texture_1D_Array       => 16#8C18#,
                          Proxy_Texture_1D_Array => 16#8C19#,
                          Texture_2D_Array       => 16#8C1A#,

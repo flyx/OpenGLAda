@@ -36,7 +36,11 @@ package GL is
    -- raised when a function that is not available for the current context
    -- is called.
    Feature_Not_Supported_Exception : exception;
-
+   
+   -- raised when OpenGLAda does not support a certain OpenGL feature
+   -- (either because it's too new and has not yet been wrapped, or because
+   -- it's so deprecated that you shouldn't use it anyway)
+   Not_Implemented_Exception : exception;
 private
 
    -----------------------------------------------------------------------------
