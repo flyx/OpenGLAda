@@ -245,144 +245,148 @@ package body Glfw.Display is
    end Height;
 
    function Opened      return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Opened);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Opened);
    begin
       return Boolean (Result);
    end Opened;
 
    function Active      return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Active);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Active);
    begin
       return Boolean (Result);
    end Active;
 
    function Iconified   return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Iconified);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Iconified);
    begin
       return Boolean (Result);
    end Iconified;
 
    function Accelerated return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Accelerated);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Accelerated);
    begin
       return Boolean (Result);
    end Accelerated;
 
    function Red_Bits     return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Red_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Red_Bits);
    begin
       return Natural (Result);
    end Red_Bits;
 
    function Green_Bits   return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Green_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Green_Bits);
    begin
       return Natural (Result);
    end Green_Bits;
 
    function Blue_Bits    return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Blue_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Blue_Bits);
    begin
       return Natural (Result);
    end Blue_Bits;
 
    function Alpha_Bits   return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Alpha_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Alpha_Bits);
    begin
       return Natural (Result);
    end Alpha_Bits;
 
    function Depth_Bits   return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Depth_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Depth_Bits);
    begin
       return Natural (Result);
    end Depth_Bits;
 
    function Stencil_Bits return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Stencil_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Stencil_Bits);
    begin
       return Natural (Result);
    end Stencil_Bits;
 
    function Refresh_Rate return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Refresh_Rate);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Refresh_Rate);
    begin
       return Natural (Result);
    end Refresh_Rate;
 
    function Accum_Red_Bits   return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Accum_Red_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Accum_Red_Bits);
    begin
       return Natural (Result);
    end Accum_Red_Bits;
 
    function Accum_Green_Bits return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Accum_Green_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Accum_Green_Bits);
    begin
       return Natural (Result);
    end Accum_Green_Bits;
 
    function Accum_Blue_Bits  return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Accum_Blue_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Accum_Blue_Bits);
    begin
       return Natural (Result);
    end Accum_Blue_Bits;
 
    function Accum_Alpha_Bits return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Accum_Alpha_Bits);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Accum_Alpha_Bits);
    begin
       return Natural (Result);
    end Accum_Alpha_Bits;
 
    function Auxiliary_Buffer_Count return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Aux_Buffers);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Aux_Buffers);
    begin
       return Natural (Result);
    end Auxiliary_Buffer_Count;
 
    function Stereo_Rendering_Supported return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Stereo);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Stereo);
    begin
       return Boolean (Result);
    end Stereo_Rendering_Supported;
 
    function Resizable return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.Window_No_Resize);
+      Result : constant Bool := Api.Get_Window_Param (Enums.Window_No_Resize);
    begin
       return not Boolean (Result);
    end Resizable;
 
    function FSAA_Sample_Count return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.Fsaa_Samples);
+      Result : constant C.int := Api.Get_Window_Param (Enums.Fsaa_Samples);
    begin
       return Natural (Result);
    end FSAA_Sample_Count;
 
-   function OpenGL_Version_Major      return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.OpenGL_Version_Major);
+   function OpenGL_Version_Major return Natural is
+      Result : constant C.int :=
+        Api.Get_Window_Param (Enums.OpenGL_Version_Major);
    begin
       return Natural (Result);
    end OpenGL_Version_Major;
 
-   function OpenGL_Version_Minor      return Natural is
-      Result : C.int := Api.Get_Window_Param (Enums.OpenGL_Version_Minor);
+   function OpenGL_Version_Minor return Natural is
+      Result : constant C.int
+        := Api.Get_Window_Param (Enums.OpenGL_Version_Minor);
    begin
       return Natural (Result);
    end OpenGL_Version_Minor;
 
    function OpenGL_Forward_Compatible return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.OpenGL_Forward_Compat);
+      Result : constant Bool
+        := Api.Get_Window_Param (Enums.OpenGL_Forward_Compat);
    begin
       return Boolean (Result);
    end OpenGL_Forward_Compatible;
 
-   function OpenGL_Debug_Context      return Boolean is
-      Result : Bool := Api.Get_Window_Param (Enums.OpenGL_Debug_Context);
+   function OpenGL_Debug_Context return Boolean is
+      Result : constant Bool
+        := Api.Get_Window_Param (Enums.OpenGL_Debug_Context);
    begin
       return Boolean (Result);
    end OpenGL_Debug_Context;
 
-   function OpenGL_Profile            return OpenGL_Profile_Kind is
+   function OpenGL_Profile return OpenGL_Profile_Kind is
    begin
       return Api.Get_Window_Param (Enums.OpenGL_Profile);
    end OpenGL_Profile;
