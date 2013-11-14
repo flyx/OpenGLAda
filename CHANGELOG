@@ -5,6 +5,12 @@ v0.3 (upcoming):
    - GL.Raster
    - GL.Objects.Framebuffers
    - GL.Objects.Renderbuffers
+   - GL.Objects.Textures.Targets
+ * Overhauled texture API and made it possible to create and load data into
+   all kinds of textures
+ * Made exception raising optional by compile-time switch rather than by
+   setting a flag at runtime (performance increasement). Exposed GL.Errors to
+   manually handle errors if exceptions are disabled.
  * Added support for GLFW 3
  * Added support for SOIL
  * Added support for FTGL
