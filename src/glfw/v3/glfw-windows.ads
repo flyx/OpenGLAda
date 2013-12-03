@@ -27,6 +27,8 @@ package Glfw.Windows is
    type Window is tagged private;
    type Window_Reference is not null access all Window;
 
+   Creation_Error : exception;
+
    package Callbacks is
       -- avoid pollution of Glfw.Windows package with symbols
 
@@ -37,6 +39,7 @@ package Glfw.Windows is
 
    subtype Coordinate is Interfaces.C.int;
 
+   -- throws Creation_Error if the window cannot be created
    procedure Init (Object        : not null access Window;
                    Width, Height : Size;
                    Title         : String; -- interpreted as UTF-8

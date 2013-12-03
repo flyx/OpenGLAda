@@ -171,6 +171,9 @@ package body Glfw.Windows is
       Object.Handle := API.Create_Window (Interfaces.C.int (Width),
                                           Interfaces.C.int (Height),
                                           C_Title, Monitor.Raw_Pointer, Share);
+      if Object.Handle = System.Null_Address then
+         raise Creation_Error;
+      end if;
       API.Set_Window_User_Pointer (Object.Handle, Object);
    end Init;
 
