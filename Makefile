@@ -13,6 +13,7 @@ endif
 
 WINDOWING_SYSTEM := -XWindowing_System=${WINDOWING_BACKEND}
 GLFW_VERSION := -XGLFW_Version=${GLFW_VERSION}
+LIBRARY_TYPE ?= static
 
 all: compile
 
