@@ -2,6 +2,8 @@ with "opengl_shared";
 with "opengl";
 
 library project OpenGL.Ftgl is
+   for Languages use ("ada");
+   
    for Library_Name use "FtglAda";
 
    for Source_Dirs use ("src/ftgl");

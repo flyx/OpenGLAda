@@ -2,6 +2,8 @@ with "opengl_shared";
 with "opengl";
 
 library project OpenGL.Glfw is
+   for Languages use ("ada");
+   
    for Library_Name use "GlfwAda";
    for Library_Kind use OpenGL_Shared'Library_Kind;
 
@@ -40,7 +42,7 @@ library project OpenGL.Glfw is
    package Linker is
       case OpenGL_Shared.Windowing_System is
          when "quartz" =>
-            for Linker_Options use (GLFW_Lib, "-Wl,-framework,Cocoa");
+            for Linker_Options use (GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit");
          when "windows" =>
             for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>

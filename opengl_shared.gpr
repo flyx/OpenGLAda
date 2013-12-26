@@ -24,7 +24,7 @@ project OpenGL_Shared is
    Library_Kind : Library_Kinds := external ("LIBRARY_TYPE", "static");
 
    for Library_Kind use Library_Kind;
-
+   
    package Ide is
       for Vcs_Kind use "Git";
    end Ide;

@@ -3,6 +3,8 @@ with "opengl-glfw";
 
 project OpenGL_Test is
 
+   for Languages use ("ada");
+
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
    

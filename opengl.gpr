@@ -1,6 +1,7 @@
 with "opengl_shared";
 
 library project OpenGL is
+   for Languages use ("ada");
 
    for Library_Name use "OpenGLAda";
    
