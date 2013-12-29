@@ -17,8 +17,8 @@
 package GL.Enums.Getter is
    pragma Preelaborate;
 
-   type Parameter is (
-      Current_Color,
+   type Parameter is
+     (Current_Color,
       Current_Index,
       Current_Normal,
       Current_Texture_Coords,
@@ -227,6 +227,12 @@ package GL.Enums.Getter is
       Feedback_Buffer_Type,
       Selection_Buffer_Pointer,
       Selection_Buffer_Size,
+      Blend_Color,
+      Blend_Equation_RGB,
+      Blend_Dst_RGB,
+      Blend_Src_RGB,
+      Blend_Dst_Alpha,
+      Blend_Src_Alpha,
       Light_Model_Color_Control,
       Major_Version,
       Minor_Version,
@@ -234,6 +240,7 @@ package GL.Enums.Getter is
       Num_Shading_Language_Versions,
       Current_Fog_Coord,
       Active_Texture,
+      Blend_Equation_Alpha,
       Max_Combined_Texture_Image_Units);
    for Parameter use
      (Current_Color                 => 16#0B00#,
@@ -445,6 +452,12 @@ package GL.Enums.Getter is
       Feedback_Buffer_Type          => 16#0DF2#,
       Selection_Buffer_Pointer      => 16#0DF3#,
       Selection_Buffer_Size         => 16#0DF4#,
+      Blend_Color                   => 16#8005#,
+      Blend_Equation_RGB            => 16#8009#,
+      Blend_Dst_RGB                 => 16#80C8#,
+      Blend_Src_RGB                 => 16#80C9#,
+      Blend_Dst_Alpha               => 16#80CA#,
+      Blend_Src_Alpha               => 16#80CB#,
       Light_Model_Color_Control     => 16#81F8#,
       Major_Version                 => 16#821B#,
       Minor_Version                 => 16#821C#,
@@ -452,6 +465,7 @@ package GL.Enums.Getter is
       Num_Shading_Language_Versions => 16#82E9#,
       Current_Fog_Coord             => 16#8453#,
       Active_Texture                => 16#84E0#,
+      Blend_Equation_Alpha          => 16#883D#,
       Max_Combined_Texture_Image_Units => 16#8B4D#);
    for Parameter'Size use Low_Level.Enum'Size;
 

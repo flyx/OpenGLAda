@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Buffers;
+with GL.Types.Colors;
 
 private with GL.Low_Level;
 
@@ -29,9 +30,37 @@ package GL.Blending is
                          Src1_Color, One_Minus_Src1_Color,
                          One_Minus_Src1_Alpha);
 
+   type Equation is (Func_Add, Min, Max, Func_Subtract, Func_Reverse_Substract);
+
    procedure Set_Blend_Func (Src_Factor, Dst_Factor : Blend_Factor);
    procedure Set_Blend_Func (Draw_Buffer : Buffers.Draw_Buffer_Index;
                              Src_Factor, Dst_Factor : Blend_Factor);
+
+   procedure Set_Blend_Func_Separate (Src_RGB, Dst_RGB, Src_Alpha, Dst_Alpha
+                                      : Blend_Factor);
+   procedure Set_Blend_Func_Separate (Draw_Buffer : Buffers.Draw_Buffer_Index;
+                                      Src_RGB, Dst_RGB, Src_Alpha, Dst_Alpha
+                                      : Blend_Factor);
+
+   function Blend_Func_Src_RGB return Blend_Factor;
+   function Blend_Func_Src_Alpha return Blend_Factor;
+   function Blend_Func_Dst_RGB return Blend_Factor;
+   function Blend_Func_Dst_Alpha return Blend_Factor;
+
+   procedure Set_Blend_Color (Value : Types.Colors.Color);
+   function Blend_Color return Types.Colors.Color;
+
+   procedure Set_Blend_Equation (Value : Equation);
+   procedure Set_Blend_Equation (Draw_Buffer : Buffers.Draw_Buffer_Index;
+                                 Value : Equation);
+
+   procedure Set_Blend_Equation_Separate (RGB, Alpha : Equation);
+   procedure Set_Blend_Equation_Separate
+     (Draw_Buffer : Buffers.Draw_Buffer_Index; RGB, Alpha : Equation);
+
+   function Blend_Equation_RGB return Equation;
+   function Blend_Equation_Alpha return Equation;
+
 private
    for Blend_Factor use (Zero                     => 0,
                          One                      => 1,
@@ -53,4 +82,11 @@ private
                          One_Minus_Src1_Color     => 16#88FA#,
                          One_Minus_Src1_Alpha     => 16#88FB#);
    for Blend_Factor'Size use Low_Level.Enum'Size;
+
+   for Equation use (Func_Add               => 16#8006#,
+                     Min                    => 16#8007#,
+                     Max                    => 16#8008#,
+                     Func_Subtract          => 16#800A#,
+                     Func_Reverse_Substract => 16#800B#);
+   for Equation'Size use Low_Level.Enum'Size;
 end GL.Blending;

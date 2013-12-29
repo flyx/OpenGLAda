@@ -117,6 +117,16 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Shade_Model,
                   External_Name => "glGetIntegerv");
 
+   procedure Get_Blend_Factor (Name : Enums.Getter.Parameter;
+                               Target : access Blending.Blend_Factor);
+   pragma Import (Convention => StdCall, Entity => Get_Blend_Factor,
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Blend_Equation (Name : Enums.Getter.Parameter;
+                                 Target : access Blending.Equation);
+   pragma Import (Convention => StdCall, Entity => Get_Blend_Equation,
+                  External_Name => "glGetIntegerv");
+   
    procedure Get_Light_Color (Name   : Enums.Light_Name;
                               Pname  : Enums.Light_Param;
                               Target : in out Colors.Color);
@@ -292,6 +302,32 @@ private package GL.API is
    procedure Blend_Func_I is new Loader.Procedure_With_3_Params
      ("glBlendFunci", Buffers.Draw_Buffer_Index, Blending.Blend_Factor,
       Blending.Blend_Factor);
+   
+   procedure Blend_Func_Separate is new Loader.Procedure_With_4_Params
+     ("glBlendFuncSeparate", Blending.Blend_Factor, Blending.Blend_Factor,
+      Blending.Blend_Factor, Blending.Blend_Factor);
+   
+   procedure Blend_Func_Separate_I is new Loader.Procedure_With_5_Params
+     ("glBlendFuncSeparate", Buffers.Draw_Buffer_Index, Blending.Blend_Factor,
+      Blending.Blend_Factor, Blending.Blend_Factor, Blending.Blend_Factor);
+   
+   procedure Blend_Color is new Loader.Procedure_With_4_Params
+     ("glBlendColor", Colors.Component, Colors.Component, Colors.Component, 
+      Colors.Component);
+   
+   procedure Blend_Equation (Mode : Blending.Equation);
+   pragma Import (Convention => StdCall, Entity => Blend_Equation,
+                  External_Name => "glBlendEquation");
+   
+   procedure Blend_Equation_I is new Loader.Procedure_With_2_Params
+     ("glBlendEquationi", Buffers.Draw_Buffer_Index, Blending.Equation);
+   
+   procedure Blend_Equation_Separate is new Loader.Procedure_With_2_Params
+     ("glBlendEquationSeparate", Blending.Equation, Blending.Equation);
+   
+   procedure Blend_Equation_Separate_I is new Loader.Procedure_With_3_Params
+     ("glBlendEquationi", Buffers.Draw_Buffer_Index, Blending.Equation,
+      Blending.Equation);
    
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
