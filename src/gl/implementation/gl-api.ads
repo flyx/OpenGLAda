@@ -19,6 +19,7 @@ with GL.Runtime_Loading;
 with GL.Attributes;
 with GL.Blending;
 with GL.Buffers;
+with GL.Culling;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
 with GL.Errors;
@@ -132,6 +133,16 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Blend_Equation,
                   External_Name => "glGetIntegerv");
    
+   procedure Get_Orientation (Name : Enums.Getter.Parameter;
+                              Target : access Culling.Orientation);
+   pragma Import (Convention => StdCall, Entity => Get_Orientation,
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Face_Selector (Name : Enums.Getter.Parameter;
+                                Target : access Culling.Face_Selector);
+   pragma Import (Convention => StdCall, Entity => Get_Face_Selector,
+                  External_Name => "glGetIntererv");
+   
    procedure Get_Light_Color (Name   : Enums.Light_Name;
                               Pname  : Enums.Light_Param;
                               Target : in out Colors.Color);
@@ -161,6 +172,18 @@ private package GL.API is
    function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool;
    pragma Import (Convention => StdCall, Entity => Is_Enabled,
                   External_Name => "glIsEnabled");
+   
+   -----------------------------------------------------------------------------
+   --                                 Culling                                 --
+   -----------------------------------------------------------------------------
+   
+   procedure Cull_Face (Selector : Culling.Face_Selector);
+   pragma Import (Convention => StdCall, Entity => Cull_Face,
+                  External_Name => "glCullFace");
+   
+   procedure Front_Face (Face : Culling.Orientation);
+   pragma Import (Convention => StdCall, Entity => Front_Face,
+                  External_Name => "glFrontFace");
    
    -----------------------------------------------------------------------------
    --                               Pixel Stuff                               --
