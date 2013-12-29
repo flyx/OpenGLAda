@@ -20,21 +20,21 @@ package body GL.Objects.Textures.With_2D_Loader is
 
    procedure Load_Empty_Texture (Object : Target;
                                  Level  : Mipmap_Level;
-                                 Internal_Format : Pixel_Data.Internal_Format;
+                                 Internal_Format : Pixels.Internal_Format;
                                  Width, Height   : Types.Size) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, 0, Pixel_Data.Format'First,
-                        Pixel_Data.Data_Type'First, System.Null_Address);
+                        Width, Height, 0, Pixels.Format'First,
+                        Pixels.Data_Type'First, System.Null_Address);
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 
    procedure Load_From_Data (Object : Fillable_Target;
                              Level : Mipmap_Level;
-                             Internal_Format : Pixel_Data.Internal_Format;
+                             Internal_Format : Pixels.Internal_Format;
                              Width, Height : Types.Size;
-                             Source_Format : Pixel_Data.Format;
-                             Source_Type   : Pixel_Data.Data_Type;
+                             Source_Format : Pixels.Format;
+                             Source_Type   : Pixels.Data_Type;
                              Source        : System.Address) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,

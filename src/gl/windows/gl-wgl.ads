@@ -32,7 +32,6 @@
 --
 
 with Interfaces.C.Strings;
-with Interfaces.C.Extensions;
 with System;
 
 package GL.WGL is

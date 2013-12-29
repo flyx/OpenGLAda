@@ -24,7 +24,7 @@ with GL.Types.Colors;    use GL.Types;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Renderbuffers;
 with GL.Objects.Framebuffers;
-with GL.Pixel_Data;
+with GL.Pixels;
 with GL.Toggles;
 with GL.Window;
 
@@ -56,7 +56,7 @@ begin
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Repeat);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Nearest);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Nearest);
-      Texture_2D.Load_Empty_Texture (0, GL.Pixel_Data.RGB8, 256, 256);
+      Texture_2D.Load_Empty_Texture (0, GL.Pixels.RGB8, 256, 256);
 
       Framebuffer.Initialize_Id;
       GL.Objects.Framebuffers.Read_And_Draw_Target.Bind (Framebuffer);
@@ -66,7 +66,7 @@ begin
       Depth_Buffer.Initialize_Id;
       GL.Objects.Renderbuffers.Active_Renderbuffer.Bind (Depth_Buffer);
       GL.Objects.Renderbuffers.Active_Renderbuffer.Allocate
-        (GL.Pixel_Data.Depth_Component24, 256, 256);
+        (GL.Pixels.Depth_Component24, 256, 256);
       GL.Objects.Framebuffers.Read_And_Draw_Target.Attach_Renderbuffer
         (GL.Objects.Framebuffers.Depth_Attachment, Depth_Buffer);
 

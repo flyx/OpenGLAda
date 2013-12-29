@@ -39,7 +39,7 @@ package body GL.Objects.Renderbuffers is
    Current_Renderbuffers : Renderbuffer_Maps.Map;
 
    procedure Allocate (Object : Renderbuffer_Target;
-                       Format : Pixel_Data.Internal_Format;
+                       Format : Pixels.Internal_Format;
                        Width, Height : Size;
                        Samples : Size := 0) is
    begin
@@ -69,8 +69,8 @@ package body GL.Objects.Renderbuffers is
    end Height;
 
    function Internal_Format (Object : Renderbuffer_Target)
-                             return Pixel_Data.Internal_Format is
-      Value : Pixel_Data.Internal_Format := Pixel_Data.Internal_Format'First;
+                             return Pixels.Internal_Format is
+      Value : Pixels.Internal_Format := Pixels.Internal_Format'First;
    begin
       API.Get_Renderbuffer_Parameter_Internal_Format
         (Object.Kind, Enums.Getter.Internal_Format, Value);

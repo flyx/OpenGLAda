@@ -29,7 +29,7 @@ with GL.Objects.Textures;
 with GL.Objects.Buffer;
 with GL.Objects.Framebuffers;
 with GL.Objects.Shaders;
-with GL.Pixel_Data;
+with GL.Pixels;
 with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -122,6 +122,11 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Blend_Factor,
                   External_Name => "glGetIntegerv");
    
+   procedure Get_Alignment (Name : Enums.Getter.Parameter;
+                            Target : access Pixels.Alignment);
+   pragma Import (Convention => StdCall, Entity => Get_Alignment,
+                  External_Name => "glGetIntegerv");
+   
    procedure Get_Blend_Equation (Name : Enums.Getter.Parameter;
                                  Target : access Blending.Equation);
    pragma Import (Convention => StdCall, Entity => Get_Blend_Equation,
@@ -156,7 +161,27 @@ private package GL.API is
    function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool;
    pragma Import (Convention => StdCall, Entity => Is_Enabled,
                   External_Name => "glIsEnabled");
-
+   
+   -----------------------------------------------------------------------------
+   --                               Pixel Stuff                               --
+   -----------------------------------------------------------------------------
+   
+   procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
+                          Value : Low_Level.Bool);
+   procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
+                          Value : Size);
+   procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
+                          Value : Pixels.Alignment);
+   pragma Import (Convention => StdCall, Entity => Pixel_Store,
+                  External_Name => "glPixelStorei");
+   
+   -----------------------------------------------------------------------------
+   --                         Framebuffer Operations                          --
+   -----------------------------------------------------------------------------
+   
+   procedure Clamp_Color is new Loader.Procedure_With_2_Params
+     ("glClampColor", Enums.Clamp_Color_Param, Low_Level.Bool);
+   
    -----------------------------------------------------------------------------
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
    -----------------------------------------------------------------------------
@@ -512,7 +537,7 @@ private package GL.API is
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Pixel_Data.Internal_Format);
+      Value      : out Pixels.Internal_Format);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Level_Parameter_Format,
                   External_Name => "glGetTexLevelParameteriv");
    
@@ -520,7 +545,7 @@ private package GL.API is
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Pixel_Data.Channel_Data_Type);
+      Value      : out Pixels.Channel_Data_Type);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Level_Parameter_Type,
                   External_Name => "glGetTexLevelParameteriv");
    
@@ -547,30 +572,30 @@ private package GL.API is
 
    procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
-                           Internal_Format : Pixel_Data.Internal_Format;
+                           Internal_Format : Pixels.Internal_Format;
                            Width  : Size;
                            Border : Int;
-                           Format : Pixel_Data.Format;
-                           Data_Type : Pixel_Data.Data_Type;
+                           Format : Pixels.Format;
+                           Data_Type : Pixels.Data_Type;
                            Data   : System.Address);
    pragma Import (Convention => StdCall, Entity => Tex_Image_1D,
                   External_Name => "glTexImage1D");
    
    procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
-                           Internal_Format : Pixel_Data.Internal_Format;
+                           Internal_Format : Pixels.Internal_Format;
                            Width, Height : Size;
                            Border : Int;
-                           Format : Pixel_Data.Format;
-                           Data_Type : Pixel_Data.Data_Type;
+                           Format : Pixels.Format;
+                           Data_Type : Pixels.Data_Type;
                            Data : System.Address);
    pragma Import (Convention => StdCall, Entity => Tex_Image_2D,
                   External_Name => "glTexImage2D");
 
    procedure Tex_Image_3D is new Loader.Procedure_With_10_Params
      ("glTexImage3D", Low_Level.Enums.Texture_Kind,
-      Objects.Textures.Mipmap_Level, Pixel_Data.Internal_Format, Size, Size,
-      Size, Int, Pixel_Data.Format, Pixel_Data.Data_Type, System.Address);
+      Objects.Textures.Mipmap_Level, Pixels.Internal_Format, Size, Size,
+      Size, Int, Pixels.Format, Pixels.Data_Type, System.Address);
    
    procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
                             Param_Name : Enums.Textures.Env_Parameter;
@@ -695,12 +720,12 @@ private package GL.API is
    
    procedure Renderbuffer_Storage is new Loader.Procedure_With_4_Params
      ("glRenderbufferStorage", Low_Level.Enums.Renderbuffer_Kind,
-      Pixel_Data.Internal_Format, Size, Size);
+      Pixels.Internal_Format, Size, Size);
    
    procedure Renderbuffer_Storage_Multisample is new
      Loader.Procedure_With_5_Params ("glRenderbufferStorageMultisample",
                                      Low_Level.Enums.Renderbuffer_Kind, Size,
-                                     Pixel_Data.Internal_Format, Size, Size);
+                                     Pixels.Internal_Format, Size, Size);
    
    procedure Bind_Renderbuffer is new Loader.Procedure_With_2_Params
      ("glBindRenderbuffer", Low_Level.Enums.Renderbuffer_Kind, UInt);
@@ -713,12 +738,18 @@ private package GL.API is
      Loader.Getter_With_3_Params ("glGetRenderbufferParameteriv",
                                   Low_Level.Enums.Renderbuffer_Kind,
                                   Enums.Getter.Renderbuffer_Parameter,
-                                  Pixel_Data.Internal_Format);
+                                  Pixels.Internal_Format);
    
    -----------------------------------------------------------------------------
-   --                         Framebuffer objects                             --
+   --                  Framebuffer objects and handling                       --
    -----------------------------------------------------------------------------
 
+   procedure Read_Pixels (X, Y : Int; Width, Height : Size;
+                          Format : Pixels.Format; Data_Type : Pixels.Data_Type;
+                          Data : System.Address);
+   pragma Import (Convention => StdCall, Entity => Read_Pixels,
+                  External_Name => "glReadPixels");
+   
    procedure Gen_Framebuffers is new Loader.Getter_With_2_Params
      ("glGenFramebuffers", Size, UInt);
    

@@ -14,27 +14,25 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
+with GL.Pixels;
+with GL.Types;
 
-generic
-   type Base (<>) is new Texture_Proxy with private;
-package GL.Objects.Textures.With_1D_Loader is
+package GL.Framebuffer is
    pragma Preelaborate;
 
-   type Target is new Base with null record;
+   use GL.Types;
 
-   procedure Load_Empty_Texture
-     (Object: Target; Level : Mipmap_Level;
-      Internal_Format : Pixels.Internal_Format;
-      Width : Types.Size);
+   -- this package provides functionality the works implicitly on the current
+   -- framebuffer. for working with framebuffer objects,
+   -- see GL.Objects.Framebuffers.
 
-   type Fillable_Target is new With_1D_Loader.Target with null record;
+   procedure Set_Clamp_Read_Color (Enabled : Boolean);
 
-   procedure Load_From_Data
-     (Object : Fillable_Target; Level : Mipmap_Level;
-      Internal_Format : Pixels.Internal_Format;
-      Width : Types.Size;
-      Source_Format : Pixels.Format;
-      Source_Type   : Pixels.Data_Type;
-      Source        : System.Address);
-end GL.Objects.Textures.With_1D_Loader;
+   generic
+      type Element_Type is private;
+      type Index_Type is (<>);
+      type Array_Type is array (Index_Type range <>) of aliased Element_Type;
+   procedure Read_Pixels (X, Y : Int; Width, Height : Size;
+                          Format : Pixels.Format;
+                          Data_Type : Pixels.Data_Type; Data : Array_Type);
+end GL.Framebuffer;

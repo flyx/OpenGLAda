@@ -25,16 +25,16 @@ package GL.Objects.Textures.With_3D_Loader is
 
    procedure Load_Empty_Texture
      (Object: Target; Level : Mipmap_Level;
-      Internal_Format : Pixel_Data.Internal_Format;
+      Internal_Format : Pixels.Internal_Format;
       Width, Height, Depth : Types.Size);
 
    type Fillable_Target is new Target with null record;
 
    procedure Load_From_Data
      (Object : Fillable_Target; Level : Mipmap_Level;
-      Internal_Format : Pixel_Data.Internal_Format;
+      Internal_Format : Pixels.Internal_Format;
       Width, Height, Depth : Types.Size;
-      Source_Format : Pixel_Data.Format;
-      Source_Type   : Pixel_Data.Data_Type;
+      Source_Format : Pixels.Format;
+      Source_Type   : Pixels.Data_Type;
       Source        : System.Address);
 end GL.Objects.Textures.With_3D_Loader;

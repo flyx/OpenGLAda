@@ -14,11 +14,14 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-private with GL.Low_Level;
-private with GL.Types;
+with GL.Types;
 
-package GL.Pixel_Data is
+private with GL.Low_Level;
+
+package GL.Pixels is
    pragma Preelaborate;
+
+   use GL.Types;
 
    type Internal_Format is (Depth_Component, Alpha, RGB, RGBA, Luminance,
                             Luminance_Alpha, R3_G3_B2, Alpha4, Alpha8, Alpha12,
@@ -72,6 +75,44 @@ package GL.Pixel_Data is
 
    type Channel_Data_Type is (None, Int_Type, Unsigned_Int_Type, Float_Type,
                               Unsigned_Normalized, Signed_Normalized);
+
+   type Alignment is (Bytes, Even_Bytes, Words, Double_Words);
+
+   procedure Set_Pack_Swap_Bytes   (Value : Boolean);
+   procedure Set_Pack_LSB_First    (Value : Boolean);
+   procedure Set_Pack_Row_Length   (Value : Size);
+   procedure Set_Pack_Image_Height (Value : Size);
+   procedure Set_Pack_Skip_Pixels  (Value : Size);
+   procedure Set_Pack_Skip_Rows    (Value : Size);
+   procedure Set_Pack_Skip_Images  (Value : Size);
+   procedure Set_Pack_Alignment    (Value : Alignment);
+
+   function Pack_Swap_Bytes   return Boolean;
+   function Pack_LSB_First    return Boolean;
+   function Pack_Row_Length   return Size;
+   function Pack_Image_Height return Size;
+   function Pack_Skip_Pixels  return Size;
+   function Pack_Skip_Rows    return Size;
+   function Pack_Skip_Images  return Size;
+   function Pack_Alignment    return Alignment;
+
+   procedure Set_Unpack_Swap_Bytes   (Value : Boolean);
+   procedure Set_Unpack_LSB_First    (Value : Boolean);
+   procedure Set_Unpack_Row_Length   (Value : Size);
+   procedure Set_Unpack_Image_Height (Value : Size);
+   procedure Set_Unpack_Skip_Pixels  (Value : Size);
+   procedure Set_Unpack_Skip_Rows    (Value : Size);
+   procedure Set_Unpack_Skip_Images  (Value : Size);
+   procedure Set_Unpack_Alignment    (Value : Alignment);
+
+   function Unpack_Swap_Bytes   return Boolean;
+   function Unpack_LSB_First    return Boolean;
+   function Unpack_Row_Length   return Size;
+   function Unpack_Image_Height return Size;
+   function Unpack_Skip_Pixels  return Size;
+   function Unpack_Skip_Rows    return Size;
+   function Unpack_Skip_Images  return Size;
+   function Unpack_Alignment    return Alignment;
 
 private
    for Internal_Format use (Depth_Component => 16#1902#,
@@ -254,4 +295,9 @@ private
                               Signed_Normalized   => 16#8F9C#);
    for Channel_Data_Type'Size use Low_Level.Enum'Size;
 
-end GL.Pixel_Data;
+   for Alignment use (Bytes        => 1,
+                      Even_Bytes   => 2,
+                      Words        => 4,
+                      Double_Words => 8);
+   for Alignment'Size use Types.Int'Size;
+end GL.Pixels;

@@ -77,6 +77,15 @@ private package GL.Enums is
                           Transform_Feedback_Buffer_Mode,
                           Transform_Feedback_Varyings);
 
+   type Clamp_Color_Param is (Clamp_Read_Color);
+   
+   type Pixel_Store_Param is (Unpack_Swap_Bytes, Unpack_LSB_First,
+                              Unpack_Row_Length, Unpack_Skip_Rows,
+                              Unpack_Skip_Pixels, Unpack_Alignment,
+                              Pack_Swap_Bytes, Pack_LSB_First, Pack_Row_Length,
+                              Pack_Skip_Rows, Pack_Skip_Pixels,
+                              Pack_Alignment, Pack_Skip_Images, Pack_Image_Height,
+                              Unpack_Skip_Images, Unpack_Image_Height);
 private
 
    for Attribute_Mask use record
@@ -149,4 +158,25 @@ private
                           Transform_Feedback_Buffer_Mode        => 16#8C7F#,
                           Transform_Feedback_Varyings           => 16#8C83#);
    for Program_Param'Size use Low_Level.Enum'Size;
+   
+   for Clamp_Color_Param use (Clamp_Read_Color => 16#891C#);
+   for Clamp_Color_Param'Size use Low_Level.Enum'Size;
+   
+   for Pixel_Store_Param use (Unpack_Swap_Bytes   => 16#0CF0#,
+                              Unpack_LSB_First    => 16#0CF1#,
+                              Unpack_Row_Length   => 16#0CF2#,
+                              Unpack_Skip_Rows    => 16#0CF3#,
+                              Unpack_Skip_Pixels  => 16#0CF4#,
+                              Unpack_Alignment    => 16#0CF5#,
+                              Pack_Swap_Bytes     => 16#0D00#,
+                              Pack_LSB_First      => 16#0D01#,
+                              Pack_Row_Length     => 16#0D02#,
+                              Pack_Skip_Rows      => 16#0D03#,
+                              Pack_Skip_Pixels    => 16#0D04#,
+                              Pack_Alignment      => 16#0D05#,
+                              Pack_Skip_Images    => 16#806B#,
+                              Pack_Image_Height   => 16#806C#,
+                              Unpack_Skip_Images  => 16#806D#,
+                              Unpack_Image_Height => 16#806E#);
+   for Pixel_Store_Param'Size use Low_Level.Enum'Size;
 end GL.Enums;

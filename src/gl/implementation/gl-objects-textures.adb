@@ -54,8 +54,8 @@ package body GL.Objects.Textures is
    end Depth;
    
    function Format (Object : Texture_Proxy; Level : Mipmap_Level)
-                    return Pixel_Data.Internal_Format is
-      Ret : Pixel_Data.Internal_Format;
+                    return Pixels.Internal_Format is
+      Ret : Pixels.Internal_Format;
    begin
       API.Get_Tex_Level_Parameter_Format (Object.Kind, Level,
                                           Enums.Textures.Internal_Format, Ret);
@@ -64,8 +64,8 @@ package body GL.Objects.Textures is
    end Format;
    
    function Red_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                      return Pixel_Data.Channel_Data_Type is
-      Ret : Pixel_Data.Channel_Data_Type;
+                      return Pixels.Channel_Data_Type is
+      Ret : Pixels.Channel_Data_Type;
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Red_Type, Ret);
@@ -74,8 +74,8 @@ package body GL.Objects.Textures is
    end Red_Type;
    
    function Green_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type is
-      Ret : Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type is
+      Ret : Pixels.Channel_Data_Type;
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Green_Type, Ret);
@@ -84,8 +84,8 @@ package body GL.Objects.Textures is
    end Green_Type;
    
    function Blue_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                       return Pixel_Data.Channel_Data_Type is
-      Ret : Pixel_Data.Channel_Data_Type;
+                       return Pixels.Channel_Data_Type is
+      Ret : Pixels.Channel_Data_Type;
    begin
         API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                           Enums.Textures.Blue_Type, Ret);
@@ -94,8 +94,8 @@ package body GL.Objects.Textures is
    end Blue_Type;
    
    function Alpha_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type is
-      Ret : Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type is
+      Ret : Pixels.Channel_Data_Type;
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Alpha_Type, Ret);
@@ -104,8 +104,8 @@ package body GL.Objects.Textures is
    end Alpha_Type;
    
    function Depth_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type is
-      Ret : Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type is
+      Ret : Pixels.Channel_Data_Type;
    begin
       API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
                                         Enums.Textures.Depth_Type, Ret);

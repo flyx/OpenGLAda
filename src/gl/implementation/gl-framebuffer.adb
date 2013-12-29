@@ -14,27 +14,26 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
+with GL.API;
+with GL.Enums;
+with GL.Low_Level;
 
-generic
-   type Base (<>) is new Texture_Proxy with private;
-package GL.Objects.Textures.With_1D_Loader is
-   pragma Preelaborate;
+package body GL.Framebuffer is
 
-   type Target is new Base with null record;
+   procedure Set_Clamp_Read_Color (Enabled : Boolean) is
+   begin
+      API.Clamp_Color (Enums.Clamp_Read_Color, Low_Level.Bool (Enabled));
+   end Set_Clamp_Read_Color;
 
-   procedure Load_Empty_Texture
-     (Object: Target; Level : Mipmap_Level;
-      Internal_Format : Pixels.Internal_Format;
-      Width : Types.Size);
+   procedure Read_Pixels (X, Y : Int;
+                          Width, Height : Size;
+                          Format : Pixels.Format;
+                          Data_Type : Pixels.Data_Type;
+                          Data : Array_Type) is
+   begin
+      API.Read_Pixels
+        (X, Y, Width, Height, Format, Data_Type, Data (Data'First)'Address);
+      Raise_Exception_On_OpenGL_Error;
+   end Read_Pixels;
 
-   type Fillable_Target is new With_1D_Loader.Target with null record;
-
-   procedure Load_From_Data
-     (Object : Fillable_Target; Level : Mipmap_Level;
-      Internal_Format : Pixels.Internal_Format;
-      Width : Types.Size;
-      Source_Format : Pixels.Format;
-      Source_Type   : Pixels.Data_Type;
-      Source        : System.Address);
-end GL.Objects.Textures.With_1D_Loader;
+end GL.Framebuffer;

@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Pixel_Data;
+with GL.Pixels;
 
 with GL.Low_Level.Enums;
 
@@ -24,14 +24,14 @@ package GL.Objects.Renderbuffers is
    type Renderbuffer_Target (<>) is tagged limited private;
 
    procedure Allocate (Object : Renderbuffer_Target;
-                       Format : Pixel_Data.Internal_Format;
+                       Format : Pixels.Internal_Format;
                        Width, Height : Size;
                        Samples : Size := 0);
 
    function Width  (Object : Renderbuffer_Target) return Size;
    function Height (Object : Renderbuffer_Target) return Size;
    function Internal_Format (Object : Renderbuffer_Target)
-                             return Pixel_Data.Internal_Format;
+                             return Pixels.Internal_Format;
    function Red_Size     (Object : Renderbuffer_Target) return Size;
    function Green_Size   (Object : Renderbuffer_Target) return Size;
    function Blue_Size    (Object : Renderbuffer_Target) return Size;

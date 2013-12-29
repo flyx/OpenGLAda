@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Low_Level.Enums;
-with GL.Pixel_Data;
+with GL.Pixels;
 with GL.Types.Colors;
 
 package GL.Objects.Textures is
@@ -87,18 +87,18 @@ package GL.Objects.Textures is
    function Depth (Object : Texture_Proxy; Level : Mipmap_Level) return Size;
    
    function Format (Object : Texture_Proxy; Level : Mipmap_Level)
-                    return Pixel_Data.Internal_Format;
+                    return Pixels.Internal_Format;
    
    function Red_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                      return Pixel_Data.Channel_Data_Type;
+                      return Pixels.Channel_Data_Type;
    function Green_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type;
    function Blue_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                       return Pixel_Data.Channel_Data_Type;
+                       return Pixels.Channel_Data_Type;
    function Alpha_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type;
    function Depth_Type (Object : Texture_Proxy; Level : Mipmap_Level)
-                        return Pixel_Data.Channel_Data_Type;
+                        return Pixels.Channel_Data_Type;
    
    function Red_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                       return Size;
