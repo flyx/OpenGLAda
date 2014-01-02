@@ -186,6 +186,8 @@ package GL.Objects.Textures is
                                        Enabled : Boolean);
    function Mipmap_Autoupdate_Enabled (Target : Texture_Target) return Boolean;
    
+   procedure Generate_Mipmap (Target : Texture_Target);
+   
    function Raw_Type (Target : Texture_Target)
                       return Low_Level.Enums.Texture_Kind;
    

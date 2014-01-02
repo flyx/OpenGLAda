@@ -520,6 +520,12 @@ package body GL.Objects.Textures is
       return Boolean (Value);
    end Mipmap_Autoupdate_Enabled;
    
+   procedure Generate_Mipmap (Target : Texture_Target) is
+   begin
+      API.Generate_Mipmap (Target.Kind);
+      Raise_Exception_On_OpenGL_Error;
+   end Generate_Mipmap;
+   
    function Raw_Type (Target : Texture_Target)
                       return Low_Level.Enums.Texture_Kind is
    begin

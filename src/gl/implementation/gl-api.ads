@@ -704,7 +704,10 @@ private package GL.API is
                   External_Name => "glGetTexEnviv");
 
    procedure Active_Texture is new Loader.Procedure_With_1_Param
-      ("glActiveTexture", Int);
+     ("glActiveTexture", Int);
+   
+   procedure Generate_Mipmap is new Loader.Procedure_With_1_Param
+     ("glGenerateMipmap", Low_Level.Enums.Texture_Kind);
 
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
