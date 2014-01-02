@@ -57,6 +57,10 @@ package GL.Low_Level is
    subtype SizeIPtr is C.long;
    
    type CharPtr_Array is array (Positive range <>) of aliased C.Strings.chars_ptr;
+   
+   -- used in API calls
+   type Size_Access is access all Types.Size;
+   type Bool_Access is access all Bool;
 private
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.unsigned_char'Size;
@@ -65,4 +69,6 @@ private
    pragma Convention (C, Double_Array);
    pragma Convention (C, Int_Array);
    pragma Convention (C, UInt_Array);
+   pragma Convention (C, Size_Access);
+   pragma Convention (C, Bool_Access);
 end GL.Low_Level;

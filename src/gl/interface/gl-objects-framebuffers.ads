@@ -58,6 +58,32 @@ package GL.Objects.Framebuffers is
    procedure Invalidate (Target : in out Framebuffer_Target;
                          Attachments : Attachment_List);
 
+   procedure Set_Default_Width (Target : in out Framebuffer_Target;
+                                Value  : Size);
+   function Default_Width (Target : Framebuffer_Target) return Size;
+   function Max_Framebuffer_Width return Size;
+
+   procedure Set_Default_Height (Target : in out Framebuffer_Target;
+                                 Value  : Size);
+   function Default_Height      (Target : Framebuffer_Target) return Size;
+   function Max_Framebuffer_Height return Size;
+
+   procedure Set_Default_Layers (Target : in out Framebuffer_Target;
+                                 Value  : Size);
+   function Default_Layers      (Target : Framebuffer_Target) return Size;
+   function Max_Framebuffer_Layers return Size;
+
+   procedure Set_Default_Samples (Target : in out Framebuffer_Target;
+                                  Value  : Size);
+   function Default_Samples
+     (Target : Framebuffer_Target) return Size;
+   function Max_Framebuffer_Samples return Size;
+
+   procedure Set_Default_Fixed_Sample_Locactions
+     (Target : in out Framebuffer_Target; Value : Boolean);
+   function Default_Fixed_Sample_Locations (Target : Framebuffer_Target)
+                                            return Boolean;
+
    -- copy from current Read to current Draw framebuffer
    procedure Blit (Src_X0, Src_Y0, Src_X1, Src_Y1,
                    Dst_X0, Dst_Y0, Dst_X1, Dst_Y1 : Int;

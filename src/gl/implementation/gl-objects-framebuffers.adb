@@ -18,6 +18,7 @@ with Ada.Containers.Indefinite_Hashed_Maps;
 with Ada.Unchecked_Conversion;
 
 with GL.API;
+with GL.Enums.Getter;
 
 package body GL.Objects.Framebuffers is
    ------------
@@ -69,6 +70,124 @@ package body GL.Objects.Framebuffers is
       Raise_Exception_On_OpenGL_Error;
    end Blit;
 
+   procedure Set_Default_Width (Target : in out Framebuffer_Target;
+                                Value  : Size) is
+   begin
+      API.Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Width, Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Default_Width;
+
+   function Default_Width (Target : Framebuffer_Target) return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Framebuffer_Parameter_Size
+        (Target.Kind, Enums.Default_Width, Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Default_Width;
+
+   function Max_Framebuffer_Width return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Size (Enums.Getter.Max_Framebuffer_Width, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Max_Framebuffer_Width;
+
+   procedure Set_Default_Height (Target : in out Framebuffer_Target;
+                                 Value  : Size) is
+   begin
+      API.Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Height,
+                                      Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Default_Height;
+
+   function Default_Height      (Target : Framebuffer_Target) return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Height,
+                                          Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Default_Height;
+
+   function Max_Framebuffer_Height return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Size (Enums.Getter.Max_Framebuffer_Height, Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Max_Framebuffer_Height;
+
+   procedure Set_Default_Layers (Target : in out Framebuffer_Target;
+                                 Value  : Size) is
+   begin
+      API.Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Layers, Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Default_Layers;
+
+   function Default_Layers      (Target : Framebuffer_Target) return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Layers,
+                                          Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Default_Layers;
+
+   function Max_Framebuffer_Layers return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Size (Enums.Getter.Max_Framebuffer_Layers, Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Max_Framebuffer_Layers;
+
+   procedure Set_Default_Samples (Target : in out Framebuffer_Target;
+                                  Value  : Size) is
+   begin
+      API.Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Samples,
+                                      Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Default_Samples;
+
+   function Default_Samples
+     (Target : Framebuffer_Target) return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Framebuffer_Parameter_Size (Target.Kind, Enums.Default_Samples,
+                                          Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Default_Samples;
+
+   function Max_Framebuffer_Samples return Size is
+      Ret : aliased Size;
+   begin
+      API.Get_Size (Enums.Getter.Max_Framebuffer_Samples, Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Max_Framebuffer_Samples;
+
+   procedure Set_Default_Fixed_Sample_Locactions
+     (Target : in out Framebuffer_Target; Value : Boolean) is
+   begin
+      API.Framebuffer_Parameter_Bool
+        (Target.Kind, Enums.Default_Fixed_Sample_Locations,
+         Low_Level.Bool (Value));
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Default_Fixed_Sample_Locactions;
+
+   function Default_Fixed_Sample_Locations (Target : Framebuffer_Target)
+                                            return Boolean is
+      Ret : aliased Low_Level.Bool;
+   begin
+      API.Get_Framebuffer_Parameter_Bool
+        (Target.Kind, Enums.Default_Fixed_Sample_Locations,
+         Ret'Unchecked_Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Boolean (Ret);
+   end Default_Fixed_Sample_Locations;
 
    procedure Initialize_Id (Object : in out Framebuffer) is
       New_Id : UInt := 0;
@@ -87,7 +206,6 @@ package body GL.Objects.Framebuffers is
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
-
 
    function Hash (Key : Low_Level.Enums.Framebuffer_Kind)
      return Ada.Containers.Hash_Type is

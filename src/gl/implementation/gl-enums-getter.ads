@@ -245,7 +245,11 @@ package GL.Enums.Getter is
       Current_Fog_Coord,
       Active_Texture,
       Blend_Equation_Alpha,
-      Max_Combined_Texture_Image_Units);
+      Max_Combined_Texture_Image_Units,
+      Max_Framebuffer_Width,
+      Max_Framebuffer_Height,
+      Max_Framebuffer_Layers,
+      Max_Framebuffer_Samples);
    for Parameter use
      (Current_Color                 => 16#0B00#,
       Current_Index                 => 16#0B01#,
@@ -474,7 +478,11 @@ package GL.Enums.Getter is
       Current_Fog_Coord             => 16#8453#,
       Active_Texture                => 16#84E0#,
       Blend_Equation_Alpha          => 16#883D#,
-      Max_Combined_Texture_Image_Units => 16#8B4D#);
+      Max_Combined_Texture_Image_Units => 16#8B4D#,
+      Max_Framebuffer_Width         => 16#9315#,
+      Max_Framebuffer_Height        => 16#9316#,
+      Max_Framebuffer_Layers        => 16#9317#,
+      Max_Framebuffer_Samples       => 16#9318#);
    for Parameter'Size use Low_Level.Enum'Size;
 
    type String_Parameter is

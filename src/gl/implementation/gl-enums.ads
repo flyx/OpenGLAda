@@ -86,6 +86,9 @@ private package GL.Enums is
                               Pack_Skip_Rows, Pack_Skip_Pixels,
                               Pack_Alignment, Pack_Skip_Images, Pack_Image_Height,
                               Unpack_Skip_Images, Unpack_Image_Height);
+   
+   type Framebuffer_Param is (Default_Width, Default_Height, Default_Layers,
+                              Default_Samples, Default_Fixed_Sample_Locations);
 private
 
    for Attribute_Mask use record
@@ -179,4 +182,11 @@ private
                               Unpack_Skip_Images  => 16#806D#,
                               Unpack_Image_Height => 16#806E#);
    for Pixel_Store_Param'Size use Low_Level.Enum'Size;
+   
+   for Framebuffer_Param use (Default_Width                  => 16#9310#,
+                              Default_Height                 => 16#9311#,
+                              Default_Layers                 => 16#9312#,
+                              Default_Samples                => 16#9313#,
+                              Default_Fixed_Sample_Locations => 16#9314#);
+   for Framebuffer_Param'Size use Low_Level.Enum'Size;
 end GL.Enums;

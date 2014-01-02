@@ -107,6 +107,11 @@ private package GL.API is
                            Target : in out Ints.Vector4);
    pragma Import (Convention => StdCall, Entity => Get_Int_Vec4,
                   External_Name => "glGetIntegerv");
+   
+   procedure Get_Size (Name   : Enums.Getter.Parameter;
+                       Target : access Size);
+   pragma Import (Convention => StdCall, Entity => Get_Size,
+                  External_Name => "glGetIntegerv");
 
    procedure Get_Color_Control (Name   : Enums.Getter.Parameter;
                                 Target : access Fixed.Lighting.Color_Control);
@@ -809,6 +814,26 @@ private package GL.API is
      ("glInvalidateFramebuffer", Low_Level.Enums.Framebuffer_Kind, Size,
       Objects.Framebuffers.Attachment_Point,
       Objects.Framebuffers.Attachment_List);
+   
+   procedure Framebuffer_Parameter_Size is new Loader.Procedure_With_3_Params
+     ("glFramebufferParameteri", Low_Level.Enums.Framebuffer_Kind,
+      Enums.Framebuffer_Param, Size);
+   
+   procedure Framebuffer_Parameter_Bool is new Loader.Procedure_With_3_Params
+     ("glFramebufferParameteri", Low_Level.Enums.Framebuffer_Kind,
+      Enums.Framebuffer_Param, Low_Level.Bool);
+   
+   procedure Get_Framebuffer_Parameter_Size is new
+     Loader.Procedure_With_3_Params ("glGetFramebufferParameteriv",
+                                     Low_Level.Enums.Framebuffer_Kind,
+                                     Enums.Framebuffer_Param,
+                                     Low_Level.Size_Access);
+   
+   procedure Get_Framebuffer_Parameter_Bool is new
+     Loader.Procedure_With_3_Params ("glGetFramebufferParameteriv",
+                                     Low_Level.Enums.Framebuffer_Kind,
+                                     Enums.Framebuffer_Param,
+                                     Low_Level.Bool_Access);
    
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
