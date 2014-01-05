@@ -34,7 +34,7 @@ package GL.Objects.Buffer is
    -- Element_Type and Array_Type should use the pragma Convention (C).
    generic
       type Element_Type is private;
-      type Array_Type is array (Positive range <>) of Element_Type;
+      type Array_Type is array (Size range <>) of Element_Type;
    procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
                              Usage  : Buffer_Usage);
    

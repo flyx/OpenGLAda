@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2014, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package GL.Types.Colors is
-   pragma Preelaborate;
-      
-   type Color_Index is (R, G, B, A);
-   subtype Basic_Color_Index is Color_Index range R .. B;
+with GL.Objects.Lists;
 
-   subtype Component is Single range 0.0 .. 1.0;
-
-   type Color is array (Color_Index) of aliased Component;
-   type Basic_Color is array (Basic_Color_Index) of Component;
-   
-   type Color_Array is array (Size range <>) of aliased Color;
-   type Basic_Color_Array is array (Size range <>) of aliased Basic_Color;
-
-private
-   pragma Convention (C, Color);
-   pragma Convention (C, Basic_Color);
-end GL.Types.Colors;
+package GL.Objects.Shaders.Lists is
+  new GL.Objects.Lists (Shader, Create_From_Id);

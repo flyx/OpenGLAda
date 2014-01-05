@@ -21,7 +21,7 @@ with GL.Files;
 with GL.Fixed.Matrix;
 with GL.Immediate;
 with GL.Objects.Programs;
-with GL.Objects.Shaders;
+with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
 with GL_Test.Display_Backend;
@@ -74,6 +74,29 @@ begin
       return;
    end if;
    Program.Use_Program;
+   
+   -- test iteration over program shaders
+   Ada.Text_IO.Put_Line ("Listing shaders attached to program...");
+   declare
+      use type GL.Objects.Shaders.Lists.Cursor;
+      
+      List : constant GL.Objects.Shaders.Lists.List
+        := Program.Attached_Shaders;
+      Cursor : GL.Objects.Shaders.Lists.Cursor := List.First;
+   begin
+      while Cursor /= GL.Objects.Shaders.Lists.No_Element loop
+         declare
+            Shader : constant GL.Objects.Shaders.Shader
+              := GL.Objects.Shaders.Lists.Element (Cursor);
+         begin
+            Ada.Text_IO.Put_Line ("----------------------------");
+            Ada.Text_IO.Put_Line ("Kind: " & Shader.Kind'Img);
+            Ada.Text_IO.Put_Line ("Status: " & Shader.Compile_Status'Img);
+         end;
+         Cursor := GL.Objects.Shaders.Lists.Next (Cursor);
+      end loop;
+   end;
+   Ada.Text_IO.Put_Line ("-----------[Done.]----------");
    
    -- set up matrices
    Projection.Load_Identity;

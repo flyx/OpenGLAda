@@ -844,6 +844,9 @@ private package GL.API is
 
    procedure Get_Shader_Param is new Loader.Getter_With_3_Params
      ("glGetShaderiv", UInt, Enums.Shader_Param, Int);
+   
+   procedure Get_Shader_Type is new Loader.Getter_With_3_Params
+     ("glGetShaderiv", UInt, Enums.Shader_Param, Objects.Shaders.Shader_Type);
 
    function Create_Shader is new Loader.Function_With_1_Param
      ("glCreateShader", Objects.Shaders.Shader_Type, UInt);
@@ -914,6 +917,9 @@ private package GL.API is
 
    procedure Disable_Vertex_Attrib_Array is new Loader.Procedure_With_1_Param
      ("glDisableVertexAttribArray", Attributes.Attribute);
+   
+   function Get_Attached_Shaders is new Loader.Array_Getter_With_4_Params
+     ("glGetAttachedShaders", UInt, UInt, UInt_Array);
    
    -----------------------------------------------------------------------------
    --                  Transformation to window coordinates                   --

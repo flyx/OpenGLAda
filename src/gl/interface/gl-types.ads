@@ -42,9 +42,9 @@ package GL.Types is
    type Double is new C.double;
    
    -- array types
-   type Int_Array    is array (Positive range <>) of Int;
-   type UInt_Array   is array (Positive range <>) of UInt;
-   type Single_Array is array (Positive range <>) of Single;
+   type Int_Array    is array (Size range <>) of Int;
+   type UInt_Array   is array (Size range <>) of UInt;
+   type Single_Array is array (Size range <>) of Single;
    
    -- type descriptors
    type Numeric_Type is (Byte_Type, UByte_Type, Short_Type,
@@ -63,38 +63,47 @@ package GL.Types is
    subtype Component_Count is Int range 1 .. 4;
    
    package Bytes is new GL.Algebra (Element_Type => Byte,
+                                    Index_Type   => Size,
                                     Null_Value   => 0,
                                     One_Value    => 1);
    
    package Shorts is new GL.Algebra (Element_Type => Short,
+                                     Index_Type   => Size,
                                      Null_Value   => 0,
                                      One_Value    => 1);
    
    package Ints is new GL.Algebra (Element_Type => Int,
+                                   Index_Type   => Size,
                                    Null_Value   => 0,
                                    One_Value    => 1);
    
    package Longs is new GL.Algebra (Element_Type => Long,
+                                    Index_Type   => Size,
                                     Null_Value   => 0,
                                     One_Value    => 1);
    
    package UBytes is new GL.Algebra (Element_Type => UByte,
+                                     Index_Type   => Size,
                                      Null_Value   => 0,
                                      One_Value    => 1);
    
    package UShorts is new GL.Algebra (Element_Type => UShort,
+                                      Index_Type   => Size,
                                       Null_Value   => 0,
                                       One_Value    => 1);
    
    package UInts is new GL.Algebra (Element_Type => UInt,
+                                    Index_Type   => Size,
                                     Null_Value   => 0,
                                     One_Value    => 1);
    
    package Singles is new GL.Algebra (Element_Type => Single,
+                                      Index_Type   => Size,
                                       Null_Value   => 0.0,
                                       One_Value    => 1.0);
    
    package Doubles is new GL.Algebra (Element_Type => Double,
+                                      Index_Type   => Size,
                                       Null_Value => 0.0,
                                       One_Value    => 1.0);
    

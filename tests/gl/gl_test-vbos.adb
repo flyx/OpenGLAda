@@ -28,8 +28,8 @@ with GL_Test.Display_Backend;
 
 procedure GL_Test.VBOs is
    use GL.Fixed.Matrix;
-   use GL.Types;
    use GL.Types.Doubles;
+   use GL.Types;
    use GL;
    
    procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
@@ -43,7 +43,7 @@ procedure GL_Test.VBOs is
    pragma Convention (C, Colored_Vertex);
    pragma Pack (Colored_Vertex);
    
-   type Colored_Vertices is array (Positive range <>) of aliased Colored_Vertex;
+   type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
    
    procedure Load_Colored_Vertex is new GL.Objects.Buffer.Load_To_Buffer
       (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);

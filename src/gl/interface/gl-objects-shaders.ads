@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2013, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -39,6 +39,8 @@ package GL.Objects.Shaders is
    overriding
    procedure Delete_Id (Object : in out Shader);
    
+   -- low-level
+   function Create_From_Id (Id : UInt) return Shader;
 private
    type Shader (Kind : Shader_Type) is new GL_Object with null record;
 

@@ -106,4 +106,15 @@ package body GL.Objects.Shaders is
       Object.Reference.Initialized := False;
    end Delete_Id;
    
+   function Create_From_Id (Id : UInt) return Shader is
+      Kind : Shader_Type := Shader_Type'First;
+   begin
+      API.Get_Shader_Type (Id, Enums.Shader_Type, Kind);
+      Raise_Exception_On_OpenGL_Error;
+      return Object : Shader (Kind) do
+         Object.Reference.GL_Id := Id;
+         Object.Reference.Initialized := True;
+      end return;
+   end Create_From_Id;
+   
 end GL.Objects.Shaders;

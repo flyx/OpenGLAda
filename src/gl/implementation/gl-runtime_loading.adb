@@ -16,6 +16,8 @@
 
 with Ada.Unchecked_Conversion;
 
+with GL.API;
+
 package body GL.Runtime_Loading is
    use type Function_Maps.Cursor;
    use type System.Address;
@@ -108,6 +110,38 @@ package body GL.Runtime_Loading is
         return Reference (Param1, Param2);
      end if;
    end Function_With_2_Params;
+   
+   function Array_Getter_With_4_Params (Param1 : Param1_Type;
+                                        Max_Size : Types.Size)
+                                        return Array_Type is
+      use type Types.Size;
+      
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Max : Types.Size;
+                          Returned_Size : in out Types.Size;
+                          Values : in out Array_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Function is new Load (Procedure_Reference);
+      Reference : constant Procedure_Reference
+        := Load_Function (Procedure_Name);
+      
+      Actual_Size : Types.Size := 0;
+   
+      Ret : Array_Type (1 .. Max_Size);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      end if;
+      
+      Reference.all (Param1, Max_Size, Actual_Size, Ret);
+      if Actual_Size /= Max_Size then
+         return Ret (1 .. Actual_Size);
+      else
+         return Ret;
+      end if;
+   end Array_Getter_With_4_Params;
+      
 
    procedure Procedure_Without_Params is
       type Procedure_Reference is

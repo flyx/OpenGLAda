@@ -37,6 +37,7 @@ package body GL.Objects.Programs is
    begin
       API.Get_Program_Param (Subject.Reference.GL_Id, Enums.Link_Status,
                              Status_Value);
+      Raise_Exception_On_OpenGL_Error;
       return Status_Value /= 0;
    end Link_Status;
 
@@ -45,6 +46,7 @@ package body GL.Objects.Programs is
    begin
       API.Get_Program_Param (Subject.Reference.GL_Id, Enums.Info_Log_Length,
                              Log_Length);
+      Raise_Exception_On_OpenGL_Error;
       -- Returned length includes null termination character
       Log_Length := Log_Length - 1;
       declare
@@ -57,6 +59,7 @@ package body GL.Objects.Programs is
          API.Get_Program_Info_Log (Subject.Reference.GL_Id,
                                    Log_Length + 1,
                                    Actual_Length, C_Info_Log);
+         Raise_Exception_On_OpenGL_Error;
          Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
          C.Strings.Free (C_Info_Log);
          return Info_Log;
@@ -66,6 +69,7 @@ package body GL.Objects.Programs is
    procedure Use_Program (Subject : Program) is
    begin
       API.Use_Program (Subject.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
    end Use_Program;
 
    procedure Initialize_Id (Object : in out Program) is
@@ -77,6 +81,7 @@ package body GL.Objects.Programs is
    procedure Delete_Id (Object : in out Program) is
    begin
       API.Delete_Program (Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
@@ -107,5 +112,19 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Location;
    end Attrib_Location;
+   
+   function Attached_Shaders (Object : Program) return Shaders.Lists.List is
+      Shader_Count : aliased Int := 0;
+   begin
+      API.Get_Program_Param (Object.Reference.GL_Id, Enums.Attached_Shaders,
+                             Shader_Count);
+      Raise_Exception_On_OpenGL_Error;
+      
+      return List : constant Shaders.Lists.List := Shaders.Lists.Create
+        (API.Get_Attached_Shaders (Object.Reference.GL_Id,
+                                   Size (Shader_Count))) do
+         Raise_Exception_On_OpenGL_Error;
+      end return;
+   end Attached_Shaders;
       
 end GL.Objects.Programs;

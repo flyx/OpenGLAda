@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Attributes;
-with GL.Objects.Shaders;
+with GL.Objects.Shaders.Lists;
 with GL.Uniforms;
 
 package GL.Objects.Programs is
@@ -39,6 +39,8 @@ package GL.Objects.Programs is
                                    Name : String);
    function Attrib_Location (Subject : Program; Name : String)
      return Attributes.Attribute;
+   
+   function Attached_Shaders (Object : Program) return Shaders.Lists.List;
    
    overriding
    procedure Initialize_Id (Object : in out Program);

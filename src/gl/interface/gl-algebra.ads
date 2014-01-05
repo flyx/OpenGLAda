@@ -19,6 +19,7 @@ with GL.Matrices;
 
 generic
    type Element_Type is private;
+   type Index_Type   is (<>);
    with function "+" (Left, Right : Element_Type) return Element_Type is <>;
    with function "-" (Left, Right : Element_Type) return Element_Type is <>;
    with function "-" (Left        : Element_Type) return Element_Type is <>;
@@ -87,13 +88,13 @@ package GL.Algebra is
    --                               Array types                               --
    -----------------------------------------------------------------------------
    
-   type Vector2_Array is array (Positive range <>) of Vector2;
-   type Vector3_Array is array (Positive range <>) of Vector3;
-   type Vector4_Array is array (Positive range <>) of Vector4;
+   type Vector2_Array is array (Index_Type range <>) of Vector2;
+   type Vector3_Array is array (Index_Type range <>) of Vector3;
+   type Vector4_Array is array (Index_Type range <>) of Vector4;
    
-   type Matrix2_Array is array (Positive range <>) of Matrix2;
-   type Matrix3_Array is array (Positive range <>) of Matrix3;
-   type Matrix4_Array is array (Positive range <>) of Matrix4;
+   type Matrix2_Array is array (Index_Type range <>) of Matrix2;
+   type Matrix3_Array is array (Index_Type range <>) of Matrix3;
+   type Matrix4_Array is array (Index_Type range <>) of Matrix4;
    
    pragma Convention (C, Vector2_Array);
    pragma Convention (C, Vector3_Array);
