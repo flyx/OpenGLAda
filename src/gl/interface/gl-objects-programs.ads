@@ -22,6 +22,7 @@ package GL.Objects.Programs is
    pragma Preelaborate;
    
    subtype Subroutine_Index_Type is UInt;
+   subtype Uniform_Location_Type is Int range -1 .. Int'Last;
    
    Invalid_Index : constant Subroutine_Index_Type;
    
@@ -53,6 +54,10 @@ package GL.Objects.Programs is
    function Subroutine_Index (Object : Program; Shader : Shaders.Shader_Type;
                               Name   : String)
                               return Subroutine_Index_Type;
+   function Subroutine_Uniform_Locations (Object : Program;
+                                          Shader : Shaders.Shader_Type;
+                                          Name   : String) 
+                                          return Uniform_Location_Type;
    
    procedure Use_Program (Subject : Program);
    

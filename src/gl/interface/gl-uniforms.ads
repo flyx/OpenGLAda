@@ -21,7 +21,7 @@ package GL.Uniforms is
    
    type Uniform is new Int;
    
-   procedure Set_Single  (Location : Uniform; Value          : Single);
+   procedure Set_Single (Location : Uniform; Value          : Single);
    procedure Set_Single (Location : Uniform; V1, V2         : Single);
    procedure Set_Single (Location : Uniform; Value          : Singles.Vector2);
    procedure Set_Single (Location : Uniform; V1, V2, V3     : Single);

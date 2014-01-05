@@ -135,12 +135,12 @@ package GL.Runtime_Loading is
    
    generic
       Procedure_Name : String;
-      type Param1_Type is private;
-      type Param2_Type is private;
-      type Param3_Type is private;
-      type Param4_Type is private;
-      type Param5_Type is private;
-      type Param6_Type is private;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
+      type Param3_Type (<>) is private;
+      type Param4_Type (<>) is private;
+      type Param5_Type (<>) is private;
+      type Param6_Type (<>) is private;
    procedure Procedure_With_6_Params (Param1 : Param1_Type;
                                       Param2 : Param2_Type;
                                       Param3 : Param3_Type;
@@ -148,6 +148,44 @@ package GL.Runtime_Loading is
                                       Param5 : Param5_Type;
                                       Param6 : Param6_Type);
    pragma Inline (Procedure_With_6_Params);
+   
+   generic
+      Procedure_Name : String;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
+      type Param3_Type (<>) is private;
+      type Param4_Type (<>) is private;
+      type Param5_Type (<>) is private;
+      type Param6_Type (<>) is private;
+      type Param7_Type (<>) is private;
+   procedure Procedure_With_7_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type;
+                                      Param7 : Param7_Type);
+   pragma Inline (Procedure_With_7_Params);
+   
+   generic
+      Procedure_Name : String;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
+      type Param3_Type (<>) is private;
+      type Param4_Type (<>) is private;
+      type Param5_Type (<>) is private;
+      type Param6_Type (<>) is private;
+      type Param7_Type (<>) is private;
+      type Param8_Type (<>) is private;
+   procedure Procedure_With_8_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type;
+                                      Param7 : Param7_Type;
+                                      Param8 : Param8_Type);
+   pragma Inline (Procedure_With_8_Params);
    
    generic
       Procedure_Name : String;

@@ -74,6 +74,10 @@ package GL.Objects.Buffers is
    overriding
    procedure Delete_Id (Object : in out Buffer);
    
+   procedure Invalidate_Data (Object : in out Buffer);   
+   procedure Invalidate_Sub_Data (Object : in out Buffer;
+                                  Offset, Length : Long_Size);
+   
    Array_Buffer              : constant Buffer_Target;
    Element_Array_Buffer      : constant Buffer_Target;
    Pixel_Pack_Buffer         : constant Buffer_Target;

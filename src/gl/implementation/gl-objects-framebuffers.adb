@@ -54,6 +54,16 @@ package body GL.Objects.Framebuffers is
       Raise_Exception_On_OpenGL_Error;
    end Invalidate;
 
+   procedure Invalidate_Sub (Target        : in out Framebuffer_Target;
+                             Attachments   : Attachment_List;
+                             X, Y          : Int;
+                             Width, Height : Size) is
+   begin
+      API.Invalidate_Sub_Framebuffer (Target.Kind, Attachments'Length,
+                                      Attachments, X, Y, Width, Height);
+      Raise_Exception_On_OpenGL_Error;
+   end Invalidate_Sub;
+
    procedure Blit (Src_X0, Src_Y0, Src_X1, Src_Y1,
                    Dst_X0, Dst_Y0, Dst_X1, Dst_Y1 : Int;
                    Mask : Buffers.Buffer_Bits;

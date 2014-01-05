@@ -15,8 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.API;
-with GL.Enums;
-with GL.Low_Level;
+with GL.Enums.Getter;
 
 package body GL.Framebuffer is
 
@@ -35,5 +34,19 @@ package body GL.Framebuffer is
         (X, Y, Width, Height, Format, Data_Type, Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Read_Pixels;
+
+   procedure Set_Logic_Op_Mode (Value : Logic_Op) is
+   begin
+      API.Logic_Op (Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Logic_Op_Mode;
+
+   function Logic_Op_Mode return Logic_Op is
+      Ret : aliased Logic_Op;
+   begin
+      API.Get_Logic_Op (Enums.Getter.Logic_Op_Mode, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Logic_Op_Mode;
 
 end GL.Framebuffer;

@@ -33,6 +33,7 @@ package GL.Types is
    type Long  is new C.long;
    
    subtype Size is Int range 0 .. Int'Last;
+   subtype Long_Size is Long range 0 .. Long'Last;
    
    -- unsigned integer types
    type UByte  is new C.unsigned_char;

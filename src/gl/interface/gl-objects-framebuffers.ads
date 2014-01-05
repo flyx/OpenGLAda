@@ -58,6 +58,11 @@ package GL.Objects.Framebuffers is
    procedure Invalidate (Target : in out Framebuffer_Target;
                          Attachments : Attachment_List);
 
+   procedure Invalidate_Sub (Target        : in out Framebuffer_Target;
+                             Attachments   : Attachment_List;
+                             X, Y          : Int;
+                             Width, Height : Size);
+
    procedure Set_Default_Width (Target : in out Framebuffer_Target;
                                 Value  : Size);
    function Default_Width (Target : Framebuffer_Target) return Size;

@@ -131,6 +131,20 @@ package body GL.Objects.Programs is
          Raise_Exception_On_OpenGL_Error;
       end return;
    end Subroutine_Index;
+   
+   function Subroutine_Uniform_Locations (Object : Program;
+                                          Shader : Shaders.Shader_Type;
+                                          Name   : String) 
+                                          return Uniform_Location_Type is
+      C_String : constant Interfaces.C.char_array
+        := Interfaces.C.To_C (Name);
+   begin
+      return Index : constant Uniform_Location_Type
+        := API.Get_Subroutine_Uniform_Location
+        (Object.Reference.GL_Id, Shader, C_String) do
+         Raise_Exception_On_OpenGL_Error;
+      end return;
+   end Subroutine_Uniform_Locations;
       
    procedure Use_Program (Subject : Program) is
    begin

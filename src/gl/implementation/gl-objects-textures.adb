@@ -252,6 +252,21 @@ package body GL.Objects.Textures is
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
+   
+   procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level) is
+   begin
+      API.Invalidate_Tex_Image (Object.Reference.GL_Id, Level);
+      Raise_Exception_On_OpenGL_Error;
+   end Invalidate_Image;
+   
+   procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
+                                   X, Y, Z : Int; Width, Height, Depth : Size)
+   is
+   begin
+      API.Invalidate_Tex_Sub_Image (Object.Reference.GL_Id, Level, X, Y, Z,
+                                    Width, Height, Depth);
+      Raise_Exception_On_OpenGL_Error;
+   end Invalidate_Sub_Image;
 
    procedure Set_Minifying_Filter (Target : Texture_Target;
                                    Filter : Minifying_Function) is

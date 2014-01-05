@@ -184,5 +184,20 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.Initialized := False;
    end Delete_Id;
+   
+   procedure Invalidate_Data (Object : in out Buffer) is
+   begin 
+      API.Invalidate_Buffer_Data (Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Invalidate_Data;
+   
+   procedure Invalidate_Sub_Data (Object : in out Buffer;
+                                  Offset, Length : Long_Size) is
+   begin
+      API.Invalidate_Buffer_Sub_Data (Object.Reference.GL_Id,
+                                      Low_Level.IntPtr (Offset),
+                                      Low_Level.SizeIPtr (Length));
+      Raise_Exception_On_OpenGL_Error;
+   end Invalidate_Sub_Data;
 
 end GL.Objects.Buffers;

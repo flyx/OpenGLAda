@@ -207,6 +207,11 @@ package GL.Objects.Textures is
    overriding
    procedure Delete_Id (Object : in out Texture);
    
+   procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level);
+   
+   procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
+                                   X, Y, Z : Int; Width, Height, Depth : Size);
+   
    -----------------------------------------------------------------------------
    --                            Texture Units                                --
    -----------------------------------------------------------------------------

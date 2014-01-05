@@ -293,6 +293,58 @@ package body GL.Runtime_Loading is
       end if;
    end Procedure_With_6_Params;
    
+   procedure Procedure_With_7_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type;
+                                      Param7 : Param7_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type; Param4 : Param4_Type;
+                          Param5 : Param5_Type; Param6 : Param6_Type;
+                          Param7 : Param7_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      else
+         Reference.all (Param1, Param2, Param3, Param4, Param5, Param6, Param7);
+      end if;
+   end Procedure_With_7_Params;
+   
+   procedure Procedure_With_8_Params (Param1 : Param1_Type;
+                                      Param2 : Param2_Type;
+                                      Param3 : Param3_Type;
+                                      Param4 : Param4_Type;
+                                      Param5 : Param5_Type;
+                                      Param6 : Param6_Type;
+                                      Param7 : Param7_Type;
+                                      Param8 : Param8_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type; Param4 : Param4_Type;
+                          Param5 : Param5_Type; Param6 : Param6_Type;
+                          Param7 : Param7_Type; Param8 : Param8_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      else
+         Reference.all (Param1, Param2, Param3, Param4,
+                        Param5, Param6, Param7, Param8);
+      end if;
+   end Procedure_With_8_Params;
+   
    procedure Procedure_With_10_Params (Param1 : Param1_Type;
                                        Param2 : Param2_Type;
                                        Param3 : Param3_Type;
