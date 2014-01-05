@@ -18,3 +18,4 @@ with GL.Objects.Lists;
 
 package GL.Objects.Shaders.Lists is
   new GL.Objects.Lists (Shader, Create_From_Id);
+pragma Preelaborate (GL.Objects.Shaders.Lists);

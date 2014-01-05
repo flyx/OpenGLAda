@@ -58,6 +58,18 @@ package GL.Runtime_Loading is
    pragma Inline (Function_With_2_Params);
    
    generic
+      Function_Name : String;
+      type Param1_Type (<>) is private;
+      type Param2_Type (<>) is private;
+      type Param3_Type (<>) is private;
+      type Return_Type is private;
+   function Function_With_3_Params (Param1 : Param1_Type;
+                                    Param2 : Param2_Type;
+                                    Param3 : Param3_Type)
+                                   return Return_Type;
+   pragma Inline (Function_With_3_Params);
+   
+   generic
       Procedure_Name : String;
       type Param1_Type (<>) is private;
       type Element_Type is private;
@@ -189,7 +201,7 @@ package GL.Runtime_Loading is
                                    Param2 : Param2_Type;
                                    Param3 : Param3_Type;
                                    Value  : in out Value_Type);
-   pragma Inline (Getter_With_3_Params);
+   pragma Inline (Getter_With_4_Params);
    
    generic
       Procedure_Name : String;

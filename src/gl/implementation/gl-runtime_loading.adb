@@ -109,6 +109,25 @@ package body GL.Runtime_Loading is
      end if;
    end Function_With_2_Params;
    
+   function Function_With_3_Params (Param1 : Param1_Type;
+                                    Param2 : Param2_Type;
+                                    Param3 : Param3_Type)
+                                    return Return_Type is
+      type Function_Reference is
+        access function (Param1 : Param1_Type; Param2 : Param2_Type;
+                         Param3 : Param3_Type) return Return_Type;
+      pragma Convention (StdCall, Function_Reference);
+      
+      function Load_Function is new Load (Function_Reference);
+      Reference : constant Function_Reference := Load_Function (Function_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Function_Name;
+      else
+         return Reference.all (Param1, Param2, Param3);
+      end if;
+   end Function_With_3_Params;
+   
    function Array_Getter_With_4_Params (Param1 : Param1_Type;
                                         Max_Size : Types.Size)
                                         return Array_Type is

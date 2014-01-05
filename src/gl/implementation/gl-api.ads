@@ -29,6 +29,7 @@ with GL.Low_Level.Enums;
 with GL.Objects.Textures;
 with GL.Objects.Buffers;
 with GL.Objects.Framebuffers;
+with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Pixels;
 with GL.Toggles;
@@ -910,6 +911,14 @@ private package GL.API is
      new Loader.String_Getter_With_4_Params
      ("glGetProgramInfoLog", Size, UInt);
 
+   procedure Get_Program_Stage is new Loader.Getter_With_4_Params
+     ("glGetProgramStageiv", UInt, Objects.Shaders.Shader_Type,
+      Enums.Program_Stage_Param, Size);
+   
+   function Get_Subroutine_Index is new Loader.Function_With_3_Params
+     ("glGetSubroutineIndex", UInt, Objects.Shaders.Shader_Type,
+      Interfaces.C.char_array, Objects.Programs.Subroutine_Index_Type);
+   
    procedure Use_Program is new Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
 

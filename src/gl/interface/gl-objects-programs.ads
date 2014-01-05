@@ -19,6 +19,12 @@ with GL.Objects.Shaders.Lists;
 with GL.Uniforms;
 
 package GL.Objects.Programs is
+   pragma Preelaborate;
+   
+   subtype Subroutine_Index_Type is UInt;
+   
+   Invalid_Index : constant Subroutine_Index_Type;
+   
    type Program is new GL_Object with private;
       
    procedure Attach (Subject : Program; Shader : Shaders.Shader);
@@ -28,6 +34,25 @@ package GL.Objects.Programs is
    function Link_Status (Subject : Program) return Boolean;
    
    function Info_Log (Subject : Program) return String;
+   
+   function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
+                                return Size;
+   function Active_Subroutine_Uniforms (Object : Program;
+                                        Shader : Shaders.Shader_Type) 
+                                        return Size;
+   function Active_Subroutine_Uniform_Locations (Object : Program;
+                                                 Shader : Shaders.Shader_Type)
+                                                 return Size;
+   function Active_Subroutine_Uniform_Max_Length (Object : Program;
+                                                  Shader : Shaders.Shader_Type)
+                                                  return Size;
+   function Active_Subroutine_Max_Length (Object : Program;
+                                          Shader : Shaders.Shader_Type)
+                                          return Size;
+   
+   function Subroutine_Index (Object : Program; Shader : Shaders.Shader_Type;
+                              Name   : String)
+                              return Subroutine_Index_Type;
    
    procedure Use_Program (Subject : Program);
    
@@ -48,5 +73,7 @@ package GL.Objects.Programs is
    overriding
    procedure Delete_Id (Object : in out Program);
 private
+   Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;
+   
    type Program is new GL_Object with null record;
 end GL.Objects.Programs;

@@ -76,6 +76,11 @@ private package GL.Enums is
                           Transform_Feedback_Varying_Max_Length,
                           Transform_Feedback_Buffer_Mode,
                           Transform_Feedback_Varyings);
+   
+   type Program_Stage_Param is (Active_Subroutines, Active_Subroutine_Uniforms,
+                                Active_Subroutine_Uniform_Locations,
+                                Active_Subroutine_Max_Length,
+                                Active_Subroutine_Uniform_Max_Length);
 
    type Clamp_Color_Param is (Clamp_Read_Color);
    
@@ -166,6 +171,13 @@ private
                           Transform_Feedback_Buffer_Mode        => 16#8C7F#,
                           Transform_Feedback_Varyings           => 16#8C83#);
    for Program_Param'Size use Low_Level.Enum'Size;
+                                
+   for Program_Stage_Param use (Active_Subroutines => 16#8DE5#,
+                                Active_Subroutine_Uniforms => 16#8DE6#,
+                                Active_Subroutine_Uniform_Locations => 16#8E47#,
+                                Active_Subroutine_Max_Length => 16#8E48#,
+                                Active_Subroutine_Uniform_Max_Length => 16#8E49#);
+   for Program_Stage_Param'Size use Low_Level.Enum'Size;
    
    for Clamp_Color_Param use (Clamp_Read_Color => 16#891C#);
    for Clamp_Color_Param'Size use Low_Level.Enum'Size;
