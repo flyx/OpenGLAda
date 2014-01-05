@@ -17,7 +17,7 @@
 with Ada.Calendar;
 
 with GL.Buffers;
-with GL.Objects.Buffer;
+with GL.Objects.Buffers;
 with GL.Fixed;
 with GL.Fixed.Matrix;
 with GL.Immediate;
@@ -32,7 +32,7 @@ procedure GL_Test.VBOs is
    use GL.Types;
    use GL;
    
-   procedure Load_Index is new GL.Objects.Buffer.Load_To_Buffer
+   procedure Load_Index is new GL.Objects.Buffers.Load_To_Buffer
      (Element_Type => Int, Array_Type => Int_Array);
    
    type Colored_Vertex is record
@@ -45,7 +45,7 @@ procedure GL_Test.VBOs is
    
    type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
    
-   procedure Load_Colored_Vertex is new GL.Objects.Buffer.Load_To_Buffer
+   procedure Load_Colored_Vertex is new GL.Objects.Buffers.Load_To_Buffer
       (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);
       
 begin
@@ -58,7 +58,7 @@ begin
    GL.Immediate.Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
    
    declare
-      use GL.Objects.Buffer;
+      use GL.Objects.Buffers;
       use GL.Buffers;
       
       Cube : constant Colored_Vertices :=
@@ -80,8 +80,7 @@ begin
          0, 3, 7, 4,
          1, 5, 6, 2);
       
-      Cube_Buffer  : Buffer_Object;
-      Index_Buffer : Buffer_Object;
+      Cube_Buffer, Index_Buffer  : Buffer;
       
       Rotator : Double := 0.0;
       
@@ -114,7 +113,7 @@ begin
          Modelview.Apply_Rotation (Rotator, 0.0, 1.0, 0.0);
          Rotator := Rotator + 1.0;
          
-         GL.Objects.Buffer.Draw_Elements (GL.Types.Quads, 24, UInt_Type);
+         GL.Objects.Buffers.Draw_Elements (GL.Types.Quads, 24, UInt_Type);
          
          GL.Flush;
          

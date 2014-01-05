@@ -16,8 +16,6 @@
 
 with Ada.Unchecked_Conversion;
 
-with GL.API;
-
 package body GL.Runtime_Loading is
    use type Function_Maps.Cursor;
    use type System.Address;

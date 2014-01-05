@@ -27,7 +27,7 @@ with GL.Fixed.Textures;
 with GL.Fixed.Lighting;
 with GL.Low_Level.Enums;
 with GL.Objects.Textures;
-with GL.Objects.Buffer;
+with GL.Objects.Buffers;
 with GL.Objects.Framebuffers;
 with GL.Objects.Shaders;
 with GL.Pixels;
@@ -724,8 +724,30 @@ private package GL.API is
 
    procedure Buffer_Data is new Loader.Procedure_With_4_Params
       ("glBufferData", Low_Level.Enums.Buffer_Kind, Low_Level.SizeIPtr,
-       System.Address, Objects.Buffer.Buffer_Usage);
-
+       System.Address, Objects.Buffers.Buffer_Usage);
+   
+   -- glMapBuffer: returns instance of generic Interfaces.C.Pointers.Pointer,
+   -- therefore declared in GL.Objects.Buffers
+   
+   procedure Unmap_Buffer is new Loader.Procedure_With_1_Param
+     ("glUnmapBuffer", Low_Level.Enums.Buffer_Kind);
+   
+   procedure Get_Buffer_Parameter_Access_Kind is new Loader.Getter_With_3_Params
+     ("glGetBufferParameteriv", Low_Level.Enums.Buffer_Kind, Enums.Buffer_Param,
+      Objects.Access_Kind);
+   
+   procedure Get_Buffer_Parameter_Bool is new Loader.Getter_With_3_Params
+     ("glGetBufferParameteriv", Low_Level.Enums.Buffer_Kind, Enums.Buffer_Param,
+      Low_Level.Bool);
+   
+   procedure Get_Buffer_Parameter_Size is new Loader.Getter_With_3_Params
+     ("glGetBufferParameteriv", Low_Level.Enums.Buffer_Kind, Enums.Buffer_Param,
+      Size);
+   
+   procedure Get_Buffer_Parameter_Usage is new Loader.Getter_With_3_Params
+     ("glGetBufferParameteriv", Low_Level.Enums.Buffer_Kind, Enums.Buffer_Param,
+      Objects.Buffers.Buffer_Usage);
+   
    -----------------------------------------------------------------------------
    --                           Vertex Array Objects                          --
    -----------------------------------------------------------------------------

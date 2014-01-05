@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Ada.Containers.Vectors;
-
 package body GL.Objects.Lists is
 
    function Create (Raw : UInt_Array) return List is

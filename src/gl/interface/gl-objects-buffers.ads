@@ -14,9 +14,11 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Interfaces.C.Pointers;
+
 private with GL.Low_Level.Enums;
 
-package GL.Objects.Buffer is
+package GL.Objects.Buffers is
    pragma Preelaborate;
    
    type Buffer_Usage is (Stream_Draw, Stream_Read, Stream_Copy,
@@ -25,11 +27,11 @@ package GL.Objects.Buffer is
    
    type Buffer_Target (<>) is tagged limited private;
    
-   type Buffer_Object is new GL_Object with private;
+   type Buffer is new GL_Object with private;
    
-   procedure Bind (Target : Buffer_Target; Object : Buffer_Object'Class);
+   procedure Bind (Target : Buffer_Target; Object : Buffer'Class);
    
-   function Current_Object (Target : Buffer_Target) return Buffer_Object'Class;
+   function Current_Object (Target : Buffer_Target) return Buffer'Class;
    
    -- Element_Type and Array_Type should use the pragma Convention (C).
    generic
@@ -42,14 +44,26 @@ package GL.Objects.Buffer is
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes: Long;
                        Usage  : Buffer_Usage);
    
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Size;
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Map (Target : in out Buffer_Target; Access_Type : Access_Kind;
+                  Pointer : out Pointers.Pointer);
+   procedure Unmap (Target : in out Buffer_Target);
+   
+   function Access_Type (Target : Buffer_Target) return Access_Kind;
+   function Mapped      (Target : Buffer_Target) return Boolean;
+   function Size        (Target : Buffer_Target) return Size;
+   function Usage       (Target : Buffer_Target) return Buffer_Usage;
+   
+   
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Types.Size;
                             Index_Type : Unsigned_Numeric_Type);
    
    overriding
-   procedure Initialize_Id (Object : in out Buffer_Object);
+   procedure Initialize_Id (Object : in out Buffer);
    
    overriding
-   procedure Delete_Id (Object : in out Buffer_Object);
+   procedure Delete_Id (Object : in out Buffer);
    
    Array_Buffer              : constant Buffer_Target;
    Element_Array_Buffer      : constant Buffer_Target;
@@ -78,7 +92,7 @@ private
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
      tagged limited null record;
 
-   type Buffer_Object is new GL_Object with null record;
+   type Buffer is new GL_Object with null record;
    
    Array_Buffer              : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Array_Buffer);
@@ -102,4 +116,4 @@ private
      := Buffer_Target'(Kind => Low_Level.Enums.Draw_Indirect_Buffer);
    Atomic_Counter_Buffer     : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Atomic_Counter_Buffer);
-end GL.Objects.Buffer;
+end GL.Objects.Buffers;

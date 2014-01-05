@@ -19,7 +19,7 @@ with Ada.Text_IO;
 with GL.Attributes;
 with GL.Buffers;
 with GL.Files;
-with GL.Objects.Buffer;
+with GL.Objects.Buffers;
 with GL.Objects.Shaders;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
@@ -33,15 +33,15 @@ procedure GL_Test.OpenGL3 is
    use GL.Objects.Vertex_Arrays;
    
    
-   procedure Load_Vectors is new GL.Objects.Buffer.Load_To_Buffer
+   procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
      (Element_Type => Singles.Vector3, Array_Type => Singles.Vector3_Array);
    
-   procedure Load_Colors is new GL.Objects.Buffer.Load_To_Buffer
+   procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
      (Element_Type => Colors.Basic_Color, Array_Type => Colors.Basic_Color_Array);
    
    procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
-                        Buffer1, Buffer2, Buffer3 : GL.Objects.Buffer.Buffer_Object) is
-      use GL.Objects.Buffer;
+                        Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
+      use GL.Objects.Buffers;
    
       Triangle1 : constant Singles.Vector3_Array
         := ((-0.3,  0.5, -1.0),
@@ -118,7 +118,7 @@ procedure GL_Test.OpenGL3 is
      (Kind => GL.Objects.Shaders.Fragment_Shader);
    Program         : GL.Objects.Programs.Program;
    
-   Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffer.Buffer_Object;
+   Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffers.Buffer;
    Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
    Display_Backend.Init;

@@ -87,6 +87,9 @@ private package GL.Enums is
                               Pack_Alignment, Pack_Skip_Images, Pack_Image_Height,
                               Unpack_Skip_Images, Unpack_Image_Height);
    
+   type Buffer_Param is (Buffer_Access, Buffer_Mapped,
+                         Buffer_Size, Buffer_Usage);
+   
    type Framebuffer_Param is (Default_Width, Default_Height, Default_Layers,
                               Default_Samples, Default_Fixed_Sample_Locations);
 private
@@ -182,6 +185,12 @@ private
                               Unpack_Skip_Images  => 16#806D#,
                               Unpack_Image_Height => 16#806E#);
    for Pixel_Store_Param'Size use Low_Level.Enum'Size;
+   
+   for Buffer_Param use (Buffer_Access => 16#88BB#,
+                         Buffer_Mapped => 16#88BC#,
+                         Buffer_Size   => 16#88BD#,
+                         Buffer_Usage  => 16#88BE#);
+   for Buffer_Param'Size use Low_Level.Enum'Size;
    
    for Framebuffer_Param use (Default_Width                  => 16#9310#,
                               Default_Height                 => 16#9311#,
