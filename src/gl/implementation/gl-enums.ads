@@ -90,6 +90,8 @@ private package GL.Enums is
    type Buffer_Param is (Buffer_Access, Buffer_Mapped,
                          Buffer_Size, Buffer_Usage);
    
+   type Buffer_Pointer_Param is (Buffer_Map_Pointer);
+   
    type Framebuffer_Param is (Default_Width, Default_Height, Default_Layers,
                               Default_Samples, Default_Fixed_Sample_Locations);
 private
@@ -191,6 +193,9 @@ private
                          Buffer_Size   => 16#88BD#,
                          Buffer_Usage  => 16#88BE#);
    for Buffer_Param'Size use Low_Level.Enum'Size;
+   
+   for Buffer_Pointer_Param use (Buffer_Map_Pointer => 16#88BD#);
+   for Buffer_Pointer_Param'Size use Low_Level.Enum'Size;
    
    for Framebuffer_Param use (Default_Width                  => 16#9310#,
                               Default_Height                 => 16#9311#,

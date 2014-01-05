@@ -377,6 +377,26 @@ package body GL.Runtime_Loading is
         Reference (Param1, Param2, Value);
       end if;
    end Getter_With_3_Params;
+   
+   procedure Getter_With_4_Params (Param1 : Param1_Type;
+                                   Param2 : Param2_Type;
+                                   Param3 : Param3_Type;
+                                   Value  : in out Value_Type) is
+      type Procedure_Reference is
+        access procedure (Param1 : Param1_Type; Param2 : Param2_Type;
+                          Param3 : Param3_Type; Param4 : in out Value_Type);
+      pragma Convention (StdCall, Procedure_Reference);
+      
+      function Load_Procedure is new Load (Procedure_Reference);
+      Reference : constant Procedure_Reference
+        := Load_Procedure (Procedure_Name);
+   begin
+      if Reference = null then
+         raise Feature_Not_Supported_Exception with Procedure_Name;
+      else
+         Reference.all (Param1, Param2, Param3, Value);
+      end if;
+   end Getter_With_4_Params;
 
    procedure String_Getter_With_4_Params (Param1      : Param1_Type;
                                           Buffer_Size : Size_Type;

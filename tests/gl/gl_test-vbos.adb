@@ -16,6 +16,8 @@
 
 with Ada.Calendar;
 
+with Interfaces.C.Pointers;
+
 with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Fixed;
@@ -33,7 +35,7 @@ procedure GL_Test.VBOs is
    use GL;
    
    procedure Load_Index is new GL.Objects.Buffers.Load_To_Buffer
-     (Element_Type => Int, Array_Type => Int_Array);
+     (Int_Pointers);
    
    type Colored_Vertex is record
       Vertex : Vector3;
@@ -45,8 +47,11 @@ procedure GL_Test.VBOs is
    
    type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
    
+   package Colored_Pointers is new Interfaces.C.Pointers
+     (Size, Colored_Vertex, Colored_Vertices, Colored_Vertex'(others => <>));
+   
    procedure Load_Colored_Vertex is new GL.Objects.Buffers.Load_To_Buffer
-      (Element_Type => Colored_Vertex, Array_Type => Colored_Vertices);
+      (Colored_Pointers);
       
 begin
    Display_Backend.Init;

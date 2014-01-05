@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Interfaces.C.Pointers;
+
 with GL.Vectors;
 with GL.Matrices;
 
@@ -88,13 +90,13 @@ package GL.Algebra is
    --                               Array types                               --
    -----------------------------------------------------------------------------
    
-   type Vector2_Array is array (Index_Type range <>) of Vector2;
-   type Vector3_Array is array (Index_Type range <>) of Vector3;
-   type Vector4_Array is array (Index_Type range <>) of Vector4;
+   type Vector2_Array is array (Index_Type range <>) of aliased Vector2;
+   type Vector3_Array is array (Index_Type range <>) of aliased Vector3;
+   type Vector4_Array is array (Index_Type range <>) of aliased Vector4;
    
-   type Matrix2_Array is array (Index_Type range <>) of Matrix2;
-   type Matrix3_Array is array (Index_Type range <>) of Matrix3;
-   type Matrix4_Array is array (Index_Type range <>) of Matrix4;
+   type Matrix2_Array is array (Index_Type range <>) of aliased Matrix2;
+   type Matrix3_Array is array (Index_Type range <>) of aliased Matrix3;
+   type Matrix4_Array is array (Index_Type range <>) of aliased Matrix4;
    
    pragma Convention (C, Vector2_Array);
    pragma Convention (C, Vector3_Array);
@@ -102,5 +104,17 @@ package GL.Algebra is
    pragma Convention (C, Matrix2_Array);
    pragma Convention (C, Matrix3_Array);
    pragma Convention (C, Matrix4_Array);
+   
+   -----------------------------------------------------------------------------
+   --                              Pointer types                              --
+   -- note: These instances of the Pointers package do not have a usable      --
+   --       default terminator. Only use the size-based subroutines.          --
+   -----------------------------------------------------------------------------
 
+   package Vector2_Pointers is new Interfaces.C.Pointers
+     (Index_Type, Vector2, Vector2_Array, Vector2'(others => <>));
+   package Vector3_Pointers is new Interfaces.C.Pointers
+     (Index_Type, Vector3, Vector3_Array, Vector3'(others => <>));
+   package Vector4_Pointers is new Interfaces.C.Pointers
+     (Index_Type, Vector4, Vector4_Array, Vector4'(others => <>));
 end GL.Algebra;

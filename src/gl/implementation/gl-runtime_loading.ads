@@ -21,7 +21,6 @@ with Interfaces.C.Strings;
 
 with System;
 
-with GL.Enums.Getter;
 with GL.Types;
 
 private generic
@@ -177,6 +176,18 @@ package GL.Runtime_Loading is
       type Value_Type  (<>) is private;
    procedure Getter_With_3_Params (Param1 : Param1_Type;
                                    Param2 : Param2_Type;
+                                   Value  : in out Value_Type);
+   pragma Inline (Getter_With_3_Params);
+   
+   generic
+      Procedure_Name : String;
+      type Param1_Type is private;
+      type Param2_Type is private;
+      type Param3_Type is private;
+      type Value_Type  (<>) is private;
+   procedure Getter_With_4_Params (Param1 : Param1_Type;
+                                   Param2 : Param2_Type;
+                                   Param3 : Param3_Type;
                                    Value  : in out Value_Type);
    pragma Inline (Getter_With_3_Params);
    

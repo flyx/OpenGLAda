@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Interfaces.C.Pointers;
+
 with GL.Algebra;
 
 package GL.Types is
@@ -42,9 +44,9 @@ package GL.Types is
    type Double is new C.double;
    
    -- array types
-   type Int_Array    is array (Size range <>) of Int;
-   type UInt_Array   is array (Size range <>) of UInt;
-   type Single_Array is array (Size range <>) of Single;
+   type Int_Array    is array (Size range <>) of aliased Int;
+   type UInt_Array   is array (Size range <>) of aliased UInt;
+   type Single_Array is array (Size range <>) of aliased Single;
    
    -- type descriptors
    type Numeric_Type is (Byte_Type, UByte_Type, Short_Type,
@@ -106,6 +108,16 @@ package GL.Types is
                                       Index_Type   => Size,
                                       Null_Value => 0.0,
                                       One_Value    => 1.0);
+   
+   -- pointer types (for use with data transfer functions
+   package Int_Pointers is new Interfaces.C.Pointers
+     (Size, Int, Int_Array, Int'Last);
+   
+   package UInt_Pointers is new Interfaces.C.Pointers
+     (Size, UInt, UInt_Array, UInt'Last);
+   
+   package Single_Pointers is new Interfaces.C.Pointers
+     (Size, Single, Single_Array, 0.0);
    
 private
    for Numeric_Type use (Byte_Type   => 16#1400#,

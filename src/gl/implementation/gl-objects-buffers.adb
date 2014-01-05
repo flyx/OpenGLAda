@@ -71,12 +71,13 @@ package body GL.Objects.Buffers is
       end if;
    end Current_Object;
 
-   procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
+   procedure Load_To_Buffer (Target : Buffer_Target;
+                             Data   : Pointers.Element_Array;
                              Usage  : Buffer_Usage) is
       use type C.long;
    begin
       API.Buffer_Data (Target.Kind,
-        Element_Type'Size * Data'Length / System.Storage_Unit,
+        Pointers.Element'Size * Data'Length / System.Storage_Unit,
         Data (Data'First)'Address, Usage);
       Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
@@ -111,6 +112,29 @@ package body GL.Objects.Buffers is
       API.Unmap_Buffer (Target.Kind);
       Raise_Exception_On_OpenGL_Error;
    end Unmap;
+   
+   function Pointer (Target : Buffer_Target) return Pointers.Pointer is
+      procedure Buffer_Pointer is new API.Loader.Getter_With_3_Params
+        ("glGetBufferPointerv", Low_Level.Enums.Buffer_Kind,
+         Enums.Buffer_Pointer_Param, Pointers.Pointer);
+      Ret : Pointers.Pointer := null;
+   begin
+      Buffer_Pointer (Target.Kind, Enums.Buffer_Map_Pointer, Ret);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Pointer;
+   
+   procedure Get_Sub_Data (Target : in out Buffer_Target;
+                           Offset : Types.Size;
+                           Data   : in out Pointers.Element_Array) is
+      procedure Buffer_Sub_Data is new API.Loader.Getter_With_4_Params
+        ("glBufferSubData", Low_Level.Enums.Buffer_Kind, Low_Level.IntPtr,
+         Low_Level.SizeIPtr, Pointers.Element_Array);
+   begin
+      Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
+                       Low_Level.SizeIPtr (Data'Length), Data);
+      Raise_Exception_On_OpenGL_Error;
+   end Get_Sub_Data;
    
    function Access_Type (Target : Buffer_Target) return Access_Kind is
       Ret : Access_Kind := Access_Kind'First;

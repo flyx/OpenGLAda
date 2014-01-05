@@ -33,11 +33,10 @@ package GL.Objects.Buffers is
    
    function Current_Object (Target : Buffer_Target) return Buffer'Class;
    
-   -- Element_Type and Array_Type should use the pragma Convention (C).
    generic
-      type Element_Type is private;
-      type Array_Type is array (Size range <>) of Element_Type;
-   procedure Load_To_Buffer (Target : Buffer_Target; Data : Array_Type;
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Load_To_Buffer (Target : Buffer_Target;
+                             Data   : Pointers.Element_Array;
                              Usage  : Buffer_Usage);
    
    -- Use this instead of Load_To_Buffer when you don't want to copy any data
@@ -49,6 +48,16 @@ package GL.Objects.Buffers is
    procedure Map (Target : in out Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
    procedure Unmap (Target : in out Buffer_Target);
+   
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   function Pointer (Target : Buffer_Target) return Pointers.Pointer;
+   
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Get_Sub_Data (Target : in out Buffer_Target;
+                           Offset : Types.Size;
+                           Data   : in out Pointers.Element_Array);
    
    function Access_Type (Target : Buffer_Target) return Access_Kind;
    function Mapped      (Target : Buffer_Target) return Boolean;

@@ -32,12 +32,11 @@ procedure GL_Test.OpenGL3 is
    use GL.Types;
    use GL.Objects.Vertex_Arrays;
    
-   
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
-     (Element_Type => Singles.Vector3, Array_Type => Singles.Vector3_Array);
+     (Singles.Vector3_Pointers);
    
    procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
-     (Element_Type => Colors.Basic_Color, Array_Type => Colors.Basic_Color_Array);
+     (Colors.Basic_Color_Pointers);
    
    procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
                         Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
