@@ -24,6 +24,20 @@ package body GL.Framebuffer is
       API.Clamp_Color (Enums.Clamp_Read_Color, Low_Level.Bool (Enabled));
    end Set_Clamp_Read_Color;
 
+   procedure Set_Read_Buffer (Value : Read_Buffer_Selector) is
+   begin
+      API.Read_Buffer (Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Read_Buffer;
+
+   function Read_Buffer return Read_Buffer_Selector is
+      Ret : aliased Read_Buffer_Selector;
+   begin
+      API.Get_Read_Buffer_Selector (Enums.Getter.Read_Buffer, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Read_Buffer;
+
    procedure Read_Pixels (X, Y : Int;
                           Width, Height : Size;
                           Format : Pixels.Format;

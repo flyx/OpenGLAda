@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.API;
+with GL.Culling;
 with GL.Enums.Getter;
 
 package body GL.Rasterization is
@@ -56,5 +57,19 @@ package body GL.Rasterization is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Smooth_Line_Width_Granularity;
+
+   procedure Set_Polygon_Mode (Value : Polygon_Mode_Type) is
+   begin
+      API.Polygon_Mode (Culling.Front_And_Back, Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Polygon_Mode;
+
+   function Polygon_Mode return Polygon_Mode_Type is
+      Ret : aliased Polygon_Mode_Type;
+   begin
+      API.Get_Polygon_Mode (Enums.Getter.Polygon_Mode, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Polygon_Mode;
 
 end GL.Rasterization;

@@ -29,6 +29,8 @@ package GL.Objects.Shaders is
    
    procedure Compile (Subject : Shader);
    
+   procedure Release_Shader_Compiler;
+   
    function Compile_Status (Subject : Shader) return Boolean;
    
    function Info_Log (Subject : Shader) return String;
@@ -50,4 +52,5 @@ private
                         Tess_Evaluation_Shader => 16#8E87#,
                         Tess_Control_Shader    => 16#8E88#);
    for Shader_Type'Size use Low_Level.Enum'Size;
+   
 end GL.Objects.Shaders;

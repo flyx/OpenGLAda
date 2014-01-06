@@ -33,6 +33,7 @@ with GL.Objects.Framebuffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Pixels;
+with GL.Rasterization;
 with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -160,10 +161,21 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Get_Face_Selector,
                   External_Name => "glGetIntegerv");
    
+   procedure Get_Polygon_Mode (Name   : Enums.Getter.Parameter;
+                               Target : access Rasterization.Polygon_Mode_Type);
+   pragma Import (Convention => StdCall, Entity => Get_Polygon_Mode,
+                  External_Name => "glGetIntegerv");
+   
    procedure Get_Logic_Op (Name : Enums.Getter.Parameter;
                            Target : access Framebuffer.Logic_Op);
    pragma Import (Convention => StdCall, Entity => Get_Logic_Op,
-                  External_Name => "glGetLogicOp");
+                  External_Name => "glGetIntegerv");
+   
+   procedure Get_Read_Buffer_Selector
+     (Name   : Enums.Getter.Parameter;
+      Target : access Framebuffer.Read_Buffer_Selector);
+   pragma Import (Convention => StdCall, Entity => Get_Read_Buffer_Selector,
+                  External_Name => "glGetIntegerv");
    
    procedure Get_Light_Color (Name   : Enums.Light_Name;
                               Pname  : Enums.Light_Param;
@@ -226,6 +238,10 @@ private package GL.API is
    
    procedure Clamp_Color is new Loader.Procedure_With_2_Params
      ("glClampColor", Enums.Clamp_Color_Param, Low_Level.Bool);
+   
+   procedure Read_Buffer (Value : Framebuffer.Read_Buffer_Selector);
+   pragma Import (Convention => StdCall, Entity => Read_Buffer,
+                  External_Name => "glReadBuffer");
    
    -----------------------------------------------------------------------------
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
@@ -406,6 +422,11 @@ private package GL.API is
    procedure Line_Width (Value : Single);
    pragma Import (Convention => StdCall, Entity => Line_Width,
                   External_Name => "glLineWidth");
+   
+   procedure Polygon_Mode (Face : Culling.Face_Selector;
+                           Value : Rasterization.Polygon_Mode_Type);
+   pragma Import (Convention => StdCall, Entity => Polygon_Mode,
+                  External_Name => "glPolygonMode");
    
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
@@ -932,6 +953,9 @@ private package GL.API is
 
    procedure Compile_Shader is new Loader.Procedure_With_1_Param
      ("glCompileShader", UInt);
+   
+   procedure Release_Shader_Compiler is new Loader.Procedure_Without_Params
+     ("glReleaseShaderCompiler");
 
    procedure Get_Shader_Info_Log is
      new Loader.String_Getter_With_4_Params
