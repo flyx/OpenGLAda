@@ -995,6 +995,9 @@ private package GL.API is
    procedure Use_Program is new Loader.Procedure_With_1_Param
      ("glUseProgram", UInt);
 
+   procedure Validate_Program is new Loader.Procedure_With_1_Param
+     ("glValidateProgram", UInt);
+   
    function Get_Uniform_Location is new Loader.Function_With_2_Params
      ("glGetUniformLocation", UInt, C.char_array, Uniforms.Uniform);
 
