@@ -89,6 +89,9 @@ package Glfw.Windows is
    procedure Set_Should_Close (Object : not null access Window;
                                Value  : Boolean);
 
+   procedure Set_Cursor_Hidden (Object : not null access Window;
+                                Cursor_Hidden : Boolean);
+
    -----------------------------------------------------------------------------
    -- Event API
    -----------------------------------------------------------------------------
