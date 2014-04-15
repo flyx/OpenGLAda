@@ -18,6 +18,7 @@ with Ada.Unchecked_Conversion;
 
 with Glfw.API;
 with Glfw.Enums;
+with Glfw.Input.Mouse;
 
 package body Glfw.Windows is
    procedure Raw_Position_Callback (Raw  : System.Address;
@@ -288,6 +289,16 @@ package body Glfw.Windows is
       API.Set_Window_Should_Close (Object.Handle, Bool (Value));
    end Set_Should_Close;
 
+   procedure Set_Cursor_Hidden (Object : not null access Window;
+                                Cursor_Hidden:  Boolean) is
+   begin
+      if Cursor_Hidden then
+         API.Set_Input_Mode (Object.Handle, Enums.Mouse_Cursor, Glfw.Input.Mouse.Hidden);
+	  else
+	     API.Set_Input_Mode (Object.Handle, Enums.Mouse_Cursor, Glfw.Input.Mouse.Normal);
+      end if;
+   end Set_Cursor_Hidden;
+   
    procedure Enable_Callback (Object  : not null access Window;
                               Subject : Callbacks.Kind) is
    begin
