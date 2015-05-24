@@ -47,7 +47,7 @@ library project OpenGL.Glfw is
             for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>
 		      -- -lX11 is already set in opengl.gpr
-            for Linker_Options use (GLFW_Lib);
+            for Linker_Options use (GLFW_Lib, "-pthread", "-lm", "-lXcursor", "-lXxf86vm", "-lXrandr", "-lXinerama", "-lXi");
       end case;
    end Linker;
 end OpenGL.Glfw;
