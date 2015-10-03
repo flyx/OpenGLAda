@@ -217,6 +217,12 @@ package body Glfw.Windows is
       return API.Get_Mouse_Button (Object.Handle, Button);
    end Mouse_Button_State;
 
+   procedure Set_Cursor_Mode (Object : not null access Window;
+                              Mode   : Input.Mouse.Cursor_Mode) is
+   begin
+      API.Set_Input_Mode (Object.Handle, Enums.Mouse_Cursor, Mode);
+   end Set_Cursor_Mode;
+
    procedure Get_Cursor_Pos (Object : not null access Window;
                              X, Y   : out Input.Mouse.Coordinate) is
    begin
