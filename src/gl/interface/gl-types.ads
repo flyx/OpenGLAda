@@ -48,7 +48,11 @@ package GL.Types is
    type Int_Array    is array (Size range <>) of aliased Int;
    type UInt_Array   is array (Size range <>) of aliased UInt;
    type Single_Array is array (Size range <>) of aliased Single;
-   
+
+   pragma Convention (C, Int_Array);
+   pragma Convention (C, UInt_Array);
+   pragma Convention (C, Single_Array);
+
    -- type descriptors
    type Numeric_Type is (Byte_Type, UByte_Type, Short_Type,
                          UShort_Type, Int_Type, UInt_Type,

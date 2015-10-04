@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with System;
+
 with GL.API.Doubles;
 with GL.API.Ints;
 with GL.API.Shorts;
@@ -30,11 +32,36 @@ package body GL.Attributes is
       case Kind is
          when Single_Type => 
             API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.False,
-                                       Stride, Offset);
+                                       Stride * Single'Size / System.Storage_Unit,
+                                       Offset * Single'Size / System.Storage_Unit);
          when Double_Type =>
-            API.Vertex_AttribL_Pointer (Index, Count, Kind, Stride, Offset);
-         when others =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind, Stride, Offset);
+            API.Vertex_AttribL_Pointer (Index, Count, Kind,
+                                       Stride * Double'Size / System.Storage_Unit,
+                                       Offset * Double'Size / System.Storage_Unit);
+         when UInt_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * UInt'Size / System.Storage_Unit,
+                                       Offset * UInt'Size / System.Storage_Unit);
+         when UByte_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * UByte'Size / System.Storage_Unit,
+                                       Offset * UByte'Size / System.Storage_Unit);
+         when UShort_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * UShort'Size / System.Storage_Unit,
+                                       Offset * UShort'Size / System.Storage_Unit);
+         when Int_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * Int'Size / System.Storage_Unit,
+                                       Offset * Int'Size / System.Storage_Unit);
+         when Byte_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * Byte'Size / System.Storage_Unit,
+                                       Offset * Byte'Size / System.Storage_Unit);
+         when Short_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride * Short'Size / System.Storage_Unit,
+                                       Offset * Short'Size / System.Storage_Unit);
       end case;
       Raise_Exception_On_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;
