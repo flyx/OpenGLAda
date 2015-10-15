@@ -16,6 +16,7 @@
 
 with GL.Low_Level;
 with GL.Types.Colors;
+with GL.Culling;
 
 package GL.Buffers is
    pragma Preelaborate;
@@ -32,7 +33,11 @@ package GL.Buffers is
    subtype Depth is Double range 0.0 .. 1.0;
    
    subtype Stencil_Index is Int;
-   
+
+   type Stencil_Action is (Zero, Invert, Keep, Replace,
+                           Increment, Decrement,
+                           Increment_Wrap, Decrement_Wrap);
+
    -- Aux buffer support was dropped with OpenGL 3.
    -- this type allows selection of multiple buffers at once
    -- (Front => Front_Left and Front_Right and so on)
@@ -52,10 +57,10 @@ package GL.Buffers is
                                   Right          => 16#0407#,
                                   Front_And_Back => 16#0408#);
    for Color_Buffer_Selector'Size use Low_Level.Enum'Size;
-   
+
    subtype Base_Color_Buffer_Selector is Color_Buffer_Selector
      range Front .. Front_And_Back;
-   
+
    -- misses Front, Right etc. from above because they may map to multiple
    -- buffers.
    type Explicit_Color_Buffer_Selector is (None, Front_Left, Front_Right,
@@ -79,7 +84,10 @@ package GL.Buffers is
    subtype Draw_Buffer_Index is UInt range 0 .. 15;
    type Explicit_Color_Buffer_List is array (Draw_Buffer_Index range <>)
      of Explicit_Color_Buffer_Selector;
-   
+
+   subtype Single_Face_Selector is Culling.Face_Selector
+     range Culling.Front .. Culling.Back;
+
    procedure Clear (Bits : Buffer_Bits);
    
    procedure Set_Active_Buffer (Selector : Explicit_Color_Buffer_Selector);
@@ -97,7 +105,46 @@ package GL.Buffers is
    -- dropped in OpenGL 3
    procedure Set_Accum_Clear_Value (Value : Colors.Color);
    function Accum_Clear_Value return Colors.Color;
-   
+
+   procedure Set_Depth_Function (Func : Compare_Function);
+   function Depth_Function return Compare_Function;
+
+   procedure Depth_Mask (Enabled : Boolean);
+   function Depth_Mask return Boolean;
+
+   procedure Set_Stencil_Function (Func : Compare_Function;
+                                   Ref  : Int;
+                                   Mask : UInt);
+
+   procedure Set_Stencil_Function (Face : Culling.Face_Selector;
+                                   Func : Compare_Function;
+                                   Ref  : Int;
+                                   Mask : UInt);
+
+   function Stencil_Function (Face : Single_Face_Selector) return Compare_Function;
+   function Stencil_Reference_Value (Face : Single_Face_Selector) return Int;
+   function Stencil_Value_Mask (Face : Single_Face_Selector) return UInt;
+
+   procedure Set_Stencil_Operation (Stencil_Fail : Buffers.Stencil_Action;
+                                    Depth_Fail   : Buffers.Stencil_Action;
+                                    Depth_Pass   : Buffers.Stencil_Action);
+
+   procedure Set_Stencil_Operation (Face : Culling.Face_Selector;
+                                    Stencil_Fail : Buffers.Stencil_Action;
+                                    Depth_Fail   : Buffers.Stencil_Action;
+                                    Depth_Pass   : Buffers.Stencil_Action);
+
+   function Stencil_Operation_Stencil_Fail (Face : Single_Face_Selector) return Buffers.Stencil_Action;
+   function Stencil_Operation_Depth_Fail (Face : Single_Face_Selector) return Buffers.Stencil_Action;
+   function Stencil_Operation_Depth_Pass (Face : Single_Face_Selector) return Buffers.Stencil_Action;
+
+   procedure Set_Stencil_Mask (Value : UInt);
+
+   procedure Set_Stencil_Mask (Face  : Culling.Face_Selector;
+                               Value : UInt);
+
+   function Stencil_Mask (Face : Single_Face_Selector) return UInt;
+
    -- The following procedures are available since OpenGL 3.0
    
    -- for one or multiple color buffers
@@ -123,7 +170,17 @@ private
       Color   at 0 range 14 .. 14;
    end record;
    for Buffer_Bits'Size use Low_Level.Bitfield'Size;
-   
+
+   for Stencil_Action use (Zero           => 0,
+                           Invert         => 16#150A#,
+                           Keep           => 16#1E00#,
+                           Replace        => 16#1E01#,
+                           Increment      => 16#1E02#,
+                           Decrement      => 16#1E03#,
+                           Increment_Wrap => 16#8507#,
+                           Decrement_Wrap => 16#8508#);
+   for Stencil_Action'Size use Low_Level.Enum'Size;
+
    for Explicit_Color_Buffer_Selector use (None               => 0,
                                            Front_Left         => 16#0400#,
                                            Front_Right        => 16#0401#,

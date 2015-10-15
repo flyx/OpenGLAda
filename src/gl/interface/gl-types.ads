@@ -66,6 +66,9 @@ package GL.Types is
                             Triangle_Strip, Triangle_Fan, Quads, Quad_Strip,
                             Polygon);
    
+   type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
+                             GEqual, Always);
+
    -- counts the number of components for vertex attributes
    subtype Component_Count is Int range 1 .. 4;
    
@@ -158,4 +161,14 @@ private
                             Quad_Strip     => 16#0008#,
                             Polygon        => 16#0009#);
    for Connection_Mode'Size use UInt'Size;
+
+   for Compare_Function use (Never     => 16#0200#,
+                             Less      => 16#0201#,
+                             Equal     => 16#0202#,
+                             LEqual    => 16#0203#,
+                             Greater   => 16#0204#,
+                             Not_Equal => 16#0205#,
+                             GEqual    => 16#0206#,
+                             Always    => 16#0207#);
+   for Compare_Function'Size use UInt'Size;
 end GL.Types;

@@ -120,7 +120,12 @@ private package GL.API is
                            Target : in out Ints.Vector4);
    pragma Import (Convention => StdCall, Entity => Get_Int_Vec4,
                   External_Name => "glGetIntegerv");
-   
+
+   procedure Get_Unsigned_Integer (Name   : Enums.Getter.Parameter;
+                                   Target : access UInt);
+   pragma Import (Convention => StdCall, Entity => Get_Unsigned_Integer,
+                  External_Name => "glGetIntegerv");
+
    procedure Get_Size (Name   : Enums.Getter.Parameter;
                        Target : access Size);
    pragma Import (Convention => StdCall, Entity => Get_Size,
@@ -150,7 +155,12 @@ private package GL.API is
                                  Target : access Blending.Equation);
    pragma Import (Convention => StdCall, Entity => Get_Blend_Equation,
                   External_Name => "glGetIntegerv");
-   
+
+   procedure Get_Compare_Function (Name : Enums.Getter.Parameter;
+                                   Target : access Compare_Function);
+   pragma Import (Convention => StdCall, Entity => Get_Compare_Function,
+                  External_Name => "glGetIntegerv");
+
    procedure Get_Orientation (Name : Enums.Getter.Parameter;
                               Target : access Culling.Orientation);
    pragma Import (Convention => StdCall, Entity => Get_Orientation,
@@ -170,7 +180,12 @@ private package GL.API is
                            Target : access Framebuffer.Logic_Op);
    pragma Import (Convention => StdCall, Entity => Get_Logic_Op,
                   External_Name => "glGetIntegerv");
-   
+
+   procedure Get_Stencil_Action (Name : Enums.Getter.Parameter;
+                                 Target : access Buffers.Stencil_Action);
+   pragma Import (Convention => StdCall, Entity => Get_Stencil_Action,
+                  External_Name => "glGetIntegerv");
+
    procedure Get_Read_Buffer_Selector
      (Name   : Enums.Getter.Parameter;
       Target : access Framebuffer.Read_Buffer_Selector);
@@ -482,6 +497,29 @@ private package GL.API is
       Buffers.Depth, Buffers.Stencil_Index);
 
    -----------------------------------------------------------------------------
+   --                        Depth And Stencil Buffers                        --
+   -----------------------------------------------------------------------------
+
+   procedure Depth_Mask (Value : Low_Level.Bool);
+   pragma Import (Convention => StdCall, Entity => Depth_Mask,
+                  External_Name => "glDepthMask");
+
+   procedure Depth_Func (Func : Compare_Function);
+   pragma Import (Convention => StdCall, Entity => Depth_Func,
+                  External_Name => "glDepthFunc");
+
+   procedure Stencil_Func_Separate is new Loader.Procedure_With_4_Params
+     ("glStencilFuncSeparate", Culling.Face_Selector,
+      Compare_Function, Int, UInt);
+
+   procedure Stencil_Op_Separate is new Loader.Procedure_With_4_Params
+     ("glStencilOpSeparate", Culling.Face_Selector, Buffers.Stencil_Action,
+      Buffers.Stencil_Action, Buffers.Stencil_Action);
+
+   procedure Stencil_Mask_Separate is new Loader.Procedure_With_2_Params
+     ("glStencilMaskSeparate", Culling.Face_Selector, UInt);
+
+   -----------------------------------------------------------------------------
    --                                Textures                                 --
    -----------------------------------------------------------------------------
 
@@ -523,7 +561,7 @@ private package GL.API is
 
    procedure Tex_Parameter_Comp_Func (Target     : Low_Level.Enums.Texture_Kind;
                                       Param_Name : Enums.Textures.Parameter;
-                                      Value      : Objects.Textures.Compare_Function);
+                                      Value      : Compare_Function);
    pragma Import (Convention => StdCall, Entity => Tex_Parameter_Comp_Func,
                   External_Name => "glTexParameteri");
 
@@ -583,7 +621,7 @@ private package GL.API is
 
    procedure Get_Tex_Parameter_Comp_Func (Target     : Low_Level.Enums.Texture_Kind;
                                           Param_Name : Enums.Textures.Parameter;
-                                          Values     : out Objects.Textures.Compare_Function);
+                                          Values     : out Compare_Function);
    pragma Import (Convention => StdCall, Entity => Get_Tex_Parameter_Comp_Func,
                   External_Name => "glGetTexParameteriv");
 
