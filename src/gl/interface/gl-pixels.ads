@@ -40,6 +40,7 @@ package GL.Pixels is
                             Compressed_Luminance, Compressed_Luminance_Alpha,
                             Compressed_Intensity, Compressed_RGB,
                             Compressed_RGBA, RGBA32F, RGB32F, RGBA16F, RGB16F,
+                            Depth24_Stencil8,
                             R11F_G11F_B10F, RGB9_E5, SRGB, SRGB8, SRGB_Alpha,
                             SRGB8_Alpha8, SLuminance_Alpha, SLuminance8_Alpha8,
                             SLuminance, SLuminance8, Compressed_SRGB,
@@ -200,6 +201,8 @@ private
                             RGB32F  => 16#8815#,
                             RGBA16F => 16#881A#,
                             RGB16F  => 16#881B#,
+
+                            Depth24_Stencil8 => 16#88F0#,
 
                             R11F_G11F_B10F => 16#8C3A#,
                             RGB9_E5 => 16#8C3D#,

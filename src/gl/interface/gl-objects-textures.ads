@@ -47,19 +47,6 @@ package GL.Objects.Textures is
 
    type Depth_Mode is (Alpha, Luminance, Intensity);
    
-   type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
-                             GEqual, Always);
-   
-   for Compare_Function use (Never     => 16#0200#,
-                             Less      => 16#0201#,
-                             Equal     => 16#0202#,
-                             LEqual    => 16#0203#,
-                             Greater   => 16#0204#,
-                             Not_Equal => 16#0205#,
-                             GEqual    => 16#0206#,
-                             Always    => 16#0207#);
-   for Compare_Function'Size use Low_Level.Enum'Size;
-   
    -- Actual range is implementation-defined.
    --  OpenGL 2.x: At least 2
    --  OpenGL 3.x: At least 48
