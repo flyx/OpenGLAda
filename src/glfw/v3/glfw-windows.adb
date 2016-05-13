@@ -313,7 +313,29 @@ package body Glfw.Windows is
          when Callbacks.Char => API.Set_Char_Callback (Object.Handle, Raw_Character_Callback'Access);
       end case;
    end Enable_Callback;
+   
+   procedure Disable_Callback (Object  : not null access Window;
+                               Subject : Callbacks.Kind) is
+   begin
+      case Subject is
+         when Callbacks.Position => API.Set_Window_Pos_Callback (Object.Handle, null);
+         when Callbacks.Size => API.Set_Window_Size_Callback (Object.Handle,  null);
+         when Callbacks.Close => API.Set_Window_Close_Callback (Object.Handle,  null);
+         when Callbacks.Refresh => API.Set_Window_Refresh_Callback (Object.Handle,  null);
+         when Callbacks.Focus => API.Set_Window_Focus_Callback (Object.Handle,  null);
+         when Callbacks.Iconify => API.Set_Window_Iconify_Callback (Object.Handle,  null);
+         when Callbacks.Framebuffer_Size => API.Set_Framebuffer_Size_Callback (Object.Handle,  null);
+         when Callbacks.Mouse_Button => API.Set_Mouse_Button_Callback (Object.Handle,  null);
+         when Callbacks.Mouse_Position => API.Set_Cursor_Pos_Callback (Object.Handle,  null);
+         when Callbacks.Mouse_Scroll => API.Set_Scroll_Callback (Object.Handle,  null);
+         when Callbacks.Mouse_Enter => API.Set_Cursor_Enter_Callback (Object.Handle,  null);
+         when Callbacks.Key => API.Set_Key_Callback (Object.Handle,  null);
+         when Callbacks.Char => API.Set_Char_Callback (Object.Handle,  null);
+      end case;
+   end Disable_Callback;
 
+   
+   
    procedure Get_OpenGL_Version (Object : not null access Window;
                                  Major, Minor, Revision : out Natural) is
       Value : Interfaces.C.int;
