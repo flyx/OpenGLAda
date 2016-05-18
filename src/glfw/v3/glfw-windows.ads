@@ -98,7 +98,11 @@ package Glfw.Windows is
 
    procedure Enable_Callback (Object : not null access Window;
                               Subject : Callbacks.Kind);
+   
+   procedure Disable_Callback (Object : not null access Window;
+                              Subject : Callbacks.Kind);
 
+   
    procedure Position_Changed (Object : not null access Window;
                                X, Y : Integer) is null;
    procedure Size_Changed (Object : not null access Window;
