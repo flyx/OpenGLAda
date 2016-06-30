@@ -416,9 +416,8 @@ private package GL.API is
      ("glBlendColor", Colors.Component, Colors.Component, Colors.Component, 
       Colors.Component);
    
-   procedure Blend_Equation (Mode : Blending.Equation);
-   pragma Import (Convention => StdCall, Entity => Blend_Equation,
-                  External_Name => "glBlendEquation");
+   procedure Blend_Equation is new Loader.Procedure_With_1_Param
+     ("glBlendEquation", Blending.Equation);
    
    procedure Blend_Equation_I is new Loader.Procedure_With_2_Params
      ("glBlendEquationi", Buffers.Draw_Buffer_Index, Blending.Equation);
