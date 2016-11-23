@@ -35,8 +35,11 @@ OpenGLAda supports MacOSX, Windows and X11-based systems.
 
 In order to build OpenGLAda, you need to have:
 
- * A GNAT compiler (a GPL'd version is available on [AdaCore's Libre Site][1],
-   or you can use the [version provided by the FSF with GCC][5])
+ * A GNAT compiler¹. The GNAT/GCC binary release from [GnuAda][12] is known to
+   work as of November 2016 and is preferable if you do not fancy a GPL'd
+   runtime. A GPL'd version is available on [AdaCore's Libre Site][1],
+   though it is known to have issues at least on OSX 10.11². More information
+   is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). Minimum
    supported version is the one that comes with GNAT GPL 2012 (20120509). Do
    not use `gnatmake` to build the project files, it won't work.
@@ -44,11 +47,16 @@ In order to build OpenGLAda, you need to have:
  * Optionally [GLFW][3]
  * Optionally [FTGL][11]
 
-_Note_: You may also be able to build OpenGLAda with another Ada compiler and/or
-without using the *.gpr files. You just have to import the sources to your
+¹: You may also be able to build OpenGLAda with another Ada compiler and/or
+without using the `*.gpr` files. You just have to import the sources to your
 project and whichever build system you are using. I never used other Ada
-compiler apart from GNAT, so if I accidentally used some GNAT-specific features
+compilers apart from GNAT, so if I accidentally used some GNAT-specific features
 in the code, please drop me a message.
+
+²: With GNAT GPL 2016, runtime loading of OpenGL function pointers does not
+seem to work on OSX 10.11, see [this bug][13]. It is unknown whether this
+affects other OSX versions or operation systems. The exact cause for this error
+is unknown. Therefore, using GNAT/GCC is currently strongly recommended.
 
 ## Compilation
 
@@ -186,4 +194,5 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [9]: http://www.ada2012.org/#the_logo
  [10]: http://www.lonesock.net/soil.html
  [11]: https://sourceforge.net/projects/ftgl/
- [12]: https://github.com/karakalo/lumen
+ [12]: https://sourceforge.net/projects/gnuada/files/
+ [13]: https://github.com/flyx/OpenGLAda/issues/15
