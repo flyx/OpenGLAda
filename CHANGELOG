@@ -1,4 +1,33 @@
-v0.3 (upcoming):
+v0.4:
+ * Added packages:
+  - GL.Culling
+  - GL.Framebuffer
+  - GL.Objects.Lists
+  - GL.Rasterization
+ * Renamed packages:
+   - GL.Pixel_Data to GL.Pixels
+   - GL.Objects.Buffer to GL.Objects.Buffers
+ * Added missing functionality in:
+   - GL.Blending (various)
+   - GL.Buffers (various)
+   - GL.Objects.Buffers (various)
+   - GL.Objects.Framebuffers (various)
+   - GL.Objects.Programs:
+     * Attached_Shaders
+     * Get_Program_Stage
+     * Get_Subroutine_Index
+     * Subroutine_Uniform_Locations
+   - GL.Objects.Shaders (Release_Shader_Compiler)
+   - GL.Objects.Textures:
+     * Generate_Mipmap
+     * Invalidate_Image
+     * Invalidate_Sub_Image
+   - GLFW.Windows (Set_Cursor_Mode, Disable_Callback)
+ * GLFW 3: Raise exception if window creation fails
+ * Added LIBRARY_TYPE scenario variable
+ * Various bugfixes
+
+v0.3:
  * Added packages:
    - GL.Context
    - GL.Blending
