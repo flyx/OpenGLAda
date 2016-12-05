@@ -20,7 +20,7 @@ with GL.API;
 with GL.Enums;
 
 package body GL.Objects.Shaders is
-   
+
    procedure Set_Source (Subject : Shader; Source : String) is
       C_Source : constant Low_Level.CharPtr_Array
         := (1 => C.Strings.New_String (Source));
@@ -30,7 +30,7 @@ package body GL.Objects.Shaders is
       API.Shader_Source (Subject.Reference.GL_Id, 1, C_Source, Lengths);
       Raise_Exception_On_OpenGL_Error;
    end Set_Source;
-   
+
    function Source (Subject : Shader) return String is
       Source_Length : Size := 0;
    begin
@@ -59,7 +59,7 @@ package body GL.Objects.Shaders is
    end Compile;
 
    procedure Release_Shader_Compiler renames API.Release_Shader_Compiler;
-   
+
    function Compile_Status (Subject : Shader) return Boolean is
       Value : Int := 0;
    begin
@@ -73,28 +73,32 @@ package body GL.Objects.Shaders is
    begin
       API.Get_Shader_Param (Subject.Reference.GL_Id,
                             Enums.Info_Log_Length, Log_Length);
-      -- Returned length includes null termination character
-      Log_Length := Log_Length - 1;
-      declare
-         Info_Log : String (1 .. Integer (Log_Length));
-         pragma Warnings (Off, Info_Log);
-         C_Info_Log : C.Strings.chars_ptr
-           := C.Strings.New_String (Info_Log);
-         Actual_Length : Size;
-      begin
-         API.Get_Shader_Info_Log (Subject.Reference.GL_Id,Log_Length + 1,
-                           Actual_Length, C_Info_Log);
-         if (Int (Actual_Length) /= Log_Length) then
-            raise Constraint_Error with "Expected info log length of" &
-                                        Log_Length'Img & ", actually got" &
-                                        Actual_Length'Img & ".";
-         end if;
-         Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
-         C.Strings.Free (C_Info_Log);
-         return Info_Log;
-      end;
+      if Log_Length = 0 then
+        return "";
+      else
+         -- Returned length includes null termination character
+         Log_Length := Log_Length - 1;
+         declare
+           Info_Log : String (1 .. Integer (Log_Length));
+           pragma Warnings (Off, Info_Log);
+           C_Info_Log : C.Strings.chars_ptr
+             := C.Strings.New_String (Info_Log);
+           Actual_Length : Size;
+         begin
+           API.Get_Shader_Info_Log (Subject.Reference.GL_Id,Log_Length + 1,
+                             Actual_Length, C_Info_Log);
+           if (Int (Actual_Length) /= Log_Length) then
+               raise Constraint_Error with "Expected info log length of" &
+                                           Log_Length'Img & ", actually got" &
+                                           Actual_Length'Img & ".";
+           end if;
+           Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
+           C.Strings.Free (C_Info_Log);
+           return Info_Log;
+         end;
+      end if;
    end Info_Log;
-   
+
    procedure Initialize_Id (Object : in out Shader) is
    begin
       Object.Reference.GL_Id := API.Create_Shader (Object.Kind);
@@ -107,7 +111,7 @@ package body GL.Objects.Shaders is
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
-   
+
    function Create_From_Id (Id : UInt) return Shader is
       Kind : Shader_Type := Shader_Type'First;
    begin
@@ -118,5 +122,5 @@ package body GL.Objects.Shaders is
          Object.Reference.Initialized := True;
       end return;
    end Create_From_Id;
-   
+
 end GL.Objects.Shaders;
