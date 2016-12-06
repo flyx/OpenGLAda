@@ -17,8 +17,6 @@
 with GL.API;
 with GL.Enums;
 
-with Interfaces.C.Strings;
-
 package body GL.Objects.Programs is
    procedure Attach(Subject : Program; Shader : Shaders.Shader) is
    begin
@@ -42,30 +40,25 @@ package body GL.Objects.Programs is
    end Link_Status;
 
    function Info_Log (Subject : Program) return String is
-      Log_Length : Int := 0;
+      Log_Length : Size := 0;
    begin
       API.Get_Program_Param (Subject.Reference.GL_Id, Enums.Info_Log_Length,
                              Log_Length);
       Raise_Exception_On_OpenGL_Error;
-      -- Returned length includes null termination character
-      Log_Length := Log_Length - 1;
-      declare
-         Info_Log : String (1 .. Integer (Log_Length));
-         -- do not care that string does not get initialized
-         pragma Warnings (Off, Info_Log);
-         C_Info_Log : C.Strings.chars_ptr := C.Strings.New_String (Info_Log);
-         Actual_Length : Size := 0;
-      begin
-         API.Get_Program_Info_Log (Subject.Reference.GL_Id,
-                                   Log_Length + 1,
-                                   Actual_Length, C_Info_Log);
-         Raise_Exception_On_OpenGL_Error;
-         Info_Log := C.Strings.Value (C_Info_Log, C.size_t (Actual_Length));
-         C.Strings.Free (C_Info_Log);
-         return Info_Log;
-      end;
+      if Log_Length = 0 then
+         return "";
+      else
+         declare
+            Info_Log : String (1 .. Integer (Log_Length));
+         begin
+            API.Get_Program_Info_Log (Subject.Reference.GL_Id, Log_Length,
+                                      Log_Length, Info_Log);
+            Raise_Exception_On_OpenGL_Error;
+            return Info_Log (1 .. Integer (Log_Length));
+         end;
+      end if;
    end Info_Log;
-   
+
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size is
       Ret : Size := 0;
@@ -75,9 +68,9 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Active_Subroutines;
-   
+
    function Active_Subroutine_Uniforms (Object : Program;
-                                        Shader : Shaders.Shader_Type) 
+                                        Shader : Shaders.Shader_Type)
                                         return Size is
       Ret : Size := 0;
    begin
@@ -86,7 +79,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Active_Subroutine_Uniforms;
-   
+
    function Active_Subroutine_Uniform_Locations (Object : Program;
                                                  Shader : Shaders.Shader_Type)
                                                  return Size is
@@ -97,7 +90,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Active_Subroutine_Uniform_Locations;
-      
+
    function Active_Subroutine_Uniform_Max_Length (Object : Program;
                                                   Shader : Shaders.Shader_Type)
                                                   return Size is
@@ -108,7 +101,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Active_Subroutine_Uniform_Max_Length;
-   
+
    function Active_Subroutine_Max_Length (Object : Program;
                                           Shader : Shaders.Shader_Type)
                                           return Size is
@@ -119,7 +112,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Active_Subroutine_Max_Length;
-   
+
    function Subroutine_Index (Object : Program; Shader : Shaders.Shader_Type;
                               Name   : String)
                               return Subroutine_Index_Type is
@@ -131,10 +124,10 @@ package body GL.Objects.Programs is
          Raise_Exception_On_OpenGL_Error;
       end return;
    end Subroutine_Index;
-   
+
    function Subroutine_Uniform_Locations (Object : Program;
                                           Shader : Shaders.Shader_Type;
-                                          Name   : String) 
+                                          Name   : String)
                                           return Uniform_Location_Type is
       C_String : constant Interfaces.C.char_array
         := Interfaces.C.To_C (Name);
@@ -145,7 +138,7 @@ package body GL.Objects.Programs is
          Raise_Exception_On_OpenGL_Error;
       end return;
    end Subroutine_Uniform_Locations;
-      
+
    procedure Use_Program (Subject : Program) is
    begin
       API.Use_Program (Subject.Reference.GL_Id);
@@ -165,7 +158,7 @@ package body GL.Objects.Programs is
       Object.Reference.GL_Id := 0;
       Object.Reference.Initialized := False;
    end Delete_Id;
-   
+
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform is
       Result : constant Uniforms.Uniform := API.Get_Uniform_Location
@@ -174,7 +167,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Result;
    end Uniform_Location;
-   
+
    procedure Bind_Attrib_Location (Subject : Program;
                                    Index : Attributes.Attribute;
                                    Name : String) is
@@ -183,7 +176,7 @@ package body GL.Objects.Programs is
                                Interfaces.C.To_C (Name));
       Raise_Exception_On_OpenGL_Error;
    end Bind_Attrib_Location;
-      
+
    function Attrib_Location (Subject : Program; Name : String)
      return Attributes.Attribute is
       Location : constant Attributes.Attribute := API.Get_Attrib_Location
@@ -192,19 +185,19 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
       return Location;
    end Attrib_Location;
-   
+
    function Attached_Shaders (Object : Program) return Shaders.Lists.List is
       Shader_Count : aliased Int := 0;
    begin
       API.Get_Program_Param (Object.Reference.GL_Id, Enums.Attached_Shaders,
                              Shader_Count);
       Raise_Exception_On_OpenGL_Error;
-      
+
       return List : constant Shaders.Lists.List := Shaders.Lists.Create
         (API.Get_Attached_Shaders (Object.Reference.GL_Id,
                                    Size (Shader_Count))) do
          Raise_Exception_On_OpenGL_Error;
       end return;
    end Attached_Shaders;
-      
+
 end GL.Objects.Programs;
