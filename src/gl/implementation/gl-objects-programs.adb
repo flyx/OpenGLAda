@@ -148,15 +148,15 @@ package body GL.Objects.Programs is
    procedure Initialize_Id (Object : in out Program) is
    begin
       Object.Reference.GL_Id := API.Create_Program;
-      Object.Reference.Initialized := True;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Program) is
    begin
       API.Delete_Program (Object.Reference.GL_Id);
-      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := Uninitialized;
+      Raise_Exception_On_OpenGL_Error;
    end Delete_Id;
 
    function Uniform_Location (Subject : Program; Name : String)

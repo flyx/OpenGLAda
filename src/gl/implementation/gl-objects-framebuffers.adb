@@ -205,7 +205,7 @@ package body GL.Objects.Framebuffers is
       API.Gen_Framebuffers (1, New_Id);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
-      Object.Reference.Initialized := True;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Framebuffer) is
@@ -214,7 +214,7 @@ package body GL.Objects.Framebuffers is
       API.Delete_Framebuffers (1, Arr);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := External;
    end Delete_Id;
 
    function Hash (Key : Low_Level.Enums.Framebuffer_Kind)

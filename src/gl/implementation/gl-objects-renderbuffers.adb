@@ -167,16 +167,16 @@ package body GL.Objects.Renderbuffers is
       API.Gen_Renderbuffers (1, New_Id);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
-      Object.Reference.Initialized := True;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Renderbuffer) is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Renderbuffers (1, Arr);
-      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := Uninitialized;
+      Raise_Exception_On_OpenGL_Error;
    end Delete_Id;
 
 end GL.Objects.Renderbuffers;

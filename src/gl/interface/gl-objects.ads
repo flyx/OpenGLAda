@@ -67,10 +67,12 @@ private
                         Read_Write => 16#88BA#);
    for Access_Kind'Size use Low_Level.Enum'Size;
 
+   type Initialization_Kind is (Uninitialized, Allocated, External);
+
    type GL_Object_Reference is record
       GL_Id           : UInt;
       Reference_Count : Natural;
-      Initialized     : Boolean := True;
+      Initialized     : Initialization_Kind := Uninitialized;
    end record;
 
    type GL_Object_Reference_Access is access all GL_Object_Reference;

@@ -34,7 +34,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Width;
-   
+
    function Height (Object : Texture_Proxy; Level : Mipmap_Level) return Size is
       Ret : Size;
    begin
@@ -43,7 +43,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Height;
-   
+
    function Depth (Object : Texture_Proxy; Level : Mipmap_Level) return Size is
       Ret : Size;
    begin
@@ -52,7 +52,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth;
-   
+
    function Format (Object : Texture_Proxy; Level : Mipmap_Level)
                     return Pixels.Internal_Format is
       Ret : Pixels.Internal_Format;
@@ -62,7 +62,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Format;
-   
+
    function Red_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                       return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
@@ -72,7 +72,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Red_Type;
-   
+
    function Green_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
@@ -82,7 +82,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Green_Type;
-   
+
    function Blue_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                        return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
@@ -92,7 +92,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Blue_Type;
-   
+
    function Alpha_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
@@ -102,7 +102,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Type;
-   
+
    function Depth_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
@@ -112,7 +112,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth_Type;
-   
+
    function Red_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                       return Size is
       Ret : Size;
@@ -122,7 +122,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Red_Size;
-   
+
    function Green_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Size is
       Ret : Size;
@@ -132,7 +132,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Green_Size;
-   
+
    function Blue_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                        return Size is
       Ret : Size;
@@ -142,7 +142,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Blue_Size;
-   
+
    function Alpha_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Size is
       Ret : Size;
@@ -152,7 +152,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Alpha_Size;
-   
+
    function Depth_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Size is
       Ret : Size;
@@ -162,7 +162,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Depth_Size;
-   
+
    function Compressed (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Boolean is
       Ret : Low_Level.Bool;
@@ -172,7 +172,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Boolean (Ret);
    end Compressed;
-   
+
    function Compressed_Image_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                                    return Size is
       Ret : Size;
@@ -183,13 +183,13 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Compressed_Image_Size;
-   
+
    function Raw_Kind (Object : Texture_Proxy)
                       return Low_Level.Enums.Texture_Kind is
    begin
       return Object.Kind;
    end Raw_Kind;
-   
+
    function Hash (Key : Low_Level.Enums.Texture_Kind)
      return Ada.Containers.Hash_Type is
       function Value is new Ada.Unchecked_Conversion
@@ -206,7 +206,7 @@ package body GL.Objects.Textures is
    use type Texture_Maps.Cursor;
 
    Current_Textures : Texture_Maps.Map;
-   
+
    procedure Bind (Target : Texture_Target; Object : Texture'Class) is
       Cursor : constant Texture_Maps.Cursor
         := Current_Textures.Find (Target.Kind);
@@ -241,24 +241,24 @@ package body GL.Objects.Textures is
       API.Gen_Textures (1, New_Id (1)'Access);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id (1);
-      Object.Reference.Initialized := True;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Texture) is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Textures (1, Arr);
-      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := Uninitialized;
+      Raise_Exception_On_OpenGL_Error;
    end Delete_Id;
-   
+
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level) is
    begin
       API.Invalidate_Tex_Image (Object.Reference.GL_Id, Level);
       Raise_Exception_On_OpenGL_Error;
    end Invalidate_Image;
-   
+
    procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
                                    X, Y, Z : Int; Width, Height, Depth : Size)
    is
@@ -534,19 +534,19 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       return Boolean (Value);
    end Mipmap_Autoupdate_Enabled;
-   
+
    procedure Generate_Mipmap (Target : Texture_Target) is
    begin
       API.Generate_Mipmap (Target.Kind);
       Raise_Exception_On_OpenGL_Error;
    end Generate_Mipmap;
-   
+
    function Raw_Type (Target : Texture_Target)
                       return Low_Level.Enums.Texture_Kind is
    begin
       return Target.Kind;
    end Raw_Type;
-   
+
    procedure Set_Active_Unit (Unit : Texture_Unit) is
       package Texture_Indexing is new Enums.Indexes
          (Enums.Textures.Texture_Unit_Start_Rep,
@@ -555,12 +555,12 @@ package body GL.Objects.Textures is
       API.Active_Texture (Texture_Indexing.Representation (Unit));
       Raise_Exception_On_OpenGL_Error;
    end Set_Active_Unit;
-   
+
    function Active_Unit return Texture_Unit is
       package Texture_Indexing is new Enums.Indexes
          (Enums.Textures.Texture_Unit_Start_Rep,
           Enums.Getter.Max_Combined_Texture_Image_Units);
-      
+
       Raw_Unit : aliased Int := Enums.Textures.Texture_Unit_Start_Rep;
    begin
       API.Get_Integer (Enums.Getter.Active_Texture, Raw_Unit'Access);

@@ -45,9 +45,9 @@ package body GL.Objects.Vertex_Arrays is
       API.Gen_Vertex_Arrays (1, New_Id);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
-      Object.Reference.Initialized := True;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
-   
+
    function Current_Array_Object return Vertex_Array_Object is
    begin
       return Current_Object;
@@ -57,8 +57,8 @@ package body GL.Objects.Vertex_Arrays is
       Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
    begin
       API.Delete_Vertex_Arrays (1, Arr);
-      Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := Uninitialized;
+      Raise_Exception_On_OpenGL_Error;
    end Delete_Id;
 end GL.Objects.Vertex_Arrays;

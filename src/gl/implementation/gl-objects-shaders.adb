@@ -54,6 +54,7 @@ package body GL.Objects.Shaders is
    procedure Compile (Subject : Shader) is
    begin
       API.Compile_Shader (Subject.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
    end Compile;
 
    procedure Release_Shader_Compiler renames API.Release_Shader_Compiler;
@@ -63,6 +64,7 @@ package body GL.Objects.Shaders is
    begin
       API.Get_Shader_Param (Subject.Reference.GL_Id, Enums.Compile_Status,
                             Value);
+      Raise_Exception_On_OpenGL_Error;
       return Value /= 0;
    end Compile_Status;
 
@@ -89,14 +91,16 @@ package body GL.Objects.Shaders is
    procedure Initialize_Id (Object : in out Shader) is
    begin
       Object.Reference.GL_Id := API.Create_Shader (Object.Kind);
-      Object.Reference.Initialized := True;
+      Raise_Exception_On_OpenGL_Error;
+      Object.Reference.Initialized := Allocated;
    end Initialize_Id;
 
    procedure Delete_Id (Object : in out Shader) is
    begin
       API.Delete_Shader (Object.Reference.GL_Id);
       Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := False;
+      Object.Reference.Initialized := Uninitialized;
+      Raise_Exception_On_OpenGL_Error;
    end Delete_Id;
 
    function Create_From_Id (Id : UInt) return Shader is
@@ -106,7 +110,7 @@ package body GL.Objects.Shaders is
       Raise_Exception_On_OpenGL_Error;
       return Object : Shader (Kind) do
          Object.Reference.GL_Id := Id;
-         Object.Reference.Initialized := True;
+         Object.Reference.Initialized := External;
       end return;
    end Create_From_Id;
 
