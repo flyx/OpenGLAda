@@ -36,54 +36,52 @@ private package GL.Enums is
    type Front_Face_Direction is (CW, CCW);
 
    type Matrix_Mode is (Modelview, Projection, Texture, Color);
-   
+
    type Light_Model_Parameter is (Local_Viewer, Two_Side,
                                   Ambient, Color_Control);
-   
+
    for Light_Model_Parameter use (Local_Viewer  => 16#0B51#,
                                   Two_Side      => 16#0B52#,
                                   Ambient       => 16#0B53#,
                                   Color_Control => 16#81F8#);
-   for Light_Model_Parameter'Size use Low_Level.Enum'Size;                               
-   
+   for Light_Model_Parameter'Size use Low_Level.Enum'Size;
+
    subtype Light_Model_Ambient_Parameter is Light_Model_Parameter range
      Ambient .. Ambient;
-   
+
    subtype Light_Model_CC_Parameter is Light_Model_Parameter range
      Color_Control .. Color_Control;
-   
+
    subtype Light_Model_Toggle_Parameter is Light_Model_Parameter range
      Local_Viewer .. Two_Side;
-   
+
    type Light_Param is (Ambient, Diffuse, Specular, Position,
                         Spot_Direction, Spot_Exponent,Spot_Cutoff,
                         Constant_Attenduation, Linear_Attenduation,
                         Quadratic_Attenduation);
-   
+
    subtype Light_Name is Toggles.Toggle range Toggles.Light0 .. Toggles.Light7;
-   
+
    type Shader_Param is (Shader_Type, Delete_Status, Compile_Status,
                          Info_Log_Length, Shader_Source_Length);
-   
-   type Program_Param is (Program_Binary_Length, Geometry_Vertices_Out,
-                          Geometry_Input_Type, Geometry_Output_Type,
-                          Active_Uniform_Block_Max_Name_Length,
-                          Active_Uniform_Blocks, Delete_Status,
-                          Link_Status, Validate_Status, Info_Log_Length,
-                          Attached_Shaders, Active_Uniforms,
-                          Active_Uniform_Max_Length, Active_Attributes, 
-                          Active_Attribute_Max_Length,
-                          Transform_Feedback_Varying_Max_Length,
-                          Transform_Feedback_Buffer_Mode,
-                          Transform_Feedback_Varyings);
-   
+
+   type Program_Param is
+     (Program_Binary_Length, Geometry_Vertices_Out, Geometry_Input_Type,
+      Geometry_Output_Type, Active_Uniform_Block_Max_Name_Length,
+      Active_Uniform_Blocks, Delete_Status, Link_Status, Validate_Status,
+      Info_Log_Length, Attached_Shaders, Active_Uniforms,
+      Active_Uniform_Max_Length, Active_Attributes, Active_Attribute_Max_Length,
+      Transform_Feedback_Varying_Max_Length, Transform_Feedback_Buffer_Mode,
+      Transform_Feedback_Varyings, Tess_Control_Output_Vertices, Tess_Gen_Mode,
+      Tess_Gen_Spacing, Tess_Gen_Vertex_Order, Tess_Gen_Point_Mode);
+
    type Program_Stage_Param is (Active_Subroutines, Active_Subroutine_Uniforms,
                                 Active_Subroutine_Uniform_Locations,
                                 Active_Subroutine_Max_Length,
                                 Active_Subroutine_Uniform_Max_Length);
 
    type Clamp_Color_Param is (Clamp_Read_Color);
-   
+
    type Pixel_Store_Param is (Unpack_Swap_Bytes, Unpack_LSB_First,
                               Unpack_Row_Length, Unpack_Skip_Rows,
                               Unpack_Skip_Pixels, Unpack_Alignment,
@@ -91,14 +89,18 @@ private package GL.Enums is
                               Pack_Skip_Rows, Pack_Skip_Pixels,
                               Pack_Alignment, Pack_Skip_Images, Pack_Image_Height,
                               Unpack_Skip_Images, Unpack_Image_Height);
-   
+
    type Buffer_Param is (Buffer_Access, Buffer_Mapped,
                          Buffer_Size, Buffer_Usage);
-   
+
    type Buffer_Pointer_Param is (Buffer_Map_Pointer);
-   
+
    type Framebuffer_Param is (Default_Width, Default_Height, Default_Layers,
                               Default_Samples, Default_Fixed_Sample_Locations);
+
+   type Patch_Parameter_Int is (Vertices);
+   type Patch_Parameter_Float_Array is
+     (Default_Inner_Level, Default_Outer_Level);
 private
 
    for Attribute_Mask use record
@@ -132,7 +134,7 @@ private
                         Texture    => 16#1702#,
                         Color      => 16#1800#);
    for Matrix_Mode'Size use Low_Level.Enum'Size;
-   
+
    for Light_Param use (Ambient        => 16#1200#,
                         Diffuse        => 16#1201#,
                         Specular       => 16#1202#,
@@ -144,14 +146,14 @@ private
                         Linear_Attenduation    => 16#1208#,
                         Quadratic_Attenduation => 16#1209#);
    for Light_Param'Size use Low_Level.Enum'Size;
-   
+
    for Shader_Param use (Shader_Type          => 16#8B4F#,
                          Delete_Status        => 16#8B80#,
                          Compile_Status       => 16#8B81#,
                          Info_Log_Length      => 16#8B84#,
                          Shader_Source_Length => 16#8B88#);
    for Shader_Param'Size use Low_Level.Enum'Size;
-   
+
    for Program_Param use (Program_Binary_Length       => 16#8741#,
                           Geometry_Vertices_Out       => 16#8916#,
                           Geometry_Input_Type         => 16#8917#,
@@ -169,19 +171,24 @@ private
                           Active_Attribute_Max_Length => 16#8B8A#,
                           Transform_Feedback_Varying_Max_Length => 16#8C76#,
                           Transform_Feedback_Buffer_Mode        => 16#8C7F#,
-                          Transform_Feedback_Varyings           => 16#8C83#);
+                          Transform_Feedback_Varyings           => 16#8C83#,
+                          Tess_Control_Output_Vertices => 16#8E75#,
+                          Tess_Gen_Mode                => 16#8E76#,
+                          Tess_Gen_Spacing             => 16#8E77#,
+                          Tess_Gen_Vertex_Order        => 16#8E78#,
+                          Tess_Gen_Point_Mode          => 16#8E79#);
    for Program_Param'Size use Low_Level.Enum'Size;
-                                
+
    for Program_Stage_Param use (Active_Subroutines => 16#8DE5#,
                                 Active_Subroutine_Uniforms => 16#8DE6#,
                                 Active_Subroutine_Uniform_Locations => 16#8E47#,
                                 Active_Subroutine_Max_Length => 16#8E48#,
                                 Active_Subroutine_Uniform_Max_Length => 16#8E49#);
    for Program_Stage_Param'Size use Low_Level.Enum'Size;
-   
+
    for Clamp_Color_Param use (Clamp_Read_Color => 16#891C#);
    for Clamp_Color_Param'Size use Low_Level.Enum'Size;
-   
+
    for Pixel_Store_Param use (Unpack_Swap_Bytes   => 16#0CF0#,
                               Unpack_LSB_First    => 16#0CF1#,
                               Unpack_Row_Length   => 16#0CF2#,
@@ -199,20 +206,26 @@ private
                               Unpack_Skip_Images  => 16#806D#,
                               Unpack_Image_Height => 16#806E#);
    for Pixel_Store_Param'Size use Low_Level.Enum'Size;
-   
+
    for Buffer_Param use (Buffer_Access => 16#88BB#,
                          Buffer_Mapped => 16#88BC#,
                          Buffer_Size   => 16#88BD#,
                          Buffer_Usage  => 16#88BE#);
    for Buffer_Param'Size use Low_Level.Enum'Size;
-   
+
    for Buffer_Pointer_Param use (Buffer_Map_Pointer => 16#88BD#);
    for Buffer_Pointer_Param'Size use Low_Level.Enum'Size;
-   
+
    for Framebuffer_Param use (Default_Width                  => 16#9310#,
                               Default_Height                 => 16#9311#,
                               Default_Layers                 => 16#9312#,
                               Default_Samples                => 16#9313#,
                               Default_Fixed_Sample_Locations => 16#9314#);
    for Framebuffer_Param'Size use Low_Level.Enum'Size;
+
+   for Patch_Parameter_Int use (Vertices => 16#8E72#);
+   for Patch_Parameter_Int'Size use Low_Level.Enum'Size;
+   for Patch_Parameter_Float_Array use (Default_Inner_Level => 16#8E73#,
+                                        Default_Outer_Level => 16#8E74#);
+   for Patch_Parameter_Float_Array'Size use Low_Level.Enum'Size;
 end GL.Enums;

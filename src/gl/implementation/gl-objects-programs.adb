@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Ada.Unchecked_Conversion;
+
 with GL.API;
 with GL.Enums;
 
@@ -30,14 +32,30 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Link;
 
-   function Link_Status (Subject : Program) return Boolean is
-      Status_Value : Int := 0;
+   function Program_Bool_Param (Subject : Program; Param: Enums.Program_Param)
+                                return Boolean is
+      Value : Int := 0;
    begin
-      API.Get_Program_Param (Subject.Reference.GL_Id, Enums.Link_Status,
-                             Status_Value);
+      API.Get_Program_Param (Subject.Reference.GL_Id, Param, Value);
       Raise_Exception_On_OpenGL_Error;
-      return Status_Value /= 0;
+      return Value /= 0;
+   end Program_Bool_Param;
+   pragma Inline (Program_Bool_Param);
+
+   function Link_Status (Subject : Program) return Boolean is
+   begin
+      return Program_Bool_Param (Subject, Enums.Link_Status);
    end Link_Status;
+
+   function Delete_Status (Subject : Program) return Boolean is
+   begin
+      return Program_Bool_Param (Subject, Enums.Delete_Status);
+   end Delete_Status;
+
+   function Validate_Status (Subject : Program) return Boolean is
+   begin
+      return Program_Bool_Param (Subject, Enums.Validate_Status);
+   end Validate_Status;
 
    function Info_Log (Subject : Program) return String is
       Log_Length : Size := 0;
@@ -58,6 +76,112 @@ package body GL.Objects.Programs is
          end;
       end if;
    end Info_Log;
+
+   function Program_Size_Param (Subject : Program; Param : Enums.Program_Param)
+                                return Size is
+      Ret : Size := 0;
+   begin
+      API.Get_Program_Param (Subject.Reference.GL_Id, Param, Ret);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Program_Size_Param;
+   pragma Inline (Program_Size_Param);
+
+   function Active_Attributes (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Active_Attributes);
+   end Active_Attributes;
+
+   function Active_Attribute_Max_Length (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Active_Attribute_Max_Length);
+   end Active_Attribute_Max_Length;
+
+   function Active_Uniform_Blocks (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Active_Uniform_Blocks);
+   end Active_Uniform_Blocks;
+
+   function Active_Uniform_Block_Max_Name_Length (Subject : Program)
+                                                  return Size is
+   begin
+      return Program_Size_Param
+        (Subject, Enums.Active_Uniform_Block_Max_Name_Length);
+   end Active_Uniform_Block_Max_Name_Length;
+
+   function Active_Uniforms (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Active_Uniforms);
+   end Active_Uniforms;
+
+   function Active_Uniform_Max_Length (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Active_Uniform_Max_Length);
+   end Active_Uniform_Max_Length;
+
+   function Tess_Control_Output_Vertices (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Tess_Control_Output_Vertices);
+   end Tess_Control_Output_Vertices;
+
+   function Program_Int_Param (Subject : Program; Param : Enums.Program_Param)
+                               return Int is
+      Ret : Int := 0;
+   begin
+      API.Get_Program_Param (Subject.Reference.GL_Id, Param, Ret);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Program_Int_Param;
+   pragma Inline (Program_Int_Param);
+
+   function Tess_Gen_Mode (Subject : Program)
+                           return Tessellation_Primitive_Mode is
+      function To_Primitive_Mode is
+        new Ada.Unchecked_Conversion (Int, Tessellation_Primitive_Mode);
+   begin
+      return To_Primitive_Mode (Program_Int_Param (Subject, Enums.Tess_Gen_Mode));
+   end Tess_Gen_Mode;
+
+   function Tess_Gen_Point_Mode (Subject : Program) return Boolean is
+   begin
+      return Program_Bool_Param (Subject, Enums.Tess_Gen_Point_Mode);
+   end Tess_Gen_Point_Mode;
+
+   function Tess_Gen_Spacing (Subject : Program) return Tessellation_Spacing is
+      function To_Spacing is
+        new Ada.Unchecked_Conversion (Int, Tessellation_Spacing);
+   begin
+      return To_Spacing (Program_Int_Param (Subject, Enums.Tess_Gen_Spacing));
+   end Tess_Gen_Spacing;
+
+   function Tess_Gen_Vertex_Order (Subject : Program)
+                                   return Tessellation_Vertex_Order is
+      function To_Vertex_Order is
+        new Ada.Unchecked_Conversion (Int, Tessellation_Vertex_Order);
+   begin
+      return To_Vertex_Order
+        (Program_Int_Param (Subject, Enums.Tess_Gen_Vertex_Order));
+   end Tess_Gen_Vertex_Order;
+
+   function Transform_Feedback_Buffer_Mode (Subject : Program)
+                                            return Buffer_Mode is
+      function To_Buffer_Mode is new Ada.Unchecked_Conversion (Int, Buffer_Mode);
+   begin
+      return To_Buffer_Mode
+        (Program_Int_Param (Subject, Enums.Transform_Feedback_Buffer_Mode));
+   end Transform_Feedback_Buffer_Mode;
+
+   function Transform_Feedback_Varyings (Subject : Program) return Size is
+   begin
+      return Program_Size_Param (Subject, Enums.Transform_Feedback_Varyings);
+   end Transform_Feedback_Varyings;
+
+   function Transform_Feedback_Varying_Max_Length (Subject : Program)
+                                                  return Size is
+   begin
+      return Program_Size_Param
+        (Subject, Enums.Transform_Feedback_Varying_Max_Length);
+   end Transform_Feedback_Varying_Max_Length;
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size is
