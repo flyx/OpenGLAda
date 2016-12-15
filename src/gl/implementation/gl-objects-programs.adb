@@ -154,10 +154,9 @@ package body GL.Objects.Programs is
       return To_Spacing (Program_Int_Param (Subject, Enums.Tess_Gen_Spacing));
    end Tess_Gen_Spacing;
 
-   function Tess_Gen_Vertex_Order (Subject : Program)
-                                   return Tessellation_Vertex_Order is
+   function Tess_Gen_Vertex_Order (Subject : Program) return Orientation is
       function To_Vertex_Order is
-        new Ada.Unchecked_Conversion (Int, Tessellation_Vertex_Order);
+        new Ada.Unchecked_Conversion (Int, Orientation);
    begin
       return To_Vertex_Order
         (Program_Int_Param (Subject, Enums.Tess_Gen_Vertex_Order));

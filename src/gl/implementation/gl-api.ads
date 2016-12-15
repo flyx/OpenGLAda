@@ -162,7 +162,7 @@ private package GL.API is
                   External_Name => "glGetIntegerv");
 
    procedure Get_Orientation (Name : Enums.Getter.Parameter;
-                              Target : access Culling.Orientation);
+                              Target : access Orientation);
    pragma Import (Convention => StdCall, Entity => Get_Orientation,
                   External_Name => "glGetIntegerv");
 
@@ -230,7 +230,7 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Cull_Face,
                   External_Name => "glCullFace");
 
-   procedure Front_Face (Face : Culling.Orientation);
+   procedure Front_Face (Face : Orientation);
    pragma Import (Convention => StdCall, Entity => Front_Face,
                   External_Name => "glFrontFace");
 
