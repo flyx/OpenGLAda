@@ -101,6 +101,8 @@ private package GL.Enums is
    type Patch_Parameter_Int is (Vertices);
    type Patch_Parameter_Float_Array is
      (Default_Inner_Level, Default_Outer_Level);
+
+   type Point_Param is (Fade_Threshold_Size);
 private
 
    for Attribute_Mask use record
@@ -228,4 +230,7 @@ private
    for Patch_Parameter_Float_Array use (Default_Inner_Level => 16#8E73#,
                                         Default_Outer_Level => 16#8E74#);
    for Patch_Parameter_Float_Array'Size use Low_Level.Enum'Size;
+
+   for Point_Param use (Fade_Threshold_Size => 16#8128#);
+   for Point_Param'Size use Low_Level.Enum'Size;
 end GL.Enums;

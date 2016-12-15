@@ -442,6 +442,13 @@ private package GL.API is
    pragma Import (Convention => StdCall, Entity => Polygon_Mode,
                   External_Name => "glPolygonMode");
 
+   procedure Set_Point_Size (Value : Single);
+   pragma Import (Convention => StdCall, Entity => Set_Point_Size,
+                  External_Name => "glPointSize");
+
+   procedure Set_Point_Parameter_Single is new Loader.Procedure_With_2_Params
+     ("glPointParameterf", Enums.Point_Param, Single);
+
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------

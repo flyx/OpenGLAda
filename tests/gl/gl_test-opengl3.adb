@@ -31,17 +31,17 @@ procedure GL_Test.OpenGL3 is
    use GL.Buffers;
    use GL.Types;
    use GL.Objects.Vertex_Arrays;
-   
+
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
      (Singles.Vector3_Pointers);
-   
+
    procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
      (Colors.Basic_Color_Pointers);
-   
+
    procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
                         Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
       use GL.Objects.Buffers;
-   
+
       Triangle1 : constant Singles.Vector3_Array
         := ((-0.3,  0.5, -1.0),
             (-0.8, -0.5, -1.0),
@@ -61,12 +61,12 @@ procedure GL_Test.OpenGL3 is
       Load_Vectors (Array_Buffer, Triangle1, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      
+
       Array_Buffer.Bind (Buffer2);
       Load_Colors (Array_Buffer, Color_Array, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
-      
+
       -- Second vertex array object: Only vertices
       Array2.Bind;
       Array_Buffer.Bind (Buffer3);
@@ -74,7 +74,7 @@ procedure GL_Test.OpenGL3 is
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
    end Load_Data;
-   
+
    procedure Load_Shaders (Vertex_Shader, Fragment_Shader : GL.Objects.Shaders.Shader;
                            Program : GL.Objects.Programs.Program) is
    begin
@@ -83,19 +83,23 @@ procedure GL_Test.OpenGL3 is
         (Vertex_Shader, "../tests/gl/gl_test-opengl3-vertex.glsl");
       GL.Files.Load_Shader_Source_From_File
         (Fragment_Shader, "../tests/gl/gl_test-opengl3-fragment.glsl");
-      
+
       Vertex_Shader.Compile;
       Fragment_Shader.Compile;
-      
+
       if not Vertex_Shader.Compile_Status then
          Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
          Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
+      else
+         Ada.Text_IO.Put_Line("Compilation of vertex shader succeeded. source:");
+         Ada.Text_IO.Put_Line(Vertex_Shader.Source);
       end if;
+
       if not Fragment_Shader.Compile_Status then
          Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
          Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
       end if;
-      
+
       -- set up program
       Program.Attach (Vertex_Shader);
       Program.Attach (Fragment_Shader);
@@ -116,7 +120,7 @@ procedure GL_Test.OpenGL3 is
    Fragment_Shader : GL.Objects.Shaders.Shader
      (Kind => GL.Objects.Shaders.Fragment_Shader);
    Program         : GL.Objects.Programs.Program;
-   
+
    Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffers.Buffer;
    Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
@@ -124,7 +128,7 @@ begin
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
    Display_Backend.Open_Window (Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
-   
+
    Vertex_Shader.Initialize_Id;
    Fragment_Shader.Initialize_Id;
    Program.Initialize_Id;
@@ -133,23 +137,23 @@ begin
    Color_Buffer.Initialize_Id;
    Array1.Initialize_Id;
    Array2.Initialize_Id;
-   
+
    Ada.Text_IO.Put_Line ("Initialized objects");
-   
+
    Load_Shaders (Vertex_Shader, Fragment_Shader, Program);
-   
+
    Ada.Text_IO.Put_Line ("Loaded shaders");
-   
+
    Load_Data (Array1, Array2, Vector_Buffer1, Color_Buffer, Vector_Buffer2);
 
    Ada.Text_IO.Put_Line ("Loaded data");
 
    while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
-      
+
       Array1.Bind;
       GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
-      
+
       Array2.Bind;
       GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
       GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
