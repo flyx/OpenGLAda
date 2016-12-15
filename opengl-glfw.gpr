@@ -28,7 +28,7 @@ library project OpenGL.Glfw is
       when "3" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v3";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw3_backend";
-         GLFW_Lib := "-lglfw";
+         GLFW_Lib := "-lglfw3";
    end case;
    
    for Source_Dirs use GLFW_Sources;
@@ -42,7 +42,7 @@ library project OpenGL.Glfw is
    package Linker is
       case OpenGL_Shared.Windowing_System is
          when "quartz" =>
-            for Linker_Options use (GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit,-L/usr/local/lib");
+            for Linker_Options use (GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit");
          when "windows" =>
             for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>
