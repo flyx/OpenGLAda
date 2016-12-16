@@ -1,3 +1,5 @@
+v0.4.1 (upcoming):
+ * Fixed an off-by-one bug in GL.Contexts
 v0.4:
  * Added packages:
   - GL.Culling
