@@ -11,8 +11,6 @@ with GL.Objects.Vertex_Arrays;
 with gl.Types;
 
 with glfw;
-with glfw.Windows;
-with glfw.Windows.Hints;
 
 with Initialization;
 with Run;
