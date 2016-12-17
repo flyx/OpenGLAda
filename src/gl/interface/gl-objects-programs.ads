@@ -34,8 +34,6 @@ package GL.Objects.Programs is
 
    type Tessellation_Spacing is (Equal, Fractional_Odd, Fractional_Even);
 
-   type Tessellation_Vertex_Order is (CW, CCW);
-
    type Buffer_Mode is (Interleaved_Attribs, Separate_Attribs);
 
    procedure Attach (Subject : Program; Shader : Shaders.Shader);
@@ -70,8 +68,7 @@ package GL.Objects.Programs is
 
    function Tess_Gen_Spacing (Subject : Program) return Tessellation_Spacing;
 
-   function Tess_Gen_Vertex_Order (Subject : Program)
-                                   return Tessellation_Vertex_Order;
+   function Tess_Gen_Vertex_Order (Subject : Program) return Orientation;
 
    function Transform_Feedback_Buffer_Mode (Subject : Program)
                                             return Buffer_Mode;
@@ -136,10 +133,6 @@ private
                                  Fractional_Odd  => 16#8E7B#,
                                  Fractional_Even => 16#8E7C#);
    for Tessellation_Spacing'Size use Low_Level.Enum'Size;
-
-   for Tessellation_Vertex_Order use (CW  => 16#0900#,
-                                      CCW => 16#0901#);
-   for Tessellation_Vertex_Order'Size use Low_Level.Enum'Size;
 
    for Buffer_Mode use (Interleaved_Attribs => 16#8C8C#,
                         Separate_Attribs    => 16#8C8D#);

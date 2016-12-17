@@ -14,14 +14,16 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with GL.Types;
+
 private with GL.Low_Level;
 
 package GL.Culling is
    pragma Preelaborate;
 
-   type Orientation is (Clockwise, Counter_Clockwise);
-
    type Face_Selector is (Front, Back, Front_And_Back);
+
+   use GL.Types;
 
    procedure Set_Front_Face (Face : Orientation);
    function Front_Face return Orientation;
@@ -30,8 +32,6 @@ package GL.Culling is
    function Cull_Face return Face_Selector;
 
 private
-   for Orientation use (Clockwise => 16#0900#, Counter_Clockwise => 16#0901#);
-   for Orientation'Size use Low_Level.Enum'Size;
 
    for Face_Selector use (Front          => 16#0404#,
                           Back           => 16#0405#,
