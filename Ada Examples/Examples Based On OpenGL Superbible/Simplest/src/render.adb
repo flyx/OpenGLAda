@@ -15,7 +15,7 @@ package body Render is
 
     procedure Render(Program : GL.Objects.Programs.Program; Current_Time : Glfw.Seconds) is
         use Math_Functions;
-        -- type GL.Types.Colors.Color is array (Color_Index), Color_Index: R, G, B, A
+
         Back_Colour   : GL.Types.Colors.Color := (0.5*(1.0 + Sin(Single(Current_Time))),
                                                                             0.5*(1.0 + Cos(Single(Current_Time))), 0.0, 1.0);
     begin

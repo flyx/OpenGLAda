@@ -43,20 +43,19 @@ package body Initialization is
                      Rendering_Program : out GL.Objects.Programs.Program;
                        Vertex_Array            : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
                        return Boolean is
-        -- sb7.init:
+
         Window_Width       : Interfaces.C.Int := 800;
         Window_Height      : Interfaces.C.Int := 600;
         Cursor                    : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
         Can_Start               : Boolean := False;
     begin
         Set_Window_Hints;
-        -- sb7 appears to be based on glfw version 2.
         Main_Window.Init(Window_Width, Window_Height, "OpenGL SuperBible Example");
         glfw.Windows.Context.Make_Current(Main_Window'Access);
         Enable_Callbacks(Main_Window);
 
-        gl.Toggles.Enable(gl.Toggles.Depth_Test);          -- glEnable(GL_DEPTH_TEST)
-        gl.Buffers.Set_Depth_Function(gl.Types.Less);    -- glDepthFunc(GL_LESS)
+        gl.Toggles.Enable(gl.Toggles.Depth_Test);
+        gl.Buffers.Set_Depth_Function(gl.Types.Less);
         Main_Window.Set_Cursor_Mode(Cursor);
         Utilities.Show_GL_Data;
 

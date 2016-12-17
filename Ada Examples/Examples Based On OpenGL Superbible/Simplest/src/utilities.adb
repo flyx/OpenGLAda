@@ -20,7 +20,6 @@ package body Utilities is
     begin
         Put_Line("Shader: " & Positive'Image(Shader_Count));
         Put_Line(Shaders.Source(Shader1));
-  --      Shader1.Delete_Id;
 
         while Shaders.Lists.Has_Next(List_Cursor)  loop
             List_Cursor := Shaders.Lists.Next(List_Cursor);
@@ -30,22 +29,21 @@ package body Utilities is
                Shader_Count := Shader_Count + 1;
                Put_Line("Shader: " & Positive'Image(Shader_Count));
                Put_Line(Shaders.Source(ShaderN));
-       --         ShaderN.Delete_Id;
             end;
         end loop;
         New_Line;
 
  exception
       when anError : Constraint_Error =>
-         Put("Show_All_Shader_Program_Data returned constraint error: ");
+         Put("Show_Shader_Program_Data returned constraint error: ");
          Put_Line(Exception_Information(anError));
 
       when anError : GL.Errors.Invalid_Operation_Error =>
-         Put_Line("Show_All_Shader_Program_Data returned an invalid operation error: ");
+         Put_Line("Show_Shader_Program_Data returned an invalid operation error: ");
          Put_Line(Exception_Information(anError));
 
       when anError :  others =>
-         Put_Line("An exceptiom occurred in Show_All_Shader_Program_Data.");
+         Put_Line("An exceptiom occurred in Show_Shader_Program_Data.");
          Put_Line(Exception_Information(anError));
 
     end Show_Shader_Program_Data;
