@@ -71,6 +71,8 @@ package GL.Types is
    type Compare_Function is (Never, Less, Equal, LEqual, Greater, Not_Equal,
                              GEqual, Always);
 
+   type Orientation is (Clockwise, Counter_Clockwise);
+
    -- counts the number of components for vertex attributes
    subtype Component_Count is Int range 1 .. 4;
 
@@ -178,4 +180,7 @@ private
                              GEqual    => 16#0206#,
                              Always    => 16#0207#);
    for Compare_Function'Size use UInt'Size;
+
+   for Orientation use (Clockwise => 16#0900#, Counter_Clockwise => 16#0901#);
+   for Orientation'Size use UInt'Size;
 end GL.Types;

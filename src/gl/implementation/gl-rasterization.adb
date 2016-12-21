@@ -72,4 +72,48 @@ package body GL.Rasterization is
       return Ret;
    end Polygon_Mode;
 
+   procedure Set_Point_Size (Value: Single) is
+   begin
+      API.Set_Point_Size (Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Point_Size;
+
+   function Point_Size return Single is
+      Ret : aliased Single := 0.0;
+   begin
+      API.Get_Single (Enums.Getter.Point_Size, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Point_Size;
+
+   function Point_Size_Range return Singles.Vector2 is
+      Ret : Singles.Vector2 := Singles.Vector2'(0.0, 0.0);
+   begin
+      API.Get_Single_Vec2 (Enums.Getter.Point_Size_Range, Ret);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Point_Size_Range;
+
+   function Point_Size_Granularity return Single is
+      Ret : aliased Single := 0.0;
+   begin
+      API.Get_Single (Enums.Getter.Point_Size_Granularity, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Point_Size_Granularity;
+
+   procedure Set_Point_Fade_Threshold_Size (Value : Single) is
+   begin
+      API.Set_Point_Parameter_Single (Enums.Fade_Threshold_Size, Value);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Point_Fade_Threshold_Size;
+
+   function Point_Fade_Threshold_Size return Single is
+      Ret : aliased Single := 0.0;
+   begin
+      API.Get_Single (Enums.Getter.Point_Fade_Threshold_Size, Ret'Access);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Point_Fade_Threshold_Size;
+
 end GL.Rasterization;

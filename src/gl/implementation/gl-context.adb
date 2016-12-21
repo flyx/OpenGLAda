@@ -163,7 +163,7 @@ package body GL.Context is
          for I in List'Range loop
             List (I) := To_Unbounded_String
               (C.Strings.Value (API.Get_String_I (
-               Enums.Getter.Shading_Language_Version, UInt (I))));
+               Enums.Getter.Shading_Language_Version, UInt (I - 1))));
          end loop;
       end return;
    end Supported_Shading_Language_Versions;
@@ -176,7 +176,7 @@ package body GL.Context is
       for I in 1 .. Count loop
          if C.Strings.Value
            (API.Get_String_I (Enums.Getter.Shading_Language_Version,
-                              UInt (I))) = Name then
+                              UInt (I - 1))) = Name then
             return True;
          end if;
       end loop;
