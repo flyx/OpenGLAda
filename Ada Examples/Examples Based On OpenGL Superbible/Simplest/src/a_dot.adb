@@ -8,7 +8,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
-with gl.Types;
 
 with glfw;
 
