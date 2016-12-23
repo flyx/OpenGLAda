@@ -8,7 +8,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
-with gl.Types;
 
 with glfw;
 
@@ -21,7 +20,7 @@ procedure A_Dot is
 
     Default_Directory           : String := ".";
 
-    Main_Window             : aliased Window_Types.tWindow;
+    Main_Window             : Window_Types.tWindow;
     Rendering_Program   : GL.Objects.Programs.Program;
     Vertex_Array              : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
