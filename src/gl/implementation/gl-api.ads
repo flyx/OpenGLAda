@@ -251,8 +251,11 @@ private package GL.API is
    --                         Framebuffer Operations                          --
    -----------------------------------------------------------------------------
 
-   procedure Clamp_Color is new Loader.Procedure_With_2_Params
-     ("glClampColor", Enums.Clamp_Color_Param, Low_Level.Bool);
+   type Clamp_Color_FType is access procedure (Target: Enums.Clamp_Color_Param,
+                                              Clamp: Low_Level.Bool);
+   pragma Convention (StdCall, Clamp_Color_FType);
+
+   Clamp_Color : Clamp_Color_FType; -- glClampColor
 
    procedure Read_Buffer (Value : Framebuffer.Read_Buffer_Selector);
    pragma Import (Convention => StdCall, Entity => Read_Buffer,
