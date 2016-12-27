@@ -17,8 +17,8 @@ with Utilities;
 with Window_Types;
 
 procedure A_Dot is
-    Main_Window             : Window_Types.tWindow;
-    Rendering_Program   : GL.Objects.Programs.Program;
+    Main_Window               : Window_Types.tWindow;
+    Rendering_Program         : GL.Objects.Programs.Program;
     Vertex_Array              : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
     glfw.Init;

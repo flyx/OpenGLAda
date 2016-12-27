@@ -7,10 +7,10 @@ with Render;
 
 package body Run is
 
-    procedure Main_Loop(Main_Window    :  in out Window_Types.tWindow;
+    procedure Main_Loop(Main_Window         :  in out Window_Types.tWindow;
                         Rendering_Program   : GL.Objects.Programs.Program) is
         use Glfw.Input;
-         Running  : Boolean := True;
+        Running  : Boolean := True;
     begin
         while Running loop
             Render.Render(Rendering_Program, glfw.Time);

@@ -23,8 +23,8 @@ with Utilities;
 package body Initialization is
 
     procedure Set_Window_Hints;
-    function Startup(Main_Window : Window_Types.tWindow;
-                     Rendering_Program : out GL.Objects.Programs.Program;
+    function Startup(Main_Window               : Window_Types.tWindow;
+                     Rendering_Program         : out GL.Objects.Programs.Program;
                      Vertex_Array              : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object) return Boolean;
 
     --  -----------------------------------------------------------------------------------------------------------------------------
@@ -39,15 +39,15 @@ package body Initialization is
 
     --  -----------------------------------------------------------------------------------------------------------------------------
 
-   function Initialize(Main_Window : in out Window_Types.tWindow;
-                     Rendering_Program : out GL.Objects.Programs.Program;
-                       Vertex_Array            : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
+    function Initialize(Main_Window             : in out Window_Types.tWindow;
+                        Rendering_Program       : out GL.Objects.Programs.Program;
+                        Vertex_Array            : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
                        return Boolean is
 
-        Window_Width       : Interfaces.C.Int := 800;
-        Window_Height      : Interfaces.C.Int := 600;
+        Window_Width              : Interfaces.C.Int := 800;
+        Window_Height             : Interfaces.C.Int := 600;
         Cursor                    : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
-        Can_Start               : Boolean := False;
+        Can_Start                 : Boolean := False;
     begin
         Set_Window_Hints;
         Main_Window.Init(Window_Width, Window_Height, "OpenGL SuperBible Example");
@@ -83,8 +83,8 @@ package body Initialization is
     --  ------------------------------------------------------------------------------------------------------------------------
 
    procedure Set_Window_Hints is
-      Min_Major_Version    : Integer := 3;
-      Minor_Version            : Integer := 2;
+        Min_Major_Version        : Integer := 3;
+        Minor_Version            : Integer := 2;
    begin
         glfw.Windows.Hints.Set_Minimum_OpenGL_Version(Min_Major_Version, Minor_Version);
         glfw.Windows.Hints.Set_Forward_Compat(True);
@@ -97,8 +97,8 @@ package body Initialization is
 
     --  ------------------------------------------------------------------------------------------------------------------------
 
-    function Startup(Main_Window : Window_Types.tWindow;
-                     Rendering_Program   : out GL.Objects.Programs.Program;
+    function Startup(Main_Window               : Window_Types.tWindow;
+                     Rendering_Program         : out GL.Objects.Programs.Program;
                      Vertex_Array              : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
                      return Boolean is
 
