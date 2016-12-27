@@ -17,18 +17,11 @@ with Utilities;
 with Window_Types;
 
 procedure A_Dot is
-
-    Default_Directory           : String := ".";
-
     Main_Window             : Window_Types.tWindow;
     Rendering_Program   : GL.Objects.Programs.Program;
     Vertex_Array              : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
-    -- Set the base directory for the executing program
-    Set_Directory (Default_Directory);
-
     glfw.Init;
-
     if Initialization.Initialize(Main_Window, Rendering_Program, Vertex_Array) then
         Run.Main_Loop(Main_Window, Rendering_Program);
     end if;
