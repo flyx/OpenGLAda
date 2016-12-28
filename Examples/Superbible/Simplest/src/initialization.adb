@@ -34,9 +34,9 @@ package body Initialization is
 
     procedure Initialize (Main_Window : in out Window_Types.tWindow) is
 
-        Window_Width              : constant Glfw.Size := 800;
-        Window_Height             : constant Glfw.Size := 600;
-        Cursor                    : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
+        Window_Width     : constant Glfw.Size := 800;
+        Window_Height    : constant Glfw.Size := 600;
+        Cursor           : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
     begin
         Set_Window_Hints;
         Main_Window.Init (Window_Width, Window_Height,
@@ -67,8 +67,8 @@ package body Initialization is
     --  ------------------------------------------------------------------------------------------------------------------------
 
     procedure Set_Window_Hints is
-        Min_Major_Version        : constant Integer := 3;
-        Minor_Version            : constant Integer := 2;
+        Min_Major_Version  : constant Integer := 3;
+        Minor_Version      : constant Integer := 2;
     begin
         glfw.Windows.Hints.Set_Minimum_OpenGL_Version (Min_Major_Version, Minor_Version);
         glfw.Windows.Hints.Set_Forward_Compat (True);
