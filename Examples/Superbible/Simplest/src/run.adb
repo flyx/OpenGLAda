@@ -25,14 +25,14 @@ package body Run is
     procedure Render_Dot (Current_Time : Glfw.Seconds);
     function Startup (Main_Window : Window_Types.tWindow) return Boolean;
 
-    Rendering_Program                       : GL.Objects.Programs.Program;
-    Vertex_Array                            :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+    Rendering_Program  : GL.Objects.Programs.Program;
+    Vertex_Array       :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
     --  -----------------------------------------------------------------------------------------------------------------------------
 
     procedure Main_Loop (Main_Window :  in out Window_Types.tWindow) is
         use Glfw.Input;
-        Running                    : Boolean := True;
+        Running : Boolean := True;
     begin
         if Startup (Main_Window) then
             while Running loop
@@ -55,8 +55,8 @@ package body Run is
         use GL.Types;
         use Math_Functions;
 
-        Back_Colour   : GL.Types.Colors.Color := (0.5 * (1.0 + Sin (Single (Current_Time))),
-                                                  0.5 * (1.0 + Cos (Single (Current_Time))), 0.0, 1.0);
+        Back_Colour : GL.Types.Colors.Color := (0.5 * (1.0 + Sin (Single (Current_Time))),
+                                                0.5 * (1.0 + Cos (Single (Current_Time))), 0.0, 1.0);
     begin
         GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Back_Colour);
@@ -82,7 +82,7 @@ package body Run is
     --  -----------------------------------------------------------------------------------------------------------------------------
 
     function Startup (Main_Window : Window_Types.tWindow) return Boolean is
-        OK  : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
+        OK : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
     begin
         if OK then
             Vertex_Array.Initialize_Id;
