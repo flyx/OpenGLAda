@@ -2,10 +2,8 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with gl.Context;
-with gl.Buffers;
+with GL.Context;
 with GL.Errors;
-with GL.Toggles;
 with GL.Types;
 
 with Glfw;
@@ -44,8 +42,6 @@ package body Initialization is
         glfw.Windows.Context.Make_Current (Main_Window'Access);
         Enable_Callbacks (Main_Window);
 
-        gl.Toggles.Enable (gl.Toggles.Depth_Test);
-        gl.Buffers.Set_Depth_Function (gl.Types.Less);
         Main_Window.Set_Cursor_Mode (Cursor);
         Utilities.Show_GL_Data;
 

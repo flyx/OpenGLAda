@@ -4,6 +4,7 @@ with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Buffers;
+with GL.Toggles;
 with GL.Errors;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
@@ -85,6 +86,8 @@ package body Run is
         OK : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
     begin
         if OK then
+            gl.Toggles.Enable (gl.Toggles.Depth_Test);
+            gl.Buffers.Set_Depth_Function (gl.Types.Less);
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
             -- Point size set in vertex shader
