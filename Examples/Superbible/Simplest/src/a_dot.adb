@@ -22,8 +22,8 @@ procedure A_Dot is
     Vertex_Array              : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
     glfw.Init;
-    if Initialization.Initialize(Main_Window, Rendering_Program, Vertex_Array) then
-        Run.Main_Loop(Main_Window, Rendering_Program);
+    if Initialization.Initialize (Main_Window, Rendering_Program, Vertex_Array) then
+        Run.Main_Loop (Main_Window, Rendering_Program);
     end if;
 
     Vertex_Array.Delete_Id;
@@ -32,10 +32,10 @@ begin
 
  exception
       when anError : Constraint_Error =>
-         Put("Application returned constraint error: ");
-         Put_Line(Exception_Information(anError));
+         Put ("Application returned constraint error: ");
+         Put_Line (Exception_Information (anError));
 
       when anError :  others =>
-         Put_Line("An exceptiom occurred in Application.");
-         Put_Line(Exception_Information(anError));
-  end A_Dot;
+         Put_Line ("An exceptiom occurred in Application.");
+         Put_Line (Exception_Information (anError));
+end A_Dot;
