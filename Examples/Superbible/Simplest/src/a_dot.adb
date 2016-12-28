@@ -16,7 +16,7 @@ with Utilities;
 with Window_Types;
 
 procedure A_Dot is
-    Main_Window               : Window_Types.tWindow;
+    Main_Window : Window_Types.tWindow;
 begin
     glfw.Init;
     Initialization.Initialize (Main_Window);
