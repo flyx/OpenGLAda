@@ -6,6 +6,6 @@ with Glfw;
 
 package Render is
 
-    procedure Render(Program : GL.Objects.Programs.Program; Current_Time : Glfw.Seconds);
+    procedure Render (Program : GL.Objects.Programs.Program; Current_Time : Glfw.Seconds);
 
 end Render;
