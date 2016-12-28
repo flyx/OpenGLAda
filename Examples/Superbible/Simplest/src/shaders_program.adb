@@ -30,9 +30,9 @@ package body Shaders_Program is
     function Make_Shader_Program (Window         : Window_Types.tWindow;
                                   Shader_Program : out GL.Objects.Programs.Program) return Boolean is
 
-        Vertex_Shader                : GL.Objects.Shaders.Shader (GL.Objects.Shaders.Vertex_Shader);
-        Fragment_Shader              : GL.Objects.Shaders.Shader (GL.Objects.Shaders.Fragment_Shader);
-        Linked                       : Boolean := False;
+        Vertex_Shader    : GL.Objects.Shaders.Shader (GL.Objects.Shaders.Vertex_Shader);
+        Fragment_Shader  : GL.Objects.Shaders.Shader (GL.Objects.Shaders.Fragment_Shader);
+        Linked           : Boolean := False;
 
     begin
         Vertex_Shader.Initialize_Id;
