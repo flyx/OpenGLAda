@@ -20,7 +20,7 @@ package body Initialization is
 
     procedure Set_Window_Hints;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------------
 
     procedure Enable_Callbacks (thisWindow : in out Window_Types.tWindow) is
     begin
@@ -30,7 +30,7 @@ package body Initialization is
         thisWindow.Enable_Callback (glfw.Windows.Callbacks.Mouse_Scroll);
     end Enable_Callbacks;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------------
 
     procedure Initialize (Main_Window : in out Window_Types.tWindow) is
 
@@ -64,7 +64,7 @@ package body Initialization is
 
     end Initialize;
 
-    --  ------------------------------------------------------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------------
 
     procedure Set_Window_Hints is
         Min_Major_Version  : constant Integer := 3;
@@ -79,6 +79,6 @@ package body Initialization is
 
     end Set_Window_Hints;
 
-    --  ------------------------------------------------------------------------------------------------------------------------
+    --  -------------------------------------------------------------------------------
 
 end Initialization;

@@ -28,7 +28,7 @@ package body Run is
     Rendering_Program  : GL.Objects.Programs.Program;
     Vertex_Array       :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     procedure Main_Loop (Main_Window :  in out Window_Types.tWindow) is
         use Glfw.Input;
@@ -49,7 +49,7 @@ package body Run is
         Rendering_Program.Delete_Id;
     end Main_Loop;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     procedure Render_Dot (Current_Time : Glfw.Seconds) is
         use GL.Types;
@@ -79,7 +79,7 @@ package body Run is
 
     end Render_Dot;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function Startup (Main_Window : Window_Types.tWindow) return Boolean is
         OK : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
@@ -98,6 +98,7 @@ package body Run is
         return OK;
     end Startup;
 
-    --  -----------------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
+
 
 end Run;

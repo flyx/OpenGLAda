@@ -8,7 +8,7 @@ with GL.Objects.Shaders;
 
 package body Shaders_Program is
 
-    --  -----------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function Compile_Shader (Shader : GL.Objects.Shaders.Shader) return Boolean is
         result : Boolean := False;
@@ -25,7 +25,7 @@ package body Shaders_Program is
 
     end Compile_Shader;
 
-    --  -----------------------------------------------------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
 
     function Make_Shader_Program (Window         : Window_Types.tWindow;
                                   Shader_Program : out GL.Objects.Programs.Program) return Boolean is
@@ -72,5 +72,7 @@ package body Shaders_Program is
             Put_Line (Exception_Information (anError));
             return Linked;
     end Make_Shader_Program;
+
+    --  ------------------------------------------------------------------------
 
 end Shaders_Program;
