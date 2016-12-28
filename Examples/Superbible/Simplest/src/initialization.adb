@@ -5,10 +5,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 with gl.Context;
 with gl.Buffers;
 with GL.Errors;
-with GL.Objects.Vertex_Arrays;
-with GL.Objects.Shaders.Lists;
 with GL.Toggles;
-with GL.Types; use  GL.Types;
+with GL.Types;
 
 with Glfw;
 with Glfw.Input.Mouse;
@@ -16,15 +14,11 @@ with glfw.Windows;
 with glfw.Windows.Context;
 with glfw.Windows.Hints;
 
-with Shaders_Program;
 with Utilities;
 
 package body Initialization is
 
     procedure Set_Window_Hints;
-    function Startup (Main_Window               : Window_Types.tWindow;
-                      Rendering_Program         : out GL.Objects.Programs.Program;
-                      Vertex_Array              : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object) return Boolean;
 
     --  -----------------------------------------------------------------------------------------------------------------------------
 
@@ -38,10 +32,7 @@ package body Initialization is
 
     --  -----------------------------------------------------------------------------------------------------------------------------
 
-    function Initialize (Main_Window             : in out Window_Types.tWindow;
-                         Rendering_Program       : out GL.Objects.Programs.Program;
-                         Vertex_Array            : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
-                         return Boolean is
+    procedure Initialize (Main_Window : in out Window_Types.tWindow) is
 
         Window_Width              : constant Glfw.Size := 800;
         Window_Height             : constant Glfw.Size := 600;
@@ -57,23 +48,18 @@ package body Initialization is
         Main_Window.Set_Cursor_Mode (Cursor);
         Utilities.Show_GL_Data;
 
-        return Startup (Main_Window, Rendering_Program, Vertex_Array);
-
     exception
         when anError : Constraint_Error =>
             Put ("Initialize returned constraint error: ");
             Put_Line (Exception_Information (anError));
-            return False;
 
         when anError : GL.Errors.Invalid_Operation_Error =>
             Put_Line ("Initialize returned an invalid operation error: ");
             Put_Line (Exception_Information (anError));
-            return False;
 
         when anError :  others =>
             Put_Line ("An exceptiom occurred in Initialize.");
             Put_Line (Exception_Information (anError));
-            return False;
 
     end Initialize;
 
@@ -93,27 +79,5 @@ package body Initialization is
     end Set_Window_Hints;
 
     --  ------------------------------------------------------------------------------------------------------------------------
-
-    function Startup (Main_Window               : Window_Types.tWindow;
-                      Rendering_Program         : out GL.Objects.Programs.Program;
-                      Vertex_Array              : in out GL.Objects.Vertex_Arrays.Vertex_Array_Object)
-                      return Boolean is
-
-        OK  : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
-    begin
-        if OK then
-            Vertex_Array.Initialize_Id;
-            Vertex_Array.Bind;
-            gl.Toggles.Enable (gl.Toggles.Vertex_Program_Point_Size);
-        else
-            Put_Line ("Shader program linking failed.");
-            Put_Line ("Log:");
-            Put_Line (Rendering_Program.Info_Log);
-        end if;
-        Utilities.Show_Shader_Program_Data (Rendering_Program);
-        return OK;
-    end Startup;
-
-    --  -----------------------------------------------------------------------------------------------------------------------------
 
 end Initialization;
