@@ -1,7 +1,7 @@
 
 with glfw.Windows;
 
-Package Window_Types is
+package Window_Types is
 
     type tWindow is new Glfw.Windows.Window with null record;
 
