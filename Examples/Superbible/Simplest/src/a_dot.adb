@@ -2,7 +2,6 @@
 -- Author Roger Mc Murtrie
 -- Created 16 December 2016
 
-with Ada.Directories; use Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -18,16 +17,10 @@ with Window_Types;
 
 procedure A_Dot is
     Main_Window               : Window_Types.tWindow;
-    Rendering_Program         : GL.Objects.Programs.Program;
-    Vertex_Array              : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 begin
     glfw.Init;
-    if Initialization.Initialize (Main_Window, Rendering_Program, Vertex_Array) then
-        Run.Main_Loop (Main_Window, Rendering_Program);
-    end if;
-
-    Vertex_Array.Delete_Id;
-    Rendering_Program.Delete_Id;
+    Initialization.Initialize (Main_Window);
+    Run.Main_Loop (Main_Window);
     glfw.Shutdown;
 
  exception
