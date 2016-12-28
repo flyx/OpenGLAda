@@ -39,7 +39,8 @@ package body Initialization is
         Cursor                    : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
     begin
         Set_Window_Hints;
-        Main_Window.Init (Window_Width, Window_Height, "OpenGL SuperBible Example");
+        Main_Window.Init (Window_Width, Window_Height,
+                          "OpenGL SuperBible Centre Square Example");
         glfw.Windows.Context.Make_Current (Main_Window'Access);
         Enable_Callbacks (Main_Window);
 
