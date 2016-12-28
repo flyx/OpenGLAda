@@ -23,12 +23,12 @@ begin
     Run.Main_Loop (Main_Window);
     glfw.Shutdown;
 
- exception
-      when anError : Constraint_Error =>
-         Put ("Application returned constraint error: ");
-         Put_Line (Exception_Information (anError));
+exception
+    when anError : Constraint_Error =>
+        Put ("Application returned constraint error: ");
+        Put_Line (Exception_Information (anError));
 
-      when anError :  others =>
-         Put_Line ("An exceptiom occurred in Application.");
-         Put_Line (Exception_Information (anError));
+    when anError :  others =>
+        Put_Line ("An exceptiom occurred in Application.");
+        Put_Line (Exception_Information (anError));
 end A_Dot;
