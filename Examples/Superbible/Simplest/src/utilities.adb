@@ -11,12 +11,12 @@ with GL.Types; use  GL.Types;
 package body Utilities is
 
     procedure Show_GL_Data is
-        GL_Version                                 : Unbounded_String;
-        Renderer                                   : Unbounded_String;
-        Shading_Language_Version                   : Unbounded_String;
+        GL_Version                : Unbounded_String;
+        Renderer                  : Unbounded_String;
+        Shading_Language_Version  : Unbounded_String;
     begin
         GL_Version := To_Unbounded_String (GL.Types.Int'image (gl.Context.Major_Version) & "." &
-                                             GL.Types.Int'image (gl.Context.Minor_Version));
+                                           GL.Types.Int'image (gl.Context.Minor_Version));
         Renderer := To_Unbounded_String (gl.Context.Renderer);
         Shading_Language_Version :=
           To_Unbounded_String (gl.Context.Primary_Shading_Language_Version);
