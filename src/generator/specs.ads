@@ -48,7 +48,6 @@ private
    type Signature is record
       Params : Param_Lists.Vector;
       Return_Type : Unbounded_String;
-      In_Root_Package : Boolean;
    end record;
 
    package Sig_Lists is new Ada.Containers.Vectors (Positive, Signature);

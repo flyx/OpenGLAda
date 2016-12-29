@@ -15,9 +15,12 @@
 --------------------------------------------------------------------------------
 
 with GL.API;
+with GL.Load_Function_Pointers;
 
 package body GL is
-   
+
+   procedure Init renames GL.Load_Function_Pointers;
+
    procedure Flush is
    begin
       API.Flush;

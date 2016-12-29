@@ -54,7 +54,6 @@ package body Specs is
             when Mode_Access_Constant => Put (File, "access constant ");
             end case;
             Put (File, To_String (Param.Type_Name));
-            Index := Index + 1;
          end loop;
          Put (File, ')');
       end if;
@@ -77,7 +76,6 @@ package body Specs is
       T : Tokenizer := Tokenize (Path);
       Data : Spec_Data := Spec_Data'(File_Base_Name => To_Unbounded_String
         (Ada.Directories.Base_Name (Path)), others => <>);
-      In_Root_Package : Boolean := False;
 
       function Get_Name (Start : Token; Name : out Unbounded_String)
         return Token is
@@ -146,8 +144,7 @@ package body Specs is
       end Gen_Copy_Item;
 
       procedure Gen_Subprogram_Item (Start : Token) is
-         Sig : Signature :=
-           Signature'(In_Root_Package => In_Root_Package, others => <>);
+         Sig : Signature;
 
          procedure Finish_Sig (From : Token) is
          begin
@@ -388,10 +385,10 @@ package body Specs is
                      Proc.Dynamic_Subprogram_Types.Append (Sig);
                   end if;
                   Data.Items.Append (Body_Item'(
-                  Kind => Dynamic,
-                  D_Name => To_Unbounded_String (Name),
-                  D_GL_Name => Read_GL_Name,
-                  Sig_Id => Sig_Id
+                    Kind => Dynamic,
+                    D_Name => To_Unbounded_String (Name),
+                    D_GL_Name => Read_GL_Name,
+                    Sig_Id => Sig_Id
                   ));
                end;
             when others =>
@@ -435,7 +432,6 @@ package body Specs is
             Wrong_Token(Cur, "Unexpected token (expected `is`)");
          end if;
       end;
-      In_Root_Package := Data.Name = To_Unbounded_String ("GL.API");
       Ada.Text_IO.Put_Line ("Processing spec """ & To_String (Data.Name) & """");
       loop
          <<continue2>>
@@ -508,8 +504,6 @@ package body Specs is
       File_Name : constant String :=
         Compose (Dir_Path, To_String (Data.File_Base_Name), "ads");
       Is_Root : constant Boolean := Name = "GL.API";
-      Types_Declared : array (1 .. Positive (Proc.Dynamic_Subprogram_Types.Length)) of
-                       Boolean := (others => False);
    begin
       Ada.Text_IO.Put_Line ("Writing API file for spec """ &
         To_String (Data.Name) & """: " & File_Name);
@@ -518,7 +512,30 @@ package body Specs is
       for With_Stmt of Data.Withs loop
          Put_Line (Target, With_Stmt);
       end loop;
-      Put_Line (Target, "package " & Name & " is");
+      Put_Line (Target,
+        (if Is_Root then "private " else "") & "package " & Name & " is");
+      Put_Line (Target, "   pragma Preelaborate;");
+      Put_Line (Target, "   use GL.Types;");
+      if Is_Root then
+         declare
+            Sig_Id : Positive := 1;
+         begin
+            for Sig of Proc.Dynamic_Subprogram_Types loop
+               declare
+                  Type_Name : constant String := Indexed_Name ('T', Sig_Id);
+                  Is_Function : constant Boolean := Length (Sig.Return_Type) > 0;
+               begin
+                  Put (Target, "   type " & Type_Name & " is access ");
+                  Put (Target, (if Is_Function then "function" else "procedure"));
+                  Put_Signature (Target,
+                     Proc.Dynamic_Subprogram_Types.Element (Sig_Id), False);
+                  Put_Line (Target, ";");
+                  Put_Line (Target, "   pragma Convention (StdCall, " & Type_Name & ");");
+               end;
+               Sig_Id := Sig_Id + 1;
+            end loop;
+         end;
+      end if;
       for Item of Data.Items loop
          case Item.Kind is
          when Copy =>
@@ -543,20 +560,7 @@ package body Specs is
             declare
                Sub_Name : constant String := To_String (Item.D_Name);
                Type_Name : constant String := Indexed_Name ('T', Item.Sig_Id);
-               Sig : constant Signature :=
-                 Proc.Dynamic_Subprogram_Types.Element (Item.Sig_Id);
-               Is_Function : constant Boolean := Length (Sig.Return_Type) > 0;
             begin
-               if not Types_Declared (Item.Sig_Id) and (
-                 Is_Root or not Sig.In_Root_Package) then
-                  Put (Target, "   type " & Type_Name & " is access ");
-                  Put (Target, (if Is_Function then "function" else "procedure"));
-                  Put_Signature (Target,
-                    Proc.Dynamic_Subprogram_Types.Element (Item.Sig_Id), False);
-                  Put_Line (Target, ";");
-                  Put_Line (Target, "   pragma Convention (StdCall, " & Type_Name & ");");
-                  Types_Declared (Item.Sig_Id) := True;
-               end if;
                Put_Line (Target, "   " & Sub_Name & " : " & Type_Name & ";");
             end;
          end case;
@@ -572,12 +576,14 @@ package body Specs is
          use Ada.Text_IO;
       begin
          Put_Line (Target, "-- Autogenerated by Generate, do not edit");
-         Put_Line (Target, "with GL.API;");
          Put_Line (Target, "with System;");
          Put_Line (Target, "with Ada.Unchecked_Conversion;");
-         Put_Line (Target, "private generic");
-         Put_Line (Target, "   with function Raw_Subprogram_Reference (Name : String) return System.Address;");
+         Put_Line (Target, "private with GL.API.Subprogram_Reference;");
+         for Spec_Data of Proc.List loop
+            Put_Line (Target, "private with " & To_String (Spec_Data.Name) & ";");
+         end loop;
          Put_Line (Target, "procedure GL.Load_Function_Pointers is");
+         Put_Line (Target, "   pragma Preelaborate;");
          Put_Line (Target, "   use GL.API;");
          Put_Line (Target, "   generic");
          Put_Line (Target, "      type Function_Reference is private;");
@@ -586,12 +592,13 @@ package body Specs is
          Put_Line (Target, "   function Load (Function_Name : String) return Function_Reference is");
          Put_Line (Target, "      function As_Function_Reference is new Ada.Unchecked_Conversion (");
          Put_Line (Target, "        Source => System.Address, Target => Function_Reference);");
-         Put_Line (Target, "      Raw : System.Address := Raw_Subprogram_Reference (Function_Name);");
+         Put_Line (Target, "      use type System.Address;");
+         Put_Line (Target, "      Raw : System.Address := Subprogram_Reference (Function_Name);");
          Put_Line (Target, "   begin");
          Put_Line (Target, "      if Raw = System.Null_Address then");
-         Put_Line (Target, "         Raw := Raw_Subprogram_Reference (Function_Name & ""ARB"");");
+         Put_Line (Target, "         Raw := Subprogram_Reference (Function_Name & ""ARB"");");
          Put_Line (Target, "         if Raw = System.Null_Address then");
-         Put_Line (Target, "            Raw := Raw_Subprogram_Reference (Function_Name & ""EXT"");");
+         Put_Line (Target, "            Raw := Subprogram_Reference (Function_Name & ""EXT"");");
          Put_Line (Target, "         end if;");
          Put_Line (Target, "      end if;");
          Put_Line (Target, "      return As_Function_Reference (Raw);");
@@ -601,7 +608,7 @@ package body Specs is
       Index : Positive := 1;
    begin
       Ada.Text_IO.Put_Line ("Writing procedure ""GL.Init""");
-      Create (Target, Out_File, Ada.Directories.Compose (Dir_Path, "gl-init.adb"));
+      Create (Target, Out_File, Ada.Directories.Compose (Dir_Path, "gl-load_function_pointers.adb"));
       Write_Header;
       for Sub_Type of Proc.Dynamic_Subprogram_Types loop
          Put_Line (Target, "   function Load_" & Indexed_Name ('T', Index) &
@@ -615,7 +622,7 @@ package body Specs is
          begin
             for Item of Data.Items loop
                if Item.Kind = Dynamic then
-                  Put_Line (Target, "   " & Spec_Name (4 .. Spec_Name'Last) &
+                  Put_Line (Target, "   " & Spec_Name &
                     '.' & To_String (Item.D_Name) & " := Load_" &
                     Indexed_Name ('T', Item.Sig_Id) & "(""" &
                     To_String (Item.D_GL_Name) & """);");

@@ -1,5 +1,3 @@
-with GL.Runtime_Loading;
-
 with GL.Attributes;
 with GL.Blending;
 with GL.Buffers;
@@ -27,11 +25,6 @@ with Interfaces.C.Strings;
 with System;
 
 spec GL.API is
-   pragma Preelaborate;
-   use GL.Types;
-
-   subtype Zero is Int range 0 .. 0;
-
    function Get_Error return Errors.Error_Code is Static ("glGetError");
    procedure Flush is Static ("glFlush");
    procedure Finish is Static ("glFinish");
@@ -183,7 +176,8 @@ spec GL.API is
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
-                            Indices    : Zero) is Static ("glDrawElements");
+                            Indices    : Low_Level.Zero) is
+     Static ("glDrawElements");
 
    -----------------------------------------------------------------------------
    --               Lighting API (deprecated as of OpenGL 3.0)                --
@@ -262,20 +256,22 @@ spec GL.API is
      Dynamic ("glClearAccum");
 
    procedure Clear_Buffer (Buffer : Buffers.Color_Buffer_Selector;
-     Drawbuffer : Zero; Value : Colors.Color) is Dynamic ("glClearBufferfv");
+                           Drawbuffer : Low_Level.Zero; Value : Colors.Color) is
+     Dynamic ("glClearBufferfv");
    procedure Clear_Draw_Buffer
      (Buffer : Low_Level.Enums.Only_Color_Buffer;
       Drawbuffer : Buffers.Draw_Buffer_Index; Value : Colors.Color) is
      Dynamic ("glClearBufferfv");
    procedure Clear_Buffer_Depth
-     (Buffer : Low_Level.Enums.Only_Depth_Buffer; Drawbuffer : Zero;
+     (Buffer : Low_Level.Enums.Only_Depth_Buffer; Drawbuffer : Low_Level.Zero;
       Value : access constant Buffers.Depth) is Dynamic ("glClearBufferfv");
    procedure Clear_Buffer_Stencil
-     (Buffer : Low_Level.Enums.Only_Stencil_Buffer; Drawbuffer : Zero;
+     (Buffer : Low_Level.Enums.Only_Stencil_Buffer; Drawbuffer : Low_Level.Zero;
       Value : access constant Buffers.Stencil_Index) is
      Dynamic ("glClearBufferiv");
    procedure Clear_Buffer_Depth_Stencil
-     (Buffer : Low_Level.Enums.Only_Depth_Stencil_Buffer; Drawbuffer : Zero;
+     (Buffer : Low_Level.Enums.Only_Depth_Stencil_Buffer;
+      Drawbuffer : Low_Level.Zero;
       Depth : Buffers.Depth; Stencil : Buffers.Stencil_Index) is
      Dynamic ("glClearBufferfi");
 
@@ -507,6 +503,18 @@ spec GL.API is
    procedure Buffer_Data (Target : Low_Level.Enums.Buffer_Kind;
      Size : Low_Level.SizeIPtr; Data : System.Address;
      Usage : Objects.Buffers.Buffer_Usage) is Dynamic ("glBufferData");
+   function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
+                        Acc : Objects.Access_Kind) return System.Address is
+     Dynamic ("glMapBuffer");
+   procedure Buffer_Pointer (Target : Low_Level.Enums.Buffer_Kind;
+                             Pname  : Enums.Buffer_Pointer_Param;
+                             Params : out System.Address) is
+     Dynamic ("glGetBufferPointerv");
+   procedure Buffer_Sub_Data (Target : Low_Level.Enums.Buffer_Kind;
+                              Offset : Low_Level.IntPtr;
+                              Size   : Low_Level.SizeIPtr;
+                              Data   : System.Address) is
+     Dynamic ("glBufferSubData");
 
    -- glMapBuffer: returns instance of generic Interfaces.C.Pointers.Pointer,
    -- therefore declared in GL.Objects.Buffers

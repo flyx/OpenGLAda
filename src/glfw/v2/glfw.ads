@@ -22,6 +22,8 @@ package Glfw is
 
    Initialization_Exception : exception;
 
+   -- for convenience, besides executing GLFW's init procedures, this also calls
+   -- GL.Init.
    procedure Init;
 
    procedure Terminate_Glfw;
