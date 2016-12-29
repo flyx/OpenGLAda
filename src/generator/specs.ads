@@ -30,7 +30,8 @@ package Specs is
 private
    use Ada.Strings.Unbounded;
 
-   type Param_Mode is (Mode_In, Mode_Out, Mode_In_Out, Mode_Access);
+   type Param_Mode is
+     (Mode_In, Mode_Out, Mode_In_Out, Mode_Access, Mode_Access_Constant);
 
    package String_Lists is new Ada.Containers.Indefinite_Vectors
      (Positive, String);
@@ -59,7 +60,7 @@ private
       when Copy => To_Copy : Unbounded_String;
       when Static =>
          S_Name, S_GL_Name : Unbounded_String;
-         Sig : Signature;
+         Sigs : Sig_Lists.Vector;
       when Dynamic =>
          D_Name, D_GL_Name : Unbounded_String;
          Sig_Id : Positive;

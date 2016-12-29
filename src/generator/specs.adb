@@ -1,3 +1,4 @@
+with Ada.Containers.Hashed_Maps;
 with Ada.Directories;
 with Ada.Exceptions;
 
@@ -45,6 +46,13 @@ package body Specs is
                Index := Index + 1;
             end loop;
             Put (File, " : ");
+            case Param.Mode is
+            when Mode_In => null;
+            when Mode_Out => Put (File, "out ");
+            when Mode_In_Out => Put (File, "in out ");
+            when Mode_Access => Put (File, "access ");
+            when Mode_Access_Constant => Put (File, "access constant ");
+            end case;
             Put (File, To_String (Param.Type_Name));
             Index := Index + 1;
          end loop;
@@ -58,6 +66,14 @@ package body Specs is
    procedure Parse_File (Proc : in out Processor; Path : String) is
       use Tokenization;
       use Ada.Exceptions;
+
+      function Symbol_Hash (S : Symbol_Id) return Ada.Containers.Hash_Type is
+        (Ada.Containers.Hash_Type (S));
+
+      package Symbol_To_Index is new Ada.Containers.Hashed_Maps
+        (Tokenization.Symbol_Id, Positive, Symbol_Hash, Tokenization."=");
+      Subroutine_Defs : Symbol_To_Index.Map;
+
       T : Tokenizer := Tokenize (Path);
       Data : Spec_Data := Spec_Data'(File_Base_Name => To_Unbounded_String
         (Ada.Directories.Base_Name (Path)), others => <>);
@@ -185,7 +201,7 @@ package body Specs is
          function Param_Type (Mode : out Param_Mode;
                               Name : out Unbounded_String) return Token is
             -- returns the next token
-            In_Seen, Out_Seen, Access_Seen : Boolean := False;
+            In_Seen, Out_Seen, Access_Seen, Constant_Seen : Boolean := False;
          begin
             loop
                declare
@@ -210,13 +226,24 @@ package body Specs is
                         raise Parsing_Error with "Duplicate `in`!";
                      end if;
                      Access_Seen := True;
+                  when Keyword_Constant =>
+                     if Constant_Seen then
+                        raise Parsing_Error with "Duplicate `constant`!";
+                     elsif not Access_Seen then
+                        raise Parsing_Error with "`constant` is illegal here!";
+                     end if;
+                     Constant_Seen := True;
                   when others =>
                      if Access_Seen then
                         if In_Seen or Out_Seen then
                            raise Parsing_Error with
                              "No `in` or `out` allowed together with `access`!";
                         end if;
-                        Mode := Mode_Access;
+                        if Constant_Seen then
+                           Mode := Mode_Access_Constant;
+                        else
+                           Mode := Mode_Access;
+                        end if;
                      elsif Out_Seen then
                         if In_Seen then
                            Mode := Mode_In_Out;
@@ -267,6 +294,21 @@ package body Specs is
             return To_Unbounded_String (Name_String.Content);
          end Read_GL_Name;
 
+         function Singleton (Sig : Signature) return Sig_Lists.Vector is
+         begin
+            return Ret : Sig_Lists.Vector do
+               Ret.Append (Sig);
+            end return;
+         end Singleton;
+
+         function Expand (List : Sig_Lists.Vector; Sig : Signature)
+           return Sig_Lists.Vector is
+         begin
+            return Ret : Sig_Lists.Vector := List do
+               Ret.Append (Sig);
+            end return;
+         end Expand;
+
          Name_Token      : constant Token   := Next (T);
          Name            : constant String  := Name_Token.Content;
       begin
@@ -291,12 +333,47 @@ package body Specs is
             end if;
             case Cur.Id is
             when Keyword_Static =>
-               Data.Items.Append (Body_Item'(
-                 Kind => Static,
-                 S_Name => To_Unbounded_String (Name),
-                 S_GL_Name => Read_GL_Name,
-                 Sig => Sig
-               ));
+               declare
+                  use type Symbol_To_Index.Cursor;
+                  Pos : constant Symbol_To_Index.Cursor :=
+                    Subroutine_Defs.Find (Name_Token.Id);
+               begin
+                  if Pos = Symbol_To_Index.No_Element then
+                     Data.Items.Append (Body_Item'(
+                       Kind => Static, S_Name => To_Unbounded_String (Name),
+                       S_GL_Name => Read_GL_Name,
+                       Sigs => Singleton (Sig)
+                     ));
+                     Subroutine_Defs.Insert (Name_Token.Id,
+                                             Positive (Data.Items.Length));
+                  else
+                     declare
+                        Item_Pos : constant Positive :=
+                          Symbol_To_Index.Element (Pos);
+                        Old : constant Body_Item :=
+                          Data.Items.Element (Item_Pos);
+                        GL_Name : constant Unbounded_String := Read_GL_Name;
+                     begin
+                        if Old.Kind /= Static then
+                           raise Parsing_Error with "Name """ & Name &
+                             """ has previous definition which is not Static!";
+                        elsif Old.S_GL_Name /= GL_Name then
+                           raise Parsing_Error with """" & Name &
+                             """ has previous definition with OpenGL name """ &
+                             To_String (Old.S_GL_Name) & """ which differs from """ &
+                             To_String (GL_Name) & """!";
+                        end if;
+
+                        Data.Items.Replace_Element (Symbol_To_Index.Element (Pos),
+                          Body_Item'(
+                             Kind => Static,
+                             S_Name => To_Unbounded_String (Name),
+                             S_GL_Name => GL_Name,
+                             Sigs => Expand (Old.Sigs, Sig)
+                        ));
+                     end;
+                  end if;
+               end;
             when Keyword_Dynamic =>
                declare
                   Sig_Id : Positive := 1;
@@ -394,7 +471,7 @@ package body Specs is
          end if;
       end;
       Proc.List.Append (Data);
-   exception when Error : Parsing_Error =>
+   exception when Error : Parsing_Error | Tokenization.Tokenization_Error =>
       raise Parsing_Error with "Parsing error at line" & Line (T)'Img &
         ", column" & Column (T)'Img & ":" & Character'Val (10) &
         Exception_Message (Error);
@@ -437,6 +514,7 @@ package body Specs is
       Ada.Text_IO.Put_Line ("Writing API file for spec """ &
         To_String (Data.Name) & """: " & File_Name);
       Create (Target, Out_File, File_Name);
+      Put_Line (Target, "-- Autogenerated by Generate, do not edit");
       for With_Stmt of Data.Withs loop
          Put_Line (Target, With_Stmt);
       end loop;
@@ -447,16 +525,17 @@ package body Specs is
             Put_Line (Target, "   " & To_String (Item.To_Copy));
          when Static =>
             declare
-               Is_Function : constant Boolean := Length (Item.Sig.Return_Type) = 0;
                Sub_Name : constant String := To_String (Item.S_Name);
             begin
-               if Is_Function then
-                  Put (Target, "   function " & Sub_Name);
-               else
-                  Put (Target, "   procedure " & Sub_Name);
-               end if;
-               Put_Signature (Target, Item.Sig, True);
-               Put_Line (Target, ";");
+               for Sig of Item.Sigs loop
+                  if Length (Sig.Return_Type) = 0 then
+                     Put (Target, "   procedure " & Sub_Name);
+                  else
+                     Put (Target, "   function " & Sub_Name);
+                  end if;
+                  Put_Signature (Target, Sig, True);
+                  Put_Line (Target, ";");
+               end loop;
                Put_Line (Target, "   pragma Import (StdCall, " & Sub_Name &
                  ", """ & To_String (Item.S_GL_Name) & """);");
             end;
@@ -466,7 +545,7 @@ package body Specs is
                Type_Name : constant String := Indexed_Name ('T', Item.Sig_Id);
                Sig : constant Signature :=
                  Proc.Dynamic_Subprogram_Types.Element (Item.Sig_Id);
-               Is_Function : constant Boolean := Length (Sig.Return_Type) = 0;
+               Is_Function : constant Boolean := Length (Sig.Return_Type) > 0;
             begin
                if not Types_Declared (Item.Sig_Id) and (
                  Is_Root or not Sig.In_Root_Package) then
@@ -492,7 +571,7 @@ package body Specs is
       procedure Write_Header is
          use Ada.Text_IO;
       begin
-         Put_Line (Target, "-- Autogenerated by Init_Generator, do not edit");
+         Put_Line (Target, "-- Autogenerated by Generate, do not edit");
          Put_Line (Target, "with GL.API;");
          Put_Line (Target, "with System;");
          Put_Line (Target, "with Ada.Unchecked_Conversion;");
@@ -515,6 +594,7 @@ package body Specs is
          Put_Line (Target, "            Raw := Raw_Subprogram_Reference (Function_Name & ""EXT"");");
          Put_Line (Target, "         end if;");
          Put_Line (Target, "      end if;");
+         Put_Line (Target, "      return As_Function_Reference (Raw);");
          Put_Line (Target, "   end Load;");
       end Write_Header;
 
@@ -526,6 +606,7 @@ package body Specs is
       for Sub_Type of Proc.Dynamic_Subprogram_Types loop
          Put_Line (Target, "   function Load_" & Indexed_Name ('T', Index) &
            " is new Load (" & Indexed_Name ('T', Index) & ");");
+         Index := Index + 1;
       end loop;
       Put_Line (Target, "begin");
       for Data of Proc.List loop
@@ -534,7 +615,7 @@ package body Specs is
          begin
             for Item of Data.Items loop
                if Item.Kind = Dynamic then
-                  Put_Line (Target, "   " & Spec_Name (3 .. Spec_Name'Last) &
+                  Put_Line (Target, "   " & Spec_Name (4 .. Spec_Name'Last) &
                     '.' & To_String (Item.D_Name) & " := Load_" &
                     Indexed_Name ('T', Item.Sig_Id) & "(""" &
                     To_String (Item.D_GL_Name) & """);");
@@ -542,6 +623,7 @@ package body Specs is
             end loop;
          end;
       end loop;
+      Put_Line (Target, "end GL.Load_Function_Pointers;");
       Close (Target);
    end Write_Init;
 end Specs;

@@ -45,6 +45,7 @@ package body Tokenization is
          File_String_IO.Read (File, Ret.Input);
          File_String_IO.Close (File);
          Ret.Symbol_Table.Insert ("access", Keyword_Access);
+         Ret.Symbol_Table.Insert ("constant", Keyword_Constant);
          Ret.Symbol_Table.Insert ("dynamic", Keyword_Dynamic);
          Ret.Symbol_Table.Insert ("end", Keyword_End);
          Ret.Symbol_Table.Insert ("function", Keyword_Function);
@@ -148,6 +149,9 @@ package body Tokenization is
                      if Cur = '(' then
                         Object.Depth := Object.Depth + 1;
                      elsif Cur = ')' then
+                        if Object.Depth = 0 then
+                           raise Tokenization_Error with "Extra `)`!";
+                        end if;
                         Object.Depth := Object.Depth - 1;
                      end if;
                      return Token'(Kind => Delimiter, Length => 1,
