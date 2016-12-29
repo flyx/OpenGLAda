@@ -5,23 +5,19 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Objects.Programs;
-with GL.Objects.Vertex_Arrays;
-
-with glfw;
+with Glfw;
 
 with Initialization;
 with Run;
-with Utilities;
 with Window_Types;
 
 procedure A_Dot is
     Main_Window : Window_Types.tWindow;
 begin
-    glfw.Init;
+    Glfw.Init;
     Initialization.Initialize (Main_Window);
     Run.Main_Loop (Main_Window);
-    glfw.Shutdown;
+    Glfw.Shutdown;
 
 exception
     when anError : Constraint_Error =>
