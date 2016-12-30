@@ -4,7 +4,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Context;
 with GL.Errors;
-with GL.Types;
 
 with Glfw;
 with Glfw.Input.Mouse;
