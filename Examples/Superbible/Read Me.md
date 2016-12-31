@@ -1,5 +1,12 @@
+Author: Roger Mc Murtrie
 These examples are based on the listings in OpenGL SuperBible, seventh edition,
 by G. Sellers, R. S. Wright, Jr and N. Haemel, Addison Wesley, 2016 and the associated
-computer code at www.openglsuperbible.com.
-The version mumbers in the shader programs may need modification depending on your
+computer code at www.openglsuperbible.com using Glfw version 3.
+The version numbers in the shader programs may need modification depending on your
 platform.
+
+GNAT Programming Studio (GPS) Considerations
+Use Tools->Views->Scenarios to display the Scenario panel.
+In the Scenario panel set GLFW Version to 3.
+For Mac, in the Scenario panel set Windowing System to quartz.
+
