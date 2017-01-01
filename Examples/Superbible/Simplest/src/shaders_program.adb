@@ -4,6 +4,7 @@ with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Errors;
 with GL.Files;
+with GL.Objects.Programs;
 with GL.Objects.Shaders;
 
 package body Shaders_Program is
@@ -49,6 +50,11 @@ package body Shaders_Program is
 
                 Shader_Program.Link;
                 Linked := Shader_Program.Link_Status;
+                if not Linked then
+                    Put_Line ("Shader linking failed.");
+                    Put_Line ("Log:");
+                    Put_Line (GL.Objects.Programs.Info_Log (Shader_Program));
+                end if;
             end if;
         end if;
 

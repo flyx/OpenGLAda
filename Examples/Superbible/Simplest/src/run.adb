@@ -90,12 +90,8 @@ package body Run is
             gl.Buffers.Set_Depth_Function (gl.Types.Less);
             Vertex_Array.Initialize_Id;
             Vertex_Array.Bind;
-            -- Point size set in vertex shader
+            -- Point size is set in the vertex shader
             gl.Toggles.Enable (gl.Toggles.Vertex_Program_Point_Size);
-        else
-            Put_Line ("Shader program linking failed.");
-            Put_Line ("Log:");
-            Put_Line (Rendering_Program.Info_Log);
         end if;
         Utilities.Show_Shader_Program_Data (Rendering_Program);
         return OK;
