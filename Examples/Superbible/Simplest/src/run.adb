@@ -24,7 +24,7 @@ package body Run is
     package Math_Functions is new Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     procedure Render_Dot (Current_Time : Glfw.Seconds);
-    function Startup (Main_Window : Window_Types.tWindow) return Boolean;
+    function Setup_Graphic (Main_Window : Window_Types.tWindow) return Boolean;
 
     Rendering_Program  : GL.Objects.Programs.Program;
     Vertex_Array       :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -35,7 +35,7 @@ package body Run is
         use Glfw.Input;
         Running : Boolean := True;
     begin
-        if Startup (Main_Window) then
+        if Setup_Graphic (Main_Window) then
             while Running loop
                 Render_Dot (Glfw.Time);
                 glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
@@ -82,7 +82,7 @@ package body Run is
 
     --  ------------------------------------------------------------------------
 
-    function Startup (Main_Window : Window_Types.tWindow) return Boolean is
+    function Setup_Graphic (Main_Window : Window_Types.tWindow) return Boolean is
         OK : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
     begin
         if OK then
@@ -95,7 +95,7 @@ package body Run is
         end if;
         Utilities.Show_Shader_Program_Data (Rendering_Program);
         return OK;
-    end Startup;
+    end Setup_Graphic;
 
     --  ------------------------------------------------------------------------
 
