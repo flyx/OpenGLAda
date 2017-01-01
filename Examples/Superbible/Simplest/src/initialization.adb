@@ -29,15 +29,15 @@ package body Initialization is
 
     --  ------------------------------------------------------------------------------
 
-    procedure Initialize (Main_Window : in out Window_Types.tWindow) is
+    procedure Initialize (Main_Window  : in out Window_Types.tWindow;
+                          Window_Title : String) is
 
         Window_Width     : constant Glfw.Size := 800;
         Window_Height    : constant Glfw.Size := 600;
         Cursor           : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
     begin
         Set_Window_Hints;
-        Main_Window.Init (Window_Width, Window_Height,
-                          "OpenGL SuperBible Centre Square Example");
+        Main_Window.Init (Window_Width, Window_Height, Window_Title);
         glfw.Windows.Context.Make_Current (Main_Window'Access);
         Enable_Callbacks (Main_Window);
 

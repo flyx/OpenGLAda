@@ -13,9 +13,10 @@ with Window_Types;
 
 procedure A_Dot is
     Main_Window : Window_Types.tWindow;
+    Window_Title : String := "OpenGL SuperBible Centre Square Example";
 begin
     Glfw.Init;
-    Initialization.Initialize (Main_Window);
+    Initialization.Initialize (Main_Window, Window_Title);
     Run.Main_Loop (Main_Window);
     Glfw.Shutdown;
 
