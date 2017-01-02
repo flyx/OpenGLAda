@@ -1,4 +1,4 @@
-#version 400
+#version 410
 
 out vec4 fragment_colour;
 
