@@ -24,18 +24,18 @@ package body Run is
     package Math_Functions is new Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     procedure Render_Dot (Current_Time : Glfw.Seconds);
-    function Setup_Graphic (Main_Window : Window_Types.tWindow) return Boolean;
+    function Setup_Graphic return Boolean;
 
     Rendering_Program  : GL.Objects.Programs.Program;
     Vertex_Array       :  GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
     --  ------------------------------------------------------------------------
 
-    procedure Main_Loop (Main_Window :  in out Window_Types.tWindow) is
+    procedure Main_Loop (Main_Window : in out Window_Types.tWindow) is
         use Glfw.Input;
         Running : Boolean := True;
     begin
-        if Setup_Graphic (Main_Window) then
+        if Setup_Graphic then
             while Running loop
                 Render_Dot (Glfw.Time);
                 glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
@@ -82,8 +82,8 @@ package body Run is
 
     --  ------------------------------------------------------------------------
 
-    function Setup_Graphic (Main_Window : Window_Types.tWindow) return Boolean is
-        OK : Boolean := Shaders_Program.Make_Shader_Program (Main_Window, Rendering_Program);
+    function Setup_Graphic return Boolean is
+        OK : Boolean := Shaders_Program.Make_Shader_Program (Rendering_Program);
     begin
         if OK then
             gl.Toggles.Enable (gl.Toggles.Depth_Test);
