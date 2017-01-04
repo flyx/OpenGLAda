@@ -1,8 +1,6 @@
 
 with GL.Objects.Programs;
 
-with Window_Types;
-
 package Shaders_Program is
 
     function Make_Shader_Program
