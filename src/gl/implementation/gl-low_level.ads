@@ -20,9 +20,9 @@ with Interfaces.C.Strings;
 
 package GL.Low_Level is
    pragma Preelaborate;
-   
+
    use GL.Types;
-   
+
    -- This package contains some low-level types that are used by the raw C
    -- interface of the OpenGL API. They are converted to types that are easier
    -- to handle by the wrapper and thus are not needed for using the wrapper.
@@ -51,16 +51,17 @@ package GL.Low_Level is
 
    type Int_Array  is array (Positive range <>) of aliased Int;
    type UInt_Array is array (Positive range <>) of aliased UInt;
-   
+
    -- These types totally are not pointers. No idea why they are named like this.
    subtype IntPtr is C.long;
    subtype SizeIPtr is C.long;
-   
+
    type CharPtr_Array is array (Positive range <>) of aliased C.Strings.chars_ptr;
-   
+
    -- used in API calls
    type Size_Access is access all Types.Size;
    type Bool_Access is access all Bool;
+   subtype Zero is Int range 0 .. 0;
 private
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.unsigned_char'Size;

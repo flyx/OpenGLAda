@@ -4,22 +4,23 @@ library project OpenGL is
    for Languages use ("ada");
 
    for Library_Name use "OpenGLAda";
-   
+
    OpenGL_Sources := ("src/gl/interface",
-                      "src/gl/implementation");
+                      "src/gl/implementation",
+                      "src/gl/generated");
    case OpenGL_Shared.Windowing_System is
       when "windows" => OpenGL_Sources := OpenGL_Sources & "src/gl/windows";
       when "x11"     => OpenGL_Sources := OpenGL_Sources & "src/gl/x11";
       when "quartz"  => OpenGL_Sources := OpenGL_Sources & "src/gl/mac";
    end case;
-   
+
    case OpenGL_Shared.Auto_Exceptions is
       when "enabled" => OpenGL_Sources :=
         OpenGL_Sources & "src/gl/implementation/auto_exceptions";
       when "disabled" => OpenGL_Sources :=
         OpenGL_Sources & "src/gl/implementation/no_auto_exceptions";
    end case;
-   
+
    for Source_Dirs use OpenGL_Sources;
    for Object_Dir use "obj";
    for Library_Dir use "lib";

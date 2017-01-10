@@ -25,6 +25,8 @@ package Glfw is
    Initialization_Exception : exception;
    Operation_Exception      : exception;
 
+   -- for convenience, besides executing GLFW's init procedures, this also calls
+   -- GL.Init.
    procedure Init;
 
    -- because terminate is a keyword in Ada
