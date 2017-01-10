@@ -100,9 +100,6 @@ package GL.Objects.Framebuffers is
    overriding
    procedure Initialize_Id (Object : in out Framebuffer);
 
-   overriding
-   procedure Delete_Id (Object : in out Framebuffer);
-
    procedure Bind (Target : Framebuffer_Target;
                    Object : Framebuffer'Class);
 

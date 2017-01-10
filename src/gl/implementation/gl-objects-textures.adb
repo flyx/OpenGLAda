@@ -235,6 +235,15 @@ package body GL.Objects.Textures is
       end if;
    end Current_Texture;
 
+   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+      Arr : constant Low_Level.UInt_Array := (1 => Reference.GL_Id);
+   begin
+      API.Delete_Textures (1, Arr);
+      Raise_Exception_On_OpenGL_Error;
+      Reference.GL_Id := 0;
+      Reference.Initialized := Uninitialized;
+   end Destructor;
+
    procedure Initialize_Id (Object : in out Texture) is
       New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
    begin
@@ -242,16 +251,8 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id (1);
       Object.Reference.Initialized := Allocated;
+      Object.Reference.Destructor := Destructor'Access;
    end Initialize_Id;
-
-   procedure Delete_Id (Object : in out Texture) is
-      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
-   begin
-      API.Delete_Textures (1, Arr);
-      Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := Uninitialized;
-      Raise_Exception_On_OpenGL_Error;
-   end Delete_Id;
 
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level) is
    begin

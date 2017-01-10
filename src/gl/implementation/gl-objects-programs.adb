@@ -268,19 +268,20 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Use_Program;
 
+   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   begin
+      API.Delete_Program (Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+      Reference.GL_Id := 0;
+      Reference.Initialized := Uninitialized;
+   end Destructor;
+
    procedure Initialize_Id (Object : in out Program) is
    begin
-      Object.Reference.GL_Id := API.Create_Program;
+      Object.Reference.GL_Id := API.Create_Program.all;
       Object.Reference.Initialized := Allocated;
+      Object.Reference.Destructor := Destructor'Access;
    end Initialize_Id;
-
-   procedure Delete_Id (Object : in out Program) is
-   begin
-      API.Delete_Program (Object.Reference.GL_Id);
-      Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := Uninitialized;
-      Raise_Exception_On_OpenGL_Error;
-   end Delete_Id;
 
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform is
@@ -315,12 +316,14 @@ package body GL.Objects.Programs is
       API.Get_Program_Param (Object.Reference.GL_Id, Enums.Attached_Shaders,
                              Shader_Count);
       Raise_Exception_On_OpenGL_Error;
-
-      return List : constant Shaders.Lists.List := Shaders.Lists.Create
-        (API.Get_Attached_Shaders (Object.Reference.GL_Id,
-                                   Size (Shader_Count))) do
+      declare
+         Raw_List : UInt_Array (1 .. Shader_Count);
+      begin
+         API.Get_Attached_Shaders (Object.Reference.GL_Id,
+                                   Size (Shader_Count), Shader_Count, Raw_List);
          Raise_Exception_On_OpenGL_Error;
-      end return;
+         return Shaders.Lists.Create (Raw_List (1 .. Shader_Count));
+      end;
    end Attached_Shaders;
 
 end GL.Objects.Programs;

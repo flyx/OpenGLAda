@@ -43,4 +43,12 @@ package body GL.Objects.Textures.With_3D_Loader is
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
 
+   procedure Storage (Object : Target; Levels : Types.Size;
+                      Internal_Format : Pixels.Internal_Format;
+                      Width, Height, Depth : Types.Size) is
+   begin
+      API.Tex_Storage_3D (Texture_Proxy (Object).Kind, Levels, Internal_Format,
+                          Width, Height, Depth);
+      Raise_Exception_On_OpenGL_Error;
+   end Storage;
 end GL.Objects.Textures.With_3D_Loader;

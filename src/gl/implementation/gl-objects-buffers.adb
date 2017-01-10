@@ -99,11 +99,10 @@ package body GL.Objects.Buffers is
 
    procedure Map (Target : in out Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
-      function Map_Buffer is new API.Loader.Function_With_2_Params
-        ("glMapBuffer", Low_Level.Enums.Buffer_Kind, Objects.Access_Kind,
-         Pointers.Pointer);
+      function To_Pointer is new Ada.Unchecked_Conversion
+        (System.Address, Pointers.Pointer);
    begin
-      Pointer := Map_Buffer (Target.Kind, Access_Type);
+      Pointer := To_Pointer (API.Map_Buffer (Target.Kind, Access_Type));
       Raise_Exception_On_OpenGL_Error;
    end Map;
 
@@ -114,25 +113,22 @@ package body GL.Objects.Buffers is
    end Unmap;
 
    function Pointer (Target : Buffer_Target) return Pointers.Pointer is
-      procedure Buffer_Pointer is new API.Loader.Getter_With_3_Params
-        ("glGetBufferPointerv", Low_Level.Enums.Buffer_Kind,
-         Enums.Buffer_Pointer_Param, Pointers.Pointer);
-      Ret : Pointers.Pointer := null;
+      function To_Pointer is new Ada.Unchecked_Conversion
+        (System.Address, Pointers.Pointer);
+      Ret : System.Address := System.Null_Address;
    begin
-      Buffer_Pointer (Target.Kind, Enums.Buffer_Map_Pointer, Ret);
+      API.Buffer_Pointer (Target.Kind, Enums.Buffer_Map_Pointer, Ret);
       Raise_Exception_On_OpenGL_Error;
-      return Ret;
+      return To_Pointer (Ret);
    end Pointer;
 
    procedure Get_Sub_Data (Target : in out Buffer_Target;
                            Offset : Types.Size;
                            Data   : in out Pointers.Element_Array) is
-      procedure Buffer_Sub_Data is new API.Loader.Getter_With_4_Params
-        ("glBufferSubData", Low_Level.Enums.Buffer_Kind, Low_Level.IntPtr,
-         Low_Level.SizeIPtr, Pointers.Element_Array);
    begin
-      Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
-                       Low_Level.SizeIPtr (Data'Length), Data);
+      API.Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
+                           Low_Level.SizeIPtr (Data'Length),
+                           Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Get_Sub_Data;
 
@@ -169,6 +165,13 @@ package body GL.Objects.Buffers is
       return Ret;
    end Usage;
 
+   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   begin
+      API.Delete_Buffers (1, (1 => Reference.GL_Id));
+      Raise_Exception_On_OpenGL_Error;
+      Reference.Initialized := Uninitialized;
+   end Destructor;
+
    overriding procedure Initialize_Id (Object : in out Buffer) is
       New_Id : UInt := 0;
    begin
@@ -176,14 +179,8 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
       Object.Reference.Initialized := Allocated;
+      Object.Reference.Destructor := Destructor'Access;
    end Initialize_Id;
-
-   overriding procedure Delete_Id (Object : in out Buffer) is
-   begin
-      API.Delete_Buffers (1, (1 => Object.Reference.GL_Id));
-      Raise_Exception_On_OpenGL_Error;
-      Object.Reference.Initialized := Uninitialized;
-   end Delete_Id;
 
    procedure Invalidate_Data (Object : in out Buffer) is
    begin

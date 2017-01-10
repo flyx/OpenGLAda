@@ -45,7 +45,7 @@ package GL.Objects is
 
    -- Deletes the ID of an object. After calling this procedure,
    -- Initialized will be false.
-   procedure Delete_Id (Object : in out GL_Object) is abstract;
+   procedure Delete_Id (Object : in out GL_Object);
 
    -- Check whether the object is set up to be used with OpenGL
    -- (i.e. whether Initialize_Id has been called on the object).
@@ -69,13 +69,18 @@ private
 
    type Initialization_Kind is (Uninitialized, Allocated, External);
 
+   type GL_Object_Reference;
+   type GL_Object_Reference_Access is access all GL_Object_Reference;
+
+   type Destructor_Procedure is access
+     procedure (Reference : not null GL_Object_Reference_Access);
+
    type GL_Object_Reference is record
       GL_Id           : UInt;
       Reference_Count : Natural;
       Initialized     : Initialization_Kind := Uninitialized;
+      Destructor      : Destructor_Procedure;
    end record;
-
-   type GL_Object_Reference_Access is access all GL_Object_Reference;
 
    type GL_Object is abstract new Ada.Finalization.Controlled with record
       Reference : GL_Object_Reference_Access;
@@ -83,5 +88,4 @@ private
 
    pragma Inline (Raw_Id);
    pragma Inline (Set_Raw_Id);
-
 end GL.Objects;

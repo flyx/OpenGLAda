@@ -15,28 +15,25 @@
 --------------------------------------------------------------------------------
 
 package GL.Objects.Vertex_Arrays is
-   
+
    type Vertex_Array_Object is new GL_Object with private;
-   
+
    procedure Bind (Object : Vertex_Array_Object);
-   
+
    procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Size);
-   
+
    function Current_Array_Object return Vertex_Array_Object;
-   
+
    overriding
    procedure Initialize_Id (Object : in out Vertex_Array_Object);
-   
-   overriding
-   procedure Delete_Id (Object : in out Vertex_Array_Object);
-   
+
    -- bind this object to unbind the current array object.
    Null_Array_Object : constant Vertex_Array_Object;
 private
    type Vertex_Array_Object is new GL_Object with null record;
-   
+
    Null_Array_Object : constant Vertex_Array_Object
      := Vertex_Array_Object'(Ada.Finalization.Controlled with
         Reference => null);
-   
+
 end GL.Objects.Vertex_Arrays;

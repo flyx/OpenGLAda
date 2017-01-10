@@ -17,6 +17,14 @@ LIBRARY_TYPE ?= static
 
 all: compile
 
+bin/generate: src/generator/generate.adb src/generator/specs.adb \
+              src/generator/specs.ads src/generator/tokenization.adb \
+							src/generator/tokenization.ads
+	${GPRBUILD} -P generate.gpr
+
+generate: bin/generate
+	bin/generate
+
 compile:
 	mkdir -p lib
 	mkdir -p obj
@@ -30,4 +38,4 @@ tests:
 	${GPRBUILD} -P glfw_test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 	${GPRBUILD} -P opengl_test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 
-.PHONY: tests
+.PHONY: generate compile clean tests

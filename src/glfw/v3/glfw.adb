@@ -16,6 +16,8 @@
 
 with Glfw.Api;
 
+with GL;
+
 with Interfaces.C.Strings;
 
 package body Glfw is
@@ -25,6 +27,7 @@ package body Glfw is
       if Api.Init = 0 then
          raise Initialization_Exception;
       end if;
+      GL.Init;
    end Init;
 
    procedure Shutdown is

@@ -18,25 +18,31 @@ with Interfaces.C;
 
 package GL is
    pragma Preelaborate;
-   
+
    package C renames Interfaces.C;
-   
+
    -----------------------------------------------------------------------------
    --                                 Basics                                  --
    -----------------------------------------------------------------------------
-   
+
+   -- this is an OpenGLAda-specific procedure that must be called once at
+   -- startup and loads all function pointers for post-1.1 OpenGL functionality.
+   -- it is idempotent (i.e. can be called multiple times without further
+   -- effect).
+   procedure Init;
+
    procedure Flush;
    procedure Finish;
-   
+
    -- index types for vectors and matrices
    type Index_Homogeneous is (X, Y, Z, W);
    subtype Index_3D is Index_Homogeneous range X .. Z;
    subtype Index_2D is Index_Homogeneous range X .. Y;
-   
+
    -- raised when a function that is not available for the current context
    -- is called.
    Feature_Not_Supported_Exception : exception;
-   
+
    -- raised when OpenGLAda does not support a certain OpenGL feature
    -- (either because it's too new and has not yet been wrapped, or because
    -- it's so deprecated that you shouldn't use it anyway)

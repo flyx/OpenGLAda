@@ -28,6 +28,10 @@ package GL.Objects.Textures.With_1D_Loader is
       Internal_Format : Pixels.Internal_Format;
       Width : Types.Size);
 
+   procedure Storage (Object : Target; Levels : Types.Size;
+                      Internal_Format : Pixels.Internal_Format;
+                      Width : Types.Size);
+
    type Fillable_Target is new With_1D_Loader.Target with null record;
 
    procedure Load_From_Data

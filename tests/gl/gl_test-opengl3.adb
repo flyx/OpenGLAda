@@ -75,9 +75,16 @@ procedure GL_Test.OpenGL3 is
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
    end Load_Data;
 
-   procedure Load_Shaders (Vertex_Shader, Fragment_Shader : GL.Objects.Shaders.Shader;
-                           Program : GL.Objects.Programs.Program) is
+   procedure Load_Shaders (Program :out GL.Objects.Programs.Program) is
+      Vertex_Shader   : GL.Objects.Shaders.Shader
+        (Kind => GL.Objects.Shaders.Vertex_Shader);
+      Fragment_Shader : GL.Objects.Shaders.Shader
+        (Kind => GL.Objects.Shaders.Fragment_Shader);
    begin
+      Vertex_Shader.Initialize_Id;
+      Fragment_Shader.Initialize_Id;
+      Program.Initialize_Id;
+
       -- load shader sources and compile shaders
       GL.Files.Load_Shader_Source_From_File
         (Vertex_Shader, "../tests/gl/gl_test-opengl3-vertex.glsl");
@@ -90,9 +97,6 @@ procedure GL_Test.OpenGL3 is
       if not Vertex_Shader.Compile_Status then
          Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
          Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
-      else
-         Ada.Text_IO.Put_Line("Compilation of vertex shader succeeded. source:");
-         Ada.Text_IO.Put_Line(Vertex_Shader.Source);
       end if;
 
       if not Fragment_Shader.Compile_Status then
@@ -114,12 +118,7 @@ procedure GL_Test.OpenGL3 is
       Program.Use_Program;
    end Load_Shaders;
 
-
-   Vertex_Shader   : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Vertex_Shader);
-   Fragment_Shader : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Fragment_Shader);
-   Program         : GL.Objects.Programs.Program;
+   Program : GL.Objects.Programs.Program;
 
    Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffers.Buffer;
    Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -129,9 +128,6 @@ begin
    Display_Backend.Open_Window (Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
-   Vertex_Shader.Initialize_Id;
-   Fragment_Shader.Initialize_Id;
-   Program.Initialize_Id;
    Vector_Buffer1.Initialize_Id;
    Vector_Buffer2.Initialize_Id;
    Color_Buffer.Initialize_Id;
@@ -140,7 +136,7 @@ begin
 
    Ada.Text_IO.Put_Line ("Initialized objects");
 
-   Load_Shaders (Vertex_Shader, Fragment_Shader, Program);
+   Load_Shaders (Program);
 
    Ada.Text_IO.Put_Line ("Loaded shaders");
 

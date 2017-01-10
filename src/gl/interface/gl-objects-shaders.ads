@@ -18,29 +18,26 @@ private with GL.Low_Level;
 
 package GL.Objects.Shaders is
    pragma Preelaborate;
-   
+
    type Shader_Type is (Fragment_Shader, Vertex_Shader, Geometry_Shader,
                         Tess_Evaluation_Shader, Tess_Control_Shader);
-   
+
    type Shader (Kind : Shader_Type) is new GL_Object with private;
-   
+
    procedure Set_Source (Subject : Shader; Source : String);
    function Source (Subject : Shader) return String;
-   
+
    procedure Compile (Subject : Shader);
-   
+
    procedure Release_Shader_Compiler;
-   
+
    function Compile_Status (Subject : Shader) return Boolean;
-   
+
    function Info_Log (Subject : Shader) return String;
-   
+
    overriding
    procedure Initialize_Id (Object : in out Shader);
-   
-   overriding
-   procedure Delete_Id (Object : in out Shader);
-   
+
    -- low-level
    function Create_From_Id (Id : UInt) return Shader;
 private
@@ -52,5 +49,5 @@ private
                         Tess_Evaluation_Shader => 16#8E87#,
                         Tess_Control_Shader    => 16#8E88#);
    for Shader_Type'Size use Low_Level.Enum'Size;
-   
+
 end GL.Objects.Shaders;
