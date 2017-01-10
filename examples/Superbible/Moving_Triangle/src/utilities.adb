@@ -10,7 +10,7 @@ with GL.Types; use  GL.Types;
 
 package body Utilities is
 
-procedure Show_GL_Data is
+    procedure Show_GL_Data is
         GL_Version               : Unbounded_String;
         Renderer                 : Unbounded_String;
         Shading_Language_Version : Unbounded_String;
@@ -68,4 +68,4 @@ procedure Show_GL_Data is
 
     --  ------------------------------------------------------------------------
 
-    end Utilities;
+end Utilities;
