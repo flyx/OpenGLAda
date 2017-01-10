@@ -22,7 +22,8 @@ package body GL.Objects is
    begin
       Object.Reference :=
         new GL_Object_Reference'(GL_Id => 0, Reference_Count => 1,
-                                 Initialized => Uninitialized);
+                                 Initialized => Uninitialized,
+                                 Destructor => null);
    end Initialize;
 
    overriding procedure Adjust (Object : in out GL_Object) is
@@ -42,7 +43,7 @@ package body GL.Objects is
          Reference.Reference_Count := Reference.Reference_Count - 1;
          if Reference.Reference_Count = 0 then
             if Reference.Initialized = Allocated then
-               Delete_Id (GL_Object'Class (Object));
+               Reference.Destructor (Reference);
             end if;
             Free (Reference);
          end if;
@@ -68,5 +69,13 @@ package body GL.Objects is
    begin
       return Left.Reference = Right.Reference;
    end "=";
+
+   procedure Delete_Id (Object : in out GL_Object) is
+   begin
+      if Object.Reference /= null and then Object.Reference.Destructor /= null
+        then
+         Object.Reference.Destructor (Object.Reference);
+      end if;
+   end Delete_Id;
 
 end GL.Objects;

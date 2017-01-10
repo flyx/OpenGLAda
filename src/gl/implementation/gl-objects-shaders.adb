@@ -91,20 +91,21 @@ package body GL.Objects.Shaders is
       end if;
    end Info_Log;
 
+   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   begin
+      API.Delete_Shader (Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+      Reference.GL_Id := 0;
+      Reference.Initialized := Uninitialized;
+   end Destructor;
+
    procedure Initialize_Id (Object : in out Shader) is
    begin
       Object.Reference.GL_Id := API.Create_Shader (Object.Kind);
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.Initialized := Allocated;
+      Object.Reference.Destructor := Destructor'Access;
    end Initialize_Id;
-
-   procedure Delete_Id (Object : in out Shader) is
-   begin
-      API.Delete_Shader (Object.Reference.GL_Id);
-      Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := Uninitialized;
-      Raise_Exception_On_OpenGL_Error;
-   end Delete_Id;
 
    function Create_From_Id (Id : UInt) return Shader is
       Kind : Shader_Type := Shader_Type'First;

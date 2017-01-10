@@ -39,6 +39,15 @@ package body GL.Objects.Vertex_Arrays is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Arrays;
 
+   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+      Arr : constant Low_Level.UInt_Array := (1 => Reference.GL_Id);
+   begin
+      API.Delete_Vertex_Arrays (1, Arr);
+      Raise_Exception_On_OpenGL_Error;
+      Reference.GL_Id := 0;
+      Reference.Initialized := Uninitialized;
+   end Destructor;
+
    procedure Initialize_Id (Object : in out Vertex_Array_Object) is
       New_Id : UInt := 0;
    begin
@@ -46,19 +55,11 @@ package body GL.Objects.Vertex_Arrays is
       Raise_Exception_On_OpenGL_Error;
       Object.Reference.GL_Id := New_Id;
       Object.Reference.Initialized := Allocated;
+      Object.Reference.Destructor := Destructor'Access;
    end Initialize_Id;
 
    function Current_Array_Object return Vertex_Array_Object is
    begin
       return Current_Object;
    end Current_Array_Object;
-
-   procedure Delete_Id (Object : in out Vertex_Array_Object) is
-      Arr : constant Low_Level.UInt_Array := (1 => Object.Reference.GL_Id);
-   begin
-      API.Delete_Vertex_Arrays (1, Arr);
-      Object.Reference.GL_Id := 0;
-      Object.Reference.Initialized := Uninitialized;
-      Raise_Exception_On_OpenGL_Error;
-   end Delete_Id;
 end GL.Objects.Vertex_Arrays;

@@ -116,9 +116,6 @@ package GL.Objects.Programs is
 
    overriding
    procedure Initialize_Id (Object : in out Program);
-
-   overriding
-   procedure Delete_Id (Object : in out Program);
 private
    Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;
 

@@ -53,9 +53,6 @@ package GL.Objects.Renderbuffers is
    overriding
    procedure Initialize_Id (Object : in out Renderbuffer);
 
-   overriding
-   procedure Delete_Id (Object : in out Renderbuffer);
-
    No_Renderbuffer : constant Renderbuffer;
 private
 

@@ -46,19 +46,19 @@ package GL.Objects.Textures is
    subtype Priority is Double range 0.0 .. 1.0;
 
    type Depth_Mode is (Alpha, Luminance, Intensity);
-   
+
    -- Actual range is implementation-defined.
    --  OpenGL 2.x: At least 2
    --  OpenGL 3.x: At least 48
    --  OpenGL 4.x: At least 80
    subtype Texture_Unit is Int range 0 .. Int'Last;
-   
+
    subtype Mipmap_Level is Int range 0 .. Int'Last;
-   
+
    -----------------------------------------------------------------------------
    --                          Texture Proxies                                --
    -----------------------------------------------------------------------------
-   
+
    -- IMPORTANT: This type is not private because of a GNAT bug:
    --   http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58881
    -- DO NOT depend on the discriminant Kind to be visible. If you need this
@@ -66,16 +66,16 @@ package GL.Objects.Textures is
    --type Texture_Proxy (<>) is tagged limited private;
    type Texture_Proxy (Kind : Low_Level.Enums.Texture_Kind) is
      tagged limited null record;
-   
+
    function Width (Object : Texture_Proxy; Level : Mipmap_Level) return Size;
-   
+
    function Height (Object : Texture_Proxy; Level : Mipmap_Level) return Size;
-   
+
    function Depth (Object : Texture_Proxy; Level : Mipmap_Level) return Size;
-   
+
    function Format (Object : Texture_Proxy; Level : Mipmap_Level)
                     return Pixels.Internal_Format;
-   
+
    function Red_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                       return Pixels.Channel_Data_Type;
    function Green_Type (Object : Texture_Proxy; Level : Mipmap_Level)
@@ -86,7 +86,7 @@ package GL.Objects.Textures is
                         return Pixels.Channel_Data_Type;
    function Depth_Type (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Pixels.Channel_Data_Type;
-   
+
    function Red_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                       return Size;
    function Green_Size (Object : Texture_Proxy; Level : Mipmap_Level)
@@ -97,24 +97,24 @@ package GL.Objects.Textures is
                         return Size;
    function Depth_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Size;
-   
+
    function Compressed (Object : Texture_Proxy; Level : Mipmap_Level)
                         return Boolean;
    function Compressed_Image_Size (Object : Texture_Proxy; Level : Mipmap_Level)
                                    return Size;
-   
+
    function Raw_Kind (Object : Texture_Proxy)
                       return Low_Level.Enums.Texture_Kind;
 
    -----------------------------------------------------------------------------
    --                          Texture Targets                                --
    -----------------------------------------------------------------------------
-   
+
    -- IMPORTANT: See note at Texture_Proxy
    --type Texture_Target (<>) is new Texture_Proxy with private;
    type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is
      new Texture_Proxy (Kind) with null record;
-   
+
    procedure Set_Minifying_Filter (Target : Texture_Target;
                                    Filter : Minifying_Function);
    function Minifying_Filter (Target : Texture_Target)
@@ -172,42 +172,39 @@ package GL.Objects.Textures is
    procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target;
                                        Enabled : Boolean);
    function Mipmap_Autoupdate_Enabled (Target : Texture_Target) return Boolean;
-   
+
    procedure Generate_Mipmap (Target : Texture_Target);
-   
+
    function Raw_Type (Target : Texture_Target)
                       return Low_Level.Enums.Texture_Kind;
-   
+
    -----------------------------------------------------------------------------
    --                          Texture Objects                                --
    -----------------------------------------------------------------------------
-   
+
    type Texture is new GL_Object with private;
-   
+
    procedure Bind (Target : Texture_Target; Object : Texture'Class);
-   
+
    function Current_Texture (Target : Texture_Target) return Texture'Class;
-   
+
    overriding
    procedure Initialize_Id (Object : in out Texture);
-   
-   overriding
-   procedure Delete_Id (Object : in out Texture);
-   
+
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level);
-   
+
    procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
                                    X, Y, Z : Int; Width, Height, Depth : Size);
-   
+
    -----------------------------------------------------------------------------
    --                            Texture Units                                --
    -----------------------------------------------------------------------------
-   
+
    procedure Set_Active_Unit (Unit : Texture_Unit);
    function Active_Unit return Texture_Unit;
-   
+
    function Texture_Unit_Count return Natural;
-   
+
 private
 
    for Wrapping_Mode use (Clamp           => 16#2900#,
@@ -221,13 +218,13 @@ private
                        Luminance => 16#1909#,
                        Intensity => 16#8049#);
    for Depth_Mode'Size use Int'Size;
-   
+
    --type Texture_Proxy (Kind : Low_Level.Enums.Texture_Kind) is
    --  tagged limited null record;
-   
+
    --type Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is
    --  new Texture_Proxy (Kind) with null record;
 
    type Texture is new GL_Object with null record;
-   
+
 end GL.Objects.Textures;
