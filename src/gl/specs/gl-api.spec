@@ -489,6 +489,18 @@ spec GL.API is
      (Texture : UInt; Level : Objects.Textures.Mipmap_Level;
       X_Offset, Y_Offset, Z_Offset : Int; Width, Height, Depth : Size) is
      Dynamic ("glInvalidateTexSubImage");
+   procedure Tex_Storage_1D
+     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+      Internal_Format : Pixels.Internal_Format;
+      Width : Size) is Dynamic ("glTexStorage1D");
+   procedure Tex_Storage_2D
+     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+      Internal_Format : Pixels.Internal_Format;
+      Width, Height : Size) is Dynamic ("glTexStorage2D");
+   procedure Tex_Storage_3D
+     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+      Internal_Format : Pixels.Internal_Format;
+      Width, Height, Depth : Size) is Dynamic ("glTexStorage3D");
 
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
