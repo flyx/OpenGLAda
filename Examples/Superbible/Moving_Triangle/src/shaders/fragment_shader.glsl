@@ -6,5 +6,4 @@
 void main()
 {
    fragment_colour = vs_colour;
-   //  fragment_colour = vec4(0.5, 0.0, 0.5, 1.0);
 }
