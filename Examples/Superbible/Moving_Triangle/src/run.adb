@@ -44,8 +44,9 @@ package body Run is
                 Render_Triangle (Glfw.Time);
                 Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
                 Glfw.Input.Poll_Events;
-                Running := Running and not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
-                Running := Running and not Main_Window.Should_Close;
+                Running := Running and then
+                not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+                Running := Running and then not Main_Window.Should_Close;
             end loop;
         end if;
         --  Deleting the following two lines causes a PROGRAM_ERROR
