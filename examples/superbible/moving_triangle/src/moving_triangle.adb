@@ -8,16 +8,16 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Glfw;
 with Glfw.Windows;
 
-with Initialization;
-with Run;
+with Initialize;
+with Main_Loop;
 
 procedure Moving_Triangle is
     Main_Window : Glfw.Windows.Window;
     Window_Title : String := "OpenGL SuperBible Moving Triangle Example";
 begin
     Glfw.Init;
-    Initialization.Initialize (Main_Window, Window_Title);
-    Run.Main_Loop (Main_Window);
+    Initialize (Main_Window, Window_Title);
+    Main_Loop (Main_Window);
     Glfw.Shutdown;
 
 exception
