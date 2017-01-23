@@ -2,6 +2,10 @@ lib
 obj
 bin
 .DS_Store
+<<<<<<< HEAD
 .#*#
 a_dot
 moving_triangle
+=======
+.#*#
+>>>>>>> flyx/master
