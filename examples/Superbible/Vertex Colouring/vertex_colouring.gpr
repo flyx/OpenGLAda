@@ -1,4 +1,4 @@
-limited with "../../../Ada_Source/OpenGLAda/opengl-glfw.gpr";
+limited with "../../../opengl-glfw.gpr";
 
 project Vertex_Colouring is
 
