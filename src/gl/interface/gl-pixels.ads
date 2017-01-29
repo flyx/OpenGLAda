@@ -57,8 +57,12 @@ package GL.Pixels is
                             RG8_SNorm, RGB8_SNorm, RGBA8_SNorm, R16_SNorm,
                             RG16_SNorm, RGB16_SNorm, RGBA16_SNorm, RGB10_A2UI);
 
-   type Format is (Color_Index, Red, Green, Blue, Alpha, RGB, RGBA,
-                   Luminance, Luminance_Alpha, BGR, BGRA);
+   type Framebuffer_Format is (Color_Index, Red, Green, Blue, Alpha, RGB, RGBA,
+                               Luminance, Luminance_Alpha, BGR, BGRA);
+
+   type Data_Format is (Stencil_Index, Depth_Component, Red, RGB, RGBA, BGR,
+                        BGRA, RG, RG_Integer, Depth_Stencil, Red_Integer,
+                        RGB_Integer, RGBA_Integer, BGR_Integer, BGRA_Integer);
 
    type Data_Type is (Byte, Unsigned_Byte, Short, Unsigned_Short, Int,
                       Unsigned_Int, Float, Bitmap, Unsigned_Byte_3_3_2,
@@ -254,18 +258,35 @@ private
                             RGB10_A2UI => 16#906F#);
    for Internal_Format'Size use GL.Types.Int'Size;
 
-   for Format use (Color_Index     => 16#1900#,
-                   Red             => 16#1903#,
-                   Green           => 16#1904#,
-                   Blue            => 16#1905#,
-                   Alpha           => 16#1906#,
-                   RGB             => 16#1907#,
-                   RGBA            => 16#1908#,
-                   Luminance       => 16#1909#,
-                   Luminance_Alpha => 16#190A#,
-                   BGR             => 16#80E0#,
-                   BGRA            => 16#80E1#);
-   for Format'Size use Low_Level.Enum'Size;
+   for Framebuffer_Format use (Color_Index     => 16#1900#,
+                               Red             => 16#1903#,
+                               Green           => 16#1904#,
+                               Blue            => 16#1905#,
+                               Alpha           => 16#1906#,
+                               RGB             => 16#1907#,
+                               RGBA            => 16#1908#,
+                               Luminance       => 16#1909#,
+                               Luminance_Alpha => 16#190A#,
+                               BGR             => 16#80E0#,
+                               BGRA            => 16#80E1#);
+   for Framebuffer_Format'Size use Low_Level.Enum'Size;
+
+   for Data_Format use (Stencil_Index   => 16#1901#,
+                        Depth_Component => 16#1902#,
+                        Red             => 16#1903#,
+                        RGB             => 16#1907#,
+                        RGBA            => 16#1908#,
+                        BGR             => 16#80E0#,
+                        BGRA            => 16#80E1#,
+                        RG              => 16#8227#,
+                        RG_Integer      => 16#8228#,
+                        Depth_Stencil   => 16#84F9#,
+                        Red_Integer     => 16#8D94#,
+                        RGB_Integer     => 16#8D98#,
+                        RGBA_Integer    => 16#8D99#,
+                        BGR_Integer     => 16#8D9A#,
+                        BGRA_Integer    => 16#8D9B#);
+   for Data_Format'Size use Low_Level.Enum'Size;
 
    for Data_Type use (Byte           => 16#1400#,
                       Unsigned_Byte  => 16#1401#,

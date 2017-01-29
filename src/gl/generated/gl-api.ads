@@ -203,7 +203,7 @@ private package GL.API is
    pragma Convention (StdCall, T88);
    type T89 is access procedure (P1 : Culling.Face_Selector; P2 : UInt);
    pragma Convention (StdCall, T89);
-   type T90 is access procedure (P1 : Low_Level.Enums.Texture_Kind; P2 : Objects.Textures.Mipmap_Level; P3 : Pixels.Internal_Format; P4, P5, P6 : Size; P7 : Int; P8 : Pixels.Format; P9 : Pixels.Data_Type; P10 : System.Address);
+   type T90 is access procedure (P1 : Low_Level.Enums.Texture_Kind; P2 : Objects.Textures.Mipmap_Level; P3 : Pixels.Internal_Format; P4, P5, P6 : Size; P7 : Int; P8 : Pixels.Data_Format; P9 : Pixels.Data_Type; P10 : System.Address);
    pragma Convention (StdCall, T90);
    type T91 is access procedure (P1 : Int);
    pragma Convention (StdCall, T91);
@@ -557,9 +557,9 @@ private package GL.API is
    pragma Import (StdCall, Bind_Texture, "glBindTexture");
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array);
    pragma Import (StdCall, Delete_Textures, "glDeleteTextures");
-   procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width : Size; Border : Int; Format : Pixels.Format; Data_Type : Pixels.Data_Type; Data : System.Address);
+   procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width : Size; Border : Int; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : System.Address);
    pragma Import (StdCall, Tex_Image_1D, "glTexImage1D");
-   procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width, Height : Size; Border : Int; Format : Pixels.Format; Data_Type : Pixels.Data_Type; Data : System.Address);
+   procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width, Height : Size; Border : Int; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : System.Address);
    pragma Import (StdCall, Tex_Image_2D, "glTexImage2D");
    Tex_Image_3D : T90;
    procedure Tex_Env_Float (Target : Enums.Textures.Env_Target; Param_Name : Enums.Textures.Env_Parameter; Value : Single);
@@ -619,7 +619,7 @@ private package GL.API is
    Bind_Renderbuffer : T119;
    Get_Renderbuffer_Parameter_Int : T120;
    Get_Renderbuffer_Parameter_Internal_Format : T121;
-   procedure Read_Pixels (X, Y : Int; Width, Height : Size; Format : Pixels.Format; Data_Type : Pixels.Data_Type; Data : System.Address);
+   procedure Read_Pixels (X, Y : Int; Width, Height : Size; Format : Pixels.Framebuffer_Format; Data_Type : Pixels.Data_Type; Data : System.Address);
    pragma Import (StdCall, Read_Pixels, "glReadPixels");
    procedure Logic_Op (Value : Framebuffer.Logic_Op);
    pragma Import (StdCall, Logic_Op, "glLogicOp");

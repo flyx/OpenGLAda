@@ -46,7 +46,7 @@ package GL.Framebuffer is
       type Index_Type is (<>);
       type Array_Type is array (Index_Type range <>) of aliased Element_Type;
    procedure Read_Pixels (X, Y : Int; Width, Height : Size;
-                          Format : Pixels.Format;
+                          Format : Pixels.Framebuffer_Format;
                           Data_Type : Pixels.Data_Type; Data : Array_Type);
 
    procedure Set_Logic_Op_Mode (Value : Logic_Op);
