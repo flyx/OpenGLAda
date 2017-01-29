@@ -40,7 +40,7 @@ package body GL.Framebuffer is
 
    procedure Read_Pixels (X, Y : Int;
                           Width, Height : Size;
-                          Format : Pixels.Format;
+                          Format : Pixels.Framebuffer_Format;
                           Data_Type : Pixels.Data_Type;
                           Data : Array_Type) is
    begin

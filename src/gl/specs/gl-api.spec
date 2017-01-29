@@ -409,7 +409,7 @@ spec GL.API is
                            Internal_Format : Pixels.Internal_Format;
                            Width  : Size;
                            Border : Int;
-                           Format : Pixels.Format;
+                           Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
                            Data   : System.Address) is Static ("glTexImage1D");
    procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind;
@@ -417,7 +417,7 @@ spec GL.API is
                            Internal_Format : Pixels.Internal_Format;
                            Width, Height : Size;
                            Border : Int;
-                           Format : Pixels.Format;
+                           Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
                            Data : System.Address) is Static ("glTexImage2D");
    procedure Tex_Image_3D (Target : Low_Level.Enums.Texture_Kind;
@@ -425,7 +425,7 @@ spec GL.API is
                            Internal_Format : Pixels.Internal_Format;
                            Width, Height, Depth : Size;
                            Border : Int;
-                           Format : Pixels.Format;
+                           Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
                            Data : System.Address) is Dynamic ("glTexImage3D");
    procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
@@ -597,7 +597,8 @@ spec GL.API is
    -----------------------------------------------------------------------------
 
    procedure Read_Pixels (X, Y : Int; Width, Height : Size;
-                          Format : Pixels.Format; Data_Type : Pixels.Data_Type;
+                          Format : Pixels.Framebuffer_Format;
+                          Data_Type : Pixels.Data_Type;
                           Data : System.Address) is Static ("glReadPixels");
    procedure Logic_Op (Value : Framebuffer.Logic_Op) is Static ("glLogicOp");
    procedure Clamp_Color (Target: Enums.Clamp_Color_Param;
