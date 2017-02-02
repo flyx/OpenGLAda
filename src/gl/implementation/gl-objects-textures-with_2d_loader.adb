@@ -24,8 +24,10 @@ package body GL.Objects.Textures.With_2D_Loader is
                                  Width, Height   : Types.Size) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, 0, Pixels.Format'First,
+                        Width, Height, 0, Pixels.Data_Format'First,
                         Pixels.Data_Type'First, System.Null_Address);
+      --raise Program_Error with "Kind => " & Texture_Proxy (Object).Kind'Img &
+      --  ", Type => " & Pixels.Data_Type'First'Img;
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 
@@ -33,7 +35,7 @@ package body GL.Objects.Textures.With_2D_Loader is
                              Level : Mipmap_Level;
                              Internal_Format : Pixels.Internal_Format;
                              Width, Height : Types.Size;
-                             Source_Format : Pixels.Format;
+                             Source_Format : Pixels.Data_Format;
                              Source_Type   : Pixels.Data_Type;
                              Source        : System.Address) is
    begin

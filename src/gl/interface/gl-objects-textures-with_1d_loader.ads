@@ -38,7 +38,7 @@ package GL.Objects.Textures.With_1D_Loader is
      (Object : Fillable_Target; Level : Mipmap_Level;
       Internal_Format : Pixels.Internal_Format;
       Width : Types.Size;
-      Source_Format : Pixels.Format;
+      Source_Format : Pixels.Data_Format;
       Source_Type   : Pixels.Data_Type;
       Source        : System.Address);
 end GL.Objects.Textures.With_1D_Loader;
