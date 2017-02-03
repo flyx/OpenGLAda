@@ -3,3 +3,5 @@ obj
 bin
 .DS_Store
 .#*#
+colour_fragments
+simple_tesselation
