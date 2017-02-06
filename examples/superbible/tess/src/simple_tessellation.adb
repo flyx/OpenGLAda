@@ -13,7 +13,8 @@ with Main_Loop;
 
 procedure Simple_Tesselation is
     Main_Window : aliased Glfw.Windows.Window;
-    Window_Title : String := "OpenGL SuperBible Simple Tesselation Example";
+    Window_Title : constant String
+      := "OpenGL SuperBible Simple Tesselation Example";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

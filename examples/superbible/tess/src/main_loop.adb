@@ -32,7 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render_Tesselation is
-        Back_Colour : GL.Types.Colors.Color := (0.0, 0.75, 0.0, 1.0);
+        Back_Colour : constant GL.Types.Colors.Color := (0.0, 0.75, 0.0, 1.0);
     begin
         GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Back_Colour);
