@@ -34,26 +34,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Render_Triangle (Current_Time : Glfw.Seconds) is
         use Math_Functions;
-        Now         : Single := Single (Current_Time);
-        Back_Colour : GL.Types.Colors.Color := (0.5 * (1.0 + Sin (Now)),
-                                                0.5 * (1.0 + Cos (Now)), 0.0, 1.0);
-        colour      : tVec4f  := (0.8 * (1.0 + Sin (Now)),
-                                  0.4 * (1.0 + Cos (Now)), 0.4, 1.0);
-        Offset      : tVec4f := (0.5 * Sin (Now),
-                                 0.5 * Cos (Now), 0.0, 0.0);
+        Now         : constant Single := Single (Current_Time);
+        Back_Colour : constant GL.Types.Colors.Color :=
+          (0.5 * (1.0 + Sin (Now)), 0.5 * (1.0 + Cos (Now)), 0.0, 1.0);
+        Offset      : constant tVec4f :=
+          (0.5 * Sin (Now), 0.5 * Cos (Now), 0.0, 0.0);
     begin
         GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Back_Colour);
 
         GL.Objects.Programs.Use_Program (Rendering_Program);
 
-        GL.Attributes.Set_Single (0, offset);
+        GL.Attributes.Set_Single (0, Offset);
         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
-
     exception
         when others => Put_Line ("Exception in Render_Triangle");
             raise;
-
     end Render_Triangle;
 
     --  ------------------------------------------------------------------------
