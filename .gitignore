@@ -5,3 +5,4 @@ bin
 .#*#
 colour_fragments
 simple_tessellation
+examples/superbible/fragment_colouring/colour_fragments
