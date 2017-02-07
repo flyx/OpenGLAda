@@ -15,9 +15,4 @@ project Simple_Tessellation is
       for Default_Switches ("ada") use ("-gnatylctux", "-gnat12");
    end Compiler;
 
-<<<<<<< HEAD:examples/superbible/tess/simple_tesselation.gpr
-end Simple_Tesselation;
-=======
 end Simple_Tessellation;
-
->>>>>>> flyx/master:examples/superbible/tess/simple_tessellation.gpr
