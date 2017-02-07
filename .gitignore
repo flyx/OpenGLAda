@@ -2,5 +2,6 @@ lib
 obj
 bin
 .DS_Store
-.#*#colour_fragments
+.#*#
+colour_fragments
 simple_tessellation
