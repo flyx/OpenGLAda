@@ -16,4 +16,3 @@ project Simple_Tessellation is
    end Compiler;
 
 end Simple_Tessellation;
-
