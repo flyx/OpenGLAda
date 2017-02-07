@@ -16,7 +16,3 @@ project Simple_Tessellation is
    end Compiler;
 
 end Simple_Tessellation;
-<<<<<<< HEAD:examples/superbible/tess/simple_tessellation.gpr
-=======
-
->>>>>>> flyx/master:examples/superbible/tess/simple_tessellation.gpr
