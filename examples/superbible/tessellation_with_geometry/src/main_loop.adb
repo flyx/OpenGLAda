@@ -8,7 +8,6 @@ with GL.Buffers;
 with GL.Errors;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
---  with GL.Objects.Shaders.Lists;
 with GL.Objects.Vertex_Arrays;
 with GL.Rasterization;
 with GL.Errors;
@@ -33,7 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Render_Tesselation_Geometry is
+    procedure Render_Tessellation_Geometry is
         Back_Colour : GL.Types.Colors.Color := (0.0, 0.75, 0.0, 1.0);
     begin
         GL.Buffers.Clear ((True, False, False, True));
@@ -43,19 +42,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Objects.Vertex_Arrays.Draw_Arrays (Patches, 0, 3);
 
     exception
-        when anError : Constraint_Error =>
-            Put ("Render_Tesselation_Geometry returned a constraint error: ");
-            Put_Line (Exception_Information (anError));
-
-        when anError : GL.Errors.Invalid_Operation_Error =>
-            Put_Line ("Render_Tesselation_Geometry returned an invalid operation error: ");
-            Put_Line (Exception_Information (anError));
-
         when anError :  others =>
             Put_Line ("An exceptiom occurred in Render_Tesselation_Geometry.");
-            Put_Line (Exception_Information (anError));
-
-    end Render_Tesselation_Geometry;
+            raise;
+    end Render_Tessellation_Geometry;
 
     --  ------------------------------------------------------------------------
 
@@ -91,7 +81,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 begin
     Setup_Graphic;
     while Running loop
-        Render_Tesselation_Geometry;
+        Render_Tessellation_Geometry;
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
         Running := Running and then not
