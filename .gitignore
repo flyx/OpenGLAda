@@ -4,5 +4,4 @@ bin
 .DS_Store
 .#*#
 colour_fragments
-simple_tesselation
-simple_geometry
+simple_geometrysimple_tessellation

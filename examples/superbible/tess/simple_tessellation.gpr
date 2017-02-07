@@ -1,11 +1,11 @@
 limited with "../../../opengl-glfw.gpr";
 
-project Simple_Tesselation is
+project Simple_Tessellation is
 
    for Source_Dirs use ("src", "../common");
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
-   for Main use ("simple_tesselation.adb");
+   for Main use ("simple_tessellation.adb");
 
    package Pretty_Printer is
       for Default_Switches ("ada") use ("-l3");
@@ -15,4 +15,9 @@ project Simple_Tesselation is
       for Default_Switches ("ada") use ("-gnatylctux", "-gnat12");
    end Compiler;
 
+<<<<<<< HEAD:examples/superbible/tess/simple_tesselation.gpr
 end Simple_Tesselation;
+=======
+end Simple_Tessellation;
+
+>>>>>>> flyx/master:examples/superbible/tess/simple_tessellation.gpr
