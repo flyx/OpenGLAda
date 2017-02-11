@@ -24,7 +24,7 @@ package body GL.Objects.Textures.With_3D_Loader is
                                  Width, Height, Depth : Types.Size) is
    begin
       API.Tex_Image_3D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, Depth, 0, Pixels.Data_Format'First,
+                        Width, Height, Depth, 0, Pixels.Red,
                         Pixels.Data_Type'First, System.Null_Address);
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;

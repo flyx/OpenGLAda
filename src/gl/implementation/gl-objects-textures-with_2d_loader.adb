@@ -24,7 +24,7 @@ package body GL.Objects.Textures.With_2D_Loader is
                                  Width, Height   : Types.Size) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, 0, Pixels.Data_Format'First,
+                        Width, Height, 0, Pixels.Red,
                         Pixels.Data_Type'First, System.Null_Address);
       --raise Program_Error with "Kind => " & Texture_Proxy (Object).Kind'Img &
       --  ", Type => " & Pixels.Data_Type'First'Img;
