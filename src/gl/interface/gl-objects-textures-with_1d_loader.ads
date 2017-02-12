@@ -37,8 +37,15 @@ package GL.Objects.Textures.With_1D_Loader is
    procedure Load_From_Data
      (Object : Fillable_Target; Level : Mipmap_Level;
       Internal_Format : Pixels.Internal_Format;
-      Width : Types.Size;
-      Source_Format : Pixels.Data_Format;
-      Source_Type   : Pixels.Data_Type;
-      Source        : System.Address);
+      Width           : Types.Size;
+      Source_Format   : Pixels.Data_Format;
+      Source_Type     : Pixels.Data_Type;
+      Source          : System.Address);
+
+   procedure Load_Compressed
+     (Object            : Fillable_Target;
+      Level             : Mipmap_Level;
+      Internal_Format   : Pixels.Internal_Format;
+      Width, Image_Size : Types.Size;
+      Source            : System.Address);
 end GL.Objects.Textures.With_1D_Loader;

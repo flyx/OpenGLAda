@@ -44,6 +44,19 @@ package body GL.Objects.Textures.With_2D_Loader is
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
 
+   procedure Load_Compressed
+     (Object                    : Fillable_Target;
+      Level                     : Mipmap_Level;
+      Internal_Format           : Pixels.Internal_Format;
+      Width, Height, Image_Size : Types.Size;
+      Source                    : System.Address) is
+   begin
+      API.Compressed_Tex_Image_2D
+        (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, Height, 0,
+         Image_Size, Source);
+      Raise_Exception_On_OpenGL_Error;
+   end Load_Compressed;
+
    procedure Storage (Object : Target; Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;
                       Width, Height : Types.Size) is
