@@ -18,7 +18,6 @@ with GL.API;
 
 package body GL.Objects.Textures.With_1D_Loader is
 
-
    procedure Load_Empty_Texture (Object: Target;
                                  Level : Mipmap_Level;
                                  Internal_Format : Pixels.Internal_Format;
@@ -42,6 +41,19 @@ package body GL.Objects.Textures.With_1D_Loader is
                         Width, 0, Source_Format, Source_Type, Source);
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
+
+   procedure Load_Compressed
+     (Object            : Fillable_Target;
+      Level             : Mipmap_Level;
+      Internal_Format   : Pixels.Internal_Format;
+      Width, Image_Size : Types.Size;
+      Source            : System.Address) is
+   begin
+      API.Compressed_Tex_Image_1D
+        (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, 0,
+         Image_Size, Source);
+      Raise_Exception_On_OpenGL_Error;
+   end Load_Compressed;
 
    procedure Storage (Object : Target; Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;
