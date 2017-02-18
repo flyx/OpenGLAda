@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with System;
+
 with GL.API;
 
 package body GL.Objects.Textures.With_2D_Loader is
@@ -25,7 +27,8 @@ package body GL.Objects.Textures.With_2D_Loader is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, 0, Pixels.Red,
-                        Pixels.Data_Type'First, System.Null_Address);
+                        Pixels.Data_Type'First,
+                        Image_Source (System.Null_Address));
       --raise Program_Error with "Kind => " & Texture_Proxy (Object).Kind'Img &
       --  ", Type => " & Pixels.Data_Type'First'Img;
       Raise_Exception_On_OpenGL_Error;
@@ -37,7 +40,7 @@ package body GL.Objects.Textures.With_2D_Loader is
                              Width, Height : Types.Size;
                              Source_Format : Pixels.Data_Format;
                              Source_Type   : Pixels.Data_Type;
-                             Source        : System.Address) is
+                             Source        : Image_Source) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, 0, Source_Format, Source_Type, Source);
@@ -49,7 +52,7 @@ package body GL.Objects.Textures.With_2D_Loader is
       Level                     : Mipmap_Level;
       Internal_Format           : Pixels.Internal_Format;
       Width, Height, Image_Size : Types.Size;
-      Source                    : System.Address) is
+      Source                    : Image_Source) is
    begin
       API.Compressed_Tex_Image_2D
         (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, Height, 0,

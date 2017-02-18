@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with System;
+
 with GL.API;
 
 package body GL.Objects.Textures.With_1D_Loader is
@@ -25,7 +27,8 @@ package body GL.Objects.Textures.With_1D_Loader is
    begin
       API.Tex_Image_1D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, 0, Pixels.Red,
-                        Pixels.Data_Type'First, System.Null_Address);
+                        Pixels.Data_Type'First,
+                        Image_Source (System.Null_Address));
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 
@@ -35,7 +38,7 @@ package body GL.Objects.Textures.With_1D_Loader is
                              Width : Types.Size;
                              Source_Format : Pixels.Data_Format;
                              Source_Type   : Pixels.Data_Type;
-                             Source        : System.Address) is
+                             Source        : Image_Source) is
    begin
       API.Tex_Image_1D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, 0, Source_Format, Source_Type, Source);
@@ -47,7 +50,7 @@ package body GL.Objects.Textures.With_1D_Loader is
       Level             : Mipmap_Level;
       Internal_Format   : Pixels.Internal_Format;
       Width, Image_Size : Types.Size;
-      Source            : System.Address) is
+      Source            : Image_Source) is
    begin
       API.Compressed_Tex_Image_1D
         (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, 0,

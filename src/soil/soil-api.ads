@@ -65,22 +65,17 @@ private package SOIL.API is
    pragma Import (Convention => C, Entity => Load_OGL_Texture_From_Memory,
                   External_Name => "SOIL_load_OGL_texture_from_memory");
 
-   function Load_OGL_Cubemap_From_Memory (X_Pos_Buffer : System.Address;
-                                          X_Pos_Length : C.int;
-                                          X_Neg_Buffer : System.Address;
-                                          X_Neg_Length : C.int;
-                                          Y_Pos_Buffer : System.Address;
-                                          Y_Pos_Length : C.int;
-                                          Y_Neg_Buffer : System.Address;
-                                          Y_Neg_Length : C.int;
-                                          Z_Pos_Buffer : System.Address;
-                                          Z_Pos_Length : C.int;
-                                          Z_Neg_Buffer : System.Address;
-                                          Z_Neg_Length : C.int;
-                                          Force_Channels   : Image_Format;
-                                          Reuse_Texture_Id : GL.Types.UInt;
-                                          Flags            : Texture_Flags)
-                                          return GL.Types.UInt;
+   function Load_OGL_Cubemap_From_Memory
+     (X_Pos_Buffer : System.Address; X_Pos_Length : C.int;
+      X_Neg_Buffer : System.Address; X_Neg_Length : C.int;
+      Y_Pos_Buffer : System.Address; Y_Pos_Length : C.int;
+      Y_Neg_Buffer : System.Address; Y_Neg_Length : C.int;
+      Z_Pos_Buffer : System.Address; Z_Pos_Length : C.int;
+      Z_Neg_Buffer : System.Address; Z_Neg_Length : C.int;
+      Force_Channels   : Image_Format;
+      Reuse_Texture_Id : GL.Types.UInt;
+      Flags            : Texture_Flags)
+      return GL.Types.UInt;
    pragma Import (Convention => C, Entity => Load_OGL_Cubemap_From_Memory,
                   External_Name => "SOIL_load_OGL_cubemap_from_memory");
 
@@ -94,7 +89,7 @@ private package SOIL.API is
    pragma Import (Convention => C, Entity => Load_OGL_Single_Cubemap_From_Memory,
                   External_Name => "SOIL_load_single_cubemap_from_memory");
 
-   function Create_OGL_Texture (Data : System.Address;
+   function Create_OGL_Texture (Data : GL.Objects.Textures.Image_Source;
                                 Width, Height : GL.Types.Int;
                                 Channels : Explicit_Image_Format;
                                 Reuse_Texture_Id : GL.Types.UInt;
@@ -102,7 +97,7 @@ private package SOIL.API is
    pragma Import (Convention => C, Entity => Create_OGL_Texture,
                   External_Name => "SOIL_create_OGL_texture");
 
-   function Create_OGL_Single_Cubemap (Data : System.Address;
+   function Create_OGL_Single_Cubemap (Data : GL.Objects.Textures.Image_Source;
                                        Width, Height : GL.Types.Int;
                                        Channels : Image_Format;
                                        Face_Order : Cubemap_Layout;
@@ -121,7 +116,8 @@ private package SOIL.API is
    function Load_Image (Filename   : C.char_array;
                         Width, Height : access GL.Types.Int;
                         Channels : access Explicit_Image_Format;
-                        Force_Channels : Image_Format) return System.Address;
+                        Force_Channels : Image_Format)
+     return GL.Objects.Textures.Image_Source;
    pragma Import (Convention => C, Entity => Load_Image,
                   External_Name => "SOIL_load_image");
 
@@ -130,7 +126,7 @@ private package SOIL.API is
                                     Width, Height : access GL.Types.Int;
                                     Channels : access Explicit_Image_Format;
                                     Force_Channels : Image_Format)
-                                    return System.Address;
+     return GL.Objects.Textures.Image_Source;
    pragma Import (Convention => C, Entity => Load_Image_From_Memory,
                   External_Name => "SOIL_load_image_from_memory");
 
@@ -138,11 +134,11 @@ private package SOIL.API is
                         Image_Type    : Image_Save_Type;
                         Width, Height : GL.Types.Int;
                         Channels      : Image_Format;
-                        Data          : System.Address) return Bool;
+                        Data          : GL.Objects.Textures.Image_Source) return Bool;
    pragma Import (Convention => C, Entity => Save_Image,
                   External_Name => "SOIL_save_image");
 
-   procedure Free_Image_Data (Data : System.Address);
+   procedure Free_Image_Data (Data : GL.Objects.Textures.Image_Source);
    pragma Import (Convention => C, Entity => Free_Image_Data,
                   External_Name => "SOIL_free_image_data");
 
