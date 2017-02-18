@@ -411,7 +411,8 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data   : System.Address) is Static ("glTexImage1D");
+                           Data   : Objects.Textures.Image_Source) is
+     Static ("glTexImage1D");
    procedure Compressed_Tex_Image_1D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -419,7 +420,8 @@ spec GL.API is
       Width           : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : System.Address) is Dynamic ("glCompressedTexImage1D");
+      Data            : Objects.Textures.Image_Source) is
+     Dynamic ("glCompressedTexImage1D");
    procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixels.Internal_Format;
@@ -427,7 +429,8 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data : System.Address) is Static ("glTexImage2D");
+                           Data : Objects.Textures.Image_Source) is
+     Static ("glTexImage2D");
    procedure Compressed_Tex_Image_2D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -435,7 +438,8 @@ spec GL.API is
       Width, Height   : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : System.Address) is Dynamic ("glCompressedTexImage2D");
+      Data            : Objects.Textures.Image_Source) is
+     Dynamic ("glCompressedTexImage2D");
    procedure Tex_Image_3D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixels.Internal_Format;
@@ -443,7 +447,8 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data : System.Address) is Dynamic ("glTexImage3D");
+                           Data : Objects.Textures.Image_Source) is
+     Dynamic ("glTexImage3D");
    procedure Compressed_Tex_Image_3D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -451,7 +456,8 @@ spec GL.API is
       Width, Height, Depth : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : System.Address) is Dynamic ("glCompressedTexImage3D");
+      Data            : Objects.Textures.Image_Source) is
+     Dynamic ("glCompressedTexImage3D");
    procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
                             Param_Name : Enums.Textures.Env_Parameter;
                             Value      : Single) is Static ("glTexEnvf");
