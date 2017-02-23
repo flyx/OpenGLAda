@@ -40,5 +40,12 @@ package GL.Objects.Textures.With_2D_Loader is
       Width, Height : Types.Size;
       Source_Format : Pixels.Data_Format;
       Source_Type   : Pixels.Data_Type;
-      Source        : System.Address);
+      Source        : Image_Source);
+
+   procedure Load_Compressed
+     (Object                    : Fillable_Target;
+      Level                     : Mipmap_Level;
+      Internal_Format           : Pixels.Internal_Format;
+      Width, Height, Image_Size : Types.Size;
+      Source                    : Image_Source);
 end GL.Objects.Textures.With_2D_Loader;

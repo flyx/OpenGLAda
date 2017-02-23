@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with System;
+
 with GL.API;
 
 package body GL.Objects.Textures.With_2D_Loader is
@@ -24,8 +26,9 @@ package body GL.Objects.Textures.With_2D_Loader is
                                  Width, Height   : Types.Size) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, 0, Pixels.Data_Format'First,
-                        Pixels.Data_Type'First, System.Null_Address);
+                        Width, Height, 0, Pixels.Red,
+                        Pixels.Data_Type'First,
+                        Image_Source (System.Null_Address));
       --raise Program_Error with "Kind => " & Texture_Proxy (Object).Kind'Img &
       --  ", Type => " & Pixels.Data_Type'First'Img;
       Raise_Exception_On_OpenGL_Error;
@@ -37,12 +40,25 @@ package body GL.Objects.Textures.With_2D_Loader is
                              Width, Height : Types.Size;
                              Source_Format : Pixels.Data_Format;
                              Source_Type   : Pixels.Data_Type;
-                             Source        : System.Address) is
+                             Source        : Image_Source) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, 0, Source_Format, Source_Type, Source);
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
+
+   procedure Load_Compressed
+     (Object                    : Fillable_Target;
+      Level                     : Mipmap_Level;
+      Internal_Format           : Pixels.Internal_Format;
+      Width, Height, Image_Size : Types.Size;
+      Source                    : Image_Source) is
+   begin
+      API.Compressed_Tex_Image_2D
+        (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, Height, 0,
+         Image_Size, Source);
+      Raise_Exception_On_OpenGL_Error;
+   end Load_Compressed;
 
    procedure Storage (Object : Target; Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;

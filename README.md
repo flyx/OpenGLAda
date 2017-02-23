@@ -26,8 +26,7 @@ bindings to the following OpenGL-related libraries:
    load TrueType fonts and render text with OpenGL. The Ada wrapper only
    provides basic functionality to load fonts and render text. As it does not
    include a wrapper to FreeType, the more low-level functionality has been
-   excluded, it may be available as part of a more complete wrapper included
-   in [Lumen][12] in the future.
+   excluded.
 
 OpenGLAda supports MacOSX, Windows and X11-based systems.
 
