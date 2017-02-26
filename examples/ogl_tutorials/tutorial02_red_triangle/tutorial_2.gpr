@@ -1,4 +1,4 @@
-with "../../../opengl-glfw.gpr";
+limited with "../../../opengl-glfw.gpr";
 
 project Tutorial_2 is
 
