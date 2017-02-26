@@ -16,9 +16,9 @@
 
 with Ada.Finalization;
 
-private with System;
-
 package SOIL.Images is
+   pragma Preelaborate;
+
    -- reference counted
    type Image is new Ada.Finalization.Controlled with private;
 
@@ -43,6 +43,7 @@ package SOIL.Images is
    function Height   (Object : Image) return GL.Types.Int;
    function Channels (Object : Image) return Explicit_Image_Format;
    function Loaded   (Object : Image) return Boolean;
+   function Data     (Object : Image) return GL.Objects.Textures.Image_Source;
 
    procedure Clear (Object : in out Image);
 
@@ -57,7 +58,7 @@ package SOIL.Images is
 
 private
    type Image_Data is record
-      Pointer         : System.Address;
+      Pointer         : GL.Objects.Textures.Image_Source;
       Width, Height   : aliased GL.Types.Int;
       Channels        : aliased Explicit_Image_Format;
       Reference_Count : Positive;

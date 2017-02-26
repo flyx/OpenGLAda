@@ -17,6 +17,7 @@
 with GL.Low_Level.Enums;
 with GL.Pixels;
 with GL.Types.Colors;
+with System;
 
 package GL.Objects.Textures is
    pragma Preelaborate;
@@ -54,6 +55,11 @@ package GL.Objects.Textures is
    subtype Texture_Unit is Int range 0 .. Int'Last;
 
    subtype Mipmap_Level is Int range 0 .. Int'Last;
+
+   -- Pointer to the beginning of image data. This type is not opaque so that it
+   -- is possible to convert addresses from other sources to it. OpenGLAda
+   -- provides a wrapper for SOIL to create image sources to load textures from.
+   type Image_Source is new System.Address;
 
    -----------------------------------------------------------------------------
    --                          Texture Proxies                                --
@@ -218,6 +224,8 @@ private
                        Luminance => 16#1909#,
                        Intensity => 16#8049#);
    for Depth_Mode'Size use Int'Size;
+
+   for Image_Source'Size use Standard'Address_Size;
 
    --type Texture_Proxy (Kind : Low_Level.Enums.Texture_Kind) is
    --  tagged limited null record;

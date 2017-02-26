@@ -14,16 +14,23 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Interfaces.C.Strings;
+with System;
 
 with SOIL.API;
 
 package body SOIL.Images is
    use type GL.Types.UInt;
+   use type GL.Objects.Textures.Image_Source;
+
+   function Null_Image return GL.Objects.Textures.Image_Source is
+   begin
+      return GL.Objects.Textures.Image_Source (System.Null_Address);
+   end Null_Image;
+   pragma Inline (Null_Image);
 
    overriding procedure Initialize (Object : in out Image) is
    begin
-      Object.Reference := new Image_Data'(Pointer         => System.Null_Address,
+      Object.Reference := new Image_Data'(Pointer         => Null_Image,
                                           Width           => 0,
                                           Height          => 0,
                                           Channels        => L,
@@ -39,9 +46,9 @@ package body SOIL.Images is
       use type System.Address;
    begin
       if Object.Reference.Reference_Count = 1 then
-         if Object.Reference.Pointer /= System.Null_Address then
+         if Object.Reference.Pointer /= Null_Image then
             API.Free_Image_Data (Object.Reference.Pointer);
-            Object.Reference.Pointer := System.Null_Address;
+            Object.Reference.Pointer := Null_Image;
          end if;
       else
          Object.Reference.Reference_Count
@@ -52,14 +59,14 @@ package body SOIL.Images is
    procedure Load (Object : in out Image; File_Name : String) is
       use type System.Address;
    begin
-      if Object.Reference.Pointer /= System.Null_Address then
+      if Object.Reference.Pointer /= Null_Image then
          API.Free_Image_Data (Object.Reference.Pointer);
       end if;
       Object.Reference.Pointer := API.Load_Image
         (Interfaces.C.To_C (File_Name), Object.Reference.Width'Access,
          Object.Reference.Height'Access,
          Object.Reference.Channels'Access, Auto);
-      if Object.Reference.Pointer = System.Null_Address then
+      if Object.Reference.Pointer = Null_Image then
          raise SOIL_Error with Last_Error;
       end if;
    end Load;
@@ -72,7 +79,7 @@ package body SOIL.Images is
 
       Tmp_Original_Format : aliased Explicit_Image_Format;
    begin
-      if Object.Reference.Pointer /= System.Null_Address then
+      if Object.Reference.Pointer /= Null_Image then
          API.Free_Image_Data (Object.Reference.Pointer);
       end if;
       Object.Reference.Pointer := API.Load_Image
@@ -80,7 +87,7 @@ package body SOIL.Images is
          Object.Reference.Height'Access,
          Tmp_Original_Format'Access, Auto);
       Original_Format := Tmp_Original_Format;
-      if Object.Reference.Pointer = System.Null_Address then
+      if Object.Reference.Pointer = Null_Image then
          raise SOIL_Error with Last_Error;
       end if;
       Object.Reference.Channels := Force_Format;
@@ -92,7 +99,7 @@ package body SOIL.Images is
 
       Result : Bool;
    begin
-      if Object.Reference.Pointer = System.Null_Address then
+      if Object.Reference.Pointer = Null_Image then
          raise SOIL_Error with "No image loaded!";
       end if;
       Result := API.Save_Image
@@ -122,15 +129,20 @@ package body SOIL.Images is
    function Loaded   (Object : Image) return Boolean is
       use type System.Address;
    begin
-      return Object.Reference.Pointer /= System.Null_Address;
+      return Object.Reference.Pointer /= Null_Image;
    end Loaded;
+
+   function Data     (Object : Image) return GL.Objects.Textures.Image_Source is
+   begin
+      return Object.Reference.Pointer;
+   end Data;
 
    procedure Clear (Object : in out Image) is
       use type System.Address;
    begin
-      if Object.Reference.Pointer /= System.Null_Address then
+      if Object.Reference.Pointer /= Null_Image then
          API.Free_Image_Data (Object.Reference.Pointer);
-         Object.Reference.Pointer := System.Null_Address;
+         Object.Reference.Pointer := Null_Image;
       end if;
    end Clear;
 
@@ -140,7 +152,7 @@ package body SOIL.Images is
       use type System.Address;
       Raw_Id : GL.Types.UInt;
    begin
-      if Object.Reference.Pointer = System.Null_Address then
+      if Object.Reference.Pointer = Null_Image then
          raise SOIL_Error with "No image loaded!";
       end if;
       Raw_Id := API.Create_OGL_Texture (Object.Reference.Pointer,
@@ -161,7 +173,7 @@ package body SOIL.Images is
       use type System.Address;
       Raw_Id : GL.Types.UInt;
    begin
-      if Object.Reference.Pointer = System.Null_Address then
+      if Object.Reference.Pointer = Null_Image then
          raise SOIL_Error with "No image loaded!";
       end if;
       Raw_Id := API.Create_OGL_Single_Cubemap (Object.Reference.Pointer,

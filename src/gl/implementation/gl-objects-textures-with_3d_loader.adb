@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with System;
+
 with GL.API;
 
 package body GL.Objects.Textures.With_3D_Loader is
@@ -24,8 +26,9 @@ package body GL.Objects.Textures.With_3D_Loader is
                                  Width, Height, Depth : Types.Size) is
    begin
       API.Tex_Image_3D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, Depth, 0, Pixels.Data_Format'First,
-                        Pixels.Data_Type'First, System.Null_Address);
+                        Width, Height, Depth, 0, Pixels.Red,
+                        Pixels.Data_Type'First,
+                        Image_Source (System.Null_Address));
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 
@@ -35,13 +38,26 @@ package body GL.Objects.Textures.With_3D_Loader is
                              Width, Height, Depth : Types.Size;
                              Source_Format : Pixels.Data_Format;
                              Source_Type   : Pixels.Data_Type;
-                             Source        : System.Address) is
+                             Source        : Image_Source) is
    begin
       API.Tex_Image_3D (Texture_Proxy (Object).Kind, Level, Internal_Format,
                         Width, Height, Depth, 0, Source_Format, Source_Type,
                         Source);
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
+
+   procedure Load_Compressed
+     (Object                           : Fillable_Target;
+      Level                            : Mipmap_Level;
+      Internal_Format                  : Pixels.Internal_Format;
+      Width, Height, Depth, Image_Size : Types.Size;
+      Source                           : Image_Source) is
+   begin
+      API.Compressed_Tex_Image_3D
+        (Texture_Proxy (Object).Kind, Level, Internal_Format, Width, Height,
+         Depth, 0, Image_Size, Source);
+      Raise_Exception_On_OpenGL_Error;
+   end Load_Compressed;
 
    procedure Storage (Object : Target; Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;
