@@ -766,6 +766,13 @@ spec GL.API is
    procedure Get_Attached_Shaders
      (Program : UInt; Max_Count : Size; Count : out Size;
       Shaders : in out UInt_Array) is Dynamic ("glGetAttachedShaders");
+   procedure Bind_Frag_Data_Location
+     (Program : UInt; Color_Number : Buffers.Draw_Buffer_Index;
+      Name : Interfaces.C.Strings.chars_ptr)
+     is Dynamic ("glBindFragDataLocation");
+   function Get_Frag_Data_Location
+     (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int
+     is Dynamic ("glGetFragDataLocation");
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --

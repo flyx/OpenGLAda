@@ -192,6 +192,8 @@ procedure GL.Load_Function_Pointers is
    function Load_T161 is new Load (T161);
    function Load_T162 is new Load (T162);
    function Load_T163 is new Load (T163);
+   function Load_T164 is new Load (T164);
+   function Load_T165 is new Load (T165);
 begin
    GL.API.Doubles.Vertex_Attrib1 := Load_T1("glVertexAttribL1d");
    GL.API.Doubles.Vertex_Attrib2 := Load_T2("glVertexAttribL2d");
@@ -362,6 +364,8 @@ begin
    GL.API.Enable_Vertex_Attrib_Array := Load_T160("glEnableVertexAttribArray");
    GL.API.Disable_Vertex_Attrib_Array := Load_T160("glDisableVertexAttribArray");
    GL.API.Get_Attached_Shaders := Load_T161("glGetAttachedShaders");
-   GL.API.Set_Patch_Parameter_Int := Load_T162("glPatchParameteri");
-   GL.API.Set_Patch_Parameter_Float_Array := Load_T163("glPatchParameterfv");
+   GL.API.Bind_Frag_Data_Location := Load_T162("glBindFragDataLocation");
+   GL.API.Get_Frag_Data_Location := Load_T163("glGetFragDataLocation");
+   GL.API.Set_Patch_Parameter_Int := Load_T164("glPatchParameteri");
+   GL.API.Set_Patch_Parameter_Float_Array := Load_T165("glPatchParameterfv");
 end GL.Load_Function_Pointers;

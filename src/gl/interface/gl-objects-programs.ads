@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with GL.Attributes;
+with GL.Buffers;
 with GL.Objects.Shaders.Lists;
 with GL.Uniforms;
 
@@ -25,6 +26,8 @@ package GL.Objects.Programs is
 
    subtype Subroutine_Index_Type is UInt;
    subtype Uniform_Location_Type is Int range -1 .. Int'Last;
+
+   Unknown_Variable_Name : exception;
 
    Invalid_Index : constant Subroutine_Index_Type;
 
@@ -113,6 +116,14 @@ package GL.Objects.Programs is
      return Attributes.Attribute;
 
    function Attached_Shaders (Object : Program) return Shaders.Lists.List;
+
+   procedure Bind_Frag_Data_Location
+     (Object : Program; Color_Number : Buffers.Draw_Buffer_Index;
+      Name : String);
+
+   -- raises Unknown_Variable_Name if Name is not an out variable
+   function Frag_Data_Location (Object : Program; Name : String)
+     return Buffers.Draw_Buffer_Index;
 
    overriding
    procedure Initialize_Id (Object : in out Program);

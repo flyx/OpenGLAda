@@ -15,6 +15,7 @@
 --------------------------------------------------------------------------------
 
 with Ada.Unchecked_Conversion;
+with Interfaces.C.Strings;
 
 with GL.API;
 with GL.Enums;
@@ -326,4 +327,31 @@ package body GL.Objects.Programs is
       end;
    end Attached_Shaders;
 
+   procedure Bind_Frag_Data_Location
+     (Object : Program; Color_Number : Buffers.Draw_Buffer_Index;
+      Name : String) is
+      C_Name : Interfaces.C.Strings.chars_ptr :=
+        Interfaces.C.Strings.New_String (Name);
+   begin
+      API.Bind_Frag_Data_Location
+        (Object.Reference.GL_Id, Color_Number, C_Name);
+      Interfaces.C.Strings.Free (C_Name);
+      Raise_Exception_On_OpenGL_Error;
+   end Bind_Frag_Data_Location;
+
+   function Frag_Data_Location (Object : Program; Name : String)
+     return Buffers.Draw_Buffer_Index is
+      C_Name : Interfaces.C.Strings.chars_ptr :=
+        Interfaces.C.Strings.New_String (Name);
+      Ret : constant Int := API.Get_Frag_Data_Location
+        (Object.Reference.GL_Id, C_Name);
+   begin
+      Interfaces.C.Strings.Free (C_Name);
+      Raise_Exception_On_OpenGL_Error;
+      if Ret < 0 then
+         raise Unknown_Variable_Name with Name;
+      else
+         return Buffers.Draw_Buffer_Index (Ret);
+      end if;
+   end Frag_Data_Location;
 end GL.Objects.Programs;
