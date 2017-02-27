@@ -7,7 +7,7 @@ package Tokenization is
    type Symbol_Id is new Positive;
 
    type Token_Kind is (Identifier, Numeric_Literal, String_Literal,
-      Delimiter, Comment);
+      Delimiter, Comment, Stream_End);
 
    type Token (Length : Natural; Kind : Token_Kind) is limited record
       Content : String (1 .. Length);
@@ -35,6 +35,9 @@ package Tokenization is
 
    function Copy (T : Token) return Token;
 
+   procedure Register_Symbol (Object : in out Tokenizer; Symbol : String;
+                              New_Id : out Symbol_Id);
+
    Keyword_Access    : constant Symbol_Id := 1;
    Keyword_Constant  : constant Symbol_Id := 2;
    Keyword_Dynamic   : constant Symbol_Id := 3;
@@ -53,6 +56,7 @@ package Tokenization is
    Keyword_Type      : constant Symbol_Id := 16;
    Keyword_Use       : constant Symbol_Id := 17;
    Keyword_With      : constant Symbol_Id := 18;
+   Keyword_Wrapper   : constant Symbol_Id := 19;
 private
    function Case_Insensitive_Hash (S : String) return Ada.Containers.Hash_Type;
    function Case_Insensitive_Equals (Left, Right : String) return Boolean;
