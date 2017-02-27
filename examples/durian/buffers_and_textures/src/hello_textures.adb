@@ -1,4 +1,4 @@
--- Program Buffers_And_Textures
+-- Program Hello_Textures
 -- Author Roger Mc Murtrie
 -- Created 13 February 2017
 -- Based on Durian Software's
@@ -12,7 +12,7 @@ with Glfw.Windows;
 with Initialize;
 with Main_Loop;
 
-procedure Buffers_And_Textures is
+procedure Hello_Textures is
     Main_Window : Glfw.Windows.Window;
     Window_Title : constant String := "Durian - Buffers And Textures Example";
 begin
@@ -23,10 +23,10 @@ begin
 
 exception
     when anError : Constraint_Error =>
-        Put ("Buffers_And_Textures returned constraint error: ");
+        Put ("Hello_Textures returned constraint error: ");
         Put_Line (Exception_Information (anError));
 
     when anError :  others =>
-        Put_Line ("An exceptiom occurred in Buffers_And_Textures.");
+        Put_Line ("An exceptiom occurred in Hello_Textures.");
         Put_Line (Exception_Information (anError));
-end Buffers_And_Textures;
+end Hello_Textures;
