@@ -13,16 +13,16 @@ package body Utilities is
 
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
    begin
-        GL.Buffers.Clear ((False, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
+        GL.Buffers.Clear ((False, False, False, True));
    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
    begin
-        GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
+        GL.Buffers.Clear ((True, False, False, True));
    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
