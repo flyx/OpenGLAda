@@ -1,9 +1,7 @@
 #version 410
 
-//attribute vec2 position;
 in vec2 position;
 
-//varying vec2 texcoord;
 out vec2 texcoord;
 
 void main()
