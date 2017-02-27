@@ -11,17 +11,9 @@ package My_Buffers is
 
     type tTexture_List is array (Natural range <>) of GL.Objects.Textures.Texture;
     type tImage_Sources is array (Positive range <>) of Ada.Strings.Unbounded.Unbounded_String;
---      type tResources is private;
 
     procedure Setup_Buffers (Vertex_Buffer  : in out tBuffer;
                              Element_Buffer : in out tBuffer);
     procedure Setup_Textures (Textures      : in out tTexture_List;
                               Images        : tImage_Sources);
-private
---      type tResources is record
---          Vertex_Buffer  : tBuffer;
---          Element_Buffer : tBuffer;
---          Texture1       : tTexture;
---          Texture2       : tTexture;
---      end record;
 end My_Buffers;

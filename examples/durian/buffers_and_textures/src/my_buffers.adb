@@ -1,13 +1,10 @@
 
-with System;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
-with GL.Toggles;
 with GL.Types; use  GL.Types;
 
 with SOIL;

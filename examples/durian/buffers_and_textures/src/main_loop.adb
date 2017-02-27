@@ -1,6 +1,4 @@
 
-with Interfaces.C;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Strings.Unbounded;
@@ -44,7 +42,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Fade_Factor_Location  : GL.Uniforms.Uniform;
     Texture_Location      : array (0 .. 1) of GL.Uniforms.Uniform;
     Position_Location     : GL.Attributes.Attribute;
-    Last_Time             : GL.Types.Single := 0.0;
 
     --  ------------------------------------------------------------------------
 
@@ -140,7 +137,7 @@ begin
     end loop;
 exception
     when Program_Loader.Shader_Loading_Error =>
-        -- message was already written to stdout
+        --  message has already been written to stdout
         raise;
     when anError :  others =>
             Put_Line ("An exceptiom occurred in Main_Loop.");
