@@ -53,7 +53,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Back_Colour   : Colors.Color := (1.0, 1.0, 1.0, 1.0);
         Stride_Single : constant Size := 2;
     begin
-       --  Delay (0.73);
         Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
         Fade_Factor := 0.5 * (1.0 + Sin (Single (Glfw.Time)));
 
