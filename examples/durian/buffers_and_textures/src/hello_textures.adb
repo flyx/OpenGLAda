@@ -1,8 +1,8 @@
--- Program Hello_Textures
--- Author Roger Mc Murtrie
--- Created 13 February 2017
--- Based on Durian Software's
--- An intro to modern OpenGL. Chapter 2.1: Buffers and Textures
+--  Program Hello_Textures
+--  Author Roger Mc Murtrie
+--  Created 13 February 2017
+--  Based on Durian Software's
+--  An intro to modern OpenGL. Chapter 2.1: Buffers and Textures
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
