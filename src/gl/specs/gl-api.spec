@@ -769,7 +769,8 @@ spec GL.API is
    procedure Bind_Frag_Data_Location
      (Program : UInt; Color_Number : Buffers.Draw_Buffer_Index;
       Name : Interfaces.C.Strings.chars_ptr)
-     is Dynamic ("glBindFragDataLocation");
+     is Dynamic ("glBindFragDataLocation"),
+        Wrapper ("GL.Objects.Programs.Bind_Frag_Data_Location");
    function Get_Frag_Data_Location
      (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int
      is Dynamic ("glGetFragDataLocation");

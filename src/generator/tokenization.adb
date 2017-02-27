@@ -62,6 +62,7 @@ package body Tokenization is
          Ret.Symbol_Table.Insert ("type", Keyword_Type);
          Ret.Symbol_Table.Insert ("use", Keyword_Use);
          Ret.Symbol_Table.Insert ("with", Keyword_With);
+         Ret.Symbol_Table.Insert ("wrapper", Keyword_Wrapper);
       end return;
    end Tokenize;
 
@@ -116,7 +117,7 @@ package body Tokenization is
       Object.Prev_Column := Object.Cur_Column;
 
       if I > Object.Input'Length then
-         raise Tokenization_Error with "Unexpected file end";
+         return Token'(Kind => Stream_End, Length => 0, Content => "");
       end if;
 
       Cur := Next_Char;
@@ -212,7 +213,7 @@ package body Tokenization is
    end To_String;
 
    function Is_Keyword (Id : Symbol_Id) return Boolean is
-     (Id < Keyword_With);
+     (Id < Keyword_Wrapper);
 
    function Copy (T : Token) return Token is
    begin
@@ -231,6 +232,14 @@ package body Tokenization is
                        Content => T.Content);
       when Comment =>
          return Token'(Kind => Comment, Length => T.Length, Content => T.Content);
+      when Stream_End =>
+         return Token'(Kind => Stream_End, Length => 0, Content => "");
       end case;
    end Copy;
+
+   procedure Register_Symbol (Object : in out Tokenizer; Symbol : String;
+                              New_Id : out Symbol_Id) is
+   begin
+      New_Id := Id (Object, Symbol);
+   end Register_Symbol;
 end Tokenization;
