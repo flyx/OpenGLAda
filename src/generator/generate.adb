@@ -8,16 +8,18 @@ with Specs;
 procedure Generate is
    Proc : Specs.Processor;
 
+   Source_Folder    : constant String := "src/gl/specs";
+   Target_Folder    : constant String := "src/gl/generated";
+   Interface_Folder : constant String := "src/gl/interface";
+
    procedure Process_File (Directory_Entry : in Directory_Entry_Type) is
       Path : constant String := Full_Name (Directory_Entry);
    begin
       Ada.Text_IO.Put_Line ("Processing " & Path & " ...");
-      Specs.Parse_File (Proc, Path);
+      Specs.Parse_File (Proc, Path, Interface_Folder);
       Ada.Text_IO.Put_Line ("Done processing " & Path & " .");
    end Process_File;
 
-   Source_Folder : constant String := "src/gl/specs";
-   Target_Folder : constant String := "src/gl/generated";
 begin
    Search (Source_Folder, "*.spec", (Ordinary_File => True, others => False),
      Process_File'Access);
@@ -32,6 +34,7 @@ begin
       end loop;
    end;
    Specs.Write_Init (Proc, Target_Folder);
+   Specs.Write_Wrapper_List (Proc, Target_Folder);
 exception when Error : Specs.Parsing_Error =>
    Ada.Text_IO.Put_Line (Exception_Message (Error));
    Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);

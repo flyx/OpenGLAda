@@ -4,35 +4,25 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use  Ada.Strings.Unbounded;
 
 with GL.Buffers;
-with GL.Context;
+with gl.Context;
 with GL.Errors;
 with GL.Objects.Shaders.Lists;
-with GL.Types; use GL.Types;
+with GL.Types.Colors;
 
 package body Utilities is
 
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
    begin
-<<<<<<< HEAD
         GL.Buffers.Clear ((False, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
-=======
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-        GL.Buffers.Clear ((False, False, False, True));
->>>>>>> flyx/master
    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
    begin
-<<<<<<< HEAD
         GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
-=======
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-        GL.Buffers.Clear ((True, False, False, True));
->>>>>>> flyx/master
    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
