@@ -17,7 +17,8 @@ package Specs is
    No_Spec : constant Spec;
    Parsing_Error : exception;
 
-   procedure Parse_File (Proc : in out Processor; Path : String);
+   procedure Parse_File (Proc : in out Processor;
+                         Path, Interface_Folder : String);
 
    function First (Proc : Processor) return Spec;
 
@@ -27,6 +28,8 @@ package Specs is
                         Dir_Path : String);
 
    procedure Write_Init (Proc : Processor; Dir_Path : String);
+
+   procedure Write_Wrapper_List (Proc : Processor; Dir_Path : String);
 private
    use Ada.Strings.Unbounded;
 
@@ -72,6 +75,7 @@ private
       Name, File_Base_Name : Unbounded_String;
       Withs : String_Lists.Vector;
       Items : Item_Lists.Vector;
+      Wrapper_Links : String_Lists.Vector;
    end record;
 
    type Spec is new Natural;

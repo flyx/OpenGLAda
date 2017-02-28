@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
-
 generic
    type Base (<>) is new Texture_Proxy with private;
 package GL.Objects.Textures.With_2D_Loader is
