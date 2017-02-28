@@ -64,8 +64,7 @@ package body Specs is
       end if;
    end Put_Signature;
 
-   procedure Parse_File (Proc : in out Processor;
-                         Path, Interface_Folder : String) is
+   procedure Parse_File (Proc : in out Processor; Path : String) is
       use Tokenization;
       use Ada.Exceptions;
 
@@ -148,14 +147,57 @@ package body Specs is
 
       procedure Gen_Subprogram_Item (Start : Token) is
          Sig : Signature;
+         Read_Property : access function return String;
+
+         function Read_Parenthesed_Name return String is
+            Open_Paren  : constant Token := Next (T);
+            Name_String : constant Token := Next (T);
+            Close_Paren : constant Token := Next (T);
+         begin
+            if Open_Paren.Kind /= Delimiter or else
+              Open_Paren.Content /= "(" then
+               Wrong_Token (Open_Paren, "Unexpected token, expected `(`");
+            elsif Name_String.Kind /= String_Literal then
+               Wrong_Token (Name_String, "Unexpected token, expected string");
+            elsif Close_Paren.Kind /= Delimiter or else
+              Close_Paren.Content /= ")" then
+               Wrong_Token (Close_Paren, "Unexpected token, expected `)`");
+            end if;
+            return Name_String.Content;
+         end Read_Parenthesed_Name;
+
+         function Read_Aspect_Value return String is
+            Arrow : constant Token := Next (T);
+            Value : constant Token := Next (T);
+         begin
+            if Arrow.Kind /= Delimiter or else Arrow.Content /= "=>" then
+               Wrong_Token (Arrow, "Unexpected token, expected `=>`");
+            elsif Value.Kind /= String_Literal then
+               Wrong_Token (Value, "Unexpected token, expected string");
+            end if;
+            return Value.Content;
+         end Read_Aspect_Value;
 
          procedure Finish_Sig (From : Token) is
+            procedure Start_Properties (Starting : Token) is
+            begin
+               if Starting.Kind = Identifier then
+                  case Starting.Id is
+                  when Keyword_With =>
+                     Read_Property := Read_Aspect_Value'Access;
+                     return;
+                  when Keyword_Is =>
+                     Read_Property := Read_Parenthesed_Name'Access;
+                     return;
+                  when others => null;
+                  end case;
+               end if;
+               Wrong_Token (Starting,
+                 "Unexpected token (expected ""with"" or ""is"")");
+            end Start_Properties;
          begin
             case Start.Id is
-            when Keyword_Procedure =>
-               if From.Kind /= Identifier or else From.Id /= Keyword_Is then
-                  Wrong_Token (From, "Unexpected token (expected ""is"")");
-               end if;
+            when Keyword_Procedure => Start_Properties (From);
             when Keyword_Function =>
                if From.Kind /= Identifier or else From.Id /= Keyword_Return then
                   Wrong_Token (From, "Unexpected token (expected ""return"")");
@@ -163,9 +205,7 @@ package body Specs is
                declare
                   After : constant Token := Get_Name (Next (T), Sig.Return_Type);
                begin
-                  if After.Kind /= Identifier or else After.Id /= Keyword_Is then
-                     Wrong_Token (After, "Unexpected token (expected ""is"")");
-                  end if;
+                  Start_Properties (After);
                end;
             when others => null;
             end case;
@@ -279,69 +319,6 @@ package body Specs is
             end loop;
          end Read_Param_List;
 
-         function Read_Parenthesed_Name return Unbounded_String is
-            Open_Paren  : constant Token := Next (T);
-            Name_String : constant Token := Next (T);
-            Close_Paren : constant Token := Next (T);
-         begin
-            if Open_Paren.Kind /= Delimiter or else Open_Paren.Content /= "(" then
-               Wrong_Token (Open_Paren, "Unexpected token, expected `(`");
-            elsif Name_String.Kind /= String_Literal then
-               Wrong_Token (Name_String, "Unexpected token, expected string");
-            elsif Close_Paren.Kind /= Delimiter or else Close_Paren.Content /= ")" then
-               Wrong_Token (Close_Paren, "Unexpected token, expected `)`");
-            end if;
-            return To_Unbounded_String (Name_String.Content);
-         end Read_Parenthesed_Name;
-
-         function Get_Wrapper_Link return String is
-            use Ada.Characters.Handling;
-            Qualified_Name : constant String :=
-              To_String (Read_Parenthesed_Name);
-            Prefix : constant String := "https://github.com/flyx/OpenGLAda/blob/master/src/gl/interface/";
-            File_Name : Unbounded_String := To_Unbounded_String (0);
-            Subroutine_Name : Unbounded_String := To_Unbounded_String (0);
-         begin
-            for Index in Qualified_Name'Range loop
-               case Qualified_Name (Index) is
-               when '.' =>
-                  if Length (File_Name) > 0 then
-                      Append (File_Name, "-");
-                  end if;
-                  Append (File_Name, Subroutine_Name);
-                  Subroutine_Name := To_Unbounded_String (0);
-               when others =>
-                  Append (Subroutine_Name, To_Lower (Qualified_Name (Index)));
-               end case;
-            end loop;
-            Append (File_Name, ".ads");
-            declare
-               use Tokenization;
-               use Ada.Strings;
-               T : Tokenizer := Tokenize
-                 (Ada.Directories.Compose (Interface_Folder, To_String (File_Name)));
-               Requested_Id : Symbol_Id;
-            begin
-               Register_Symbol (T, To_String (Subroutine_Name), Requested_Id);
-               loop
-                  declare
-                     Cur : constant Token := Next (T);
-                  begin
-                     if Cur.Kind = Identifier and then Cur.Id = Requested_Id
-                       then
-                        return Prefix & To_String (File_Name) & "#L" &
-                          Fixed.Trim (Line (T)'Img, Left);
-                     elsif Cur.Kind = Stream_End then
-                        exit;
-                     end if;
-                  end;
-               end loop;
-               raise Parsing_Error with "Cannot find symbol " &
-                 To_String (Subroutine_Name) & " in file " &
-                 To_String (File_Name);
-            end;
-         end Get_Wrapper_Link;
-
          function Singleton (Sig : Signature) return Sig_Lists.Vector is
          begin
             return Ret : Sig_Lists.Vector do
@@ -357,9 +334,11 @@ package body Specs is
             end return;
          end Expand;
 
-         Name_Token : constant Token   := Next (T);
-         Name       : constant String  := Name_Token.Content;
-         Kind_Seen, Wrapper_Seen : Boolean := False;
+         Name_Token  : constant Token   := Next (T);
+         Name        : constant String  := Name_Token.Content;
+         Kind_Seen   : Boolean := False;
+         Wrappers    : String_Lists.Vector;
+         Wrapper_Pos : Natural := 0;
       begin
          if Name_Token.Kind /= Identifier then
             Wrong_Token (Name_Token, "Unexpected token (expected identifier)");
@@ -396,7 +375,7 @@ package body Specs is
                   if Pos = Symbol_To_Index.No_Element then
                      Data.Items.Append (Body_Item'(
                        Kind => Static, S_Name => To_Unbounded_String (Name),
-                       S_GL_Name => Read_Parenthesed_Name,
+                       S_GL_Name => To_Unbounded_String (Read_Property.all),
                        Sigs => Singleton (Sig)
                      ));
                      Subroutine_Defs.Insert (Name_Token.Id,
@@ -407,7 +386,8 @@ package body Specs is
                           Symbol_To_Index.Element (Pos);
                         Old : constant Body_Item :=
                           Data.Items.Element (Item_Pos);
-                        GL_Name : constant Unbounded_String := Read_Parenthesed_Name;
+                        GL_Name : constant Unbounded_String :=
+                          To_Unbounded_String (Read_Property.all);
                      begin
                         if Old.Kind /= Static then
                            raise Parsing_Error with "Name """ & Name &
@@ -426,11 +406,7 @@ package body Specs is
                              S_GL_Name => GL_Name,
                              Sigs => Expand (Old.Sigs, Sig)
                         ));
-                        if Wrapper_Seen then
-                           Wrong_Token (Cur, "Duplicate wrapper for overloaded subroutine!");
-                        else
-                           Wrapper_Seen := True;
-                        end if;
+                        Wrapper_Pos := Item_Pos;
                      end;
                   end if;
                end;
@@ -455,17 +431,12 @@ package body Specs is
                   Data.Items.Append (Body_Item'(
                     Kind => Dynamic,
                     D_Name => To_Unbounded_String (Name),
-                    D_GL_Name => Read_Parenthesed_Name,
+                    D_GL_Name => To_Unbounded_String (Read_Property.all),
                     Sig_Id => Sig_Id
                   ));
                end;
             when Keyword_Wrapper =>
-               if Wrapper_Seen then
-                  Wrong_Token (Cur, "Duplicate `Wrapper`!");
-               else
-                  Wrapper_Seen := True;
-               end if;
-               Data.Wrapper_Links.Append (Get_Wrapper_Link);
+               Wrappers.Append (Read_Property.all);
             when others =>
                Wrong_Token (Cur,
                  "Unexpected identifier (expected `Static` or `Dynamic`)");
@@ -481,8 +452,12 @@ package body Specs is
                   Wrong_Token (Cur, "Unexpected token (expected `;` or `,`)");
                end if;
             end;
-            if not Wrapper_Seen then
-               Data.Wrapper_Links.Append ("");
+            if Wrapper_Pos = 0 then
+               Data.Wrappers.Append (Wrappers);
+            else
+               Data.Wrappers.Replace_Element (Wrapper_Pos,
+                 String_Lists."&" (Data.Wrappers.Element (Wrapper_Pos),
+                                   Wrappers));
             end if;
          end;
       end Gen_Subprogram_Item;
@@ -514,7 +489,7 @@ package body Specs is
             Wrong_Token(Cur, "Unexpected token (expected `is`)");
          end if;
       end;
-      Ada.Text_IO.Put_Line ("Processing spec """ & To_String (Data.Name) & """");
+      Put_Line ("Processing spec """ & To_String (Data.Name) & """");
       loop
          <<continue2>>
          declare
@@ -578,7 +553,6 @@ package body Specs is
 
    procedure Write_API (Proc : Processor; Cur : Spec;
                         Dir_Path : String) is
-      use Ada.Text_IO;
       use Ada.Directories;
       Target : File_Type;
       Data : constant Spec_Data := Proc.List.Element (Cur);
@@ -587,7 +561,7 @@ package body Specs is
         Compose (Dir_Path, To_String (Data.File_Base_Name), "ads");
       Is_Root : constant Boolean := Name = "GL.API";
    begin
-      Ada.Text_IO.Put_Line ("Writing API file for spec """ &
+      Put_Line ("Writing API file for spec """ &
         To_String (Data.Name) & """: " & File_Name);
       Create (Target, Out_File, File_Name);
       Put_Line (Target, "-- Autogenerated by Generate, do not edit");
@@ -689,7 +663,7 @@ package body Specs is
 
       Index : Positive := 1;
    begin
-      Ada.Text_IO.Put_Line ("Writing procedure ""GL.Init""");
+      Put_Line ("Writing procedure ""GL.Init""");
       Create (Target, Out_File, Ada.Directories.Compose (Dir_Path, "gl-load_function_pointers.adb"));
       Write_Header;
       for Sub_Type of Proc.Dynamic_Subprogram_Types loop
@@ -716,18 +690,72 @@ package body Specs is
       Close (Target);
    end Write_Init;
 
-   procedure Write_Wrapper_List (Proc : Processor; Dir_Path : String) is
+   procedure Write_Wrapper_Table (Proc : Processor;
+                                  Dir_Path, Interface_Folder : String) is
       Target : File_Type;
 
       procedure Write_Header is
          use Ada.Text_IO;
       begin
-         Put_Line (Target, "<!-- Autogenerated by Generate, do not edit -->");
+         Put_Line (Target, "---");
+         Put_Line (Target, "layout: default");
+         Put_Line (Target, "title: OpenGL Function List");
+         Put_Line (Target, "permalink: gl.html");
+         Put_Line (Target, "---");
+         Put_Line (Target, "<!-- Autogenerated by generate tool, do not edit -->");
+         Put_Line (Target, "OpenGL Function Name | OpenGLAda Wrapper");
+         Put_Line (Target, "---------------------+------------------");
       end Write_Header;
+
+      function Get_Wrapper_Link (Qualified_Name : String) return String is
+         use Ada.Characters.Handling;
+         Prefix : constant String := "https://github.com/flyx/OpenGLAda/blob/master/src/gl/interface/";
+         File_Name : Unbounded_String := To_Unbounded_String (0);
+         Subroutine_Name : Unbounded_String := To_Unbounded_String (0);
+      begin
+         for Index in Qualified_Name'Range loop
+            case Qualified_Name (Index) is
+            when '.' =>
+               if Length (File_Name) > 0 then
+                     Append (File_Name, "-");
+               end if;
+               Append (File_Name, Subroutine_Name);
+               Subroutine_Name := To_Unbounded_String (0);
+            when others =>
+               Append (Subroutine_Name, To_Lower (Qualified_Name (Index)));
+            end case;
+         end loop;
+         Append (File_Name, ".ads");
+         declare
+            use Tokenization;
+            use Ada.Strings;
+            T : Tokenizer := Tokenize
+               (Ada.Directories.Compose (Interface_Folder, To_String (File_Name)));
+            Requested_Id : Symbol_Id;
+         begin
+            Register_Symbol (T, To_String (Subroutine_Name), Requested_Id);
+            loop
+               declare
+                  Cur : constant Token := Next (T);
+               begin
+                  if Cur.Kind = Identifier and then Cur.Id = Requested_Id
+                     then
+                     return Prefix & To_String (File_Name) & "#L" &
+                        Fixed.Trim (Line (T)'Img, Left);
+                  elsif Cur.Kind = Stream_End then
+                     exit;
+                  end if;
+               end;
+            end loop;
+            raise Parsing_Error with "Cannot find symbol " &
+               To_String (Subroutine_Name) & " in file " &
+               To_String (File_Name);
+         end;
+      end Get_Wrapper_Link;
 
       Index : Positive := 1;
    begin
-      Ada.Text_IO.Put_Line ("Writing wrapper list");
+      Put_Line ("Writing wrapper list");
       Create (Target, Out_File, Ada.Directories.Compose (Dir_Path, "WrapperList.md"));
       Write_Header;
       for Data of Proc.List loop
@@ -736,16 +764,30 @@ package body Specs is
                Item : constant Body_Item := Data.Items.Element (Index);
                GL_Name : constant String := To_String (
                  if Item.Kind = Static then Item.S_GL_Name else Item.D_GL_Name);
-               Wrapper_Link : constant String :=
-                  Data.Wrapper_Links.Element (Index);
+               Wrappers : constant String_Lists.Vector :=
+                 Data.Wrappers.Element (Index);
             begin
-               if Wrapper_Link /= "" then
-                  Ada.Text_IO.Put_Line (Target,
-                    " * [" & GL_Name & "](" & Wrapper_Link & ")");
+               if Wrappers.Length > 0 then
+                  Put (Target, '`' & GL_Name & "` | ");
+                  declare
+                     First : Boolean := True;
+                  begin
+                     for Wrapper of Wrappers loop
+                        if First then
+                           First := False;
+                        else
+                           Put (Target, " <br/> ");
+                        end if;
+                        Put (Target,
+                          "[" & Wrapper & "](" & Get_Wrapper_Link (Wrapper) &
+                          ")");
+                     end loop;
+                  end;
+                  New_Line (Target);
                end if;
             end;
          end loop;
       end loop;
       Close (Target);
-   end Write_Wrapper_List;
+   end Write_Wrapper_Table;
 end Specs;
