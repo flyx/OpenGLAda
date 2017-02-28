@@ -23,7 +23,7 @@ with GL.Types.Colors;
 -- OpenGL 3, you should use VBOs instead.
 package GL.Immediate is
    pragma Preelaborate;
-   
+
    use GL.Types;
    use GL.Types.Doubles;
 
@@ -39,6 +39,9 @@ package GL.Immediate is
 
    procedure Set_Color (Value : Colors.Color);
    function Current_Color return Colors.Color;
+
+   procedure Set_Secondary_Color (Value : Colors.Color);
+   function Current_Secondary_Color return Colors.Color;
 
    procedure Set_Fog_Distance (Value : Double);
    function Current_Fog_Distance return Double;

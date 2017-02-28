@@ -43,13 +43,13 @@ package body GL.Immediate is
    begin
       API.Doubles.Vertex2 (Vertex);
    end Add_Vertex;
-   
+
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector3) is
       pragma Unreferenced (Token);
    begin
       API.Doubles.Vertex3 (Vertex);
    end Add_Vertex;
-   
+
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector4) is
       pragma Unreferenced (Token);
    begin
@@ -73,6 +73,24 @@ package body GL.Immediate is
       end if;
       return Ret;
    end Current_Color;
+
+   procedure Set_Secondary_Color (Value : Colors.Color) is
+   begin
+      API.Secondary_Color (Value);
+      if not Error_Checking_Suspended then
+         Raise_Exception_On_OpenGL_Error;
+      end if;
+   end Set_Secondary_Color;
+
+   function Current_Secondary_Color return Colors.Color is
+      Ret : Colors.Color;
+   begin
+      API.Get_Color (Enums.Getter.Current_Secondary_Color, Ret);
+      if not Error_Checking_Suspended then
+         Raise_Exception_On_OpenGL_Error;
+      end if;
+      return Ret;
+   end Current_Secondary_Color;
 
    procedure Set_Fog_Distance (Value : Double) is
    begin
@@ -117,7 +135,7 @@ package body GL.Immediate is
          Raise_Exception_On_OpenGL_Error;
       end if;
    end Set_Texture_Coordinates;
-   
+
    procedure Set_Texture_Coordinates (Value : Vector3) is
    begin
       API.Doubles.Tex_Coord3 (Value);
@@ -125,7 +143,7 @@ package body GL.Immediate is
          Raise_Exception_On_OpenGL_Error;
       end if;
    end Set_Texture_Coordinates;
-   
+
    procedure Set_Texture_Coordinates (Value : Vector2) is
    begin
       API.Doubles.Tex_Coord2 (Value);
