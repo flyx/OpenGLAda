@@ -20,13 +20,15 @@ package body GL.Toggles is
    procedure Enable (Subject : Toggle) is
    begin
       API.Enable (Subject);
+      Raise_Exception_On_OpenGL_Error;
    end Enable;
-   
+
    procedure Disable (Subject : Toggle) is
    begin
       API.Disable (Subject);
+      Raise_Exception_On_OpenGL_Error;
    end Disable;
-   
+
    procedure Set (Subject : Toggle; Value : Toggle_State) is
    begin
       if Value = Disabled then
@@ -34,8 +36,9 @@ package body GL.Toggles is
       else
          API.Enable (Subject);
       end if;
+      Raise_Exception_On_OpenGL_Error;
    end Set;
-   
+
    function State (Subject : Toggle) return Toggle_State is
    begin
       if API.Is_Enabled (Subject) then
@@ -43,5 +46,6 @@ package body GL.Toggles is
       else
          return Disabled;
       end if;
+      Raise_Exception_On_OpenGL_Error;
    end State;
 end GL.Toggles;
