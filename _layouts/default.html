@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="{{ site.baseurl }}/js/prettify.js"></script>
 		<script type="text/javascript" src="{{ site.baseurl }}/js/lang-ada.js"></script>
 	</head>
-	
+
 	<body onload="prettyPrint()">
 		<!--[if IE lte 8]>
 			<div class="ie-warning"><p>Yes, I'm aware that this site is broken on IE &lt;=8. I don't care.</p></div>
@@ -28,14 +28,10 @@
 					<ul>
 						{% assign sorted_pages = site.pages | sort:"name" %}
 						{% for p in sorted_pages %}
-							{% if p.url contains '/doc/gl' or p.api %}
-								{% assign api = true %}
-							{% else %}
-								{% assign api = false %}
-							{% endif %}
-							<li {% if api == true %}class="api"{% endif %}>
+							{% assign api = p.api %}
+							<li {% if api %}class="api"{% endif %}>
 								<a {% if p.url == page.url %}class="active"{% endif %}href="{{ site.baseurl }}{{ p.url }}">
-									{% if api == true %}
+									{% if api %}
 										<span>
 											{% for package in p.packages %}
 												{% unless forloop.first %}
@@ -59,11 +55,11 @@
 					</ul>
 				</div>
 			</nav>
-			
+
 			<article>
 				{{ content }}
 			</article>
-		
+
 		</div>
 		<footer>
 			<p>Copyright © 2012 by <a href="http://flyx.org">Felix Krause</a>. Powered by <a href="http://pages.github.com/">GitHub Pages</a></p>
