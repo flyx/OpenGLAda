@@ -34,64 +34,78 @@ spec GL.API is
    -----------------------------------------------------------------------------
 
    procedure Get_Boolean (Name   : Enums.Getter.Parameter;
-                          Target : access Low_Level.Bool) is Static ("glGetBooleanv");
+                          Target : access Low_Level.Bool) with
+     Static => "glGetBooleanv";
    procedure Get_Double (Name   : Enums.Getter.Parameter;
-                         Target : access Double) is Static ("glGetDoublev");
+                         Target : access Double) with
+     Static => "glGetDoublev";
    procedure Get_Double_Vec2 (Name   : Enums.Getter.Parameter;
-                              Target : in out Doubles.Vector2) is Static ("glGetDoublev");
+                              Target : in out Doubles.Vector2) with
+     Static => "glGetDoublev";
    procedure Get_Single (Name   : Enums.Getter.Parameter;
-                         Target : access Single) is Static ("glGetFloatv");
+                         Target : access Single) with
+     Static => "glGetFloatv";
    procedure Get_Single_Vec2 (Name   : Enums.Getter.Parameter;
-                              Target : in out Singles.Vector2) is Static ("glGetFloatv");
+                              Target : in out Singles.Vector2) with
+     Static => "glGetFloatv";
    procedure Get_Color (Name   : Enums.Getter.Parameter;
-                        Target : in out Colors.Color) is Static ("glGetFloatv");
+                        Target : in out Colors.Color) with
+     Static => "glGetFloatv";
    procedure Get_Integer (Name   : Enums.Getter.Parameter;
-                          Target : access Int) is Static ("glGetIntegerv");
+                          Target : access Int) with Static => "glGetIntegerv";
    procedure Get_Int_Vec4 (Name   : Enums.Getter.Parameter;
-                           Target : in out Ints.Vector4) is Static ("glGetIntegerv");
+                           Target : in out Ints.Vector4) with
+     Static => "glGetIntegerv";
    procedure Get_Unsigned_Integer (Name   : Enums.Getter.Parameter;
-                                   Target : access UInt) is Static ("glGetIntegerv");
+                                   Target : access UInt) with
+     Static => "glGetIntegerv";
    procedure Get_Size (Name   : Enums.Getter.Parameter;
-                       Target : access Size) is Static ("glGetIntegerv");
+                       Target : access Size) with
+     Static => "glGetIntegerv";
    procedure Get_Color_Control (Name   : Enums.Getter.Parameter;
-                                Target : access Fixed.Lighting.Color_Control) is
-     Static ("glGetIntegerv");
+                                Target : access Fixed.Lighting.Color_Control)
+     with Static => "glGetIntegerv";
    procedure Get_Shade_Model (Name   : Enums.Getter.Parameter;
-                              Target : access Fixed.Lighting.Shade_Model) is
-     Static ("glGetIntegerv");
+                              Target : access Fixed.Lighting.Shade_Model) with
+     Static => "glGetIntegerv";
    procedure Get_Blend_Factor (Name : Enums.Getter.Parameter;
-                               Target : access Blending.Blend_Factor) is
-     Static ("glGetIntegerv");
+                               Target : access Blending.Blend_Factor) with
+     Static => "glGetIntegerv";
    procedure Get_Alignment (Name : Enums.Getter.Parameter;
-                            Target : access Pixels.Alignment) is
-     Static ("glGetIntegerv");
+                            Target : access Pixels.Alignment) with
+     Static => "glGetIntegerv";
    procedure Get_Blend_Equation (Name : Enums.Getter.Parameter;
-                                 Target : access Blending.Equation) is
-     Static ("glGetIntegerv");
+                                 Target : access Blending.Equation) with
+     Static => "glGetIntegerv";
    procedure Get_Compare_Function (Name : Enums.Getter.Parameter;
-                                   Target : access Compare_Function) is
-     Static ("glGetIntegerv");
+                                   Target : access Compare_Function) with
+     Static => "glGetIntegerv";
    procedure Get_Orientation (Name : Enums.Getter.Parameter;
-                              Target : access Orientation) is
-     Static ("glGetIntegerv");
+                              Target : access Orientation) with
+     Static => "glGetIntegerv";
    procedure Get_Face_Selector (Name : Enums.Getter.Parameter;
-                                Target : access Culling.Face_Selector) is
-     Static ("glGetIntegerv");
+                                Target : access Culling.Face_Selector) with
+     Static => "glGetIntegerv";
    procedure Get_Polygon_Mode (Name   : Enums.Getter.Parameter;
-                               Target : access Rasterization.Polygon_Mode_Type) is
-     Static ("glGetIntegerv");
+                               Target : access Rasterization.Polygon_Mode_Type)
+     with Static => "glGetIntegerv";
    procedure Get_Logic_Op (Name : Enums.Getter.Parameter;
-                           Target : access Framebuffer.Logic_Op) is
-     Static ("glGetIntegerv");
+                           Target : access Framebuffer.Logic_Op) with
+     Static => "glGetIntegerv";
    procedure Get_Stencil_Action (Name : Enums.Getter.Parameter;
-                                 Target : access Buffers.Stencil_Action) is
-     Static ("glGetIntegerv");
+                                 Target : access Buffers.Stencil_Action) with
+     Static => "glGetIntegerv";
    procedure Get_Read_Buffer_Selector
      (Name   : Enums.Getter.Parameter;
-      Target : access Framebuffer.Read_Buffer_Selector) is Static ("glGetIntegerv");
+      Target : access Framebuffer.Read_Buffer_Selector) with
+     Static => "glGetIntegerv";
    procedure Get_Light_Color (Name   : Enums.Light_Name;
                               Pname  : Enums.Light_Param;
-                              Target : in out Colors.Color) is Static ("glGetLightfv");
+                              Target : in out Colors.Color) with
+     Static => "glGetLightfv",
+     Wrapper => "GL.Fixed.Lighting.Ambient",
+     Wrapper => "GL.Fixed.Lighting.Diffuse",
+     Wrapper => "GL.Fixed.Lighting.Specular";
    function Get_String (Name : Enums.Getter.String_Parameter)
                         return C.Strings.chars_ptr is Static ("glGetString");
    function Get_String_I (Name  : Enums.Getter.String_Parameter;
@@ -102,55 +116,80 @@ spec GL.API is
    --                                 Toggles                                 --
    -----------------------------------------------------------------------------
 
-   procedure Enable (Subject : Toggles.Toggle) is Static ("glEnable");
-   procedure Disable (Subject : Toggles.Toggle) is Static ("glDisable");
-   function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool is
-     Static ("glIsEnabled");
+   procedure Enable (Subject : Toggles.Toggle) with
+     Static => "glEnable", Wrapper => "GL.Toggles.Enable";
+   procedure Disable (Subject : Toggles.Toggle) with
+     Static => "glDisable", Wrapper => "GL.Toggles.Disable";
+   function Is_Enabled (Subject : Toggles.Toggle) return Low_Level.Bool with
+     Static => "glIsEnabled", Wrapper => "GL.Toggles.State";
 
    -----------------------------------------------------------------------------
    --                                 Culling                                 --
    -----------------------------------------------------------------------------
 
-   procedure Cull_Face (Selector : Culling.Face_Selector) is Static ("glCullFace");
-   procedure Front_Face (Face : Orientation) is Static ("glFrontFace");
+   procedure Cull_Face (Selector : Culling.Face_Selector) with
+     Static => "glCullFace", Wrapper => "GL.Culling.Set_Cull_Face";
+   procedure Front_Face (Face : Orientation) with
+     Static => "glFrontFace", Wrapper => "GL.Culling.Set_Front_Face";
 
    -----------------------------------------------------------------------------
    --                               Pixel Stuff                               --
    -----------------------------------------------------------------------------
 
    procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
-                          Value : Low_Level.Bool) is Static ("glPixelStorei");
+                          Value : Low_Level.Bool) with
+     Static  => "glPixelStorei",
+     Wrapper => "GL.Pixels.Set_Pack_Swap_Bytes",
+     Wrapper => "GL.Pixels.Set_Pack_LSB_First";
    procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
-                          Value : Size) is Static ("glPixelStorei");
+                          Value : Size) with
+     Static  => "glPixelStorei",
+     Wrapper => "GL.Pixels.Set_Pack_Row_Length",
+     Wrapper => "GL.Pixels.Set_Pack_Image_Height",
+     Wrapper => "GL.Pixels.Set_Pack_Skip_Pixels",
+     Wrapper => "GL.Pixels.Set_Pack_Skip_Rows",
+     Wrapper => "GL.Pixels.Set_Pack_Skip_Images";
    procedure Pixel_Store (Param : Enums.Pixel_Store_Param;
-                          Value : Pixels.Alignment) is Static ("glPixelStorei");
+                          Value : Pixels.Alignment) with
+     Static => "glPixelStorei", Wrapper => "GL.Pixels.Set_Pack_Alignment";
 
    -----------------------------------------------------------------------------
    --            Matrix stack API (deprecated as of OpenGL 3.0)               --
    -----------------------------------------------------------------------------
 
-   procedure Matrix_Mode (Mode : Enums.Matrix_Mode) is Static ("glMatrixMode");
-   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Double) is
-     Static ("glFrustum");
-   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Double) is
-     Static ("glOrtho");
-   procedure Load_Identity is Static ("glLoadIdentity");
-   procedure Push_Matrix is Static ("glPushMatrix");
-   procedure Pop_Matrix is Static ("glPopMatrix");
-   procedure Rotate (Angle, X, Y, Z : Double) is Static ("glRotated");
-   procedure Scale (X, Y, Z : Double) is Static ("glScaled");
-   procedure Translate (X, Y, Z : Double) is Static ("glTranslated");
+   procedure Matrix_Mode (Mode : Enums.Matrix_Mode) with
+     Static => "glMatrixMode";
+   procedure Frustum (Left, Right, Bottom, Top, zNear, zFar : Double) with
+     Static => "glFrustum", Wrapper => "GL.Fixed.Matrix.Apply_Frustum";
+   procedure Ortho (Left, Right, Bottom, Top, zNear, zFar : Double) with
+     Static => "glOrtho", Wrapper => "GL.Fixed.Matrix.Apply_Orthogonal";
+   procedure Load_Identity with
+     Static => "glLoadIdentity", Wrapper => "GL.Fixed.Matrix.Load_Identity";
+   procedure Push_Matrix with
+     Static => "glPushMatrix", Wrapper => "GL.Fixed.Matrix.Push";
+   procedure Pop_Matrix with
+     Static => "glPopMatrix", Wrapper => "GL.Fixed.Matrix.Pop";
+   procedure Rotate (Angle, X, Y, Z : Double) with
+     Static => "glRotated", Wrapper => "GL.Fixed.Matrix.Apply_Rotation";
+   procedure Scale (X, Y, Z : Double) with
+     Static => "glScaled", Wrapper => "GL.Fixed.Matrix.Apply_Scaling";
+   procedure Translate (X, Y, Z : Double) with
+     Static => "glTranslated", Wrapper => "GL.Fixed.Matrix.Apply_Translation";
 
    -----------------------------------------------------------------------------
    --              Immediate API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
-   procedure GL_Begin (Mode : Connection_Mode) is Static ("glBegin");
-   procedure GL_End is Static ("glEnd");
-   procedure Color (Value : Colors.Color) is Static ("glColor4fv");
-   procedure Secondary_Color (Value : Colors.Color) is
-     Dynamic ("glSecondaryColor3dv");
-   procedure Fog_Coord (Value : Double) is Dynamic ("glFogCoordd");
+   procedure GL_Begin (Mode : Connection_Mode) with
+     Static => "glBegin", Wrapper => "GL.Immediate.Start";
+   procedure GL_End with Static => "glEnd";
+   procedure Color (Value : Colors.Color) with
+     Static => "glColor4fv", Wrapper => "GL.Immediate.Set_Color";
+   procedure Secondary_Color (Value : Colors.Color) with
+     Dynamic => "glSecondaryColor3dv",
+     Wrapper => "GL.Immediate.Set_Secondary_Color";
+   procedure Fog_Coord (Value : Double) with
+     Dynamic => "glFogCoordd", Wrapper => "GL.Immediate.Set_Fog_Distance";
 
    -----------------------------------------------------------------------------
    --        Fixed Function Pipeline (deprecated as of OpenGL 3.0)            --
@@ -159,136 +198,175 @@ spec GL.API is
    procedure Vertex_Pointer (Count     : Int;
                              Data_Type : Signed_Numeric_Type;
                              Stride    : Size;
-                             Pointer   : Int) is Static ("glVertexPointer");
+                             Pointer   : Int) with
+     Static => "glVertexPointer", Wrapper => "GL.Fixed.Set_Vertex_Pointer";
    procedure Index_Pointer (Data_Type : Signed_Numeric_Type;
                             Stride    : Size;
-                            Pointer   : Int) is Static ("glIndexPointer");
+                            Pointer   : Int) with Static => "glIndexPointer";
    procedure Color_Pointer (Count     : Int;
                             Data_Type : Signed_Numeric_Type;
                             Stride    : Size;
-                            Pointer   : Int) is Static ("glColorPointer");
-   procedure Enable_Client_State (Cap : Fixed.Client_Side_Capability) is
-     Static ("glEnableClientState");
-   procedure Disable_Client_State (Cap : Fixed.Client_Side_Capability) is
-     Static ("glDisableClientState");
+                            Pointer   : Int) with
+     Static => "glColorPointer", Wrapper => "GL.Fixed.Set_Color_Pointer";
+   procedure Enable_Client_State (Cap : Fixed.Client_Side_Capability) with
+     Static => "glEnableClientState", Wrapper => "GL.Fixed.Enable";
+   procedure Disable_Client_State (Cap : Fixed.Client_Side_Capability) with
+     Static => "glDisableClientState", Wrapper => "GL.Fixed.Disable";
    procedure Draw_Arrays (Mode  : Connection_Mode;
-                          First : Int; Count : Size) is Static ("glDrawArrays");
+                          First : Int; Count : Size) with
+     Static  => "glDrawArrays",
+     Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays";
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
-                            Indices    : Low_Level.Zero) is
-     Static ("glDrawElements");
+                            Indices    : Low_Level.Zero) with
+     Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
 
    -----------------------------------------------------------------------------
    --               Lighting API (deprecated as of OpenGL 3.0)                --
    -----------------------------------------------------------------------------
 
    procedure Light_Model_Color (Param : Enums.Light_Model_Ambient_Parameter;
-                                Color : Colors.Color) is
-     Static ("glLightModelfv");
+                                Color : Colors.Color) with
+     Static  => "glLightModelfv",
+     Wrapper => "GL.Fixed.Lighting.Set_Global_Ambient_Light";
    procedure Light_Model_Color_Control (Param : Enums.Light_Model_CC_Parameter;
-     Value : access constant Fixed.Lighting.Color_Control) is
-     Static ("glLightModeliv");
+     Value : access constant Fixed.Lighting.Color_Control) with
+     Static  => "glLightModeliv",
+     Wrapper => "GL.Fixed.Lighting.Set_Color_Control";
    procedure Light_Model_Toggles (Param : Enums.Light_Model_Toggle_Parameter;
-                                  Value : access constant Int) is
-     Static ("glLightModeliv");
-   procedure Shade_Model (Mode : Fixed.Lighting.Shade_Model) is
-     Static ("glShadeModel");
+                                  Value : access constant Int) with
+     Static  => "glLightModeliv",
+     Wrapper => "GL.Fixed.Lighting.Enable_Local_Viewer",
+     Wrapper => "GL.Fixed.Lighting.Disable_Local_Viewer",
+     Wrapper => "GL.Fixed.Lighting.Enable_Two_Side",
+     Wrapper => "GL.Fixed.Lighting.Disable_Two_Side";
+   procedure Shade_Model (Mode : Fixed.Lighting.Shade_Model) with
+     Static => "glShadeModel", Wrapper => "GL.Fixed.Lighting.Set_Shade_Model";
    procedure Light_Color (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
-                          Param : Colors.Color) is Static ("glLightfv");
+                          Param : Colors.Color) with
+     Static  => "glLightfv",
+     Wrapper => "GL.Fixed.Lighting.Set_Ambient",
+     Wrapper => "GL.Fixed.Lighting.Set_Diffuse",
+     Wrapper => "GL.Fixed.Lighting.Set_Specular";
 
    -----------------------------------------------------------------------------
    --                               Blending                                  --
    -----------------------------------------------------------------------------
 
-   procedure Blend_Func (Src_Factor, Dst_Factor : Blending.Blend_Factor) is
-     Static ("glBlendFunc");
+   procedure Blend_Func (Src_Factor, Dst_Factor : Blending.Blend_Factor) with
+     Static => "glBlendFunc", Wrapper => "GL.Blending.Set_Blend_Func";
    procedure Blend_Func_I (Buf : Buffers.Draw_Buffer_Index;
-     Src_Factor, Dst_Factor : Blending.Blend_Factor) is
-     Dynamic ("glBlendFunci");
+     Src_Factor, Dst_Factor : Blending.Blend_Factor) with
+     Dynamic => "glBlendFunci", Wrapper => "GL.Blending.Set_Blend_Func";
    procedure Blend_Func_Separate
-     (Src_Rgb, Dst_Rgb, Src_Alpha, Dst_Alpha : Blending.Blend_Factor) is
-     Dynamic ("glBlendFuncSeparate");
+     (Src_Rgb, Dst_Rgb, Src_Alpha, Dst_Alpha : Blending.Blend_Factor) with
+     Dynamic => "glBlendFuncSeparate",
+     Wrapper => "GL.Blending.Set_Blend_Func_Separate";
    procedure Blend_Func_Separate_I (Buf : Buffers.Draw_Buffer_Index;
-     Src_Rgb, Dst_Rgb, Src_Alpha, Dst_Alpha : Blending.Blend_Factor) is
-     Dynamic ("glBlendFuncSeparate");
-   procedure Blend_Color (Red, Green, Blue, Alpha : Colors.Component) is
-     Dynamic ("glBlendColor");
-   procedure Blend_Equation (Mode : Blending.Equation) is
-     Dynamic ("glBlendEquation");
+     Src_Rgb, Dst_Rgb, Src_Alpha, Dst_Alpha : Blending.Blend_Factor) with
+     Dynamic => "glBlendFuncSeparate",
+     Wrapper => "GL.Blending.Set_Blend_Func_Separate";
+   procedure Blend_Color (Red, Green, Blue, Alpha : Colors.Component) with
+     Dynamic => "glBlendColor",
+     Wrapper => "GL.Blending.Set_Blend_Color";
+   procedure Blend_Equation (Mode : Blending.Equation) with
+     Dynamic => "glBlendEquation",
+     Wrapper => "GL.Blending.Set_Blend_Equation";
    procedure Blend_Equation_I (Buf : Buffers.Draw_Buffer_Index;
-                               Mode : Blending.Equation) is
-     Dynamic ("glBlendEquationi");
+                               Mode : Blending.Equation) with
+     Dynamic => "glBlendEquationi",
+     Wrapper => "GL.Blending.Set_Blend_Equation";
    procedure Blend_Equation_Separate (Mode_Rgb, Mode_Alpha : Blending.Equation)
-     is Dynamic ("glBlendEquationSeparate");
+     with Dynamic => "glBlendEquationSeparate",
+          Wrapper => "GL.Blending.Set_Blend_Equation_Separate";
    procedure Blend_Equation_Separate_I (Buf : Buffers.Draw_Buffer_Index;
-     Mode_Rgb, Mode_Alpha : Blending.Equation) is Dynamic ("glBlendEquationi");
+     Mode_Rgb, Mode_Alpha : Blending.Equation) with
+     Dynamic => "glBlendEquationi",
+     Wrapper => "GL.Blending.Set_Blend_Equation_Separate";
 
    -----------------------------------------------------------------------------
    --                             Rasterization                               --
    -----------------------------------------------------------------------------
 
-   procedure Line_Width (Value : Single) is Static ("glLineWidth");
+   procedure Line_Width (Value : Single) with
+     Static => "glLineWidth", Wrapper => "GL.Rasterization.Set_Line_Width";
    procedure Polygon_Mode (Face : Culling.Face_Selector;
-                           Value : Rasterization.Polygon_Mode_Type) is
-     Static ("glPolygonMode");
-   procedure Set_Point_Size (Value : Single) is Static ("glPointSize");
+                           Value : Rasterization.Polygon_Mode_Type) with
+     Static => "glPolygonMode", Wrapper => "GL.Rasterization.Set_Polygon_Mode";
+   procedure Set_Point_Size (Value : Single) with
+     Static => "glPointSize", Wrapper => "GL.Rasterization.Set_Point_Size";
    procedure Set_Point_Parameter_Single (Pname : Enums.Point_Param;
-     Param : Single) is Dynamic ("glPointParameterf");
+     Param : Single) with
+     Dynamic => "glPointParameterf",
+     Wrapper => "GL.Rasterization.Set_Point_Fade_Threshold_Size";
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
    -----------------------------------------------------------------------------
 
-   procedure Clear (Bits : Low_Level.Bitfield) is Static ("glClear");
-   procedure Draw_Buffer (Mode : Buffers.Explicit_Color_Buffer_Selector) is
-     Static ("glDrawBuffer");
+   procedure Clear (Bits : Low_Level.Bitfield) with
+     Static => "glClear", Wrapper => "GL.Buffers.Clear";
+   procedure Draw_Buffer (Mode : Buffers.Explicit_Color_Buffer_Selector) with
+     Static => "glDrawBuffer", Wrapper => "GL.Buffers.Set_Active_Buffer";
    procedure Draw_Buffers (N : UInt; Bufs : Buffers.Explicit_Color_Buffer_List)
-     is Dynamic ("glDrawBuffers");
-   procedure Clear_Color (Red, Green, Blue, Alpha : Colors.Component) is
-     Static ("glClearColor");
-   procedure Clear_Depth (Depth : Buffers.Depth) is Static ("glClearDepth");
-   procedure Clear_Stencil (Index : Buffers.Stencil_Index) is
-     Static ("glClearStencil");
+     with Dynamic => "glDrawBuffers",
+          Wrapper => "GL.Buffers.Set_Active_Buffers";
+   procedure Clear_Color (Red, Green, Blue, Alpha : Colors.Component) with
+     Static => "glClearColor", Wrapper => "GL.Buffers.Set_Color_Clear_Value";
+   procedure Clear_Depth (Depth : Buffers.Depth) with
+     Static => "glClearDepth", Wrapper => "GL.Buffers.Set_Depth_Clear_Value";
+   procedure Clear_Stencil (Index : Buffers.Stencil_Index) with
+     Static  => "glClearStencil",
+     Wrapper => "GL.Buffers.Set_Stencil_Clear_Value";
 
    -- dropped in OpenGL 3
-   procedure Clear_Accum (Red, Green, Blue, Alpha : Colors.Component) is
-     Dynamic ("glClearAccum");
+   procedure Clear_Accum (Red, Green, Blue, Alpha : Colors.Component) with
+     Dynamic => "glClearAccum", Wrapper => "GL.Buffers.Set_Accum_Clear_Value";
 
    procedure Clear_Buffer (Buffer : Buffers.Color_Buffer_Selector;
-                           Drawbuffer : Low_Level.Zero; Value : Colors.Color) is
-     Dynamic ("glClearBufferfv");
+                           Drawbuffer : Low_Level.Zero; Value : Colors.Color)
+     with Dynamic => "glClearBufferfv",
+          Wrapper => "GL.Buffers.Clear_Color_Buffers";
    procedure Clear_Draw_Buffer
      (Buffer : Low_Level.Enums.Only_Color_Buffer;
-      Drawbuffer : Buffers.Draw_Buffer_Index; Value : Colors.Color) is
-     Dynamic ("glClearBufferfv");
+      Drawbuffer : Buffers.Draw_Buffer_Index; Value : Colors.Color) with
+     Dynamic => "glClearBufferfv", Wrapper => "GL.Buffers.Clear_Draw_Buffer";
    procedure Clear_Buffer_Depth
      (Buffer : Low_Level.Enums.Only_Depth_Buffer; Drawbuffer : Low_Level.Zero;
-      Value : access constant Buffers.Depth) is Dynamic ("glClearBufferfv");
+      Value : access constant Buffers.Depth) with
+     Dynamic => "glClearBufferfv", Wrapper => "GL.Buffers.Clear_Depth_Buffer";
    procedure Clear_Buffer_Stencil
      (Buffer : Low_Level.Enums.Only_Stencil_Buffer; Drawbuffer : Low_Level.Zero;
-      Value : access constant Buffers.Stencil_Index) is
-     Dynamic ("glClearBufferiv");
+      Value : access constant Buffers.Stencil_Index) with
+     Dynamic => "glClearBufferiv", Wrapper => "GL.Buffers.Clear_Stencil_Buffer";
    procedure Clear_Buffer_Depth_Stencil
      (Buffer : Low_Level.Enums.Only_Depth_Stencil_Buffer;
       Drawbuffer : Low_Level.Zero;
-      Depth : Buffers.Depth; Stencil : Buffers.Stencil_Index) is
-     Dynamic ("glClearBufferfi");
+      Depth : Buffers.Depth; Stencil : Buffers.Stencil_Index) with
+     Dynamic => "glClearBufferfi",
+     Wrapper => "GL.Buffers.Clear_Depth_And_Stencil_Buffer";
 
    -----------------------------------------------------------------------------
    --                        Depth And Stencil Buffers                        --
    -----------------------------------------------------------------------------
 
-   procedure Depth_Mask (Value : Low_Level.Bool) is Static ("glDepthMask");
-   procedure Depth_Func (Func : Compare_Function) is Static ("glDepthFunc");
+   procedure Depth_Mask (Value : Low_Level.Bool) with
+     Static => "glDepthMask", Wrapper => "GL.Buffers.Depth_Mask";
+   procedure Depth_Func (Func : Compare_Function) with
+     Static => "glDepthFunc", Wrapper => "GL.Buffers.Set_Depth_Function";
    procedure Stencil_Func_Separate (Face : Culling.Face_Selector;
-     Func : Compare_Function; Ref : Int; Mask : UInt) is
-     Dynamic ("glStencilFuncSeparate");
+     Func : Compare_Function; Ref : Int; Mask : UInt) with
+     Dynamic => "glStencilFuncSeparate",
+     Wrapper => "GL.Buffers.Set_Stencil_Function";
    procedure Stencil_Op_Separate  (Face : Culling.Face_Selector;
-     S_Fail, Dp_Fail, Dp_Pass : Buffers.Stencil_Action) is
-     Dynamic ("glStencilOpSeparate");
+     S_Fail, Dp_Fail, Dp_Pass : Buffers.Stencil_Action) with
+     Dynamic => "glStencilOpSeparate",
+     Wrapper => "GL.Buffers.Set_Stencil_Operation";
    procedure Stencil_Mask_Separate (Face : Culling.Face_Selector;
-     Mask : UInt) is Dynamic ("glStencilMaskSeparate");
+     Mask : UInt) with
+     Dynamic => "glStencilMaskSeparate",
+     Wrapper => "GL.Buffers.Set_Stencil_Mask";
 
    -----------------------------------------------------------------------------
    --                                Textures                                 --
