@@ -10,19 +10,6 @@ permalink: index.html
 you to create complex graphical applications in Ada, using the OpenGL industry
 standard.
 
-OpenGLAda is not the first attempt to create an OpenGL binding for Ada. Other
-bindings are:
-
- * [AdaOpenGL](http://adaopengl.sourceforge.net/): Afaik the first binding that
-   has been developed. It's a rather thin binding and is not quite up-to-date,
-   but like OpenGLAda, it also includes GLFW bindings.
- * [Globe3D](http://globe3d.sourceforge.net/): This is not only an OpenGL
-   binding, but also provides methods for rendering of 3D objects. The included
-   OpenGL binding is decent and up-to-date, but also rather thin.
- * [Lumen](http://www.niestu.com/software/lumen/): Lumen aims to be an interface
-   library for Ada and is currently under development. It includes an
-   auto-generated, very thin OpenGL binding.
-
 ## Highlights
 
  * Strong typing: Thanks to extensive usage of Ada's type system, using the API
@@ -34,8 +21,8 @@ bindings are:
  * Object-oriented design: All OpenGL objects are wrapped as tagged types. They
    are also reference-counted, so you do not need to worry about freeing memory
    yourself.
- * OS-agnostic: OpenGLAda builds on MacOSX, Windows and Linux without further
-   configuration.
+ * Cross-Platform: OpenGLAda builds on MacOSX, Windows and X11-based operating
+   systems like Linux.
  * Structured: In contrast to the raw OpenGL library, OpenGLAda's functionality
    is structured into packages, so you have a better overview over the
    functionality of the API.
@@ -57,6 +44,18 @@ available as [tags][2] of the git repository.
 ## License
 
 OpenGLAda is distributed under the terms of the [ISC License][3].
+
+## Related Projects
+
+OpenGLAda is not the first attempt to create an OpenGL binding for Ada. Other
+bindings are:
+
+ * [AdaOpenGL](http://adaopengl.sourceforge.net/): Probably the first
+   open-source binding that has been developed. It's rather thin and has seen
+   its last update in 2003. Like OpenGLAda, it includes GLFW bindings.
+ * [Globe3D](http://globe3d.sourceforge.net/): A 3D engine in Ada based on
+   OpenGL. The included OpenGL binding is decent and up-to-date, but also rather
+   thin.
 
  [1]: https://github.com/flyx/OpenGLAda
  [2]: https://github.com/flyx/OpenGLAda/tags

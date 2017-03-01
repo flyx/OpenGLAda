@@ -21,8 +21,9 @@ describes how OpenGL features are wrapped by OpenGLAda.
 
 ## OpenGL Versions
 
-OpenCLAda aims to provide the feature set of OpenGL 3.2. It may be extended to provide
-functionality of newer versions in the future.
+OpenGLAda aims to provide the feature set of OpenGL 3.2, but quite some
+functionality of newer OpenGL version (up to 4.4) is also available. Features
+are being added when requested.
 
 OpenGL 3.0 has deprecated a lot of functionality that was part of earlier versions.
 OpenGLAda provides some of this older functionality that seems to be important enough
@@ -57,7 +58,7 @@ OpenGL sets an error flag. You can disable this behavior by setting the scenario
 All features that were introduced in OpenGL 1.2 or later will not be expected to be
 available. OpenGLAda queries the neccessary function pointers at runtime and raises a
 `Feature_Not_Supported_Exception` when a function is not available from the system's
-OpenGL implementation.
+OpenGL implementation. The querying will be done once by calling `GL.Init`.
 
 ## Getting Started
 
