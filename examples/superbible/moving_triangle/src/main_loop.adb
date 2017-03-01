@@ -43,8 +43,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (0.5 * Sin (Single (Current_Time)),
            0.5 * Cos (Single (Current_Time)), 0.0, 0.0);
     begin
-        GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Back_Colour);
+        Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
         GL.Objects.Programs.Use_Program (Rendering_Program);
 
