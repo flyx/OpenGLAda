@@ -40,8 +40,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (0.5 * (1.0 + Sin (Single (Current_Time))),
            0.5 * (1.0 + Cos (Single (Current_Time))), 0.0, 1.0);
     begin
-        GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Back_Colour);
+        Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
         GL.Objects.Programs.Use_Program (Rendering_Program);
         GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
