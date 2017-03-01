@@ -78,6 +78,7 @@ private
    type Spec_Data is record
       Name, File_Base_Name : Unbounded_String;
       Withs : String_Lists.Vector;
+      Uses  : String_Lists.Vector;
       Items : Item_Lists.Vector;
       Wrappers : Wrapper_Lists.Vector;
    end record;

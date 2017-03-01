@@ -461,6 +461,35 @@ package body Specs is
             end if;
          end;
       end Gen_Subprogram_Item;
+
+      procedure Gen_Use is
+         Tmp : Unbounded_String := To_Unbounded_String ("");
+      begin
+         loop
+            declare
+               Ident : constant Token := Next (T);
+            begin
+               if Ident.Kind /= Identifier or else Is_Keyword (Ident.Id) then
+                  Wrong_Token (Ident, "Unexpected token, expected identifier");
+               end if;
+               Append (Tmp, Ident.Content);
+            end;
+            declare
+               Delim : constant Token := Next (T);
+            begin
+               if Delim.Kind /= Delimiter then
+                  Wrong_Token (Delim, "Unexpected token, expected `;` or `.`");
+               elsif Delim.Content = ";" then
+                  exit;
+               elsif Delim.Content = "." then
+                  Append (Tmp, '.');
+               else
+                  Wrong_Token (Delim, "Unexpected token, expected `;` or `.`");
+               end if;
+            end;
+         end loop;
+         Data.Uses.Append (To_String (Tmp));
+      end Gen_Use;
    begin
       loop
          <<continue1>>
@@ -501,10 +530,11 @@ package body Specs is
                Wrong_Token (Cur, "Unexpected token (expected identifier)");
             end if;
             case Cur.Id is
-            when Keyword_Pragma | Keyword_Use | Keyword_Type | Keyword_Subtype =>
+            when Keyword_Pragma | Keyword_Type | Keyword_Subtype =>
                Gen_Copy_Item (Cur);
             when Keyword_Function | Keyword_Procedure =>
                Gen_Subprogram_Item (Cur);
+            when Keyword_Use => Gen_Use;
             when Keyword_End => exit;
             when others =>
                Wrong_Token (Cur, "Unexpected identifier (expected keyword)");
@@ -571,6 +601,9 @@ package body Specs is
       Put_Line (Target,
         (if Is_Root then "private " else "") & "package " & Name & " is");
       Put_Line (Target, "   pragma Preelaborate;");
+      for Use_Item of Data.Uses loop
+         Put_Line (Target, "   use " & Use_Item & ";");
+      end loop;
       Put_Line (Target, "   use GL.Types;");
       if Is_Root then
          declare

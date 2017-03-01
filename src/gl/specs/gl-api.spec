@@ -25,6 +25,8 @@ with Interfaces.C.Strings;
 with System;
 
 spec GL.API is
+   use GL.Types;
+
    function Get_Error return Errors.Error_Code is Static ("glGetError");
    procedure Flush is Static ("glFlush");
    procedure Finish is Static ("glFinish");
@@ -374,114 +376,167 @@ spec GL.API is
 
    procedure Tex_Parameter_Float (Target     : Low_Level.Enums.Texture_Kind;
                                   Param_Name : Enums.Textures.Parameter;
-                                  Value      : Single) is
-     Static ("glTexParameterf");
+                                  Value      : Single) with
+     Static  => "glTexParameterf",
+     Wrapper => "GL.Objects.Textures.Set_Minimum_LoD",
+     Wrapper => "GL.Objects.Textures.Set_Maximum_LoD",
+     Wrapper => "GL.Objects.Textures.Set_Texture_Priority";
    procedure Tex_Parameter_Int (Target     : Low_Level.Enums.Texture_Kind;
                                 Param_Name : Enums.Textures.Parameter;
-                                Value      : Int) is Static ("glTexParameteri");
+                                Value      : Int) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_Lowest_Mipmap_Level",
+     Wrapper => "GL.Objects.Textures.Set_Highest_Mipmap_Level";
    procedure Tex_Parameter_Min_Filter
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Value      : Objects.Textures.Minifying_Function) is
-     Static ("glTexParameteri");
+      Value      : Objects.Textures.Minifying_Function) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_Minifying_Filter";
    procedure Tex_Parameter_Mag_Filter
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Value      : Objects.Textures.Magnifying_Function) is
-     Static ("glTexParameteri");
+      Value      : Objects.Textures.Magnifying_Function) with
+     Static => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_Magnifying_Filter";
    procedure Tex_Parameter_Wrap_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Value      : Objects.Textures.Wrapping_Mode) is
-     Static ("glTexParameteri");
+      Value      : Objects.Textures.Wrapping_Mode) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_X_Wrapping",
+     Wrapper => "GL.Objects.Textures.Set_Y_Wrapping",
+     Wrapper => "GL.Objects.Textures.Set_Z_Wrapping";
    procedure Tex_Parameter_Comp_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Value      : Enums.Textures.Compare_Kind) is Static ("glTexParameteri");
+      Value      : Enums.Textures.Compare_Kind) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Toggle_Compare_X_To_Texture";
    procedure Tex_Parameter_Comp_Func (Target     : Low_Level.Enums.Texture_Kind;
                                       Param_Name : Enums.Textures.Parameter;
-                                      Value      : Compare_Function) is
-     Static ("glTexParameteri");
+                                      Value      : Compare_Function) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_Compare_Function";
    procedure Tex_Parameter_Depth_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Value      : Objects.Textures.Depth_Mode) is Static ("glTexParameteri");
+      Value      : Objects.Textures.Depth_Mode) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Set_Depth_Texture_Mode";
    procedure Tex_Parameter_Bool (Target     : Low_Level.Enums.Texture_Kind;
                                  Param_Name : Enums.Textures.Parameter;
-                                 Value      : Low_Level.Bool) is
-     Static ("glTexParameteri");
+                                 Value      : Low_Level.Bool) with
+     Static  => "glTexParameteri",
+     Wrapper => "GL.Objects.Textures.Toggle_Mipmap_Autoupdate";
    procedure Tex_Parameter_Floats (Target     : Low_Level.Enums.Texture_Kind;
                                    Param_Name : Enums.Textures.Parameter;
-                                   Values     : Low_Level.Single_Array) is
-     Static ("glTexParameterfv");
+                                   Values     : Low_Level.Single_Array) with
+     Static  => "glTexParameterfv",
+     Wrapper => "GL.Objects.Textures.Set_Border_Color";
    procedure Get_Tex_Parameter_Float (Target     : Low_Level.Enums.Texture_Kind;
                                       Param_Name : Enums.Textures.Parameter;
-                                      Value      : out Single) is
-     Static ("glGetTexParameterfv");
+                                      Value      : out Single) with
+     Static  => "glGetTexParameterfv",
+     Wrapper => "GL.Objects.Textures.Minimum_LoD",
+     Wrapper => "GL.Objects.Textures.Maximum_LoD",
+     Wrapper => "GL.Objects.Textures.Texture_Priority";
    procedure Get_Tex_Parameter_Floats
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : in out Low_Level.Single_Array) is
-     Static ("glGetTexParameterfv");
+      Values     : in out Low_Level.Single_Array) with
+     Static  => "glGetTexParameterfv",
+     Wrapper => "GL.Objects.Textures.Border_Color";
    procedure Get_Tex_Parameter_Int (Target     : Low_Level.Enums.Texture_Kind;
                                     Param_Name : Enums.Textures.Parameter;
-                                    Values     : out Int) is
-     Static ("glGetTexParameteriv");
+                                    Values     : out Int) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.Minifying_Filter",
+     Wrapper => "GL.Objects.Textures.Magnifying_Filter",
+     Wrapper => "GL.Objects.Textures.Lowest_Mipmap_Level",
+     Wrapper => "GL.Objects.Textures.Highest_Mipmap_Level";
    procedure Get_Tex_Parameter_Ints (Target     : Low_Level.Enums.Texture_Kind;
                                      Param_Name : Enums.Textures.Parameter;
-                                     Values     : in out Low_Level.Int_Array) is
-     Static ("glGetTexParameteriv");
+                                     Values     : in out Low_Level.Int_Array)
+     with Static => "glGetTexParameteriv";
    procedure Get_Tex_Parameter_Wrap_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : out Objects.Textures.Wrapping_Mode) is
-     Static ("glGetTexParameteriv");
+      Values     : out Objects.Textures.Wrapping_Mode) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.X_Wrapping",
+     Wrapper => "GL.Objects.Textures.Y_Wrapping",
+     Wrapper => "GL.Objects.Textures.Z_Wrapping";
    procedure Get_Tex_Parameter_Comp_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : out Enums.Textures.Compare_Kind) is
-     Static ("glGetTexParameteriv");
+      Values     : out Enums.Textures.Compare_Kind) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.Compare_X_To_Texture_Enabled";
    procedure Get_Tex_Parameter_Comp_Func
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : out Compare_Function) is Static ("glGetTexParameteriv");
+      Values     : out Compare_Function) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.Current_Compare_Function";
    procedure Get_Tex_Parameter_Depth_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : out Objects.Textures.Depth_Mode) is
-     Static ("glGetTexParameteriv");
+      Values     : out Objects.Textures.Depth_Mode) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.Depth_Texture_Mode";
    procedure Get_Tex_Parameter_Bool (Target     : Low_Level.Enums.Texture_Kind;
                                      Param_Name : Enums.Textures.Parameter;
-                                     Values     : out Low_Level.Bool) is
-     Static ("glGetTexParameteriv");
+                                     Values     : out Low_Level.Bool) with
+     Static  => "glGetTexParameteriv",
+     Wrapper => "GL.Objects.Textures.Mipmap_Autoupdate_Enabled";
    procedure Get_Tex_Level_Parameter_Size
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Size) is Static ("glGetTexLevelParameteriv");
+      Value      : out Size) with
+     Static  => "glGetTexLevelParameteriv",
+     Wrapper => "GL.Objects.Textures.Width",
+     Wrapper => "GL.Objects.Textures.Height",
+     Wrapper => "GL.Objects.Textures.Depth",
+     Wrapper => "GL.Objects.Textures.Red_Size",
+     Wrapper => "GL.Objects.Textures.Green_Size",
+     Wrapper => "GL.Objects.Textures.Blue_Size",
+     Wrapper => "GL.Objects.Textures.Alpha_Size",
+     Wrapper => "GL.Objects.Textures.Depth_Size",
+     Wrapper => "GL.Objects.Textures.Compressed_Image_Size";
    procedure Get_Tex_Level_Parameter_Format
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Pixels.Internal_Format) is
-     Static ("glGetTexLevelParameteriv");
+      Value      : out Pixels.Internal_Format) with
+     Static => "glGetTexLevelParameteriv",
+     Wrapper => "GL.Objects.Textures.Format";
    procedure Get_Tex_Level_Parameter_Type
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Pixels.Channel_Data_Type) is
-     Static ("glGetTexLevelParameteriv");
+      Value      : out Pixels.Channel_Data_Type) with
+     Static  => "glGetTexLevelParameteriv",
+     Wrapper => "GL.Objects.Textures.Red_Type",
+     Wrapper => "GL.Objects.Textures.Green_Type",
+     Wrapper => "GL.Objects.Textures.Blue_Type",
+     Wrapper => "GL.Objects.Textures.Alpha_Type",
+     Wrapper => "GL.Objects.Textures.Depth_Type";
    procedure Get_Tex_Level_Parameter_Bool
      (Target     : Low_Level.Enums.Texture_Kind;
       Level      : Objects.Textures.Mipmap_Level;
       Param_Name : Enums.Textures.Level_Parameter;
-      Value      : out Low_Level.Bool) is Static ("glGetTexLevelParameteriv");
-   procedure Gen_Textures (N : Size; Textures : access UInt) is
-     Static ("glGenTextures");
+      Value      : out Low_Level.Bool) with
+     Static  => "glGetTexLevelParameteriv",
+     Wrapper => "GL.Objects.Textures.Compressed";
+   procedure Gen_Textures (N : Size; Textures : access UInt) with
+     Static => "glGenTextures", Wrapper => "GL.Objects.Textures.Initialize_Id";
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
-                           Texture : UInt) is Static ("glBindTexture");
-   procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array) is
-     Static ("glDeleteTextures");
+                           Texture : UInt) with
+     Static => "glBindTexture", Wrapper => "GL.Objects.Textures.Bind";
+   procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array) with
+     Static => "glDeleteTextures";
    procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixels.Internal_Format;
@@ -489,8 +544,10 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data   : Objects.Textures.Image_Source) is
-     Static ("glTexImage1D");
+                           Data   : Objects.Textures.Image_Source) with
+     Static  => "glTexImage1D",
+     Wrapper => "GL.Objects.Textures.With_1D_Loader.Load_Empty_Texture",
+     Wrapper => "GL.Objects.Textures.With_1D_Loader.Load_From_Data";
    procedure Compressed_Tex_Image_1D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -498,8 +555,15 @@ spec GL.API is
       Width           : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : Objects.Textures.Image_Source) is
-     Dynamic ("glCompressedTexImage1D");
+      Data            : Objects.Textures.Image_Source) with
+     Dynamic => "glCompressedTexImage1D",
+     Wrapper => "GL.Objects.Textures.With_1D_Loader.Load_Compressed";
+   procedure Tex_Storage_1D
+     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+      Internal_Format : Pixels.Internal_Format;
+      Width : Size) with
+     Dynamic => "glTexStorage1D",
+     Wrapper => "GL.Objects.Textures.With_1D_Loader.Storage";
    procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixels.Internal_Format;
@@ -507,8 +571,10 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data : Objects.Textures.Image_Source) is
-     Static ("glTexImage2D");
+                           Data : Objects.Textures.Image_Source) with
+     Static  => "glTexImage2D",
+     Wrapper => "GL.Objects.Textures.With_2D_Loader.Load_Empty_Texture",
+     Wrapper => "GL.Objects.Textures.With_2D_Loader.Load_From_Data";
    procedure Compressed_Tex_Image_2D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -516,8 +582,15 @@ spec GL.API is
       Width, Height   : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : Objects.Textures.Image_Source) is
-     Dynamic ("glCompressedTexImage2D");
+      Data            : Objects.Textures.Image_Source) with
+     Dynamic => "glCompressedTexImage2D",
+     Wrapper => "GL.Objects.Textures.With_2D_Loader.Load_Compressed";
+   procedure Tex_Storage_2D
+     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+      Internal_Format : Pixels.Internal_Format;
+      Width, Height : Size) with
+     Dynamic => "glTexStorage2D",
+     Wrapper => "GL.Objects.Textures.With_2D_Loader.Storage";
    procedure Tex_Image_3D (Target : Low_Level.Enums.Texture_Kind;
                            Level  : Objects.Textures.Mipmap_Level;
                            Internal_Format : Pixels.Internal_Format;
@@ -525,8 +598,10 @@ spec GL.API is
                            Border : Low_Level.Zero;
                            Format : Pixels.Data_Format;
                            Data_Type : Pixels.Data_Type;
-                           Data : Objects.Textures.Image_Source) is
-     Dynamic ("glTexImage3D");
+                           Data : Objects.Textures.Image_Source) with
+     Dynamic => "glTexImage3D",
+     Wrapper => "GL.Objects.Textures.With_3D_Loader.Load_Empty_Texture",
+     Wrapper => "GL.Objects.Textures.With_3D_Loader.Load_From_Data";
    procedure Compressed_Tex_Image_3D
      (Target          : Low_Level.Enums.Texture_Kind;
       Level           : Objects.Textures.Mipmap_Level;
@@ -534,171 +609,215 @@ spec GL.API is
       Width, Height, Depth : Size;
       Border          : Low_Level.Zero;
       Image_Size      : Size;
-      Data            : Objects.Textures.Image_Source) is
-     Dynamic ("glCompressedTexImage3D");
-   procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
-                            Param_Name : Enums.Textures.Env_Parameter;
-                            Value      : Single) is Static ("glTexEnvf");
-   procedure Tex_Env_Int (Target     : Enums.Textures.Env_Target;
-                          Param_Name : Enums.Textures.Env_Parameter;
-                          Value      : Int) is Static ("glTexEnvi");
-   procedure Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
-                               Param_Name : Enums.Textures.Env_Parameter;
-                               Value      : Fixed.Textures.Texture_Function) is
-     Static ("glTexEnvi");
-   procedure Tex_Env_Combine_Func
-     (Target     : Enums.Textures.Env_Target;
-      Param_Name : Enums.Textures.Env_Parameter;
-      Value      : Fixed.Textures.Combine_Function) is Static ("glTexEnvi");
-   procedure Tex_Env_Source (Target     : Enums.Textures.Env_Target;
-                             Param_Name : Enums.Textures.Env_Parameter;
-                             Value      : Fixed.Textures.Source_Kind) is
-     Static ("glTexEnvi");
-   procedure Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
-                          Param_Name : Enums.Textures.Env_Parameter;
-                          Value      : Low_Level.Single_Array) is
-     Static ("glTexEnvfv");
-   procedure Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
-                           Param_Name : Enums.Textures.Env_Parameter;
-                           Value      : Low_Level.Bool) is Static ("glTexEnvi");
-   procedure Get_Tex_Env_Float (Target     : Enums.Textures.Env_Target;
-                                Param_Name : Enums.Textures.Env_Parameter;
-                                Value      : out Single) is
-     Static ("glGetTexEnvfv");
-   procedure Get_Tex_Env_Tex_Func
-     (Target     : Enums.Textures.Env_Target;
-      Param_Name : Enums.Textures.Env_Parameter;
-      Value      : out Fixed.Textures.Texture_Function) is
-     Static ("glGetTexEnviv");
-   procedure Get_Tex_Env_Combine_Func
-     (Target     : Enums.Textures.Env_Target;
-      Param_Name : Enums.Textures.Env_Parameter;
-      Value      : out Fixed.Textures.Combine_Function) is
-     Static ("glGetTexEnviv");
-   procedure Get_Tex_Env_Source (Target     : Enums.Textures.Env_Target;
-                                 Param_Name : Enums.Textures.Env_Parameter;
-                                 Value      : out Fixed.Textures.Source_Kind) is
-     Static ("glGetTexEnviv");
-   procedure Get_Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
-                              Param_Name : Enums.Textures.Env_Parameter;
-                              Value      : in out Low_Level.Single_Array) is
-     Static ("glGetTexEnvfv");
-   procedure Get_Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
-                               Param_Name : Enums.Textures.Env_Parameter;
-                               Value      : out Low_Level.Bool) is
-     Static ("glGetTexEnviv");
-   procedure Active_Texture (Texture : Int) is Dynamic ("glActiveTexture");
-   procedure Generate_Mipmap (Target : Low_Level.Enums.Texture_Kind) is
-     Dynamic ("glGenerateMipmap");
-   procedure Invalidate_Tex_Image
-     (Texture : UInt; Level : Objects.Textures.Mipmap_Level) is
-     Dynamic ("glInvalidateTexImage");
-   procedure Invalidate_Tex_Sub_Image
-     (Texture : UInt; Level : Objects.Textures.Mipmap_Level;
-      X_Offset, Y_Offset, Z_Offset : Int; Width, Height, Depth : Size) is
-     Dynamic ("glInvalidateTexSubImage");
-   procedure Tex_Storage_1D
-     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
-      Internal_Format : Pixels.Internal_Format;
-      Width : Size) is Dynamic ("glTexStorage1D");
-   procedure Tex_Storage_2D
-     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
-      Internal_Format : Pixels.Internal_Format;
-      Width, Height : Size) is Dynamic ("glTexStorage2D");
+      Data            : Objects.Textures.Image_Source) with
+     Dynamic => "glCompressedTexImage3D",
+     Wrapper => "GL.Objects.Textures.With_3D_Loader.Load_Compressed";
    procedure Tex_Storage_3D
      (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
       Internal_Format : Pixels.Internal_Format;
-      Width, Height, Depth : Size) is Dynamic ("glTexStorage3D");
+      Width, Height, Depth : Size) with
+     Dynamic => "glTexStorage3D",
+     Wrapper => "GL.Objects.Textures.With_3D_Loader.Storage";
+   procedure Tex_Env_Float (Target     : Enums.Textures.Env_Target;
+                            Param_Name : Enums.Textures.Env_Parameter;
+                            Value      : Single) with
+     Static  => "glTexEnvf",
+     Wrapper => "GL.Fixed.Textures.Set_RGB_Scale",
+     Wrapper => "GL.Fixed.Textures.Set_Alpha_Scale",
+     Wrapper => "GL.Fixed.Textures.Set_LoD_Bias";
+   procedure Tex_Env_Int (Target     : Enums.Textures.Env_Target;
+                          Param_Name : Enums.Textures.Env_Parameter;
+                          Value      : Int) with Static  => "glTexEnvi";
+   procedure Tex_Env_Tex_Func (Target     : Enums.Textures.Env_Target;
+                               Param_Name : Enums.Textures.Env_Parameter;
+                               Value      : Fixed.Textures.Texture_Function)
+     with Static  => "glTexEnvi",
+          Wrapper => "GL.Fixed.Textures.Set_Tex_Function";
+   procedure Tex_Env_Combine_Func
+     (Target     : Enums.Textures.Env_Target;
+      Param_Name : Enums.Textures.Env_Parameter;
+      Value      : Fixed.Textures.Combine_Function) with
+     Static  => "glTexEnvi",
+     Wrapper => "GL.Fixed.Textures.Set_RGB_Combine",
+     Wrapper => "GL.Fixed.Textures.Set_Alpha_Combine";
+   procedure Tex_Env_Source (Target     : Enums.Textures.Env_Target;
+                             Param_Name : Enums.Textures.Env_Parameter;
+                             Value      : Fixed.Textures.Source_Kind) with
+     Static  => "glTexEnvi",
+     Wrapper => "GL.Fixed.Textures.Set_RGB_Source",
+     Wrapper => "GL.Fixed.Textures.Set_Alpha_Source";
+   procedure Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
+                          Param_Name : Enums.Textures.Env_Parameter;
+                          Value      : Low_Level.Single_Array) with
+     Static => "glTexEnvfv", Wrapper => "GL.Fixed.Textures.Set_Env_Color";
+   procedure Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
+                           Param_Name : Enums.Textures.Env_Parameter;
+                           Value      : Low_Level.Bool) with
+     Static  => "glTexEnvi",
+     Wrapper => "GL.Fixed.Textures.Toggle_Point_Sprite_Coord_Replace";
+   procedure Get_Tex_Env_Float (Target     : Enums.Textures.Env_Target;
+                                Param_Name : Enums.Textures.Env_Parameter;
+                                Value      : out Single) with
+     Static  => "glGetTexEnvfv",
+     Wrapper => "GL.Fixed.Textures.RGB_Scale",
+     Wrapper => "GL.Fixed.Textures.Alpha_Scale",
+     Wrapper => "GL.Fixed.Textures.LoD_Bias";
+   procedure Get_Tex_Env_Tex_Func
+     (Target     : Enums.Textures.Env_Target;
+      Param_Name : Enums.Textures.Env_Parameter;
+      Value      : out Fixed.Textures.Texture_Function) with
+     Static => "glGetTexEnviv", Wrapper => "GL.Fixed.Textures.Tex_Function";
+   procedure Get_Tex_Env_Combine_Func
+     (Target     : Enums.Textures.Env_Target;
+      Param_Name : Enums.Textures.Env_Parameter;
+      Value      : out Fixed.Textures.Combine_Function) with
+     Static  => "glGetTexEnviv",
+     Wrapper => "GL.Fixed.Textures.RGB_Combine",
+     Wrapper => "GL.Fixed.Textures.Alpha_Combine";
+   procedure Get_Tex_Env_Source (Target     : Enums.Textures.Env_Target;
+                                 Param_Name : Enums.Textures.Env_Parameter;
+                                 Value      : out Fixed.Textures.Source_Kind)
+     with Static  => "glGetTexEnviv",
+          Wrapper => "GL.Fixed.Textures.RGB_Source",
+          Wrapper => "GL.Fixed.Textures.Alpha_Source";
+   procedure Get_Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
+                              Param_Name : Enums.Textures.Env_Parameter;
+                              Value      : in out Low_Level.Single_Array) with
+     Static => "glGetTexEnvfv", Wrapper => "GL.Fixed.Textures.Env_Color";
+   procedure Get_Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
+                               Param_Name : Enums.Textures.Env_Parameter;
+                               Value      : out Low_Level.Bool) with
+     Static  => "glGetTexEnviv",
+     Wrapper => "GL.Fixed.Textures.Point_Sprite_Coord_Replace";
+   procedure Active_Texture (Texture : Int) with
+     Dynamic => "glActiveTexture",
+     Wrapper => "GL.Objects.Textures.Set_Active_Unit";
+   procedure Generate_Mipmap (Target : Low_Level.Enums.Texture_Kind) with
+     Dynamic => "glGenerateMipmap",
+     Wrapper => "GL.Objects.Textures.Generate_Mipmap";
+   procedure Invalidate_Tex_Image
+     (Texture : UInt; Level : Objects.Textures.Mipmap_Level) with
+     Dynamic => "glInvalidateTexImage",
+     Wrapper => "GL.Objects.Textures.Invalidate_Image";
+   procedure Invalidate_Tex_Sub_Image
+     (Texture : UInt; Level : Objects.Textures.Mipmap_Level;
+      X_Offset, Y_Offset, Z_Offset : Int; Width, Height, Depth : Size) with
+     Dynamic => "glInvalidateTexSubImage",
+     Wrapper => "GL.Objects.Textures.Invalidate_Sub_Image";
 
    -----------------------------------------------------------------------------
    --                             Buffer Objects                              --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Buffers (N : Size; Buffers : out UInt) is
-     Dynamic ("glGenBuffers");
-   procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) is
-     Dynamic ("glDeleteBuffers");
+   procedure Gen_Buffers (N : Size; Buffers : out UInt) with
+     Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Buffers.Initialize_Id";
+   procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteBuffers";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
-     is Dynamic ("glBindBuffer");
-   procedure Buffer_Data (Target : Low_Level.Enums.Buffer_Kind;
-     Size : Low_Level.SizeIPtr; Data : System.Address;
-     Usage : Objects.Buffers.Buffer_Usage) is Dynamic ("glBufferData");
+     with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
+   procedure Buffer_Data
+     (Target : Low_Level.Enums.Buffer_Kind;
+      Size : Low_Level.SizeIPtr; Data : System.Address;
+      Usage : Objects.Buffers.Buffer_Usage) with
+     Dynamic => "glBufferData",
+     Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
+     Wrapper => "GL.Objects.Buffers.Allocate";
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
-                        Acc : Objects.Access_Kind) return System.Address is
-     Dynamic ("glMapBuffer");
+                        Acc : Objects.Access_Kind) return System.Address with
+     Dynamic => "glMapBuffer", Wrapper => "GL.Objects.Buffers.Map";
    procedure Buffer_Pointer (Target : Low_Level.Enums.Buffer_Kind;
                              Pname  : Enums.Buffer_Pointer_Param;
-                             Params : out System.Address) is
-     Dynamic ("glGetBufferPointerv");
+                             Params : out System.Address) with
+     Dynamic => "glGetBufferPointerv", Wrapper => "GL.Objects.Buffers.Pointer";
    procedure Buffer_Sub_Data (Target : Low_Level.Enums.Buffer_Kind;
                               Offset : Low_Level.IntPtr;
                               Size   : Low_Level.SizeIPtr;
-                              Data   : System.Address) is
-     Dynamic ("glBufferSubData");
-
-   -- glMapBuffer: returns instance of generic Interfaces.C.Pointers.Pointer,
-   -- therefore declared in GL.Objects.Buffers
-
-   procedure Unmap_Buffer (Target : Low_Level.Enums.Buffer_Kind) is
-     Dynamic ("glUnmapBuffer");
+                              Data   : System.Address) with
+     Dynamic => "glBufferSubData", Wrapper => "GL.Objects.Buffers.Get_Sub_Data";
+   procedure Unmap_Buffer (Target : Low_Level.Enums.Buffer_Kind) with
+     Dynamic => "glUnmapBuffer", Wrapper => "GL.Objects.Buffers.Unmap";
    procedure Get_Buffer_Parameter_Access_Kind
      (Target : Low_Level.Enums.Buffer_Kind; Value : Enums.Buffer_Param;
-      Data   : out Objects.Access_Kind) is Dynamic ("glGetBufferParameteriv");
+      Data   : out Objects.Access_Kind) with
+     Dynamic => "glGetBufferParameteriv",
+     Wrapper => "GL.Objects.Buffers.Access_Type";
    procedure Get_Buffer_Parameter_Bool
      (Target : Low_Level.Enums.Buffer_Kind; Value : Enums.Buffer_Param;
-      Data   : out Low_Level.Bool) is Dynamic ("glGetBufferParameteriv");
+      Data   : out Low_Level.Bool) with
+     Dynamic => "glGetBufferParameteriv",
+     Wrapper => "GL.Objects.Buffers.Mapped";
    procedure Get_Buffer_Parameter_Size
      (Target : Low_Level.Enums.Buffer_Kind; Value : Enums.Buffer_Param;
-      Data   : out Size) is Dynamic ("glGetBufferParameteriv");
+      Data   : out Size) with
+     Dynamic => "glGetBufferParameteriv",
+     Wrapper => "GL.Objects.Buffers.Size";
    procedure Get_Buffer_Parameter_Usage
      (Target : Low_Level.Enums.Buffer_Kind; Value : Enums.Buffer_Param;
-      Data   : out Objects.Buffers.Buffer_Usage) is
-     Dynamic ("glGetBufferParameteriv");
-   procedure Invalidate_Buffer_Data (Buffer : UInt) is
-     Dynamic ("glInvalidateBufferData");
+      Data   : out Objects.Buffers.Buffer_Usage) with
+     Dynamic => "glGetBufferParameteriv",
+     Wrapper => "GL.Objects.Buffers.Usage";
+   procedure Invalidate_Buffer_Data (Buffer : UInt) with
+     Dynamic => "glInvalidateBufferData",
+     Wrapper => "GL.Objects.Buffers.Invalidate_Data";
    procedure Invalidate_Buffer_Sub_Data
-     (Buffer : UInt; Offset : Low_Level.IntPtr; Length : Low_Level.SizeIPtr) is
-     Dynamic ("glInvalidateBufferSubData");
+     (Buffer : UInt; Offset : Low_Level.IntPtr; Length : Low_Level.SizeIPtr)
+     with Dynamic => "glInvalidateBufferSubData",
+          Wrapper => "GL.Objects.Buffers.Invalidate_Sub_Data";
 
    -----------------------------------------------------------------------------
    --                           Vertex Array Objects                          --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Vertex_Arrays (N : Size; Arrays : out UInt) is
-     Dynamic ("glGenVertexArrays");
-   procedure Delete_Vertex_Arrays (N : Size; Arrays : Low_Level.UInt_Array) is
-     Dynamic ("glDeleteVertexArrays");
-   procedure Bind_Vertex_Array (Arr : UInt) is Dynamic ("glBindVertexArray");
+   procedure Gen_Vertex_Arrays (N : Size; Arrays : out UInt) with
+     Dynamic => "glGenVertexArrays",
+     Wrapper => "GL.Objects.Vertex_Arrays.Initialize_Id";
+   procedure Delete_Vertex_Arrays (N : Size; Arrays : Low_Level.UInt_Array)
+     with Dynamic => "glDeleteVertexArrays";
+   procedure Bind_Vertex_Array (Arr : UInt) with
+     Dynamic => "glBindVertexArray", Wrapper => "GL.Objects.Vertex_Arrays.Bind";
 
    -----------------------------------------------------------------------------
    --                        Renderbuffer objects                             --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Renderbuffers (N : Size; Renderbuffers : out UInt) is
-     Dynamic ("glGenRenderbuffers");
+   procedure Gen_Renderbuffers (N : Size; Renderbuffers : out UInt) with
+     Dynamic => "glGenRenderbuffers",
+     Wrapper => "GL.Objects.Renderbuffers.Initialize_Id";
    procedure Delete_Renderbuffers
-     (N : Size; Renderbuffers : Low_Level.UInt_Array) is
-     Dynamic ("glDeleteBuffers");
+     (N : Size; Renderbuffers : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteBuffers";
    procedure Renderbuffer_Storage
      (Target : Low_Level.Enums.Renderbuffer_Kind;
-      Internal_Format : Pixels.Internal_Format; Width, Height : Size) is
-     Dynamic ("glRenderbufferStorage");
+      Internal_Format : Pixels.Internal_Format; Width, Height : Size) with
+     Dynamic => "glRenderbufferStorage",
+     Wrapper => "GL.Objects.Renderbuffers.Allocate";
    procedure Renderbuffer_Storage_Multisample
      (Target : Low_Level.Enums.Renderbuffer_Kind; Samples : Size;
-      Internal_Format : Pixels.Internal_Format; Width, Height : Size) is
-     Dynamic ("glRenderbufferStorageMultisample");
+      Internal_Format : Pixels.Internal_Format; Width, Height : Size) with
+     Dynamic => "glRenderbufferStorageMultisample",
+     Wrapper => "GL.Objects.Renderbuffers.Allocate";
    procedure Bind_Renderbuffer (Target : Low_Level.Enums.Renderbuffer_Kind;
-                                Renderbuffer : UInt) is
-     Dynamic ("glBindRenderbuffer");
+                                Renderbuffer : UInt) with
+     Dynamic => "glBindRenderbuffer",
+     Wrapper => "GL.Objects.Renderbuffers.Bind";
    procedure Get_Renderbuffer_Parameter_Int
      (Target : Low_Level.Enums.Renderbuffer_Kind;
-      Pname  : Enums.Getter.Renderbuffer_Parameter; Params : out Int) is
-     Dynamic ("glGetRenderbufferParameteriv");
+      Pname  : Enums.Getter.Renderbuffer_Parameter; Params : out Int) with
+     Dynamic => "glGetRenderbufferParameteriv",
+     Wrapper => "GL.Objects.Renderbuffers.Width",
+     Wrapper => "GL.Objects.Renderbuffers.Height",
+     Wrapper => "GL.Objects.Renderbuffers.Red_Size",
+     Wrapper => "GL.Objects.Renderbuffers.Green_Size",
+     Wrapper => "GL.Objects.Renderbuffers.Blue_Size",
+     Wrapper => "GL.Objects.Renderbuffers.Alpha_Size",
+     Wrapper => "GL.Objects.Renderbuffers.Depth_Size",
+     Wrapper => "GL.Objects.Renderbuffers.Stencil_Size";
    procedure Get_Renderbuffer_Parameter_Internal_Format
      (Target : Low_Level.Enums.Renderbuffer_Kind;
       Pname  : Enums.Getter.Renderbuffer_Parameter;
-      Params : out Pixels.Internal_Format) is
-     Dynamic ("glGetRenderbufferParameteriv");
+      Params : out Pixels.Internal_Format) with
+     Dynamic => "glGetRenderbufferParameteriv",
+     Wrapper => "GL.Objects.Renderbuffers.Internal_Format";
 
    -----------------------------------------------------------------------------
    --                  Framebuffer objects and handling                       --
@@ -707,168 +826,249 @@ spec GL.API is
    procedure Read_Pixels (X, Y : Int; Width, Height : Size;
                           Format : Pixels.Framebuffer_Format;
                           Data_Type : Pixels.Data_Type;
-                          Data : System.Address) is Static ("glReadPixels");
-   procedure Logic_Op (Value : Framebuffer.Logic_Op) is Static ("glLogicOp");
+                          Data : System.Address) with
+     Static => "glReadPixels", Wrapper => "GL.Framebuffer.Read_Pixels";
+   procedure Logic_Op (Value : Framebuffer.Logic_Op) with
+     Static => "glLogicOp", Wrapper => "GL.Framebuffer.Set_Logic_Op_Mode";
    procedure Clamp_Color (Target: Enums.Clamp_Color_Param;
-                          Clamp: Low_Level.Bool) is Dynamic ("glClampColor");
-   procedure Read_Buffer (Value : Framebuffer.Read_Buffer_Selector) is
-     Static ("glReadBuffer");
-   procedure Gen_Framebuffers (N : Size; Framebuffers : out UInt) is
-     Dynamic ("glGenFramebuffers");
+                          Clamp: Low_Level.Bool) with
+     Dynamic => "glClampColor",
+     Wrapper => "GL.Framebuffer.Set_Clamp_Read_Color";
+   procedure Read_Buffer (Value : Framebuffer.Read_Buffer_Selector) with
+     Static => "glReadBuffer", Wrapper => "GL.Framebuffer.Set_Read_Buffer";
+   procedure Gen_Framebuffers (N : Size; Framebuffers : out UInt) with
+     Dynamic => "glGenFramebuffers",
+     Wrapper => "GL.Objects.Framebuffers.Initialize_Id";
    procedure Delete_Framebuffers
-     (N : Size; Framebuffers : Low_Level.UInt_Array) is
-     Dynamic ("glDeleteFramebuffers");
+     (N : Size; Framebuffers : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteFramebuffers";
    procedure Bind_Framebuffer
-     (Target : Low_Level.Enums.Framebuffer_Kind; Framebuffer : UInt) is
-     Dynamic ("glBindFramebuffer");
+     (Target : Low_Level.Enums.Framebuffer_Kind; Framebuffer : UInt) with
+     Dynamic => "glBindFramebuffer",
+     Wrapper => "GL.Objects.Framebuffers.Bind";
    function Check_Framebuffer_Status (Target : Low_Level.Enums.Framebuffer_Kind)
-     return Objects.Framebuffers.Framebuffer_Status is
-     Dynamic ("glCheckFramebufferStatus");
+     return Objects.Framebuffers.Framebuffer_Status with
+     Dynamic => "glCheckFramebufferStatus",
+     Wrapper => "GL.Objects.Framebuffers.Status";
    procedure Framebuffer_Renderbuffer
      (Target : Low_Level.Enums.Framebuffer_Kind;
       Attachment : Objects.Framebuffers.Attachment_Point;
       Renderbuffer_Target : Low_Level.Enums.Renderbuffer_Kind;
-      Renderbuffer : UInt) is Dynamic ("glFramebufferRenderbuffer");
+      Renderbuffer : UInt) with
+     Dynamic => "glFramebufferRenderbuffer",
+     Wrapper => "GL.Objects.Framebuffers.Attach_Renderbuffer";
    procedure Framebuffer_Texture
      (Target : Low_Level.Enums.Framebuffer_Kind;
       Attachment : Objects.Framebuffers.Attachment_Point;
-      Texture : UInt; Level : Objects.Textures.Mipmap_Level) is
-     Dynamic ("glFramebufferTexture");
+      Texture : UInt; Level : Objects.Textures.Mipmap_Level) with
+     Dynamic => "glFramebufferTexture",
+     Wrapper => "GL.Objects.Framebuffers.Attach_Texture";
    procedure Framebuffer_Texture_Layer
      (Target : Low_Level.Enums.Framebuffer_Kind;
       Attachment : Objects.Framebuffers.Attachment_Point; Texture : UInt;
-      Level : Objects.Textures.Mipmap_Level; Layer : Int) is
-     Dynamic ("glFramebufferTextureLayer");
+      Level : Objects.Textures.Mipmap_Level; Layer : Int) with
+     Dynamic => "glFramebufferTextureLayer",
+     Wrapper => "GL.Objects.Framebuffers.Attach_Texture_Layer";
    procedure Blit_Framebuffer
      (Src_X0, Src_X1, Src_Y0, Src_X1, Dst_X0, Dst_X1, Dst_Y0, Dst_Y1 : Int;
       Mask : Low_Level.Bitfield; Filter : Objects.Textures.Magnifying_Function)
-     is Dynamic ("glBlitFramebuffer");
+     with Dynamic => "glBlitFramebuffer",
+          Wrapper => "GL.Objects.Framebuffers.Blit";
    procedure Invalidate_Framebuffer
      (Target : Low_Level.Enums.Framebuffer_Kind; Num_Attachments : Size;
-      Attachments : Objects.Framebuffers.Attachment_List) is
-     Dynamic ("glInvalidateFramebuffer");
+      Attachments : Objects.Framebuffers.Attachment_List) with
+     Dynamic => "glInvalidateFramebuffer",
+     Wrapper => "GL.Objects.Framebuffers.Invalidate";
    procedure Invalidate_Sub_Framebuffer
      (Target : Low_Level.Enums.Framebuffer_Kind; Num_Attachments : Size;
       Attachments : Objects.Framebuffers.Attachment_List; X, Y : Int;
-      Width, Height : Size) is Dynamic ("glInvalidateSubFramebuffer");
+      Width, Height : Size) with
+     Dynamic => "glInvalidateSubFramebuffer",
+     Wrapper => "GL.Objects.Framebuffers.Invalidate_Sub";
    procedure Framebuffer_Parameter_Size
      (Target : Low_Level.Enums.Framebuffer_Kind;
-      Pname  : Enums.Framebuffer_Param; Param : Size) is
-     Dynamic ("glFramebufferParameteri");
+      Pname  : Enums.Framebuffer_Param; Param : Size) with
+     Dynamic => "glFramebufferParameteri",
+     Wrapper => "GL.Objects.Framebuffers.Set_Default_Width",
+     Wrapper => "GL.Objects.Framebuffers.Set_Default_Height",
+     Wrapper => "GL.Objects.Framebuffers.Set_Default_Layers",
+     Wrapper => "GL.Objects.Framebuffers.Set_Default_Samples";
    procedure Framebuffer_Parameter_Bool
      (Target : Low_Level.Enums.Framebuffer_Kind;
-      Pname  : Enums.Framebuffer_Param; Param : Low_Level.Bool) is
-     Dynamic ("glFramebufferParameteri");
+      Pname  : Enums.Framebuffer_Param; Param : Low_Level.Bool) with
+     Dynamic => "glFramebufferParameteri",
+     Wrapper => "GL.Objects.Framebuffers.Set_Default_Fixed_Sample_Locactions";
    procedure Get_Framebuffer_Parameter_Size
      (Target : Low_Level.Enums.Framebuffer_Kind;
-      Pname  : Enums.Framebuffer_Param; Params : out Size) is
-     Dynamic ("glGetFramebufferParameteriv");
+      Pname  : Enums.Framebuffer_Param; Params : out Size) with
+     Dynamic => "glGetFramebufferParameteriv",
+     Wrapper => "GL.Objects.Framebuffers.Default_Width",
+     Wrapper => "GL.Objects.Framebuffers.Default_Height",
+     Wrapper => "GL.Objects.Framebuffers.Default_Layers",
+     Wrapper => "GL.Objects.Framebuffers.Default_Samples";
    procedure Get_Framebuffer_Parameter_Bool
      (Target : Low_Level.Enums.Framebuffer_Kind;
-      Pname  : Enums.Framebuffer_Param; Params : out Low_Level.Bool) is
-     Dynamic ("glGetFramebufferParameteriv");
+      Pname  : Enums.Framebuffer_Param; Params : out Low_Level.Bool) with
+     Dynamic => "glGetFramebufferParameteriv",
+     Wrapper => "GL.Objects.Framebuffers.Default_Fixed_Sample_Locations";
 
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
 
    procedure Get_Shader_Param (Shader : UInt; Pname : Enums.Shader_Param;
-                               Param : out Int) is Dynamic ("glGetShaderiv");
-   procedure Get_Shader_Type (Shader : UInt; Pname : Enums.Shader_Param;
-     Param : out Objects.Shaders.Shader_Type) is Dynamic ("glGetShaderiv");
+                               Param : out Int) with
+     Dynamic => "glGetShaderiv", Wrapper => "GL.Objects.Shaders.Compile_Status";
+   procedure Get_Shader_Type
+     (Shader : UInt; Pname : Enums.Shader_Param;
+      Param : out Objects.Shaders.Shader_Type) with
+     Dynamic => "glGetShaderiv", Wrapper => "GL.Objects.Shaders.Create_From_Id";
    function Create_Shader (Shader_Type : Objects.Shaders.Shader_Type)
-     return Uint is Dynamic ("glCreateShader");
-   procedure Delete_Shader (Shader : UInt) is Dynamic ("glDeleteShader");
-   procedure Shader_Source (Shader : UInt; Count : Size;
-     Str : Low_Level.CharPtr_Array; Length : Low_Level.Int_Array) is
-     Dynamic ("glShaderSource");
+                          return Uint with
+     Dynamic => "glCreateShader", Wrapper => "GL.Objects.Shaders.Initialize_Id";
+   procedure Delete_Shader (Shader : UInt) with Dynamic => "glDeleteShader";
+   procedure Shader_Source
+     (Shader : UInt; Count : Size;
+      Str : Low_Level.CharPtr_Array; Length : Low_Level.Int_Array) with
+     Dynamic => "glShaderSource", Wrapper => "GL.Objects.Shaders.Set_Source";
    procedure Get_Shader_Source (Shader : UInt; Buffer_Size : Size;
-                                Length : out Size; Value : in out String) is
-     Dynamic ("glGetShaderSource");
-   procedure Compile_Shader (Shader : UInt) is Dynamic ("glCompileShader");
-   procedure Release_Shader_Compiler is Dynamic ("glReleaseShaderCompiler");
+                                Length : out Size; Value : in out String) with
+     Dynamic => "glGetShaderSource",
+     Wrapper => "GL.Objects.Shaders.Source";
+   procedure Compile_Shader (Shader : UInt) with
+     Dynamic => "glCompileShader", Wrapper => "GL.Objects.Shaders.Compile";
+   procedure Release_Shader_Compiler with
+     Dynamic => "glReleaseShaderCompiler",
+     Wrapper => "GL.Objects.Shaders.Release_Shader_Compiler";
    procedure Get_Shader_Info_Log (Shader : UInt; Buffer_Size : Size;
-                                  Length : out Size; Value : in out String) is
-     Dynamic ("glGetShaderInfoLog");
-   function Create_Program return UInt is Dynamic ("glCreateProgram");
-   procedure Delete_Program (Program : UInt) is Dynamic ("glDeleteProgram");
+                                  Length : out Size; Value : in out String) with
+     Dynamic => "glGetShaderInfoLog", Wrapper => "GL.Objects.Shaders.Info_Log";
+   function Create_Program return UInt with
+     Dynamic => "glCreateProgram",
+     Wrapper => "GL.Objects.Programs.Initialize_Id";
+   procedure Delete_Program (Program : UInt) with Dynamic => "glDeleteProgram";
    procedure Get_Program_Param (Program : UInt; Pname : Enums.Program_Param;
-                                Params : out Int) is Dynamic ("glGetProgramiv");
-   procedure Attach_Shader (Program, Shader : UInt) is
-     Dynamic ("glAttachShader");
-   procedure Link_Program (Program : UInt) is Dynamic ("glLinkProgram");
+                                Params : out Int) with
+     Dynamic => "glGetProgramiv",
+     Wrapper => "GL.Objects.Programs.Link_Status",
+     Wrapper => "GL.Objects.Programs.Delete_Status",
+     Wrapper => "GL.Objects.Programs.Validate_Status",
+     Wrapper => "GL.Objects.Programs.Active_Attributes",
+     Wrapper => "GL.Objects.Programs.Active_Attribute_Max_Length",
+     Wrapper => "GL.Objects.Programs.Active_Uniform_Blocks",
+     Wrapper => "GL.Objects.Programs.Active_Uniform_Block_Max_Name_Length",
+     Wrapper => "GL.Objects.Programs.Active_Uniforms",
+     Wrapper => "GL.Objects.Programs.Active_Uniform_Max_Length",
+     Wrapper => "GL.Objects.Programs.Tess_Control_Output_Vertices",
+     Wrapper => "GL.Objects.Programs.Tess_Gen_Mode",
+     Wrapper => "GL.Objects.Programs.Tess_Gen_Point_Mode",
+     Wrapper => "GL.Objects.Programs.Tess_Gen_Spacing",
+     Wrapper => "GL.Objects.Programs.Tess_Gen_Vertex_Order",
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Buffer_Mode",
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings",
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length";
+   procedure Attach_Shader (Program, Shader : UInt) with
+     Dynamic => "glAttachShader", Wrapper => "GL.Objects.Programs.Attach";
+   procedure Link_Program (Program : UInt) with
+     Dynamic => "glLinkProgram", Wrapper => "GL.Objects.Programs.Link";
    procedure Get_Program_Info_Log (Program : UInt; Buffer_Size : Size;
-                                   Length : out Size; Value : in out String) is
-     Dynamic ("glGetProgramInfoLog");
+                                   Length : out Size; Value : in out String)
+     with Dynamic => "glGetProgramInfoLog",
+          Wrapper => "GL.Objects.Programs.Info_Log";
    procedure Get_Program_Stage
      (Program : UInt; Shader_Type : Objects.Shaders.Shader_Type;
-      Pname   : Enums.Program_Stage_Param; Params : out Size) is
-     Dynamic ("glGetProgramStageiv");
+      Pname   : Enums.Program_Stage_Param; Params : out Size) with
+     Dynamic => "glGetProgramStageiv",
+     Wrapper => "GL.Objects.Programs.Active_Subroutines",
+     Wrapper => "GL.Objects.Programs.Active_Subroutine_Uniforms",
+     Wrapper => "GL.Objects.Programs.Active_Subroutine_Uniform_Locations",
+     Wrapper => "GL.Objects.Programs.Active_Subroutine_Uniform_Max_Length",
+     Wrapper => "GL.Objects.Programs.Active_Subroutine_Max_Length";
    function Get_Subroutine_Index
      (Program : UInt; Shader_Type : Objects.Shaders.Shader_Type;
       Name : Interfaces.C.char_array)
-     return Objects.Programs.Subroutine_Index_Type is
-     Dynamic ("glGetSubroutineIndex");
+     return Objects.Programs.Subroutine_Index_Type with
+     Dynamic => "glGetSubroutineIndex",
+     Wrapper => "GL.Objects.Programs.Subroutine_Index";
    function Get_Subroutine_Uniform_Location
      (Program : UInt; Shader_Type : Objects.Shaders.Shader_Type;
       Name : Interfaces.C.char_array)
-     return Objects.Programs.Uniform_Location_Type is
-     Dynamic ("glGetSubroutineUniformLocation");
-   procedure Use_Program (Program : UInt) is Dynamic ("glUseProgram");
-   procedure Validate_Program (Program : UInt) is Dynamic ("glValidateProgram");
+     return Objects.Programs.Uniform_Location_Type with
+     Dynamic => "glGetSubroutineUniformLocation",
+     Wrapper => "GL.Objects.Programs.Subroutine_Uniform_Locations";
+   procedure Use_Program (Program : UInt) with
+     Dynamic => "glUseProgram", Wrapper => "GL.Objects.Programs.Use_Program";
+   procedure Validate_Program (Program : UInt) with
+     Dynamic => "glValidateProgram", Wrapper => "GL.Objects.Programs.Validate";
    function Get_Uniform_Location
-     (Program : UInt; Name : C.char_array) return Uniforms.Uniform is
-     Dynamic ("glGetUniformLocation");
+     (Program : UInt; Name : C.char_array) return Uniforms.Uniform with
+     Dynamic => "glGetUniformLocation",
+     Wrapper => "GL.Objects.Programs.Uniform_Location";
    procedure Bind_Attrib_Location
-     (Program : UInt; Index : Attributes.Attribute; Name : C.char_array) is
-     Dynamic ("glBindAttribLocation");
+     (Program : UInt; Index : Attributes.Attribute; Name : C.char_array) with
+     Dynamic => "glBindAttribLocation",
+     Wrapper => "GL.Objects.Programs.Bind_Attrib_Location";
    function Get_Attrib_Location
-     (Program : UInt; Name : C.char_array) return Attributes.Attribute is
-     Dynamic ("glGetAttribLocation");
+     (Program : UInt; Name : C.char_array) return Attributes.Attribute with
+     Dynamic => "glGetAttribLocation",
+     Wrapper => "GL.Objects.Programs.Attrib_Location";
    procedure Vertex_Attrib_Pointer
      (Index : Attributes.Attribute; Size : Component_Count;
       N_Type : Numeric_Type; Normalized : Low_Level.Bool; Stride : Size;
-      Pointer : Int) is Dynamic ("glVertexAttribPointer");
+      Pointer : Int) with
+     Dynamic => "glVertexAttribPointer",
+     Wrapper => "GL.Attributes.Set_Vertex_Attrib_Pointer";
    procedure Vertex_AttribI_Pointer
      (Index : Attributes.Attribute; Size : Component_Count;
-      N_Type :Numeric_Type; Stride : Size; Pointer : Int) is
-     Dynamic ("glVertexAttribIPointer");
+      N_Type : Numeric_Type; Stride : Size; Pointer : Int) with
+     Dynamic => "glVertexAttribIPointer",
+     Wrapper => "GL.Attributes.Set_Vertex_Attrib_Pointer";
    procedure Vertex_AttribL_Pointer
      (Index : Attributes.Attribute; Size : Component_Count;
-      N_Type :Numeric_Type; Stride : Size; Pointer : Int) is
-     Dynamic ("glVertexAttribLPointer");
-   procedure Enable_Vertex_Attrib_Array (Index : Attributes.Attribute) is
-     Dynamic ("glEnableVertexAttribArray");
-   procedure Disable_Vertex_Attrib_Array (Index : Attributes.Attribute) is
-     Dynamic ("glDisableVertexAttribArray");
+      N_Type :Numeric_Type; Stride : Size; Pointer : Int) with
+     Dynamic => "glVertexAttribLPointer",
+     Wrapper => "GL.Attributes.Set_Vertex_Attrib_Pointer";
+   procedure Enable_Vertex_Attrib_Array (Index : Attributes.Attribute) with
+     Dynamic => "glEnableVertexAttribArray",
+     Wrapper => "GL.Attributes.Enable_Vertex_Attrib_Array";
+   procedure Disable_Vertex_Attrib_Array (Index : Attributes.Attribute) with
+     Dynamic => "glDisableVertexAttribArray",
+     Wrapper => "GL.Attributes.Disable_Vertex_Attrib_Array";
    procedure Get_Attached_Shaders
      (Program : UInt; Max_Count : Size; Count : out Size;
-      Shaders : in out UInt_Array) is Dynamic ("glGetAttachedShaders");
+      Shaders : in out UInt_Array) with
+     Dynamic => "glGetAttachedShaders",
+     Wrapper => "GL.Objects.Programs.Attached_Shaders";
    procedure Bind_Frag_Data_Location
      (Program : UInt; Color_Number : Buffers.Draw_Buffer_Index;
       Name : Interfaces.C.Strings.chars_ptr)
      is Dynamic ("glBindFragDataLocation"),
         Wrapper ("GL.Objects.Programs.Bind_Frag_Data_Location");
    function Get_Frag_Data_Location
-     (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int
-     is Dynamic ("glGetFragDataLocation");
+     (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int with
+     Dynamic => "glGetFragDataLocation",
+     Wrapper => "GL.Objects.Programs.Frag_Data_Location";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --
    -----------------------------------------------------------------------------
 
    procedure Set_Patch_Parameter_Int
-     (Pname : Enums.Patch_Parameter_Int; Value : Int) is
-     Dynamic ("glPatchParameteri");
+     (Pname : Enums.Patch_Parameter_Int; Value : Int) with
+     Dynamic => "glPatchParameteri",
+     Wrapper => "GL.Tessellation.Set_Patch_Vertices";
    procedure Set_Patch_Parameter_Float_Array
-     (Pname : Enums.Patch_Parameter_Float_Array; Value : Types.Single_Array) is
-     Dynamic ("glPatchParameterfv");
+     (Pname : Enums.Patch_Parameter_Float_Array; Value : Types.Single_Array)
+     with Dynamic => "glPatchParameterfv",
+          Wrapper => "GL.Tessellation.Set_Patch_Default_Inner_Level",
+          Wrapper => "GL.Tessellation.Set_Patch_Default_Outer_Level";
 
    -----------------------------------------------------------------------------
    --                  Transformation to window coordinates                   --
    -----------------------------------------------------------------------------
 
-   procedure Depth_Range (Near, Far : Double) is Static ("glDepthRange");
-   procedure Viewport (X, Y : Int; Width, Height : Size) is
-     Static ("glViewport");
+   procedure Depth_Range (Near, Far : Double) with
+     Static => "glDepthRange", Wrapper => "GL.Window.Set_Depth_Range";
+   procedure Viewport (X, Y : Int; Width, Height : Size) with
+     Static => "glViewport", Wrapper => "GL.Window.Get_Viewport";
 end GL.API;
