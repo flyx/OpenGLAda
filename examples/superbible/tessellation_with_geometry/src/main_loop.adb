@@ -35,15 +35,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render_Tessellation_Geometry is
         Back_Colour : GL.Types.Colors.Color := (0.0, 0.75, 0.0, 1.0);
     begin
-        GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Back_Colour);
+        Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
         GL.Objects.Programs.Use_Program (Rendering_Program);
         GL.Objects.Vertex_Arrays.Draw_Arrays (Patches, 0, 3);
 
     exception
         when anError :  others =>
-            Put_Line ("An exceptiom occurred in Render_Tesselation_Geometry.");
+            Put_Line ("An exceptiom occurred in Render_Tessellation_Geometry.");
             raise;
     end Render_Tessellation_Geometry;
 
@@ -57,9 +56,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            Vertex_Shader),
            Program_Loader.Src ("src/shaders/geometry_shader.glsl",
              Geometry_Shader),
-           Program_Loader.Src ("src/shaders/tesselation_control_shader.glsl",
+           Program_Loader.Src ("src/shaders/tessellation_control_shader.glsl",
              Tess_Control_Shader),
-           Program_Loader.Src ("src/shaders/tesselation_evaluation_shader.glsl",
+           Program_Loader.Src ("src/shaders/tessellation_evaluation_shader.glsl",
              Tess_Evaluation_Shader),
            Program_Loader.Src ("src/shaders/fragment_shader.glsl",
              Fragment_Shader)));
