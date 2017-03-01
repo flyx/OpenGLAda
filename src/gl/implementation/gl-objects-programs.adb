@@ -263,6 +263,12 @@ package body GL.Objects.Programs is
       end return;
    end Subroutine_Uniform_Locations;
 
+   procedure Validate (Subject : Program) is
+   begin
+      API.Validate_Program (Subject.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Validate;
+
    procedure Use_Program (Subject : Program) is
    begin
       API.Use_Program (Subject.Reference.GL_Id);

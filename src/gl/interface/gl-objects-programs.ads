@@ -104,6 +104,8 @@ package GL.Objects.Programs is
                                           Name   : String)
                                           return Uniform_Location_Type;
 
+   procedure Validate (Subject : Program);
+
    procedure Use_Program (Subject : Program);
 
    function Uniform_Location (Subject : Program; Name : String)

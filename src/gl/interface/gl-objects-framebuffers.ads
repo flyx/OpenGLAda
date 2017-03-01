@@ -55,6 +55,12 @@ package GL.Objects.Framebuffers is
                              Object : Textures.Texture'Class;
                              Level  : Textures.Mipmap_Level);
 
+   procedure Attach_Texture_Layer (Target : Framebuffer_Target;
+                                   Attachment : Attachment_Point;
+                                   Object : Textures.Texture'Class;
+                                   Level  : Textures.Mipmap_Level;
+                                   Layer  : Int);
+
    procedure Invalidate (Target : in out Framebuffer_Target;
                          Attachments : Attachment_List);
 
