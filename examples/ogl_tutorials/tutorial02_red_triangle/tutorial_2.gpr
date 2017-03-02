@@ -1,0 +1,19 @@
+limited with "../../../opengl-glfw.gpr";
+
+project Tutorial_2 is
+
+<<<<<<< HEAD
+   for Source_Dirs use ("../common", "src");
+=======
+   for Source_Dirs use ("../../common", "src");
+>>>>>>> flyx/master
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("tutorial_02.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatyclux");
+   end Compiler;
+
+end Tutorial_2;
+

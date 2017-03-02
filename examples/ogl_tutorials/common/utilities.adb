@@ -7,33 +7,23 @@ with GL.Buffers;
 with GL.Context;
 with GL.Errors;
 with GL.Objects.Shaders.Lists;
-with GL.Types; use GL.Types;
+with GL.Types; use  GL.Types;
 
 package body Utilities is
 
-   procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
-   begin
-<<<<<<< HEAD
-        GL.Buffers.Clear ((False, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-=======
+    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
->>>>>>> flyx/master
-   end Clear_Background_Colour;
+    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
-   procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
-   begin
-<<<<<<< HEAD
-        GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-=======
+    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
->>>>>>> flyx/master
-   end Clear_Background_Colour_And_Depth;
+    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
 
@@ -43,7 +33,7 @@ package body Utilities is
         Shading_Language_Version  : Unbounded_String;
     begin
         GL_Version := To_Unbounded_String (GL.Types.Int'image (gl.Context.Major_Version) & "." &
-                                           GL.Types.Int'image (gl.Context.Minor_Version));
+                                             GL.Types.Int'image (gl.Context.Minor_Version));
         Renderer := To_Unbounded_String (gl.Context.Renderer);
         Shading_Language_Version :=
           To_Unbounded_String (gl.Context.Primary_Shading_Language_Version);

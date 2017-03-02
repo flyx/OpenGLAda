@@ -47,6 +47,17 @@ package body GL.Objects.Framebuffers is
       Raise_Exception_On_OpenGL_Error;
    end Attach_Texture;
 
+   procedure Attach_Texture_Layer (Target : Framebuffer_Target;
+                                   Attachment : Attachment_Point;
+                                   Object : Textures.Texture'Class;
+                                   Level  : Textures.Mipmap_Level;
+                                   Layer  : Int) is
+   begin
+      API.Framebuffer_Texture_Layer (Target.Kind, Attachment, Object.Raw_Id,
+                                     Level, Layer);
+      Raise_Exception_On_OpenGL_Error;
+   end Attach_Texture_Layer;
+
    procedure Invalidate (Target : in out Framebuffer_Target;
                          Attachments : Attachment_List) is
    begin

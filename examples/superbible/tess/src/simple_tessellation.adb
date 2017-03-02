@@ -11,10 +11,10 @@ with Glfw.Windows;
 with Initialize;
 with Main_Loop;
 
-procedure Simple_Tesselation is
+procedure Simple_Tessellation is
     Main_Window : aliased Glfw.Windows.Window;
     Window_Title : constant String
-      := "OpenGL SuperBible Simple Tesselation Example";
+      := "OpenGL SuperBible Simple Tessellation Example";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);
@@ -23,10 +23,10 @@ begin
 
 exception
     when anError : Constraint_Error =>
-        Put ("Simple_Tesselation returned constraint error: ");
+        Put ("Simple_Tessellation returned constraint error: ");
         Put_Line (Exception_Information (anError));
 
     when anError : others =>
-        Put_Line ("An exceptiom occurred in Simple_Tesselation.");
+        Put_Line ("An exceptiom occurred in Simple_Tessellation.");
         Put_Line (Exception_Information (anError));
-end Simple_Tesselation;
+end Simple_Tessellation;

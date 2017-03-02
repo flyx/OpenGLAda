@@ -16,7 +16,7 @@ procedure Generate is
       Path : constant String := Full_Name (Directory_Entry);
    begin
       Ada.Text_IO.Put_Line ("Processing " & Path & " ...");
-      Specs.Parse_File (Proc, Path, Interface_Folder);
+      Specs.Parse_File (Proc, Path);
       Ada.Text_IO.Put_Line ("Done processing " & Path & " .");
    end Process_File;
 
@@ -34,7 +34,7 @@ begin
       end loop;
    end;
    Specs.Write_Init (Proc, Target_Folder);
-   Specs.Write_Wrapper_List (Proc, Target_Folder);
+   Specs.Write_Wrapper_Table (Proc, Target_Folder, Interface_Folder);
 exception when Error : Specs.Parsing_Error =>
    Ada.Text_IO.Put_Line (Exception_Message (Error));
    Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
