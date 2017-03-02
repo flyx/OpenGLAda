@@ -17,8 +17,7 @@ package Specs is
    No_Spec : constant Spec;
    Parsing_Error : exception;
 
-   procedure Parse_File (Proc : in out Processor;
-                         Path, Interface_Folder : String);
+   procedure Parse_File (Proc : in out Processor; Path : String);
 
    function First (Proc : Processor) return Spec;
 
@@ -29,7 +28,8 @@ package Specs is
 
    procedure Write_Init (Proc : Processor; Dir_Path : String);
 
-   procedure Write_Wrapper_List (Proc : Processor; Dir_Path : String);
+   procedure Write_Wrapper_Table (Proc : Processor;
+                                  Dir_Path, Interface_Folder : String);
 private
    use Ada.Strings.Unbounded;
 
@@ -69,13 +69,18 @@ private
       end case;
    end record;
 
-   package Item_Lists is new Ada.Containers.Indefinite_Vectors (Positive, Body_Item);
+   package Item_Lists is
+     new Ada.Containers.Indefinite_Vectors (Positive, Body_Item);
+
+   package Wrapper_Lists is new Ada.Containers.Indefinite_Vectors
+     (Positive, String_Lists.Vector, String_Lists."=");
 
    type Spec_Data is record
       Name, File_Base_Name : Unbounded_String;
       Withs : String_Lists.Vector;
+      Uses  : String_Lists.Vector;
       Items : Item_Lists.Vector;
-      Wrapper_Links : String_Lists.Vector;
+      Wrappers : Wrapper_Lists.Vector;
    end record;
 
    type Spec is new Natural;

@@ -34,8 +34,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render_Tesselation is
         Back_Colour : constant GL.Types.Colors.Color := (0.0, 0.75, 0.0, 1.0);
     begin
-        GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Back_Colour);
+        Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
         GL.Objects.Programs.Use_Program (Rendering_Program);
         GL.Objects.Vertex_Arrays.Draw_Arrays (GL.Types.Patches, 0, 3);
