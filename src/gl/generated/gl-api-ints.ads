@@ -2,10 +2,6 @@
 package GL.API.Ints is
    pragma Preelaborate;
    use GL.Types;
-   procedure Get_Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Target : in out Types.Ints.Vector4);
-   pragma Import (StdCall, Get_Light_Position, "glGetLightiv");
-   procedure Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Types.Ints.Vector4);
-   pragma Import (StdCall, Light_Position, "glLightiv");
    Uniform1 : T8;
    Uniform1v : T9;
    Uniform2 : T10;

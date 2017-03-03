@@ -251,6 +251,22 @@ spec GL.API is
      Wrapper => "GL.Fixed.Lighting.Set_Ambient",
      Wrapper => "GL.Fixed.Lighting.Set_Diffuse",
      Wrapper => "GL.Fixed.Lighting.Set_Specular";
+   procedure Get_Light_Position
+     (Name   : Enums.Light_Name; Pname : Enums.Light_Param;
+      Target : in out Types.Singles.Vector4) with
+     Static  => "glGetLightfv", Wrapper => "GL.Fixed.Lighting.Position";
+   procedure Get_Light_Direction
+     (Name   : Enums.Light_Name; Pname : Enums.Light_Param;
+      Target : in out Types.Singles.Vector3) with
+     Static  => "glGetLightfv", Wrapper => "GL.Fixed.Lighting.Spot_Direction";
+   procedure Light_Position
+     (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
+      Param : Types.Singles.Vector4) with
+     Static  => "glLightfv", Wrapper => "GL.Fixed.Lighting.Set_Position";
+   procedure Light_Direction
+     (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
+      Param : Types.Singles.Vector3) with
+     Static => "glLightfv", Wrapper => "GL.Fixed.Lighting.Set_Spot_Direction";
 
    -----------------------------------------------------------------------------
    --                               Blending                                  --

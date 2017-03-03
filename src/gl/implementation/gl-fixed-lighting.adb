@@ -15,12 +15,11 @@
 -------------------------------------------------------------------------------
 
 with GL.Enums.Getter;
-with GL.API.Singles;
-with GL.API.Ints;
+with GL.API;
 
 package body GL.Fixed.Lighting is
    use type Toggles.Toggle_State;
-   
+
    Light_Model_Enabled  : aliased constant Int := 1;
    Light_Model_Disabled : aliased constant Int := 0;
 
@@ -33,12 +32,12 @@ package body GL.Fixed.Lighting is
    begin
       Toggles.Enable (Toggles.Lighting);
    end Enable_Lighting;
-      
+
    procedure Disable_Lighting is
    begin
       Toggles.Disable (Toggles.Lighting);
    end Disable_Lighting;
-      
+
    function Lighting_Enabled return Boolean is
    begin
       return Toggles.State (Toggles.Lighting) = Toggles.Enabled;
@@ -49,13 +48,13 @@ package body GL.Fixed.Lighting is
       API.Light_Model_Toggles (Enums.Local_Viewer, Light_Model_Enabled'Access);
       Raise_Exception_On_OpenGL_Error;
    end Enable_Local_Viewer;
-      
+
    procedure Disable_Local_Viewer is
    begin
       API.Light_Model_Toggles (Enums.Local_Viewer, Light_Model_Disabled'Access);
       Raise_Exception_On_OpenGL_Error;
    end Disable_Local_Viewer;
-   
+
    function Local_Viewer_Enabled return Boolean is
       Value : aliased Low_Level.Bool;
    begin
@@ -69,13 +68,13 @@ package body GL.Fixed.Lighting is
       API.Light_Model_Toggles (Enums.Two_Side, Light_Model_Enabled'Access);
       Raise_Exception_On_OpenGL_Error;
    end Enable_Two_Side;
-      
+
    procedure Disable_Two_Side is
    begin
       API.Light_Model_Toggles (Enums.Two_Side, Light_Model_Disabled'Access);
       Raise_Exception_On_OpenGL_Error;
    end Disable_Two_Side;
-   
+
    function Two_Side_Enabled return Boolean is
       Value : aliased Low_Level.Bool;
    begin
@@ -89,7 +88,7 @@ package body GL.Fixed.Lighting is
       API.Light_Model_Color (Enums.Ambient, Value);
       Raise_Exception_On_OpenGL_Error;
    end Set_Global_Ambient_Light;
-      
+
    function Global_Ambient_Light return Colors.Color is
       Value : Colors.Color;
    begin
@@ -104,7 +103,7 @@ package body GL.Fixed.Lighting is
       API.Light_Model_Color_Control (Enums.Color_Control, Aliased_Value'Access);
       Raise_Exception_On_OpenGL_Error;
    end Set_Color_Control;
-      
+
    function Current_Color_Control return Color_Control is
       Value : aliased Color_Control;
    begin
@@ -119,7 +118,7 @@ package body GL.Fixed.Lighting is
       API.Shade_Model (Value);
       Raise_Exception_On_OpenGL_Error;
    end Set_Shade_Model;
-      
+
    function Current_Shade_Model return Shade_Model is
       Value : aliased Shade_Model;
    begin
@@ -132,12 +131,12 @@ package body GL.Fixed.Lighting is
    begin
       Toggles.Enable (Source.Identifier);
    end Enable;
-   
+
    procedure Disable (Source : Light_Object) is
    begin
       Toggles.Disable (Source.Identifier);
    end Disable;
-   
+
    function Enabled (Source : Light_Object) return Boolean is
    begin
       return Toggles.State (Source.Identifier) = Toggles.Enabled;
@@ -148,7 +147,7 @@ package body GL.Fixed.Lighting is
       API.Light_Color (Source.Identifier, Enums.Ambient, Color);
       Raise_Exception_On_OpenGL_Error;
    end Set_Ambient;
-   
+
    function Ambient (Source : Light_Object) return Colors.Color is
       Value : Colors.Color;
    begin
@@ -162,7 +161,7 @@ package body GL.Fixed.Lighting is
       API.Light_Color (Source.Identifier, Enums.Diffuse, Color);
       Raise_Exception_On_OpenGL_Error;
    end Set_Diffuse;
-   
+
    function Diffuse (Source : Light_Object) return Colors.Color is
       Value : Colors.Color;
    begin
@@ -176,7 +175,7 @@ package body GL.Fixed.Lighting is
       API.Light_Color (Source.Identifier, Enums.Specular, Color);
       Raise_Exception_On_OpenGL_Error;
    end Set_Specular;
-   
+
    function Specular (Source : Light_Object) return Colors.Color is
       Value : Colors.Color;
    begin
@@ -188,21 +187,14 @@ package body GL.Fixed.Lighting is
    procedure Set_Position (Source : Light_Object;
                            Position : Types.Singles.Vector4) is
    begin
-      API.Singles.Light_Position (Source.Identifier, Enums.Position, Position);
+      API.Light_Position (Source.Identifier, Enums.Position, Position);
       Raise_Exception_On_OpenGL_Error;
    end Set_Position;
-      
-   procedure Set_Position (Source : Light_Object;
-                           Position : Types.Ints.Vector4) is
-   begin
-      API.Ints.Light_Position (Source.Identifier, Enums.Position, Position);
-      Raise_Exception_On_OpenGL_Error;
-   end Set_Position;
-      
+
    function Position (Source : Light_Object) return Types.Singles.Vector4 is
       Value : Types.Singles.Vector4;
    begin
-      API.Singles.Get_Light_Position (Source.Identifier, Enums.Position, Value);
+      API.Get_Light_Position (Source.Identifier, Enums.Position, Value);
       Raise_Exception_On_OpenGL_Error;
       return Value;
    end Position;
@@ -210,18 +202,18 @@ package body GL.Fixed.Lighting is
    procedure Set_Spot_Direction (Source : Light_Object;
                                  Direction : Types.Singles.Vector3) is
    begin
-      API.Singles.Light_Direction (Source.Identifier, Enums.Spot_Direction,
+      API.Light_Direction (Source.Identifier, Enums.Spot_Direction,
                                    Direction);
       Raise_Exception_On_OpenGL_Error;
    end Set_Spot_Direction;
-      
+
    function Spot_Direction (Source : Light_Object) return Types.Singles.Vector3 is
       Value : Singles.Vector3;
    begin
-      API.Singles.Get_Light_Direction (Source.Identifier, Enums.Spot_Direction,
+      API.Get_Light_Direction (Source.Identifier, Enums.Spot_Direction,
                                        Value);
       Raise_Exception_On_OpenGL_Error;
       return Value;
    end Spot_Direction;
-   
+
 end GL.Fixed.Lighting;

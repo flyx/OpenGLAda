@@ -475,6 +475,14 @@ private package GL.API is
    pragma Import (StdCall, Shade_Model, "glShadeModel");
    procedure Light_Color (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Colors.Color);
    pragma Import (StdCall, Light_Color, "glLightfv");
+   procedure Get_Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Target : in out Types.Singles.Vector4);
+   pragma Import (StdCall, Get_Light_Position, "glGetLightfv");
+   procedure Get_Light_Direction (Name : Enums.Light_Name; Pname : Enums.Light_Param; Target : in out Types.Singles.Vector3);
+   pragma Import (StdCall, Get_Light_Direction, "glGetLightfv");
+   procedure Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Types.Singles.Vector4);
+   pragma Import (StdCall, Light_Position, "glLightfv");
+   procedure Light_Direction (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Types.Singles.Vector3);
+   pragma Import (StdCall, Light_Direction, "glLightfv");
    procedure Blend_Func (Src_Factor, Dst_Factor : Blending.Blend_Factor);
    pragma Import (StdCall, Blend_Func, "glBlendFunc");
    Blend_Func_I : T72;

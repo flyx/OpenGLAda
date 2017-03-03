@@ -2,14 +2,6 @@
 package GL.API.Singles is
    pragma Preelaborate;
    use GL.Types;
-   procedure Get_Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Target : in out Types.Singles.Vector4);
-   pragma Import (StdCall, Get_Light_Position, "glGetLightfv");
-   procedure Get_Light_Direction (Name : Enums.Light_Name; Pname : Enums.Light_Param; Target : in out Types.Singles.Vector3);
-   pragma Import (StdCall, Get_Light_Direction, "glGetLightfv");
-   procedure Light_Position (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Types.Singles.Vector4);
-   pragma Import (StdCall, Light_Position, "glLightfv");
-   procedure Light_Direction (Name : Enums.Light_Name; Pname : Enums.Light_Param; Param : Types.Singles.Vector3);
-   pragma Import (StdCall, Light_Direction, "glLightfv");
    Uniform1 : T33;
    Uniform1v : T34;
    Uniform2 : T35;
