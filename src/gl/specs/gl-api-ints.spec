@@ -1,11 +1,4 @@
 spec GL.API.Ints is
-   procedure Get_Light_Position (Name   : Enums.Light_Name;
-                                 Pname  : Enums.Light_Param;
-                                 Target : in out Types.Ints.Vector4) is
-     Static ("glGetLightiv");
-   procedure Light_Position
-     (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
-      Param : Types.Ints.Vector4) is Static("glLightiv");
    procedure Uniform1 (Location : Uniforms.Uniform; Value : Int) is
      Dynamic ("glUniform1i");
    procedure Uniform1v (Location : Uniforms.Uniform; Count : Size;

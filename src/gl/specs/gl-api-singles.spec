@@ -1,16 +1,4 @@
 spec GL.API.Singles is
-   procedure Get_Light_Position
-     (Name   : Enums.Light_Name; Pname : Enums.Light_Param;
-      Target : in out Types.Singles.Vector4) is Static ("glGetLightfv");
-   procedure Get_Light_Direction
-     (Name   : Enums.Light_Name; Pname : Enums.Light_Param;
-      Target : in out Types.Singles.Vector3) is Static ("glGetLightfv");
-   procedure Light_Position
-     (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
-      Param : Types.Singles.Vector4) is Static ("glLightfv");
-   procedure Light_Direction
-     (Name  : Enums.Light_Name; Pname : Enums.Light_Param;
-      Param : Types.Singles.Vector3) is Static ("glLightfv");
    procedure Uniform1 (Location : Uniforms.Uniform; Value : Single) is
      Dynamic ("glUniform1f");
    procedure Uniform1v (Location : Uniforms.Uniform; Count : Size;
