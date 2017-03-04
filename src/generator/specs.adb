@@ -488,6 +488,7 @@ package body Specs is
                end if;
             end;
          end loop;
+         Put_Line ("Adding use: " & To_String (Tmp));
          Data.Uses.Append (To_String (Tmp));
       end Gen_Use;
    begin
@@ -604,7 +605,6 @@ package body Specs is
       for Use_Item of Data.Uses loop
          Put_Line (Target, "   use " & Use_Item & ";");
       end loop;
-      Put_Line (Target, "   use GL.Types;");
       if Is_Root then
          declare
             Sig_Id : Positive := 1;

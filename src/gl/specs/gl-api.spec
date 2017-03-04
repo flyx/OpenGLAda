@@ -223,6 +223,24 @@ spec GL.API is
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Low_Level.Zero) with
      Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
+   procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
+     Static => "glLoadMatrixd";
+   procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with
+     Static => "glMultMatrixd";
+   procedure Vertex4 (Value : Types.Doubles.Vector4) with
+     Static => "glVertex4dv";
+   procedure Vertex3 (Value : Types.Doubles.Vector3) with
+     Static => "glVertex3dv";
+   procedure Vertex2 (Value : Types.Doubles.Vector2) with
+     Static => "glVertex2dv";
+   procedure Normal (Value : Types.Doubles.Vector3) with
+     Static => "glNormal3dv";
+   procedure Tex_Coord4 (Value : Types.Doubles.Vector4) with
+     Static => "glTexCoord4dv";
+   procedure Tex_Coord3 (Value : Types.Doubles.Vector3) with
+     Static => "glTexCoord3dv";
+   procedure Tex_Coord2 (Value : Types.Doubles.Vector2) with
+     Static => "glTexCoord2dv";
 
    -----------------------------------------------------------------------------
    --               Lighting API (deprecated as of OpenGL 3.0)                --
