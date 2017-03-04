@@ -517,6 +517,12 @@ private package GL.API is
    procedure Set_Point_Size (Value : Single);
    pragma Import (StdCall, Set_Point_Size, "glPointSize");
    Set_Point_Parameter_Single : T80;
+   procedure Raster_Pos4 (Value : Types.Doubles.Vector4);
+   pragma Import (StdCall, Raster_Pos4, "glRasterPos4dv");
+   procedure Raster_Pos3 (Value : Types.Doubles.Vector3);
+   pragma Import (StdCall, Raster_Pos3, "glRasterPos3dv");
+   procedure Raster_Pos2 (Value : Types.Doubles.Vector2);
+   pragma Import (StdCall, Raster_Pos2, "glRasterPos2dv");
    procedure Clear (Bits : Low_Level.Bitfield);
    pragma Import (StdCall, Clear, "glClear");
    procedure Draw_Buffer (Mode : Buffers.Explicit_Color_Buffer_Selector);
