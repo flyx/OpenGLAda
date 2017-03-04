@@ -1,51 +1,70 @@
 spec GL.API.UInts is
-   procedure Uniform1 (Location : Uniforms.Uniform; Value : UInt) is
-     Dynamic ("glUniform1ui");
+   procedure Uniform1 (Location : Uniforms.Uniform; Value : UInt) with
+     Dynamic => "glUniform1ui",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform1v (Location : Uniforms.Uniform; Count : Size;
-                        Value : UInt_Array) is Dynamic ("glUniform1uiv");
-   procedure Uniform2 (Location : Uniforms.Uniform; V0, V1 : UInt) is
-     Dynamic ("glUniform2ui");
+                        Value : UInt_Array) with
+     Dynamic => "glUniform1uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
+   procedure Uniform2 (Location : Uniforms.Uniform; V0, V1 : UInt) with
+     Dynamic => "glUniform2ui",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform2v (Location : Uniforms.Uniform; Count : Size;
-                        Value : Uints.Vector2_Array) is
-     Dynamic ("glUniform2uiv");
-   procedure Uniform3 (Location : Uniforms.Uniform; V0, V1, V2 : UInt) is
-     Dynamic ("glUniform3ui");
+                        Value : Uints.Vector2_Array) with
+     Dynamic => "glUniform2uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
+   procedure Uniform3 (Location : Uniforms.Uniform; V0, V1, V2 : UInt) with
+     Dynamic => "glUniform3ui",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform3v (Location : Uniforms.Uniform; Count : Size;
-                        Value : Uints.Vector3_Array) is
-     Dynamic ("glUniform3uiv");
-   procedure Uniform4 (Location : Uniforms.Uniform; V0, V1, V2, V3 : UInt) is
-     Dynamic ("glUniform4ui");
+                        Value : Uints.Vector3_Array) with
+     Dynamic => "glUniform3uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
+   procedure Uniform4 (Location : Uniforms.Uniform; V0, V1, V2, V3 : UInt) with
+     Dynamic => "glUniform4ui",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform4v (Location : Uniforms.Uniform; Count : Size;
-                        Value : Uints.Vector4_Array) is
-     Dynamic ("glUniform4uiv");
+                        Value : Uints.Vector4_Array) with
+     Dynamic => "glUniform4uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform_Matrix2 (Location : Uniforms.Uniform; Count : Size;
                               Transpose : Low_Level.Bool;
-                              Value : Uints.Matrix2_Array) is
-     Dynamic ("glUniformMatrix2uiv");
+                              Value : Uints.Matrix2_Array) with
+     Dynamic => "glUniformMatrix2uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform_Matrix3 (Location : Uniforms.Uniform; Count : Size;
                               Transpose : Low_Level.Bool;
-                              Value : Uints.Matrix3_Array) is
-     Dynamic ("glUniformMatrix3uiv");
+                              Value : Uints.Matrix3_Array) with
+     Dynamic => "glUniformMatrix3uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
    procedure Uniform_Matrix4 (Location : Uniforms.Uniform; Count : Size;
                               Transpose :Low_Level.Bool;
-                              Value : Uints.Matrix4_Array) is
-     Dynamic ("glUniformMatrix4uiv");
-   procedure Vertex_Attrib1 (Index : Attributes.Attribute; Value : UInt) is
-     Dynamic ("glVertexAttribI1ui");
-   procedure Vertex_Attrib2 (Index : Attributes.Attribute; V0, V1 : UInt) is
-     Dynamic ("glVertexAttribI2ui");
+                              Value : Uints.Matrix4_Array) with
+     Dynamic => "glUniformMatrix4uiv",
+     Wrapper => "GL.Uniforms.Set_UInt";
+   procedure Vertex_Attrib1 (Index : Attributes.Attribute; Value : UInt) with
+     Dynamic => "glVertexAttribI1ui",
+     Wrapper => "GL.Attributes.Set_UInt";
+   procedure Vertex_Attrib2 (Index : Attributes.Attribute; V0, V1 : UInt) with
+     Dynamic => "glVertexAttribI2ui",
+     Wrapper => "GL.Attributes.Set_UInt";
    procedure Vertex_Attrib2v (Index : Attributes.Attribute;
-                              Value : Uints.Vector2) is
-     Dynamic ("glVertexAttribI2uiv");
-   procedure Vertex_Attrib3 (Index : Attributes.Attribute; V0, V1, V2 : UInt) is
-     Dynamic ("glVertexAttribI3ui");
+                              Value : Uints.Vector2) with
+     Dynamic => "glVertexAttribI2uiv",
+     Wrapper => "GL.Attributes.Set_UInt";
+   procedure Vertex_Attrib3 (Index : Attributes.Attribute; V0, V1, V2 : UInt)
+     with Dynamic => "glVertexAttribI3ui",
+          Wrapper => "GL.Attributes.Set_UInt";
    procedure Vertex_Attrib3v (Index : Attributes.Attribute;
-                              Value : Uints.Vector3) is
-     Dynamic ("glVertexAttribI3uiv");
+                              Value : Uints.Vector3) with
+     Dynamic => "glVertexAttribI3uiv",
+     Wrapper => "GL.Attributes.Set_UInt";
    procedure Vertex_Attrib4 (Index : Attributes.Attribute;
-                             V0, V1, V2, V3 : UInt) is
-     Dynamic ("glVertexAttribI4ui");
+                             V0, V1, V2, V3 : UInt) with
+     Dynamic => "glVertexAttribI4ui",
+     Wrapper => "GL.Attributes.Set_UInt";
    procedure Vertex_Attrib4v (Index : Attributes.Attribute;
-                              Value : Uints.Vector4) is
-     Dynamic ("glVertexAttrib4Iuiv");
+                              Value : Uints.Vector4) with
+     Dynamic => "glVertexAttrib4Iuiv",
+     Wrapper => "GL.Attributes.Set_UInt";
 end GL.API.UInts;
