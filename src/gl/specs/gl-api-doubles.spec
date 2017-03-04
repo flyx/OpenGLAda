@@ -1,11 +1,4 @@
 spec GL.API.Doubles is
-   procedure Raster_Pos4 (Value : Types.Doubles.Vector4) is
-     Static ("glRasterPos4dv");
-   procedure Raster_Pos3 (Value : Types.Doubles.Vector3) is
-     Static ("glRasterPos3dv");
-   procedure Raster_Pos2 (Value : Types.Doubles.Vector2) is
-     Static ("glRasterPos2dv");
-
    procedure Vertex_Attrib1 (Index : Attributes.Attribute; Value : Double) is
      Dynamic ("glVertexAttribL1d");
    procedure Vertex_Attrib2 (Index : Attributes.Attribute; V0, V1 : Double) is
