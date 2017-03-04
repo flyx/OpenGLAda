@@ -14,21 +14,21 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API.Doubles;
+with GL.API;
 
 package body GL.Raster is
    procedure Set_Pos (Position : Vector2) is
    begin
-      API.Doubles.Raster_Pos2 (Position);
+      API.Raster_Pos2 (Position);
    end Set_Pos;
 
    procedure Set_Pos (Position : Vector3) is
    begin
-      API.Doubles.Raster_Pos3 (Position);
+      API.Raster_Pos3 (Position);
    end Set_Pos;
 
    procedure Set_Pos (Position : Vector4) is
    begin
-      API.Doubles.Raster_Pos4 (Position);
+      API.Raster_Pos4 (Position);
    end Set_Pos;
 end GL.Raster;
