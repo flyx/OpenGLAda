@@ -488,7 +488,6 @@ package body Specs is
                end if;
             end;
          end loop;
-         Put_Line ("Adding use: " & To_String (Tmp));
          Data.Uses.Append (To_String (Tmp));
       end Gen_Use;
    begin
