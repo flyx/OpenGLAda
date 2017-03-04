@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API.Doubles;
+with GL.API;
 with GL.Enums.Getter;
 
 package body GL.Immediate is
@@ -41,19 +41,19 @@ package body GL.Immediate is
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector2) is
       pragma Unreferenced (Token);
    begin
-      API.Doubles.Vertex2 (Vertex);
+      API.Vertex2 (Vertex);
    end Add_Vertex;
 
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector3) is
       pragma Unreferenced (Token);
    begin
-      API.Doubles.Vertex3 (Vertex);
+      API.Vertex3 (Vertex);
    end Add_Vertex;
 
    procedure Add_Vertex (Token : Input_Token; Vertex : Vector4) is
       pragma Unreferenced (Token);
    begin
-      API.Doubles.Vertex4 (Vertex);
+      API.Vertex4 (Vertex);
    end Add_Vertex;
 
    procedure Set_Color (Value : Colors.Color) is
@@ -112,7 +112,7 @@ package body GL.Immediate is
 
    procedure Set_Normal (Value : Vector3) is
    begin
-      API.Doubles.Normal (Value);
+      API.Normal (Value);
       if not Error_Checking_Suspended then
          Raise_Exception_On_OpenGL_Error;
       end if;
@@ -130,7 +130,7 @@ package body GL.Immediate is
 
    procedure Set_Texture_Coordinates (Value : Vector4) is
    begin
-      API.Doubles.Tex_Coord4 (Value);
+      API.Tex_Coord4 (Value);
       if not Error_Checking_Suspended then
          Raise_Exception_On_OpenGL_Error;
       end if;
@@ -138,7 +138,7 @@ package body GL.Immediate is
 
    procedure Set_Texture_Coordinates (Value : Vector3) is
    begin
-      API.Doubles.Tex_Coord3 (Value);
+      API.Tex_Coord3 (Value);
       if not Error_Checking_Suspended then
          Raise_Exception_On_OpenGL_Error;
       end if;
@@ -146,7 +146,7 @@ package body GL.Immediate is
 
    procedure Set_Texture_Coordinates (Value : Vector2) is
    begin
-      API.Doubles.Tex_Coord2 (Value);
+      API.Tex_Coord2 (Value);
       if not Error_Checking_Suspended then
          Raise_Exception_On_OpenGL_Error;
       end if;

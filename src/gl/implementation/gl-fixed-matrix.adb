@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.API.Doubles;
+with GL.API;
 
 package body GL.Fixed.Matrix is
 
@@ -44,21 +44,21 @@ package body GL.Fixed.Matrix is
    procedure Load_Matrix (Stack : Matrix_Stack; Value : Matrix4) is
    begin
       API.Matrix_Mode (Stack.Mode);
-      API.Doubles.Load_Matrix (Value);
+      API.Load_Matrix (Value);
       Raise_Exception_On_OpenGL_Error;
    end Load_Matrix;
 
    procedure Apply_Multiplication (Stack : Matrix_Stack; Factor : Matrix4) is
    begin
       API.Matrix_Mode (Stack.Mode);
-      API.Doubles.Mult_Matrix (Factor);
+      API.Mult_Matrix (Factor);
       Raise_Exception_On_OpenGL_Error;
    end Apply_Multiplication;
 
    procedure Apply_Multiplication (Stack : Matrix_Stack; Factor : Double) is
    begin
       API.Matrix_Mode (Stack.Mode);
-      API.Doubles.Mult_Matrix (Identity4 * Factor);
+      API.Mult_Matrix (Identity4 * Factor);
       Raise_Exception_On_OpenGL_Error;
    end Apply_Multiplication;
 
