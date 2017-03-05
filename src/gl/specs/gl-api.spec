@@ -223,6 +223,28 @@ spec GL.API is
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Low_Level.Zero) with
      Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
+   procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
+     Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
+   procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with
+     Static  => "glMultMatrixd",
+     Wrapper => "GL.Fixed.Matrix.Apply_Multiplication";
+   procedure Vertex4 (Value : Types.Doubles.Vector4) with
+     Static => "glVertex4dv", Wrapper => "GL.Immediate.Add_Vertex";
+   procedure Vertex3 (Value : Types.Doubles.Vector3) with
+     Static => "glVertex3dv", Wrapper => "GL.Immediate.Add_Vertex";
+   procedure Vertex2 (Value : Types.Doubles.Vector2) with
+     Static => "glVertex2dv", Wrapper => "GL.Immediate.Add_Vertex";
+   procedure Normal (Value : Types.Doubles.Vector3) with
+     Static => "glNormal3dv", Wrapper => "GL.Immediate.Set_Normal";
+   procedure Tex_Coord4 (Value : Types.Doubles.Vector4) with
+     Static  => "glTexCoord4dv",
+     Wrapper => "GL.Immediate.Set_Texture_Coordinates";
+   procedure Tex_Coord3 (Value : Types.Doubles.Vector3) with
+     Static  => "glTexCoord3dv",
+     Wrapper => "GL.Immediate.Set_Texture_Coordinates";
+   procedure Tex_Coord2 (Value : Types.Doubles.Vector2) with
+     Static  => "glTexCoord2dv",
+     Wrapper => "GL.Immediate.Set_Texture_Coordinates";
 
    -----------------------------------------------------------------------------
    --               Lighting API (deprecated as of OpenGL 3.0)                --
@@ -318,6 +340,12 @@ spec GL.API is
      Param : Single) with
      Dynamic => "glPointParameterf",
      Wrapper => "GL.Rasterization.Set_Point_Fade_Threshold_Size";
+   procedure Raster_Pos4 (Value : Types.Doubles.Vector4) with
+     Static => "glRasterPos4dv", Wrapper => "GL.Raster.Set_Pos";
+   procedure Raster_Pos3 (Value : Types.Doubles.Vector3) with
+     Static => "glRasterPos3dv", Wrapper => "GL.Raster.Set_Pos";
+   procedure Raster_Pos2 (Value : Types.Doubles.Vector2) with
+     Static => "glRasterPos2dv", Wrapper => "GL.Raster.Set_Pos";
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
