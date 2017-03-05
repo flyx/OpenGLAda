@@ -604,7 +604,6 @@ package body Specs is
       for Use_Item of Data.Uses loop
          Put_Line (Target, "   use " & Use_Item & ";");
       end loop;
-      Put_Line (Target, "   use GL.Types;");
       if Is_Root then
          declare
             Sig_Id : Positive := 1;
