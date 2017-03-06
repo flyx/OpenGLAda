@@ -48,7 +48,7 @@ private package Glfw.Enums is
                         Samples          => 16#2100D#,
                         SRGB_Capable     => 16#2100E#,
                         Refresh_Rate     => 16#2100F#,
-                        
+
                         Client_API             => 16#22001#,
                         Context_Version_Major  => 16#22002#,
                         Context_Version_Minor  => 16#22003#,
@@ -61,12 +61,10 @@ private package Glfw.Enums is
 
    subtype Window_Hint is Window_Info range Resizable .. OpenGL_Profile;
 
-   type Input_Toggle is (Mouse_Cursor, Sticky_Keys, Sticky_Mouse_Buttons);
-   for Input_Toggle use (Mouse_Cursor         => 16#33001#,
-                         Sticky_Keys          => 16#33002#,
-                         Sticky_Mouse_Buttons => 16#33003#);
+   type Input_Toggle is (Mouse_Cursor);
+   for Input_Toggle use (Mouse_Cursor         => 16#33001#);
    for Input_Toggle'Size use Interfaces.C.int'Size;
-   
+
    type Joystick_ID is (
       Joystick_1, Joystick_2, Joystick_3, Joystick_4, Joystick_5,
       Joystick_6, Joystick_7, Joystick_8, Joystick_9, Joystick_10,
@@ -81,7 +79,7 @@ private package Glfw.Enums is
       Joystick_16 => 15
    );
    for Joystick_ID'Size use Interfaces.C.int'Size;
-   
+
    type Joystick_Param is (Present, Axis, Buttons);
    for Joystick_Param use (Present => 16#50001#,
                            Axis    => 16#50002#,

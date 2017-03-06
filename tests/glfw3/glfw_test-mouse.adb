@@ -59,7 +59,7 @@ procedure Glfw_Test.Mouse is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : Glfw.Windows.Window_Reference
+      Upcast : constant Glfw.Windows.Window_Reference
         := Glfw.Windows.Window (Object.all)'Access;
    begin
       Upcast.Init (Width, Height, Title, Monitor, Share);

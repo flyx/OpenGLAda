@@ -41,7 +41,7 @@ procedure Glfw_Test.Windows is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : Glfw.Windows.Window_Reference
+      Upcast : constant Glfw.Windows.Window_Reference
         := Glfw.Windows.Window (Object.all)'Access;
    begin
       Upcast.Init (Width, Height, Title, Monitor, Share);
@@ -53,6 +53,9 @@ procedure Glfw_Test.Windows is
                           Scancode : Glfw.Input.Keys.Scancode;
                           Action   : Glfw.Input.Keys.Action;
                           Mods     : Glfw.Input.Keys.Modifiers) is
+      pragma Unreferenced (Scancode);
+      pragma Unreferenced (Action);
+      pragma Unreferenced (Mods);
       use type Glfw.Input.Keys.Key;
    begin
       If Key = Glfw.Input.Keys.Escape then

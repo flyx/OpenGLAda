@@ -63,6 +63,10 @@ package Glfw.Windows is
                                 Button : Input.Mouse.Button)
                                 return Input.Button_State;
 
+   procedure Set_Input_Toggle (Object : not null access Window;
+                               Kind   : Input.Sticky_Toggle;
+                               Value  : Boolean);
+
    procedure Set_Cursor_Mode (Object : not null access Window;
                               Mode   : Input.Mouse.Cursor_Mode);
 
@@ -98,11 +102,11 @@ package Glfw.Windows is
 
    procedure Enable_Callback (Object : not null access Window;
                               Subject : Callbacks.Kind);
-   
+
    procedure Disable_Callback (Object : not null access Window;
                               Subject : Callbacks.Kind);
 
-   
+
    procedure Position_Changed (Object : not null access Window;
                                X, Y : Integer) is null;
    procedure Size_Changed (Object : not null access Window;
