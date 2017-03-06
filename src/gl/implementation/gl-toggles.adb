@@ -40,12 +40,13 @@ package body GL.Toggles is
    end Set;
 
    function State (Subject : Toggle) return Toggle_State is
+      Value : constant Low_Level.Bool := API.Is_Enabled (Subject);
    begin
-      if API.Is_Enabled (Subject) then
+      Raise_Exception_On_OpenGL_Error;
+      if Value then
          return Enabled;
       else
          return Disabled;
       end if;
-      Raise_Exception_On_OpenGL_Error;
    end State;
 end GL.Toggles;

@@ -39,8 +39,8 @@ procedure Glfw_Test.Monitors is
       use Ada.Text_IO;
       use type Glfw.Monitors.Video_Mode;
       Param1, Param2 : Integer;
-      VM_List : Glfw.Monitors.Video_Mode_List := M.Video_Modes;
-      Gamma_Ramp : Glfw.Monitors.Gamma_Ramp := M.Current_Gamma_Ramp;
+      VM_List    : constant Glfw.Monitors.Video_Mode_List := M.Video_Modes;
+      Gamma_Ramp : constant Glfw.Monitors.Gamma_Ramp := M.Current_Gamma_Ramp;
    begin
       Put_Line ("Monitor """ & M.Name & """");
       M.Get_Position (Param1, Param2);
@@ -73,7 +73,8 @@ begin
    Glfw.Init;
    Enable_Print_Errors;
    declare
-      My_Monitors : Glfw.Monitors.Monitor_List := Glfw.Monitors.Monitors;
+      My_Monitors : constant Glfw.Monitors.Monitor_List :=
+        Glfw.Monitors.Monitors;
    begin
       for I in My_Monitors'Range loop
          Print_Monitor_Info (My_Monitors (I));
