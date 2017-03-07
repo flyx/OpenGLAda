@@ -25,7 +25,7 @@ with Vertex_Data;
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     procedure Load_Vertex_Buffer is new GL.Objects.Buffers.Load_To_Buffer
-      (Vertex_Data.pVertex_Pointers);
+      (GL.Types.Single_Pointers);
 
     Dark_Blue           : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
     Element_Buffer_Data : Array (0 .. 2) of GL.Types.UShort := (0, 1, 2);
@@ -119,7 +119,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Utilities.Show_Shader_Program_Data (Render_Program);
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Setup.");
+            Put_Line ("An exception occurred in Setup.");
     end Setup;
 
     --  ------------------------------------------------------------------------
@@ -137,6 +137,6 @@ begin
     end loop;
 exception
     when others =>
-        Put_Line ("An exceptiom occurred in Main_Loop.");
+        Put_Line ("An exception occurred in Main_Loop.");
         raise;
 end Main_Loop;
