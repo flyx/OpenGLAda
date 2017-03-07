@@ -15,23 +15,23 @@ package body Maths is
     function To_Radians (Degrees : Single) return Single;
     function Zero_Matrix4f return GL.Types.Singles.Matrix4;
 
-    function Cross (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
+    function Cross_Product (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
                    return GL.Types.Singles.Vector3 is
         use GL;
     begin
         return (V1 (Y) * V2 (Z) - V1 (Z) * V2 (Y),
                 V1 (Z) * V2 (X) - V1 (X) * V2 (Z),
                 V1 (X) * V2 (Y) - V1 (Y) * V2 (X));
-    end Cross;
+    end Cross_Product;
 
     --  ------------------------------------------------------------------------
 
-    function Dot (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
+    function Dot_Product (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
                   return Single is
         use GL;
     begin
         return (V1 (X) * V2 (X) + V1 (Y) * V2 (Y) + V1 (Z) * V2 (Z));
-    end Dot;
+    end Dot_Product;
 
     --  ------------------------------------------------------------------------
 
@@ -47,8 +47,8 @@ package body Maths is
         Side    : GL.Types.Singles.Vector3;
         Up_New  : GL.Types.Singles.Vector3;
     begin
-        Side := Cross (Up, Forward);     --  u = Up x n = |Up| |n| Sin(n, Up)
-        Up_New := Cross (Forward, Side); --  v = n x u  = |n| |u| Sin(u, n)
+        Side := Cross_Product (Up, Forward);     --  u = Up x n = |Up| |n| Sin(n, Up)
+        Up_New := Cross_Product (Forward, Side); --  v = n x u  = |n| |u| Sin(u, n)
         Normalize (Forward);             --  n / |n|
         Normalize (Side);                --  u = Sin(n, Up)  ?
         Normalize (Up_New);              --  v = Sin(u, n)   ?
@@ -57,17 +57,17 @@ package body Maths is
         Look_At (X, X) := Side (X);        --  ux = Sin(n, Up) (Perp n, Up)x
         Look_At (X, Y) := Up_New (X);      --  vx = Sin(u, n) (Perp u, n)x
         Look_At (X, Z) := Forward (X);     --  nx / |n|
-        Look_At (X, W) := - Dot (Position, Side);
+        Look_At (X, W) := - Dot_Product (Position, Side);
 
         Look_At (Y, X) := Side (Y);
         Look_At (Y, Y) := Up_New (Y);
         Look_At (Y, Z) := Forward (Y);
-        Look_At (Y, W) := - Dot (Position, Up_New);
+        Look_At (Y, W) := - Dot_Product (Position, Up_New);
 
         Look_At (Z, X) := Side (Z);
         Look_At (Z, Y) := Up_New (Z);
         Look_At (Z, Z) := Forward (Z);
-        Look_At (Z, W) := - Dot (Position, Forward);
+        Look_At (Z, W) := - Dot_Product (Position, Forward);
 
     end Init_Lookat_Transform;
 
