@@ -3,69 +3,20 @@ with Ada.Numerics; use Ada.Numerics;
 
 package body Maths is
     use GL.Types;
+    use type GL.Types.Singles.Matrix4;
+    use type GL.Types.Singles.Vector3;
 
     Radians_Per_Degree : constant Single := Ada.Numerics.Pi / 180.0;
     Degrees_Per_Radian : constant Single := 180.0 / Ada.Numerics.Pi;
 
-    function Length (V : tVector_3f) return Single;
-    procedure Normalize (V : in out tVector_3f);
+    function Length (V : GL.Types.Singles.Vector3) return Single;
+    procedure Normalize (V : in out GL.Types.Singles.Vector3);
     function To_Degrees (Radians : Single) return Single;
     function To_Radians (Degrees : Single) return Single;
-    function Zero_Matrix4f return tMatrix_4f;
+    function Zero_Matrix4f return GL.Types.Singles.Matrix4;
 
-    --  ------------------------------------------------------------------------
-    --  Matrix multiplication
-    --  AB(i,j) = sum(k = 1..4)(A(i,k)B(k,j))
-    function "*" (Left :  tMatrix_4f; Right : tMatrix_4f) return  tMatrix_4f is
-        Product : tMatrix_4f;
-    begin
-        for i in GL.Index_Homogeneous loop
-            for j in GL.Index_Homogeneous loop
-                Product (i, j) := 0.0;
-                for k in GL.Index_Homogeneous  loop
-                    Product (i, j) := Product (i, j) +
-                                     Left (i, k) * Right (k, j);
-                end loop;
-            end loop;
-        end loop;
-        return Product;
-    end  "*";
-
-    --  ------------------------------------------------------------------------
-
-    function "+" (V1, V2 : tVector_3f) return  tVector_3f is
-        use GL;
-    begin
-        return (V1 (X) + V2 (X), V1 (Y) + V2 (Y), V1 (Z) + V2 (Z));
-    end  "+";
-
-    --  ------------------------------------------------------------------------
-
-    function "-" (Left, Right : tVector_3f) return  tVector_3f is
-        use GL;
-    begin
-        return (Left (X) - Right (X), Left (Y) - Right (Y), Left (Z) - Right (Z));
-    end  "-";
-
-    --  ------------------------------------------------------------------------
-
-    function "*" (Left : Single; Right : tVector_3f) return tVector_3f is
-        use GL;
-    begin
-        return (Left * Right (X), Left * Right (Y), Left * Right (Z));
-    end  "*";
-
-    --  ------------------------------------------------------------------------
-
-    function "*" (Left : tVector_3f; Right : Single) return tVector_3f is
-        use GL;
-    begin
-        return (Left (X) * Right, Left (Y) * Right, Left (Z) * Right);
-    end  "*";
-
-    --  ------------------------------------------------------------------------
-
-      function Cross (V1 : tVector_3f; V2 : tVector_3f) return tVector_3f is
+    function Cross (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
+                   return GL.Types.Singles.Vector3 is
         use GL;
     begin
         return (V1 (Y) * V2 (Z) - V1 (Z) * V2 (Y),
@@ -75,7 +26,8 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-      function Dot (V1 : tVector_3f; V2 : tVector_3f) return Single is
+    function Dot (V1 : GL.Types.Singles.Vector3; V2 : GL.Types.Singles.Vector3)
+                  return Single is
         use GL;
     begin
         return (V1 (X) * V2 (X) + V1 (Y) * V2 (Y) + V1 (Z) * V2 (Z));
@@ -85,14 +37,15 @@ package body Maths is
 
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.11
-    procedure Init_Lookat_Transform (Position : tVector_3f; Target : tVector_3f;
-                                     Up       : tVector_3f;
-                                     Look_At  : out tMatrix_4f) is
+    procedure Init_Lookat_Transform (Position : GL.Types.Singles.Vector3;
+                                     Target   : GL.Types.Singles.Vector3;
+                                     Up       : GL.Types.Singles.Vector3;
+                                     Look_At  : out GL.Types.Singles.Matrix4) is
         use GL;
         --  Reference co-ordinate frame
-        Forward : tVector_3f := Position - Target;    --  n
-        Side    : tVector_3f;
-        Up_New  : tVector_3f;
+        Forward : GL.Types.Singles.Vector3 := Position - Target;    --  n
+        Side    : GL.Types.Singles.Vector3;
+        Up_New  : GL.Types.Singles.Vector3;
     begin
         Side := Cross (Up, Forward);     --  u = Up x n = |Up| |n| Sin(n, Up)
         Up_New := Cross (Forward, Side); --  v = n x u  = |n| |u| Sin(u, n)
@@ -122,9 +75,9 @@ package body Maths is
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.13
 
- procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
+    procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
                                           Z_Near, Z_Far : Single;
-                                          Transform     : out tMatrix_4f) is
+                                          Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
         use pSingle_Math_Functions;
         dX : Single := Right - Left;
@@ -145,7 +98,7 @@ package body Maths is
 
     procedure Init_Perspective_Transform (View_Angle, Width, Height,
                                           Z_Near, Z_Far : Single;
-                                          Transform     : out tMatrix_4f) is
+                                          Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
         use pSingle_Math_Functions;
 
@@ -160,7 +113,7 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    function Length (V : tVector_3f) return Single is
+    function Length (V : GL.Types.Singles.Vector3) return Single is
         use pSingle_Math_Functions;
         use GL;
     begin
@@ -169,7 +122,7 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Normalize (V : in out tVector_3f) is
+    procedure Normalize (V : in out GL.Types.Singles.Vector3) is
         use GL;
         use pSingle_Math_Functions;
         L : Single := Length (V);
@@ -180,9 +133,9 @@ package body Maths is
     --  ------------------------------------------------------------------------
 
     function Perspective (Top, Bottom, Left, Right, Near, Far : Single)
-                          return tMatrix_4f is
+                          return GL.Types.Singles.Matrix4 is
         use GL;
-        Matrix     : tMatrix_4f := Zero_Matrix4f;
+        Matrix     : GL.Types.Singles.Matrix4 := Zero_Matrix4f;
     begin
         Matrix (X, X) := 2.0 * Near / (Right - Left);
         Matrix (X, Z) := (Right + Left) / (Right - Left);
@@ -197,7 +150,7 @@ package body Maths is
     --  ------------------------------------------------------------------------
 
     function Perspective (View_Angle, Aspect, Near, Far : Single)
-                          return tMatrix_4f is
+                          return GL.Types.Singles.Matrix4 is
         use pSingle_Math_Functions;
 
         Top          : Single := Near * Tan ((Pi / 360.0) * View_Angle);
@@ -224,8 +177,8 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-       function Zero_Matrix4f return tMatrix_4f is
-        Zero_Matrix     : tMatrix_4f;
+    function Zero_Matrix4f return GL.Types.Singles.Matrix4 is
+        Zero_Matrix     : GL.Types.Singles.Matrix4;
     begin
         for row in GL.Index_Homogeneous loop
             for col in  GL.Index_Homogeneous loop

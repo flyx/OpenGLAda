@@ -33,7 +33,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     Vertex_Buffer       : GL.Objects.Buffers.Buffer;
     Render_Program      : GL.Objects.Programs.Program;
     MVP_Location        : GL.Uniforms.Uniform;
-    MVP_Matrix          : Maths.tMatrix_4f := GL.Types.Singles.Identity4;
+    MVP_Matrix          : GL.Types.Singles.Matrix4;
 
     --  ------------------------------------------------------------------------
 
@@ -63,22 +63,31 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program) is
         use GL.Types;
         use Maths;
+        use type GL.Types.Singles.Matrix4;
         View_Width        : constant Single := 1024.0;
         View_Height       : constant Single := 768.0;
-        Camera_Position   : tVector_3f := (4.0, 3.0, 3.0);
-        Look_At           : tVector_3f := (0.0, 0.0, 0.0);
-        Up                : tVector_3f := (0.0, 1.0, 0.0);
-        Model_Matrix      : Maths.tMatrix_4f := Singles.Identity4;
-        Projection_Matrix : Maths.tMatrix_4f := Singles.Identity4;
-        View_Matrix       : Maths.tMatrix_4f := Singles.Identity4;
+        Camera_Position   : GL.Types.Singles.Vector3 := (0.0, 0.1, -3.0);
+        Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
+        Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
+        Result            : GL.Types.Singles.Matrix4;
+        Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
     begin
         MVP_Location := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP");
 
-        Init_Perspective_Transform (45.0, View_Width, View_Height, 0.1, 100.0, Projection_Matrix);
-        Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
-
+--          Init_Perspective_Transform (45.0, View_Width, View_Height,
+--                                      0.1, 100.0, Projection_Matrix);
+--          Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+        Result := Projection_Matrix * View_Matrix * Model_Matrix;
+       for row in GL.X .. GL.W loop
+            for col in GL.X .. GL.W loop
+                Put (Single'Image (Result (row, col)));
+            end loop;
+            New_Line;
+       end loop;
+       MVP_Matrix := Result;
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
@@ -102,11 +111,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Render_Program := Program_From
           ((Src ("src/shaders/simple_transform_vertex.glsl", Vertex_Shader),
            Src ("src/shaders/single_colour_fragment.glsl", Fragment_Shader)));
-            Set_MVP_Matrix (Render_Program);
-            Vertex_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Vertex_Buffer);
-            Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertex_Buffer_Data,
-                                Static_Draw);
+        Set_MVP_Matrix (Render_Program);
+        Vertex_Buffer.Initialize_Id;
+        Array_Buffer.Bind (Vertex_Buffer);
+        Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertex_Buffer_Data,
+                            Static_Draw);
+        Utilities.Show_Shader_Program_Data (Render_Program);
     exception
         when others =>
             Put_Line ("An exceptiom occurred in Setup.");
