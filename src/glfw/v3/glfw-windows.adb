@@ -217,6 +217,13 @@ package body Glfw.Windows is
       return API.Get_Mouse_Button (Object.Handle, Button);
    end Mouse_Button_State;
 
+   procedure Set_Input_Toggle (Object : not null access Window;
+                               Kind   : Input.Sticky_Toggle;
+                               Value  : Boolean) is
+   begin
+      API.Set_Input_Mode (Object.Handle, Kind, Bool (Value));
+   end Set_Input_Toggle;
+
    procedure Set_Cursor_Mode (Object : not null access Window;
                               Mode   : Input.Mouse.Cursor_Mode) is
    begin
@@ -313,7 +320,7 @@ package body Glfw.Windows is
          when Callbacks.Char => API.Set_Char_Callback (Object.Handle, Raw_Character_Callback'Access);
       end case;
    end Enable_Callback;
-   
+
    procedure Disable_Callback (Object  : not null access Window;
                                Subject : Callbacks.Kind) is
    begin
@@ -334,8 +341,8 @@ package body Glfw.Windows is
       end case;
    end Disable_Callback;
 
-   
-   
+
+
    procedure Get_OpenGL_Version (Object : not null access Window;
                                  Major, Minor, Revision : out Natural) is
       Value : Interfaces.C.int;

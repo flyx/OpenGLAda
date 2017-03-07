@@ -393,7 +393,7 @@ private package Glfw.API is
                   External_Name => "glfwGetInputMode");
 
    procedure Set_Input_Mode (Window : System.Address;
-                             Mode   : Enums.Input_Toggle;
+                             Mode   : Input.Sticky_Toggle;
                              Value  : Bool);
    procedure Set_Input_Mode (Window : System.Address;
                              Mode   : Enums.Input_Toggle;
