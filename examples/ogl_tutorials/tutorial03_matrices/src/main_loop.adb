@@ -96,13 +96,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Setup is
+    procedure Setup (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Objects.Buffers;
-
         use GL.Objects.Shaders;
+        use Glfw.Input;
         use Program_Loader;
     begin
+        Main_Window.Set_Input_Toggle (Sticky_Keys, True);
         Utilities.Clear_Background_Colour (Dark_Blue);
 
         Vertex_Array.Initialize_Id;
@@ -127,12 +128,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     use Glfw.Input;
     Running : Boolean := True;
 begin
-    Setup;
+    Setup (Main_Window);
     while Running loop
         Render (Glfw.Time);
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
-        Running := Running and not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+        Running := Running and not (Main_Window.Key_State (Glfw.Input.Keys.Escape)
+                                    = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
 exception
