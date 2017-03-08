@@ -89,16 +89,11 @@ package body GL.Vectors is
    function Dot_Product (Left, Right : Vector) return Element_Type is
       Ret : Element_Type;
     begin
-      if Left'Length /=  Right'Length then
-         raise Constraint_Error with "Both dot product vectors must be the " &
-                                     " same length.";
-      else
-         Ret := Left (Left'First) * Right (Right'First);
-         for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
+        Ret := Left (Left'First) * Right (Right'First);
+        for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
             Ret := Ret + Left (Index) * Right  (Index);
-         end loop;
-      end if;
-      return Ret;
+        end loop;
+        return Ret;
     end Dot_Product;
 
 end GL.Vectors;
