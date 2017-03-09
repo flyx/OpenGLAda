@@ -66,28 +66,29 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use type GL.Types.Singles.Matrix4;
         View_Width        : constant Single := 1024.0;
         View_Height       : constant Single := 768.0;
-        Camera_Position   : GL.Types.Singles.Vector3 := (0.0, 0.1, -3.0);
+        Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, 3.0);
         Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
         Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
         Result            : GL.Types.Singles.Matrix4;
         Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
         Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
-        View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        View_Matrix       : GL.Types.Singles.Matrix4;
     begin
         MVP_Location := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP");
 
---          Init_Perspective_Transform (45.0, View_Width, View_Height,
---                                      0.1, 100.0, Projection_Matrix);
---          Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+        Init_Perspective_Transform (45.0, View_Width, View_Height,
+                                    0.1, 100.0, Projection_Matrix);
+        Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
         Result := Projection_Matrix * View_Matrix * Model_Matrix;
-       for row in GL.X .. GL.W loop
+        Put_Line ("MVP Matrix:");
+        for row in GL.X .. GL.W loop
             for col in GL.X .. GL.W loop
-                Put (Single'Image (Result (row, col)));
+                Put (Single'Image (Result (row, col)) & "   ");
             end loop;
             New_Line;
-       end loop;
-       MVP_Matrix := Result;
+        end loop;
+        MVP_Matrix := Result;
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
