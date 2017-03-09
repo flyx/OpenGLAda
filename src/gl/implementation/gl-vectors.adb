@@ -65,29 +65,23 @@ package body GL.Vectors is
       return Ret;
    end "/";
    
-   function Cross_Product (Left, Right : Vector) return Vector is
-      V1          : array (1 .. 3) of Element_Type;
-      V2          : array (1 .. 3) of Element_Type;
-      Array_Index : Positive := 1;
+    function Cross_Product (Left, Right : Vector) return Vector is
     begin
-      if Left'Length /= 3 or Right'Length /= 3 then
-          raise Constraint_Error with "The vector cross-product is only" &
-                                      " defined for vectors of length three.";
-      else
-            for Index in Left'Range loop
-                V1 (Array_Index) := Left (Index);
-                V2 (Array_Index) := Right (Index);
-                Array_Index := Array_Index + 1;
-            end loop;
-      
-            return (V1 (2) * V2 (3) - V2 (3) * V1 (2),
-                    V1 (3) * V2 (1) - V2 (1) * V1 (3),
-                    V1 (1) * V2 (2) - V2 (2) * V1 (1));
-      end if;
+        if Left'Length /= 3 or Right'Length /= 3 then
+            raise Constraint_Error with "The vector cross-product is only" &
+              " defined for vectors of length three.";
+        else
+            return (Left (Index_Type'Succ (Left'First)) * Right (Right'Last) - 
+                      Left (Left'Last) * Right (Index_Type'Succ (Right'First)),
+                    Left (Left'Last) * Right (Right'First) - 
+                      Left (Left'First) * Right (Right'Last),
+                    Left (Left'First) * Right (Index_Type'Succ (Right'First)) -
+                      Left (Index_Type'Succ (Left'First)) * Right (Right'First));
+        end if;
     end Cross_Product;
    
-   function Dot_Product (Left, Right : Vector) return Element_Type is
-      Ret : Element_Type;
+    function Dot_Product (Left, Right : Vector) return Element_Type is
+        Ret : Element_Type;
     begin
         Ret := Left (Left'First) * Right (Right'First);
         for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
