@@ -71,7 +71,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
         Result            : GL.Types.Singles.Matrix4;
         Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
-        Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        Projection_Matrix : GL.Types.Singles.Matrix4;
         View_Matrix       : GL.Types.Singles.Matrix4;
     begin
         MVP_Location := GL.Objects.Programs.Uniform_Location
