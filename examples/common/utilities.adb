@@ -27,6 +27,17 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
+    begin
+        Put (Name);
+        for Index in aVector'Range loop
+            Put (GL.Types.Single'Image (aVector (Index)));
+        end loop;
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
     procedure Show_GL_Data is
         GL_Version                : Unbounded_String;
         Renderer                  : Unbounded_String;
