@@ -28,8 +28,10 @@ package body Maths is
         Side    : GL.Types.Singles.Vector3;
         Up_New  : GL.Types.Singles.Vector3;
     begin
-        Side := GL.Types.Singles.Cross_Product (Up, Forward);     --  u = Up x n = |Up| |n| Sin(n, Up)
-        Up_New := GL.Types.Singles.Cross_Product (Forward, Side); --  v = n x u  = |n| |u| Sin(u, n)
+        --  u = Up x n = |Up| |n| Sin(n, Up)
+        Side := GL.Types.Singles.Cross_Product (Up, Forward);
+        --  v = n x u  = |n| |u| Sin(u, n)
+        Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
         Normalize (Forward);             --  n / |n|
         Normalize (Side);                --  u = Sin(n, Up)  ?
         Normalize (Up_New);              --  v = Sin(u, n)   ?
@@ -57,8 +59,8 @@ package body Maths is
     --  Chapter 7, Figure 7.13
 
     procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
-                                          Z_Near, Z_Far : Single;
-                                          Transform     : out GL.Types.Singles.Matrix4) is
+                                Z_Near, Z_Far : Single;
+                                Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
         use pSingle_Math_Functions;
         dX : Single := Right - Left;
@@ -78,8 +80,8 @@ package body Maths is
     --  ------------------------------------------------------------------------
 
     procedure Init_Perspective_Transform (View_Angle, Width, Height,
-                                          Z_Near, Z_Far : Single;
-                                          Transform     : out GL.Types.Singles.Matrix4) is
+                                Z_Near, Z_Far : Single;
+                                Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
         use pSingle_Math_Functions;
 
