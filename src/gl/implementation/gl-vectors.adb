@@ -65,29 +65,14 @@ package body GL.Vectors is
       return Ret;
    end "/";
    
-    function Cross_Product (Left, Right : Vector) return Vector is
-    begin
-        if Left'Length /= 3 or Right'Length /= 3 then
-            raise Constraint_Error with "The vector cross-product is only" &
-              " defined for vectors of length three.";
-        else
-            return (Left (Index_Type'Succ (Left'First)) * Right (Right'Last) - 
-                      Left (Left'Last) * Right (Index_Type'Succ (Right'First)),
-                    Left (Left'Last) * Right (Right'First) - 
-                      Left (Left'First) * Right (Right'Last),
-                    Left (Left'First) * Right (Index_Type'Succ (Right'First)) -
-                      Left (Index_Type'Succ (Left'First)) * Right (Right'First));
-        end if;
-    end Cross_Product;
-   
-    function Dot_Product (Left, Right : Vector) return Element_Type is
-        Ret : Element_Type;
-    begin
-        Ret := Left (Left'First) * Right (Right'First);
-        for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
-            Ret := Ret + Left (Index) * Right  (Index);
-        end loop;
-        return Ret;
-    end Dot_Product;
+   function Dot_Product (Left, Right : Vector) return Element_Type is
+      Ret : Element_Type;
+   begin
+      Ret := Left (Left'First) * Right (Right'First);
+      for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
+          Ret := Ret + Left (Index) * Right  (Index);
+      end loop;
+      return Ret;
+   end Dot_Product;
 
 end GL.Vectors;
