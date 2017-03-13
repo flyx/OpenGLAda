@@ -55,7 +55,7 @@ project Tutorial04_Coloured_Cube is
                               when "2" =>
 
                               when "3" =>
-                                 for Source_Files use ("cube_data.ads", "initialize.adb", "initialize.ads", "main_loop.adb", "main_loop.ads", "maths.adb", "maths.ads", "program_loader.adb", "program_loader.ads", "tutorial_4.adb", 
+                                 for Source_Files use ("cube_data.ads", "initialize.adb", "initialize.ads", "main_loop.adb", "main_loop.ads", "program_loader.adb", "program_loader.ads", "tutorial_4.adb", 
                                     "utilities.adb", "utilities.ads");
                            end case;
                      end case;
