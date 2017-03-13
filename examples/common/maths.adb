@@ -1,7 +1,10 @@
-
-with Ada.Numerics; use Ada.Numerics;
+with Ada.Numerics;
+with Ada.Numerics.Generic_Elementary_Functions;
 
 package body Maths is
+    package pSingle_Math_Functions is new
+      Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
+
     use GL.Types;
     use type GL.Types.Singles.Matrix4;
     use type GL.Types.Singles.Vector3;
@@ -9,49 +12,48 @@ package body Maths is
     Radians_Per_Degree : constant Single := Ada.Numerics.Pi / 180.0;
     Degrees_Per_Radian : constant Single := 180.0 / Ada.Numerics.Pi;
 
+    Zero_Matrix4f : constant GL.Types.Singles.Matrix4 :=
+      (others => (others => 0.0));
+
     function Length (V : GL.Types.Singles.Vector3) return Single;
     procedure Normalize (V : in out GL.Types.Singles.Vector3);
     function To_Degrees (Radians : Single) return Single;
     function To_Radians (Degrees : Single) return Single;
-    function Zero_Matrix4f return GL.Types.Singles.Matrix4;
 
     --  ------------------------------------------------------------------------
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.11
-    procedure Init_Lookat_Transform (Position : GL.Types.Singles.Vector3;
-                                     Target   : GL.Types.Singles.Vector3;
-                                     Up       : GL.Types.Singles.Vector3;
-                                     Look_At  : out GL.Types.Singles.Matrix4) is
+    procedure Init_Lookat_Transform
+      (Position, Target, Up : GL.Types.Singles.Vector3;
+       Look_At  : out GL.Types.Singles.Matrix4) is
         use GL;
         --  Reference co-ordinate frame
-        Forward : GL.Types.Singles.Vector3 := Position - Target;    --  n
-        Side    : GL.Types.Singles.Vector3;
-        Up_New  : GL.Types.Singles.Vector3;
+        Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
+        Side    : GL.Types.Singles.Vector3
+          --  u = Up x n = |Up| |n| Sin(n, Up)
+          := GL.Types.Singles.Cross_Product (Up, Forward);
+        Up_New  : GL.Types.Singles.Vector3
+          --  v = n x u  = |n| |u| Sin(u, n)
+          := GL.Types.Singles.Cross_Product (Forward, Side);
     begin
-        --  u = Up x n = |Up| |n| Sin(n, Up)
-        Side := GL.Types.Singles.Cross_Product (Up, Forward);
-        --  v = n x u  = |n| |u| Sin(u, n)
-        Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
         Normalize (Forward);             --  n / |n|
         Normalize (Side);                --  u = Sin(n, Up)  ?
         Normalize (Up_New);              --  v = Sin(u, n)   ?
 
-        Look_At := Singles.Identity4;
-        Look_At (X, X) := Side (X);        --  ux = Sin(n, Up) (Perp n, Up)x
-        Look_At (X, Y) := Up_New (X);      --  vx = Sin(u, n) (Perp u, n)x
-        Look_At (X, Z) := Forward (X);     --  nx / |n|
-        Look_At (X, W) := - GL.Types.Singles.Dot_Product (Position, Side);
-
-        Look_At (Y, X) := Side (Y);
-        Look_At (Y, Y) := Up_New (Y);
-        Look_At (Y, Z) := Forward (Y);
-        Look_At (Y, W) := - GL.Types.Singles.Dot_Product (Position, Up_New);
-
-        Look_At (Z, X) := Side (Z);
-        Look_At (Z, Y) := Up_New (Z);
-        Look_At (Z, Z) := Forward (Z);
-        Look_At (Z, W) := - GL.Types.Singles.Dot_Product (Position, Forward);
-
+        Look_At := (
+          X => (X => Side (X),        --  ux = Sin(n, Up) (Perp n, Up)x
+                Y => Up_New (X),      --  vx = Sin(u, n) (Perp u, n)x
+                Z => Forward (X),     --  nx / |n|
+                W => -GL.Types.Singles.Dot_Product (Position, Side)),
+          Y => (X => Side (Y),
+                Y => Up_New (Y),
+                Z => Forward (Y),
+                W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
+          Z => (X => Side (Z),
+                Y => Up_New (Z),
+                Z => Forward (Z),
+                W => -GL.Types.Singles.Dot_Product (Position, Forward)),
+          W => (0.0, 0.0, 0.0, 1.0));
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
@@ -62,19 +64,15 @@ package body Maths is
                                 Z_Near, Z_Far : Single;
                                 Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
-        use pSingle_Math_Functions;
         dX : Single := Right - Left;
         dY : Single := Top - Bottom;
         dZ : Single := Z_Far - Z_Near;
     begin
-        Transform := Zero_Matrix4f;
-        Transform (X, X) := 2.0 * Z_Near / dX;
-        Transform (X, Z) := (Right + Left) / dX;
-        Transform (Y, Y) := 2.0 * Z_Near / dY;
-        Transform (Y, Z) := (Top + Bottom) / dY;
-        Transform (Z, Z) := - (Z_Far + Z_Near) / dZ;
-        Transform (Z, W) := - 2.0 * Z_Far * Z_Near / dZ;
-        Transform (W, Z) := - 1.0;
+        Transform := (
+          X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
+          Y => (0.0, 2.0 * Z_Near / dY, (Top + Bottom) / dY, 0.0),
+          Z => (0.0, 0.0, -(Z_Far + Z_Near) / dZ, -2.0 * Z_Far * Z_Near / dZ),
+          W => (0.0, 0.0, - 1.0, 0.0));
     end Init_Perspective_Transform;
 
     --  ------------------------------------------------------------------------
@@ -82,9 +80,7 @@ package body Maths is
     procedure Init_Perspective_Transform (View_Angle, Width, Height,
                                 Z_Near, Z_Far : Single;
                                 Transform     : out GL.Types.Singles.Matrix4) is
-        use GL;
         use pSingle_Math_Functions;
-
         Top          : Single := Z_Near * Tan (To_Radians (View_Angle) / 2.0);
         Right        : Single := Top *  Width / Height;
         Bottom       : Single := - Top;
@@ -107,7 +103,6 @@ package body Maths is
 
     procedure Normalize (V : in out GL.Types.Singles.Vector3) is
         use GL;
-        use pSingle_Math_Functions;
         L : Single := Length (V);
     begin
         V := (V (X) / L, V (Y) / L, V (Z) / L);
@@ -136,10 +131,10 @@ package body Maths is
                           return GL.Types.Singles.Matrix4 is
         use pSingle_Math_Functions;
 
-        Top          : Single := Near * Tan ((Pi / 360.0) * View_Angle);
-        Bottom       : Single := -Top;
-        Right        : Single := Top * Aspect;
-        Left         : Single := -Right;
+        Top    : Single := Near * Tan ((Ada.Numerics.Pi / 360.0) * View_Angle);
+        Bottom : Single := -Top;
+        Right  : Single := Top * Aspect;
+        Left   : Single := -Right;
     begin
         return Perspective (Top, Bottom, Left, Right, Near, Far);
     end Perspective;
@@ -157,19 +152,6 @@ package body Maths is
     begin
         return Radians * Degrees_Per_Radian;
     end ;
-
-    --  ------------------------------------------------------------------------
-
-    function Zero_Matrix4f return GL.Types.Singles.Matrix4 is
-        Zero_Matrix     : GL.Types.Singles.Matrix4;
-    begin
-        for row in GL.Index_Homogeneous loop
-            for col in  GL.Index_Homogeneous loop
-                Zero_Matrix (row, col) := 0.0;
-            end loop;
-        end loop;
-        return Zero_Matrix;
-    end Zero_Matrix4f;
 
     --  ------------------------------------------------------------------------
 
