@@ -1,5 +1,5 @@
 
-with Interfaces.C;
+
 with Interfaces.C.Pointers;
 
 with Ada.Exceptions; use Ada.Exceptions;
@@ -28,7 +28,6 @@ with Glfw.Input.Mouse;
 with Glfw.Windows;
 with Glfw.Windows.Context;
 
-with Controls;
 with Cube_Data;
 with Maths;
 with Program_Loader;
@@ -60,12 +59,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Buffers;
         use Maths;
 
-        Window_Width                  : Glfw.Size;
-        Window_Height                 : Glfw.Size;
+--          Window_Width                  : Glfw.Size;
+--          Window_Height                 : Glfw.Size;
     begin
-        Utilities.Clear_Background_Colour (Dark_Blue);
-        Glfw.Windows.Get_Size (Window'Access, Window_Width, Window_Height);
-        GL.Window.Set_Viewport (0, 0, Int (Window_Width), Int (Window_Height));
+        Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+--          Glfw.Windows.Get_Size (Window'Access, Window_Width, Window_Height);
+--          GL.Window.Set_Viewport (0, 0, Int (Window_Width), Int (Window_Height));
 
         GL.Objects.Programs.Use_Program (Render_Program);
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
@@ -75,10 +74,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
-        --  Second attribute buffer : UVs
+        --  Second attribute buffer : Colours
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
         Array_Buffer.Bind (Colour_Buffer);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangles,
                                               First => 0,
@@ -95,7 +94,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use Interfaces.C;
         use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
@@ -112,8 +110,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     begin
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
         Window.Get_Size (Window_Width, Window_Height);
---          Window.Set_Cursor_Pos (Glfw.Input.Mouse.Coordinate (Window_Width) / 2.0,
---                                 Glfw.Input.Mouse.Coordinate (Window_Height) / 2.0);
         Utilities.Clear_Background_Colour (Dark_Blue);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
@@ -144,7 +140,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Colour_Buffer.Initialize_Id;
         Array_Buffer.Bind (Colour_Buffer);
         Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
-        Put_Line ("Setup; Vertex and UVs Buffers loaded.");
+        Put_Line ("Setup; Vertex and colour buffers loaded.");
 
     exception
         when others =>

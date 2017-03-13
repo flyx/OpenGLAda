@@ -2,9 +2,75 @@ limited with "../../../opengl-glfw.gpr";
 
 project Tutorial04_Coloured_Cube is
 
+   type Glfw_Version_Type is
+      ("2", "3");
+
+   -- Different operating systems need different linker
+   -- flags. Moreover, some features (such as WGL, GLX,
+   -- CGL) are only available on one specific platform.
+   -- Supported values:
+   --  * windows : Microsoft Windows
+   --  * x11     : X Window System
+   --  * quartz  : Quartz Compositor (OS X)
+   type Windowing_System_Type is
+      ("windows", "x11", "quartz");
+   type Mode_Type is
+      ("debug", "release");
+   type Toggle_Type is
+      ("enabled", "disabled");
+   type Library_Kinds is
+      ("static", "relocatable");
    for Source_Dirs use ("src", "../../common");
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
    for Main use ("tutorial_4.adb");
+   LIBRARY_TYPE : Library_Kinds := external ("LIBRARY_TYPE");
+   Auto_Exceptions : Toggle_Type := external ("Auto_Exceptions");
+   Mode : Mode_Type := external ("Mode");
+   Windowing_System : Windowing_System_Type := external ("Windowing_System");
+   GLFW_Version : Glfw_Version_Type := external ("GLFW_Version");
+
+   case LIBRARY_TYPE is
+
+      when "static" =>
+
+         case Auto_Exceptions is
+
+            when "enabled" =>
+
+               case Mode is
+
+                  when "debug" =>
+
+                     case Windowing_System is
+
+                        when "windows" =>
+
+                        when "x11" =>
+
+                        when "quartz" =>
+
+                           case GLFW_Version is
+
+                              when "2" =>
+
+                              when "3" =>
+                                 for Source_Files use ("cube_data.ads", "initialize.adb", "initialize.ads", "main_loop.adb", "main_loop.ads", "maths.adb", "maths.ads", "program_loader.adb", "program_loader.ads", "tutorial_4.adb", 
+                                    "utilities.adb", "utilities.ads");
+                           end case;
+                     end case;
+
+                  when "release" =>
+
+               end case;
+
+            when "disabled" =>
+
+         end case;
+
+      when "relocatable" =>
+
+   end case;
+
 end Tutorial04_Coloured_Cube;
 

@@ -49,8 +49,8 @@ package Cube_Data is
                             1.0, -1.0, 1.0);
 
     -- One colour for each vertex. These were generated randomly.
-    Colour_Data : tElement_Array (0 .. 36 * 2 - 1) :=
-                       (0.583,  0.771,  0.014,
+    Colour_Data : tElement_Array (0 .. 36 * 3 - 1) :=
+               (0.583,  0.771,  0.014,
 		0.609,  0.115,  0.436,
 		0.327,  0.483,  0.844,
 		0.822,  0.569,  0.201,
