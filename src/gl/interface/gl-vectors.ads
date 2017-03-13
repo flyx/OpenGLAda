@@ -38,6 +38,8 @@ package GL.Vectors is
    
    function "/" (Left : Vector; Right : Element_Type) return Vector;
    
+   function Dot_Product   (Left, Right : Vector) return Element_Type;
+   
    pragma Inline ("+");
    pragma Inline ("-");
    pragma Inline ("*");
