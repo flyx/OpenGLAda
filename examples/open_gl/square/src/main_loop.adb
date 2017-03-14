@@ -1,22 +1,16 @@
 
-with Interfaces.C;
-
 with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
 with GL.Types;
 with GL.Types.Colors;
-with GL.Uniforms;
 
 with Glfw;
-with Glfw.Errors;
 with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
@@ -39,15 +33,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render is
         use GL.Types;
         Back_Colour   : Colors.Color := (0.0, 0.6, 0.6, 1.0);
-          Stride   : Int := 5;
-          Skip     : Int := 3;
+        Stride        : Int := 5;
+        Skip          : Int := 3;
     begin
         Utilities.Clear_Background_Colour (Back_Colour);
 
         Shader_Program.Use_Program;
         GL.Attributes.Enable_Vertex_Attrib_Array (Position_Location);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Position_Location,
-             2, Single_Type, Stride, 0);
+                                                 2, Single_Type, Stride, 0);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (Colour_Location);
 
