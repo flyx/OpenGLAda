@@ -29,21 +29,19 @@ package body Maths is
         use GL;
         --  Reference co-ordinate frame
         Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
-        Side    : GL.Types.Singles.Vector3
-          --  u = Up x n = |Up| |n| Sin(n, Up)
-          := GL.Types.Singles.Cross_Product (Up, Forward);
-        Up_New  : GL.Types.Singles.Vector3
-          --  v = n x u  = |n| |u| Sin(u, n)
-          := GL.Types.Singles.Cross_Product (Forward, Side);
+        Side    : GL.Types.Singles.Vector3;                      --  u
+        Up_New  : GL.Types.Singles.Vector3;                      --  v
     begin
+        Side := GL.Types.Singles.Cross_Product (Up, Forward);
+        Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
         Normalize (Forward);             --  n / |n|
-        Normalize (Side);                --  u = Sin(n, Up)  ?
-        Normalize (Up_New);              --  v = Sin(u, n)   ?
-
+        Normalize (Side);                --  u / |u|
+        Normalize (Up_New);              --  v / |v|
+        -- n,u and v are orthonormal basis vectors.
         Look_At := (
-          X => (X => Side (X),        --  ux = Sin(n, Up) (Perp n, Up)x
-                Y => Up_New (X),      --  vx = Sin(u, n) (Perp u, n)x
-                Z => Forward (X),     --  nx / |n|
+          X => (X => Side (X),        --  ux
+                Y => Up_New (X),      --  vx
+                Z => Forward (X),     --  nx
                 W => -GL.Types.Singles.Dot_Product (Position, Side)),
           Y => (X => Side (Y),
                 Y => Up_New (Y),
@@ -57,7 +55,7 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
-    --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
+    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.13
 
     procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
@@ -144,14 +142,14 @@ package body Maths is
     function To_Radians (Degrees : Single) return Single is
     begin
         return Degrees * Radians_Per_Degree;
-    end ;
+    end To_Radians;
 
     --  ------------------------------------------------------------------------
 
     function To_Degrees (Radians : Single) return Single is
     begin
         return Radians * Degrees_Per_Radian;
-    end ;
+    end To_Degrees;
 
     --  ------------------------------------------------------------------------
 
