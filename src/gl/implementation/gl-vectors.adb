@@ -64,4 +64,15 @@ package body GL.Vectors is
       end loop;
       return Ret;
    end "/";
+   
+   function Dot_Product (Left, Right : Vector) return Element_Type is
+      Ret : Element_Type;
+   begin
+      Ret := Left (Left'First) * Right (Right'First);
+      for Index in Index_Type'Succ (Index_Type'First) .. Index_Type'Last loop
+          Ret := Ret + Left (Index) * Right  (Index);
+      end loop;
+      return Ret;
+   end Dot_Product;
+
 end GL.Vectors;

@@ -54,7 +54,7 @@ package GL.Algebra is
    function To_Vector3 (Vector : Vector4) return Vector3;
    function To_Vector4 (Vector : Vector2) return Vector4;
    function To_Vector4 (Vector : Vector3) return Vector4;
-   
+      
    pragma Inline (To_Vector2);
    pragma Inline (To_Vector3);
    pragma Inline (To_Vector4);
@@ -117,4 +117,6 @@ package GL.Algebra is
      (Index_Type, Vector3, Vector3_Array, Vector3'(others => <>));
    package Vector4_Pointers is new Interfaces.C.Pointers
      (Index_Type, Vector4, Vector4_Array, Vector4'(others => <>));
+     
+   function Cross_Product (Left, Right : Vector3) return Vector3;
 end GL.Algebra;
