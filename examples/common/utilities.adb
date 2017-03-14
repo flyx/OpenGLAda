@@ -11,19 +11,51 @@ with GL.Types.Colors;
 
 package body Utilities is
 
-   procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
-   begin
+    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Clear ((False, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
-   end Clear_Background_Colour;
+    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
-   procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
-   begin
+    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
-   end Clear_Background_Colour_And_Depth;
+    end Clear_Background_Colour_And_Depth;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Matrix (Name : String;
+                            aMatrix : GL.Types.Singles.Matrix3) is
+        use GL.Types.Singles;
+    begin
+        Put_Line (Name & ":");
+        for Row in GL.Index_3D'Range loop
+            for Column in GL.Index_3D'Range loop
+                Put (GL.Types.Single'Image (aMatrix (Row, Column)) & "   ");
+            end loop;
+            New_Line;
+        end loop;
+        New_Line;
+    end Print_Matrix;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Matrix (Name : String;
+                            aMatrix : GL.Types.Singles.Matrix4) is
+        use GL.Types.Singles;
+    begin
+        Put_Line (Name & ":");
+        for Row in GL.Index_Homogeneous'Range loop
+            for Column in GL.Index_Homogeneous'Range loop
+                Put (GL.Types.Single'Image (aMatrix (Row, Column)) & "   ");
+            end loop;
+            New_Line;
+        end loop;
+        New_Line;
+    end Print_Matrix;
 
     --  ------------------------------------------------------------------------
 
@@ -44,7 +76,7 @@ package body Utilities is
         Shading_Language_Version  : Unbounded_String;
     begin
         GL_Version := To_Unbounded_String (GL.Types.Int'image (gl.Context.Major_Version) & "." &
-                                           GL.Types.Int'image (gl.Context.Minor_Version));
+                                             GL.Types.Int'image (gl.Context.Minor_Version));
         Renderer := To_Unbounded_String (gl.Context.Renderer);
         Shading_Language_Version :=
           To_Unbounded_String (gl.Context.Primary_Shading_Language_Version);
