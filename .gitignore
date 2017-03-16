@@ -12,5 +12,9 @@ hello_textures
 tutorial_03
 trivial
 triangle
+<<<<<<< HEAD
 tutorial_4
+=======
+coloured_square
+>>>>>>> f7180bfe4262801e90c35e78dc2074e0a71b7d35
 
