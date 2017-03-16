@@ -9,5 +9,5 @@ project Tutorial04_Coloured_Cube is
    package Compiler is
       for Default_Switches ("ada") use ("-gnatycltux");
    end Compiler;
-end Tutorial04_Coloured_Cube;
 
+end Tutorial04_Coloured_Cube;
