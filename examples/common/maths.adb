@@ -37,7 +37,7 @@ package body Maths is
         Normalize (Forward);             --  n / |n|
         Normalize (Side);                --  u / |u|
         Normalize (Up_New);              --  v / |v|
-        -- n,u and v are orthonormal basis vectors.
+        --  n,u and v are orthonormal basis vectors.
         Look_At := (
           X => (X => Side (X),        --  ux
                 Y => Up_New (X),      --  vx
@@ -55,6 +55,57 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
+    --  Init_Lookat_Transform is derived from OpenGL SuperBible
+    --
+--      procedure Init_Lookat_Transform
+--        (Position, Target, Up : GL.Types.Singles.Vector3;
+--         Look_At              : out GL.Types.Singles.Matrix4) is
+--          use GL;
+--          --  Reference co-ordinate frame
+--          Forward : GL.Types.Singles.Vector3 := Target - Position; --  n
+--          Side    : GL.Types.Singles.Vector3;                      --  u
+--          Up_New  : GL.Types.Singles.Vector3;                      --  v
+--      begin
+--          Side := GL.Types.Singles.Cross_Product (Up, Forward);
+--          Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
+--          Normalize (Forward);             --  n / |n|
+--          Normalize (Side);                --  u / |u|
+--          Normalize (Up_New);              --  v / |v|
+--          --  n,u and v are orthonormal basis vectors.
+--          Look_At := (
+--                      X => (X => Side (X),        --  ux
+--                            Y => Up_New (X),      --  vx
+--                            Z => Forward (X),     --  nx
+--                            W => -Position (X)),
+--                      Y => (X => Side (Y),
+--                            Y => Up_New (Y),
+--                            Z => Forward (Y),
+--                            W => -Position (Y)),
+--                      Z => (X => Side (Z),
+--                            Y => Up_New (Z),
+--                            Z => Forward (Z),
+--                            W => -Position (Z)),
+--                      W => (0.0, 0.0, 0.0, 1.0));
+--      end Init_Lookat_Transform;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
+                                Z_Near, Z_Far : Single;
+                                Transform     : out GL.Types.Singles.Matrix4) is
+        use GL;
+        dX : Single := Right - Left;
+        dY : Single := Top - Bottom;
+        dZ : Single := Z_Far - Z_Near;
+    begin
+        Transform := (
+                      X => (2.0 / dX, 0.0, 0.0, (Right + Left) / dX),
+                      Y => (0.0, 2.0 / dY, 0.0, (Top + Bottom) / dY),
+                      Z => (0.0, 0.0, -2.0 / dZ, (Z_Far + Z_Near) / dZ),
+                      W => (0.0, 0.0, 0.0, 1.0));
+    end Init_Orthographic_Transform;
+
+    --  ------------------------------------------------------------------------
     --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.13
 
@@ -70,7 +121,7 @@ package body Maths is
           X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
           Y => (0.0, 2.0 * Z_Near / dY, (Top + Bottom) / dY, 0.0),
           Z => (0.0, 0.0, -(Z_Far + Z_Near) / dZ, -2.0 * Z_Far * Z_Near / dZ),
-          W => (0.0, 0.0, - 1.0, 0.0));
+          W => (0.0, 0.0, -1.0, 0.0));
     end Init_Perspective_Transform;
 
     --  ------------------------------------------------------------------------
@@ -81,8 +132,8 @@ package body Maths is
         use pSingle_Math_Functions;
         Top          : Single := Z_Near * Tan (To_Radians (View_Angle) / 2.0);
         Right        : Single := Top *  Width / Height;
-        Bottom       : Single := - Top;
-        Left         : Single := - Right;
+        Bottom       : Single := -Top;
+        Left         : Single := -Right;
     begin
         Init_Perspective_Transform (Bottom, Top, Left, Right, Z_Near, Z_Far,
                                     Transform);
