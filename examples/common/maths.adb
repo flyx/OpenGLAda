@@ -15,16 +15,18 @@ package body Maths is
     Zero_Matrix4f : constant GL.Types.Singles.Matrix4 :=
       (others => (others => 0.0));
 
-    function Length (V : GL.Types.Singles.Vector3) return Single;
-    procedure Normalize (V : in out GL.Types.Singles.Vector3);
-    function To_Degrees (Radians : Single) return Single;
-    function To_Radians (Degrees : Single) return Single;
+    --  ------------------------------------------------------------------------
+
+function Degree (Radians : tRadian) return tDegree is
+    begin
+        return Radians * Degrees_Per_Radian;
+    end Degree;
 
     --  ------------------------------------------------------------------------
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.11
     procedure Init_Lookat_Transform
-      (Position, Target, Up : GL.Types.Singles.Vector3;
+      (Position, Target, Up : Singles.Vector3;
        Look_At  : out GL.Types.Singles.Matrix4) is
         use GL;
         --  Reference co-ordinate frame
@@ -40,8 +42,8 @@ package body Maths is
         Normalize (Side);                --  u = Sin(n, Up)  ?
         Normalize (Up_New);              --  v = Sin(u, n)   ?
 
-        Look_At := (
-          X => (X => Side (X),        --  ux = Sin(n, Up) (Perp n, Up)x
+        Look_At :=
+         (X => (X => Side (X),        --  ux = Sin(n, Up) (Perp n, Up)x
                 Y => Up_New (X),      --  vx = Sin(u, n) (Perp u, n)x
                 Z => Forward (X),     --  nx / |n|
                 W => -GL.Types.Singles.Dot_Product (Position, Side)),
@@ -57,6 +59,24 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
+    --  Init_Orthographic_Transform is derived from
+    --  Computer Graphics Using OpenGL, Chapter 7, Figure 7.18
+
+    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
+                                Z_Near, Z_Far : Single;
+                                Transform     : out GL.Types.Singles.Matrix4) is
+        use GL;
+        dX : Single := Right - Left;
+        dY : Single := Top - Bottom;
+        dZ : Single := Z_Far - Z_Near;
+    begin
+        Transform := (X => (2.0 / dX, 0.0, 0.0, -(Right + Left) / dX),
+                      Y => (0.0, 2.0 / dY, 0.0, -(Top + Bottom) / dY),
+                      Z => (0.0, 0.0, -2.0 / dZ, -(Z_Far + Z_Near) / dZ),
+                      W => (0.0, 0.0, 0.0, 1.0));
+    end Init_Orthographic_Transform;
+
+    --  ------------------------------------------------------------------------
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
     --  Chapter 7, Figure 7.13
 
@@ -68,8 +88,8 @@ package body Maths is
         dY : Single := Top - Bottom;
         dZ : Single := Z_Far - Z_Near;
     begin
-        Transform := (
-          X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
+        Transform :=
+         (X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
           Y => (0.0, 2.0 * Z_Near / dY, (Top + Bottom) / dY, 0.0),
           Z => (0.0, 0.0, -(Z_Far + Z_Near) / dZ, -2.0 * Z_Far * Z_Near / dZ),
           W => (0.0, 0.0, - 1.0, 0.0));
@@ -81,7 +101,7 @@ package body Maths is
                                 Z_Near, Z_Far : Single;
                                 Transform     : out GL.Types.Singles.Matrix4) is
         use pSingle_Math_Functions;
-        Top          : Single := Z_Near * Tan (To_Radians (View_Angle) / 2.0);
+        Top          : Single := Z_Near * Tan (Radian (View_Angle) / 2.0);
         Right        : Single := Top *  Width / Height;
         Bottom       : Single := - Top;
         Left         : Single := - Right;
@@ -92,7 +112,7 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    function Length (V : GL.Types.Singles.Vector3) return Single is
+    function Length (V : GL.Types.Singles.Vector3) return GL.Types.Single is
         use pSingle_Math_Functions;
         use GL;
     begin
@@ -141,17 +161,63 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    function To_Radians (Degrees : Single) return Single is
+    function Radian (Degrees : tDegree) return tRadian is
     begin
         return Degrees * Radians_Per_Degree;
-    end ;
+    end Radian;
 
     --  ------------------------------------------------------------------------
+    --  Rotation_Transform provides the transformation matrix for rotation by
+    --  a radian angle Angle about an axis (uX, uY, uZ)
 
-    function To_Degrees (Radians : Single) return Single is
+    procedure Rotation_Transform (Angle, uX, uY, uZ : Single;
+                                  theMatrix         : out Singles.Matrix4) is
+        use GL;
+        use pSingle_Math_Functions;
+        CosA            : Single := Cos (Angle);
+        SinA            : Single := Sin (Angle);
     begin
-        return Radians * Degrees_Per_Radian;
-    end ;
+        theMatrix := Singles.Identity4;
+        theMatrix (X, X) := CosA + (1.0 - CosA) * uX * uX;
+        theMatrix (X, Y) := (1.0 - CosA) * uY * uX - SinA * uZ;
+        theMatrix (X, Z) := (1.0 - CosA) * uZ * uX + SinA * uY;
+
+        theMatrix (Y, X) := (1.0 - CosA) * uX * uY + SinA * uZ;
+        theMatrix (Y, Y) := CosA + (1.0 - CosA) * uY * uY;
+        theMatrix (Y, Z) := (1.0 - CosA) * uZ * uY  - SinA * uX;
+
+        theMatrix (Z, X) := (1.0 - CosA) * uX * uZ - SinA * uY;
+        theMatrix (Z, Y) := (1.0 - CosA) * uY * uZ + SinA * uX;
+        theMatrix (Z, Z) :=  CosA + (1.0 - CosA) * uZ * uZ;
+    end Rotation_Transform;
+
+    --  ------------------------------------------------------------------------
+    --  Scaling_Transform is derived from OpenGL SuperBible, 7th Edition
+    --  Chapter 4, Math For 3D Graphics, The Scaling Matrix
+
+    procedure Scaling_Transform (xX, xY, xZ : Single;
+                                 theMatrix  : out Singles.Matrix4) is
+        use GL;
+    begin
+        theMatrix := Singles.Identity4;
+        theMatrix (X, X) := xX;
+        theMatrix (Y, Y) := xY;
+        theMatrix (Z, Z) := xZ;
+    end Scaling_Transform;
+
+    --  ------------------------------------------------------------------------
+    --  Translation_Transform is derived from OpenGL SuperBible, 7th Edition
+    --  Chapter 4, Math For 3D Graphics, The Translation Matrix
+
+    procedure Translation_Transform (tX, tY, tZ : Single;
+                                     theMatrix  : out Singles.Matrix4) is
+        use GL;
+    begin
+        theMatrix := Singles.Identity4;
+        theMatrix (X, W) := tX;
+        theMatrix (Y, W) := tY;
+        theMatrix (Z, W) := tZ;
+    end Translation_Transform;
 
     --  ------------------------------------------------------------------------
 
