@@ -15,6 +15,7 @@ with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
+with GL.Window;
 
 with Glfw;
 with Glfw.Input;
@@ -36,6 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       (pVertex_Pointers);
 
     Dark_Blue                : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+    White                    : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -47,11 +49,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
+        use Interfaces.C;
         use GL.Types;
         use GL.Objects.Buffers;
         use Maths;
+        Window_Width  : Glfw.Size;
+        Window_Height : Glfw.Size;
     begin
+        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+        GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
+                                GL.Types.Int (Window_Height));
+        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+        GL.Buffers.Set_Depth_Function (GL.Types.LEqual);
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+
         GL.Objects.Programs.Use_Program (Render_Program);
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
@@ -79,27 +90,47 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
+    procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program) is
+        use GL.Types;
+        use Maths;
+        use type GL.Types.Singles.Matrix4;
+        Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, -3.0);
+        Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
+        Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
+        Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
+    begin
+        MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "MVP");
+
+--          Init_Perspective_Transform (50.0, 4.0, 3.0,
+--                                      0.1, 100.0, Projection_Matrix);
+--          Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+        Maths.Init_Orthographic_Transform (Bottom    => -4.0, Top     => 4.0,
+                                           Left      => -4.0, Right   => 4.0,
+                                           Z_Near    =>    0.1, Z_Far   => 100.0,
+                                           Transform => Projection_Matrix);
+        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Set_MVP_Matrix.");
+            raise;
+    end Set_MVP_Matrix;
+
+    --  ------------------------------------------------------------------------
+
     procedure Setup (Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-
-        Window_Width  : constant Glfw.Size := 1024;
-        Window_Height : constant Glfw.Size := 768;
-        Camera_Position               : Singles.Vector3 := (4.0, 3.0, 3.0);
-        Target                        : Singles.Vector3 := (0.0, 0.0, 0.0);
-        Up                            : Singles.Vector3 := (0.0, 1.0, 0.0);
-        Model_Matrix                  : Singles.Matrix4 := Singles.Identity4;
-        View_Matrix                   : Singles.Matrix4;
-        Projection_Matrix             : Singles.Matrix4;
     begin
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
-        Window.Set_Size (Window_Width, Window_Height);
-        Utilities.Clear_Background_Colour (Dark_Blue);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
         GL.Buffers.Set_Depth_Function (GL.Types.Less);
+        Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
         Vertices_Array_Object.Initialize_Id;
         Vertices_Array_Object.Bind;
@@ -113,10 +144,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP");
 
-        Maths.Init_Lookat_Transform (Camera_Position, Target, Up, View_Matrix);
-        Maths.Init_Perspective_Transform (45.0, 4.0, 3.0, 0.1, 100.0,
-                                          Projection_Matrix);
-        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+        Set_MVP_Matrix (Render_Program);
         Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
 
         Vertex_Buffer.Initialize_Id;
