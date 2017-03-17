@@ -24,7 +24,7 @@ function Degree (Radians : tRadian) return tDegree is
 
     --  ------------------------------------------------------------------------
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, Figure 7.11
+    --  Chapter 7, equation (7.2)
     procedure Init_Lookat_Transform
       (Position, Target, Up : Singles.Vector3;
        Look_At  : out GL.Types.Singles.Matrix4) is
@@ -32,35 +32,33 @@ function Degree (Radians : tRadian) return tDegree is
         --  Reference co-ordinate frame
         Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
         Side    : GL.Types.Singles.Vector3
-          --  u = Up x n = |Up| |n| Sin(n, Up)
-          := GL.Types.Singles.Cross_Product (Up, Forward);
+          := GL.Types.Singles.Cross_Product (Up, Forward);       --  u = Up x n
         Up_New  : GL.Types.Singles.Vector3
-          --  v = n x u  = |n| |u| Sin(u, n)
-          := GL.Types.Singles.Cross_Product (Forward, Side);
+          := GL.Types.Singles.Cross_Product (Forward, Side);     --  v = n x u
     begin
         Normalize (Forward);             --  n / |n|
-        Normalize (Side);                --  u = Sin(n, Up)  ?
-        Normalize (Up_New);              --  v = Sin(u, n)   ?
+        Normalize (Side);                --  u / |u|
+        Normalize (Up_New);              --  v / |v|
 
         Look_At :=
-         (X => (X => Side (X),        --  ux = Sin(n, Up) (Perp n, Up)x
-                Y => Up_New (X),      --  vx = Sin(u, n) (Perp u, n)x
-                Z => Forward (X),     --  nx / |n|
+         (X => (X => Side (X),     --  ux
+                Y => Side (Y),     --  uy
+                Z => Side (Z),     --  uz
                 W => -GL.Types.Singles.Dot_Product (Position, Side)),
-          Y => (X => Side (Y),
-                Y => Up_New (Y),
-                Z => Forward (Y),
+          Y => (X => Up_New (X),   --  vx
+                Y => Up_New (Y),   --  vx
+                Z => Up_New (Z),   --  vx
                 W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
-          Z => (X => Side (Z),
-                Y => Up_New (Z),
-                Z => Forward (Z),
+          Z => (X => Forward (X),  --  nx
+                Y => Forward (Y),  --  nx
+                Z => Forward (Z),  --  nx
                 W => -GL.Types.Singles.Dot_Product (Position, Forward)),
           W => (0.0, 0.0, 0.0, 1.0));
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
     --  Init_Orthographic_Transform is derived from
-    --  Computer Graphics Using OpenGL, Chapter 7, Figure 7.18
+    --  Computer Graphics Using OpenGL, Chapter 7, equation 7.18
 
     procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
                                 Z_Near, Z_Far : Single;
@@ -77,8 +75,8 @@ function Degree (Radians : tRadian) return tDegree is
     end Init_Orthographic_Transform;
 
     --  ------------------------------------------------------------------------
-    --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, Figure 7.13
+    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
+    --  Chapter 7, equation 7.13
 
     procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
                                 Z_Near, Z_Far : Single;
