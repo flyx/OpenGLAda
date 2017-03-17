@@ -17,8 +17,10 @@ package Maths is
        Transform                                : out Singles.Matrix4);
     function Length (V : Singles.Vector3) return Single;
     procedure Normalize (V : in out Singles.Vector3);
-    function Perspective (View_Angle, Aspect, Near, Far : Single)
+    function Perspective_Matrix (View_Angle, Aspect, Near, Far : Single)
                           return Singles.Matrix4;
+    function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
+                          return GL.Types.Singles.Matrix4;
     function Radian (Degrees : tDegree) return tRadian;
     function Rotation_Matrix (Angle : Single; Axis : Singles.Vector3)
                               return Singles.Matrix4;

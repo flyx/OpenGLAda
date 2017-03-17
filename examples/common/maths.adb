@@ -13,11 +13,11 @@ package body Maths is
     Degrees_Per_Radian : constant Single := 180.0 / Ada.Numerics.Pi;
 
     Zero_Matrix4f : constant GL.Types.Singles.Matrix4 :=
-      (others => (others => 0.0));
+                      (others => (others => 0.0));
 
     --  ------------------------------------------------------------------------
 
-function Degree (Radians : tRadian) return tDegree is
+    function Degree (Radians : tRadian) return tDegree is
     begin
         return Radians * Degrees_Per_Radian;
     end Degree;
@@ -27,7 +27,7 @@ function Degree (Radians : tRadian) return tDegree is
     --  Chapter 7, equation (7.2)
     procedure Init_Lookat_Transform
       (Position, Target, Up : Singles.Vector3;
-       Look_At  : out GL.Types.Singles.Matrix4) is
+       Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
         --  Reference co-ordinate frame
         Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
@@ -41,19 +41,19 @@ function Degree (Radians : tRadian) return tDegree is
         Normalize (Up_New);              --  v / |v|
 
         Look_At :=
-         (X => (X => Side (X),     --  ux
-                Y => Side (Y),     --  uy
-                Z => Side (Z),     --  uz
-                W => -GL.Types.Singles.Dot_Product (Position, Side)),
-          Y => (X => Up_New (X),   --  vx
-                Y => Up_New (Y),   --  vx
-                Z => Up_New (Z),   --  vx
-                W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
-          Z => (X => Forward (X),  --  nx
-                Y => Forward (Y),  --  nx
-                Z => Forward (Z),  --  nx
-                W => -GL.Types.Singles.Dot_Product (Position, Forward)),
-          W => (0.0, 0.0, 0.0, 1.0));
+          (X => (X => Side (X),     --  ux
+                 Y => Side (Y),     --  uy
+                 Z => Side (Z),     --  uz
+                 W => -GL.Types.Singles.Dot_Product (Position, Side)),
+           Y => (X => Up_New (X),   --  vx
+                 Y => Up_New (Y),   --  vx
+                 Z => Up_New (Z),   --  vx
+                 W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
+           Z => (X => Forward (X),  --  nx
+                 Y => Forward (Y),  --  nx
+                 Z => Forward (Z),  --  nx
+                 W => -GL.Types.Singles.Dot_Product (Position, Forward)),
+           W => (0.0, 0.0, 0.0, 1.0));
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
@@ -61,8 +61,8 @@ function Degree (Radians : tRadian) return tDegree is
     --  Computer Graphics Using OpenGL, Chapter 7, equation 7.18
 
     procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
+                                           Z_Near, Z_Far : Single;
+                                           Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
         dX : Single := Right - Left;
         dY : Single := Top - Bottom;
@@ -75,37 +75,13 @@ function Degree (Radians : tRadian) return tDegree is
     end Init_Orthographic_Transform;
 
     --  ------------------------------------------------------------------------
-    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, equation 7.13
-
-    procedure Init_Perspective_Transform (Bottom, Top, Left, Right,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
-        use GL;
-        dX : Single := Right - Left;
-        dY : Single := Top - Bottom;
-        dZ : Single := Z_Far - Z_Near;
-    begin
-        Transform :=
-         (X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
-          Y => (0.0, 2.0 * Z_Near / dY, (Top + Bottom) / dY, 0.0),
-          Z => (0.0, 0.0, -(Z_Far + Z_Near) / dZ, -2.0 * Z_Far * Z_Near / dZ),
-          W => (0.0, 0.0, - 1.0, 0.0));
-    end Init_Perspective_Transform;
-
-    --  ------------------------------------------------------------------------
 
     procedure Init_Perspective_Transform (View_Angle, Width, Height,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
-        use pSingle_Math_Functions;
-        Top          : Single := Z_Near * Tan (Radian (View_Angle) / 2.0);
-        Right        : Single := Top *  Width / Height;
-        Bottom       : Single := - Top;
-        Left         : Single := - Right;
+                                          Z_Near, Z_Far : Single;
+                                          Transform     : out GL.Types.Singles.Matrix4) is
     begin
-        Init_Perspective_Transform (Bottom, Top, Left, Right, Z_Near, Z_Far,
-                                    Transform);
+        Transform := Perspective_Matrix (View_Angle, Width / Height,
+                                         Z_Near, Z_Far);
     end Init_Perspective_Transform;
 
     --  ------------------------------------------------------------------------
@@ -127,35 +103,40 @@ function Degree (Radians : tRadian) return tDegree is
     end Normalize;
 
     --  ------------------------------------------------------------------------
-
-    function Perspective (Top, Bottom, Left, Right, Near, Far : Single)
+    --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
+    --  Chapter 7, equation 7.13
+    function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
                           return GL.Types.Singles.Matrix4 is
         use GL;
+        dX : Single := Right - Left;
+        dY : Single := Top - Bottom;
+        dZ : Single := Far - Near;
         Matrix     : GL.Types.Singles.Matrix4 := Zero_Matrix4f;
     begin
-        Matrix (X, X) := 2.0 * Near / (Right - Left);
-        Matrix (X, Z) := (Right + Left) / (Right - Left);
-        Matrix (Y, Y) := 2.0 * Near / (Top - Bottom);
-        Matrix (Y, Z) :=  (Top + Bottom) / (Top - Bottom);
-        Matrix (Z, Z) := -(Far + Near) / (Far - Near);
-        Matrix (Z, W) := -2.0 * Far * Near / (Far - Near);
+        Matrix (X, X) := 2.0 * Near / dX;
+        Matrix (X, Z) := (Right + Left) / dX;
+        Matrix (Y, Y) := 2.0 * Near / dY;
+        Matrix (Y, Z) :=  (Top + Bottom) / dY;
+        Matrix (Z, Z) := -(Far + Near) / dZ;
+        Matrix (Z, W) := -2.0 * Far * Near / dZ;
         Matrix (W, Z) := -1.0;
         return Matrix;
-    end Perspective;
+    end Perspective_Matrix;
 
     --  ------------------------------------------------------------------------
-
-    function Perspective (View_Angle, Aspect, Near, Far : Single)
+    --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
+    --  Chapter 7, top, bottom, left and right equations following equation 7.13
+    function Perspective_Matrix (View_Angle, Aspect, Near, Far : Single)
                           return GL.Types.Singles.Matrix4 is
         use pSingle_Math_Functions;
 
-        Top    : Single := Near * Tan ((Ada.Numerics.Pi / 360.0) * View_Angle);
+        Top    : Single := Near * Tan (0.5 * Radian (View_Angle));
         Bottom : Single := -Top;
         Right  : Single := Top * Aspect;
         Left   : Single := -Right;
     begin
-        return Perspective (Top, Bottom, Left, Right, Near, Far);
-    end Perspective;
+        return Perspective_Matrix (Top, Bottom, Left, Right, Near, Far);
+    end Perspective_Matrix;
 
     --  ------------------------------------------------------------------------
 
@@ -210,7 +191,7 @@ function Degree (Radians : tRadian) return tDegree is
     --  Translation_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 5, equation (5.25)
 
-    function Translation_Matrix (Translate: Singles.Vector3)
+    function Translation_Matrix (Translate : Singles.Vector3)
                                  return Singles.Matrix4 is
         use GL;
         theMatrix  : Singles.Matrix4 := Singles.Identity4;
