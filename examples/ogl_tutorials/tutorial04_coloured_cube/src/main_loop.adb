@@ -59,8 +59,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                                 GL.Types.Int (Window_Height));
-        GL.Toggles.Enable (GL.Toggles.Depth_Test);
-        GL.Buffers.Set_Depth_Function (GL.Types.LEqual);
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
         GL.Objects.Programs.Use_Program (Render_Program);
@@ -104,14 +102,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP");
 
---          Init_Perspective_Transform (50.0, 4.0, 3.0,
---                                      0.1, 100.0, Projection_Matrix);
---          Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        Maths.Init_Orthographic_Transform (Bottom    => -4.0, Top     => 4.0,
-                                           Left      => -4.0, Right   => 4.0,
-                                           Z_Near    =>    0.1, Z_Far   => 100.0,
-                                           Transform => Projection_Matrix);
+        Init_Perspective_Transform (50.0, 4.0, 3.0,
+                                    0.1, 100.0, Projection_Matrix);
+        Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+--          Maths.Init_Orthographic_Transform (Bottom    => -2.0, Top     => 2.0,
+--                                             Left      => -2.0, Right   => 2.0,
+--                                             Z_Near    =>    0.1, Z_Far   => 1000.0,
+--                                             Transform => Projection_Matrix);
         MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+        Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
