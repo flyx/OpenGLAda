@@ -2,25 +2,25 @@ with Ada.Numerics;
 with Ada.Numerics.Generic_Elementary_Functions;
 
 package body Maths is
-    package pSingle_Math_Functions is new
+    package Single_Math_Functions is new
       Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     use GL.Types;
     use type GL.Types.Singles.Matrix4;
     use type GL.Types.Singles.Vector3;
 
-    Radians_Per_Degree : constant Single := Ada.Numerics.Pi / 180.0;
-    Degrees_Per_Radian : constant Single := 180.0 / Ada.Numerics.Pi;
+    Radians_Per_Degree : constant Radian := Ada.Numerics.Pi / 180.0;
+    Degrees_Per_Radian : constant Degree := 180.0 / Ada.Numerics.Pi;
 
-    Zero_Matrix4f : constant GL.Types.Singles.Matrix4 :=
+    Zero_Matrix4 : constant GL.Types.Singles.Matrix4 :=
                       (others => (others => 0.0));
 
     --  ------------------------------------------------------------------------
 
-    function Degree (Radians : tRadian) return tDegree is
+    function Degrees (Angle : Radian) return Degree is
     begin
-        return Radians * Degrees_Per_Radian;
-    end Degree;
+        return Degree (Angle) * Degrees_Per_Radian;
+    end Degrees;
 
     --  ------------------------------------------------------------------------
     --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
@@ -36,9 +36,9 @@ package body Maths is
         Up_New  : GL.Types.Singles.Vector3
           := GL.Types.Singles.Cross_Product (Forward, Side);     --  v = n x u
     begin
-        Normalize (Forward);             --  n / |n|
-        Normalize (Side);                --  u / |u|
-        Normalize (Up_New);              --  v / |v|
+        Forward := Normalized (Forward);          --  n / |n|
+        Side := Normalized (Side);                --  u / |u|
+        Up_New :=Normalized (Up_New);             --  v / |v|
 
         Look_At :=
           (X => (X => Side (X),     --  ux
@@ -64,9 +64,9 @@ package body Maths is
                                            Z_Near, Z_Far : Single;
                                            Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
-        dX : Single := Right - Left;
-        dY : Single := Top - Bottom;
-        dZ : Single := Z_Far - Z_Near;
+        dX : constant Single := Right - Left;
+        dY : constant Single := Top - Bottom;
+        dZ : constant Single := Z_Far - Z_Near;
     begin
         Transform := (X => (2.0 / dX, 0.0, 0.0, -(Right + Left) / dX),
                       Y => (0.0, 2.0 / dY, 0.0, -(Top + Bottom) / dY),
@@ -76,9 +76,9 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Init_Perspective_Transform (View_Angle, Width, Height,
-                                          Z_Near, Z_Far : Single;
-                                          Transform     : out GL.Types.Singles.Matrix4) is
+    procedure Init_Perspective_Transform (View_Angle : Degree;
+                                          Width, Height, Z_Near, Z_Far : Single;
+                                          Transform  : out GL.Types.Singles.Matrix4) is
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);
@@ -87,7 +87,7 @@ package body Maths is
     --  ------------------------------------------------------------------------
 
     function Length (V : GL.Types.Singles.Vector3) return GL.Types.Single is
-        use pSingle_Math_Functions;
+        use Single_Math_Functions;
         use GL;
     begin
         return Sqrt (V (X) * V (X) + V (Y) * V (Y) + V (Z) * V (Z));
@@ -95,12 +95,12 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Normalize (V : in out GL.Types.Singles.Vector3) is
+    function Normalized (V : Singles.Vector3) return Singles.Vector3 is
         use GL;
         L : Single := Length (V);
     begin
-        V := (V (X) / L, V (Y) / L, V (Z) / L);
-    end Normalize;
+        return (V (X) / L, V (Y) / L, V (Z) / L);
+    end Normalized;
 
     --  ------------------------------------------------------------------------
     --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
@@ -108,10 +108,10 @@ package body Maths is
     function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
                           return GL.Types.Singles.Matrix4 is
         use GL;
-        dX : Single := Right - Left;
-        dY : Single := Top - Bottom;
-        dZ : Single := Far - Near;
-        Matrix     : GL.Types.Singles.Matrix4 := Zero_Matrix4f;
+        dX : constant Single := Right - Left;
+        dY : constant Single := Top - Bottom;
+        dZ : constant Single := Far - Near;
+        Matrix     : GL.Types.Singles.Matrix4 := Zero_Matrix4;
     begin
         Matrix (X, X) := 2.0 * Near / dX;
         Matrix (X, Z) := (Right + Left) / dX;
@@ -126,24 +126,24 @@ package body Maths is
     --  ------------------------------------------------------------------------
     --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 7, top, bottom, left and right equations following equation 7.13
-    function Perspective_Matrix (View_Angle, Aspect, Near, Far : Single)
+    function Perspective_Matrix (View_Angle : Degree; Aspect, Near, Far : Single)
                           return GL.Types.Singles.Matrix4 is
-        use pSingle_Math_Functions;
+        use Single_Math_Functions;
 
-        Top    : Single := Near * Tan (0.5 * Radian (View_Angle));
-        Bottom : Single := -Top;
-        Right  : Single := Top * Aspect;
-        Left   : Single := -Right;
+        Top    : constant Single := Near * Tan (Single (0.5 * View_Angle));
+        Bottom : constant Single := -Top;
+        Right  : constant Single := Top * Aspect;
+        Left   : constant Single := -Right;
     begin
         return Perspective_Matrix (Top, Bottom, Left, Right, Near, Far);
     end Perspective_Matrix;
 
     --  ------------------------------------------------------------------------
 
-    function Radian (Degrees : tDegree) return tRadian is
+    function Radians (Angle : Degree) return Radian is
     begin
-        return Degrees * Radians_Per_Degree;
-    end Radian;
+        return Radian (Angle) * Radians_Per_Degree;
+    end Radians;
 
     --  ------------------------------------------------------------------------
     --  Rotation_Matrix is derived from Computer Graphics Using OpenGL
@@ -154,9 +154,9 @@ package body Maths is
     function Rotation_Matrix (Angle : Single; Axis : Singles.Vector3)
                               return Singles.Matrix4 is
         use GL;
-        use pSingle_Math_Functions;
-        CosA            : Single := Cos (Angle);
-        SinA            : Single := Sin (Angle);
+        use Single_Math_Functions;
+        CosA            : constant Single := Cos (Angle);
+        SinA            : constant Single := Sin (Angle);
         theMatrix       : Singles.Matrix4 := Singles.Identity4;
     begin
         theMatrix (X, X) := CosA + (1.0 - CosA) * Axis (X) * Axis (X);
