@@ -167,57 +167,61 @@ function Degree (Radians : tRadian) return tDegree is
     end Radian;
 
     --  ------------------------------------------------------------------------
-    --  Rotation_Transform provides the transformation matrix for rotation by
-    --  a radian angle Angle about an axis (uX, uY, uZ)
+    --  Rotation_Matrix is derived from Computer Graphics Using OpenGL
+    --  Chapter 5, matrix preceding equation (5.33)
+    --  It is the transformation matrix for rotating a 4D vector by
+    --  a radian angle Angle about a 3D Axis (X, Y, Z)
 
-    procedure Rotation_Transform (Angle, uX, uY, uZ : Single;
-                                  theMatrix         : out Singles.Matrix4) is
+    function Rotation_Matrix (Angle : Single; Axis : Singles.Vector3)
+                              return Singles.Matrix4 is
         use GL;
         use pSingle_Math_Functions;
         CosA            : Single := Cos (Angle);
         SinA            : Single := Sin (Angle);
+        theMatrix       : Singles.Matrix4 := Singles.Identity4;
     begin
-        theMatrix := Singles.Identity4;
-        theMatrix (X, X) := CosA + (1.0 - CosA) * uX * uX;
-        theMatrix (X, Y) := (1.0 - CosA) * uY * uX - SinA * uZ;
-        theMatrix (X, Z) := (1.0 - CosA) * uZ * uX + SinA * uY;
+        theMatrix (X, X) := CosA + (1.0 - CosA) * Axis (X) * Axis (X);
+        theMatrix (X, Y) := (1.0 - CosA) * Axis (Y) * Axis (X) - SinA * Axis (Z);
+        theMatrix (X, Z) := (1.0 - CosA) * Axis (Z) * Axis (X) + SinA * Axis (Y);
 
-        theMatrix (Y, X) := (1.0 - CosA) * uX * uY + SinA * uZ;
-        theMatrix (Y, Y) := CosA + (1.0 - CosA) * uY * uY;
-        theMatrix (Y, Z) := (1.0 - CosA) * uZ * uY  - SinA * uX;
+        theMatrix (Y, X) := (1.0 - CosA) * Axis (X) * Axis (Y) + SinA * Axis (Z);
+        theMatrix (Y, Y) := CosA + (1.0 - CosA) * Axis (Y) * Axis (Y);
+        theMatrix (Y, Z) := (1.0 - CosA) * Axis (Z) * Axis (Y)  - SinA * Axis (X);
 
-        theMatrix (Z, X) := (1.0 - CosA) * uX * uZ - SinA * uY;
-        theMatrix (Z, Y) := (1.0 - CosA) * uY * uZ + SinA * uX;
-        theMatrix (Z, Z) :=  CosA + (1.0 - CosA) * uZ * uZ;
-    end Rotation_Transform;
+        theMatrix (Z, X) := (1.0 - CosA) * Axis (X) * Axis (Z) - SinA * Axis (Y);
+        theMatrix (Z, Y) := (1.0 - CosA) * Axis (Y) * Axis (Z) + SinA * Axis (X);
+        theMatrix (Z, Z) :=  CosA + (1.0 - CosA) * Axis (Z) * Axis (Z);
+        return theMatrix;
+    end Rotation_Matrix;
 
     --  ------------------------------------------------------------------------
-    --  Scaling_Transform is derived from OpenGL SuperBible, 7th Edition
-    --  Chapter 4, Math For 3D Graphics, The Scaling Matrix
+    --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
+    --  Chapter 5, matrix preceding equation (5.25)
 
-    procedure Scaling_Transform (xX, xY, xZ : Single;
-                                 theMatrix  : out Singles.Matrix4) is
+    function Scaling_Matrix (Scale : Singles.Vector3) return Singles.Matrix4 is
         use GL;
+        theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
-        theMatrix := Singles.Identity4;
-        theMatrix (X, X) := xX;
-        theMatrix (Y, Y) := xY;
-        theMatrix (Z, Z) := xZ;
-    end Scaling_Transform;
+        theMatrix (X, X) := Scale (X);
+        theMatrix (Y, Y) := Scale (Y);
+        theMatrix (Z, Z) := Scale (Z);
+        return theMatrix;
+    end Scaling_Matrix;
 
     --  ------------------------------------------------------------------------
-    --  Translation_Transform is derived from OpenGL SuperBible, 7th Edition
-    --  Chapter 4, Math For 3D Graphics, The Translation Matrix
+    --  Translation_Matrix is derived from Computer Graphics Using OpenGL
+    --  Chapter 5, equation (5.25)
 
-    procedure Translation_Transform (tX, tY, tZ : Single;
-                                     theMatrix  : out Singles.Matrix4) is
+    function Translation_Matrix (Translate: Singles.Vector3)
+                                 return Singles.Matrix4 is
         use GL;
+        theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
-        theMatrix := Singles.Identity4;
-        theMatrix (X, W) := tX;
-        theMatrix (Y, W) := tY;
-        theMatrix (Z, W) := tZ;
-    end Translation_Transform;
+        theMatrix (X, W) := Translate (X);
+        theMatrix (Y, W) := Translate (Y);
+        theMatrix (Z, W) := Translate (Z);
+        return theMatrix;
+    end Translation_Matrix;
 
     --  ------------------------------------------------------------------------
 

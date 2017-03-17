@@ -20,12 +20,11 @@ package Maths is
     function Perspective (View_Angle, Aspect, Near, Far : Single)
                           return Singles.Matrix4;
     function Radian (Degrees : tDegree) return tRadian;
-    procedure Rotation_Transform (Angle, uX, uY, uZ : Single;
-                                  theMatrix         : out Singles.Matrix4);
-    procedure Scaling_Transform (xX, xY, xZ : Single;
-                                 theMatrix  : out Singles.Matrix4);
-    procedure Translation_Transform (tX, tY, tZ : Single;
-                                     theMatrix  : out Singles.Matrix4);
+    function Rotation_Matrix (Angle : Single; Axis : Singles.Vector3)
+                              return Singles.Matrix4;
+    function Scaling_Matrix (Scale : Singles.Vector3) return Singles.Matrix4 ;
+    function Translation_Matrix (Translate: Singles.Vector3)
+                                 return Singles.Matrix4;
 
 end Maths;
 
