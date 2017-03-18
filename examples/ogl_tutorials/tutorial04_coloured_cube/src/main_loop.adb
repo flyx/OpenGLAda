@@ -100,7 +100,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
     begin
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MVP");
+          (Render_Program, "MVP_Matrix");
 
         Init_Perspective_Transform (50.0, 4.0, 3.0,
                                     0.1, 100.0, Projection_Matrix);
@@ -135,13 +135,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Vertices_Array_Object.Bind;
 
         Render_Program := Program_Loader.Program_From
-          ((Program_Loader.Src ("src/shaders/Transform_Vertex_Shader.glsl",
+          ((Program_Loader.Src ("src/shaders/MVP_Vertex_Shader.glsl",
            Vertex_Shader),
            Program_Loader.Src ("src/shaders/Colour_Fragment_Shader.glsl",
              Fragment_Shader)));
         Utilities.Show_Shader_Program_Data (Render_Program);
 
-        MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP");
+        MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP_Matrix");
 
         Set_MVP_Matrix (Render_Program);
         Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
