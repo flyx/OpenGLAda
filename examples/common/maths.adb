@@ -13,7 +13,7 @@ package body Maths is
     Degrees_Per_Radian : constant Degree := 180.0 / Ada.Numerics.Pi;
 
     Zero_Matrix4 : constant GL.Types.Singles.Matrix4 :=
-                      (others => (others => 0.0));
+                     (others => (others => 0.0));
 
     --  ------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ package body Maths is
     begin
         Forward := Normalized (Forward);          --  n / |n|
         Side := Normalized (Side);                --  u / |u|
-        Up_New :=Normalized (Up_New);             --  v / |v|
+        Up_New := Normalized (Up_New);            --  v / |v|
 
         Look_At :=
           (X => (X => Side (X),     --  ux
@@ -76,9 +76,9 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Init_Perspective_Transform (View_Angle : Degree;
+    procedure Init_Perspective_Transform (View_Angle                   : Degree;
                                           Width, Height, Z_Near, Z_Far : Single;
-                                          Transform  : out GL.Types.Singles.Matrix4) is
+                                          Transform                    : out GL.Types.Singles.Matrix4) is
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);
@@ -106,11 +106,11 @@ package body Maths is
     --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 7, equation 7.13
     function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
-                          return GL.Types.Singles.Matrix4 is
+                                 return GL.Types.Singles.Matrix4 is
         use GL;
-        dX : constant Single := Right - Left;
-        dY : constant Single := Top - Bottom;
-        dZ : constant Single := Far - Near;
+        dX         : constant Single := Right - Left;
+        dY         : constant Single := Top - Bottom;
+        dZ         : constant Single := Far - Near;
         Matrix     : GL.Types.Singles.Matrix4 := Zero_Matrix4;
     begin
         Matrix (X, X) := 2.0 * Near / dX;
@@ -127,7 +127,7 @@ package body Maths is
     --  Perspective_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 7, top, bottom, left and right equations following equation 7.13
     function Perspective_Matrix (View_Angle : Degree; Aspect, Near, Far : Single)
-                          return GL.Types.Singles.Matrix4 is
+                                 return GL.Types.Singles.Matrix4 is
         use Single_Math_Functions;
 
         Top    : constant Single := Near * Tan (Single (0.5 * View_Angle));
