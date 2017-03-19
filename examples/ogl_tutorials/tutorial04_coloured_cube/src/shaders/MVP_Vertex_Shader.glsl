@@ -1,11 +1,11 @@
 #version 410 core
 
-layout(location = 0) in vec3 vertex_model_position
-layout(location = 1) in vec 3 vertex_colour
+layout(location = 0) in vec3 vertex_model_position;
+layout(location = 1) in vec3 vertex_colour;
 
-out vec3 fragmant_colour
+out vec3 fragment_colour;
 
-uniform mat4 MVP_Matrix
+uniform mat4 MVP_Matrix;
 
 void main()
 {
