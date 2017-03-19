@@ -23,36 +23,39 @@ package body Maths is
     end Degrees;
 
     --  ------------------------------------------------------------------------
-    --  Init_Lookat_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, equation (7.2)
+    --  Init_Lookat_Transform is derived from OpenGL SuperBible
+    --  Chapter 4, Maths for 3D Graphics, The Lookat Matrix
     procedure Init_Lookat_Transform
       (Position, Target, Up : Singles.Vector3;
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
+        x_axis  : Singles.Vector3 := (1.0, 0.0, 0.0);
+        y_axis  : Singles.Vector3 := (0.0, 1.0, 0.0);
+        z_axis  : Singles.Vector3 := (0.0, 0.0, 1.0);
         --  Reference co-ordinate frame
-        Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
+        Forward : GL.Types.Singles.Vector3 := Position - Target; --  f
         Side    : GL.Types.Singles.Vector3
-          := GL.Types.Singles.Cross_Product (Up, Forward);       --  u = Up x n
+          := GL.Types.Singles.Cross_Product (Up, Forward);       --  s = Up x f
         Up_New  : GL.Types.Singles.Vector3
-          := GL.Types.Singles.Cross_Product (Forward, Side);     --  v = n x u
+          := GL.Types.Singles.Cross_Product (Forward, Side);     --  u = f x s
     begin
-        Forward := Normalized (Forward);          --  n / |n|
-        Side := Normalized (Side);                --  u / |u|
-        Up_New := Normalized (Up_New);            --  v / |v|
+        Forward := Normalized (Forward);          --  f / |f|
+        Side := Normalized (Side);                --  s / |s|
+        Up_New := Normalized (Up_New);            --  u / |uv|
 
         Look_At :=
-          (X => (X => Side (X),     --  ux
-                 Y => Side (Y),     --  uy
-                 Z => Side (Z),     --  uz
-                 W => -GL.Types.Singles.Dot_Product (Position, Side)),
-           Y => (X => Up_New (X),   --  vx
-                 Y => Up_New (Y),   --  vx
-                 Z => Up_New (Z),   --  vx
-                 W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
-           Z => (X => Forward (X),  --  nx
-                 Y => Forward (Y),  --  nx
-                 Z => Forward (Z),  --  nx
-                 W => -GL.Types.Singles.Dot_Product (Position, Forward)),
+          (X => (X => Dot (Side, x_axis),     --  s.x
+                 Y => Dot (Side, y_axis),     --  s.y
+                 Z => Dot (Side, z_axis),     --  s.z
+                 W => -Target (X),
+           Y => (X => Dot (Up_New, x_axis),   --  u.x
+                 Y => Dot (Up_New, y_axis),   --  u.y
+                 Z => Dot (Up_New, z_axis),   --  u.z
+                 W => -Target (Y),
+           Z => (X => Dot (Forward, x_axis),  --  f.x
+                 Y => Dot (Forward, y_axis),  --  f.y
+                 Z => Dot (Forward, z_axis),  --  f.z
+                 W => -Target (Z),
            W => (0.0, 0.0, 0.0, 1.0));
     end Init_Lookat_Transform;
 
