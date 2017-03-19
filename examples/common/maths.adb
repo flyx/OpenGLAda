@@ -29,14 +29,15 @@ package body Maths is
       (Position, Target, Up : Singles.Vector3;
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
+        use GL.Types;
         x_axis  : Singles.Vector3 := (1.0, 0.0, 0.0);
         y_axis  : Singles.Vector3 := (0.0, 1.0, 0.0);
         z_axis  : Singles.Vector3 := (0.0, 0.0, 1.0);
         --  Reference co-ordinate frame
-        Forward : GL.Types.Singles.Vector3 := Position - Target; --  f
-        Side    : GL.Types.Singles.Vector3
+        Forward : Singles.Vector3 := Position - Target; --  f
+        Side    : Singles.Vector3
           := GL.Types.Singles.Cross_Product (Up, Forward);       --  s = Up x f
-        Up_New  : GL.Types.Singles.Vector3
+        Up_New  : Singles.Vector3
           := GL.Types.Singles.Cross_Product (Forward, Side);     --  u = f x s
     begin
         Forward := Normalized (Forward);          --  f / |f|
@@ -44,18 +45,18 @@ package body Maths is
         Up_New := Normalized (Up_New);            --  u / |uv|
 
         Look_At :=
-          (X => (X => Dot (Side, x_axis),     --  s.x
-                 Y => Dot (Side, y_axis),     --  s.y
-                 Z => Dot (Side, z_axis),     --  s.z
-                 W => -Target (X),
-           Y => (X => Dot (Up_New, x_axis),   --  u.x
-                 Y => Dot (Up_New, y_axis),   --  u.y
-                 Z => Dot (Up_New, z_axis),   --  u.z
-                 W => -Target (Y),
-           Z => (X => Dot (Forward, x_axis),  --  f.x
-                 Y => Dot (Forward, y_axis),  --  f.y
-                 Z => Dot (Forward, z_axis),  --  f.z
-                 W => -Target (Z),
+          (X => (X => Singles.Dot_Product (Side, x_axis),     --  s.x
+                 Y => Singles.Dot_Product (Side, y_axis),     --  s.y
+                 Z => Singles.Dot_Product (Side, z_axis),     --  s.z
+                 W => -Target (X)),
+           Y => (X => Singles.Dot_Product (Up_New, x_axis),   --  u.x
+                 Y => Singles.Dot_Product (Up_New, y_axis),   --  u.y
+                 Z => Singles.Dot_Product (Up_New, z_axis),   --  u.z
+                 W => -Target (Y)),
+           Z => (X => Singles.Dot_Product (Forward, x_axis),  --  f.x
+                 Y => Singles.Dot_Product (Forward, y_axis),  --  f.y
+                 Z => Singles.Dot_Product (Forward, z_axis),  --  f.z
+                 W => -Target (Z)),
            W => (0.0, 0.0, 0.0, 1.0));
     end Init_Lookat_Transform;
 
