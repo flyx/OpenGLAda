@@ -32,9 +32,9 @@ package body Maths is
         use GL;
         use GL.Types;
         --  Reference co-ordinate frame (u, v, n)
-        -- Forward (n): camera axis
-        -- Side (u): axis through side of camera, perpendicular to Forward
-        -- Up_New (v): vertical axis of camera, perpendicular to Forward and Side
+        --  Forward (n): camera axis
+        --  Side (u): axis through side of camera, perpendicular to Forward
+        --  Up_New (v): vertical axis of camera, perpendicular to Forward and Side
         Forward : Singles.Vector3 := Position - Target; --  n
         Side    : Singles.Vector3
           := GL.Types.Singles.Cross_Product (Up, Forward);       --  u = Up x n
@@ -46,9 +46,9 @@ package body Maths is
         Up_New := Normalized (Up_New);            --  v / |v|
 
         Look_At :=
-          (X => (X => Side(X),     --  u.x
-                 Y => Side(Y),     --  u.y
-                 Z => Side(Z),     --  u.z
+          (X => (X => Side (X),     --  u.x
+                 Y => Side (Y),     --  u.y
+                 Z => Side (Z),     --  u.z
                  W => -GL.Types.Singles.Dot_Product (Position, Side)),
            Y => (X => Up_New (X),   --  v.x
                  Y => Up_New (Y),   --  v.y
@@ -65,7 +65,7 @@ package body Maths is
     --  Init_Orthographic_Transform is derived from
     --  Computer Graphics Using OpenGL, Chapter 7, equation 7.18
 
-    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
+    procedure Init_Orthographic_Transform (Top, Bottom, Left, Right,
                                            Z_Near, Z_Far : Single;
                                            Transform     : out GL.Types.Singles.Matrix4) is
         use GL;
@@ -135,11 +135,15 @@ package body Maths is
                                  return GL.Types.Singles.Matrix4 is
         use Single_Math_Functions;
 
-        Top    : constant Single := Near * Tan (Single (0.5 * View_Angle));
-        Bottom : constant Single := -Top;
-        Right  : constant Single := Top * Aspect;
-        Left   : constant Single := -Right;
+        Top    : Single;
+        Bottom : Single;
+        Right  : Single;
+        Left   : Single;
     begin
+        Top := Near * Tan (Single (0.5 * Radians (View_Angle)));
+        Bottom := -Top;
+        Right  := Top * Aspect;
+        Left   := -Right;
         return Perspective_Matrix (Top, Bottom, Left, Right, Near, Far);
     end Perspective_Matrix;
 
@@ -182,13 +186,13 @@ package body Maths is
     --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 5, matrix preceding equation (5.25)
 
-    function Scaling_Matrix (Scale : Singles.Vector3) return Singles.Matrix4 is
+    function Scaling_Matrix (Scale_Factor : Singles.Vector3) return Singles.Matrix4 is
         use GL;
         theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
-        theMatrix (X, X) := Scale (X);
-        theMatrix (Y, Y) := Scale (Y);
-        theMatrix (Z, Z) := Scale (Z);
+        theMatrix (X, X) := Scale_Factor (X);
+        theMatrix (Y, Y) := Scale_Factor (Y);
+        theMatrix (Z, Z) := Scale_Factor (Z);
         return theMatrix;
     end Scaling_Matrix;
 
@@ -196,14 +200,14 @@ package body Maths is
     --  Translation_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 5, equation (5.25)
 
-    function Translation_Matrix (Translate : Singles.Vector3)
+    function Translation_Matrix (Change : Singles.Vector3)
                                  return Singles.Matrix4 is
         use GL;
         theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
-        theMatrix (X, W) := Translate (X);
-        theMatrix (Y, W) := Translate (Y);
-        theMatrix (Z, W) := Translate (Z);
+        theMatrix (X, W) := Change (X);
+        theMatrix (Y, W) := Change (Y);
+        theMatrix (Z, W) := Change (Z);
         return theMatrix;
     end Translation_Matrix;
 
