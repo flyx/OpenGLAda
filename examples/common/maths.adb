@@ -184,7 +184,7 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
     --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
-    --  Chapter 5, matrix preceding equation (5.25)
+    --  Chapter 5, matrix equation (5.25)
 
     function Scaling_Matrix (Scale_Factor : Singles.Vector3) return Singles.Matrix4 is
         use GL;
@@ -198,7 +198,7 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
     --  Translation_Matrix is derived from Computer Graphics Using OpenGL
-    --  Chapter 5, equation (5.25)
+    --  Chapter 5, equation preceding (5.25)
 
     function Translation_Matrix (Change : Singles.Vector3)
                                  return Singles.Matrix4 is
