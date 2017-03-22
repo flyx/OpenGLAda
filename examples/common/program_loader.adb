@@ -53,7 +53,7 @@ package body Program_Loader is
 
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Program_From.");
+            Put_Line ("An exception occurred in Program_From.");
             raise Shader_Loading_Error;
     end Program_From;
 
@@ -67,7 +67,7 @@ package body Program_Loader is
                               Kind => Kind);
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Program_Loader.Src.");
+            Put_Line ("An exception occurred in Program_Loader.Src.");
             raise;
     end Src;
 
