@@ -48,6 +48,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
+    procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
+                              Render_Program : GL.Objects.Programs.Program);
+
+    --  ------------------------------------------------------------------------
+
     procedure Render (Window : in out Glfw.Windows.Window) is
         use Interfaces.C;
         use GL.Types;
@@ -59,9 +64,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                                 GL.Types.Int (Window_Height));
-        Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+        Utilities.Clear_Background_Colour_And_Depth (White);
 
         GL.Objects.Programs.Use_Program (Render_Program);
+        Set_MVP_Matrix (Window, Render_Program);
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         --  First attribute buffer : vertices
@@ -88,29 +94,41 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program) is
+    procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
+                              Render_Program : GL.Objects.Programs.Program) is
         use GL.Types;
+        use GL.Types.Singles;
         use Maths;
-        use type GL.Types.Singles.Matrix4;
-        Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, -3.0);
-        Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
-        Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
-        Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
-        Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
-        View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        --  Camera position, Look_At and Up are world coordinates.
+        Camera_Position   : Vector3 := (4.0, 3.0, -3.0);
+        Look_At           : Vector3 := (0.0, 0.0, 0.0);
+        Up                : Vector3 := (0.0, 1.0, 0.0);
+        --  The Model_Matrix operates in world coordinates.
+        Model_Matrix      : Matrix4 := Singles.Identity4;
+        --  The Projection_Matrix projetcs the camera view in camera coordinates
+        --  on to the camera view's Near plane
+        Projection_Matrix : Matrix4;
+        --  The View_Matrix transforms the world_cordinates of the world view
+        --  into view (camera) coordinates.
+        View_Matrix       : Matrix4;
+        Window_Width      : Glfw.Size;
+        Window_Height     : Glfw.Size;
     begin
+        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP_Matrix");
 
-        Init_Perspective_Transform (50.0, 4.0, 3.0,
-                                    0.1, 100.0, Projection_Matrix);
         Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+        Init_Perspective_Transform (45.0, Single (Window_Width),
+                                          Single (Window_Height),
+                                    0.1, 100.0, Projection_Matrix);
 --          Maths.Init_Orthographic_Transform (Bottom    => -2.0, Top     => 2.0,
 --                                             Left      => -2.0, Right   => 2.0,
 --                                             Z_Near    =>    0.1, Z_Far   => 1000.0,
 --                                             Transform => Projection_Matrix);
+        --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
+        --  The Projection_Matrix transforms view (camera) coordinates.
         MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
-        Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
@@ -128,6 +146,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
+        --  Accept fragment if it closer to the camera than the former one.
         GL.Buffers.Set_Depth_Function (GL.Types.Less);
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
@@ -143,7 +162,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP_Matrix");
 
-        Set_MVP_Matrix (Render_Program);
+        Set_MVP_Matrix (Window, Render_Program);
         Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
 
         Vertex_Buffer.Initialize_Id;
@@ -153,7 +172,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Colour_Buffer.Initialize_Id;
         Array_Buffer.Bind (Colour_Buffer);
         Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
-        Put_Line ("Setup; Vertex and colour buffers loaded.");
 
     exception
         when others =>
