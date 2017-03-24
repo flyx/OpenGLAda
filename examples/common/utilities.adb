@@ -27,38 +27,6 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Matrix (Name : String;
-                            aMatrix : GL.Types.Singles.Matrix3) is
-        use GL.Types.Singles;
-    begin
-        Put_Line (Name & ":");
-        for Row in GL.Index_3D'Range loop
-            for Column in GL.Index_3D'Range loop
-                Put (GL.Types.Single'Image (aMatrix (Row, Column)) & "   ");
-            end loop;
-            New_Line;
-        end loop;
-        New_Line;
-    end Print_Matrix;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Print_Matrix (Name : String;
-                            aMatrix : GL.Types.Singles.Matrix4) is
-        use GL.Types.Singles;
-    begin
-        Put_Line (Name & ":");
-        for Row in GL.Index_Homogeneous'Range loop
-            for Column in GL.Index_Homogeneous'Range loop
-                Put (GL.Types.Single'Image (aMatrix (Row, Column)) & "   ");
-            end loop;
-            New_Line;
-        end loop;
-        New_Line;
-    end Print_Matrix;
-
-    --  ------------------------------------------------------------------------
-
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
     begin
         Put (Name);
