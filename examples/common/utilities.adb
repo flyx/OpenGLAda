@@ -59,7 +59,6 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
     begin
         Put (Name);
