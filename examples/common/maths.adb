@@ -155,17 +155,26 @@ package body Maths is
     end Radians;
 
     --  ------------------------------------------------------------------------
+
+    function Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3)
+                              return Singles.Matrix4 is
+    begin
+        return Rotation_Matrix (Radians (Angle), Axis);
+    end Rotation_Matrix;
+
+    --  ------------------------------------------------------------------------
+
     --  Rotation_Matrix is derived from Computer Graphics Using OpenGL
     --  Chapter 5, matrix preceding equation (5.33)
     --  It is the transformation matrix for rotating a 4D vector by
     --  a radian angle Angle about a 3D Axis (X, Y, Z)
 
-    function Rotation_Matrix (Angle : Single; Axis : Singles.Vector3)
+    function Rotation_Matrix (Angle : Radian; Axis : Singles.Vector3)
                               return Singles.Matrix4 is
         use GL;
         use Single_Math_Functions;
-        CosA            : constant Single := Cos (Angle);
-        SinA            : constant Single := Sin (Angle);
+        CosA            : constant Single := Cos (Single (Angle));
+        SinA            : constant Single := Sin (Single (Angle));
         theMatrix       : Singles.Matrix4 := Singles.Identity4;
     begin
         theMatrix (X, X) := CosA + (1.0 - CosA) * Axis (X) * Axis (X);
