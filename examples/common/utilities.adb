@@ -11,6 +11,13 @@ with GL.Types.Colors;
 
 package body Utilities is
 
+   procedure Clear_All (Colour : GL.Types.Colors.Color) is
+   begin
+        GL.Buffers.Clear ((True, True, True, True));
+        GL.Buffers.Set_Color_Clear_Value (Colour);
+   end Clear_All;
+
+    --  ------------------------------------------------------------------------
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
    begin
         GL.Buffers.Clear ((False, False, False, True));
@@ -60,6 +67,17 @@ package body Utilities is
     --  ------------------------------------------------------------------------
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
+    begin
+        Put (Name);
+        for Index in aVector'Range loop
+            Put (GL.Types.Single'Image (aVector (Index)));
+        end loop;
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4) is
     begin
         Put (Name);
         for Index in aVector'Range loop
