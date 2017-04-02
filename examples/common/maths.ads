@@ -1,7 +1,12 @@
 
+with Ada.Numerics.Generic_Elementary_Functions;
+
 with GL.Types; use GL.Types;
 
 package Maths is
+
+    package Single_Math_Functions is new
+      Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     type Degree is new Single;
     type Radian is new Single;

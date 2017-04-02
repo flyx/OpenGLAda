@@ -2,8 +2,6 @@ with Ada.Numerics;
 with Ada.Numerics.Generic_Elementary_Functions;
 
 package body Maths is
-    package Single_Math_Functions is new
-      Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     use GL.Types;
     use type GL.Types.Singles.Matrix4;
