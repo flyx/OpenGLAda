@@ -68,9 +68,9 @@ package body Utilities is
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
     begin
-        Put (Name);
+        Put (Name & ":  ");
         for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)));
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
         end loop;
         New_Line;
     end Print_Vector;
@@ -79,9 +79,9 @@ package body Utilities is
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4) is
     begin
-        Put (Name);
+        Put (Name & ":  ");
         for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)));
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
         end loop;
         New_Line;
     end Print_Vector;
