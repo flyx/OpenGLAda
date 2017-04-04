@@ -32,6 +32,8 @@ package Maths is
     function Rotation_Matrix (Angle : Radian; Axis : Singles.Vector3)
                               return Singles.Matrix4;
     function Scaling_Matrix (Scale_Factor : Singles.Vector3) return Singles.Matrix4;
+    function To_3 (Array_4 : GL.Types.Single_Array) return GL.Types.Single_Array;
+    function To_4 (Array_3 : GL.Types.Single_Array) return GL.Types.Single_Array;
     function Translation_Matrix (Change : Singles.Vector3)
                                  return Singles.Matrix4;
 
