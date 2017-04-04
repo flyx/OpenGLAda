@@ -4,32 +4,34 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use  Ada.Strings.Unbounded;
 
 with GL.Buffers;
-with gl.Context;
+with GL.Context;
 with GL.Errors;
 with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
 package body Utilities is
-
+   --  Set_Color_Clear_Value sets the value to which a buffer should be set
+   --  when cleared.
+   --  Clear "clears" selected values to the previously selected value set by
+   --  Set_Color_Clear_Value .
    procedure Clear_All (Colour : GL.Types.Colors.Color) is
    begin
-        GL.Buffers.Clear ((True, True, True, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
-   end Clear_All;
+        GL.Buffers.Clear ((True, True, True, True));   end Clear_All;
 
     --  ------------------------------------------------------------------------
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
    begin
-        GL.Buffers.Clear ((False, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
+        GL.Buffers.Clear ((False, False, False, True));
    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
    begin
-        GL.Buffers.Clear ((True, False, False, True));
         GL.Buffers.Set_Color_Clear_Value (Colour);
+        GL.Buffers.Clear ((True, False, False, True));
    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
