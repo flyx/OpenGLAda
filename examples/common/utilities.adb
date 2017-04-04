@@ -36,39 +36,24 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Single_Array) is
-        use GL;
+    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Singles.Vector3_Array) is
         use GL.Types;
-        Index           : Int := anArray'First;
-        Vec_3           : Singles.Vector3;
     begin
         Put_Line (Name & ": ");
-        while Index < anArray'Last loop
-            Vec_3 (X) := anArray (Index);
-            Vec_3 (Y) := anArray (Index + 1);
-            Vec_3 (Z) := anArray (Index + 2);
-            Print_Vector (Int'Image (Index) & ":  ", Vec_3);
-            Index := Index + 3;
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
         end loop;
         New_Line;
     end Print_GL_Array3;
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_GL_Array4 (Name : String; anArray : GL.Types.Single_Array) is
-        use GL;
+    procedure Print_GL_Array4 (Name : String; anArray : GL.Types.Singles.Vector4_Array) is
         use GL.Types;
-        Index           : Int := anArray'First;
-        Vec_4           : Singles.Vector4;
     begin
         Put_Line (Name & ": ");
-        while Index < anArray'Last loop
-            Vec_4 (X) := anArray (Index);
-            Vec_4 (Y) := anArray (Index + 1);
-            Vec_4 (Z) := anArray (Index + 2);
-            Vec_4 (W) := anArray (Index + 3);
-            Print_Vector (Int'Image (Index) & ":  ", Vec_4);
-            Index := Index + 4;
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
         end loop;
         New_Line;
     end Print_GL_Array4;
