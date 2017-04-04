@@ -34,6 +34,25 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_GL_Array (Name : String; anArray : GL.Types.Single_Array) is
+        use GL;
+        use GL.Types;
+        Index_3           : Int := anArray'First;
+        Vec_3             : Singles.Vector3;
+    begin
+        Put_Line (Name & ": ");
+        while Index_3 < anArray'Last loop
+            Vec_3 (X) := anArray (Index_3);
+            Vec_3 (Y) := anArray (Index_3 + 1);
+            Vec_3 (Z) := anArray (Index_3 + 2);
+            Print_Vector (Int'Image (Index_3) & ":  ", Vec_3);
+            Index_3 := Index_3 + 3;
+        end loop;
+        New_Line;
+    end Print_GL_Array;
+
+    --  ------------------------------------------------------------------------
+
     procedure Print_Matrix (Name : String;
                             aMatrix : GL.Types.Singles.Matrix3) is
         use GL.Types.Singles;
