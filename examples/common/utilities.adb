@@ -20,6 +20,7 @@ package body Utilities is
         GL.Buffers.Clear ((True, True, True, True));   end Clear_All;
 
     --  ------------------------------------------------------------------------
+
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
@@ -59,7 +60,6 @@ package body Utilities is
     end Print_GL_Array4;
 
     --  ------------------------------------------------------------------------
-
 
     procedure Print_Matrix (Name : String;
                             aMatrix : GL.Types.Singles.Matrix3) is
