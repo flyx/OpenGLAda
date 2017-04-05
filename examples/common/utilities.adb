@@ -5,7 +5,6 @@ with Ada.Strings.Unbounded; use  Ada.Strings.Unbounded;
 
 with GL.Buffers;
 with GL.Context;
-with GL.Errors;
 with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
@@ -17,7 +16,8 @@ package body Utilities is
    procedure Clear_All (Colour : GL.Types.Colors.Color) is
    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
-        GL.Buffers.Clear ((True, True, True, True));   end Clear_All;
+        GL.Buffers.Clear ((True, True, True, True));
+   end Clear_All;
 
     --  ------------------------------------------------------------------------
 
@@ -157,20 +157,43 @@ package body Utilities is
         New_Line;
 
     exception
-        when anError : Constraint_Error =>
-            Put ("Show_Shader_Program_Data returned constraint error: ");
-            Put_Line (Exception_Information (anError));
-
-        when anError : GL.Errors.Invalid_Operation_Error =>
-            Put_Line ("Show_Shader_Program_Data returned an invalid operation error: ");
-            Put_Line (Exception_Information (anError));
-
-        when anError :  others =>
+        when others =>
             Put_Line ("An exceptiom occurred in Show_Shader_Program_Data.");
-            Put_Line (Exception_Information (anError));
+            raise;
 
     end Show_Shader_Program_Data;
 
     --  ------------------------------------------------------------------------
 
+ procedure Show_Shader_Info_Log (aProgram : gl.Objects.Programs.Program) is
+        use GL.Objects;
+        Shaders_List        : Shaders.Lists.List := Programs.Attached_Shaders (aProgram);
+        List_Cursor         : Shaders.Lists.Cursor := Shaders_List.First;
+        Shader1             : Shaders.Shader := Shaders.Lists.Element (List_Cursor);
+        Shader_Count        : Positive := 1;
+    begin
+        Put_Line ("Shader: " & Positive'Image (Shader_Count) & " log:");
+        while Shaders.Lists.Has_Next (List_Cursor)  loop
+            List_Cursor := Shaders.Lists.Next (List_Cursor);
+            declare
+                ShaderN  : Shaders.Shader := Shaders.Lists.Element (List_Cursor);
+            begin
+                Shader_Count := Shader_Count + 1;
+                Put_Line ("Shader: " & Positive'Image (Shader_Count) & " log:");
+                declare
+                    Shader_Log : String := GL.Objects.Shaders.Info_Log (ShaderN);
+                begin
+                    Put_Line (Shader_Log);
+                end;
+            end;
+        end loop;
+        New_Line;
+    exception
+        when others =>
+            Put_Line ("An exceptiom occurred in Show_Shader_Info_Log.");
+            raise;
+
+    end Show_Shader_Info_Log;
+
+    --  ------------------------------------------------------------------------
 end Utilities;
