@@ -9,31 +9,31 @@ with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
 package body Utilities is
-   --  Set_Color_Clear_Value sets the value to which a buffer should be set
-   --  when cleared.
-   --  Clear "clears" selected values to the previously selected value set by
-   --  Set_Color_Clear_Value .
-   procedure Clear_All (Colour : GL.Types.Colors.Color) is
-   begin
+--  Set_Color_Clear_Value sets the value to which a buffer should be set
+--  when cleared.
+--  Clear "clears" selected values to the previously selected value set by
+--  Set_Color_Clear_Value .
+    procedure Clear_All (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, True, True, True));
-   end Clear_All;
+    end Clear_All;
 
     --  ------------------------------------------------------------------------
 
-   procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
-   begin
+    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
-   end Clear_Background_Colour;
+    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
-   procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
-   begin
+    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
+    begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
-   end Clear_Background_Colour_And_Depth;
+    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Matrix (Name : String;
+    procedure Print_Matrix (Name    : String;
                             aMatrix : GL.Types.Singles.Matrix3) is
         use GL.Types.Singles;
     begin
@@ -77,7 +77,7 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Matrix (Name : String;
+    procedure Print_Matrix (Name    : String;
                             aMatrix : GL.Types.Singles.Matrix4) is
         use GL.Types.Singles;
     begin
@@ -121,7 +121,7 @@ package body Utilities is
         Shading_Language_Version  : Unbounded_String;
     begin
         GL_Version := To_Unbounded_String (GL.Types.Int'image (gl.Context.Major_Version) & "." &
-                                           GL.Types.Int'image (gl.Context.Minor_Version));
+                                             GL.Types.Int'image (gl.Context.Minor_Version));
         Renderer := To_Unbounded_String (gl.Context.Renderer);
         Shading_Language_Version :=
           To_Unbounded_String (gl.Context.Primary_Shading_Language_Version);
@@ -165,7 +165,7 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
- procedure Show_Shader_Info_Log (aProgram : gl.Objects.Programs.Program) is
+    procedure Show_Shader_Info_Log (aProgram : gl.Objects.Programs.Program) is
         use GL.Objects;
         Shaders_List        : Shaders.Lists.List := Programs.Attached_Shaders (aProgram);
         List_Cursor         : Shaders.Lists.Cursor := Shaders_List.First;
