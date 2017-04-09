@@ -10,7 +10,6 @@ with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
@@ -30,14 +29,7 @@ with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    package pVertex_Pointers is new Interfaces.C.Pointers
-      (GL.Types.UInt, GL.Types.Single, Cube_Data.tElement_Array, 0.0);
-
-    procedure Load_Vertex_Buffer is new GL.Objects.Buffers.Load_To_Buffer
-      (pVertex_Pointers);
-
     Dark_Blue                : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
-    White                    : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -56,6 +48,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render (Window : in out Glfw.Windows.Window) is
         use Interfaces.C;
         use GL.Types;
+        use GL.Types.Singles;
         use GL.Objects.Buffers;
         use Maths;
         Window_Width  : Glfw.Size;
@@ -64,11 +57,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                                 GL.Types.Int (Window_Height));
-        Utilities.Clear_Background_Colour_And_Depth (White);
+        Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
         GL.Objects.Programs.Use_Program (Render_Program);
         Set_MVP_Matrix (Window, Render_Program);
-        GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
+        GL.Uniforms.Set_Single (MVP_Matrix_ID, Transpose (MVP_Matrix));
 
         --  First attribute buffer : vertices
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -105,8 +98,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Up                : Vector3 := (0.0, 1.0, 0.0);
         --  The Model_Matrix operates in world coordinates.
         Model_Matrix      : Matrix4 := Singles.Identity4;
-        --  The Projection_Matrix projetcs the camera view in camera coordinates
-        --  on to the camera view's Near plane
+        --  The Projection_Matrix projects the camera view in camera coordinates
+        --  onto the camera view's Near plane
         Projection_Matrix : Matrix4;
         --  The View_Matrix transforms the world_cordinates of the world view
         --  into view (camera) coordinates.
@@ -122,10 +115,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Init_Perspective_Transform (45.0, Single (Window_Width),
                                           Single (Window_Height),
                                     0.1, 100.0, Projection_Matrix);
---          Maths.Init_Orthographic_Transform (Bottom    => -2.0, Top     => 2.0,
---                                             Left      => -2.0, Right   => 2.0,
---                                             Z_Near    =>    0.1, Z_Far   => 1000.0,
---                                             Transform => Projection_Matrix);
         --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
         --  The Projection_Matrix transforms view (camera) coordinates.
         MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
@@ -161,17 +150,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Utilities.Show_Shader_Program_Data (Render_Program);
 
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP_Matrix");
-
         Set_MVP_Matrix (Window, Render_Program);
-        Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Load_Vertex_Buffer (Array_Buffer, Cube_Data.Vertex_Data, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.Vertex_Data, Static_Draw);
 
         Colour_Buffer.Initialize_Id;
         Array_Buffer.Bind (Colour_Buffer);
-        Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
 
     exception
         when others =>
