@@ -5,12 +5,10 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
-with GL.Culling;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
-with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -29,14 +27,18 @@ with Vertex_Data;
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     Grey                  : GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
-    Position_Buffer        : GL.Objects.Buffers.Buffer;
-    Rendering_Program      : GL.Objects.Programs.Program;
-    Vertex_Array           : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-    Projection_Location    : GL.Uniforms.Uniform;
-    Model_View_Location    : GL.Uniforms.Uniform;
+    Window_Width          : Glfw.Size := 520;
+    Window_Height         : Glfw.Size := 520;
+    Viewport_Width        : GL.Types.Size := 500;
+    Viewport_Height       : GL.Types.Size := 500;
+    Position_Buffer       : GL.Objects.Buffers.Buffer;
+    Rendering_Program     : GL.Objects.Programs.Program;
+    Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+    Projection_Location   : GL.Uniforms.Uniform;
+    Model_View_Location   : GL.Uniforms.Uniform;
 
-    Projection_Matrix      : GL.Types.Singles.Matrix4;
-    Set_Up_Error           : Exception;
+    Projection_Matrix     : GL.Types.Singles.Matrix4;
+    Set_Up_Error          : Exception;
 
     --  ------------------------------------------------------------------------
 
@@ -45,16 +47,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types.Singles;
         use Maths.Single_Math_Functions;
 
-        Window_Width      : Glfw.Size := 600;
-        Window_Height     : Glfw.Size := 600;
-        Viewport_Width    : Glfw.Size := 512;
-        Viewport_Height   : Glfw.Size := 512;
         Model_View_Matrix : GL.Types.Singles.Matrix4;
         Current_Time      : Single;
         Time_Factor       : Single;
     begin
         Window.Set_Size (Window_Width, Window_Height);
-        GL.Window.Set_Viewport (10, 10, GL.Types.Int (Viewport_Width),
+        GL.Window.Set_Viewport (10, 10, Viewport_Width,
                                 GL.Types.Int (Viewport_Height));
         Utilities.Clear_Background_Colour (Grey);
 
@@ -92,13 +90,7 @@ exception
         use GL.Objects.Shaders;
         use GL;
         use GL.Types;
-        use GL.Types.Singles;
         use Program_Loader;
-
-        Window_Width      : Glfw.Size := 400;
-        Window_Height     : Glfw.Size := 400;
-        Viewport_Width    : GL.Types.Size := 360;
-        Viewport_Height   : GL.Types.Size := 360;
     begin
         Window.Set_Size (Window_Width, Window_Height);
         GL.Window.Set_Viewport (10, 10, Viewport_Width, Viewport_Height);

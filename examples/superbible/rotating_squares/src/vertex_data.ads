@@ -1,6 +1,5 @@
 
 with GL.Types; use GL.Types;
-with GL.Objects.Buffers;
 
 package Vertex_Data is
 

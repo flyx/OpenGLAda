@@ -1,16 +1,13 @@
 
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
-with GL.Culling;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
-with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -40,7 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Projection_Location    : GL.Uniforms.Uniform;
     Model_View_Location    : GL.Uniforms.Uniform;
 
-    Projection_Matrix      : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+    Projection_Matrix      : GL.Types.Singles.Matrix4;
     Set_Up_Error           : Exception;
 
     --  ------------------------------------------------------------------------
@@ -50,7 +47,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types.Singles;
         use Maths.Single_Math_Functions;
 
-        Model_View_Matrix : Singles.Matrix4 := Singles.Identity4;
+        Model_View_Matrix : Singles.Matrix4;
         Current_Time      : Single;
         Time_Factor       : Single;
     begin
@@ -94,7 +91,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Shaders;
         use GL;
         use GL.Types;
-        use GL.Types.Singles;
         use Program_Loader;
     begin
         Window.Set_Size (Window_Width, Window_Height);
