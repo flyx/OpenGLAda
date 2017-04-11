@@ -1,0 +1,126 @@
+limited with "../../opengl-glfw.gpr";
+
+project Quaternions_Project is
+
+   for Object_Dir use "obj/";
+   for Exec_Dir use ".";
+   type Library_Kinds is
+      ("static", "relocatable");
+   Library_Type : Library_Kinds := external ("LIBRARY_TYPE");
+   type Toggle_Type is
+      ("enabled", "disabled");
+   Auto_Exceptions : Toggle_Type := external ("Auto_Exceptions");
+   type Mode_Type is
+      ("debug", "release");
+   Mode : Mode_Type := external ("Mode");
+   type Windowing_System_Type is
+      ("windows", "x11", "quartz");
+   Windowing_System : Windowing_System_Type := external ("Windowing_System");
+   type Glfw_Version_Type is
+      ("2", "3");
+   Glfw_Version : Glfw_Version_Type := external ("GLFW_Version");
+
+   case Library_Type is
+
+      when "static" =>
+
+         case Auto_Exceptions is
+
+            when "enabled" =>
+
+               case Mode is
+
+                  when "debug" =>
+
+                     case Windowing_System is
+
+                        when "windows" =>
+
+                           case Glfw_Version is
+
+                              when "2" =>
+                                 for Source_Files use ("quaternions.adb", "quaternions.ads", "test_quaternion.adb");
+                                 for Main use ("test_quaternion.adb");
+
+                              when "3" =>
+
+                           end case;
+
+                        when "x11" =>
+
+                        when "quartz" =>
+
+                           case Glfw_Version is
+
+                              when "2" =>
+
+                              when "3" =>
+                                 for Main use ("test_quaternion.adb");
+                                 for Source_Dirs use (".", "../common");
+                           end case;
+                     end case;
+
+                  when "release" =>
+
+               end case;
+
+            when "disabled" =>
+
+         end case;
+
+      when "relocatable" =>
+
+   end case;
+
+   package Pretty_Printer is
+      for Default_Switches ("ada") use ("-kU");
+   end Pretty_Printer;
+
+   package Compiler is
+
+      case Library_Type is
+
+         when "static" =>
+
+            case Auto_Exceptions is
+
+               when "enabled" =>
+
+                  case Mode is
+
+                     when "debug" =>
+
+                        case Windowing_System is
+
+                           when "windows" =>
+
+                              case Glfw_Version is
+
+                                 when "2" =>
+                                    for Default_Switches ("ada") use ("-gnatytuxlc");
+
+                                 when "3" =>
+
+                              end case;
+
+                           when "x11" =>
+
+                           when "quartz" =>
+
+                        end case;
+
+                     when "release" =>
+
+                  end case;
+
+               when "disabled" =>
+
+            end case;
+
+         when "relocatable" =>
+
+      end case;
+   end Compiler;
+
+end Quaternions_Project;
+
