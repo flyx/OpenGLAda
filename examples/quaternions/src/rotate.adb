@@ -1,14 +1,65 @@
 
-with Ada.Unchecked_Conversion;
-
 package body Rotate is
     use GL.Types;
     use Maths.Single_Math_Functions;
 
-    function Vector4_To_Quaternion is new
-      Ada.Unchecked_Conversion (Singles.Vector4, Single_Quaternion.Quaternion);
-    function Quaternion_To_Vector4 is new
-      Ada.Unchecked_Conversion (Single_Quaternion.Quaternion, Singles.Vector4);
+    --  ------------------------------------------------------------------------
+
+    function Vector4_To_Quaternion (aVector : GL.Types.Singles.Vector4)
+                                    return Single_Quaternion.Quaternion is
+       theQuaternion : Single_Quaternion.Quaternion;
+    begin
+        theQuaternion.A := aVector (GL.X);
+        theQuaternion.B := aVector (GL.Y);
+        theQuaternion.C := aVector (GL.Z);
+        theQuaternion.D := aVector (GL.W);
+        return theQuaternion;
+    end Vector4_To_Quaternion;
+
+    --  ------------------------------------------------------------------------
+
+    function Quaternion_To_Matrix4 (aQuaternion : Single_Quaternion.Quaternion)
+                                    return GL.Types.Singles.Matrix4 is
+        USE GL;
+        theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+        Norm        : GL.Types.Single;
+        NQ          : Single_Quaternion.Quaternion;
+    begin
+        Norm := Sqrt (aQuaternion.A * aQuaternion.A + aQuaternion.B * aQuaternion.B
+           + aQuaternion.C * aQuaternion.C + aQuaternion.D * aQuaternion.D);
+        NQ.A := aQuaternion.A / Norm;
+        NQ.B := aQuaternion.B/ Norm;
+        NQ.C := aQuaternion.C / Norm;
+        NQ.D := aQuaternion.D / Norm;
+
+        theMatrix (X, X) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
+        theMatrix (X, Y) := 2.0 * (NQ.A * NQ.B - NQ.C * NQ.D);
+        theMatrix (X, Z) := 2.0 * (NQ.A * NQ.C + NQ.B * NQ.D);
+
+        theMatrix (Y, X) := 2.0 * (NQ.A * NQ.B + NQ.C * NQ.D);
+        theMatrix (Y, Y) := 1.0 - 2.0 * (NQ.A * NQ.A + NQ.C * NQ.C);
+        theMatrix (Y, Z) := 2.0 * (NQ.B * NQ.C - NQ.A * NQ.D);
+
+        theMatrix (Z, X) := 2.0 * (NQ.A * NQ.C - NQ.B * NQ.D);
+        theMatrix (Z, Y) := 2.0 * (NQ.B * NQ.C + 2.0 * NQ.A * NQ.D);
+        theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.A * NQ.A + NQ.B * NQ.B);
+        return theMatrix;
+    end Quaternion_To_Matrix4;
+
+    --  ------------------------------------------------------------------------
+
+    function Quaternion_To_Vector4 (aQuaternion : Single_Quaternion.Quaternion)
+                                    return GL.Types.Singles.Vector4 is
+        theVector : GL.Types.Singles.Vector4;
+    begin
+        theVector (GL.X) := aQuaternion.A;
+        theVector (GL.Y) := aQuaternion.B;
+        theVector (GL.Z) := aQuaternion.C;
+        theVector (GL.W) := aQuaternion.D;
+        return theVector;
+    end Quaternion_To_Vector4;
+
+    --  ------------------------------------------------------------------------
 
     function Rotation_Quaternion (Angle : Maths.Degree;
                                   Axis  : GL.Types.Singles.Vector3)
