@@ -41,7 +41,7 @@ package body Rotate is
         theMatrix (Y, Z) := 2.0 * (NQ.B * NQ.C - NQ.A * NQ.D);
 
         theMatrix (Z, X) := 2.0 * (NQ.A * NQ.C - NQ.B * NQ.D);
-        theMatrix (Z, Y) := 2.0 * (NQ.B * NQ.C + 2.0 * NQ.A * NQ.D);
+        theMatrix (Z, Y) := 2.0 * (NQ.B * NQ.C + NQ.A * NQ.D);
         theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.A * NQ.A + NQ.B * NQ.B);
         return theMatrix;
     end Quaternion_To_Matrix4;
