@@ -157,6 +157,8 @@ package body Maths is
     end Radians;
 
     --  ------------------------------------------------------------------------
+    --  Rotation_Matrix is based on "Quaternians and spatial rotation" by
+    --  en.m.wikipedia.org
 
     function Rotation_Matrix (Angle : Maths.Degree; Axis : GL.Types.Singles.Vector3)
                               return GL.Types.Singles.Matrix4 is
