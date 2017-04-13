@@ -59,10 +59,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         for count in 1 .. 10 loop
             Current_Time := Single (Glfw.Time);
             Time_Factor := Single (count) + 0.3 * Single (Current_Time);
-            Model_View_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -3.0));
             Model_View_Matrix :=
               Maths.Rotation_Matrix (Maths.Degree (30.0 * Current_Time),
-                                     (0.0, 0.0, 1.0)) * Model_View_Matrix;
+                                     (0.0, 0.0, 1.0));
+            Model_View_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -3.0)) * Model_View_Matrix;
             Model_View_Matrix :=
               Maths.Translation_Matrix ((2.0 * Sin (2.1 * Time_Factor),
                                         2.0 * Cos (1.7 * Time_Factor),
