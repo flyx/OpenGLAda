@@ -186,7 +186,7 @@ package body Maths is
 
         theMatrix (Z, X) := 2.0 * (NQ.B * NQ.D - NQ.A * NQ.C);
         theMatrix (Z, Y) := 2.0 * (NQ.C * NQ.D + NQ.A * NQ.B);
-        theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.C + NQ.C * NQ.C);
+        theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
         return theMatrix;
    end Rotation_Matrix;
 
