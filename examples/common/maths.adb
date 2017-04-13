@@ -1,11 +1,15 @@
 with Ada.Numerics;
 with Ada.Numerics.Generic_Elementary_Functions;
 
+with Quaternions;
+
 package body Maths is
 
     use GL.Types;
     use type GL.Types.Singles.Matrix4;
     use type GL.Types.Singles.Vector3;
+
+    package Single_Quaternion is new Quaternions (GL.Types.Single);
 
     Radians_Per_Degree : constant Radian := Ada.Numerics.Pi / 180.0;
     Degrees_Per_Radian : constant Degree := 180.0 / Ada.Numerics.Pi;
@@ -154,40 +158,41 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    function Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3)
-                              return Singles.Matrix4 is
-    begin
-        return Rotation_Matrix (Radians (Angle), Axis);
-    end Rotation_Matrix;
-
-    --  ------------------------------------------------------------------------
-
-    --  Rotation_Matrix is derived from Computer Graphics Using OpenGL
-    --  Chapter 5, matrix preceding equation (5.33)
-    --  It is the transformation matrix for rotating a 4D vector by
-    --  a radian angle Angle about a 3D Axis (X, Y, Z)
-
-    function Rotation_Matrix (Angle : Radian; Axis : Singles.Vector3)
-                              return Singles.Matrix4 is
+    function Rotation_Matrix (Angle : Maths.Degree; Axis : GL.Types.Singles.Vector3)
+                              return GL.Types.Singles.Matrix4 is
         use GL;
-        use Single_Math_Functions;
-        CosA            : constant Single := Cos (Single (Angle));
-        SinA            : constant Single := Sin (Single (Angle));
-        theMatrix       : Singles.Matrix4 := Singles.Identity4;
+        use Maths.Single_Math_Functions;
+        use Single_Quaternion;
+
+        aQuaternion : Single_Quaternion.Quaternion;
+        theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+        Norm        : GL.Types.Single;
+        NQ          : Single_Quaternion.Quaternion;
+        Half_Angle  : Single := 0.5 * Single (Maths.Radians (Angle));
+        Sine       : Single := Sin (Half_Angle);
     begin
-        theMatrix (X, X) := CosA + (1.0 - CosA) * Axis (X) * Axis (X);
-        theMatrix (X, Y) := (1.0 - CosA) * Axis (Y) * Axis (X) - SinA * Axis (Z);
-        theMatrix (X, Z) := (1.0 - CosA) * Axis (Z) * Axis (X) + SinA * Axis (Y);
+        aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
+                          Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
+        Norm := Sqrt (aQuaternion.A * aQuaternion.A + aQuaternion.B * aQuaternion.B
+           + aQuaternion.C * aQuaternion.C + aQuaternion.D * aQuaternion.D);
+        NQ.A := aQuaternion.A / Norm;
+        NQ.B := aQuaternion.B/ Norm;
+        NQ.C := aQuaternion.C / Norm;
+        NQ.D := aQuaternion.D / Norm;
 
-        theMatrix (Y, X) := (1.0 - CosA) * Axis (X) * Axis (Y) + SinA * Axis (Z);
-        theMatrix (Y, Y) := CosA + (1.0 - CosA) * Axis (Y) * Axis (Y);
-        theMatrix (Y, Z) := (1.0 - CosA) * Axis (Z) * Axis (Y)  - SinA * Axis (X);
+        theMatrix (X, X) := 1.0 - 2.0 * (NQ.C * NQ.C + NQ.D * NQ.D);
+        theMatrix (X, Y) := 2.0 * (NQ.B * NQ.C - NQ.A * NQ.D);
+        theMatrix (X, Z) := 2.0 * (NQ.B * NQ.D + NQ.A * NQ.C);
 
-        theMatrix (Z, X) := (1.0 - CosA) * Axis (X) * Axis (Z) - SinA * Axis (Y);
-        theMatrix (Z, Y) := (1.0 - CosA) * Axis (Y) * Axis (Z) + SinA * Axis (X);
-        theMatrix (Z, Z) :=  CosA + (1.0 - CosA) * Axis (Z) * Axis (Z);
+        theMatrix (Y, X) := 2.0 * (NQ.B * NQ.C + NQ.A * NQ.D);
+        theMatrix (Y, Y) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.D * NQ.D);
+        theMatrix (Y, Z) := 2.0 * (NQ.C * NQ.D - NQ.A * NQ.B);
+
+        theMatrix (Z, X) := 2.0 * (NQ.B * NQ.D - NQ.A * NQ.C);
+        theMatrix (Z, Y) := 2.0 * (NQ.C * NQ.D + NQ.A * NQ.B);
+        theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.C + NQ.C * NQ.C);
         return theMatrix;
-    end Rotation_Matrix;
+   end Rotation_Matrix;
 
     --  ------------------------------------------------------------------------
     --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
