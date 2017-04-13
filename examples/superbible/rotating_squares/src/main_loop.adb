@@ -1,5 +1,4 @@
 
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 

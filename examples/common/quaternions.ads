@@ -16,5 +16,6 @@ package Quaternions is
    function "*" (Left : Real; Right : Quaternion) return Quaternion;
    function "*" (Left, Right : Quaternion) return Quaternion;
    function Image (Left : Quaternion) return String;
+   function Normalized (Left : Quaternion) return Quaternion;
 
 end Quaternions;

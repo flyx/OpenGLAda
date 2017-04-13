@@ -168,19 +168,13 @@ package body Maths is
 
         aQuaternion : Single_Quaternion.Quaternion;
         theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-        Norm        : GL.Types.Single;
         NQ          : Single_Quaternion.Quaternion;
         Half_Angle  : Single := 0.5 * Single (Maths.Radians (Angle));
         Sine       : Single := Sin (Half_Angle);
     begin
         aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
                           Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
-        Norm := Sqrt (aQuaternion.A * aQuaternion.A + aQuaternion.B * aQuaternion.B
-           + aQuaternion.C * aQuaternion.C + aQuaternion.D * aQuaternion.D);
-        NQ.A := aQuaternion.A / Norm;
-        NQ.B := aQuaternion.B/ Norm;
-        NQ.C := aQuaternion.C / Norm;
-        NQ.D := aQuaternion.D / Norm;
+        NQ := Normalized (aQuaternion);
 
         theMatrix (X, X) := 1.0 - 2.0 * (NQ.C * NQ.C + NQ.D * NQ.D);
         theMatrix (X, Y) := 2.0 * (NQ.B * NQ.C - NQ.A * NQ.D);
