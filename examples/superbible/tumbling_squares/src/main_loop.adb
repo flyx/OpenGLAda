@@ -20,7 +20,6 @@ with Glfw.Windows.Context;
 
 with Maths;
 with Program_Loader;
-with Rotate;
 with Utilities;
 with Vertex_Data;
 
@@ -47,11 +46,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Types.Singles;
         use Maths.Single_Math_Functions;
-        use Rotate.Single_Quaternion;
-
---          type Quaternion is record
---              A, B, C, D : Real;
---          end record;
 
         Model_View_Matrix : Singles.Matrix4;
         Current_Time      : Single;
@@ -66,10 +60,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Current_Time := Single (Glfw.Time);
             Time_Factor := Single (count) + 0.3 * Single (Current_Time);
             Model_View_Matrix :=
-            Rotate.Quaternion_To_Matrix4 (Rotate.Rotation_Quaternion (Maths.Degree (21.0 * Single (Current_Time)),
+            Maths.Rotation_Matrix (Maths.Degree (21.0 * Single (Current_Time)),
                                      (1.0, 0.0, 0.0)) *
-              Rotate.Rotation_Quaternion (Maths.Degree (45.0 * Single (Current_Time)),
-                                     (0.0, 1.0, 0.0)));
+              Maths.Rotation_Matrix (Maths.Degree (45.0 * Single (Current_Time)),
+                                     (0.0, 1.0, 0.0));
             Model_View_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -6.0)) * Model_View_Matrix;
             Model_View_Matrix :=
             Maths.Translation_Matrix ((2.0 * Sin (2.3 * Time_Factor),
