@@ -1,6 +1,7 @@
 
 generic
    type Real is digits <>;
+
 package Quaternions is
    type Quaternion is record
       A, B, C, D : Real;
