@@ -68,17 +68,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                      (0.0, 1.0, 0.0)) *
                 Maths.Rotation_Matrix (Maths.Degree (21.0 * Current_Time),
                                        (1.0, 0.0, 0.0));
-            Model_View_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -6.0)) * Model_View_Matrix;
-            Model_View_Matrix :=
+            Model_View_Matrix := Model_View_Matrix *
+              Maths.Translation_Matrix ((0.0, 0.0, -6.0));
+            Model_View_Matrix := Model_View_Matrix *
               Maths.Translation_Matrix ((2.0 * Sin (2.3 * Time_Factor),
                                         2.0 * Cos (1.7 * Time_Factor),
                                         2.0 * Sin (1.1 * Time_Factor)
-                                        * Cos (1.5 * Time_Factor)))
-              * Model_View_Matrix;
+                                        * Cos (1.5 * Time_Factor)));
 
             GL.Objects.Programs.Use_Program (Rendering_Program);
-            GL.Uniforms.Set_Single (Projection_Location, Transpose (Projection_Matrix));
-            GL.Uniforms.Set_Single (Model_View_Location, Transpose (Model_View_Matrix));
+            GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
+            GL.Uniforms.Set_Single (Model_View_Location, Model_View_Matrix);
 
             GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 36);
         end loop;
