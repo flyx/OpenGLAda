@@ -1,6 +1,4 @@
 
-with Interfaces.C.Pointers;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -46,7 +44,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
-        use Interfaces.C;
         use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
