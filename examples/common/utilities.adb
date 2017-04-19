@@ -4,30 +4,64 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded; use  Ada.Strings.Unbounded;
 
 with GL.Buffers;
-with gl.Context;
-with GL.Errors;
+with GL.Context;
 with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
 package body Utilities is
+--  Set_Color_Clear_Value sets the value to which a buffer should be set
+--  when cleared.
+--  Clear "clears" selected values to the previously selected value set by
+--  Set_Color_Clear_Value .
+    procedure Clear_All (Colour : GL.Types.Colors.Color) is
+    begin
+        GL.Buffers.Set_Color_Clear_Value (Colour);
+        GL.Buffers.Clear ((True, True, True, True));
+    end Clear_All;
 
-   procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
-   begin
+    --  ------------------------------------------------------------------------
+
+    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
+    begin
+        GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-   end Clear_Background_Colour;
+    end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
-   procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
-   begin
+    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
+    begin
+        GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
-        GL.Buffers.Set_Color_Clear_Value (Colour);
-   end Clear_Background_Colour_And_Depth;
+    end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Matrix (Name : String;
+    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Singles.Vector3_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
+        end loop;
+        New_Line;
+    end Print_GL_Array3;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_GL_Array4 (Name : String; anArray : GL.Types.Singles.Vector4_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
+        end loop;
+        New_Line;
+    end Print_GL_Array4;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Matrix (Name    : String;
                             aMatrix : GL.Types.Singles.Matrix3) is
         use GL.Types.Singles;
     begin
@@ -43,7 +77,7 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
-    procedure Print_Matrix (Name : String;
+    procedure Print_Matrix (Name    : String;
                             aMatrix : GL.Types.Singles.Matrix4) is
         use GL.Types.Singles;
     begin
@@ -61,9 +95,20 @@ package body Utilities is
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
     begin
-        Put (Name);
+        Put (Name & ":  ");
         for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)));
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
+        end loop;
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4) is
+    begin
+        Put (Name & ":  ");
+        for Index in aVector'Range loop
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
         end loop;
         New_Line;
     end Print_Vector;
@@ -76,7 +121,7 @@ package body Utilities is
         Shading_Language_Version  : Unbounded_String;
     begin
         GL_Version := To_Unbounded_String (GL.Types.Int'image (gl.Context.Major_Version) & "." &
-                                           GL.Types.Int'image (gl.Context.Minor_Version));
+                                             GL.Types.Int'image (gl.Context.Minor_Version));
         Renderer := To_Unbounded_String (gl.Context.Renderer);
         Shading_Language_Version :=
           To_Unbounded_String (gl.Context.Primary_Shading_Language_Version);
@@ -112,20 +157,43 @@ package body Utilities is
         New_Line;
 
     exception
-        when anError : Constraint_Error =>
-            Put ("Show_Shader_Program_Data returned constraint error: ");
-            Put_Line (Exception_Information (anError));
-
-        when anError : GL.Errors.Invalid_Operation_Error =>
-            Put_Line ("Show_Shader_Program_Data returned an invalid operation error: ");
-            Put_Line (Exception_Information (anError));
-
-        when anError :  others =>
+        when others =>
             Put_Line ("An exceptiom occurred in Show_Shader_Program_Data.");
-            Put_Line (Exception_Information (anError));
+            raise;
 
     end Show_Shader_Program_Data;
 
     --  ------------------------------------------------------------------------
 
+    procedure Show_Shader_Info_Log (aProgram : gl.Objects.Programs.Program) is
+        use GL.Objects;
+        Shaders_List        : Shaders.Lists.List := Programs.Attached_Shaders (aProgram);
+        List_Cursor         : Shaders.Lists.Cursor := Shaders_List.First;
+        Shader1             : Shaders.Shader := Shaders.Lists.Element (List_Cursor);
+        Shader_Count        : Positive := 1;
+    begin
+        Put_Line ("Shader: " & Positive'Image (Shader_Count) & " log:");
+        while Shaders.Lists.Has_Next (List_Cursor)  loop
+            List_Cursor := Shaders.Lists.Next (List_Cursor);
+            declare
+                ShaderN  : Shaders.Shader := Shaders.Lists.Element (List_Cursor);
+            begin
+                Shader_Count := Shader_Count + 1;
+                Put_Line ("Shader: " & Positive'Image (Shader_Count) & " log:");
+                declare
+                    Shader_Log : String := GL.Objects.Shaders.Info_Log (ShaderN);
+                begin
+                    Put_Line (Shader_Log);
+                end;
+            end;
+        end loop;
+        New_Line;
+    exception
+        when others =>
+            Put_Line ("An exceptiom occurred in Show_Shader_Info_Log.");
+            raise;
+
+    end Show_Shader_Info_Log;
+
+    --  ------------------------------------------------------------------------
 end Utilities;
