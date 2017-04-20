@@ -12,9 +12,17 @@ hello_textures
 tutorial_03
 trivial
 triangle
+<<<<<<< HEAD
+tutorial_4
+=======
 coloured_square
+<<<<<<< HEAD
 element_buffers
 squares
 examples/superbible/rotating_squares/squares
 spinner
 tutorial_4
+=======
+>>>>>>> f7180bfe4262801e90c35e78dc2074e0a71b7d35
+
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c

@@ -19,18 +19,26 @@ package body Utilities is
         GL.Buffers.Clear ((True, True, True, True));
     end Clear_All;
 
+<<<<<<< HEAD
     --  ------------------------------------------------------------------------
 
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
     begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
+=======
+    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color) is
+    begin
+        GL.Buffers.Clear ((False, False, False, True));
+        GL.Buffers.Set_Color_Clear_Value (Colour);
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
     end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
 
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color) is
     begin
+<<<<<<< HEAD
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
     end Clear_Background_Colour_And_Depth;
@@ -90,6 +98,11 @@ package body Utilities is
         end loop;
         New_Line;
     end Print_Matrix;
+=======
+        GL.Buffers.Clear ((True, False, False, True));
+        GL.Buffers.Set_Color_Clear_Value (Colour);
+    end Clear_Background_Colour_And_Depth;
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
 

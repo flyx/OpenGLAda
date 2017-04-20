@@ -1,4 +1,9 @@
 
+<<<<<<< HEAD
+=======
+with Interfaces.C.Pointers;
+
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -8,6 +13,10 @@ with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
+<<<<<<< HEAD
+=======
+with GL.Pixels;
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
@@ -27,7 +36,18 @@ with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
+<<<<<<< HEAD
     Dark_Blue                : Colors.Color := (0.0, 0.0, 0.4, 1.0);
+=======
+    package pVertex_Pointers is new Interfaces.C.Pointers
+      (GL.Types.UInt, GL.Types.Single, Cube_Data.tElement_Array, 0.0);
+
+    procedure Load_Vertex_Buffer is new GL.Objects.Buffers.Load_To_Buffer
+      (pVertex_Pointers);
+
+    Dark_Blue                : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+    White                    : GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -38,6 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
+<<<<<<< HEAD
     procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
                               Render_Program : GL.Objects.Programs.Program);
 
@@ -46,6 +67,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render (Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Types.Singles;
+=======
+    procedure Render (Window : in out Glfw.Windows.Window) is
+        use Interfaces.C;
+        use GL.Types;
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
         use GL.Objects.Buffers;
         use Maths;
         Window_Width  : Glfw.Size;
@@ -54,10 +80,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                                 GL.Types.Int (Window_Height));
+<<<<<<< HEAD
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
         GL.Objects.Programs.Use_Program (Render_Program);
         Set_MVP_Matrix (Window, Render_Program);
+=======
+        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+        GL.Buffers.Set_Depth_Function (GL.Types.LEqual);
+        Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+
+        GL.Objects.Programs.Use_Program (Render_Program);
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         --  First attribute buffer : vertices
@@ -84,6 +118,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
+<<<<<<< HEAD
     procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
                               Render_Program : GL.Objects.Programs.Program) is
         use GL.Types;
@@ -115,6 +150,30 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
         --  The Projection_Matrix transforms view (camera) coordinates.
         MVP_Matrix := Model_Matrix * View_Matrix * Projection_Matrix;
+=======
+    procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program) is
+        use GL.Types;
+        use Maths;
+        use type GL.Types.Singles.Matrix4;
+        Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, -3.0);
+        Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
+        Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
+        Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        Projection_Matrix : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        View_Matrix       : GL.Types.Singles.Matrix4 := Singles.Identity4;
+    begin
+        MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "MVP");
+
+--          Init_Perspective_Transform (50.0, 4.0, 3.0,
+--                                      0.1, 100.0, Projection_Matrix);
+--          Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
+        Maths.Init_Orthographic_Transform (Bottom    => -4.0, Top     => 4.0,
+                                           Left      => -4.0, Right   => 4.0,
+                                           Z_Near    =>    0.1, Z_Far   => 100.0,
+                                           Transform => Projection_Matrix);
+        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
@@ -132,7 +191,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
+<<<<<<< HEAD
         --  Accept fragment if it closer to the camera than the former one.
+=======
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
         GL.Buffers.Set_Depth_Function (GL.Types.Less);
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
@@ -140,12 +202,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Vertices_Array_Object.Bind;
 
         Render_Program := Program_Loader.Program_From
+<<<<<<< HEAD
           ((Program_Loader.Src ("src/shaders/MVP_Vertex_Shader.glsl",
+=======
+          ((Program_Loader.Src ("src/shaders/Transform_Vertex_Shader.glsl",
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
            Vertex_Shader),
            Program_Loader.Src ("src/shaders/Colour_Fragment_Shader.glsl",
              Fragment_Shader)));
         Utilities.Show_Shader_Program_Data (Render_Program);
 
+<<<<<<< HEAD
         Set_MVP_Matrix (Window, Render_Program);
 
         Vertex_Buffer.Initialize_Id;
@@ -155,6 +222,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Colour_Buffer.Initialize_Id;
         Array_Buffer.Bind (Colour_Buffer);
         Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
+=======
+        MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location (Render_Program, "MVP");
+
+        Set_MVP_Matrix (Render_Program);
+        Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
+
+        Vertex_Buffer.Initialize_Id;
+        Array_Buffer.Bind (Vertex_Buffer);
+        Load_Vertex_Buffer (Array_Buffer, Cube_Data.Vertex_Data, Static_Draw);
+
+        Colour_Buffer.Initialize_Id;
+        Array_Buffer.Bind (Colour_Buffer);
+        Load_Vertex_Buffer (Array_Buffer, Cube_Data.Colour_Data, Static_Draw);
+        Put_Line ("Setup; Vertex and colour buffers loaded.");
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     exception
         when others =>

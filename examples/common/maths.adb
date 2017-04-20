@@ -33,6 +33,7 @@ package body Maths is
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
 <<<<<<< HEAD
+<<<<<<< HEAD
         use GL.Types;
         --  Reference co-ordinate frame (u, v, n)
         --  Forward (n): camera axis
@@ -71,6 +72,13 @@ package body Maths is
     --  Init_Orthographic_Transform is derived from
     --  Computer Graphics Using OpenGL, Chapter 7, transpose of equation 7.18
 =======
+=======
+        --  Reference co-ordinate frame
+        Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
+        Side    : GL.Types.Singles.Vector3;                      --  u
+        Up_New  : GL.Types.Singles.Vector3;                      --  v
+    begin
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
         Side := GL.Types.Singles.Cross_Product (Up, Forward);
         Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
         Normalize (Forward);             --  n / |n|
@@ -126,6 +134,30 @@ package body Maths is
 --                            W => -Position (Z)),
 --                      W => (0.0, 0.0, 0.0, 1.0));
 --      end Init_Lookat_Transform;
+<<<<<<< HEAD
+=======
+
+    --  ------------------------------------------------------------------------
+
+    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
+                                Z_Near, Z_Far : Single;
+                                Transform     : out GL.Types.Singles.Matrix4) is
+        use GL;
+        dX : Single := Right - Left;
+        dY : Single := Top - Bottom;
+        dZ : Single := Z_Far - Z_Near;
+    begin
+        Transform := (
+                      X => (2.0 / dX, 0.0, 0.0, (Right + Left) / dX),
+                      Y => (0.0, 2.0 / dY, 0.0, (Top + Bottom) / dY),
+                      Z => (0.0, 0.0, -2.0 / dZ, (Z_Far + Z_Near) / dZ),
+                      W => (0.0, 0.0, 0.0, 1.0));
+    end Init_Orthographic_Transform;
+
+    --  ------------------------------------------------------------------------
+    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
+    --  Chapter 7, Figure 7.13
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
 
@@ -190,7 +222,10 @@ package body Maths is
         Right        : Single := Top *  Width / Height;
         Bottom       : Single := -Top;
         Left         : Single := -Right;
+<<<<<<< HEAD
 >>>>>>> Add Init_Orthographic_Transform to Maths.
+=======
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);
@@ -298,6 +333,7 @@ package body Maths is
 =======
         return Degrees * Radians_Per_Degree;
     end To_Radians;
+<<<<<<< HEAD
 >>>>>>> Cosmetic changes
 
     --  ------------------------------------------------------------------------
@@ -313,6 +349,8 @@ package body Maths is
         theMatrix (Z, Z) := Scale_Factor (Z);
         return theMatrix;
     end Scaling_Matrix;
+=======
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
     --  Translation_Matrix is derived from Computer Graphics Using OpenGL
@@ -332,7 +370,10 @@ package body Maths is
 =======
         return Radians * Degrees_Per_Radian;
     end To_Degrees;
+<<<<<<< HEAD
 >>>>>>> Cosmetic changes
+=======
+>>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
 
