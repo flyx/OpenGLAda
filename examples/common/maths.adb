@@ -32,8 +32,6 @@ package body Maths is
       (Position, Target, Up : Singles.Vector3;
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
-<<<<<<< HEAD
-<<<<<<< HEAD
         use GL.Types;
         --  Reference co-ordinate frame (u, v, n)
         --  Forward (n): camera axis
@@ -45,7 +43,6 @@ package body Maths is
         Up_New  : Singles.Vector3
           := GL.Types.Singles.Cross_Product (Forward, Side);     --  v = n x u
     begin
-<<<<<<< HEAD
         Forward := Normalized (Forward);          --  n / |n|
         Side := Normalized (Side);                --  u / |u|
         Up_New := Normalized (Up_New);            --  v / |v|
@@ -69,117 +66,6 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
-    --  Init_Orthographic_Transform is derived from
-    --  Computer Graphics Using OpenGL, Chapter 7, transpose of equation 7.18
-=======
-=======
-        --  Reference co-ordinate frame
-        Forward : GL.Types.Singles.Vector3 := Position - Target; --  n
-        Side    : GL.Types.Singles.Vector3;                      --  u
-        Up_New  : GL.Types.Singles.Vector3;                      --  v
-    begin
->>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
-        Side := GL.Types.Singles.Cross_Product (Up, Forward);
-        Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
-        Normalize (Forward);             --  n / |n|
-        Normalize (Side);                --  u / |u|
-        Normalize (Up_New);              --  v / |v|
-        --  n,u and v are orthonormal basis vectors.
-        Look_At := (
-          X => (X => Side (X),        --  ux
-                Y => Up_New (X),      --  vx
-                Z => Forward (X),     --  nx
-                W => -GL.Types.Singles.Dot_Product (Position, Side)),
-          Y => (X => Side (Y),
-                Y => Up_New (Y),
-                Z => Forward (Y),
-                W => -GL.Types.Singles.Dot_Product (Position, Up_New)),
-          Z => (X => Side (Z),
-                Y => Up_New (Z),
-                Z => Forward (Z),
-                W => -GL.Types.Singles.Dot_Product (Position, Forward)),
-          W => (0.0, 0.0, 0.0, 1.0));
-    end Init_Lookat_Transform;
-
-    --  ------------------------------------------------------------------------
-    --  Init_Lookat_Transform is derived from OpenGL SuperBible
-    --
---      procedure Init_Lookat_Transform
---        (Position, Target, Up : GL.Types.Singles.Vector3;
---         Look_At              : out GL.Types.Singles.Matrix4) is
---          use GL;
---          --  Reference co-ordinate frame
---          Forward : GL.Types.Singles.Vector3 := Target - Position; --  n
---          Side    : GL.Types.Singles.Vector3;                      --  u
---          Up_New  : GL.Types.Singles.Vector3;                      --  v
---      begin
---          Side := GL.Types.Singles.Cross_Product (Up, Forward);
---          Up_New := GL.Types.Singles.Cross_Product (Forward, Side);
---          Normalize (Forward);             --  n / |n|
---          Normalize (Side);                --  u / |u|
---          Normalize (Up_New);              --  v / |v|
---          --  n,u and v are orthonormal basis vectors.
---          Look_At := (
---                      X => (X => Side (X),        --  ux
---                            Y => Up_New (X),      --  vx
---                            Z => Forward (X),     --  nx
---                            W => -Position (X)),
---                      Y => (X => Side (Y),
---                            Y => Up_New (Y),
---                            Z => Forward (Y),
---                            W => -Position (Y)),
---                      Z => (X => Side (Z),
---                            Y => Up_New (Z),
---                            Z => Forward (Z),
---                            W => -Position (Z)),
---                      W => (0.0, 0.0, 0.0, 1.0));
---      end Init_Lookat_Transform;
-<<<<<<< HEAD
-=======
-
-    --  ------------------------------------------------------------------------
-
-    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
-        use GL;
-        dX : Single := Right - Left;
-        dY : Single := Top - Bottom;
-        dZ : Single := Z_Far - Z_Near;
-    begin
-        Transform := (
-                      X => (2.0 / dX, 0.0, 0.0, (Right + Left) / dX),
-                      Y => (0.0, 2.0 / dY, 0.0, (Top + Bottom) / dY),
-                      Z => (0.0, 0.0, -2.0 / dZ, (Z_Far + Z_Near) / dZ),
-                      W => (0.0, 0.0, 0.0, 1.0));
-    end Init_Orthographic_Transform;
-
-    --  ------------------------------------------------------------------------
-    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, Figure 7.13
->>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
-
-    --  ------------------------------------------------------------------------
-
-    procedure Init_Orthographic_Transform (Bottom, Top, Left, Right,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
-        use GL;
-        dX : Single := Right - Left;
-        dY : Single := Top - Bottom;
-        dZ : Single := Z_Far - Z_Near;
-    begin
-        Transform := (
-                      X => (2.0 / dX, 0.0, 0.0, (Right + Left) / dX),
-                      Y => (0.0, 2.0 / dY, 0.0, (Top + Bottom) / dY),
-                      Z => (0.0, 0.0, -2.0 / dZ, (Z_Far + Z_Near) / dZ),
-                      W => (0.0, 0.0, 0.0, 1.0));
-    end Init_Orthographic_Transform;
-
-    --  ------------------------------------------------------------------------
-    --  Init_Perspective_Transform is derived from Computer Graphics Using OpenGL
-    --  Chapter 7, Figure 7.13
->>>>>>> Add Init_Orthographic_Transform to Maths.
 
     procedure Init_Orthographic_Transform (Top, Bottom, Left, Right,
                                            Z_Near, Z_Far : Single;
@@ -189,7 +75,6 @@ package body Maths is
         dY : constant Single := Top - Bottom;
         dZ : constant Single := Z_Far - Z_Near;
     begin
-<<<<<<< HEAD
         Transform := GL.Types.Singles.Identity4;
         Transform (X, X) := 2.0 / dX;
         Transform (W, X) := -(Right + Left) / dX;
@@ -201,31 +86,9 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Init_Perspective_Transform (View_Angle                   : Degree;
-                                          Width, Height, Z_Near, Z_Far : Single;
-                                          Transform                    : out GL.Types.Singles.Matrix4) is
-=======
-        Transform := (
-          X => (2.0 * Z_Near / dX, 0.0, (Right + Left) / dX, 0.0),
-          Y => (0.0, 2.0 * Z_Near / dY, (Top + Bottom) / dY, 0.0),
-          Z => (0.0, 0.0, -(Z_Far + Z_Near) / dZ, -2.0 * Z_Far * Z_Near / dZ),
-          W => (0.0, 0.0, -1.0, 0.0));
-    end Init_Perspective_Transform;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Init_Perspective_Transform (View_Angle, Width, Height,
-                                Z_Near, Z_Far : Single;
-                                Transform     : out GL.Types.Singles.Matrix4) is
-        use pSingle_Math_Functions;
-        Top          : Single := Z_Near * Tan (To_Radians (View_Angle) / 2.0);
-        Right        : Single := Top *  Width / Height;
-        Bottom       : Single := -Top;
-        Left         : Single := -Right;
-<<<<<<< HEAD
->>>>>>> Add Init_Orthographic_Transform to Maths.
-=======
->>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
+    procedure Init_Perspective_Transform
+      (View_Angle : Degree; Width, Height, Z_Near, Z_Far : Single;
+       Transform  : out Singles.Matrix4) is
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);
@@ -312,7 +175,6 @@ package body Maths is
         Half_Angle  : Single := 0.5 * Single (Maths.Radians (Angle));
         Sine       : Single := Sin (Half_Angle);
     begin
-<<<<<<< HEAD
         aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
                           Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
         NQ := Normalized (aQuaternion);
@@ -330,11 +192,6 @@ package body Maths is
         theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
         return theMatrix;
     end Rotation_Matrix;
-=======
-        return Degrees * Radians_Per_Degree;
-    end To_Radians;
-<<<<<<< HEAD
->>>>>>> Cosmetic changes
 
     --  ------------------------------------------------------------------------
     --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
@@ -349,8 +206,6 @@ package body Maths is
         theMatrix (Z, Z) := Scale_Factor (Z);
         return theMatrix;
     end Scaling_Matrix;
-=======
->>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
     --  Translation_Matrix is derived from Computer Graphics Using OpenGL
@@ -361,19 +216,11 @@ package body Maths is
         use GL;
         theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
-<<<<<<< HEAD
         theMatrix (W, X) := Change (X);
         theMatrix (W, Y) := Change (Y);
         theMatrix (W, Z) := Change (Z);
         return theMatrix;
     end Translation_Matrix;
-=======
-        return Radians * Degrees_Per_Radian;
-    end To_Degrees;
-<<<<<<< HEAD
->>>>>>> Cosmetic changes
-=======
->>>>>>> d879bad96ec4f56102acaa82fb5d1b126a45384c
 
     --  ------------------------------------------------------------------------
 
