@@ -88,9 +88,9 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Init_Perspective_Transform
-      (View_Angle : Degree; Width, Height, Z_Near, Z_Far : Single;
-       Transform  : out Singles.Matrix4) is
+    procedure Init_Perspective_Transform (View_Angle                   : Degree;
+                                          Width, Height, Z_Near, Z_Far : Single;
+                                          Transform                    : out GL.Types.Singles.Matrix4) is
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);

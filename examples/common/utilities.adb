@@ -192,6 +192,7 @@ package body Utilities is
         when others =>
             Put_Line ("An exceptiom occurred in Show_Shader_Info_Log.");
             raise;
+
     end Show_Shader_Info_Log;
 
     --  ------------------------------------------------------------------------
