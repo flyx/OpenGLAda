@@ -25,7 +25,6 @@ package body Utilities is
     begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
-
     end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
