@@ -66,6 +66,8 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
+    --  Init_Orthographic_Transform is derived from
+    --  Computer Graphics Using OpenGL, Chapter 7, transpose of equation 7.18
 
     procedure Init_Orthographic_Transform (Top, Bottom, Left, Right,
                                            Z_Near, Z_Far : Single;
