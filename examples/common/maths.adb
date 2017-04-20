@@ -66,8 +66,6 @@ package body Maths is
     end Init_Lookat_Transform;
 
     --  ------------------------------------------------------------------------
-    --  Init_Orthographic_Transform is derived from
-    --  Computer Graphics Using OpenGL, Chapter 7, transpose of equation 7.18
 
     procedure Init_Orthographic_Transform (Top, Bottom, Left, Right,
                                            Z_Near, Z_Far : Single;
@@ -88,9 +86,9 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
-    procedure Init_Perspective_Transform (View_Angle                   : Degree;
-                                          Width, Height, Z_Near, Z_Far : Single;
-                                          Transform                    : out GL.Types.Singles.Matrix4) is
+    procedure Init_Perspective_Transform
+      (View_Angle : Degree; Width, Height, Z_Near, Z_Far : Single;
+       Transform  : out Singles.Matrix4) is
     begin
         Transform := Perspective_Matrix (View_Angle, Width / Height,
                                          Z_Near, Z_Far);
