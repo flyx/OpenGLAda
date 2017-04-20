@@ -27,7 +27,7 @@ with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Dark_Blue                : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+    Dark_Blue                : Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -58,7 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         GL.Objects.Programs.Use_Program (Render_Program);
         Set_MVP_Matrix (Window, Render_Program);
-        GL.Uniforms.Set_Single (MVP_Matrix_ID, Transpose (MVP_Matrix));
+        GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         --  First attribute buffer : vertices
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -109,12 +109,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Render_Program, "MVP_Matrix");
 
         Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        Init_Perspective_Transform (45.0, Single (Window_Width),
+        Init_Perspective_Transform (60.0, Single (Window_Width),
                                           Single (Window_Height),
                                     0.1, 100.0, Projection_Matrix);
         --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
         --  The Projection_Matrix transforms view (camera) coordinates.
-        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+        MVP_Matrix := Model_Matrix * View_Matrix * Projection_Matrix;
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
