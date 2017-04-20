@@ -32,6 +32,7 @@ package body Maths is
       (Position, Target, Up : Singles.Vector3;
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
+<<<<<<< HEAD
         use GL.Types;
         --  Reference co-ordinate frame (u, v, n)
         --  Forward (n): camera axis
@@ -177,6 +178,7 @@ package body Maths is
         Half_Angle  : Single := 0.5 * Single (Maths.Radians (Angle));
         Sine       : Single := Sin (Half_Angle);
     begin
+<<<<<<< HEAD
         aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
                           Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
         NQ := Normalized (aQuaternion);
@@ -194,6 +196,10 @@ package body Maths is
         theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
         return theMatrix;
     end Rotation_Matrix;
+=======
+        return Degrees * Radians_Per_Degree;
+    end To_Radians;
+>>>>>>> Cosmetic changes
 
     --  ------------------------------------------------------------------------
     --  Scaling_Matrix is derived from Computer Graphics Using OpenGL
@@ -218,11 +224,16 @@ package body Maths is
         use GL;
         theMatrix  : Singles.Matrix4 := Singles.Identity4;
     begin
+<<<<<<< HEAD
         theMatrix (W, X) := Change (X);
         theMatrix (W, Y) := Change (Y);
         theMatrix (W, Z) := Change (Z);
         return theMatrix;
     end Translation_Matrix;
+=======
+        return Radians * Degrees_Per_Radian;
+    end To_Degrees;
+>>>>>>> Cosmetic changes
 
     --  ------------------------------------------------------------------------
 
