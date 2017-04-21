@@ -71,7 +71,7 @@ package body Quaternions is
          Norm := Sqrt (Left.A * Left.A + Left.B * Left.B +
                        Left.C * Left.C + Left.D * Left.D);
         NQ.A := Left.A / Norm;
-        NQ.B := Left.B/ Norm;
+        NQ.B := Left.B / Norm;
         NQ.C := Left.C / Norm;
         NQ.D := Left.D / Norm;
 
