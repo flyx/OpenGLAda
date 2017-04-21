@@ -28,7 +28,7 @@ with Glfw.Windows.Context;
 with Cube_Data;
 with Maths;
 with Program_Loader;
-with DDS_Loader;
+with Load_DDS;
 with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
@@ -158,7 +158,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Set_MVP_Matrix (Window, Render_Program);
 
-        DDS_Loader.Load_DDS ("src/textures/uvtemplate.DDS", Cube_Texture);
+        Load_DDS ("src/textures/uvtemplate.DDS", Cube_Texture);
         Texture_ID := GL.Objects.Programs.Uniform_Location
                       (Render_Program, "myTextureSampler");
 
