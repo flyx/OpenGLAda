@@ -2,6 +2,7 @@
 with System;
 with Interfaces;
 
+with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
 with Ada.Sequential_IO;
@@ -244,21 +245,14 @@ exception
 
         --  File_ID         : Byte_IO.File_Type;
         File_ID         : Sequential_UByte.File_Type;
-        Buffer_Length   : GL.Types.UInt := 0;
-        Bytes_Read      : GL.Types.UInt := 0;
-        Dump            : GL.Types.UByte;
-        Texture_ID      : GL.Types.UInt := 0;
+        Buffer_Length   : UInt := 0;
+        Bytes_Read      : UInt := 0;
+        Texture_ID      : UInt := 0;
         Header          : DDS_Header;
 begin
+    Buffer_Length := UInt (Ada.Directories.Size (File_Name));
     Open (File_ID, In_File, File_Name);
 
-    --  Determine file length
-    while not End_Of_File (File_ID) loop
-        Buffer_Length := Buffer_Length + 1;
-        Read (File_ID, Dump);
-    end loop;
-
-    Reset (File_ID);
     declare
        Input_Buffer : UByte_Array (1 .. Buffer_Length);
     begin
