@@ -12,7 +12,6 @@ with GL.Types;
 with GL.Low_Level.Enums;
 with GL.Objects.Buffers;
 with GL.Objects.Textures.Targets;
-with GL.Objects.Textures.With_2D_Loader;
 with GL.Pixels;
 
 --  Extracted from SOIL.adb  Direct_Load_DDS
