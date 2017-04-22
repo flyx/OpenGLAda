@@ -4,6 +4,7 @@ with Interfaces;
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
+with Ada.Sequential_IO;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 
@@ -14,11 +15,11 @@ with GL.Objects.Textures.Targets;
 with GL.Objects.Textures.With_2D_Loader;
 with GL.Pixels;
 
-with IO;
-
 --  Extracted from SOIL.adb  Direct_Load_DDS
 procedure Load_DDS (File_Name  : String;
                     theTexture : out GL.Objects.Textures.Texture) is
+    package Sequential_UByte is new Ada.Sequential_IO (GL.Types.UByte);
+
     type UBytes4 is array (1 .. 4) of GL.Types.UByte;
     type UBytes44 is array (1 .. 44) of GL.Types.UByte;
     type DDS_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
@@ -240,32 +241,33 @@ exception
     --  ------------------------------------------------------------------------
 
   use GL.Types;
-        use IO;
+        use Sequential_UByte;
 
-        File_ID         : Byte_IO.File_Type;
+        --  File_ID         : Byte_IO.File_Type;
+        File_ID         : Sequential_UByte.File_Type;
         Buffer_Length   : GL.Types.UInt := 0;
         Bytes_Read      : GL.Types.UInt := 0;
         Dump            : GL.Types.UByte;
         Texture_ID      : GL.Types.UInt := 0;
         Header          : DDS_Header;
 begin
-    Byte_IO.Open (File_ID, Byte_IO.In_File, File_Name);
+    Open (File_ID, In_File, File_Name);
 
     --  Determine file length
-    while not Byte_IO.End_Of_File (File_ID) loop
+    while not End_Of_File (File_ID) loop
         Buffer_Length := Buffer_Length + 1;
-        Read_UByte (File_ID, Dump);
+        Read (File_ID, Dump);
     end loop;
 
-    Byte_IO.Reset (File_ID);
+    Reset (File_ID);
     declare
        Input_Buffer : UByte_Array (1 .. Buffer_Length);
     begin
-        while not Byte_IO.End_Of_File (File_ID) loop
+        while not End_Of_File (File_ID) loop
             Bytes_Read := Bytes_Read + 1;
-            Read_UByte (File_ID, Input_Buffer (Bytes_Read));
+            Read (File_ID, Input_Buffer (Bytes_Read));
         end loop;
-        Byte_IO.Close (File_ID);
+        Close (File_ID);
 
         Load_DSS_Header (Input_Buffer, Header);
         if Buffer_Length < Header'Size then
