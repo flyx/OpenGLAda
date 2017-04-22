@@ -45,8 +45,8 @@ procedure Load_DDS (File_Name  : String;
     function Byte_To_Character is new
       Ada.Unchecked_Conversion (Interfaces.Unsigned_8, Character);
 
-    procedure Load_DSS_Header (Buffer : UByte_Array; Header : out DDS_Header);
-    procedure Load_DSS_Data (Input_Buffer : UByte_Array;
+    procedure Load_DDS_Header (Buffer : UByte_Array; Header : out DDS_Header);
+    procedure Load_DDS_Data (Input_Buffer : UByte_Array;
                              Buffer_Size  : GL.Types.UInt;
                              Header       : DDS_Header;
                              theTexture   : out GL.Objects.Textures.Texture);
@@ -84,7 +84,7 @@ procedure Load_DDS (File_Name  : String;
 
     -- -------------------------------------------------------------------------
 
-    procedure Load_DSS_Data (Input_Buffer  : UByte_Array;
+    procedure Load_DDS_Data (Input_Buffer  : UByte_Array;
                              Buffer_Size   : GL.Types.UInt;
                              Header        : DDS_Header;
                              theTexture    : out GL.Objects.Textures.Texture) is
@@ -148,13 +148,13 @@ procedure Load_DDS (File_Name  : String;
         end;  --  declare block
     exception
         when others =>
-            Put_Line ("An exception occurred in Load_DSS_Data.");
+            Put_Line ("An exception occurred in Load_DDS_Data.");
             raise;
-    end Load_DSS_Data;
+    end Load_DDS_Data;
 
     --  ------------------------------------------------------------------------
 
-    procedure Load_DSS_Header (Buffer : UByte_Array; Header : out DDS_Header) is
+    procedure Load_DDS_Header (Buffer : UByte_Array; Header : out DDS_Header) is
         use Interfaces;
         use GL.Types;
 
@@ -180,9 +180,9 @@ procedure Load_DDS (File_Name  : String;
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Load_DSS_Header.");
+            Put_Line ("An exception occurred in Load_DDS_Header.");
             raise;
-    end Load_DSS_Header;
+    end Load_DDS_Header;
 
     --  ------------------------------------------------------------------------
 
@@ -268,12 +268,12 @@ begin
         end loop;
         Close (File_ID);
 
-        Load_DSS_Header (Input_Buffer, Header);
+        Load_DDS_Header (Input_Buffer, Header);
         if Buffer_Length < Header'Size then
             Put_Line ("Load_DDS; The buffer is too small.");
             raise Header_Error;
         else
-            Load_DSS_Data (Input_Buffer, Buffer_Length, Header, theTexture);
+            Load_DDS_Data (Input_Buffer, Buffer_Length, Header, theTexture);
         end if;
     end;  --  declare
 
