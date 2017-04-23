@@ -4,14 +4,12 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
-with GL.Errors;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
@@ -183,7 +181,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 begin
     Setup (Main_Window);
     while Running loop
-        Delay (1.0);
         Render (Main_Window);
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
