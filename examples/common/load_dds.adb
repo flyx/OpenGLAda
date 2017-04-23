@@ -1,16 +1,12 @@
 
 with System;
-with Interfaces;
 
-with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
-with Ada.Sequential_IO;
+with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Unchecked_Conversion;
 
 with GL.Types;
-with GL.Low_Level.Enums;
 with GL.Objects.Buffers;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
@@ -18,10 +14,6 @@ with GL.Pixels;
 --  Extracted from SOIL.adb  Direct_Load_DDS
 procedure Load_DDS (File_Name  : String;
                     theTexture : out GL.Objects.Textures.Texture) is
-    package Sequential_UByte is new Ada.Sequential_IO (GL.Types.UByte);
-
-    type UBytes4 is array (1 .. 4) of GL.Types.UByte;
-    type UBytes44 is array (1 .. 44) of GL.Types.UByte;
     type DDS_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
 
     type DDS_Header is record
@@ -34,8 +26,6 @@ procedure Load_DDS (File_Name  : String;
         Byte_Size      : GL.Types.UInt := 128; --  bytes
     end record;
 
-    type UByte_Array is array (GL.Types.UInt range <>) of aliased GL.Types.UByte;
-
     -- -------------------------------------------------------------------------
 
     Header_Error : exception;
@@ -43,12 +33,11 @@ procedure Load_DDS (File_Name  : String;
 
     -- -------------------------------------------------------------------------
 
-    function Byte_To_Character is new
-      Ada.Unchecked_Conversion (Interfaces.Unsigned_8, Character);
-
-    procedure Load_DDS_Header (Buffer : UByte_Array; Header : out DDS_Header);
-    procedure Load_DDS_Data (Input_Buffer : UByte_Array;
-                             Buffer_Size  : GL.Types.UInt;
+    procedure Load_DDS_Header (File_ID : Ada.Streams.Stream_IO.File_Type;
+                               File_Size   : GL.Types.UInt;
+                               Header  : out DDS_Header);
+    procedure Load_DDS_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
+                             File_Size   : GL.Types.UInt;
                              Header       : DDS_Header;
                              theTexture   : out GL.Objects.Textures.Texture);
 
@@ -61,68 +50,38 @@ procedure Load_DDS (File_Name  : String;
 
     --  ------------------------------------------------------------------------
 
-    function Bytes_To_String (Bytes : UBytes4) return String is
-        use Interfaces;
-        theString : String (1 .. 4);
-    begin
-        for index in 1 .. 4 loop
-            theString (Index) := Byte_To_Character
-              (Interfaces.Unsigned_8 (Bytes (Index)));
-        end loop;
-        return theString;
-    end Bytes_To_String;
-
-    --  ------------------------------------------------------------------------
-
-    function Bytes_To_UInt (Bytes : UBytes4) return GL.Types.UInt is
-        use Interfaces;
-    begin
-        return GL.Types.Uint (Shift_Left (Unsigned_32 (Bytes (4)), 24) +
-                                Shift_Left (Unsigned_32 (Bytes (3)), 16) +
-                                Shift_Left (Unsigned_32 (Bytes (2)), 8) +
-                                Unsigned_32 (Bytes (1)));
-    end Bytes_To_UInt;
-
-    -- -------------------------------------------------------------------------
-
-    procedure Load_DDS_Data (Input_Buffer  : UByte_Array;
-                             Buffer_Size   : GL.Types.UInt;
-                             Header        : DDS_Header;
-                             theTexture    : out GL.Objects.Textures.Texture) is
-        use Interfaces;
+    procedure Load_DDS_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
+                             File_Size   : GL.Types.UInt;
+                             Header      : DDS_Header;
+                             theTexture  : out GL.Objects.Textures.Texture) is
+        use Ada.Streams.Stream_IO;
         use GL.Objects.Textures;
         use GL.Pixels;
         use GL.Types;
 
+        Data_Stream       : Stream_Access := Stream (File_ID);
         Block_Size        : UInt;
-        Components        : UInt;
         Four_CC           : String (1 .. 4);
         Format            : GL.Pixels.Internal_Format;
-        aTexture          : GL.Objects.Textures.Texture;
-        Data_Size         : UInt;  --  including all mipmaps
+        Data_Size         : UInt:= File_Size - Uint (Index (File_ID));
+        Data  : DDS_Data (1 .. GL.Types.UInt (Data_Size));  -- array of bytes
     begin
-        if Header.Four_CC = "DXT1" then
-            Components := 3;
-        else
-            Components := 4;
-        end if;
-
         Four_CC := Header.Four_CC;
-        if Four_CC = "DXT1" then
+        if Header.Four_CC = "DXT1" then
             Format := Compressed_RGBA_S3TC_DXT1;
-        elsif Four_CC = "DXT3" then
+        elsif Header.Four_CC = "DXT3" then
             Format := Compressed_RGBA_S3TC_DXT3;
-        elsif Four_CC = "DXT5" then
+        elsif Header.Four_CC = "DXT5" then
             Format := Compressed_RGBA_S3TC_DXT5;
         else
             Put_Line ("Load_DSS_Data; Invalid S3TC_Type. Four_CC: "
                       & Four_CC);
             raise  Image_Error;
         end if;
+        Put_Line ("Load_DSS_Data; S3TC_Type, Four_CC: " & Four_CC);
 
         theTexture.Initialize_Id;
         Targets.Texture_2d.Bind (theTexture);
-
         GL.Pixels.Set_Pack_Alignment (GL.Pixels.Bytes);
 
         if Format = GL.Pixels.Compressed_RGBA_S3TC_DXT1 then
@@ -131,51 +90,64 @@ procedure Load_DDS (File_Name  : String;
             Block_Size := 16;
         end if;
 
-        if Header.Mip_Map_Count > 1 then
-            Data_Size := 2 * Header.Linear_Size;
-        else
-            Data_Size := Header.Linear_Size;
-        end if;
-
-        declare
-            Data  : DDS_Data (1 .. GL.Types.UInt (Data_Size));
-        begin
-            for Index in UInt range Header.Byte_Size + 1 .. Buffer_Size loop
-                Data (Index - Header.Byte_Size ) := Input_Buffer (Index);
-            end loop;
-
+--          if Header.Mip_Map_Count > 1 then
+--              Data_Size := 2 * Header.Linear_Size;
+--          else
+--              Data_Size := Header.Linear_Size;
+--          end if;
+        Put_Line ("Load_DDS_Data; Data_Size: " & UInt'Image (Data_Size));
+        Put_Line ("Load_DDS_Data; File_Size - Header.Byte_Size: " &
+                    UInt'Image (File_Size - Header.Byte_Size));
+--        declare
+--            Data  : DDS_Data (1 .. GL.Types.UInt (Data_Size));  -- array of bytes
+--        begin
+            Put_Line ("Load_DDS_Data; File index: " &
+                    Ada.Streams.Stream_IO.Count'Image (Index (File_ID)));
+--              DDS_Data'Read (Data_Stream, Data (1 .. File_Size - Header.Byte_Size));
+            DDS_Data'Read (Data_Stream, Data (1 .. File_Size - Uint (Index (File_ID))));
+            Put_Line ("Load_DDS_Data; File index: " &
+                    Ada.Streams.Stream_IO.Count'Image (Index (File_ID)));
             Load_Mipmaps (Header, Data, Block_Size, Header.Width,
                           Header.Height, Format);
-        end;  --  declare block
+--        end;  --  declare block
     exception
         when others =>
             Put_Line ("An exception occurred in Load_DDS_Data.");
-            raise;
+            raise Image_Error;
     end Load_DDS_Data;
 
     --  ------------------------------------------------------------------------
 
-    procedure Load_DDS_Header (Buffer : UByte_Array; Header : out DDS_Header) is
-        use Interfaces;
+    procedure Load_DDS_Header (File_ID   : Ada.Streams.Stream_IO.File_Type;
+                               File_Size : GL.Types.UInt;
+                               Header    : out DDS_Header) is
         use GL.Types;
+        use Ada.Streams.Stream_IO;
+        Header_Stream   : Stream_Access := Stream (File_ID);
 
-        UInt_Size         : Natural := UInt'Size;
-        Header_Byte_Size  : GL.Types.UInt := 128;
     begin
-        Header.Magic := Bytes_To_String (UBytes4 (Buffer (1 .. 4)));
-        Header.Height := Bytes_To_UInt (UBytes4 (Buffer (13 .. 16)));
-        Header.Width := Bytes_To_UInt (UBytes4 (Buffer (17 .. 20)));
-        Header.Linear_Size := Bytes_To_UInt (UBytes4 (Buffer (21 .. 24)));
-        Header.Mip_Map_Count := Bytes_To_UInt (UBytes4 (Buffer (29 .. 32)));
-        Header.Four_CC := Bytes_To_String (UBytes4 (Buffer (85 .. 88)));
+        if File_Size > Header.Byte_Size then
+            String'Read (Header_Stream, Header.Magic);
+            if Header.Magic /= "DDS " then
+                Put_Line ("Load_DSS_Header; File is not a DDS file");
+                raise Header_Error;
+            end if;
 
-        if Header.Magic /= "DDS " then
-            Put_Line ("Load_DSS_Header; File is not a DDS file");
-            raise Header_Error;
-        end if;
+            Set_Index (File_ID, Index (File_ID) + 8);
+            UInt'Read (Header_Stream, Header.Height);
+            UInt'Read (Header_Stream, Header.Width);
+            UInt'Read (Header_Stream, Header.Linear_Size);
+            Set_Index (File_ID, Index (File_ID) + 4);
+            UInt'Read (Header_Stream, Header.Mip_Map_Count);
+            Set_Index (File_ID, Index (File_ID) + 52);
+            String'Read (Header_Stream, Header.Four_CC);
 
-        if not Test_DW_Four_CC (Header.Four_CC) then
-            Put_Line ("Load_DSS_Header; invalid FourCC: " & Header.Four_CC);
+            if not Test_DW_Four_CC (Header.Four_CC) then
+                Put_Line ("Load_DSS_Header; invalid FourCC: " & Header.Four_CC);
+                raise Header_Error;
+            end if;
+        else
+            Put_Line ("Load_DSS_Header; This file is not a DDS file.");
             raise Header_Error;
         end if;
 
@@ -197,7 +169,7 @@ procedure Load_DDS (File_Name  : String;
         Width        : UInt := Initial_Width;
         Height       : UInt := Initial_Height;
         Mip_Size     : UInt := ((Width + 3) / 4) * ((Height + 3) / 4) * Block_Size;
-        Offset       : UInt := 1;
+        Data_Index   : UInt := 1;
         Level        : UInt := 0;
         Continue     : Boolean := Width > 1 and then Height > 1;
     begin
@@ -206,12 +178,12 @@ procedure Load_DDS (File_Name  : String;
             --  Load Compressed_Tex_Image_2D into the 2D texture
             Targets.Texture_2D.Load_Compressed (Int (Level), Format,
                               Int (Width), Int (Height), Int (Mip_Size),
-                              Image_Source (Data (Offset)'Address));
+                              Image_Source (Data (Data_Index)'Address));
 
             Continue :=  Width > 1 and then Height > 1;
             if Continue then
                 Level := Level + 1;
-                Offset := Offset + Mip_Size;
+                Data_Index := Data_Index + Mip_Size;
                 Width := Width / 2;
                 Height := Height / 2;
                 --  Deal with Non-Power-Of-Two textures.
@@ -226,7 +198,7 @@ procedure Load_DDS (File_Name  : String;
 exception
     when others =>
         Put_Line ("An exception occurred in Load_Mipmaps.");
-        raise;
+        raise Image_Error;
     end Load_Mipmaps;
 
     --  ------------------------------------------------------------------------
@@ -240,36 +212,18 @@ exception
 
     --  ------------------------------------------------------------------------
 
-  use GL.Types;
-        use Sequential_UByte;
+    use GL.Types;
+    use Ada.Streams.Stream_IO;
 
-        --  File_ID         : Byte_IO.File_Type;
-        File_ID         : Sequential_UByte.File_Type;
-        Buffer_Length   : UInt := 0;
-        Bytes_Read      : UInt := 0;
-        Texture_ID      : UInt := 0;
-        Header          : DDS_Header;
+    File_ID       : Ada.Streams.Stream_IO.File_Type;
+    File_Length   : UInt;
+    Header        : DDS_Header;
 begin
-    Buffer_Length := UInt (Ada.Directories.Size (File_Name));
-    Open (File_ID, In_File, File_Name);
+    Ada.Streams.Stream_IO.Open (File_ID, In_File, File_Name);
+    File_Length := UInt (Ada.Streams.Stream_IO.Size (File_ID));
 
-    declare
-       Input_Buffer : UByte_Array (1 .. Buffer_Length);
-    begin
-        while not End_Of_File (File_ID) loop
-            Bytes_Read := Bytes_Read + 1;
-            Read (File_ID, Input_Buffer (Bytes_Read));
-        end loop;
-        Close (File_ID);
-
-        Load_DDS_Header (Input_Buffer, Header);
-        if Buffer_Length < Header'Size then
-            Put_Line ("Load_DDS; The buffer is too small.");
-            raise Header_Error;
-        else
-            Load_DDS_Data (Input_Buffer, Buffer_Length, Header, theTexture);
-        end if;
-    end;  --  declare
+    Load_DDS_Header (File_ID, File_Length, Header);
+    Load_DDS_Data (File_ID, File_Length, Header, theTexture);
 
 exception
     when anError : Ada.IO_Exceptions.Name_Error  =>
