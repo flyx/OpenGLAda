@@ -33,11 +33,11 @@ procedure Load_DDS (File_Name  : String;
 
     -- -------------------------------------------------------------------------
 
-    procedure Load_DDS_Header (File_ID : Ada.Streams.Stream_IO.File_Type;
+    procedure Load_DDS_Header (File_ID     : Ada.Streams.Stream_IO.File_Type;
                                File_Size   : GL.Types.UInt;
-                               Header  : out DDS_Header);
-    procedure Load_DDS_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
-                             File_Size   : GL.Types.UInt;
+                               Header      : out DDS_Header);
+    procedure Load_DDS_Data (File_ID      : Ada.Streams.Stream_IO.File_Type;
+                             File_Size    : GL.Types.UInt;
                              Header       : DDS_Header;
                              theTexture   : out GL.Objects.Textures.Texture);
 
@@ -63,8 +63,8 @@ procedure Load_DDS (File_Name  : String;
         Block_Size        : UInt;
         Four_CC           : String (1 .. 4);
         Format            : GL.Pixels.Internal_Format;
-        Data_Size         : UInt:= File_Size - Uint (Index (File_ID));
-        Data  : DDS_Data (1 .. GL.Types.UInt (Data_Size));  -- array of bytes
+        Data_Size         : UInt := File_Size - Uint (Index (File_ID));
+        Data              : DDS_Data (1 .. GL.Types.UInt (Data_Size));  -- array of bytes
     begin
         Four_CC := Header.Four_CC;
         if Header.Four_CC = "DXT1" then
@@ -78,7 +78,6 @@ procedure Load_DDS (File_Name  : String;
                       & Four_CC);
             raise  Image_Error;
         end if;
-        Put_Line ("Load_DSS_Data; S3TC_Type, Four_CC: " & Four_CC);
 
         theTexture.Initialize_Id;
         Targets.Texture_2d.Bind (theTexture);
@@ -89,27 +88,9 @@ procedure Load_DDS (File_Name  : String;
         else
             Block_Size := 16;
         end if;
-
---          if Header.Mip_Map_Count > 1 then
---              Data_Size := 2 * Header.Linear_Size;
---          else
---              Data_Size := Header.Linear_Size;
---          end if;
-        Put_Line ("Load_DDS_Data; Data_Size: " & UInt'Image (Data_Size));
-        Put_Line ("Load_DDS_Data; File_Size - Header.Byte_Size: " &
-                    UInt'Image (File_Size - Header.Byte_Size));
---        declare
---            Data  : DDS_Data (1 .. GL.Types.UInt (Data_Size));  -- array of bytes
---        begin
-            Put_Line ("Load_DDS_Data; File index: " &
-                    Ada.Streams.Stream_IO.Count'Image (Index (File_ID)));
---              DDS_Data'Read (Data_Stream, Data (1 .. File_Size - Header.Byte_Size));
-            DDS_Data'Read (Data_Stream, Data (1 .. File_Size - Uint (Index (File_ID))));
-            Put_Line ("Load_DDS_Data; File index: " &
-                    Ada.Streams.Stream_IO.Count'Image (Index (File_ID)));
-            Load_Mipmaps (Header, Data, Block_Size, Header.Width,
-                          Header.Height, Format);
---        end;  --  declare block
+        DDS_Data'Read (Data_Stream, Data (1 .. File_Size - Uint (Index (File_ID))));
+        Load_Mipmaps (Header, Data, Block_Size, Header.Width,
+                      Header.Height, Format);
     exception
         when others =>
             Put_Line ("An exception occurred in Load_DDS_Data.");
@@ -177,8 +158,8 @@ procedure Load_DDS (File_Name  : String;
             Mip_Size := ((Width + 3) / 4) * ((Height + 3) / 4) * Block_Size;
             --  Load Compressed_Tex_Image_2D into the 2D texture
             Targets.Texture_2D.Load_Compressed (Int (Level), Format,
-                              Int (Width), Int (Height), Int (Mip_Size),
-                              Image_Source (Data (Data_Index)'Address));
+                                                Int (Width), Int (Height), Int (Mip_Size),
+                                                Image_Source (Data (Data_Index)'Address));
 
             Continue :=  Width > 1 and then Height > 1;
             if Continue then
@@ -195,10 +176,10 @@ procedure Load_DDS (File_Name  : String;
                 end if;
             end if;
         end loop;
-exception
-    when others =>
-        Put_Line ("An exception occurred in Load_Mipmaps.");
-        raise Image_Error;
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Load_Mipmaps.");
+            raise Image_Error;
     end Load_Mipmaps;
 
     --  ------------------------------------------------------------------------
