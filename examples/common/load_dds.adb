@@ -137,7 +137,6 @@ procedure Load_DDS (File_Name  : String;
         Width        : Int := Int (Header.Width);
         Height       : Int := Int (Header.Height);
         Mip_Size     : UInt := UInt (((Width + 3) / 4) * ((Height + 3) / 4)) * Block_Size;
-        Offset       : UInt := 1;
         Level        : Int := 0;
         Continue     : Boolean := Width > 1 and then Height > 1;
     begin
@@ -156,7 +155,6 @@ procedure Load_DDS (File_Name  : String;
             Continue :=  Width > 1 and then Height > 1;
             if Continue then
                 Level := Level + 1;
-                Offset := Offset + Mip_Size;
                 Width := Width / 2;
                 Height := Height / 2;
                 --  Deal with Non-Power-Of-Two textures.
