@@ -58,9 +58,9 @@ package body GL.Matrices is
          for Row in Index_Type loop
             for X in Index_Type loop
                if X = Index_Type'First then
-                  Element := Left (Column, X) * Right (X, Row);
+                  Element := Left (X, Row) * Right (Column, X);
                else
-                  Element := Element + Left (Column, X) * Right (X, Row);
+                  Element := Element + Left (X, Row) * Right (Column, X);
                end if;
             end loop;
             Return_Matrix (Column, Row) := Element;
@@ -74,7 +74,7 @@ package body GL.Matrices is
    begin
       for Row in Index_Type loop
          for Column in Index_Type loop
-            if Row = Index_Type'First then
+            if Column = Index_Type'First then
                Return_Vector (Row) := Left (Column, Row) * Right (Column);
             else
                Return_Vector (Row)
