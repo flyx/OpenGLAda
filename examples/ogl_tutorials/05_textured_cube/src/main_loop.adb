@@ -124,7 +124,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         --  As OpenGLAda matrices are in column row order, unconventionally,
         --  multiplication operates from the right.
-       MVP_Matrix :=  Model_Matrix * View_Matrix * Projection_Matrix;
+       MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
