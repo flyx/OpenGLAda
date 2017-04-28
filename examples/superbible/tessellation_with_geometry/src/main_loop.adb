@@ -24,8 +24,6 @@ with Program_Loader;
 with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-    package Math_Functions is new Ada.Numerics.Generic_Elementary_Functions (Single);
-    subtype tVec4f is GL.Types.Singles.Vector4;
 
     Rendering_Program : GL.Objects.Programs.Program;
     Vertex_Array      : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
