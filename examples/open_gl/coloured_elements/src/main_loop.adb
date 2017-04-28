@@ -73,7 +73,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Vertex_Data.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices_Coloured, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices_Coloured, Static_Draw);
 
         Elements_Buffer.Initialize_Id;
         Element_Array_Buffer.Bind (Elements_Buffer);
