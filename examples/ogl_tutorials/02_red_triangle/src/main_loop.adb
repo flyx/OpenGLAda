@@ -22,11 +22,6 @@ with Vertex_Data;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
-    subtype tVec3f is GL.Types.Singles.Vector3;
-
-    procedure Load_Vertex_Buffer is new GL.Objects.Buffers.Load_To_Buffer
-      (Vertex_Data.pVertex_Pointers);
-
     Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer  : GL.Objects.Buffers.Buffer;
     Render_Program : GL.Objects.Programs.Program;
@@ -67,7 +62,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Load_Vertex_Buffer (Array_Buffer,
+        Utilities.Load_Vertex_Buffer (Array_Buffer,
                             Vertex_Data.Vertex_Buffer_Data, Static_Draw);
 
         Render_Program := Program_From
