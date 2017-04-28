@@ -17,14 +17,11 @@ with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
+with Maths;
 with Program_Loader;
 with Utilities;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
-
-    package Math_Functions is
-      new Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
-    subtype tVec4f is GL.Types.Singles.Vector4;
 
     Rendering_Program : GL.Objects.Programs.Program;
     Vertex_Array      : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -33,13 +30,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     procedure Render_Triangle (Current_Time : Glfw.Seconds) is
         use GL.Types;
-        use Math_Functions;
+        use Maths.Single_Math_Functions;
         Now           : constant Single := Single (Current_Time);
         Back_Colour   : constant GL.Types.Colors.Color :=
           (0.5 * (1.0 + Sin (Now)), 0.5 * (1.0 + Cos (Now)), 0.0, 1.0);
-        Colour        : constant tVec4f  :=
+        Colour        : constant Singles.Vector4  :=
           (0.8 * (1.0 + Sin (Now)), 0.4 * (1.0 + Cos (Now)), 0.4, 1.0);
-        Offset        : constant tVec4f :=
+        Offset        : constant Singles.Vector4 :=
           (0.5 * Sin (Now), 0.5 * Cos (Now), 0.0, 0.0);
     begin
         Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
