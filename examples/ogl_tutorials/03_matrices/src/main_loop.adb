@@ -28,7 +28,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       (GL.Types.Single_Pointers);
 
     Dark_Blue           : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
-    Element_Buffer_Data : Array (0 .. 2) of GL.Types.UShort := (0, 1, 2);
+    Element_Buffer_Data : Array (1 .. 3) of GL.Types.UShort := (0, 1, 2);
     Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer       : GL.Objects.Buffers.Buffer;
     Render_Program      : GL.Objects.Programs.Program;
@@ -69,7 +69,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, 3.0);
         Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
         Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
-        Result            : GL.Types.Singles.Matrix4;
         Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
         Projection_Matrix : GL.Types.Singles.Matrix4;
         View_Matrix       : GL.Types.Singles.Matrix4;
@@ -80,15 +79,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Init_Perspective_Transform (45.0, View_Width, View_Height,
                                     0.1, 100.0, Projection_Matrix);
         Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        Result := Projection_Matrix * View_Matrix * Model_Matrix;
-        Put_Line ("MVP Matrix:");
-        for row in GL.X .. GL.W loop
-            for col in GL.X .. GL.W loop
-                Put (Single'Image (Result (row, col)) & "   ");
-            end loop;
-            New_Line;
-        end loop;
-        MVP_Matrix := Result;
+        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
+        Utilities.Print_Matrix ("MVP Matrix", MVP_Matrix);
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");

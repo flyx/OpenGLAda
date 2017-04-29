@@ -1,6 +1,5 @@
 
 with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -18,14 +17,12 @@ with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
+with Maths;
 with Program_Loader;
 with Utilities;
 with Vertex_Data;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-
-    package Math_Functions is new
-      Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     Rendering_Program     : GL.Objects.Programs.Program;
     Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -37,7 +34,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Render is
         use GL.Types;
-        use Math_Functions;
+        use Maths.Single_Math_Functions;
         Now  : Glfw.Seconds := Glfw.Time;
     begin
         Rendering_Program.Use_Program;
@@ -63,7 +60,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Vertex_Data.Load_Vertex_Buffer (Array_Buffer, Vertex_data.Vertices, Static_Draw);
+        Utilities.Load_UV_Buffer (Array_Buffer, Vertex_data.Vertices, Static_Draw);
 
         Rendering_Program := Program_From
           ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),

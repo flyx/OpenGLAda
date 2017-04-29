@@ -114,7 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                     0.1, 100.0, Projection_Matrix);
         --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
         --  The Projection_Matrix transforms view (camera) coordinates.
-        MVP_Matrix := Model_Matrix * View_Matrix * Projection_Matrix;
+        MVP_Matrix := Projection_Matrix * View_Matrix * Model_Matrix;
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
