@@ -28,7 +28,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       (GL.Types.Single_Pointers);
 
     Dark_Blue           : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
-    Element_Buffer_Data : Array (0 .. 2) of GL.Types.UShort := (0, 1, 2);
+    Element_Buffer_Data : Array (1 .. 3) of GL.Types.UShort := (0, 1, 2);
     Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer       : GL.Objects.Buffers.Buffer;
     Render_Program      : GL.Objects.Programs.Program;
