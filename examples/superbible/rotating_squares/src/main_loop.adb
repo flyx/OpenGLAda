@@ -61,12 +61,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Model_View_Matrix :=
               Maths.Rotation_Matrix (Maths.Degree (30.0 * Current_Time),
                                      (0.0, 0.0, 1.0));
-            Model_View_Matrix := Model_View_Matrix * Maths.Translation_Matrix ((0.0, 0.0, -3.0));
-            Model_View_Matrix := Model_View_Matrix *
+            Model_View_Matrix := Maths.Translation_Matrix ((0.0, 0.0, -3.0)) * Model_View_Matrix;
+            Model_View_Matrix :=
               Maths.Translation_Matrix ((2.0 * Sin (2.1 * Time_Factor),
                                         2.0 * Cos (1.7 * Time_Factor),
                                         2.0 * Sin (1.3 * Time_Factor) *
-                                         Cos (1.5 * Time_Factor)));
+                                         Cos (1.5 * Time_Factor))) * Model_View_Matrix;
 
             GL.Objects.Programs.Use_Program (Rendering_Program);
             GL.Uniforms.Set_Single (Model_View_Location, Model_View_Matrix);

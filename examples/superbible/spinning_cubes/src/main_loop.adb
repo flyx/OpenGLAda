@@ -27,7 +27,6 @@ with Vertex_Data;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Green                  : GL.Types.Colors.Color := (0.0, 0.6, 0.0, 1.0);
     Grey                   : GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
     Window_Width           : Glfw.Size := 520;
     Window_Height          : Glfw.Size := 520;
@@ -39,9 +38,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Projection_Location    : GL.Uniforms.Uniform;
     Model_View_Location    : GL.Uniforms.Uniform;
 
-    Projection_Matrix      : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-    --  Projection_Matrix_Stack : GL.Fixed.Matrix.Matrix_Stack := GL.Fixed.Matrix.Projection;
-    --  Projection_Matrix_Array : Maths.pSingles_Algebra.Matrix4_Array (1 .. 1);
+    Projection_Matrix      : GL.Types.Singles.Matrix4;
 
     Set_Up_Error           : Exception;
 
@@ -68,13 +65,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                      (0.0, 1.0, 0.0)) *
                 Maths.Rotation_Matrix (Maths.Degree (21.0 * Current_Time),
                                        (1.0, 0.0, 0.0));
-            Model_View_Matrix := Model_View_Matrix *
-              Maths.Translation_Matrix ((0.0, 0.0, -6.0));
-            Model_View_Matrix := Model_View_Matrix *
+            Model_View_Matrix :=
+              Maths.Translation_Matrix ((0.0, 0.0, -6.0)) * Model_View_Matrix;
+            Model_View_Matrix :=
               Maths.Translation_Matrix ((2.0 * Sin (2.3 * Time_Factor),
                                         2.0 * Cos (1.7 * Time_Factor),
                                         2.0 * Sin (1.1 * Time_Factor)
-                                        * Cos (1.5 * Time_Factor)));
+                                        * Cos (1.5 * Time_Factor))) * Model_View_Matrix;
 
             GL.Objects.Programs.Use_Program (Rendering_Program);
             GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
