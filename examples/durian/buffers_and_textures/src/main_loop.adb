@@ -1,13 +1,10 @@
 
 with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
-with GL.Errors;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Shaders;
@@ -25,13 +22,12 @@ with Program_Loader;
 with Utilities;
 with Vertex_Data;
 
+with Maths;
 with My_Buffers;
 
     --  ------------------------------------------------------------------------
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-    package Math_Functions is
-        new Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
     Rendering_Program     : GL.Objects.Programs.Program;
     Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -48,7 +44,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render is
         use GL.Types;
         use GL.Objects.Textures.Targets;
-        use Math_Functions;
+        use Maths.Single_Math_Functions;
 
         Back_Colour   : Colors.Color := (1.0, 1.0, 1.0, 1.0);
         Stride_Single : constant Size := 2;
