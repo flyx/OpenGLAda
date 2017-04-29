@@ -10,16 +10,12 @@ with GL.Types; use  GL.Types;
 with SOIL;
 with SOIL.Images;
 
+with Utilities;
 with Vertex_Data;
 
 package body My_Buffers is
 
     Image_Error : exception;
-
-    procedure Load_Vertex_Buffer is new
-      GL.Objects.Buffers.Load_To_Buffer (Vertex_Data.pVertex_Pointers);
-    procedure Load_Element_Buffer is new
-      GL.Objects.Buffers.Load_To_Buffer (Vertex_Data.pElement_Pointers);
 
     --  ------------------------------------------------------------------------
 
@@ -73,7 +69,7 @@ package body My_Buffers is
         Stride : GL.Types.Size := GL.Types.Size (Vertex_Data.Vertex_Array_Size);
     begin
        Make_Buffer (GL.Objects.Buffers.Array_Buffer, Vertex_Buffer);
-       Vertex_Data.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
+       Utilities.Load_UV_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
 
        Make_Buffer (GL.Objects.Buffers.Element_Array_Buffer, Element_Buffer);
        Vertex_Data.Load_Element_Buffer (Element_Array_Buffer,
