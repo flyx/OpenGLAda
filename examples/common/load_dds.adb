@@ -40,7 +40,7 @@ procedure Load_DDS (File_Name  : String;
                              Header       : DDS_Header;
                              theTexture   : out GL.Objects.Textures.Texture);
 
-    procedure Load_Mipmaps (Data_Stream   : Ada.Streams.Stream_IO.Stream_Access ;
+    procedure Load_Mipmaps (Data_Stream   : Ada.Streams.Stream_IO.Stream_Access;
                             Header        : DDS_Header;
                             Block_Size    : GL.Types.UInt;
                             Format        : GL.Pixels.Internal_Format);
