@@ -1,5 +1,6 @@
 
 with Ada.Numerics;
+with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types; use GL.Types;
 
@@ -8,14 +9,17 @@ with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 
 with Maths;
+with Utilities;
 
 package body Controls is
+    Half_Pi            : constant Single := 0.5 * Ada.Numerics.Pi;
+    -- Position, position of camera.
     Position           : GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
-    Horizontal_Angle   : Single := 3.14;
+    Horizontal_Angle   : Single := Ada.Numerics.Pi;
     Vertical_Angle     : Single := 0.0;
     Initial_View_Angle : Maths.Degree := 45.0;
     Speed              : Single := 3.0;  -- units per second
-    Mouse_Speed        : Single := 0.005;
+    Mouse_Speed        : Single := 0.5;  -- orig: 0.005
     Last_Time          : Double := Double (Glfw.Time);
 
     --  ------------------------------------------------------------------------
@@ -40,26 +44,42 @@ package body Controls is
         View_Angle         : Maths.Degree := Initial_View_Angle;
         X_Position         : Mouse.Coordinate;
         Y_Position         : Mouse.Coordinate;
+        -- Direction, position of target with respect to camera.
         Direction          : Vector3;
         Right              : Vector3;
         Up                 : Vector3;
     begin
+        Put_Line ("Delta_Time: " & Single'Image (Delta_Time));
         Window'Access.Get_Cursor_Pos (X_Position, Y_Position);
         Window'Access.Get_Size (Window_Width, Window_Height);
         Half_Window_Width := 0.5 * Single (Window_Width);
         Half_Window_Height := 0.5 * Single (Window_Height);
-        Window'Access.Set_Cursor_Pos (Mouse.Coordinate (Half_Window_Height),
-                                      Mouse.Coordinate (Half_Window_Height));
 
+        --  Reset the mouse position for next frame.
+        --  Put the cursor back to the center of the screen
+        --  or it will soon go outside the window and
+
+        Window'Access.Set_Cursor_Pos (Mouse.Coordinate (Half_Window_Width),
+                                      Mouse.Coordinate (Half_Window_Height));
+        --  For the horizontal angle, Half_Window_Width - xpos means:
+        --  How far is the mouse from the centre of the window ?
+        --  The further it is from the centre, the more we want to turn.
+        --  mouseSpeed is speeds up or slows down the rotations. Fine-tune this at will.
+        --  If the mouse isn't moved, Half_Window_Width - xpos will be 0,
+        --  and Horizontal_Angle won't change.
         Horizontal_Angle := Horizontal_Angle +
-          Mouse_Speed * (Half_Window_Width - Single (X_Position));
+          100.0 * Mouse_Speed * Delta_Time * (Half_Window_Width - Single (X_Position));
         Vertical_Angle := Vertical_Angle +
-          Mouse_Speed * (Half_Window_Height - Single (X_Position));
+          Mouse_Speed * Delta_Time * (Half_Window_Height - Single (Y_Position));
+        Put_Line ("Horizontal_Angle: " & Single'Image (Horizontal_Angle));
+        Put_Line ("Vertical_Angle: " & Single'Image (Vertical_Angle));
+
         Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
                       Sin (Vertical_Angle),
-                      Cos (Vertical_Angle) * Cos (Horizontal_Angle));
-        Right := (Sin (Horizontal_Angle - 0.5 * Ada.Numerics.Pi), 0.0,
-                  Cos (Horizontal_Angle - 0.5 * Ada.Numerics.Pi));
+                      -5.0 + Cos (Vertical_Angle) * Cos (Horizontal_Angle));
+        Utilities.Print_Vector ("Direction", Direction);
+        Right := (Sin (Horizontal_Angle - Half_Pi), 0.0,
+                  Cos (Horizontal_Angle - Half_Pi));
         Up := Singles.Cross_Product (Right, Direction);
 
         if Window'Access.Key_State (Keys.Up) = Pressed then
