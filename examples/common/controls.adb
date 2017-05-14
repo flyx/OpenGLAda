@@ -1,6 +1,5 @@
 
 with Ada.Numerics;
-with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types; use GL.Types;
 
@@ -42,22 +41,20 @@ package body Controls is
         --  But this is a bit too complicated for a beginner's tutorial,
         --  so it's not implemented in this Tutorial 14.
         View_Angle         : Maths.Degree := Initial_View_Angle;
-        X_Position         : Mouse.Coordinate;
-        Y_Position         : Mouse.Coordinate;
-        -- Direction, position of target with respect to camera.
+        X_Position         : Mouse.Coordinate := 0.00001;
+        Y_Position         : Mouse.Coordinate := 0.00002;
+        -- Direction, the position of the target with respect to camera.
         Direction          : Vector3;
         Right              : Vector3;
         Up                 : Vector3;
     begin
-        Put_Line ("Delta_Time: " & Single'Image (Delta_Time));
         Window'Access.Get_Cursor_Pos (X_Position, Y_Position);
         Window'Access.Get_Size (Window_Width, Window_Height);
         Half_Window_Width := 0.5 * Single (Window_Width);
         Half_Window_Height := 0.5 * Single (Window_Height);
 
-        --  Reset the mouse position for next frame.
-        --  Put the cursor back to the center of the screen
-        --  or it will soon go outside the window and
+        --  Reset the cursor to the center of the screen
+        --  otherwise it will soon go outside the window.
 
         Window'Access.Set_Cursor_Pos (Mouse.Coordinate (Half_Window_Width),
                                       Mouse.Coordinate (Half_Window_Height));
@@ -68,16 +65,13 @@ package body Controls is
         --  If the mouse isn't moved, Half_Window_Width - xpos will be 0,
         --  and Horizontal_Angle won't change.
         Horizontal_Angle := Horizontal_Angle +
-          100.0 * Mouse_Speed * Delta_Time * (Half_Window_Width - Single (X_Position));
+          Mouse_Speed * Delta_Time * (Half_Window_Width - Single (X_Position));
         Vertical_Angle := Vertical_Angle +
           Mouse_Speed * Delta_Time * (Half_Window_Height - Single (Y_Position));
-        Put_Line ("Horizontal_Angle: " & Single'Image (Horizontal_Angle));
-        Put_Line ("Vertical_Angle: " & Single'Image (Vertical_Angle));
 
         Direction := (Cos (Vertical_Angle) * Sin (Horizontal_Angle),
                       Sin (Vertical_Angle),
-                      -5.0 + Cos (Vertical_Angle) * Cos (Horizontal_Angle));
-        Utilities.Print_Vector ("Direction", Direction);
+                      Cos (Vertical_Angle) * Cos (Horizontal_Angle));
         Right := (Sin (Horizontal_Angle - Half_Pi), 0.0,
                   Cos (Horizontal_Angle - Half_Pi));
         Up := Singles.Cross_Product (Right, Direction);
@@ -95,7 +89,7 @@ package body Controls is
         Maths.Init_Perspective_Transform (View_Angle, Single (Window_Width),
                                     Single (Window_Height), 0.1, 100.0,
                                     Projection_Matrix);
-        Maths.Init_Lookat_Transform (Position, Position + Direction, Up,
+        Maths.Init_Lookat_Transform (Position, Direction, Up,
                                      View_Matrix);
 
         Last_Time := Current_Time;
