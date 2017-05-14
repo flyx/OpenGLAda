@@ -67,7 +67,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         GL.Objects.Textures.Set_Active_Unit (0);
         GL.Objects.Textures.Targets.Texture_2D.Bind (Cube_Texture);
-        --  Set myTextureSampler sampler to use Texture Unit 0
         GL.Uniforms.Set_Int (Texture_ID, 0);
 
         --  First attribute buffer : vertices
@@ -98,36 +97,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               Render_Program : GL.Objects.Programs.Program) is
         use GL.Types;
         use GL.Types.Singles;
---        use Maths;
-        --  Camera position, Look_At and Up are world coordinates.
---          Camera_Position   : Vector3 := (4.0, 3.0, -3.0);
---          Look_At           : Vector3 := (0.0, 0.0, 0.0);
---          Up                : Vector3 := (0.0, 1.0, 0.0);
-        --  The Model_Matrix operates in world coordinates.
         Model_Matrix      : Matrix4 := Singles.Identity4;
-        --  The Projection_Matrix projects the camera view in camera coordinates
-        --  onto the camera view's Near plane
         Projection_Matrix : Matrix4;
-        --  The View_Matrix transforms the world_cordinates of the world view
-        --  into view (camera) coordinates.
         View_Matrix       : Matrix4;
---          Window_Width      : Glfw.Size;
---          Window_Height     : Glfw.Size;
     begin
---          Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP_5");
 
---     Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
         Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
---          Init_Perspective_Transform (45.0, Single (Window_Width),
---                                            Single (Window_Height),
---                                      0.1, 100.0, Projection_Matrix);
-        --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
 
        MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-       Utilities.Print_Matrix ("View_Matrix", View_Matrix);
-       Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
     exception
         when others =>
             Put_Line ("An exception occurred in Set_MVP_Matrix.");
@@ -143,6 +122,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Shaders;
         use GL.Objects.Textures.Targets;
     begin
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Enter);
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
         Utilities.Clear_Background_Colour (Dark_Blue);
 
