@@ -25,6 +25,7 @@ with Glfw.Input.Mouse;
 with Glfw.Windows;
 with Glfw.Windows.Context;
 
+with Controls;
 with Cube_Data;
 with Maths;
 with Program_Loader;
@@ -105,7 +106,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Model_Matrix      : Matrix4 := Singles.Identity4;
         --  The Projection_Matrix projects the camera view in camera coordinates
         --  onto the camera view's Near plane
-        Projection_Matrix : Matrix4 := Singles.Identity4;
+        Projection_Matrix : Matrix4;
         --  The View_Matrix transforms the world_cordinates of the world view
         --  into view (camera) coordinates.
         View_Matrix       : Matrix4;
@@ -117,9 +118,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Render_Program, "MVP_5");
 
         Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        Init_Perspective_Transform (45.0, Single (Window_Width),
-                                          Single (Window_Height),
-                                    0.1, 100.0, Projection_Matrix);
+        Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
+--          Init_Perspective_Transform (45.0, Single (Window_Width),
+--                                            Single (Window_Height),
+--                                      0.1, 100.0, Projection_Matrix);
         --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
 
         --  As OpenGLAda matrices are in column row order, unconventionally,
