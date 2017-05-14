@@ -19,8 +19,6 @@ procedure Initialize (Main_Window  : in out Glfw.Windows.Window;
     begin
         Main_Window.Enable_Callback (Glfw.Windows.Callbacks.Size);
         Main_Window.Enable_Callback (Glfw.Windows.Callbacks.Key);
-        Main_Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Button);
-        Main_Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Scroll);
     end Enable_Callbacks;
 
     --  ------------------------------------------------------------------------
