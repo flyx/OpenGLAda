@@ -121,14 +121,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
         use GL.Objects.Textures.Targets;
+        use Glfw.Input;
+        Window_Width       : Glfw.Size;
+        Window_Height      : Glfw.Size;
     begin
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Enter);
-        Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
+        Window.Set_Input_Toggle (Sticky_Keys, True);
+        Window.Set_Cursor_Mode (Mouse.Disabled);
+        Glfw.Input.Poll_Events;
+
+        Window'Access.Get_Size (Window_Width, Window_Height);
+        Window'Access.Set_Cursor_Pos (Mouse.Coordinate (0.5 * Single (Window_Width)),
+                                      Mouse.Coordinate (0.5 * Single (Window_Height)));
         Utilities.Clear_Background_Colour (Dark_Blue);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
         GL.Buffers.Set_Depth_Function (GL.Types.Less);
+        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
         Vertices_Array_Object.Initialize_Id;
         Vertices_Array_Object.Bind;
@@ -153,7 +161,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         UVs_Buffer.Initialize_Id;
         Array_Buffer.Bind (UVs_Buffer);
         Utilities.Load_UV_Buffer (Array_Buffer, Cube_Data.UV_Data, Static_Draw);
-
+        Utilities.Enable_Mouse_Callbacks (Window, True);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
     exception
         when others =>
             Put_Line ("An exception occurred in Setup.");
@@ -166,8 +176,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Running : Boolean := True;
 begin
     Setup (Main_Window);
-    while Running loop
-        Delay (1.0);
+       while Running loop
         Render (Main_Window);
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
