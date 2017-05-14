@@ -105,7 +105,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Model_Matrix      : Matrix4 := Singles.Identity4;
         --  The Projection_Matrix projects the camera view in camera coordinates
         --  onto the camera view's Near plane
-        Projection_Matrix : Matrix4 := Singles.Identity4;
+        Projection_Matrix : Matrix4;
         --  The View_Matrix transforms the world_cordinates of the world view
         --  into view (camera) coordinates.
         View_Matrix       : Matrix4;
