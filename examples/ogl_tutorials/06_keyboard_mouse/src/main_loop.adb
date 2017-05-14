@@ -4,22 +4,18 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
-with GL.Errors;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
 
-with Glfw;
-with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 with Glfw.Windows;

@@ -3,12 +3,10 @@ with Ada.Numerics;
 
 with GL.Types; use GL.Types;
 
-with Glfw;
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 
 with Maths;
-with Utilities;
 
 package body Controls is
     Half_Pi            : constant Single := 0.5 * Ada.Numerics.Pi;
