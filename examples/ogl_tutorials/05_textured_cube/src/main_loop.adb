@@ -4,22 +4,18 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
-with GL.Errors;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
 
-with Glfw;
-with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 with Glfw.Windows;
@@ -120,10 +116,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Init_Perspective_Transform (45.0, Single (Window_Width),
                                           Single (Window_Height),
                                     0.1, 100.0, Projection_Matrix);
-        --  The View_Matrix transforms world_cordinates to view (camera) coordinates.
-
-        --  As OpenGLAda matrices are in column row order, unconventionally,
-        --  multiplication operates from the right.
        MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
     exception
         when others =>
