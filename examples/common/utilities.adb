@@ -9,6 +9,7 @@ with GL.Objects.Shaders.Lists;
 with GL.Types.Colors;
 
 package body Utilities is
+
 --  Set_Color_Clear_Value sets the value to which a buffer should be set
 --  when cleared.
 --  Clear "clears" selected values to the previously selected value set by
@@ -34,6 +35,23 @@ package body Utilities is
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
     end Clear_Background_Colour_And_Depth;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean) is
+    begin
+        if Enable then
+            Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
+            Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Enter);
+            Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Button);
+            Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Scroll);
+        else
+            Window.Disable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
+            Window.Disable_Callback (Glfw.Windows.Callbacks.Mouse_Enter);
+            Window.Disable_Callback (Glfw.Windows.Callbacks.Mouse_Button);
+            Window.Disable_Callback (Glfw.Windows.Callbacks.Mouse_Scroll);
+        end if;
+    end;
 
     --  ------------------------------------------------------------------------
 
