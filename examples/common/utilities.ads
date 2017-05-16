@@ -4,6 +4,8 @@ with GL.Objects.Programs;
 with GL.Types;
 with GL.Types.Colors;
 
+with Glfw.Windows;
+
 with Maths;
 
 package Utilities is
@@ -11,6 +13,7 @@ package Utilities is
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
+    procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean);
     procedure Load_UV_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
     procedure Load_Vertex_Buffer is new

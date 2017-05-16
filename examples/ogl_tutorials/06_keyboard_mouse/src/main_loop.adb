@@ -21,6 +21,7 @@ with Glfw.Input.Mouse;
 with Glfw.Windows;
 with Glfw.Windows.Context;
 
+with Controls;
 with Cube_Data;
 with Maths;
 with Program_Loader;
@@ -57,11 +58,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
         GL.Objects.Programs.Use_Program (Render_Program);
+        Set_MVP_Matrix (Window, Render_Program);
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         GL.Objects.Textures.Set_Active_Unit (0);
         GL.Objects.Textures.Targets.Texture_2D.Bind (Cube_Texture);
-        --  Set myTextureSampler sampler to use Texture Unit 0
         GL.Uniforms.Set_Int (Texture_ID, 0);
 
         --  First attribute buffer : vertices
@@ -92,30 +93,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               Render_Program : GL.Objects.Programs.Program) is
         use GL.Types;
         use GL.Types.Singles;
-        use Maths;
-        --  Camera position, Look_At and Up are world coordinates.
-        Camera_Position   : Vector3 := (4.0, 3.0, -3.0);
-        Look_At           : Vector3 := (0.0, 0.0, 0.0);
-        Up                : Vector3 := (0.0, 1.0, 0.0);
-        --  The Model_Matrix operates in world coordinates.
         Model_Matrix      : Matrix4 := Singles.Identity4;
-        --  The Projection_Matrix projects the camera view in camera coordinates
-        --  onto the camera view's Near plane
         Projection_Matrix : Matrix4;
-        --  The View_Matrix transforms the world_cordinates of the world view
-        --  into view (camera) coordinates.
         View_Matrix       : Matrix4;
-        Window_Width      : Glfw.Size;
-        Window_Height     : Glfw.Size;
     begin
-        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP_5");
 
-        Init_Lookat_Transform (Camera_Position, Look_At, Up, View_Matrix);
-        Init_Perspective_Transform (45.0, Single (Window_Width),
-                                          Single (Window_Height),
-                                    0.1, 100.0, Projection_Matrix);
+        Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
+
        MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
     exception
         when others =>
@@ -131,12 +117,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
         use GL.Objects.Textures.Targets;
+        use Glfw.Input;
+        Window_Width       : Glfw.Size;
+        Window_Height      : Glfw.Size;
     begin
-        Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
+        Window.Set_Input_Toggle (Sticky_Keys, True);
+        Window.Set_Cursor_Mode (Mouse.Disabled);
+        Glfw.Input.Poll_Events;
+
+        Window'Access.Get_Size (Window_Width, Window_Height);
+        Window'Access.Set_Cursor_Pos (Mouse.Coordinate (0.5 * Single (Window_Width)),
+                                      Mouse.Coordinate (0.5 * Single (Window_Height)));
         Utilities.Clear_Background_Colour (Dark_Blue);
 
         GL.Toggles.Enable (GL.Toggles.Depth_Test);
         GL.Buffers.Set_Depth_Function (GL.Types.Less);
+        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
         Vertices_Array_Object.Initialize_Id;
         Vertices_Array_Object.Bind;
@@ -161,7 +157,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         UVs_Buffer.Initialize_Id;
         Array_Buffer.Bind (UVs_Buffer);
         Utilities.Load_UV_Buffer (Array_Buffer, Cube_Data.UV_Data, Static_Draw);
-
+        Utilities.Enable_Mouse_Callbacks (Window, True);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
     exception
         when others =>
             Put_Line ("An exception occurred in Setup.");
@@ -174,8 +172,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Running : Boolean := True;
 begin
     Setup (Main_Window);
-    while Running loop
-        Delay (1.0);
+       while Running loop
         Render (Main_Window);
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
