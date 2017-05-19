@@ -1,15 +1,26 @@
 
+with Interfaces.C.Pointers;
+
 with Ada.Numerics.Generic_Elementary_Functions;
 
 with GL.Types; use GL.Types;
 
 package Maths is
 
+    type Degree is new Single;
+    type Radian is new Single;
+
+    type Index_5 is (X, Y, Z, U, V);
+    type Vector5 is array (Index_5) of aliased Single;
+    pragma Convention (C, Vector5);
+    type Vector5_Array is array (Size range <>) of aliased Vector5;
+    pragma Convention (C, Vector5_Array);
+
     package Single_Math_Functions is new
       Ada.Numerics.Generic_Elementary_Functions (GL.Types.Single);
 
-    type Degree is new Single;
-    type Radian is new Single;
+    package Vector5_Pointers is new Interfaces.C.Pointers
+      (Size, Vector5, Vector5_Array, Vector5'(others => <>));
 
     function Degrees (Angle : Radian) return Degree;
     procedure Init_Lookat_Transform
