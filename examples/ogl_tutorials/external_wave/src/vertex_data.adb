@@ -1,0 +1,163 @@
+
+with Ada.Exceptions; use Ada.Exceptions;
+with Ada.Numerics;
+with Ada.Text_IO; use Ada.Text_IO;
+
+package body Vertex_Data is
+
+   procedure Adjust_Grid (Pressure : in out Grid_Array) is
+      use Maths;
+      Position : Int;
+   begin
+        for y_index in 1 .. Grid_Height loop
+            for x_index in 1 .. Grid_Width loop
+                Position := (y_index - 1) * Grid_Width + x_index;
+                Vertex_Buffer_Data (Position) (Z) :=
+                  Single (Pressure (x_index, y_index)) / 50.0;
+            end loop;
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Adjust_Grid.");
+            raise;
+   end Adjust_Grid;
+
+    --  ----------------------------------------------------------------------------
+
+    procedure Initialize_Grid (Pressure : in out Grid_Array;
+                               Vel_X    : in out Grid_Array;
+                               Vel_Y    : in out Grid_Array) is
+        Half_Height  : constant single := single (Grid_Height) / 2.0;
+        Half_Width   : constant single := single (Grid_Width) / 2.0;
+        dx           : single;
+        dy           : single;
+        d            : single;
+    begin
+        for y_index in 1 .. Grid_Height loop
+            for x_index in 1 .. Grid_Width loop
+                dx := single (x_index) - Half_Width;
+                dy := single (y_index) - Half_Height;
+                d := Single_Functions.Sqrt (dx * dx + dy * dy);
+                if d < 0.1 * Half_Width then
+                    d := 10.0 * d;
+                    Pressure (x_index, y_index) := -100.0 *
+                      Single_Functions.Cos (d * Ada.Numerics.Pi / single (4 * Grid_Width));
+                else
+                    Pressure (x_index, y_index) := 0.0;
+                end if;
+                Vel_X (x_index, y_index) := 0.0;
+                Vel_Y (x_index, y_index) := 0.0;
+            end loop;
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Initialize_Grid.");
+            raise;
+    end Initialize_Grid;
+
+    --  ----------------------------------------------------------------------------
+    --  Iniialize_Vertices places the vertices in a grid
+    procedure Initialize_Vertices (Vertices      : in out Vertices_Array;
+                                   Quad_Elements : in out Elements_Array) is
+      use Maths;
+        Half_Height  : constant single := single (Grid_Height) / 2.0;
+        Half_Width   : constant single := single (Grid_Width) / 2.0;
+        V_Point      : Int;
+        Q_Point      : Int;
+        Vym1_GW      : Int;
+        Qym1_GW      : Int;
+    begin
+        for y_index in Int range 1 .. Grid_Height loop
+            Vym1_GW := (y_index - 1) * Grid_Width;
+            for x_index in Int range 1 .. Grid_Width loop
+                V_Point := Vym1_GW + x_index;
+                Vertices (V_Point) (X) := single (x_index) - Half_Width / single (Half_Width);
+                Vertices (V_Point) (Y) := single (y_index) - Half_Width / single (Half_Height);
+                Vertices (V_Point) (Z) := 0.0;
+
+                if (x_index mod 4 < 2) and then (y_index mod 4 < 2) then
+                    Vertices (V_Point) (R) := 0.0;
+                else
+                    Vertices (V_Point) (R) := 0.0;
+                end if;
+                Vertices (V_Point) (G) := single (y_index) / single (Grid_Height);
+                Vertices (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
+                  single (y_index) / single (Grid_Height) / 2.0;
+            end loop;
+        end loop;
+
+        for y_index in Int range  1 .. Int (Quad_Height - 1) loop
+            Qym1_GW := (y_index - 1) * Int (Grid_Width);
+            for x_index in Int range 1 .. Int (Quad_Width - 1) loop
+                Q_Point := Qym1_GW + x_index;
+--                  Put_Line ("Initialize_Vertices, x, y, point: " & Int'Image (x_index)
+--                   & ",  " & Int'Image (y_index)& ",  " & Int'Image (point));
+                Quad_Elements (Q_Point) := Qym1_GW + x_index;                            --  a point
+                Quad_Elements (Q_Point + 1) := Qym1_GW + x_index + 1;                    --  right side neighbour
+                Quad_Elements (Q_Point + 2) := y_index * Int (Grid_Width) + x_index + 1; --  upper right neighbour
+                Quad_Elements (Q_Point + 3) := y_index * Int (Grid_Width) + x_index;     --  upper neighbour
+            end loop;
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Initialize_Vertices.");
+            raise;
+    end Initialize_Vertices;
+
+    --  ----------------------------------------------------------------------------
+
+    procedure Propogate_Wave (Pressure : in out Grid_Array;
+                              Vel_X    : in out Grid_Array;
+                              Vel_Y    : in out Grid_Array;
+                              dt       : single) is
+        Animation_Speed : constant single := 10.0;
+        Time_Step       : single := dt * Animation_Speed;
+        Acc_X           : Grid_Array;
+        Acc_Y           : Grid_Array;
+        x2              : Int;
+        y2              : Int;
+    begin
+        for x_index in 0 .. Grid_Width - 1 loop
+            x2 := (x_index + 1) mod Grid_Width;
+            for y_index in 0 .. Grid_Height - 1 loop
+                Acc_X (x_index, y_index) := Pressure (x_index, y_index) - Pressure (x2, y_index);
+            end loop;
+        end loop;
+
+        for y_index in 0 .. Grid_Height - 1 loop
+            y2 := (y_index + 1) mod Grid_Height;
+            for x_index in 0 .. Grid_Width - 1 loop
+                Acc_Y (x_index, y_index) := Pressure (x_index, y_index) - Pressure (x_index, y2);
+            end loop;
+        end loop;
+
+        for x_index in 0 .. Grid_Width - 1 loop
+            x2 := (x_index + 1) mod Grid_Width;
+            for y_index in 0 .. Grid_Height - 1 loop
+                Vel_X (x_index, y_index) := Vel_X (x_index, y_index) + Acc_X (x_index, y_index) * Time_Step;
+                Vel_Y (x_index, y_index) := Vel_Y (x_index, y_index) + Acc_Y (x_index, y_index) * Time_Step;
+            end loop;
+        end loop;
+
+        for x_index in 0 .. Grid_Width - 1 loop
+            x2 := x_index - 1;
+            for y_index in 0 .. Grid_Height - 1 loop
+                y2 := y_index - 1;
+                Pressure (x_index, y_index) := Pressure (x_index, y_index) +
+                  (Vel_X (x2, y_index) - Vel_X (x_index, y_index) -
+                   Vel_Y (x_index, y2) - Vel_Y (x_index, y_index) ) * Time_Step;
+            end loop;
+        end loop;
+
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Propogate_Wave.");
+            raise;
+    end Propogate_Wave;
+
+    --  ----------------------------------------------------------------------------
+
+end Vertex_Data;
