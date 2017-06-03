@@ -36,7 +36,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     Vertices_Buffer : GL.Objects.Buffers.Buffer;
     Render_Program  : GL.Objects.Programs.Program;
     MVP_Matrix_ID   : GL.Uniforms.Uniform;
-    MVP_Matrix      : GL.Types.Singles.Matrix4;
+   MVP_Matrix      : GL.Types.Singles.Matrix4;
+   Last_Time       : GL.Types.Single;
     Running         : Boolean := True;
 
     --  ------------------------------------------------------------------------
@@ -45,9 +46,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Objects.Buffers;
 
-        Black : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+      Black    : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+      Now      : Single := Single (Glfw.Time);
+      dt_Total : Single := Now - Last_Time;
     begin
-        Utilities.Clear_Background_Colour_And_Depth (Black);
+      Utilities.Clear_Background_Colour_And_Depth (Black);
+      Last_Time := Now;
         GL.Objects.Programs.Use_Program (Render_Program);
 
         Control_Wave.Check_Input (Window);
@@ -113,7 +117,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "MVP_5");
         Control_Wave.Get_Settings (Alpha, Beta, Zoom);
-        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, - Zoom)) * Singles.Identity4;
+        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom)) * Singles.Identity4;
         MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
         MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
 
@@ -150,9 +154,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         GL.Rasterization.Set_Point_Size (2.0);
 
-        Control_Wave.Get_Data (Pressure, Vel_X , Vel_Y);
-        Vertex_Data.Initialize_Grid (Pressure, Vel_X , Vel_Y);
+        Control_Wave.Get_Data (Pressure, Vel_X, Vel_Y);
+        Vertex_Data.Initialize_Grid (Pressure, Vel_X, Vel_Y);
         Vertex_Data.Initialize_Vertices (Vertices, Quad_Elems);
+      Vertex_Data.Adjust_Grid (Pressure);
+      Last_Time := Single (Glfw.Time) - 0.01;
 
         Render_Program := Program_From
           ((Src ("src/shaders/simple_vertex_shader.glsl", Vertex_Shader),
