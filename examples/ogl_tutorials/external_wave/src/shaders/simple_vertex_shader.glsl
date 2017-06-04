@@ -5,11 +5,11 @@ layout(location = 1) in vec3 vertex_Colour;
 
 out vec3 colour_vs;
 
-uniform mat4 mvp;
+uniform mat4 MVP_Matrix;
 
 void main()
 {
-    gl_Position =  mvp * vec4(vertex_Position, 1.0);
+    gl_Position =  MVP_Matrix * vec4(vertex_Position, 1.0);
     colour_vs = vertex_Colour;
 }
 

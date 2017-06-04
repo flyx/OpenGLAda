@@ -12,6 +12,7 @@ with GL.Rasterization;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
+with GL.Window;
 
 with Glfw;
 with Glfw.Input;
@@ -28,17 +29,23 @@ with Vertex_Data;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
-    Vertices        : Vertex_Data.Vertices_Array;
-    Quad_Elems      : Vertex_Data.Elements_Array;
-
     Vertex_Array    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Elements_Buffer : GL.Objects.Buffers.Buffer;
     Vertices_Buffer : GL.Objects.Buffers.Buffer;
     Render_Program  : GL.Objects.Programs.Program;
     MVP_Matrix_ID   : GL.Uniforms.Uniform;
-   MVP_Matrix      : GL.Types.Singles.Matrix4;
-   Last_Time       : GL.Types.Single;
+    MVP_Matrix      : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
+    Pressure        : Vertex_Data.Grid_Array;
+    Vel_X           : Vertex_Data.Grid_Array;
+    Vel_Y           : Vertex_Data.Grid_Array;
+    Last_Time       : GL.Types.Single;
+    dt              : GL.Types.Single := 0.0;
     Running         : Boolean := True;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Set_MVP_Matrix (Window         : in out Glfw.Windows.Window;
+                              Render_Program : GL.Objects.Programs.Program);
 
     --  ------------------------------------------------------------------------
 
@@ -46,35 +53,56 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Objects.Buffers;
 
-      Black    : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
-      Now      : Single := Single (Glfw.Time);
-      dt_Total : Single := Now - Last_Time;
+        Black         : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+        Window_Width  : Glfw.Size;
+        Window_Height : Glfw.Size;
+        Now           : Single := Single (Glfw.Time);
+        dt_Total      : Single := Now - Last_Time;
     begin
-      Utilities.Clear_Background_Colour_And_Depth (Black);
-      Last_Time := Now;
+        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+        GL.Window.Set_Viewport (0, 0, Int (Window_Width),
+                                GL.Types.Int (Window_Height));
+        Utilities.Clear_Background_Colour_And_Depth (Black);
+        Last_Time := Now;
+
+        while dt_Total > 0.0 loop
+            if dt_Total > Vertex_Data.Max_dt then
+                dt := Vertex_Data.Max_dt;
+            else
+                dt := dt_Total;
+            end if;
+            dt_Total := dt_Total - dt;
+            Vertex_Data.Calculate_Grid (Pressure, Vel_X, Vel_Y, dt);
+        end loop;
+
         GL.Objects.Programs.Use_Program (Render_Program);
 
         Control_Wave.Check_Input (Window);
+        Set_MVP_Matrix (Window, Render_Program);
+        GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         Vertices_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertices_Buffer);
         Utilities.Load_Vector6_Buffer (Array_Buffer,
-                    Vertex_Data.Vertex_Buffer_Data, Static_Draw);
+                                       Vertex_Data.Vertex_Buffer_Data, Static_Draw);
 
         Elements_Buffer.Initialize_Id;
         Element_Array_Buffer.Bind (Elements_Buffer);
         Vertex_Data.Load_Element_Buffer (Element_Array_Buffer,
-                    Vertex_Data.Quad_Element_Array, Static_Draw);
+                                         Vertex_Data.Quad_Element_Array, Static_Draw);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
+                                                 Kind   => Single_Type,
+                                                 Stride => 0, Offset => 0);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 3, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 3, 0);
 
         Put_Line ("OK 3 in Render.");
-        Draw_Elements (Quads, GL.Types.Size (4 * Vertex_Data.Num_Quads), UInt_Type);
+        Draw_Elements (GL.Types.Quads, GL.Types.Size (4 * Vertex_Data.Num_Quads), UInt_Type);
         Put_Line ("OK 4 in Render.");
+
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
         GL.Attributes.Disable_Vertex_Attrib_Array (1);
 
@@ -110,16 +138,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Alpha             : Degree;
         Beta              : Degree;
         Zoom              : Single;
-        Window_Width      : Glfw.Size;
-        Window_Height     : Glfw.Size;
     begin
-        Window.Get_Framebuffer_Size (Window_Width, Window_Height);
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MVP_5");
+          (Render_Program, "MVP_Matrix");
         Control_Wave.Get_Settings (Alpha, Beta, Zoom);
-        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom)) * Singles.Identity4;
-        MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
-        MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
+--          MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom)) * Singles.Identity4;
+--          MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
+--          MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
 
     exception
         when others =>
@@ -136,14 +161,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use Glfw.Input;
         use Program_Loader;
 
-        Pressure      : Vertex_Data.Grid_Array;
-        Vel_X         : Vertex_Data.Grid_Array;
-        Vel_Y         : Vertex_Data.Grid_Array;
         Window_Width  : Glfw.Size;
         Window_Height : Glfw.Size;
     begin
         Window.Set_Input_Toggle (Sticky_Keys, True);
         Window.Set_Cursor_Mode (Mouse.Disabled);
+        Glfw.Windows.Context.Set_Swap_Interval (1);
         Glfw.Input.Poll_Events;
 
         Window'Access.Get_Size (Window_Width, Window_Height);
@@ -155,10 +178,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         GL.Rasterization.Set_Point_Size (2.0);
 
         Control_Wave.Get_Data (Pressure, Vel_X, Vel_Y);
+        Vertex_Data.Initialize_Vertices;
         Vertex_Data.Initialize_Grid (Pressure, Vel_X, Vel_Y);
-        Vertex_Data.Initialize_Vertices (Vertices, Quad_Elems);
-      Vertex_Data.Adjust_Grid (Pressure);
-      Last_Time := Single (Glfw.Time) - 0.01;
+        Vertex_Data.Adjust_Grid (Pressure);
+        Last_Time := Single (Glfw.Time) - 0.01;
 
         Render_Program := Program_From
           ((Src ("src/shaders/simple_vertex_shader.glsl", Vertex_Shader),

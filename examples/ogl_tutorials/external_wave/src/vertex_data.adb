@@ -23,7 +23,47 @@ package body Vertex_Data is
             raise;
    end Adjust_Grid;
 
-    --  ----------------------------------------------------------------------------
+       --  ------------------------------------------------------------------------
+
+    procedure Calculate_Grid (Pressure : in out Grid_Array;
+                              Vel_X    : in out Grid_Array;
+                              Vel_Y    : in out Grid_Array;
+                              dt       : single) is
+        Acc_X     : Grid_Array;
+        Acc_Y     : Grid_Array;
+        X2        : int;
+        Y2        : int;
+        Time_Step : single := dt * Animation_Speed;
+    begin
+        for X in 1 .. Grid_Width loop
+            X2 := X mod Grid_Width;
+            for Y in 1 .. Grid_Height loop
+                Acc_X (X, Y) := Pressure (X, Y) - Pressure (X2, Y);
+            end loop;
+        end loop;
+        for Y in 1 .. Grid_Height loop
+            Y2 := Y mod Grid_Height;
+            for X in 1 .. Grid_Width loop
+                Acc_Y (X, Y) := Pressure (X, Y) - Pressure (X, Y2);
+            end loop;
+        end loop;
+        for X in 1 .. Grid_Width loop
+            for Y in 1 .. Grid_Height loop
+                Vel_X (X, Y) := Vel_X (X, Y) + Acc_X (X, Y) * Time_Step;
+                Vel_Y (X, Y) := Vel_Y (X, Y) + Acc_Y (X, Y) * Time_Step;
+            end loop;
+        end loop;
+        for X in 2 .. Grid_Width loop
+            X2 := X - 1;
+            for Y in 2 .. Grid_Height loop
+                Y2 := Y - 1;
+                Pressure (X, Y) := Pressure (X, Y) + (Vel_X (X2, Y) - Vel_X (X, Y)
+                                   + Vel_Y (X, Y2) - Vel_Y (X, Y)) * Time_Step;
+            end loop;
+        end loop;
+    end Calculate_Grid;
+
+    --  ------------------------------------------------------------------------
 
     procedure Initialize_Grid (Pressure : in out Grid_Array;
                                Vel_X    : in out Grid_Array;
@@ -59,8 +99,7 @@ package body Vertex_Data is
 
     --  ----------------------------------------------------------------------------
     --  Iniialize_Vertices places the vertices in a grid
-    procedure Initialize_Vertices (Vertices      : in out Vertices_Array;
-                                   Quad_Elements : in out Elements_Array) is
+    procedure Initialize_Vertices is
       use Maths;
         Half_Height  : constant single := single (Grid_Height) / 2.0;
         Half_Width   : constant single := single (Grid_Width) / 2.0;
@@ -73,17 +112,17 @@ package body Vertex_Data is
             Vym1_GW := (y_index - 1) * Grid_Width;
             for x_index in Int range 1 .. Grid_Width loop
                 V_Point := Vym1_GW + x_index;
-                Vertices (V_Point) (X) := single (x_index) - Half_Width / single (Half_Width);
-                Vertices (V_Point) (Y) := single (y_index) - Half_Width / single (Half_Height);
-                Vertices (V_Point) (Z) := 0.0;
+                Vertex_Buffer_Data (V_Point) (X) := single (x_index) - Half_Width / single (Half_Width);
+                Vertex_Buffer_Data (V_Point) (Y) := single (y_index) - Half_Width / single (Half_Height);
+                Vertex_Buffer_Data (V_Point) (Z) := 0.0;
 
                 if (x_index mod 4 < 2) and then (y_index mod 4 < 2) then
-                    Vertices (V_Point) (R) := 0.0;
+                    Vertex_Buffer_Data (V_Point) (R) := 0.0;
                 else
-                    Vertices (V_Point) (R) := 0.0;
+                    Vertex_Buffer_Data (V_Point) (R) := 0.0;
                 end if;
-                Vertices (V_Point) (G) := single (y_index) / single (Grid_Height);
-                Vertices (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
+                Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
+                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
                   single (y_index) / single (Grid_Height) / 2.0;
             end loop;
         end loop;
@@ -94,10 +133,10 @@ package body Vertex_Data is
                 Q_Point := Qym1_GW + x_index;
 --                  Put_Line ("Initialize_Vertices, x, y, point: " & Int'Image (x_index)
 --                   & ",  " & Int'Image (y_index)& ",  " & Int'Image (point));
-                Quad_Elements (Q_Point) := Qym1_GW + x_index;                            --  a point
-                Quad_Elements (Q_Point + 1) := Qym1_GW + x_index + 1;                    --  right side neighbour
-                Quad_Elements (Q_Point + 2) := y_index * Int (Grid_Width) + x_index + 1; --  upper right neighbour
-                Quad_Elements (Q_Point + 3) := y_index * Int (Grid_Width) + x_index;     --  upper neighbour
+                Quad_Element_Array (Q_Point) := Qym1_GW + x_index;                            --  a point
+                Quad_Element_Array (Q_Point + 1) := Qym1_GW + x_index + 1;                    --  right side neighbour
+                Quad_Element_Array (Q_Point + 2) := y_index * Int (Grid_Width) + x_index + 1; --  upper right neighbour
+                Quad_Element_Array (Q_Point + 3) := y_index * Int (Grid_Width) + x_index;     --  upper neighbour
             end loop;
         end loop;
 
@@ -148,7 +187,7 @@ package body Vertex_Data is
                 y2 := y_index - 1;
                 Pressure (x_index, y_index) := Pressure (x_index, y_index) +
                   (Vel_X (x2, y_index) - Vel_X (x_index, y_index) -
-                   Vel_Y (x_index, y2) - Vel_Y (x_index, y_index) ) * Time_Step;
+                   Vel_Y (x_index, y2) - Vel_Y (x_index, y_index)) * Time_Step;
             end loop;
         end loop;
 

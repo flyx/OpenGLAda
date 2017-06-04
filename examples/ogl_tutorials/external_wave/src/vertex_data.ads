@@ -21,6 +21,9 @@ package Vertex_Data is
     Quad_Width   : constant Int := Grid_Width - 1;
     Num_Quads    : constant Int := Quad_Width * Quad_Height;
 
+    Animation_Speed : constant single := 10.0;
+    Max_dt          : constant single := 0.01;
+
    type Grid_Array is array (1 .. Grid_Width, 1 .. Grid_Height) of single;
 
     --   The grid will look like this:
@@ -42,13 +45,14 @@ package Vertex_Data is
         Blue  : single;
     end record;
 
-   subtype Vertices_Array is  Maths.Vector6_Array (1 .. Num_Vertices);
-   subtype Elements_Array is Int_Array (1 .. 4 * Num_Quads);
-
-    Vertex_Buffer_Data : Vertices_Array;
-    Quad_Element_Array : Elements_Array;
+    Vertex_Buffer_Data : Maths.Vector6_Array (1 .. Num_Vertices);
+    Quad_Element_Array : Int_Array (1 .. 4 * Num_Quads);
 
     procedure Adjust_Grid (Pressure    : in out Grid_Array);
+    procedure Calculate_Grid (Pressure : in out Grid_Array;
+                              Vel_X    : in out Grid_Array;
+                              Vel_Y    : in out Grid_Array;
+                              dt       : single);
     procedure Propogate_Wave (Pressure : in out Grid_Array;
                               Vel_X    : in out Grid_Array;
                               Vel_Y    : in out Grid_Array;
@@ -56,6 +60,5 @@ package Vertex_Data is
     procedure Initialize_Grid (Pressure : in out Grid_Array;
                               Vel_X    : in out Grid_Array;
                               Vel_Y    : in out Grid_Array);
-    procedure Initialize_Vertices (Vertices      : in out Vertices_Array;
-                                   Quad_Elements : in out Elements_Array);
+    procedure Initialize_Vertices;
 end Vertex_Data;
