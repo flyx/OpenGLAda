@@ -79,6 +79,30 @@ package body Utilities is
 
     --  ------------------------------------------------------------------------
 
+    procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
+        end loop;
+        New_Line;
+    end Print_Array6;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Put_line (Int'Image (Index) & ":  " & Int'Image (anArray (Index)));
+        end loop;
+        New_Line;
+    end Print_GL_Int_Array;
+
+    --  ------------------------------------------------------------------------
+
     procedure Print_Matrix (Name    : String;
                             aMatrix : GL.Types.Singles.Matrix3) is
         use GL.Types.Singles;
@@ -134,6 +158,17 @@ package body Utilities is
     --  ------------------------------------------------------------------------
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4) is
+    begin
+        Put (Name & ":  ");
+        for Index in aVector'Range loop
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
+        end loop;
+        New_Line;
+    end Print_Vector;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Vector (Name : String; aVector : Maths.Vector6) is
     begin
         Put (Name & ":  ");
         for Index in aVector'Range loop
