@@ -12,7 +12,6 @@ package Control_Wave is
     type Data is private;
 
     procedure Check_Input (Window : in out Glfw.Windows.Window);
-    procedure Get_Data (Press, VX, VY  : out Vertex_Data.Grid_Array);
     procedure Get_Settings (A, B : out Maths.Degree; Z : out GL.Types.single);
 
 private

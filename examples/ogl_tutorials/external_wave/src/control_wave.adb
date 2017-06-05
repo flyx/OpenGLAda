@@ -3,6 +3,7 @@ with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 
 with Maths;
+with Vertex_Data;
 
 package body Control_Wave is
 
@@ -11,11 +12,6 @@ package body Control_Wave is
     Cursor_X       : Glfw.Input.Mouse.Coordinate;
     Cursor_Y       : Glfw.Input.Mouse.Coordinate;
 
-    Pressure       : Vertex_Data.Grid_Array;
-    Vel_X          : Vertex_Data.Grid_Array;
-    Vel_Y          : Vertex_Data.Grid_Array;
-    --      Acc_X          : Vertex_Data.Grid_Array;
-    --      Acc_Y          : Vertex_Data.Grid_Array;
     Alpha          : Degree := -Degrees (210.0);
     Beta           : Degree := -Degrees (70.0);
     Zoom           : GL.Types.single := 2.0;
@@ -30,7 +26,7 @@ package body Control_Wave is
         use Glfw.Input;
     begin
         if Window'Access.Key_State (Keys.Space) = Pressed then
-            Vertex_Data.Initialize_Grid (Pressure, Vel_X, Vel_Y);
+            Vertex_Data.Initialize_Grid;
         elsif Window'Access.Key_State (Keys.Left) = Pressed then
             Alpha := Alpha + 5.0;
         elsif Window'Access.Key_State (Keys.Right) = Pressed then
@@ -94,8 +90,8 @@ package body Control_Wave is
     procedure Check_Scroll (Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use Glfw.Input;
-        Scroll_X   : Mouse.Scroll_Offset;
-        Scroll_Y   : Mouse.Scroll_Offset;
+        Scroll_X   : Mouse.Scroll_Offset := 200.0;
+        Scroll_Y   : Mouse.Scroll_Offset := 200.0;
     begin
         Window'Access.Mouse_Scrolled (Scroll_X, Scroll_Y);
         Zoom := Zoom + Single (Scroll_Y) / 4.0;
@@ -112,15 +108,6 @@ package body Control_Wave is
         B := Beta;
         Z := Zoom;
     end Get_Settings;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Get_Data (Press, VX, VY : out Vertex_Data.Grid_Array) is
-    begin
-        Press := Pressure;
-        VX := Vel_X;
-        VY := Vel_Y;
-    end Get_Data;
 
     --  ------------------------------------------------------------------------
 
