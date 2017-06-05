@@ -5,7 +5,13 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Vertex_Data is
 
-   procedure Adjust_Grid (Pressure : in out Grid_Array) is
+    Pressure        : Vertex_Data.Grid_Array;
+    Vel_X           : Vertex_Data.Grid_Array;
+    Vel_Y           : Vertex_Data.Grid_Array;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Adjust_Grid is
       use Maths;
       Position : Int;
    begin
@@ -23,25 +29,22 @@ package body Vertex_Data is
             raise;
    end Adjust_Grid;
 
-       --  ------------------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
-    procedure Calculate_Grid (Pressure : in out Grid_Array;
-                              Vel_X    : in out Grid_Array;
-                              Vel_Y    : in out Grid_Array;
-                              dt       : single) is
+    procedure Calculate_Grid (dt : single) is
         Acc_X     : Grid_Array;
         Acc_Y     : Grid_Array;
         X2        : int;
         Y2        : int;
         Time_Step : single := dt * Animation_Speed;
     begin
-        for X in 1 .. Grid_Width loop
+        for X in 1 .. Grid_Width - 1 loop
             X2 := X mod Grid_Width;
             for Y in 1 .. Grid_Height loop
                 Acc_X (X, Y) := Pressure (X, Y) - Pressure (X2, Y);
             end loop;
         end loop;
-        for Y in 1 .. Grid_Height loop
+        for Y in 1 .. Grid_Height - 1 loop
             Y2 := Y mod Grid_Height;
             for X in 1 .. Grid_Width loop
                 Acc_Y (X, Y) := Pressure (X, Y) - Pressure (X, Y2);
@@ -61,13 +64,24 @@ package body Vertex_Data is
                                    + Vel_Y (X, Y2) - Vel_Y (X, Y)) * Time_Step;
             end loop;
         end loop;
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Calculate_Grid.");
+            raise;
     end Calculate_Grid;
 
     --  ------------------------------------------------------------------------
 
-    procedure Initialize_Grid (Pressure : in out Grid_Array;
-                               Vel_X    : in out Grid_Array;
-                               Vel_Y    : in out Grid_Array) is
+    procedure Get_Data (Press, VX, VY : out Grid_Array) is
+    begin
+        Press := Pressure;
+        VX := Vel_X;
+        VY := Vel_Y;
+    end Get_Data;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Initialize_Grid is
         Half_Height  : constant single := single (Grid_Height) / 2.0;
         Half_Width   : constant single := single (Grid_Width) / 2.0;
         dx           : single;
@@ -104,9 +118,10 @@ package body Vertex_Data is
         Half_Height  : constant single := single (Grid_Height) / 2.0;
         Half_Width   : constant single := single (Grid_Width) / 2.0;
         V_Point      : Int;
-        Q_Point      : Int;
+        Q_Point      : Int := 0;
         Vym1_GW      : Int;
         Qym1_GW      : Int;
+        Qy_GW        : Int;
     begin
         for y_index in Int range 1 .. Grid_Height loop
             Vym1_GW := (y_index - 1) * Grid_Width;
@@ -124,19 +139,24 @@ package body Vertex_Data is
                 Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
                 Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
                   single (y_index) / single (Grid_Height) / 2.0;
+--                  Put_Line ("Initialize_Vertices, x, y, V_Point: " & Int'Image (x_index)
+--                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (V_Point));
+--                  Put_Line ("Initialize_Vertices,V_Point X, Y: " & Int'image (V_Point)
+--                            & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (X))
+--                             & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (Y)));
             end loop;
         end loop;
 
-        for y_index in Int range  1 .. Int (Quad_Height - 1) loop
+        for y_index in Int range  1 .. Int (Quad_Height) loop
             Qym1_GW := (y_index - 1) * Int (Grid_Width);
-            for x_index in Int range 1 .. Int (Quad_Width - 1) loop
-                Q_Point := Qym1_GW + x_index;
---                  Put_Line ("Initialize_Vertices, x, y, point: " & Int'Image (x_index)
---                   & ",  " & Int'Image (y_index)& ",  " & Int'Image (point));
-                Quad_Element_Array (Q_Point) := Qym1_GW + x_index;                            --  a point
-                Quad_Element_Array (Q_Point + 1) := Qym1_GW + x_index + 1;                    --  right side neighbour
-                Quad_Element_Array (Q_Point + 2) := y_index * Int (Grid_Width) + x_index + 1; --  upper right neighbour
-                Quad_Element_Array (Q_Point + 3) := y_index * Int (Grid_Width) + x_index;     --  upper neighbour
+            Qy_GW := y_index * Int (Grid_Width);
+            for x_index in Int range 1 .. Int (Quad_Width) loop
+                Q_Point := 4 * (Qym1_GW + x_index) - 3;
+                --  Four vertices of a quadralateral
+                Quad_Element_Array (Q_Point) := Qym1_GW + x_index;          --  a point
+                Quad_Element_Array (Q_Point + 1) := Qym1_GW + x_index + 1;  --  right side neighbour
+                Quad_Element_Array (Q_Point + 2) := Qy_GW + x_index + 1;    --  upper right neighbour
+                Quad_Element_Array (Q_Point + 3) := Qy_GW + x_index;        --  upper neighbour
             end loop;
         end loop;
 
@@ -148,10 +168,7 @@ package body Vertex_Data is
 
     --  ----------------------------------------------------------------------------
 
-    procedure Propogate_Wave (Pressure : in out Grid_Array;
-                              Vel_X    : in out Grid_Array;
-                              Vel_Y    : in out Grid_Array;
-                              dt       : single) is
+    procedure Propogate_Wave (dt : single) is
         Animation_Speed : constant single := 10.0;
         Time_Step       : single := dt * Animation_Speed;
         Acc_X           : Grid_Array;

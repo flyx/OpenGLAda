@@ -35,9 +35,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     Render_Program  : GL.Objects.Programs.Program;
     MVP_Matrix_ID   : GL.Uniforms.Uniform;
     MVP_Matrix      : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-    Pressure        : Vertex_Data.Grid_Array;
-    Vel_X           : Vertex_Data.Grid_Array;
-    Vel_Y           : Vertex_Data.Grid_Array;
     Last_Time       : GL.Types.Single;
     dt              : GL.Types.Single := 0.0;
     Running         : Boolean := True;
@@ -64,7 +61,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                                 GL.Types.Int (Window_Height));
         Utilities.Clear_Background_Colour_And_Depth (Black);
         Last_Time := Now;
-
+       --  Iterate if dt_Total is too large
         while dt_Total > 0.0 loop
             if dt_Total > Vertex_Data.Max_dt then
                 dt := Vertex_Data.Max_dt;
@@ -72,8 +69,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                 dt := dt_Total;
             end if;
             dt_Total := dt_Total - dt;
-            Vertex_Data.Calculate_Grid (Pressure, Vel_X, Vel_Y, dt);
+            Vertex_Data.Calculate_Grid (dt);
         end loop;
+        Vertex_Data.Adjust_Grid;
 
         GL.Objects.Programs.Use_Program (Render_Program);
 
@@ -98,13 +96,18 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 3, 0);
+--          Utilities.Print_Array6 ("Vertex_Buffer_Data", Vertex_Data.Vertex_Buffer_Data);
+--          Put_Line ("Num_Vertices" & GL.Types.Size'Image (Vertex_Data.Num_Vertices));
 
-        Put_Line ("OK 3 in Render.");
-        Draw_Elements (GL.Types.Quads, GL.Types.Size (4 * Vertex_Data.Num_Quads), UInt_Type);
-        Put_Line ("OK 4 in Render.");
+--          Utilities.Print_GL_Int_Array ("Quad_Element_Array", Vertex_Data.Quad_Element_Array);
+--          Put_Line ("Num_Elements" & GL.Types.Size'Image (Vertex_Data.Num_Elements));
+--        Put_Line ("OK 3 in Render.");
+        Draw_Elements (GL.Types.Quads, GL.Types.Size (Vertex_Data.Num_Elements), UInt_Type);
+--        Put_Line ("OK 4 in Render.");
 
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
         GL.Attributes.Disable_Vertex_Attrib_Array (1);
+        Glfw.Input.Poll_Events;
 
     exception
         when  others =>
@@ -164,6 +167,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Window_Width  : Glfw.Size;
         Window_Height : Glfw.Size;
     begin
+        Utilities.Enable_Mouse_Callbacks (Window, True);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Scroll);
+        Window.Enable_Callback (Glfw.Windows.Callbacks.Framebuffer_Size);
+
         Window.Set_Input_Toggle (Sticky_Keys, True);
         Window.Set_Cursor_Mode (Mouse.Disabled);
         Glfw.Windows.Context.Set_Swap_Interval (1);
@@ -177,21 +186,23 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         GL.Rasterization.Set_Point_Size (2.0);
 
-        Control_Wave.Get_Data (Pressure, Vel_X, Vel_Y);
         Vertex_Data.Initialize_Vertices;
-        Vertex_Data.Initialize_Grid (Pressure, Vel_X, Vel_Y);
-        Vertex_Data.Adjust_Grid (Pressure);
+    --    Utilities.Print_GL_Int_Array ("Quad_Element_Array", Vertex_Data.Quad_Element_Array);
+
+--          Put_Line ("Quad_Element_Array: ");
+--          for Index in Vertex_Data.Quad_Element_Array'First .. Vertex_Data.Quad_Element_Array'Last loop
+--              Put_line (Int'Image (Index) & ":  " & Int'Image (Vertex_Data.Quad_Element_Array (Index)));
+--          end loop;
+--          Put_Line ("4 * Num_Quads" & GL.Types.Size'Image (4 * Vertex_Data.Num_Quads));
+--          New_Line;
+
+        Vertex_Data.Initialize_Grid;
+        Vertex_Data.Adjust_Grid;
         Last_Time := Single (Glfw.Time) - 0.01;
 
         Render_Program := Program_From
           ((Src ("src/shaders/simple_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/simple_fragment_shader.glsl", Fragment_Shader)));
-
-        Utilities.Enable_Mouse_Callbacks (Window, True);
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Scroll);
-        Window.Enable_Callback (Glfw.Windows.Callbacks.Framebuffer_Size);
 
     exception
         when others =>
