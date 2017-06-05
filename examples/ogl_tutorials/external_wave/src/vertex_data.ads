@@ -19,8 +19,10 @@ package Vertex_Data is
 
     Quad_Height       : constant Int := Grid_Height - 1;
     Quad_Width        : constant Int := Grid_Width - 1;
-    Num_Quads         : constant Int := Quad_Width * Quad_Height;
-    Num_Quad_Vertices : constant Int := 4 * Num_Quads;
+   Num_Quads         : constant Int := Quad_Width * Quad_Height;
+   --  Each quad comprises two triangles,
+   --  thus six points of which two are identical pairs.
+    Num_Quad_Vertices : constant Int := 6 * Num_Quads;
 
     Animation_Speed : constant single := 10.0;
     Max_dt          : constant single := 0.01;

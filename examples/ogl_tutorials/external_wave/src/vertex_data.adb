@@ -151,12 +151,16 @@ package body Vertex_Data is
             Qym1_GW := (y_index - 1) * Int (Grid_Width);
             Qy_GW := y_index * Int (Grid_Width);
             for x_index in Int range 1 .. Int (Quad_Width) loop
-                Q_Point := 4 * (Qym1_GW + x_index) - 3;
-                --  Four vertices of a quadralateral
+                Q_Point := 6 * (Qym1_GW + x_index) - 5;
+                --  Four vertices of a quadralateral:
+                --  First triangle
                 Quad_Element_Array (Q_Point) := Qym1_GW + x_index;          --  a point
                 Quad_Element_Array (Q_Point + 1) := Qym1_GW + x_index + 1;  --  right side neighbour
-                Quad_Element_Array (Q_Point + 2) := Qy_GW + x_index + 1;    --  upper right neighbour
-                Quad_Element_Array (Q_Point + 3) := Qy_GW + x_index;        --  upper neighbour
+                Quad_Element_Array (Q_Point + 2) := Qy_GW + x_index;    --  upper right neighbour
+                --  Second Triangle
+                Quad_Element_Array (Q_Point + 3) := Quad_Element_Array (Q_Point + 1);
+                Quad_Element_Array (Q_Point + 4) := Qy_GW + x_index + 1;
+                Quad_Element_Array (Q_Point + 5) := Qy_GW + x_index;        --  upper neighbour
             end loop;
         end loop;
 
