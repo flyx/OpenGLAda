@@ -34,15 +34,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     Vertices_Buffer : GL.Objects.Buffers.Buffer;
     Render_Program  : GL.Objects.Programs.Program;
     MVP_Matrix_ID   : GL.Uniforms.Uniform;
-    MVP_Matrix      : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
-    Last_Time       : GL.Types.Single;
+    MVP_Matrix      : GL.Types.Singles.Matrix4;
+    Last_Time       : GL.Types.Single := 0.0;
     dt              : GL.Types.Single := 0.0;
     Running         : Boolean := True;
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_MVP_Matrix (Window         : in out Glfw.Windows.Window;
-                              Render_Program : GL.Objects.Programs.Program);
+    procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program;
+                              Window_Width, Window_Height : GL.Types.Single);
 
     --  ------------------------------------------------------------------------
 
@@ -71,12 +71,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
             dt_Total := dt_Total - dt;
             Vertex_Data.Calculate_Grid (dt);
         end loop;
-        Vertex_Data.Adjust_Grid;
 
         GL.Objects.Programs.Use_Program (Render_Program);
 
         Control_Wave.Check_Input (Window);
-        Set_MVP_Matrix (Window, Render_Program);
+        Set_MVP_Matrix (Render_Program, Single (Window_Width), Single (Window_Height));
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         Vertices_Buffer.Initialize_Id;
@@ -96,14 +95,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 3, 0);
+
 --          Utilities.Print_Array6 ("Vertex_Buffer_Data", Vertex_Data.Vertex_Buffer_Data);
 --          Put_Line ("Num_Vertices" & GL.Types.Size'Image (Vertex_Data.Num_Vertices));
 
 --          Utilities.Print_GL_Int_Array ("Quad_Element_Array", Vertex_Data.Quad_Element_Array);
 --          Put_Line ("Num_Elements" & GL.Types.Size'Image (Vertex_Data.Num_Elements));
---        Put_Line ("OK 3 in Render.");
-        Draw_Elements (GL.Types.Quads, GL.Types.Size (Vertex_Data.Num_Elements), UInt_Type);
---        Put_Line ("OK 4 in Render.");
+        --  Put_Line ("OK 3 in Render.");
+        Draw_Elements (GL.Types.Triangles, GL.Types.Size (Vertex_Data.Num_Elements), UInt_Type);
+        --  Put_Line ("OK 4 in Render.");
 
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
         GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -132,22 +132,27 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_MVP_Matrix (Window         : in out Glfw.Windows.Window;
-                              Render_Program : GL.Objects.Programs.Program) is
+    procedure Set_MVP_Matrix (Render_Program : GL.Objects.Programs.Program;
+                              Window_Width, Window_Height : GL.Types.Single) is
         use GL.Types;
         use GL.Types.Singles;
         use Maths;
 
-        Alpha             : Degree;
-        Beta              : Degree;
-        Zoom              : Single;
+        Perspective   : GL.Types.Singles.Matrix4;
+        Alpha         : Degree;
+        Beta          : Degree;
+        Zoom          : Single;
     begin
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MVP_Matrix");
+                         (Render_Program, "MVP_Matrix");
         Control_Wave.Get_Settings (Alpha, Beta, Zoom);
---          MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom)) * Singles.Identity4;
+        Vertex_Data.Adjust_Grid;
+        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom / 10.0)) * Singles.Identity4;
 --          MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
---          MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
+        MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
+        Maths.Init_Perspective_Transform (Maths.Degree (60.0), Window_Width,
+                                          Window_Height, 1.0, 1024.0, Perspective);
+        MVP_Matrix := Perspective * MVP_Matrix;
 
     exception
         when others =>
@@ -186,7 +191,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
         GL.Rasterization.Set_Point_Size (2.0);
 
-        Vertex_Data.Initialize_Vertices;
+        Vertex_Data.Initialize_Simulation;
     --    Utilities.Print_GL_Int_Array ("Quad_Element_Array", Vertex_Data.Quad_Element_Array);
 
 --          Put_Line ("Quad_Element_Array: ");
@@ -196,8 +201,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --          Put_Line ("4 * Num_Quads" & GL.Types.Size'Image (4 * Vertex_Data.Num_Quads));
 --          New_Line;
 
-        Vertex_Data.Initialize_Grid;
-        Vertex_Data.Adjust_Grid;
         Last_Time := Single (Glfw.Time) - 0.01;
 
         Render_Program := Program_From

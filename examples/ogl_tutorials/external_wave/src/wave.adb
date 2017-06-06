@@ -15,7 +15,7 @@ with Main_Loop;
 
 procedure Wave is
     Main_Window  : Glfw.Windows.Window;
-    Window_Title : String := "Wave";
+    Window_Title : String := "Wave Simulation";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

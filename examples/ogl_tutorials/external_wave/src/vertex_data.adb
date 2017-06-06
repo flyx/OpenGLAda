@@ -111,7 +111,7 @@ package body Vertex_Data is
             raise;
     end Initialize_Grid;
 
-    --  ----------------------------------------------------------------------------
+    --  ------------------------------------------------------------------------
     --  Iniialize_Vertices places the vertices in a grid
     procedure Initialize_Vertices is
       use Maths;
@@ -161,6 +161,11 @@ package body Vertex_Data is
                 Quad_Element_Array (Q_Point + 3) := Quad_Element_Array (Q_Point + 1);
                 Quad_Element_Array (Q_Point + 4) := Qy_GW + x_index + 1;
                 Quad_Element_Array (Q_Point + 5) := Qy_GW + x_index;        --  upper neighbour
+--                  Put_Line ("Initialize_Vertices, x, y, Q_Point: " & Int'Image (x_index)
+--                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (Q_Point));
+--                  Put_Line ("Initialize_Vertices,Q_Point X, Y: " & Int'image (Q_Point)
+--                            & ",  " &  Int'Image (Quad_Element_Array (Q_Point))
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point)));
             end loop;
         end loop;
 
@@ -171,6 +176,15 @@ package body Vertex_Data is
     end Initialize_Vertices;
 
     --  ----------------------------------------------------------------------------
+
+    procedure Initialize_Simulation is
+    begin
+        Initialize_Vertices;
+        Initialize_Grid;
+        Adjust_Grid;
+    end Initialize_Simulation;
+
+    --  ------------------------------------------------------------------------
 
     procedure Propogate_Wave (dt : single) is
         Animation_Speed : constant single := 10.0;
