@@ -10,6 +10,16 @@ with Maths;
 
 package Utilities is
 
+    generic
+        type Index_Type is (<>);
+        type Vector_Type is  array (Index_Type) of aliased GL.Types.Single;
+    procedure Print_Vector1 (Name : String; aVector : Vector_Type);
+
+--      generic
+--          type Index_Type is (<>);
+--          type Array_Type is  array (Index_Type) of aliased GL.Types.Singles.;
+--      procedure Print_ArrayG (Name : String; anArray : Array_Type);
+
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
@@ -33,7 +43,6 @@ package Utilities is
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector2);
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3);
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4);
-    procedure Print_Vector (Name : String; aVector : Maths.Vector6);
     procedure Show_Shader_Info_Log (aProgram : gl.Objects.Programs.Program);
     procedure Show_Shader_Program_Data (aProgram : gl.Objects.Programs.Program);
     procedure Show_GL_Data;
