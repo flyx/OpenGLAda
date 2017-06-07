@@ -71,6 +71,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
             dt_Total := dt_Total - dt;
             Vertex_Data.Calculate_Grid (dt);
         end loop;
+        Vertex_Data.Adjust_Grid;
 
         GL.Objects.Programs.Use_Program (Render_Program);
 
@@ -101,9 +102,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
 --          Utilities.Print_GL_Int_Array ("Quad_Element_Array", Vertex_Data.Quad_Element_Array);
 --          Put_Line ("Num_Elements" & GL.Types.Size'Image (Vertex_Data.Num_Elements));
-        --  Put_Line ("OK 3 in Render.");
+
         Draw_Elements (GL.Types.Triangles, GL.Types.Size (Vertex_Data.Num_Elements), UInt_Type);
-        --  Put_Line ("OK 4 in Render.");
 
         GL.Attributes.Disable_Vertex_Attrib_Array (0);
         GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -146,9 +146,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
                          (Render_Program, "MVP_Matrix");
         Control_Wave.Get_Settings (Alpha, Beta, Zoom);
-        Vertex_Data.Adjust_Grid;
-        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom / 10.0)) * Singles.Identity4;
---          MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
+
+        MVP_Matrix :=  Maths.Translation_Matrix ((0.0, 0.0, -Zoom / 10.0)) * Singles.Identity4;          MVP_Matrix :=  Maths.Rotation_Matrix (Beta, (1.0, 0.0, 0.0)) * MVP_Matrix;
         MVP_Matrix :=  Maths.Rotation_Matrix (Alpha, (0.0, 0.0, 1.0)) * MVP_Matrix;
         Maths.Init_Perspective_Transform (Maths.Degree (60.0), Window_Width,
                                           Window_Height, 1.0, 1024.0, Perspective);
