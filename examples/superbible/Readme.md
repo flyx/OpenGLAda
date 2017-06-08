@@ -4,6 +4,8 @@ by G. Sellers, R. S. Wright, Jr and N. Haemel, Addison Wesley, 2016 and the asso
 computer code at www.openglsuperbible.com using Glfw version 3.
 The version numbers in the shader programs may need modification depending on your
 platform.
+For Mac users, note that the Glfw provided with OSX is incompatible with OpenGLAda as it does not contain libglfw.a.
+A compatible version can be obtained from Homebrew: brew install glfw.
 
 GNAT Programming Studio (GPS) Considerations
 Use Tools->Views->Scenarios to display the Scenario panel.
