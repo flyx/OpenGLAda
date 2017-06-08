@@ -101,16 +101,16 @@ package body Control_Wave is
 
    --  ------------------------------------------------------------------------
 
-   procedure Mouse_Scrolled (Object : not null access Glfw.Windows.Window;
-                               X, Y   : Glfw.Input.Mouse.Scroll_Offset) is
-      use GL.Types;
-   begin
-      Put_Line ("Mouse_Scrolled called");
-      Zoom := Zoom + Single (Y) / 4.0;
-      if Zoom < 0.0 then
-         Zoom := 0.0;
-      end if;
-   end Mouse_Scrolled;
+--     procedure Mouse_Scrolled (Object : not null access Glfw.Windows.Window;
+--                                 X, Y   : Glfw.Input.Mouse.Scroll_Offset) is
+--        use GL.Types;
+--     begin
+--        Put_Line ("Mouse_Scrolled called");
+--        Zoom := Zoom + Single (Y) / 4.0;
+--        if Zoom < 0.0 then
+--           Zoom := 0.0;
+--        end if;
+--     end Mouse_Scrolled;
 
 --     procedure Check_Scroll (Window : in out Glfw.Windows.Window) is
 --        use GL.Types;

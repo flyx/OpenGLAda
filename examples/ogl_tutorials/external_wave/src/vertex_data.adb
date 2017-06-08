@@ -90,8 +90,8 @@ package body Vertex_Data is
     begin
         for y_index in 1 .. Grid_Height loop
             for x_index in 1 .. Grid_Width loop
-                dx := single (x_index) - Half_Width;
-                dy := single (y_index) - Half_Height;
+                dx := single (x_index) - Half_Width - 1.0;
+                dy := single (y_index) - Half_Height - 1.0;
                 d := Single_Functions.Sqrt (dx * dx + dy * dy);
                 if d < 0.1 * Half_Width then
                     d := 10.0 * d;
@@ -127,23 +127,27 @@ package body Vertex_Data is
             Vym1_GW := (y_index - 1) * Grid_Width;
             for x_index in Int range 1 .. Grid_Width loop
                 V_Point := Vym1_GW + x_index;
-                Vertex_Buffer_Data (V_Point) (X) := single (x_index) - Half_Width / single (Half_Width);
-                Vertex_Buffer_Data (V_Point) (Y) := single (y_index) - Half_Width / single (Half_Height);
+                Vertex_Buffer_Data (V_Point) (X) := (single (x_index - 1) - Half_Width) / single (Half_Width);
+                Vertex_Buffer_Data (V_Point) (Y) := (single (y_index - 1) - Half_Width) / single (Half_Height);
                 Vertex_Buffer_Data (V_Point) (Z) := 0.0;
 
-                if (x_index mod 4 < 2) and then (y_index mod 4 < 2) then
+                if (x_index mod 4 < 2) xor (y_index mod 4 < 2) then
                     Vertex_Buffer_Data (V_Point) (R) := 0.0;
                 else
-                    Vertex_Buffer_Data (V_Point) (R) := 0.0;
+                    Vertex_Buffer_Data (V_Point) (R) := 1.0;
                 end if;
-                Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
-                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
-                  single (y_index) / single (Grid_Height) / 2.0;
---                  Put_Line ("Initialize_Vertices, x, y, V_Point: " & Int'Image (x_index)
---                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (V_Point));
---                  Put_Line ("Initialize_Vertices,V_Point X, Y: " & Int'image (V_Point)
---                            & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (X))
---                             & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (Y)));
+                Vertex_Buffer_Data (V_Point) (G) := single (y_index - 1) / single (Grid_Height);
+                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index - 1) / single (Grid_Width) +
+                  single (y_index - 1) / single (Grid_Height) / 2.0;
+                --                  Put_Line ("Initialize_Vertices, x, y, V_Point: " & Int'Image (x_index)
+                --                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (V_Point));
+                --                  Put_Line ("Initialize_Vertices, V_Point (X, Y): " & Int'image (V_Point)
+                --                            & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (X))
+                --                             & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (Y)) & ")");
+                Put_Line ("Initialize_Vertices, V_Point (R, G, B): " & Int'image (V_Point)
+                          & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (R))
+                          & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (G))
+                          & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (B)) & ")");
             end loop;
         end loop;
 
@@ -163,9 +167,13 @@ package body Vertex_Data is
                 Quad_Element_Array (Q_Point + 5) := Qy_GW + x_index;        --  upper neighbour
 --                  Put_Line ("Initialize_Vertices, x, y, Q_Point: " & Int'Image (x_index)
 --                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (Q_Point));
---                  Put_Line ("Initialize_Vertices,Q_Point X, Y: " & Int'image (Q_Point)
+--                  Put_Line ("Initialize_Vertices, Q_Point, P .. P + 3" & Int'image (Q_Point)
 --                            & ",  " &  Int'Image (Quad_Element_Array (Q_Point))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point)));
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 1))
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 2))
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 3))
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 4))
+--                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 5)));
             end loop;
         end loop;
 
@@ -180,8 +188,8 @@ package body Vertex_Data is
     procedure Initialize_Simulation is
     begin
         Initialize_Vertices;
-        Initialize_Grid;
-        Adjust_Grid;
+    --    Initialize_Grid;
+    --    Adjust_Grid;
     end Initialize_Simulation;
 
     --  ------------------------------------------------------------------------
