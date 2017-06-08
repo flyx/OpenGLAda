@@ -38,14 +38,14 @@ package body Vertex_Data is
         Y2        : int;
         Time_Step : single := dt * Animation_Speed;
     begin
-        for X in 1 .. Grid_Width - 1 loop
-            X2 := X mod Grid_Width;
+        for X in 1 .. Grid_Width loop
+            X2 := X mod Grid_Width + 1;
             for Y in 1 .. Grid_Height loop
                 Acc_X (X, Y) := Pressure (X, Y) - Pressure (X2, Y);
             end loop;
         end loop;
-        for Y in 1 .. Grid_Height - 1 loop
-            Y2 := Y mod Grid_Height;
+        for Y in 1 .. Grid_Height loop
+         Y2 := Y mod Grid_Height + 1;
             for X in 1 .. Grid_Width loop
                 Acc_Y (X, Y) := Pressure (X, Y) - Pressure (X, Y2);
             end loop;
@@ -119,16 +119,16 @@ package body Vertex_Data is
         Half_Width   : constant single := single (Grid_Width) / 2.0;
         V_Point      : Int;
         Q_Point      : Int := 0;
-        Vym1_GW      : Int;
+        Vy_GW        : Int;
         Qym1_GW      : Int;
         Qy_GW        : Int;
     begin
-        for y_index in Int range 1 .. Grid_Height loop
-            Vym1_GW := (y_index - 1) * Grid_Width;
-            for x_index in Int range 1 .. Grid_Width loop
-                V_Point := Vym1_GW + x_index;
-                Vertex_Buffer_Data (V_Point) (X) := (single (x_index - 1) - Half_Width) / single (Half_Width);
-                Vertex_Buffer_Data (V_Point) (Y) := (single (y_index - 1) - Half_Width) / single (Half_Height);
+        for y_index in Int range 0 .. Grid_Height - 1 loop
+            Vy_GW := y_index * Grid_Width;
+            for x_index in Int range 0 .. Grid_Width - 1 loop
+                V_Point := Vy_GW + x_index + 1;
+                Vertex_Buffer_Data (V_Point) (X) := (single (x_index) - Half_Width) / single (Half_Width);
+                Vertex_Buffer_Data (V_Point) (Y) := (single (y_index) - Half_Height) / single (Half_Height);
                 Vertex_Buffer_Data (V_Point) (Z) := 0.0;
 
                 if (x_index mod 4 < 2) xor (y_index mod 4 < 2) then
@@ -136,9 +136,9 @@ package body Vertex_Data is
                 else
                     Vertex_Buffer_Data (V_Point) (R) := 1.0;
                 end if;
-                Vertex_Buffer_Data (V_Point) (G) := single (y_index - 1) / single (Grid_Height);
-                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index - 1) / single (Grid_Width) +
-                  single (y_index - 1) / single (Grid_Height) / 2.0;
+                Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
+                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
+                  single (y_index) / single (Grid_Height) / 2.0;
                 --                  Put_Line ("Initialize_Vertices, x, y, V_Point: " & Int'Image (x_index)
                 --                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (V_Point));
                 --                  Put_Line ("Initialize_Vertices, V_Point (X, Y): " & Int'image (V_Point)
@@ -146,7 +146,7 @@ package body Vertex_Data is
                 --                             & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (Y)) & ")");
                 Put_Line ("Initialize_Vertices, V_Point (R, G, B): " & Int'image (V_Point)
                           & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (R))
-                          & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (G))
+                          & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (G))
                           & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (B)) & ")");
             end loop;
         end loop;
@@ -188,8 +188,8 @@ package body Vertex_Data is
     procedure Initialize_Simulation is
     begin
         Initialize_Vertices;
-    --    Initialize_Grid;
-    --    Adjust_Grid;
+        Initialize_Grid;
+        Adjust_Grid;
     end Initialize_Simulation;
 
     --  ------------------------------------------------------------------------
