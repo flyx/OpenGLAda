@@ -24,8 +24,8 @@ package Vertex_Data is
    --  thus six points of which two are identical pairs.
    Num_Quad_Vertices : constant Int := 6 * Num_Quads;
 
-   Animation_Speed : constant single := 10.0;
-   Max_dt          : constant single := 0.01;
+   Animation_Speed : constant single := 2.2;
+   Max_dt          : constant single := 0.1;
 
    type Grid_Array is array (1 .. Grid_Width, 1 .. Grid_Height) of single;
 
