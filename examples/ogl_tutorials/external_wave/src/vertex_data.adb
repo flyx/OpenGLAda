@@ -38,6 +38,7 @@ package body Vertex_Data is
         Y2        : int;
         Time_Step : single := dt * Animation_Speed;
     begin
+        --  Acceleration
         for X in 1 .. Grid_Width loop
             X2 := X mod Grid_Width + 1;
             for Y in 1 .. Grid_Height loop
@@ -50,12 +51,14 @@ package body Vertex_Data is
                 Acc_Y (X, Y) := Pressure (X, Y) - Pressure (X, Y2);
             end loop;
         end loop;
+        --  Speed
         for X in 1 .. Grid_Width loop
             for Y in 1 .. Grid_Height loop
                 Vel_X (X, Y) := Vel_X (X, Y) + Acc_X (X, Y) * Time_Step;
                 Vel_Y (X, Y) := Vel_Y (X, Y) + Acc_Y (X, Y) * Time_Step;
             end loop;
         end loop;
+        --  Pressure
         for X in 2 .. Grid_Width loop
             X2 := X - 1;
             for Y in 2 .. Grid_Height loop
@@ -87,16 +90,17 @@ package body Vertex_Data is
         dx           : single;
         dy           : single;
         d            : single;
+        Angle_Step   : single := Ada.Numerics.Pi / single (4 * Grid_Width);
     begin
         for y_index in 1 .. Grid_Height loop
             for x_index in 1 .. Grid_Width loop
-                dx := single (x_index) - Half_Width - 1.0;
-                dy := single (y_index) - Half_Height - 1.0;
+                dx := single (x_index) - Half_Width;
+                dy := single (y_index) - Half_Height;
                 d := Single_Functions.Sqrt (dx * dx + dy * dy);
                 if d < 0.1 * Half_Width then
                     d := 10.0 * d;
                     Pressure (x_index, y_index) := -100.0 *
-                      Single_Functions.Cos (d * Ada.Numerics.Pi / single (4 * Grid_Width));
+                      Single_Functions.Cos (d * Angle_Step);
                 else
                     Pressure (x_index, y_index) := 0.0;
                 end if;
@@ -137,17 +141,9 @@ package body Vertex_Data is
                     Vertex_Buffer_Data (V_Point) (R) := 1.0;
                 end if;
                 Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
-                Vertex_Buffer_Data (V_Point) (B) := 1.0 - single (x_index) / single (Grid_Width) +
-                  single (y_index) / single (Grid_Height) / 2.0;
-                --                  Put_Line ("Initialize_Vertices, x, y, V_Point: " & Int'Image (x_index)
-                --                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (V_Point));
-                --                  Put_Line ("Initialize_Vertices, V_Point (X, Y): " & Int'image (V_Point)
-                --                            & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (X))
-                --                             & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (Y)) & ")");
-                Put_Line ("Initialize_Vertices, V_Point (R, G, B): " & Int'image (V_Point)
-                          & ",  (" &  single'Image (Vertex_Buffer_Data (V_Point) (R))
-                          & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (G))
-                          & ",  " &  single'Image (Vertex_Buffer_Data (V_Point) (B)) & ")");
+                Vertex_Buffer_Data (V_Point) (B) := 1.0 -
+                  0.5 * (single (x_index) / single (Grid_Width) +
+                  single (y_index) / single (Grid_Height));
             end loop;
         end loop;
 
@@ -160,20 +156,11 @@ package body Vertex_Data is
                 --  First triangle
                 Quad_Element_Array (Q_Point) := Qym1_GW + x_index;          --  a point
                 Quad_Element_Array (Q_Point + 1) := Qym1_GW + x_index + 1;  --  right side neighbour
-                Quad_Element_Array (Q_Point + 2) := Qy_GW + x_index;    --  upper right neighbour
+                Quad_Element_Array (Q_Point + 2) := Qy_GW + x_index;        --  upper right neighbour
                 --  Second Triangle
                 Quad_Element_Array (Q_Point + 3) := Quad_Element_Array (Q_Point + 1);
                 Quad_Element_Array (Q_Point + 4) := Qy_GW + x_index + 1;
                 Quad_Element_Array (Q_Point + 5) := Qy_GW + x_index;        --  upper neighbour
---                  Put_Line ("Initialize_Vertices, x, y, Q_Point: " & Int'Image (x_index)
---                   & ",  " & Int'Image (y_index) & ",  " & Int'Image (Q_Point));
---                  Put_Line ("Initialize_Vertices, Q_Point, P .. P + 3" & Int'image (Q_Point)
---                            & ",  " &  Int'Image (Quad_Element_Array (Q_Point))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 1))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 2))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 3))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 4))
---                             & ",  " &  Int'Image (Quad_Element_Array (Q_Point + 5)));
             end loop;
         end loop;
 
