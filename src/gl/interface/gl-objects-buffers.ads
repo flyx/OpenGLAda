@@ -55,7 +55,7 @@ package GL.Objects.Buffers is
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   procedure Get_Sub_Data (Target : in out Buffer_Target;
+   procedure Get_Sub_Data (Target : Buffer_Target;
                            Offset : Types.Size;
                            Data   : in out Pointers.Element_Array);
 
