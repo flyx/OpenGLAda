@@ -47,8 +47,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Buffer is new
-       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Single_Pointers);
+    procedure Load_Vertex_Sub_Buffer is new
+      GL.Objects.Buffers.Get_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
@@ -100,12 +100,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render is
       use GL.Types;
       use GL.Objects.Buffers;
-      Background      : constant GL.Types.Colors.Color := (0.2, 0.3, 0.3, 1.0);
-      Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.8, 0.2);
+      Background      : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
+      Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.2, 0.4, 0.0);
    begin
-      --        Utilities.Clear_Background_Colour (Background);
-      --          GL.Objects.Programs.Use_Program (Render_Program);
-      --          Put_Line ("Rendering text.");
+      Utilities.Clear_Background_Colour (Background);
       Render_The_Text ("Some sample text.", 25.0, 25.0, 1.0, Text_Colour);
 
    exception
@@ -122,22 +120,70 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color) is
       use GL.Objects.Buffers;
+      use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
-      --  2D quad requires 6 vertices of 4 floats
-      Vertex_Data        : Single_Array (1 .. 6 * 4);
+      Char_Index    : Integer;
+      Char_S        : String (1 .. 1);
+      X_Orig        : Single := X;
+      Y_Orig        : Single := Y;
+      X_Pos         : Single;
+      Y_Pos         : Single;
+      --  BBox array elements:
+      --  1 lower  2 left  3 near
+      --  4 upper  5 right 6 far
+      BBox          : FTGL.Bounding_Box;
+      Height        : Single;
+      Width         : Single;
+      Ascend        : Single;
+      Descend       : Single;
+      Advance       : Single;
+      Bearing_X     : Single;
+      Bearing_Y     : Single;
+      --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
+      Vertex_Data   : Singles.Vector4_Array (1 .. 6);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+      GL.Objects.Textures.Set_Active_Unit (0);
+      Vertex_Array.Bind;
 
-      Vertex_Data := (0.0, -theFont.Descender, -1.5);
+      for index in Text'Range loop
+         Char_S := Text (index .. index);
+         Char_Index := Character'Pos (Text (index));
+         BBox := theFont.Bounds (Char_S);
+         Ascend := theFont.Ascender;
+         Descend := theFont.Descender;
+         Advance := theFont.Advance_Width (Char_S);
+         Height := (BBox (4) - BBox (1)) * Scale;
+         Width  := (BBox (5) - BBox (2)) * Scale;
+         Bearing_X := 0.5 * Width;
+         Bearing_Y := Height - Descend;
+         X_Pos := X_Orig + Bearing_X * Scale;
+         Y_Pos := Y_Orig - (Width - Bearing_Y) * Scale;
+         Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
+                         (X_Pos, Y_Pos,                  0.0, 1.0),
+                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos, Y_Pos + Height,         0.0, 0.0),
+                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 1, Single_Type, 0, 0);
+         Texture_2D.Bind (Font_Texture);
+         Array_Buffer.Bind (Vertex_Buffer);
+         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
 
-      Array_Buffer.Bind (Vertex_Buffer);
+--       generic
+--           with package Pointers is new Interfaces.C.Pointers (<>);
+--           Get_Sub_Data (Target : in out Buffer_Target;
+--                             Offset : Types.Size;
+--                             Data   : in out Pointers.Element_Array);
+         Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 1, Single_Type, 0, 0);
 
-      Load_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
+         X_Orig := X_Orig + Advance * Scale;
+      end loop;
 
    exception
       when anError : FTGL.FTGL_Error =>
