@@ -2,6 +2,7 @@
 with Interfaces.C;
 with System;
 
+with Ada.Containers.Vectors;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -33,6 +34,17 @@ with Program_Loader;
 with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
+   type Character_Data is record
+      Texture_ID        : GL.Objects.Textures.Texture;
+      Width             : GL.Types.Single;
+      Height            : GL.Types.Single;
+      Bearing_X         : GL.Types.Single;
+      Bearing_Y         : GL.Types.Single;
+      Valid             : Boolean := False;
+   end record;
+
+   package Characters_Package is new Ada.Containers.Vectors (Natural, Character_Data);
+   type Chars_Vector is new Characters_Package.Vector with null record;
 
    theFont               : FTGL.Fonts.Bitmap_Font;
 
@@ -48,7 +60,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
     procedure Load_Vertex_Sub_Buffer is new
-      GL.Objects.Buffers.Get_Sub_Data (GL.Types.Singles.Vector4_Pointers);
+      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
