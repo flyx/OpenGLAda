@@ -2,7 +2,7 @@
 with Interfaces.C;
 with System;
 
-with Ada.Containers.Vectors;
+with Ada.Containers.Ordered_Maps;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -38,16 +38,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID        : GL.Objects.Textures.Texture;
       Width             : GL.Types.Single;
       Height            : GL.Types.Single;
+      Advance           : GL.Types.Single;
+      Ascend            : GL.Types.Single;
+      Descend           : GL.Types.Single;
       Bearing_X         : GL.Types.Single;
       Bearing_Y         : GL.Types.Single;
       Valid             : Boolean := False;
    end record;
 
-   package Characters_Package is new Ada.Containers.Vectors (Natural, Character_Data);
-   type Chars_Vector is new Characters_Package.Vector with null record;
+   package Characters_Package is new Ada.Containers.Ordered_Maps (Character, Character_Data);
+   type Chars_Map_Type is new Characters_Package.Map with null record;
+   type Chars_Cursor is new Characters_Package.Cursor;
 
    theFont               : FTGL.Fonts.Bitmap_Font;
-
+   Chars_Map             : Chars_Map_Type;
    Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
@@ -109,6 +113,43 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+   procedure Load_Char_Vector (Scale : GL.Types.Single := 1.0) is
+      use GL.Types;
+      Char_Map_List   : FTGL.Fonts.Charset_List := theFont.Get_Char_Map_List;
+      Char_Map        : FTGL.Charset := Char_Map_List (5);
+      Char_Data       : Character_Data;
+      Face_Size       : GL.Types.Int := GL.Types.Int (theFont.Get_Font_Face_Size);
+      aChar           : Character;
+      Char_S          : String := " ";  --  BBox array elements:
+      --  1 lower  2 left  3 near
+      --  4 upper  5 right 6 far
+      BBox          : FTGL.Bounding_Box;
+   begin
+      for Index in 0 .. 128 loop
+         aChar := Character'Val (Index);
+         Char_S (1) := aChar;
+         BBox := theFont.Bounds (Char_S);
+         Char_Data.Ascend := theFont.Ascender;
+         Char_Data.Descend := theFont.Descender;
+         Char_Data.Advance := theFont.Advance_Width (Char_S);
+         Char_Data.Height := (BBox (4) - BBox (1)) * Scale;
+         Char_Data.Width  := (BBox (5) - BBox (2)) * Scale;
+         Char_Data.Bearing_X := 0.5 * Char_Data.Width;
+         Char_Data.Bearing_Y := Char_Data.Height - Char_Data.Descend;
+         Chars_Map.Insert (aChar, Char_Data);
+      end loop;
+
+   exception
+      when anError : FTGL.FTGL_Error =>
+      Put_Line ("Generate_Texture returned an FTGL error: ");
+         raise;
+      when  others =>
+         Put_Line ("An exception occurred in Load_Char_Vector.");
+         raise;
+   end Load_Char_Vector;
+
+   --  ------------------------------------------------------------------------
+
    procedure Render is
       use GL.Types;
       use GL.Objects.Buffers;
@@ -141,17 +182,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Y_Orig        : Single := Y;
       X_Pos         : Single;
       Y_Pos         : Single;
-      --  BBox array elements:
-      --  1 lower  2 left  3 near
-      --  4 upper  5 right 6 far
-      BBox          : FTGL.Bounding_Box;
-      Height        : Single;
-      Width         : Single;
-      Ascend        : Single;
-      Descend       : Single;
-      Advance       : Single;
-      Bearing_X     : Single;
-      Bearing_Y     : Single;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data   : Singles.Vector4_Array (1 .. 6);
    begin
@@ -163,22 +193,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       for index in Text'Range loop
          Char_S := Text (index .. index);
          Char_Index := Character'Pos (Text (index));
-         BBox := theFont.Bounds (Char_S);
-         Ascend := theFont.Ascender;
-         Descend := theFont.Descender;
-         Advance := theFont.Advance_Width (Char_S);
-         Height := (BBox (4) - BBox (1)) * Scale;
-         Width  := (BBox (5) - BBox (2)) * Scale;
-         Bearing_X := 0.5 * Width;
-         Bearing_Y := Height - Descend;
-         X_Pos := X_Orig + Bearing_X * Scale;
-         Y_Pos := Y_Orig - (Width - Bearing_Y) * Scale;
-         Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
-                         (X_Pos, Y_Pos,                  0.0, 1.0),
-                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos, Y_Pos + Height,         0.0, 0.0),
-                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
+--           X_Pos := X_Orig + Bearing_X * Scale;
+--           Y_Pos := Y_Orig - (Width - Bearing_Y) * Scale;
+--           Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
+--                           (X_Pos, Y_Pos,                  0.0, 1.0),
+--                           (X_Pos + Width, Y_Pos,          1.0, 1.0),
+--                           (X_Pos, Y_Pos + Height,         0.0, 0.0),
+--                           (X_Pos + Width, Y_Pos,          1.0, 1.0),
+--                           (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
          Texture_2D.Bind (Font_Texture);
          Array_Buffer.Bind (Vertex_Buffer);
@@ -194,7 +216,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Attributes.Set_Vertex_Attrib_Pointer (0, 1, Single_Type, 0, 0);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
-         X_Orig := X_Orig + Advance * Scale;
+--           X_Orig := X_Orig + Advance * Scale;
       end loop;
 
    exception
