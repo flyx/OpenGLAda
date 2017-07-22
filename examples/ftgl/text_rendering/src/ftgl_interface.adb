@@ -111,8 +111,7 @@ package body FTGL_Interface is
 
       procedure Load_Characters (theFont   : in out Font_Type;
                                  Data      : out Character_Data;
-                                 Face_Size : GL.Types.Int;
-                                 Scale     : GL.Types.Single) is
+                                 Face_Size : GL.Types.Int) is
          use FTGL.Fonts;
          use GL.Objects.Textures;
          use GL.Types;
@@ -136,8 +135,8 @@ package body FTGL_Interface is
             Data.Ascend := theFont.Ascender;
             Data.Descend := theFont.Descender;
             Data.Advance := theFont.Advance_Width (Char_S);
-            Data.Height := (BBox (4) - BBox (1)) * Scale;
-            Data.Width  := (BBox (5) - BBox (2)) * Scale;
+            Data.Height := (BBox (4) - BBox (1));
+            Data.Width  := (BBox (5) - BBox (2));
             Data.Bearing_X := 0.5 * Data.Width;
             Data.Bearing_Y := Data.Height - Data.Descend;
             Image_Address := Image_Source (Font_Char_Map'Address);
@@ -160,8 +159,7 @@ package body FTGL_Interface is
 
       procedure Setup_Font (theFont    : in out Font_Type;
                             Data       : out Character_Data;
-                            Font_File  : String; Face_Size : GL.Types.UInt := 72;
-                            Scale      : GL.Types.Single := 1.0) is
+                            Font_File  : String; Face_Size : GL.Types.UInt := 72) is
       begin
          theFont.Initialize;
          theFont.Load (Font_File);
@@ -169,7 +167,7 @@ package body FTGL_Interface is
             Put_Line (Font_File & " failed to load.");
             raise FTGL.FTGL_Error;
          end if;
-         Load_Characters (theFont, Data, GL.Types.Int (Face_Size), Scale);
+         Load_Characters (theFont, Data, GL.Types.Int (Face_Size));
       exception
          when anError : FTGL.FTGL_Error =>
             Put_Line ("Setup_Font returned an FTGL error: ");
