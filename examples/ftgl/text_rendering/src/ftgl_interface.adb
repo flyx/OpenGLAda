@@ -82,18 +82,27 @@ package body FTGL_Interface is
    package body Setup is
 
       procedure Generate_Texture (Font_Texture  : in out GL.Objects.Textures.Texture;
-                                  Image_Address : GL.Objects.Textures.Image_Source;
+                                  Image_Address : in out GL.Objects.Textures.Image_Source;
                                   Data          : Character_Data) is
          use GL.Objects.Textures;
          use GL.Objects.Textures.Targets;
          use GL.Pixels;
 
       begin
-         Font_Texture.Initialize;
+         Put_Line ("Generate_Texture entered");
+         Font_Texture.Initialize_Id;
+         Put_Line ("Generate_Texture Font_Texture initialized");
+         if not Font_Texture.Initialized then
+            Put_Line ("Generate_Texture, Font_Texture initialization failed.");
+            raise FTGL.FTGL_Error;
+         end if;
          Texture_2D.Bind (Font_Texture);
+         Put_Line ("Generate_Texture Font_Texture bound");
+
          Texture_2D.Load_From_Data  (0, RGB, GL.Types.Int (Data.Width),
                                      GL.Types.Int (Data.Height), Red,
                                      Unsigned_Byte, Image_Address);
+         Put_Line ("Generate_Texture Texture loaded");
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
          Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
@@ -116,12 +125,12 @@ package body FTGL_Interface is
          use FTGL.Fonts;
          use GL.Objects.Textures;
          use GL.Types;
+         Font_Texture    : GL.Objects.Textures.Texture;
          Char_Map_List   : FTGL.Fonts.Charset_List := theFont.Get_Char_Map_List;
          Font_Char_Map   : FTGL.Charset := Char_Map_List (5);
          aChar           : Character;
          Char_S          : String := " ";
          Char_Image_Map  : Chars_Map_Type;
-         Font_Texture    : GL.Objects.Textures.Texture;
          Image_Address   : GL.Objects.Textures.Image_Source;
 
          --  BBox array elements:
@@ -141,18 +150,19 @@ package body FTGL_Interface is
             Data.Bearing_X := 0.5 * Data.Width;
             Data.Bearing_Y := Data.Height - Data.Descend;
             Image_Address := Image_Source (Font_Char_Map'Address);
+            Put_Line ("Load_Characters Data.Bearing_Y " & Single'Image (Data.Bearing_Y));
+            Put_Line ("Load_Characters Index " & Integer'Image (Index));
             Generate_Texture (Font_Texture, Image_Address, Data);
             Char_Image_Map.Insert (aChar, Data);
             Data.Texture := Font_Texture;
             Data.Valid := True;
          end loop;
-
       exception
          when anError : FTGL.FTGL_Error =>
-            Put_Line ("Generate_Texture returned an FTGL error: ");
+            Put_Line ("Load_Characters returned an FTGL error: ");
             raise;
          when  others =>
-            Put_Line ("An exception occurred in Load_Char_Vector.");
+            Put_Line ("An exception occurred in Load_Characters.");
             raise;
       end Load_Characters;
 
@@ -161,7 +171,8 @@ package body FTGL_Interface is
       procedure Setup_Font (theFont    : in out Font_Type;
                             Data       : out Character_Data;
                             Font_File  : String;
-                            Face_Size, Resolution : GL.Types.UInt := 72) is
+                            Face_Size, Resolution : GL.Types.UInt := 72;
+                            Depth      : GL.Types.Single := 0.05) is
       begin
          theFont.Initialize;
          theFont.Load (Font_File);
@@ -170,6 +181,7 @@ package body FTGL_Interface is
             raise FTGL.FTGL_Error;
          end if;
          theFont.Set_Font_Face_Size (Face_Size, Resolution);
+         theFont.Set_Font_Depth (Depth);
          Load_Characters (theFont, Data, GL.Types.Int (Face_Size));
       exception
          when anError : FTGL.FTGL_Error =>
