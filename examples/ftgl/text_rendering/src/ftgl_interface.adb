@@ -83,7 +83,7 @@ package body FTGL_Interface is
 
       procedure Generate_Texture (Font_Texture  : in out GL.Objects.Textures.Texture;
                                   Image_Address : GL.Objects.Textures.Image_Source;
-                                  Face_Size     : GL.Types.Int) is
+                                  Data          : Character_Data) is
          use GL.Objects.Textures;
          use GL.Objects.Textures.Targets;
          use GL.Pixels;
@@ -91,7 +91,8 @@ package body FTGL_Interface is
       begin
          Font_Texture.Initialize;
          Texture_2D.Bind (Font_Texture);
-         Texture_2D.Load_From_Data  (0, RGB, Face_Size, Face_Size, Red,
+         Texture_2D.Load_From_Data  (0, RGB, GL.Types.Int (Data.Width),
+                                     GL.Types.Int (Data.Height), Red,
                                      Unsigned_Byte, Image_Address);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
          Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
@@ -140,7 +141,7 @@ package body FTGL_Interface is
             Data.Bearing_X := 0.5 * Data.Width;
             Data.Bearing_Y := Data.Height - Data.Descend;
             Image_Address := Image_Source (Font_Char_Map'Address);
-            Generate_Texture (Font_Texture, Image_Address, Face_Size);
+            Generate_Texture (Font_Texture, Image_Address, Data);
             Char_Image_Map.Insert (aChar, Data);
             Data.Texture := Font_Texture;
             Data.Valid := True;
@@ -159,7 +160,8 @@ package body FTGL_Interface is
 
       procedure Setup_Font (theFont    : in out Font_Type;
                             Data       : out Character_Data;
-                            Font_File  : String; Face_Size : GL.Types.UInt := 72) is
+                            Font_File  : String;
+                            Face_Size, Resolution : GL.Types.UInt := 72) is
       begin
          theFont.Initialize;
          theFont.Load (Font_File);
@@ -167,6 +169,7 @@ package body FTGL_Interface is
             Put_Line (Font_File & " failed to load.");
             raise FTGL.FTGL_Error;
          end if;
+         theFont.Set_Font_Face_Size (Face_Size, Resolution);
          Load_Characters (theFont, Data, GL.Types.Int (Face_Size));
       exception
          when anError : FTGL.FTGL_Error =>

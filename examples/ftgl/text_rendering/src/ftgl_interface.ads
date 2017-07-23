@@ -13,7 +13,8 @@ package FTGL_Interface is
    package Setup is
       procedure Setup_Font (theFont    : in out Font_Type;
                             Data       : out Character_Data;
-                            Font_File  : String; Face_Size : GL.Types.UInt := 72);
+                            Font_File  : String;
+                            Face_Size, Resolution : GL.Types.UInt := 72);
    end Setup;
 
    function Char_Advance (Data : Character_Data) return GL.Types.Single;
