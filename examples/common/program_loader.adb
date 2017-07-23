@@ -1,8 +1,6 @@
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
-
-with GL.Errors;
 with GL.Files;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
