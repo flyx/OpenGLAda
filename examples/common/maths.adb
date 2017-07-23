@@ -165,7 +165,7 @@ package body Maths is
     --  Rotation_Matrix is based on "Quaternians and spatial rotation" by
     --  en.m.wikipedia.org, with the matrix transposed
 
-    function Rotation_Matrix (Angle : Maths.Degree; Axis : GL.Types.Singles.Vector3)
+    function Rotation_Matrix (Angle : Radian; Axis : GL.Types.Singles.Vector3)
                               return GL.Types.Singles.Matrix4 is
         use GL;
         use Maths.Single_Math_Functions;
@@ -174,8 +174,8 @@ package body Maths is
         aQuaternion : Single_Quaternion.Quaternion;
         theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
         NQ          : Single_Quaternion.Quaternion;
-        Half_Angle  : Single := 0.5 * Single (Maths.Radians (Angle));
-        Sine       : Single := Sin (Half_Angle);
+        Half_Angle  : Single := 0.5 * Single (Angle);
+        Sine        : Single := Sin (Half_Angle);
     begin
         aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
                           Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
@@ -193,6 +193,14 @@ package body Maths is
         theMatrix (Y, Z) := 2.0 * (NQ.C * NQ.D + NQ.A * NQ.B);
         theMatrix (Z, Z) := 1.0 - 2.0 * (NQ.B * NQ.B + NQ.C * NQ.C);
         return theMatrix;
+    end Rotation_Matrix;
+
+    --  ------------------------------------------------------------------------
+
+    function Rotation_Matrix (Angle : Degree; Axis : GL.Types.Singles.Vector3)
+                              return GL.Types.Singles.Matrix4 is
+    begin
+         return Rotation_Matrix (Radians (Angle), Axis);
     end Rotation_Matrix;
 
     --  ------------------------------------------------------------------------
