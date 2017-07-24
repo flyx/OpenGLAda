@@ -33,18 +33,21 @@ package FTGL_Interface is
 private
 
    type Glyph_Data (Kind : Font_Kind) is record
+      Valid             : Boolean := False;
       Texture           : GL.Objects.Textures.Texture;
       Width             : GL.Types.Single;
       Height            : GL.Types.Single;
       Advance           : GL.Types.Single;
-      Ascend            : GL.Types.Single;
-      Descend           : GL.Types.Single;
-      Bearing_X         : GL.Types.Single;
-      Bearing_Y         : GL.Types.Single;
-      Valid             : Boolean := False;
       case Kind is
-         when Buffer => Depth : GL.Types.Single := 0.05;
-         when others => null;
+         when Bitmap =>
+            Ascend            : GL.Types.Single;
+            Descend           : GL.Types.Single;
+            Bearing_X         : GL.Types.Single;
+            Bearing_Y         : GL.Types.Single;
+         when Buffer =>
+            Depth : GL.Types.Single := 0.05;
+         when others =>
+            null;
       end case;
    end record;
 
