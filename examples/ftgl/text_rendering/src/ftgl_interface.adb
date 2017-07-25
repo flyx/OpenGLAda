@@ -96,13 +96,20 @@ package body FTGL_Interface is
    --  ------------------------------------------------------------------------
 
    procedure Generate_Texture (Font_Texture  : in out GL.Objects.Textures.Texture;
-                               Image_Address : in out GL.Objects.Textures.Image_Source;
+                               Image_Address : GL.Objects.Textures.Image_Source;
                                Data          : Glyph_Data) is
       use GL.Objects.Textures;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
 
    begin
+      Font_Texture.Initialize_Id;
+      if not Font_Texture.Initialized then
+         Put_Line ("Generate_Texture, Font_Texture initialization failed.");
+         raise FTGL.FTGL_Error;
+      end if;
+      Texture_2D.Bind (Font_Texture);    -- Complete initialization
+
       Texture_2D.Load_From_Data  (0, RGB, GL.Types.Int (Data.Width),
                                   GL.Types.Int (Data.Height), Red,
                                   Unsigned_Byte, Image_Address);
@@ -144,13 +151,7 @@ package body FTGL_Interface is
       --  4 upper  5 right 6 far
       BBox            : FTGL.Bounding_Box;
    begin
-      Font_Texture.Initialize_Id;
-      if not Font_Texture.Initialized then
-         Put_Line ("Generate_Texture, Font_Texture initialization failed.");
-         raise FTGL.FTGL_Error;
-      end if;
-      Texture_2D.Bind (Font_Texture);    -- Complete initialization
-
+      Put_Line ("Load_Characters Font_Glyph_Map: " & FTGL.Charset'Image (Font_Glyph_Map));
       for Index in 0 .. 128 loop
          aChar := Character'Val (Index);
          Glyph_S (1) := aChar;
@@ -169,8 +170,8 @@ package body FTGL_Interface is
 --           Put_Line ("Load_Characters Data.Bearing_Y " & Single'Image (Data.Bearing_Y));
 --           Put_Line ("Load_Characters Index " & Integer'Image (Index));
          Generate_Texture (Font_Texture, Image_Address, Data);
-         Glyph_Texture_Map.Insert (aChar, Data);
          Data.Texture := Font_Texture;
+         Glyph_Texture_Map.Insert (aChar, Data);
          Data.Valid := True;
       end loop;
    exception
