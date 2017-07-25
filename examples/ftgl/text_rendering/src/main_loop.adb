@@ -38,6 +38,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
+   Texture_Map           : FTGL_Interface.Chars_Map_Type;
    Bitmap_Font_Data      : FTGL_Interface.Glyph_Data (FTGL_Interface.Bitmap);
 --     Buffer_Font_Data      : FTGL_Interface.Glyph_Data (FTGL_Interface.Buffer);
 --     Pixmap_Font_Data      : FTGL_Interface.Glyph_Data (FTGL_Interface.Pixmap);
@@ -82,8 +83,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use FTGL_Interface;
 
-      Char_Index    : Integer;
-      Char_S        : String (1 .. 1);
+      Char          : Character;
       X_Orig        : Single := X;
       Y_Orig        : Single := Y;
       X_Pos         : Single;
@@ -95,12 +95,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
       GL.Objects.Textures.Set_Active_Unit (0);
       Vertex_Array.Bind;
+      Array_Buffer.Bind (Vertex_Buffer);
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
 
       for index in Text'Range loop
-         Char_S := Text (index .. index);
-         Char_Index := Character'Pos (Text (index));
-         X_Pos := X_Orig + Glyph_Bearing_X (Bitmap_Font_Data) * Scale;
-         Y_Pos := Y_Orig - (Glyph_Width (Bitmap_Font_Data) - Glyph_Bearing_Y (Bitmap_Font_Data)) * Scale;
+         Char := Text (index);
+         Bitmap_Font_Data := Texture_Map (Char);
+--           X_Pos := X_Orig + Glyph_Bearing_X (Bitmap_Font_Data) * Scale;
+         X_Pos := X_Orig * Scale;
+--           Y_Pos := Y_Orig - (Glyph_Width (Bitmap_Font_Data) - Glyph_Bearing_Y (Bitmap_Font_Data)) * Scale;
+         Y_Pos := Y_Orig - (Glyph_Width (Bitmap_Font_Data)) * Scale;
          Vertex_Data := ((X_Pos, Y_Pos + Glyph_Height (Bitmap_Font_Data), 0.0, 0.0),
                          (X_Pos, Y_Pos,                    0.0, 1.0),
                          (X_Pos + Glyph_Width (Bitmap_Font_Data), Y_Pos,  1.0, 1.0),
@@ -111,14 +115,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Texture_2D.Bind (Glyph_Texture (Bitmap_Font_Data));
          Array_Buffer.Bind (Vertex_Buffer);
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
 
          Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          GL.Attributes.Set_Vertex_Attrib_Pointer (0, 1, Single_Type, 0, 0);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
-         X_Orig := X_Orig + Glyph_Advance (Bitmap_Font_Data) * Scale;
+--           X_Orig := X_Orig + Glyph_Advance (Bitmap_Font_Data) * Scale;
+         X_Orig := X_Orig + Glyph_Width (Bitmap_Font_Data) * Scale;
       end loop;
 
    exception
@@ -142,7 +146,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
    begin
-      FTGL_Interface.Setup_Font (Font_Bitmap, Bitmap_Font_Data,
+      FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
                                       "/System/Library/Fonts/Helvetica.dfont");
 --        FTGL_Interface.Setup_Font (Font_Pixmap, Pixmap_Font_Data,
 --                                        "/System/Library/Fonts/Helvetica.dfont");

@@ -1,5 +1,4 @@
 
-with Ada.Containers.Ordered_Maps;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -9,11 +8,6 @@ with GL.Objects.Textures.Targets;
 with FTGL;
 
 package body FTGL_Interface is
-
-   subtype Bitmap_Glyph_Data is Glyph_Data (Bitmap);
-   package Characters_Package is new Ada.Containers.Ordered_Maps (Character, Bitmap_Glyph_Data);
-   type Chars_Map_Type is new Characters_Package.Map with null record;
-   type Chars_Cursor is new Characters_Package.Cursor;
 
    --  ------------------------------------------------------------------------
 
@@ -65,10 +59,25 @@ package body FTGL_Interface is
    end Glyph_Kind;
 
    --  ------------------------------------------------------------------------
+
+   function Glyph_Pitch (Data : Glyph_Data) return GL.Types.UInt is
+   begin
+      return Data.Pitch;
+   end Glyph_Pitch;
+
+   --  ------------------------------------------------------------------------
+
    function Glyph_Texture (Data : Glyph_Data) return GL.Objects.Textures.Texture is
    begin
       return Data.Texture;
    end Glyph_Texture;
+
+   --  ------------------------------------------------------------------------
+
+   function Glyph_Top_Left (Data : Glyph_Data) return FT_Point is
+   begin
+      return Data.Top_Left;
+   end Glyph_Top_Left;
 
    --  ------------------------------------------------------------------------
 
@@ -94,13 +103,6 @@ package body FTGL_Interface is
       use GL.Pixels;
 
    begin
-      Font_Texture.Initialize_Id;
-      if not Font_Texture.Initialized then
-         Put_Line ("Generate_Texture, Font_Texture initialization failed.");
-         raise FTGL.FTGL_Error;
-      end if;
-      Texture_2D.Bind (Font_Texture);
-
       Texture_2D.Load_From_Data  (0, RGB, GL.Types.Int (Data.Width),
                                   GL.Types.Int (Data.Height), Red,
                                   Unsigned_Byte, Image_Address);
@@ -120,45 +122,54 @@ package body FTGL_Interface is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Characters (theFont   : in out FTGL.Fonts.Bitmap_Font;
-                              Kind      : Font_Kind;
-                              Data      : out Glyph_Data;
-                              Face_Size : GL.Types.Int) is
+   procedure Load_Characters (theFont           : in out FTGL.Fonts.Bitmap_Font;
+                              Kind              : Font_Kind;
+                              Glyph_Texture_Map : in out Chars_Map_Type;
+                              Face_Size         : GL.Types.Int) is
       use FTGL.Fonts;
       use GL.Objects.Textures;
+      use GL.Objects.Textures.Targets;
       use GL.Types;
-      Font_Texture     : GL.Objects.Textures.Texture;
-      Glyph_Map_List   : FTGL.Fonts.Charset_List := theFont.Get_Char_Map_List;
-      Font_Glyph_Map   : FTGL.Charset := Glyph_Map_List (5);
-      aChar            : Character;
-      Glyph_S          : String := " ";
-      Glyph_Image_Map  : Chars_Map_Type;
-      Image_Address    : GL.Objects.Textures.Image_Source;
+
+      Font_Texture      : GL.Objects.Textures.Texture;
+      Glyph_Map_List    : FTGL.Fonts.Charset_List := theFont.Get_Char_Map_List;
+      Font_Glyph_Map    : FTGL.Charset := Glyph_Map_List (5);
+      aChar             : Character;
+      Glyph_S           : String := " ";
+      Data              : Glyph_Data (Bitmap);
+      Image_Address     : GL.Objects.Textures.Image_Source;
 
       --  BBox array elements:
       --  1 lower  2 left  3 near
       --  4 upper  5 right 6 far
       BBox            : FTGL.Bounding_Box;
    begin
+      Font_Texture.Initialize_Id;
+      if not Font_Texture.Initialized then
+         Put_Line ("Generate_Texture, Font_Texture initialization failed.");
+         raise FTGL.FTGL_Error;
+      end if;
+      Texture_2D.Bind (Font_Texture);    -- Complete initialization
+
       for Index in 0 .. 128 loop
          aChar := Character'Val (Index);
          Glyph_S (1) := aChar;
          BBox := theFont.Bounds (Glyph_S);
-         Data.Ascend := theFont.Ascender;
-         Data.Descend := theFont.Descender;
-         Data.Advance := theFont.Advance_Width (Glyph_S);
+--           Data.Ascend := theFont.Ascender;
+--           Data.Descend := theFont.Descender;
+--           Data.Advance := theFont.Advance_Width (Glyph_S);
          Data.Height := (BBox (4) - BBox (1));
          Data.Width  := (BBox (5) - BBox (2));
-         Data.Bearing_X := 0.5 * Data.Width;
-         Data.Bearing_Y := Data.Height - Data.Descend;
---           if Kind = Buffer then
---              Data.Depth := Depth;
+--           Data.Bearing_X := 0.5 * Data.Width;
+--           Data.Bearing_Y := Data.Height - Data.Descend;
+--           if Kind = Buffer or else Kind = Extrude then
+--              Data.Depth := theFont.Depth;
 --           end if;
          Image_Address := Image_Source (Font_Glyph_Map'Address);
 --           Put_Line ("Load_Characters Data.Bearing_Y " & Single'Image (Data.Bearing_Y));
 --           Put_Line ("Load_Characters Index " & Integer'Image (Index));
          Generate_Texture (Font_Texture, Image_Address, Data);
-         Glyph_Image_Map.Insert (aChar, Data);
+         Glyph_Texture_Map.Insert (aChar, Data);
          Data.Texture := Font_Texture;
          Data.Valid := True;
       end loop;
@@ -174,7 +185,7 @@ package body FTGL_Interface is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Font (theFont               : in out FTGL.Fonts.Bitmap_Font;
-                         Data                  : out Glyph_Data;
+                         Texture_Map           : in out Chars_Map_Type;
                          Font_File             : String;
                          Face_Size, Resolution : GL.Types.UInt := 72) is
    begin
@@ -185,7 +196,7 @@ package body FTGL_Interface is
          raise FTGL.FTGL_Error;
       end if;
       theFont.Set_Font_Face_Size (Face_Size, Resolution);
-      Load_Characters (theFont, Bitmap, Data, GL.Types.Int (Face_Size));
+      Load_Characters (theFont, Bitmap, Texture_Map, GL.Types.Int (Face_Size));
    exception
       when anError : FTGL.FTGL_Error =>
          Put_Line ("Setup_Bitmap_Font_Font returned an FTGL error: ");
