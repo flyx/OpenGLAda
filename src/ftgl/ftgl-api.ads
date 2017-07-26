@@ -16,6 +16,7 @@
 
 with System;
 with Interfaces.C.Pointers;
+with Interfaces.C.Strings;
 
 with FTGL.Errors;
 with FTGL.Fonts;
@@ -46,10 +47,6 @@ private package FTGL.API is
                                  return System.Address;
    pragma Import (Convention => C, Entity => Create_Custom_Glyph,
                   External_Name => "ftglCreateCustomGlyph");
-
-   function Get_Glyph (Char : Character) return System.Address;
-   pragma Import (Convention => CPP, Entity => Get_Glyph,
-                  External_Name => "Glyph");
 
    procedure Destroy_Glyph (Glyph : System.Address);
    pragma Import (Convention => C, Entity => Destroy_Glyph,
