@@ -166,7 +166,7 @@ package body FTGL_Interface is
 --           if Kind = Buffer or else Kind = Extrude then
 --              Data.Depth := theFont.Depth;
 --           end if;
-         Image_Address := Image_Source (Font_Glyph_Map'Address);
+         Image_Address := Image_Source (Get_Glyph (aChar));
 --           Put_Line ("Load_Characters Data.Bearing_Y " & Single'Image (Data.Bearing_Y));
 --           Put_Line ("Load_Characters Index " & Integer'Image (Index));
          Generate_Texture (Font_Texture, Image_Address, Data);
@@ -190,8 +190,9 @@ package body FTGL_Interface is
                          Font_File             : String;
                          Face_Size, Resolution : GL.Types.UInt := 72) is
    begin
-      theFont.Initialize;
-      theFont.Load (Font_File);
+--        theFont.Initialize;
+--        theFont.Load (Font_File);
+      theFont := new FTBitmapFont (Font_File);
       if not theFont.Loaded then
          Put_Line (Font_File & " failed to load.");
          raise FTGL.FTGL_Error;
@@ -209,29 +210,4 @@ package body FTGL_Interface is
 
    --  ------------------------------------------------------------------------
 
---     procedure Setup_Font (theFont               : in out FTGL.Fonts.Buffer_Font;
---                           Data                  : out Glyph_Data;
---                           Font_File             : String;
---                           Face_Size, Resolution : GL.Types.UInt := 72;
---                           Depth                 : GL.Types.Single := 0.05) is
---     begin
---        theFont.Initialize;
---        theFont.Load (Font_File);
---        if not theFont.Loaded then
---           Put_Line (Font_File & " failed to load.");
---           raise FTGL.FTGL_Error;
---        end if;
---        theFont.Set_Font_Face_Size (Face_Size, Resolution);
---        theFont.Set_Font_Depth (Depth);
---        Load_Characters (theFont, Buffer, Data, GL.Types.Int (Face_Size));
---     exception
---        when anError : FTGL.FTGL_Error =>
---           Put_Line ("Setup_Buffer_Font returned an FTGL error: ");
---           raise;
---        when  others =>
---           Put_Line ("An exception occurred in Setup_Buffer_Font.");
---           raise;
---     end Setup_Font;
-
-   --  ------------------------------------------------------------------------
 end FTGL_Interface;

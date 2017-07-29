@@ -1,4 +1,6 @@
 
+with System;
+
 with Ada.Containers.Ordered_Maps;
 with GL.Objects.Textures;
 with GL.Types;
@@ -20,14 +22,27 @@ package FTGL_Interface is
       Texture     : GL.Objects.Textures.Texture;
       Width       : GL.Types.Single;
       Height      : GL.Types.Single;
+      Advance     : GL.Types.Single;
       case Kind is
          when Bitmap =>
             Pitch    : GL.Types.UInt;
-            Top_Left : FT_Point;
-         when Buffer | Extrude =>
-            Depth : GL.Types.Single := 0.05;
+            Top_Left_BM : FT_Point;
+         when Buffer =>
+            Has_Bitmap : Boolean := False;
+            Corner     : FT_Point;
+--              Bitmap     : FT_Bitmap;
+            Pixels     : System.Address;
+--              Buffer     : FT_Buffer;
+         when Extrude =>
+            H_Scale       : GL.Types.Single := 1.0;
+            V_Scale       : GL.Types.Single := 1.0;
+            Back_Outset   : GL.Types.Single;
+            Front_Outset  : GL.Types.Single;
+            Depth         : GL.Types.Single := 0.05;
+--              Vectoriser    : FT_Vectorizer;
+         when Pixmap =>
+            Top_Left_PM : FT_Point;
          when others =>
-            Advance     : GL.Types.Single;
             Bearing_X   : GL.Types.Single;
             Bearing_Y   : GL.Types.Single;
             Ascend      : GL.Types.Single;
