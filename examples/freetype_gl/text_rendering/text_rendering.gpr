@@ -1,4 +1,3 @@
-limited with "../../../opengl-ftgl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Text_Rendering is
@@ -11,6 +10,10 @@ project Text_Rendering is
    package Compiler is
       for Default_Switches ("ada") use ("-gnatyBcltux", "-fstack-check");
    end Compiler;
+
+   package Linker is
+      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype");
+   end Linker;
 
 end Text_Rendering;
 
