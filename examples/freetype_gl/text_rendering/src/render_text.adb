@@ -7,8 +7,6 @@ with GL.Pixels;
 with Glfw;
 with Glfw.Windows;
 
-with FTGL;
-
 with Initialize;
 with Main_Loop;
 
@@ -25,10 +23,6 @@ exception
    when anError : Constraint_Error =>
       Put_Line ("Render_Text returned a constraint error: ");
       Put_Line (Exception_Information (anError));
-
-    when anError : FTGL.FTGL_Error =>
-              Put_Line ("Render_Text returned an FTGL error: ");
-              Put_Line (Exception_Information (anError));
 
    when anError :  others =>
       Put_Line ("An exception occurred in Render_Text.");
