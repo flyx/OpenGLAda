@@ -2,10 +2,10 @@ limited with "../../../opengl-glfw.gpr";
 
 project Text_Rendering is
 
+   for Source_Dirs use ("src", "../../common", "../../free_type");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
    for Main use ("render_text.adb");
-   for Source_Dirs use ("src", "../../../examples/common");
 
    package Compiler is
       for Default_Switches ("ada") use ("-gnatyBcltux", "-fstack-check");
