@@ -50,6 +50,7 @@ package FT_Types is
 
    subtype FT_Bool is unsigned_char;
    subtype FT_Error is int;
+   subtype FT_Fixed is long;
    subtype FT_Int is int;
    subtype FT_Long is long;
    subtype FT_Short is short;
