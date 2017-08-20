@@ -35,7 +35,7 @@ with FT_Types;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   theLibrary            : FT_Interface.FT_Library;
+   theLibrary            : FT_Types.FT_Library;
    Face_Ptr              : FT_Interface.FT_Face;
    Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
@@ -214,10 +214,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup_Texture is
       use Interfaces.C;
       use GL.Objects.Textures.Targets;
-      aFace      : FT_Interface.FT_Face_Record := Face (Face_Ptr);
+      aFace      : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
       aTexture   : GL.Objects.Textures.Texture;
    begin
-      aFace := Face_Ptr'Access;
       for Char in unsigned_long range 1 .. 128 loop
          if FT_Interface.Load_Character (Face_Ptr, Char, FT_Types.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
