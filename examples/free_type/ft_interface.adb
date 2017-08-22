@@ -5,25 +5,27 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with FT_Interface.API; use FT_Interface.API;
-with FT_Glyph;
+with FT_Glyphs;
 
 package body FT_Interface is
-   package Face_To_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
-   package Glyph_To_Access is new System.Address_To_Access_Conversions (FT_Glyph.FT_Glyph_Record);
+   package Face_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
+   package Glyph_Access is new System.Address_To_Access_Conversions (FT_Glyphs.FT_Glyph_Record);
+   package Slot_Access is new System.Address_To_Access_Conversions (FT_Interface.FT_Glyph_Slot_Record);
 
-   function Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Glyph_Slot is
+   function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap is
       use Interfaces.C;
-      use Glyph_To_Access;
+      use Slot_Access;
       aGlyph_Ptr    : System.Address;
       Glyph_Pointer : Object_Pointer := To_Pointer (System.Address (Glyph_Slot));
-      theGlyph      : FT_Glyph.FT_Glyph_Record := Glyph_Pointer.all;
+      theGlyph      : FT_Interface.FT_Glyph_Slot_Record := Glyph_Pointer.all;
    begin
-      if FT_Glyph.Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
+      --  Get_Glyph calls the FT_Get_Glyph C function.
+      if FT_Glyphs.Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
          Put_Line ("FT_Interface.Bitmap raised an Exception");
          raise FT_Exception;
       end if;
       return theGlyph.Bitmap;
-   end Bitmap;
+   end Get_Bitmap;
 
    --  -------------------------------------------------------------------------
 
@@ -45,22 +47,22 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Face_Ptr : FT_Face) return FT_Glyph.FT_Glyph_Record is
+   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyph.FT_Glyph_Record is
       use Glyph_To_Access;
       theFace : FT_Face_Record := Face (Face_Ptr);
       Glyph_Pointer : Object_Pointer :=
         To_Pointer (System.Address (theFace.Glyph));
    begin
       return Glyph_Pointer.all;
-   end Glyph;
+   end Get_Glyph_Record;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Face_Ptr : FT_Face) return FT_Glyph_Slot is
+   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot is
       theFace : FT_Face_Record := Face (Face_Ptr);
    begin
       return theFace.Glyph;
-   end Glyph;
+   end Get_Glyph_Slot;
 
    --  -------------------------------------------------------------------------
 

@@ -1,13 +1,13 @@
 
 with System;
 
-with FT_Glyph;
+with FT_Glyphs;
 with FT_Image;
 with FT_Types;
 
-package FT_Glyph.API is
+package FT_Glyphs.API is
 
-   procedure FT_Done_Glyph (Glyph : FT_Glyph.);
+   procedure FT_Done_Glyph (Glyph : FT_Glyphs.FT_Glyph);
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
 
   function FT_Glyph_To_Bitmap
@@ -22,4 +22,4 @@ package FT_Glyph.API is
                           return FT_Types.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
-end FT_Glyph.API;
+end FT_Glyphs.API;
