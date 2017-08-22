@@ -8,6 +8,11 @@ with FT_Types; use FT_Types;
 
 package FT_Interface.API is
 
+   function FT_Get_Kerning
+     (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
+      Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;
+   pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
+
   function FT_Init_FreeType (aLibrary : in out System.Address) return FT_Error;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 

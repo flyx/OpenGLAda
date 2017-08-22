@@ -37,6 +37,14 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Kerning (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
+                         Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error is
+   begin
+      return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
+   end Get_Kerning;
+
+   --  -------------------------------------------------------------------------
+
    function Glyph (Face_Ptr : FT_Face) return FT_Glyph.FT_Glyph_Record is
       use Glyph_To_Access;
       theFace : FT_Face_Record := Face (Face_Ptr);
@@ -56,36 +64,36 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-  function Init_FreeType (aLibrary : in out FT_Library) return FT_Types.FT_Error is
-  begin
+   function Init_FreeType (aLibrary : in out FT_Library) return FT_Types.FT_Error is
+   begin
       return FT_Init_FreeType (System.Address (aLibrary));
-  end Init_FreeType;
+   end Init_FreeType;
 
    --  -------------------------------------------------------------------------
 
    function Load_Character (Face : in out FT_Face; Char_Code : FT_ULong;
-      Load_Flags : FT_Types.Load_Flag) return FT_Error is
+                            Load_Flags : FT_Types.Load_Flag) return FT_Error is
    begin
       return FT_Load_Char (Face, Char_Code, Load_Flags'Enum_Rep);
    end Load_Character;
 
    --  -------------------------------------------------------------------------
 
-  function New_Face (Library : FT_Library;
-               File_Path_Name : String;
-               Face_Index     : FT_Long; aFace : in out FT_Face) return FT_Error is
+   function New_Face (Library : FT_Library;
+                      File_Path_Name : String;
+                      Face_Index     : FT_Long; aFace : in out FT_Face) return FT_Error is
       Path : Interfaces.C.Strings.chars_ptr :=
-               Interfaces.C.Strings.New_String (File_Path_Name);
-  begin
+        Interfaces.C.Strings.New_String (File_Path_Name);
+   begin
       return  FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
-  end New_Face;
+   end New_Face;
 
    --  -------------------------------------------------------------------------
 
    function Set_Pixel_Sizes (Face : in out FT_Face; Pixel_Width : FT_UInt;
                              Pixel_Height : FT_UInt) return FT_Error is
    begin
-       return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
+      return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
    end;
 
    --  -------------------------------------------------------------------------

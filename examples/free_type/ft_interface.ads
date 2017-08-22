@@ -13,15 +13,18 @@ package FT_Interface is
 
    type FT_Face is new System.Address;
    type FT_Face_Record is private;
+   type FT_Glyph_Slot_Record is private;
 
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
+   function Get_Kerning (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
+      Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;
    function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
    function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT_Types.Load_Flag) return FT_Error;
    function New_Face (Library       : FT_Library; File_Path_Name : String;
                       Face_Index    : FT_Long; aFace : in out FT_Face) return FT_Error;
    function Glyph (Face_Ptr : FT_Face) return FT_Glyph.FT_Glyph_Record;
-   function Glyph (Face_Ptr : FT_Face) return FT_Glyph_Slot;
+   function Glyph (Face_Ptr : FT_Face) return FT_Glyph_Slot_Record;
    function Set_Pixel_Sizes (Face         : in out FT_Face; Pixel_Width : FT_UInt;
                              Pixel_Height : FT_UInt) return FT_Error;
 
@@ -93,28 +96,29 @@ private
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Metrics);
 
    type FT_Glyph_Slot_Record is record
-      library : FT_Library;
-      face : FT_Face;
-      next : FT_Glyph_Slot;
-      reserved : aliased FT_Types.FT_UInt;
-      c_generic : aliased FT_Types.FT_Generic;
-      metrics : aliased FT_Glyph_Metrics;
-      linearHoriAdvance : aliased FT_Types.FT_Fixed;
-      linearVertAdvance : aliased FT_Types.FT_Fixed;
-      advance : aliased FT_Image.FT_Vector;
-      format : aliased FT_Image.FT_Glyph_Format;
-      bitmap : aliased FT_Image.FT_Bitmap;
-      bitmap_left : aliased FT_Types.FT_Int;
-      bitmap_top : aliased FT_Types.FT_Int;
-      outline : aliased FT_Image.FT_Outline;
-      num_subglyphs : aliased FT_Types.FT_UInt;
-      subglyphs : FT_SubGlyph;
-      control_data : System.Address;
-      control_len : aliased long;
-      lsb_delta : aliased FT_Image.FT_Pos;
-      rsb_delta : aliased freetype_ftimage_h.FT_Pos;
-      other : System.Address;
-      internal : FT_Slot_Internal;
+      Library           : FT_Library;
+      Face              : FT_Face;
+      Next              : FT_Glyph_Slot;
+      Reserved          : aliased FT_Types.FT_UInt;
+      C_Generic         : aliased FT_Types.FT_Generic;
+      etrics            : aliased FT_Glyph_Metrics;
+      LinearHoriAdvance : aliased FT_Types.FT_Fixed;
+      LinearVertAdvance : aliased FT_Types.FT_Fixed;
+      Advance           : aliased FT_Image.FT_Vector;
+      Format            : aliased FT_Image.FT_Glyph_Format;
+      Bitmap            : aliased FT_Image.FT_Bitmap;
+      Bitmap_Left       : aliased FT_Types.FT_Int;
+      Bitmap_Top        : aliased FT_Types.FT_Int;
+      Outline           : aliased FT_Image.FT_Outline;
+      Num_Subglyphs     : aliased FT_Types.FT_UInt;
+      Subglyphs         : FT_Subglyph;
+      Control_Data      : System.Address;
+      Control_Len       : aliased Interfaces.C.long;
+      Lsb_Delta         : aliased FT_Image.FT_Pos;
+      Rsb_Delta         : aliased FT_Image.FT_Pos;
+      Other             : System.Address;
+      Internal          : FT_Slot_Internal;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
+
 end FT_Interface;

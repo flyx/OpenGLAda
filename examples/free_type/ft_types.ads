@@ -14,6 +14,8 @@ package FT_Types is
    type FT_List_Record is private;
    type FT_Library is new System.Address;
    type FT_Size is new System.Address;
+   type FT_Slot_Internal is new System.Address;
+   type FT_Subglyph is new System.Address;
 
    type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
                       Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
