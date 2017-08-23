@@ -32,6 +32,7 @@ with Program_Loader;
 with Utilities;
 
 with FT_Glyphs;
+with FT_Image;
 with FT_Interface;
 with FT_Types;
 
@@ -70,6 +71,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
+   procedure Setup_Font;
+   procedure Setup_Texture;
 
    --  ------------------------------------------------------------------------
 
@@ -106,9 +109,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
       GL.Objects.Textures.Set_Active_Unit (0);
-      Vertex_Array.Bind;
-      Array_Buffer.Bind (Vertex_Buffer);
---        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
 
       for index in Text'Range loop
          Char := Text (index);
@@ -187,11 +187,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          -100.0, 100.0, Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
+      Vertex_Buffer.Initialize_Id;
+      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+
+      Setup_Font;
+      Setup_Texture;
+      FT_Interface.Done_Face (Face_Ptr);
+      FT_Interface.Done_Library (theLibrary);
+
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
 
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer, Single'Size / 8 * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
 
    exception
       when others =>
@@ -239,6 +248,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Char_Data.Rows := FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph);
          Char_Data.Left := FT_Glyphs.Get_Bitmap_Left (aFace.Glyph);
          Char_Data.Top := FT_Glyphs.Get_Bitmap_Top (aFace.Glyph);
+         Char_Data.Advance_X := FT_Image.Vector_X (FT_Glyphs.Get_Glyph_Advance (aFace.Glyph));
 
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
@@ -251,6 +261,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
          Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
 
+         Char_Data.Texture := aTexture;
+         Character_Data.Append (Char_Data);
       end loop;
    end Setup_Texture;
 

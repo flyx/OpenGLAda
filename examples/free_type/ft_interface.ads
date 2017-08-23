@@ -104,6 +104,8 @@ package FT_Interface is
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
 
+   procedure Done_Face (Face_Ptr : FT_Face);
+   procedure Done_Library (Library_Ptr : FT_Library);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
    function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap;
    function Init_FreeType (alibrary : in out FT_Library) return FT_Error;

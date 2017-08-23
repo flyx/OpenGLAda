@@ -8,6 +8,12 @@ with FT_Types; use FT_Types;
 
 package FT_Interface.API is
 
+   function FT_Done_Face (face : FT_Face) return FT_Error;
+   pragma Import (C, FT_Done_Face, "FT_Done_Face");
+
+   function FT_Done_Library (Library : FT_Library) return FT_Error;
+   pragma Import (C, FT_Done_Library, "FT_Done_Library");
+
    function FT_Get_Kerning
      (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
       Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;

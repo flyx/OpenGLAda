@@ -25,4 +25,18 @@ package body FT_Image is
 
    --  -------------------------------------------------------------------------
 
+   function Vector_X (theVector : FT_Vector) return GL.Types.Int is
+   begin
+      return GL.Types.Int (theVector.x);
+   end Vector_X;
+
+   --  -------------------------------------------------------------------------
+
+   function Vector_Y (theVector : FT_Vector) return GL.Types.Int is
+   begin
+      return GL.Types.Int (theVector.y);
+   end Vector_Y;
+
+   --  -------------------------------------------------------------------------
+
 end FT_Image;

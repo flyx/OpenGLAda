@@ -24,6 +24,7 @@ package FT_Glyphs is
    function Get_Bitmap_Rows (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int;
    function Get_Bitmap_Top (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int;
    function Get_Bitmap_Width (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single;
+   function Get_Glyph_Advance (Slot_Ptr : FT_Types.FT_Glyph_Slot) return FT_Image.FT_Vector;
    function Glyph_To_Bitmap
        (theGlyph    : System.Address; Render_Mode : FT_Types.FT_Render_Mode;
         Origin      : access FT_Image.FT_Vector;

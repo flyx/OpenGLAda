@@ -12,6 +12,30 @@ package body FT_Interface is
    package Glyph_Access is new System.Address_To_Access_Conversions (FT_Glyphs.FT_Glyph_Record);
    package Slot_Access is new System.Address_To_Access_Conversions (FT_Interface.FT_Glyph_Slot_Record);
 
+   --  -------------------------------------------------------------------------
+
+   procedure Done_Face (Face_Ptr : FT_Face) is
+      use Interfaces.C;
+   begin
+      if FT_Done_Face (Face_Ptr) /= 0 then
+         Put_Line ("FT_Done_Face failed");
+         raise FT_Types.FT_Exception;
+      end if;
+   end Done_Face;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Done_Library (Library_Ptr : FT_Library) is
+      use Interfaces.C;
+   begin
+      if FT_Done_Library (Library_Ptr) /= 0 then
+         Put_Line ("FT_Done_Library failed");
+         raise FT_Types.FT_Exception;
+      end if;
+   end Done_Library;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap is
       use Interfaces.C;
       use Slot_Access;
