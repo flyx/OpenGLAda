@@ -30,7 +30,7 @@ package body FT_Interface is
    --  -------------------------------------------------------------------------
 
    function Face (Face_Ptr : FT_Face) return FT_Face_Record is
-      use Face_To_Access;
+      use Face_Access;
       --  type Object_Pointer is access all Object;
       Face_Pointer : Object_Pointer := To_Pointer (System.Address (Face_Ptr));
    begin
@@ -47,8 +47,8 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyph.FT_Glyph_Record is
-      use Glyph_To_Access;
+   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record is
+      use Glyph_Access;
       theFace : FT_Face_Record := Face (Face_Ptr);
       Glyph_Pointer : Object_Pointer :=
         To_Pointer (System.Address (theFace.Glyph));

@@ -3,6 +3,7 @@ with Interfaces.C;
 with Interfaces.C.Strings;
 with System;
 
+with Ada.Containers.Vectors;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -30,10 +31,23 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with FT_Glyphs;
 with FT_Interface;
 with FT_Types;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
+   type Character_Record is record
+      Texture   : GL.Objects.Textures.Texture;
+      Width     : GL.Types.Int;
+      Height    : GL.Types.Int;
+      Rows      : GL.Types.Int;
+      Left      : GL.Types.Int;
+      Top       : GL.Types.Int;
+      Advance_X : GL.Types.Int;
+   end record;
+
+   package Data_Vector_Package is new Ada.Containers.Vectors (Natural, Character_Record);
+   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
 
    theLibrary            : FT_Types.FT_Library;
    Face_Ptr              : FT_Interface.FT_Face;
@@ -44,6 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Colour_ID             : GL.Uniforms.Uniform;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
+   Character_Data        : Character_Data_Vector;
 
    Background      : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.2, 0.4, 0.0);
@@ -136,10 +151,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use Program_Loader;
 
---        Font_Bitmap     : FTGL.Fonts.Bitmap_Font;
---        Font_Buffer     : FTGL.Fonts.Buffer_Font;
---        Font_Pixmap     : FTGL.Fonts.Pixmap_Font;
---        Font_Polygon    : FTGL.Fonts.Polygon_Font;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
    begin
@@ -216,17 +227,30 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Textures.Targets;
       aFace      : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
       aTexture   : GL.Objects.Textures.Texture;
+      Char_Data  : Character_Record;
    begin
-      for Char in unsigned_long range 1 .. 128 loop
+      for Char in FT_Types.FT_ULong range 1 .. 128 loop
          if FT_Interface.Load_Character (Face_Ptr, Char, FT_Types.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
             raise FT_Types.FT_Exception;
          end if;
+         Char_Data.Width := GL.Types.Int (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph));
+         Char_Data.Height := GL.Types.Int (FT_Glyphs.Get_Bitmap_Height (aFace.Glyph));
+         Char_Data.Rows := FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph);
+         Char_Data.Left := FT_Glyphs.Get_Bitmap_Left (aFace.Glyph);
+         Char_Data.Top := FT_Glyphs.Get_Bitmap_Top (aFace.Glyph);
+
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
-         Texture_2D_Target.Load_From_Data (0, GL.Pixels.Red, aFace.Glyph.Bitmap.Width,
-                                           aFace.Glyph.Bitmap.Height, GL.Pixels.Red,
-                                           GL.Pixels.Unsigned_Byte, aFace.Glyph.Bitmap.Buffer);
+         Texture_2D.Load_From_Data (0, GL.Pixels.RGB,
+                                    Char_Data.Width, Char_Data.Height,
+                                    GL.Pixels.RGB, GL.Pixels.Unsigned_Byte,
+                                    FT_Glyphs.Get_Bitmap_Image (aFace.Glyph));
+         Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+         Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+         Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
+         Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
+
       end loop;
    end Setup_Texture;
 

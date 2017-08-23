@@ -1,10 +1,14 @@
 
 with System.Address_To_Access_Conversions;
 
+with GL.Objects.Textures;
+
 with FT_Glyphs.API;
+with FT_Image;
 with FT_Interface;
 
 package body FT_Glyphs is
+   package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT_Image.FT_Bitmap);
    package Glyph_Slot_Access is new System.Address_To_Access_Conversions (FT_Interface.FT_Glyph_Slot_Record);
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph) is
@@ -14,14 +18,63 @@ package body FT_Glyphs is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Bitmap_Image (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Objects.Textures.Image_Source is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return FT_Image.Get_Buffer (Glyph.Bitmap);
+   end Get_Bitmap_Image;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Bitmap_Left (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return GL.Types.Int (Glyph.Bitmap_Left);
+   end Get_Bitmap_Left;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Bitmap_Width (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single is
       use Glyph_Slot_Access;
       Glyph : FT_Interface.FT_Glyph_Slot_Record :=
                 To_Pointer (System.Address (Slot_Ptr)).all;
-      Width : GL.Types.Single := Glyph.;
    begin
-      return Width;
+      return GL.Types.Single (Glyph.Metrics.width);
    end Get_Bitmap_Width;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Bitmap_Height (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return GL.Types.Single (Glyph.Metrics.height);
+   end Get_Bitmap_Height;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Bitmap_Rows (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return FT_Image.Get_Rows (Glyph.Bitmap);
+   end Get_Bitmap_Rows;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Bitmap_Top (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return GL.Types.Int (Glyph.Bitmap_Top);
+   end Get_Bitmap_Top;
 
    --  -------------------------------------------------------------------------
 

@@ -13,40 +13,23 @@ with FT_Types; Use FT_Types;
 package FT_Interface is
 
    type FT_Face is new System.Address;
-   type FT_Face_Record is private;
-   type FT_Glyph_Slot_Record is private;
-
-   function Face (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap;
-   function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
-   function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
-                            Load_Flags : FT_Types.Load_Flag) return FT_Error;
-   function New_Face (Library       : FT_Library; File_Path_Name : String;
-                      Face_Index    : FT_Long; aFace : in out FT_Face) return FT_Error;
-   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
-   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
-   function Set_Pixel_Sizes (Face         : in out FT_Face; Pixel_Width : FT_UInt;
-                             Pixel_Height : FT_UInt) return FT_Error;
-
-private
-   use FT_Image;
-
-   type FT_BBox is record
-      xMin : aliased FT_Pos;
-      yMin : aliased FT_Pos;
-      xMax : aliased FT_Pos;
-      yMax : aliased FT_Pos;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_BBox);
 
    type FT_Bitmap_Size is record
       Height : aliased FT_Short;
       Width  : aliased FT_Short;
-      Size   : aliased FT_Pos;
-      X_Ppem : aliased FT_Pos;
-      Y_Ppem : aliased FT_Pos;
+      Size   : aliased FT_Image.FT_Pos;
+      X_Ppem : aliased FT_Image.FT_Pos;
+      Y_Ppem : aliased FT_Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
+
+   type FT_BBox is record
+      xMin : aliased FT_Image.FT_Pos;
+      yMin : aliased FT_Image.FT_Pos;
+      xMax : aliased FT_Image.FT_Pos;
+      yMax : aliased FT_Image.FT_Pos;
+   end record;
+   pragma Convention (C_Pass_By_Copy, FT_BBox);
 
    type FT_Face_Record is record
       Num_Faces               : aliased FT_Long;
@@ -120,4 +103,19 @@ private
       Internal : FT_Slot_Internal;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
+
+   function Face (Face_Ptr : FT_Face) return FT_Face_Record;
+   function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap;
+   function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
+   function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
+                            Load_Flags : FT_Types.Load_Flag) return FT_Error;
+   function New_Face (Library       : FT_Library; File_Path_Name : String;
+                      Face_Index    : FT_Long; aFace : in out FT_Face) return FT_Error;
+   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
+   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
+   function Set_Pixel_Sizes (Face         : in out FT_Face; Pixel_Width : FT_UInt;
+                             Pixel_Height : FT_UInt) return FT_Error;
+
+private
+
 end FT_Interface;

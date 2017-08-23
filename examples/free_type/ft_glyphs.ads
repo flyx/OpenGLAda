@@ -2,6 +2,7 @@
 with System;
 with Interfaces.C;
 
+with GL.Objects.Textures;
 with GL.Types;
 
 with FT_Image;
@@ -17,6 +18,11 @@ package FT_Glyphs is
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
 
+   function Get_Bitmap_Height (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single;
+   function Get_Bitmap_Image (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Objects.Textures.Image_Source;
+   function Get_Bitmap_Left (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int;
+   function Get_Bitmap_Rows (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int;
+   function Get_Bitmap_Top (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Int;
    function Get_Bitmap_Width (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single;
    function Glyph_To_Bitmap
        (theGlyph    : System.Address; Render_Mode : FT_Types.FT_Render_Mode;

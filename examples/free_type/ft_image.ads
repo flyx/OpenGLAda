@@ -3,6 +3,9 @@ with System;
 with Interfaces.C; use Interfaces.C;
 with Interfaces.C.Strings;
 
+with GL.Objects.Textures;
+with GL.Types;
+
 package FT_Image is
 
    type FT_Bitmap is private;
@@ -15,6 +18,10 @@ package FT_Image is
                             Outline     => unsigned (1869968492),
                             Plotter     => unsigned (1886154612));
    subtype FT_Pos is long;
+
+   function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source;
+   function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int;
+   function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt;
 
 private
     type FT_Bitmap is record
