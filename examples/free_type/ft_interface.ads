@@ -24,10 +24,10 @@ package FT_Interface is
    pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
 
    type FT_BBox is record
-      xMin : aliased FT_Image.FT_Pos;
-      yMin : aliased FT_Image.FT_Pos;
-      xMax : aliased FT_Image.FT_Pos;
-      yMax : aliased FT_Image.FT_Pos;
+      X_Min : aliased FT_Image.FT_Pos;
+      Y_Min : aliased FT_Image.FT_Pos;
+      X_Max : aliased FT_Image.FT_Pos;
+      Y_Max : aliased FT_Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_BBox);
 
@@ -67,14 +67,14 @@ package FT_Interface is
    pragma Convention (C_Pass_By_Copy, FT_Face_Record);
 
     type FT_Glyph_Metrics is record
-      width        : aliased FT_Image.FT_Pos;
-      height       : aliased FT_Image.FT_Pos;
-      horiBearingX : aliased FT_Image.FT_Pos;
-      horiBearingY : aliased FT_Image.FT_Pos;
-      horiAdvance  : aliased FT_Image.FT_Pos;
-      vertBearingX : aliased FT_Image.FT_Pos;
-      vertBearingY : aliased FT_Image.FT_Pos;
-      vertAdvance  : aliased FT_Image.FT_Pos;
+      Width        : aliased FT_Image.FT_Pos;
+      Height       : aliased FT_Image.FT_Pos;
+      HoriBearingX : aliased FT_Image.FT_Pos;
+      HoriBearingY : aliased FT_Image.FT_Pos;
+      HoriAdvance  : aliased FT_Image.FT_Pos;
+      VertBearingX : aliased FT_Image.FT_Pos;
+      VertBearingY : aliased FT_Image.FT_Pos;
+      VertAdvance  : aliased FT_Image.FT_Pos;
     end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Metrics);
 
