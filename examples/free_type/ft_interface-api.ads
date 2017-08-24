@@ -22,7 +22,7 @@ package FT_Interface.API is
   function FT_Init_FreeType (aLibrary : in out System.Address) return FT_Error;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
-   function FT_Load_Char (Face : in out FT_Face; Char_Code : FT_ULong;
+   function FT_Load_Char (Face : FT_Face; Char_Code : FT_ULong;
       Load_Flags : FT_Config.FT_Int32) return FT_Error;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
@@ -32,7 +32,7 @@ package FT_Interface.API is
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
-   function FT_Set_Pixel_Sizes (Face : in out FT_Face; Pixel_Width : FT_UInt;
+   function FT_Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
                                 Pixel_Height : FT_UInt) return FT_Error;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");
 

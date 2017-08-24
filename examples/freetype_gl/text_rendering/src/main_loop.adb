@@ -10,6 +10,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Attributes;
 with GL.Blending;
 with GL.Buffers;
+with GL.Errors;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -37,13 +38,20 @@ with FT_Interface;
 with FT_Types;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
+   type Character_Size is record
+      Width     : GL.Types.Single;
+      Rows      : GL.Types.Single;
+   end record;
+
+   type Character_Bearing is record
+      Left      : GL.Types.Single;
+      Top       : GL.Types.Single;
+   end record;
+
    type Character_Record is record
       Texture   : GL.Objects.Textures.Texture;
-      Width     : GL.Types.Int;
-      Height    : GL.Types.Int;
-      Rows      : GL.Types.Int;
-      Left      : GL.Types.Int;
-      Top       : GL.Types.Int;
+      Size      : Character_Size;
+      Bearing   : Character_Bearing;
       Advance_X : GL.Types.Int;
    end record;
 
@@ -61,7 +69,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Character_Data        : Character_Data_Vector;
 
-   Background      : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
+   Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.2, 0.4, 0.0);
 
    --  ------------------------------------------------------------------------
@@ -80,7 +88,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use GL.Objects.Buffers;
    begin
-      Utilities.Clear_Background_Colour (Background);
+      Utilities.Clear_Background_Colour_And_Depth (Background);
       Render_The_Text ("Some sample text.", 25.0, 25.0, 1.0, Text_Colour);
 
    exception
@@ -99,42 +107,43 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
 
       Char          : Character;
+      Char_Data     : Character_Record;
       X_Orig        : Single := X;
       Y_Orig        : Single := Y;
       X_Pos         : Single;
---        Y_Pos         : Single;
+      Y_Pos         : Single;
+      Width         : Single;
+      Height        : Single;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
---        Vertex_Data   : Singles.Vector4_Array (1 .. 6);
+      Vertex_Data   : Singles.Vector4_Array (1 .. 6);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
       GL.Objects.Textures.Set_Active_Unit (0);
 
       for index in Text'Range loop
+         Put_Line ("Render_The_Text." & Single'Image (Y_Orig));
          Char := Text (index);
---           Bitmap_Font_Data := Texture_Map (Char);
---           X_Pos := X_Orig + Glyph_Bearing_X (Bitmap_Font_Data) * Scale;
-         X_Pos := X_Orig * Scale;
---           Y_Pos := Y_Orig - (Glyph_Width (Bitmap_Font_Data) - Glyph_Bearing_Y (Bitmap_Font_Data)) * Scale;
---           Y_Pos := Y_Orig - (Glyph_Width (Bitmap_Font_Data)) * Scale;
---           Vertex_Data := ((X_Pos, Y_Pos + Glyph_Height (Bitmap_Font_Data), 0.0, 0.0),
---                           (X_Pos, Y_Pos,                    0.0, 1.0),
---                           (X_Pos + Glyph_Width (Bitmap_Font_Data), Y_Pos,  1.0, 1.0),
---                           (X_Pos, Y_Pos + Glyph_Height (Bitmap_Font_Data), 0.0, 0.0),
---                           (X_Pos + Glyph_Width (Bitmap_Font_Data), Y_Pos,  1.0, 1.0),
---                           (X_Pos + Glyph_Width (Bitmap_Font_Data),
---                            Y_Pos + Glyph_Height (Bitmap_Font_Data),        1.0, 0.0));
---
---           Texture_2D.Bind (Glyph_Texture (Bitmap_Font_Data));
-         Array_Buffer.Bind (Vertex_Buffer);
+         Char_Data := Character_Data.Element (index);
+         X_Pos := X_Orig + Char_Data.Bearing.Left * Scale;
+         Y_Pos := Y_Orig - (Char_Data.Size.Rows - Char_Data.Bearing.Top) * Scale;
+         Width := Char_Data.Size.Width;
+         Height := Char_Data.Size.Rows;
+         Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
+                         (X_Pos, Y_Pos,                  0.0, 1.0),
+                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos, Y_Pos + Height,         0.0, 0.0),
+                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
---           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 1, Single_Type, 0, 0);
+         Texture_2D.Bind (Char_Data.Texture);
+         Array_Buffer.Bind (Vertex_Buffer);
+         Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
---           X_Orig := X_Orig + Glyph_Advance (Bitmap_Font_Data) * Scale;
---           X_Orig := X_Orig + Glyph_Width (Bitmap_Font_Data) * Scale;
+         --  Bitshift by 6 to get value in pixels (2^6 = 64
+         --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
+         X_Orig := X_Orig + Single (Char_Data.Advance_X) / 64.0 * Scale;
       end loop;
 
    exception
@@ -143,7 +152,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          raise;
    end Render_The_Text;
 
-   --      --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
    procedure Setup  (Window  : in out Glfw.Windows.Window) is
       use GL.Objects.Programs;
@@ -200,8 +209,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer, Single'Size / 8 * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
+      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
+                 Single'Size / 8 * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
 
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => 4,
+                                               Kind => Single_Type, Stride => 4,
+                                               Offset => 0);
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
@@ -227,6 +241,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          raise FT_Types.FT_Exception;
       end if;
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Setup_Font.");
+         raise;
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
@@ -234,6 +252,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup_Texture is
       use Interfaces.C;
       use GL.Objects.Textures.Targets;
+      use GL.Types;
       aFace      : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
       aTexture   : GL.Objects.Textures.Texture;
       Char_Data  : Character_Record;
@@ -243,17 +262,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Put_Line ("A character failed to load.");
             raise FT_Types.FT_Exception;
          end if;
-         Char_Data.Width := GL.Types.Int (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph));
-         Char_Data.Height := GL.Types.Int (FT_Glyphs.Get_Bitmap_Height (aFace.Glyph));
-         Char_Data.Rows := FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph);
-         Char_Data.Left := FT_Glyphs.Get_Bitmap_Left (aFace.Glyph);
-         Char_Data.Top := FT_Glyphs.Get_Bitmap_Top (aFace.Glyph);
+
+         Char_Data.Size.Width := FT_Glyphs.Get_Bitmap_Width (aFace.Glyph);
+         Char_Data.Size.Rows := Single (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph));
+         Char_Data.Bearing.Left := Single (FT_Glyphs.Get_Bitmap_Left (aFace.Glyph));
+         Char_Data.Bearing.Top := Single (FT_Glyphs.Get_Bitmap_Top (aFace.Glyph));
          Char_Data.Advance_X := FT_Image.Vector_X (FT_Glyphs.Get_Glyph_Advance (aFace.Glyph));
 
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
          Texture_2D.Load_From_Data (0, GL.Pixels.RGB,
-                                    Char_Data.Width, Char_Data.Height,
+                                    GL.Types.Int (Char_Data.Size.Width),
+                                    GL.Types.Int (Char_Data.Size.Rows),
                                     GL.Pixels.RGB, GL.Pixels.Unsigned_Byte,
                                     FT_Glyphs.Get_Bitmap_Image (aFace.Glyph));
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
@@ -264,6 +284,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Char_Data.Texture := aTexture;
          Character_Data.Append (Char_Data);
       end loop;
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Setup_Texture.");
+         raise;
    end Setup_Texture;
 
    --  ------------------------------------------------------------------------

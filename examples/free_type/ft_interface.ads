@@ -115,9 +115,7 @@ package FT_Interface is
                       Face_Index    : FT_Long; aFace : in out FT_Face) return FT_Error;
    function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
    function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
-   function Set_Pixel_Sizes (Face         : in out FT_Face; Pixel_Width : FT_UInt;
+   function Set_Pixel_Sizes (Face         : FT_Face; Pixel_Width : FT_UInt;
                              Pixel_Height : FT_UInt) return FT_Error;
-
-private
 
 end FT_Interface;

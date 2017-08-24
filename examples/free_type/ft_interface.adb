@@ -116,7 +116,7 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Pixel_Sizes (Face : in out FT_Face; Pixel_Width : FT_UInt;
+   function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
                              Pixel_Height : FT_UInt) return FT_Error is
    begin
       return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
