@@ -84,12 +84,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Character_Data (Char : FT_Types.FT_ULong;
+                                   Data : Character_Record) is
+      use GL.Types;
+   begin
+      Put_Line ("Character" & FT_Types.FT_ULong'Image (Char) & " Data");
+      Put_Line ("Width: " & Single'Image (Data.Size.Width));
+      Put_Line ("Rows: " & Single'Image (Data.Size.Rows));
+      Put_Line ("Left: " & Single'Image (Data.Bearing.Left));
+      Put_Line ("Top: " & Single'Image (Data.Bearing.Top));
+      Put_Line ("Advance X: " & Int'Image (Data.Advance_X));
+      New_Line;
+   end Print_Character_Data;
+
+   --  ------------------------------------------------------------------------
+
    procedure Render is
       use GL.Types;
       use GL.Objects.Buffers;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Background);
-      Render_The_Text ("Some sample text.", 25.0, 25.0, 1.0, Text_Colour);
+      Render_The_Text ("Some sample text.", 25.0, 25.0, 0.1, Text_Colour);
 
    exception
       when  others =>
@@ -289,6 +304,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Char_Data.Texture := aTexture;
          end;
          Character_Data.Append (Char_Data);
+         Print_Character_Data (Char, Char_Data);
       end loop;
    exception
       when others =>
