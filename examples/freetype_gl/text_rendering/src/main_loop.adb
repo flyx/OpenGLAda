@@ -120,9 +120,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
       GL.Objects.Textures.Set_Active_Unit (0);
+      GL.Uniforms.Set_Int (Texture_ID, 0);  --  Added
+
+      Vertex_Array.Bind;
 
       for index in Text'Range loop
-         Put_Line ("Render_The_Text." & Single'Image (Y_Orig));
          Char := Text (index);
          Char_Data := Character_Data.Element (index);
          X_Pos := X_Orig + Char_Data.Bearing.Left * Scale;
@@ -136,11 +138,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          (X_Pos + Width, Y_Pos,          1.0, 1.0),
                          (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
          Texture_2D.Bind (Char_Data.Texture);
          Array_Buffer.Bind (Vertex_Buffer);
          Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Char_Data.Advance_X) / 64.0 * Scale;
@@ -254,7 +258,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Textures.Targets;
       use GL.Types;
       aFace      : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      aTexture   : GL.Objects.Textures.Texture;
       Char_Data  : Character_Record;
    begin
       for Char in FT_Types.FT_ULong range 1 .. 128 loop
@@ -268,20 +271,23 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Char_Data.Bearing.Left := Single (FT_Glyphs.Get_Bitmap_Left (aFace.Glyph));
          Char_Data.Bearing.Top := Single (FT_Glyphs.Get_Bitmap_Top (aFace.Glyph));
          Char_Data.Advance_X := FT_Image.Vector_X (FT_Glyphs.Get_Glyph_Advance (aFace.Glyph));
+         declare
+            aTexture   : GL.Objects.Textures.Texture;
+         begin
+            aTexture.Initialize_Id;
+            Texture_2D.Bind (aTexture);
+            Texture_2D.Load_From_Data (0, GL.Pixels.RGB,
+                                       GL.Types.Int (Char_Data.Size.Width),
+                                       GL.Types.Int (Char_Data.Size.Rows),
+                                       GL.Pixels.RGB, GL.Pixels.Unsigned_Byte,
+                                       FT_Glyphs.Get_Bitmap_Image (aFace.Glyph));
+            Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
+            Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
 
-         aTexture.Initialize_Id;
-         Texture_2D.Bind (aTexture);
-         Texture_2D.Load_From_Data (0, GL.Pixels.RGB,
-                                    GL.Types.Int (Char_Data.Size.Width),
-                                    GL.Types.Int (Char_Data.Size.Rows),
-                                    GL.Pixels.RGB, GL.Pixels.Unsigned_Byte,
-                                    FT_Glyphs.Get_Bitmap_Image (aFace.Glyph));
-         Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
-         Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-         Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
-         Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
-
-         Char_Data.Texture := aTexture;
+            Char_Data.Texture := aTexture;
+         end;
          Character_Data.Append (Char_Data);
       end loop;
    exception
