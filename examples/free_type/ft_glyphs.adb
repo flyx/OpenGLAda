@@ -41,9 +41,10 @@ package body FT_Glyphs is
    function Get_Bitmap_Width (Slot_Ptr : FT_Types.FT_Glyph_Slot) return GL.Types.Single is
       use Glyph_Slot_Access;
       Glyph : FT_Interface.FT_Glyph_Slot_Record :=
-                To_Pointer (System.Address (Slot_Ptr)).all;
+        To_Pointer (System.Address (Slot_Ptr)).all;
+      Bitmap : FT_Image.FT_Bitmap := Glyph.Bitmap;
    begin
-      return GL.Types.Single (Glyph.Metrics.width);
+      return GL.Types.Single (FT_Image.Get_Width (Bitmap));
    end Get_Bitmap_Width;
 
    --  -------------------------------------------------------------------------
@@ -62,8 +63,9 @@ package body FT_Glyphs is
       use Glyph_Slot_Access;
       Glyph : FT_Interface.FT_Glyph_Slot_Record :=
                 To_Pointer (System.Address (Slot_Ptr)).all;
+      Bitmap : FT_Image.FT_Bitmap := Glyph.Bitmap;
    begin
-      return FT_Image.Get_Rows (Glyph.Bitmap);
+      return GL.Types.Int (FT_Image.Get_Rows (Bitmap));
    end Get_Bitmap_Rows;
 
    --  -------------------------------------------------------------------------
