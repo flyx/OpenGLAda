@@ -93,7 +93,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Put_Line ("Rows: " & Single'Image (Data.Size.Rows));
       Put_Line ("Left: " & Single'Image (Data.Bearing.Left));
       Put_Line ("Top: " & Single'Image (Data.Bearing.Top));
-      Put_Line ("Advance X: " & Int'Image (Data.Advance_X));
+      Put_Line ("Advance X: " & Int'Image (Data.Advance_X) & " bits");
       New_Line;
    end Print_Character_Data;
 
@@ -104,7 +104,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Background);
-      Render_The_Text ("Some sample text.", 25.0, 25.0, 0.1, Text_Colour);
+      Render_The_Text ("Some sample text.", 25.0, 25.0, 1.0, Text_Colour);
 
    exception
       when  others =>
@@ -163,6 +163,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Char_Data.Advance_X) / 64.0 * Scale;
+--           Put_Line ("X origin: " & Single'Image (X_Orig));
       end loop;
 
    exception
@@ -294,7 +295,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Texture_2D.Load_From_Data (0, GL.Pixels.RGB,
                                        GL.Types.Int (Char_Data.Size.Width),
                                        GL.Types.Int (Char_Data.Size.Rows),
-                                       GL.Pixels.RGB, GL.Pixels.Unsigned_Byte,
+                                       GL.Pixels.Red, GL.Pixels.Unsigned_Byte,
                                        FT_Glyphs.Get_Bitmap_Image (aFace.Glyph));
             Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
             Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
