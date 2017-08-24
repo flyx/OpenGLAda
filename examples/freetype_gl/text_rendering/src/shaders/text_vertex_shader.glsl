@@ -1,4 +1,4 @@
-#version 410 core
+#version 410
 
 layout(location = 0) in vec4 vertex;  // <vec2 position, vec2 texture>
 out vec2 texture_coords;

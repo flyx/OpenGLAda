@@ -1,4 +1,4 @@
-#version 410 core
+#version 410
 
 in vec2 texture_coords;
 out vec4 colour;
