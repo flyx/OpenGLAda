@@ -14,7 +14,7 @@ with Main_Loop;
 
 procedure Hello_Character is
     Main_Window : Glfw.Windows.Window;
-    Window_Title : constant String := "Durian - Buffers And Textures Example";
+    Window_Title : constant String := "Single Freetype Character Example";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);
