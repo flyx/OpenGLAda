@@ -8,12 +8,16 @@ project Render_A_Character is
    for Exec_Dir use ".";
 
    package Compiler is
-      for Default_Switches ("ada") use ("-gnat12", "-gnatyclux");
+      for Default_Switches ("ada") use ("-gnat12", "-gnatyclux", "-g");
    end Compiler;
 
    package Linker is
-      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype");
+      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype", "-g");
    end Linker;
+
+   package Builder is
+     for Switches ("ada") use ("-g");
+   end Builder;
 
 end Render_A_Character;
 
