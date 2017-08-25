@@ -53,7 +53,7 @@ package FT_Interface is
       Max_Advance_Height      : aliased FT_Short;
       Underline_Position      : aliased FT_Short;
       Underline_Thickness     : aliased FT_Short;
-      Glyph                   : FT_Glyph_Slot;
+      Glyph_Slot              : FT_Glyph_Slot;
       Size                    : FT_Size;
       Character_Map           : FT_Char_Map;
       Driver                  : FT_Driver;
@@ -108,13 +108,16 @@ package FT_Interface is
    procedure Done_Library (Library_Ptr : FT_Library);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
    function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap;
+   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
+   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
    function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
    function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT_Types.Load_Flag) return FT_Error;
    function New_Face (Library       : FT_Library; File_Path_Name : String;
                       Face_Index    : FT_Long; aFace : in out FT_Face) return FT_Error;
-   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
-   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
+   function Render_Glyph (Face_Ptr : FT_Face;
+                          Render_Mode : FT_Render_Mode := Render_Mode_Mono)
+                          return FT_Error;
    function Set_Pixel_Sizes (Face         : FT_Face; Pixel_Width : FT_UInt;
                              Pixel_Height : FT_UInt) return FT_Error;
 

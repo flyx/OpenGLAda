@@ -10,5 +10,7 @@ package Texture_Manager is
 
     procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
                              aTexture      : in out GL.Objects.Textures.Texture;
-                             X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0);
+                             X, Y: GL.Types.Single;
+                             Scale : GL.Types.Single := 1.0;
+                             Char          : Character := 'G');
 end Texture_Manager;

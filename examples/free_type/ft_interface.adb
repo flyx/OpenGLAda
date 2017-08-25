@@ -75,7 +75,7 @@ package body FT_Interface is
       use Glyph_Access;
       theFace : FT_Face_Record := Face (Face_Ptr);
       Glyph_Pointer : Object_Pointer :=
-        To_Pointer (System.Address (theFace.Glyph));
+        To_Pointer (System.Address (theFace.Glyph_Slot));
    begin
       return Glyph_Pointer.all;
    end Get_Glyph_Record;
@@ -85,7 +85,7 @@ package body FT_Interface is
    function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot is
       theFace : FT_Face_Record := Face (Face_Ptr);
    begin
-      return theFace.Glyph;
+      return theFace.Glyph_Slot;
    end Get_Glyph_Slot;
 
    --  -------------------------------------------------------------------------
@@ -116,11 +116,21 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
-                             Pixel_Height : FT_UInt) return FT_Error is
+   function Render_Glyph (Face_Ptr : FT_Face;
+                          Render_Mode : FT_Render_Mode := Render_Mode_Mono)
+                          return FT_Error is
+      Slot : FT_Glyph_Slot := Get_Glyph_Slot (Face_Ptr);
    begin
+      return  FT_Render_Glyph (Slot, Render_Mode);
+   end Render_Glyph;
+
+   --  -------------------------------------------------------------------------
+
+  function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
+                             Pixel_Height : FT_UInt) return FT_Error is
+  begin
       return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
-   end;
+  end;
 
    --  -------------------------------------------------------------------------
 
