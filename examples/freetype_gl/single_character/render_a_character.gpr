@@ -1,0 +1,19 @@
+limited with "../../../opengl-glfw.gpr";
+
+project Render_A_Character is
+
+   for Source_Dirs use ("src", "../../common", "../../free_type");
+   for Object_Dir use "obj/";
+   for Main use ("hello_character.adb");
+   for Exec_Dir use ".";
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnat12", "-gnatyclux");
+   end Compiler;
+
+   package Linker is
+      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype");
+   end Linker;
+
+end Render_A_Character;
+
