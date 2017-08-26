@@ -38,9 +38,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Position_Location     : GL.Attributes.Attribute;
    Projection_Matrix     : Singles.Matrix4 := Singles.Identity4;
 
-   --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
-   Vertex_Data           : GL.Types.Singles.Vector4_Array (1 .. 6);
-
    Back_Colour   : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
 
    --  ------------------------------------------------------------------------
@@ -49,16 +46,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
-      Num_Vertices  : Int := 12;
+      Num_Vertices  : Int := 6;
 
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
-      GL.Objects.Programs.Use_Program (Rendering_Program);
-
+      Vertex_Array.Bind;
       GL.Objects.Textures.Set_Active_Unit (0);
       Texture_2D.Bind (Char_Texture);
+      GL.Objects.Programs.Use_Program (Rendering_Program);
       GL.Uniforms.Set_Int (Texture_Location, 0);
+      GL.Uniforms.Set_Single (Colour_Location, 0.5, 0.8, 0.2);
 
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
 
@@ -79,15 +77,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
 
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
+--        Vertex_Buffer.Initialize_Id;
+--        Array_Buffer.Bind (Vertex_Buffer);
+--        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
 
       Rendering_Program := Program_From
           ((Src ("src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Vertex_Data, Char_Texture,
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture,
                                      -400.0, 10.0, 1.0 / 512.0);
 
       Projection_Location :=
