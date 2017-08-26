@@ -7,10 +7,13 @@ with GL.Types;
 package Texture_Manager is
 
     subtype V_Buffer is GL.Objects.Buffers.Buffer;
+   --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
+    subtype Vertex_Array is GL.Types.Singles.Vector4_Array (1 .. 6);
 
     procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
+                             Vertex_Data : in out Vertex_Array;
                              aTexture      : in out GL.Objects.Textures.Texture;
                              X, Y: GL.Types.Single;
-                             Scale : GL.Types.Single := 1.0;
+                             Scale : GL.Types.Single;
                              Char          : Character := 'G');
 end Texture_Manager;

@@ -25,6 +25,7 @@ package body Texture_Manager is
    Image_Error : exception;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
+                           Vertex_Data   : in out Vertex_Array;
                            X, Y, Scale   : GL.Types.Single);
    procedure Setup_Font;
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
@@ -51,8 +52,9 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
+                            Vertex_Data   : in out Vertex_Array;
                             aTexture      : in out GL.Objects.Textures.Texture;
-                            X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0;
+                            X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'G') is
       use Interfaces.C;
    begin
@@ -71,7 +73,7 @@ package body Texture_Manager is
          raise FT_Types.FT_Exception;
       end if;
       Print_Character_Data (Char);
-      Setup_Buffer (Vertex_Buffer, X, Y, Scale);
+      Setup_Buffer (Vertex_Buffer, Vertex_Data, X, Y, Scale);
       Setup_Texture (aTexture);
       FT_Interface.Done_Face (Face_Ptr);
       FT_Interface.Done_Library (theLibrary);
@@ -80,33 +82,37 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
+                           Vertex_Data : in out Vertex_Array;
                            X, Y, Scale   : GL.Types.Single) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
-      Vertex_Data   : GL.Types.Singles.Vector4_Array (1 .. 6);
       aFace       : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      Width       : Single := FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot);
-      Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      X_Pos       : Single := X * Scale;
+      Y_Pos       : Single := Y * Scale;
+      Width       : Single := FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot) * Scale;
+      Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot)) * Scale;
+      Num_Triangles : Int := 2;
+      Num_Vertices  : Int := 12;
+      Stride        : Int := 4;
    begin
       Put_Line ("Setup_Buffer, X, Y: " & Single'Image (X) & Single'Image (Y));
       Put_Line ("Setup_Buffer, width: " & Single'Image (Width));
       Put_Line ("Setup_Buffer, Height: " & Single'Image (Height));
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Vertex_Data := ((X, Y + Height,         0.0, 0.0),
-                      (X, Y,                  0.0, 1.0),
-                      (X + Width, Y,          1.0, 1.0),
-                      (X, Y + Height,         0.0, 0.0),
-                      (X + Width, Y,          1.0, 1.0),
-                      (X + Width, Y + Height, 1.0, 0.0));
+      Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
+                      (X_Pos, Y_Pos,                  0.0, 1.0),
+                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                      (X_Pos, Y_Pos + Height,         0.0, 0.0),
+                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                      (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
 
-      GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 4,
+      GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
-                                               Stride => 0, Offset => 0);
+                                               Stride => Stride, Offset => 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
    exception
