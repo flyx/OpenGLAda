@@ -162,11 +162,6 @@ package body Texture_Manager is
 
       Put_Line ("Setup_Texture, Bitmap address: " & System.Address_Image
                 (System.Address (Bitmap_Image)));
-      if GL.Objects.Textures.Is_Texture (aTexture) then
-         Put_Line ("Setup_Texture, is a texture.");
-      else
-         Put_Line ("Setup_Texture, is not a texture.");
-      end if;
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");
