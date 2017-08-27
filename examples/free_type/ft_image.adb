@@ -3,6 +3,13 @@ with FT_Types;
 
 package body FT_Image is
 
+--     function Data (Object : FT_Bitmap) return GL.Objects.Textures.Image_Source is
+--     begin
+--        return Object.Reference.Pointer;
+--     end Data;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source is
      Addr   : System.Address := FT_Types.Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
    begin

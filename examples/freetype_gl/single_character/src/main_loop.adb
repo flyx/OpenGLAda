@@ -12,6 +12,7 @@ with GL.Objects.Textures.Targets;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
+with GL.Window;
 
 with Glfw.Input;
 with Glfw.Input.Keys;
@@ -37,26 +38,28 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Texture_Location      : GL.Uniforms.Uniform;
    Position_Location     : GL.Attributes.Attribute;
    Projection_Matrix     : Singles.Matrix4 := Singles.Identity4;
+   View_Matrix           : Singles.Matrix4 := Singles.Identity4;
 
    Back_Colour   : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
 
    --  ------------------------------------------------------------------------
 
-   procedure Render is
+   procedure Render (Window : in out Glfw.Windows.Window)  is
       use GL.Types;
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       Num_Vertices  : Int := 6;
-
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
 
-      Vertex_Array.Bind;
-      GL.Objects.Textures.Set_Active_Unit (0);
-      Texture_2D.Bind (Char_Texture);
       GL.Objects.Programs.Use_Program (Rendering_Program);
+      GL.Objects.Textures.Set_Active_Unit (0);
+      Vertex_Array.Bind;
+
+      Texture_2D.Bind (Char_Texture);
       GL.Uniforms.Set_Int (Texture_Location, 0);
       GL.Uniforms.Set_Single (Colour_Location, 0.5, 0.8, 0.2);
+      GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
 
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
 
@@ -68,25 +71,28 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup is
+   procedure Setup (Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures;
       use Program_Loader;
+      Window_Width   : Glfw.Size;
+      Window_Height  : Glfw.Size;
    begin
+      Window.Get_Size (Window_Width, Window_Height);
+      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
+                                GL.Types.Int (Window_Height));
+      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
+
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
 
---        Vertex_Buffer.Initialize_Id;
---        Array_Buffer.Bind (Vertex_Buffer);
---        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
-
       Rendering_Program := Program_From
-          ((Src ("src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
-
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture,
-                                     -400.0, 10.0, 1.0 / 512.0);
+          ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
+           Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
+      --  Character position must be within window bounds.
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 2.0);
 
       Projection_Location :=
           GL.Objects.Programs.Uniform_Location (Rendering_Program, "projection_matrix");
@@ -96,7 +102,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Rendering_Program, "text_colour");
       Position_Location :=
           GL.Objects.Programs.Attrib_Location (Rendering_Program, "vertices");
---        Maths.Init_Orthographic_Transform (0.0, 800.0, 0.0, 600.0, -1.0, 100.0, Projection_Matrix);
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup.");
@@ -108,9 +113,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    use Glfw.Input;
    Running : Boolean := True;
 begin
-   Setup;
+   Setup (Main_Window);
    while Running loop
-      Render;
+      Render (Main_Window);
       glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       glfw.Input.Poll_Events;
       Running := Running and not

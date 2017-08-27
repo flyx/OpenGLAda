@@ -67,10 +67,10 @@ package body Texture_Manager is
          raise FT_Types.FT_Exception;
       end if;
       --  Ensure that the glyph image is an anti-aliased bitmap
---        if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
---           Put_Line ("A character failed to render.");
---           raise FT_Types.FT_Exception;
---        end if;
+      if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
+         Put_Line ("A character failed to render.");
+         raise FT_Types.FT_Exception;
+      end if;
       Print_Character_Data (Char);
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
@@ -86,26 +86,21 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Types;
       aFace       : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      X_Pos       : Single := X * Scale;
-      Y_Pos       : Single := Y * Scale;
+      X_Pos       : Single := X;
+      Y_Pos       : Single := Y ;
       Width       : Single := FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot) * Scale;
       Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot)) * Scale;
       Num_Triangles : Int := 2;
---        Num_Vertices  : Int := 12;
       Stride        : Int := 4;
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
       Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
-                      (X_Pos, Y_Pos,                  0.0, 0.0),
-                      (X_Pos + Width, Y_Pos,          0.0, 0.0),
+                      (X_Pos, Y_Pos,                  0.0, 1.0),
+                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
                       (X_Pos, Y_Pos + Height,         0.0, 0.0),
-                      (X_Pos + Width, Y_Pos,          0.0, 0.0),
-                      (X_Pos + Width, Y_Pos + Height, 0.0, 0.0));
-      Put_Line ("Setup_Buffer X_Pos: " & Single'Image (X_Pos));
-      Put_Line ("Setup_Buffer Y_Pos: " & Single'Image (Y_Pos));
-      Put_Line ("Setup_Buffer X_Pos + Width: " & Single'Image (X_Pos + Width));
-      Put_Line ("Setup_Buffer Y_Pos + Height: " & Single'Image (Y_Pos + Height));
+                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                      (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
 
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
@@ -149,9 +144,10 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      aFace       : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      Width       : Size := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
-      Height      : Size := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      aFace        : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
+      Width        : Size := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
+      Height       : Size := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      Bitmap_Image : GL.Objects.Textures.Image_Source;
    begin
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -160,10 +156,17 @@ package body Texture_Manager is
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-      Texture_2D.Load_From_Data  (0, RGBA, Width, Height, RGB, Unsigned_Byte,
-                                  FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot));
+      Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
+      Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
+                                  Bitmap_Image);
+
       Put_Line ("Setup_Texture, Bitmap address: " & System.Address_Image
-                  (System.Address (FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot))));
+                (System.Address (Bitmap_Image)));
+      if GL.Objects.Textures.Is_Texture (aTexture) then
+         Put_Line ("Setup_Texture, is a texture.");
+      else
+         Put_Line ("Setup_Texture, is not a texture.");
+      end if;
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");
