@@ -23,6 +23,7 @@ package body FT_Utilities is
       Put_Line ("Left: " & Int'Image (Get_Bitmap_Left (aFace.Glyph_Slot)));
       Put_Line ("Top: " & Int'Image (Get_Bitmap_Top (aFace.Glyph_Slot)));
       Put_Line ("Advance X: " & Int'Image (Advance_X) & " bits");
+      Put_Line ("Glyph format: " & FT_Image.FT_Glyph_Format'Image (Get_Glyph_Format (aFace.Glyph_Slot)));
       Put_Line ("Bitmap address: " & System.Address_Image
                 (System.Address (Get_Bitmap_Image (aFace.Glyph_Slot))));
       New_Line;
