@@ -67,6 +67,8 @@ package Glfw.Windows is
                                Kind   : Input.Sticky_Toggle;
                                Value  : Boolean);
 
+   function Get_Cursor_Mode (Object : not null access Window)
+                             return Input.Mouse.Cursor_Mode;
    procedure Set_Cursor_Mode (Object : not null access Window;
                               Mode   : Input.Mouse.Cursor_Mode);
 
