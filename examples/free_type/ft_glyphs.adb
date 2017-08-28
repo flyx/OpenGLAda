@@ -111,6 +111,16 @@ package body FT_Glyphs is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Glyph_Format (Slot_Ptr : FT_Types.FT_Glyph_Slot) return FT_Image.FT_Glyph_Format is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return Glyph.Format;
+   end Get_Glyph_Format;
+
+   --  -------------------------------------------------------------------------
+
    function Glyph_To_Bitmap
        (theGlyph    : System.Address; Render_Mode : FT_Types.FT_Render_Mode;
         Origin      : access FT_Image.FT_Vector;

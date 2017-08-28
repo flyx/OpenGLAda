@@ -100,7 +100,7 @@ package FT_Interface is
       Lsb_Delta         : aliased FT_Image.FT_Pos;
       Rsb_Delta         : aliased FT_Image.FT_Pos;
       Other             : System.Address;
-      Internal : FT_Slot_Internal;
+      Internal          : FT_Slot_Internal;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
 

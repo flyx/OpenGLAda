@@ -61,11 +61,14 @@ package body Texture_Manager is
          Put_Line ("The Freetype Library failed to load.");
          raise FT_Types.FT_Exception;
       end if;
+
       Setup_Font;
-      if FT_Interface.Load_Character (Face_Ptr, Character'Pos (Char), FT_Types.Load_Render) /= 0 then
+      if FT_Interface.Load_Character (Face_Ptr, Character'Pos (Char),
+                                      FT_Types.Load_Render) /= 0 then
          Put_Line ("A character failed to load.");
          raise FT_Types.FT_Exception;
       end if;
+      Put_Line ("Setup_Graphic, character code : " & Long_Integer'Image (Character'Pos (Char)));
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
          Put_Line ("A character failed to render.");
@@ -118,7 +121,8 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use Interfaces.C;
-      Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
+      Font_File       : String := "/Library/Fonts/Arial.ttf";
+--        Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
       if FT_Interface.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
