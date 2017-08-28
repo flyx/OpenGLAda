@@ -150,7 +150,7 @@ package body Texture_Manager is
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
       Texture_2D.Set_Highest_Mipmap_Level (0);
-      Texture_2D.Set_Texture_Priority (Priority);
+--        Texture_2D.Set_Texture_Priority (Priority);
 --        Texture_2D.Set_Border_Color (Border_Color);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
