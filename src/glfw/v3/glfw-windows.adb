@@ -224,6 +224,12 @@ package body Glfw.Windows is
       API.Set_Input_Mode (Object.Handle, Kind, Bool (Value));
    end Set_Input_Toggle;
 
+   function Get_Cursor_Mode (Object : not null access Window)
+                             return Input.Mouse.Cursor_Mode is
+   begin
+      return API.Get_Input_Mode (Object.Handle, Enums.Mouse_Cursor);
+   end Get_Cursor_Mode;
+
    procedure Set_Cursor_Mode (Object : not null access Window;
                               Mode   : Input.Mouse.Cursor_Mode) is
    begin
