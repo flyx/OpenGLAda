@@ -14,6 +14,7 @@ with FT_Glyphs;
 with FT_Image;
 with FT_Interface;
 with FT_Types;
+with FT_Utilities;
 
 with Utilities;
 
@@ -29,25 +30,6 @@ package body Texture_Manager is
                            X, Y, Scale   : GL.Types.Single);
    procedure Setup_Font;
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
-
-   --  ------------------------------------------------------------------------
-
-   procedure Print_Character_Data (Char : Character) is
-      use GL.Types;
-      use FT_Glyphs;
-      aFace     : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      Advance_X : GL.Types.Int := FT_Image.Vector_X (Get_Glyph_Advance (aFace.Glyph_Slot));
-   begin
-      Put_Line ("Character " & Char & " Data");
-      Put_Line ("Width: " & Single'Image (Get_Bitmap_Width (aFace.Glyph_Slot)));
-      Put_Line ("Rows: " & Int'Image (Get_Bitmap_Rows (aFace.Glyph_Slot)));
-      Put_Line ("Left: " & Int'Image (Get_Bitmap_Left (aFace.Glyph_Slot)));
-      Put_Line ("Top: " & Int'Image (Get_Bitmap_Top (aFace.Glyph_Slot)));
-      Put_Line ("Advance X: " & Int'Image (Advance_X) & " bits");
-      Put_Line ("Bitmap address: " & System.Address_Image
-                (System.Address (Get_Bitmap_Image (aFace.Glyph_Slot))));
-      New_Line;
-   end Print_Character_Data;
 
    --  ------------------------------------------------------------------------
 
@@ -74,7 +56,7 @@ package body Texture_Manager is
          Put_Line ("A character failed to render.");
          raise FT_Types.FT_Exception;
       end if;
-      Print_Character_Data (Char);
+      FT_Utilities.Print_Character_Data (Face_Ptr, Char);
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
       FT_Interface.Done_Face (Face_Ptr);
