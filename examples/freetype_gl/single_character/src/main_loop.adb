@@ -1,14 +1,19 @@
 
+with System;
+with System.Address_Image;
+
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Objects.Buffers;
+with  GL.Low_Level.Enums;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
+with GL.Pixels;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -17,6 +22,10 @@ with GL.Window;
 with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
+
+with FT_Glyphs;
+with FT_Interface;
+with FT_Utilities;
 
 with Maths;
 with Program_Loader;
@@ -48,21 +57,40 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
-      Num_Vertices  : Int := 6;
+      use GL.Pixels;
+      Num_Vertices  : GL.Types.Int := 6;
+      aFace         : FT_Interface.FT_Face_Record;
+      Width         : GL.Types.Size;
+      Height        : GL.Types.Size;
+      Bitmap_Image  : GL.Objects.Textures.Image_Source;
+      Char          : Character := 'G';
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
-
-      GL.Objects.Programs.Use_Program (Rendering_Program);
-      GL.Objects.Textures.Set_Active_Unit (0);
       Vertex_Array.Bind;
 
+      GL.Objects.Programs.Use_Program (Rendering_Program);
+
+      GL.Objects.Textures.Set_Active_Unit (0);
       Texture_2D.Bind (Char_Texture);
       GL.Uniforms.Set_Int (Texture_Location, 0);
+      Put_Line ("Render, Raw texture type: " & GL.Low_Level.Enums.Texture_Kind'Image (Texture_2D.Raw_Kind));
+      aFace := FT_Interface.Face (Texture_Manager.Get_Face_Ptr);
+      Put_Line ("Render, Glyph_Slot address: " & System.Address_Image
+                (System.Address (aFace.Glyph_Slot)));
+      Width := GL.Types.Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
+      Height := GL.Types.Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
+      Put_Line ("Render, Bitmap address: " & System.Address_Image
+                (System.Address (Bitmap_Image)));
+      Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
+                                  Bitmap_Image);
+
       GL.Uniforms.Set_Single (Colour_Location, 0.5, 0.8, 0.2);
       GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
 
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
 
+      FT_Utilities.Print_Character_Data (Texture_Manager.Get_Face_Ptr, Char);
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Render.");

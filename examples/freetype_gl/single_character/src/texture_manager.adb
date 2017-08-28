@@ -9,10 +9,10 @@ with Ada.Text_IO; use  Ada.Text_IO;
 with GL.Attributes;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
+with GL.Types.Colors;
 
 with FT_Glyphs;
 with FT_Image;
-with FT_Interface;
 with FT_Types;
 with FT_Utilities;
 
@@ -30,6 +30,13 @@ package body Texture_Manager is
                            X, Y, Scale   : GL.Types.Single);
    procedure Setup_Font;
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Face_Ptr return FT_Interface.FT_Face is
+   begin
+      return Face_Ptr;
+   end Get_Face_Ptr;
 
    --  ------------------------------------------------------------------------
 
@@ -59,8 +66,8 @@ package body Texture_Manager is
       FT_Utilities.Print_Character_Data (Face_Ptr, Char);
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
-      FT_Interface.Done_Face (Face_Ptr);
-      FT_Interface.Done_Library (theLibrary);
+--        FT_Interface.Done_Face (Face_Ptr);
+--        FT_Interface.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -130,24 +137,33 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      aFace        : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
-      Width        : Size := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
-      Height       : Size := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      aFace        : FT_Interface.FT_Face_Record;
+      Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
+      Priority     : GL.Objects.Textures.Priority := 0.9;
+      Width        : Size;
+      Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
    begin
+      aFace := FT_Interface.Face (Face_Ptr);
+      Width := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
+      Height := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
+      Texture_2D.Set_Highest_Mipmap_Level (0);
+      Texture_2D.Set_Texture_Priority (Priority);
+--        Texture_2D.Set_Border_Color (Border_Color);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
       Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
-      Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
-                                  Bitmap_Image);
-
-      Put_Line ("Setup_Texture, Bitmap address: " & System.Address_Image
-                (System.Address (Bitmap_Image)));
+--        Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
+--                                    Bitmap_Image);
+      Put_Line ("Setup_Texture, Face_Ptr address: " & System.Address_Image
+                (System.Address (Texture_Manager.Get_Face_Ptr)));
+      Put_Line ("Setup_Texture, Glyph_Slot address: " & System.Address_Image
+                (System.Address (aFace.Glyph_Slot)));
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");
