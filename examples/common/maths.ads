@@ -49,6 +49,7 @@ package Maths is
     function Radians (Angle : Degree) return Radian;
     function Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3)
                               return Singles.Matrix4;
+
     function Rotation_Matrix (Angle : Radian; Axis : Singles.Vector3)
                              return Singles.Matrix4;
     function Scaling_Matrix (Scale_Factor : Singles.Vector3) return Singles.Matrix4;
