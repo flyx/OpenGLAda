@@ -7,6 +7,7 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Attributes;
+with GL.Low_Level.Enums;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Types.Colors;
@@ -66,6 +67,7 @@ package body Texture_Manager is
       FT_Utilities.Print_Character_Data (Face_Ptr, Char);
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
+      FT_Utilities.Print_Character_Data (Texture_Manager.Get_Face_Ptr, Char);
 --        FT_Interface.Done_Face (Face_Ptr);
 --        FT_Interface.Done_Library (theLibrary);
    end Setup_Graphic;
@@ -149,7 +151,6 @@ package body Texture_Manager is
       Height := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
-      Texture_2D.Set_Highest_Mipmap_Level (0);
 --        Texture_2D.Set_Texture_Priority (Priority);
 --        Texture_2D.Set_Border_Color (Border_Color);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
@@ -158,12 +159,13 @@ package body Texture_Manager is
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
       Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
---        Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
---                                    Bitmap_Image);
+      Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
+                                  Bitmap_Image);
       Put_Line ("Setup_Texture, Face_Ptr address: " & System.Address_Image
                 (System.Address (Texture_Manager.Get_Face_Ptr)));
       Put_Line ("Setup_Texture, Glyph_Slot address: " & System.Address_Image
                 (System.Address (aFace.Glyph_Slot)));
+      Put_Line ("Render, Raw texture type: " & GL.Low_Level.Enums.Texture_Kind'Image (Texture_2D.Raw_Kind));
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");
