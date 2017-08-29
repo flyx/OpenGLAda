@@ -10,21 +10,13 @@ with Maths;
 
 package Utilities is
 
-    generic
-        type Index_Type is (<>);
-        type Vector_Type is  array (Index_Type) of aliased GL.Types.Single;
-    procedure Print_Vector1 (Name : String; aVector : Vector_Type);
-
---      generic
---          type Index_Type is (<>);
---          type Array_Type is  array (Index_Type) of aliased GL.Types.Singles.;
---      procedure Print_ArrayG (Name : String; anArray : Array_Type);
-
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
     procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean);
-    procedure Load_UV_Buffer is new
+    procedure Load_Element_Buffer is new
+      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Int_Pointers);
+    procedure Load_Vertex_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
     procedure Load_Vertex_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector3_Pointers);

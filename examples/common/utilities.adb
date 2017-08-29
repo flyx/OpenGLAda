@@ -10,6 +10,35 @@ with GL.Types.Colors;
 
 package body Utilities is
 
+    generic
+        type Index_Type is (<>);
+        type Vector_Type is  array (Index_Type) of aliased GL.Types.Single;
+    procedure Print_Vector1 (Name : String; aVector : Vector_Type);
+
+    procedure Print_Vector1 (Name : String; aVector : Vector_Type) is
+    begin
+        Put (Name & ":  ");
+        for Index in aVector'Range loop
+            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
+        end loop;
+        New_Line;
+    end Print_Vector1;
+
+    --  -------------------------------------------------------------------
+
+    procedure Print_Vector2 is
+        new Print_Vector1 (GL.Index_2D, GL.Types.Singles.Vector2);
+    procedure Print_Vector3 is
+        new Print_Vector1 (GL.Index_3D, GL.Types.Singles.Vector3);
+    procedure Print_Vector4 is
+        new Print_Vector1 (GL.Index_Homogeneous, GL.Types.Singles.Vector4);
+    procedure Print_Vector5 is
+        new Print_Vector1 (Maths.Index_5, Maths.Vector5);
+    procedure Print_Vector6 is
+        new Print_Vector1 (Maths.Index_6, Maths.Vector6);
+
+    --  ---------------------------------------------------------------
+
 --  Set_Color_Clear_Value sets the value to which a buffer should be set
 --  when cleared.
 --  Clear "clears" selected values to the previously selected value set by
@@ -60,7 +89,7 @@ package body Utilities is
     begin
         Put_Line (Name & ": ");
         for Index in anArray'First .. anArray'Last loop
-            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
+            Print_Vector3 (Name, anArray (Index));
         end loop;
         New_Line;
     end Print_GL_Array3;
@@ -72,10 +101,34 @@ package body Utilities is
     begin
         Put_Line (Name & ": ");
         for Index in anArray'First .. anArray'Last loop
-            Print_Vector (Int'Image (Index) & ":  ", anArray (Index));
+            Print_Vector4 (Name, anArray (Index));
         end loop;
         New_Line;
     end Print_GL_Array4;
+
+    --  ------------------------------------------------------------------------
+
+    procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Print_Vector6 (Name, anArray (Index));
+        end loop;
+        New_Line;
+    end Print_Array6;
+
+    --  ---------------------------------------------------------------
+
+    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
+        use GL.Types;
+    begin
+        Put_Line (Name & ": ");
+        for Index in anArray'First .. anArray'Last loop
+            Put_line (Int'Image (Index) & ":  " & Int'Image (anArray (Index)));
+        end loop;
+        New_Line;
+    end Print_GL_Int_Array;
 
     --  ------------------------------------------------------------------------
 
@@ -113,33 +166,21 @@ package body Utilities is
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector2) is
     begin
-        Put (Name & ":  ");
-        for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
-        end loop;
-        New_Line;
+        Print_Vector2 (Name, aVector);
     end Print_Vector;
 
     --  ------------------------------------------------------------------------
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3) is
     begin
-        Put (Name & ":  ");
-        for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
-        end loop;
-        New_Line;
+        Print_Vector3 (Name, aVector);
     end Print_Vector;
 
     --  ------------------------------------------------------------------------
 
     procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4) is
     begin
-        Put (Name & ":  ");
-        for Index in aVector'Range loop
-            Put (GL.Types.Single'Image (aVector (Index)) & "   ");
-        end loop;
-        New_Line;
+        Print_Vector4 (Name, aVector);
     end Print_Vector;
 
     --  ------------------------------------------------------------------------
