@@ -11,8 +11,6 @@ with FT_Glyphs;
 
 package body FT_Interface is
    package Face_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
-   package Glyph_Access is new System.Address_To_Access_Conversions (FT_Glyphs.FT_Glyph_Record);
-   package Slot_Access is new System.Address_To_Access_Conversions (FT_Interface.FT_Glyph_Slot_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -38,23 +36,6 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap is
-      use GL.Types;
-      use Slot_Access;
-      aGlyph_Ptr    : System.Address;
-      Glyph_Pointer : Object_Pointer := To_Pointer (System.Address (Glyph_Slot));
-      theGlyph      : FT_Interface.FT_Glyph_Slot_Record := Glyph_Pointer.all;
-   begin
-      --  Get_Glyph calls the FT_Get_Glyph C function.
-      if FT_Glyphs.Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
-         Put_Line ("FT_Interface.Bitmap raised an Exception");
-         raise FT_Exception;
-      end if;
-      return theGlyph.Bitmap;
-   end Get_Bitmap;
-
-   --  -------------------------------------------------------------------------
-
    function Face (Face_Ptr : FT_Face) return FT_Face_Record is
       use Face_Access;
       --  type Object_Pointer is access all Object;
@@ -71,17 +52,6 @@ package body FT_Interface is
    begin
       return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
    end Get_Kerning;
-
-   --  -------------------------------------------------------------------------
-
-   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record is
-      use Glyph_Access;
-      theFace : FT_Face_Record := Face (Face_Ptr);
-      Glyph_Pointer : Object_Pointer :=
-        To_Pointer (System.Address (theFace.Glyph_Slot));
-   begin
-      return Glyph_Pointer.all;
-   end Get_Glyph_Record;
 
    --  -------------------------------------------------------------------------
 
@@ -130,8 +100,8 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-  function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width :  GL.Types.UInt;
-                             Pixel_Height :  GL.Types.UInt) return FT_Error is
+  function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : GL.Types.UInt;
+                            Pixel_Height : GL.Types.UInt) return FT_Error is
   begin
       return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
   end;

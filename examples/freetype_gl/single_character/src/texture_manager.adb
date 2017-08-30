@@ -104,8 +104,6 @@ package body Texture_Manager is
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
                                                Stride => Stride, Offset => 0);
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Buffer.");

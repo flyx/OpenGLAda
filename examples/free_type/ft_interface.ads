@@ -7,7 +7,7 @@ with Interfaces.C.Strings;
 with GL.Types;
 
 with FT_Config;
-with FT_Glyphs;
+--  with FT_Glyphs;
 with FT_Image;
 with FT_System;
 with FT_Types; Use FT_Types;
@@ -67,49 +67,9 @@ package FT_Interface is
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Face_Record);
 
-   type FT_Glyph_Metrics is record
-      Width        : FT_Image.FT_Pos;
-      Height       : FT_Image.FT_Pos;
-      HoriBearingX : FT_Image.FT_Pos;
-      HoriBearingY : FT_Image.FT_Pos;
-      HoriAdvance  : FT_Image.FT_Pos;
-      VertBearingX : FT_Image.FT_Pos;
-      VertBearingY : FT_Image.FT_Pos;
-      VertAdvance  : FT_Image.FT_Pos;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_Glyph_Metrics);
-
-   type FT_Glyph_Slot_Record is record
-      Library : FT_Library;
-      Face              : FT_Face;
-      Next              : FT_Glyph_Slot;
-      Reserved          : GL.Types.UInt;
-      C_Generic         : FT_Types.FT_Generic;
-      Metrics           : FT_Glyph_Metrics;
-      LinearHoriAdvance : GL.Types.long;
-      LinearVertAdvance : GL.Types.long;
-      Advance           : FT_Image.FT_Vector;
-      Format            : FT_Image.FT_Glyph_Format;
-      Bitmap            : FT_Image.FT_Bitmap;
-      Bitmap_left       : GL.Types.Int;
-      Bitmap_top        : GL.Types.Int;
-      Outline           : FT_Image.FT_Outline;
-      Num_subglyphs     : GL.Types.UInt;
-      Subglyphs         : FT_SubGlyph;
-      Control_data      : System.Address;
-      Control_len       : GL.Types.long;
-      Lsb_Delta         : FT_Image.FT_Pos;
-      Rsb_Delta         : FT_Image.FT_Pos;
-      Other             : System.Address;
-      Internal          : FT_Slot_Internal;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
-
    procedure Done_Face (Face_Ptr : FT_Face);
    procedure Done_Library (Library_Ptr : FT_Library);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap;
-   function Get_Glyph_Record (Face_Ptr : FT_Face) return FT_Glyphs.FT_Glyph_Record;
    function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot;
    function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
    function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
