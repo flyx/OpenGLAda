@@ -46,6 +46,7 @@ package body Texture_Manager is
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use Interfaces.C;
+      use GL.Types;
    begin
       if FT_Interface.Init_FreeType (theLibrary) /= 0 then
          Put_Line ("The Freetype Library failed to load.");
@@ -114,7 +115,7 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Font is
-      use Interfaces.C;
+      use GL.Types;
 --        Font_File       : String := "/Library/Fonts/Arial.ttf";
       Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin

@@ -15,8 +15,8 @@ package FT_Interface.API is
    pragma Import (C, FT_Done_Library, "FT_Done_Library");
 
    function FT_Get_Kerning
-     (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
-      Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;
+     (aFace : FT_Face; Left_Glyph : GL.Types.UInt; Right_Glyph :  GL.Types.UInt;
+      Kern_Mode : GL.Types.UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
   function FT_Init_FreeType (aLibrary : in out System.Address) return FT_Error;
@@ -28,7 +28,7 @@ package FT_Interface.API is
 
    function FT_New_Face (Library : FT_Library;
                File_Path_Name : Interfaces.C.Strings.chars_ptr;
-               Face_Index     : FT_Long; aFace : in out System.Address)
+               Face_Index     : GL.Types.long; aFace : in out System.Address)
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
@@ -36,8 +36,8 @@ package FT_Interface.API is
                              return FT_Error;
    pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
 
-   function FT_Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
-                                Pixel_Height : FT_UInt) return FT_Error;
+   function FT_Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : GL.Types.UInt;
+                                Pixel_Height : GL.Types.UInt) return FT_Error;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");
 
 end FT_Interface.API;

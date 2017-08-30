@@ -35,25 +35,17 @@ package FT_Glyphs is
                        Glyph_Ptr : in out System.Address) return FT_Types.FT_Error;
 private
 
-   type FT_Bitmap_Glyph_Record is record
-      Root   : aliased FT_Glyph_Record;
-      Left   : aliased FT_Types.FT_Int;
-      Top    : aliased FT_Types.FT_Int;
-      Bitmap : aliased FT_Image.FT_Bitmap;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_Bitmap_Glyph_Record);
-
    type FT_Glyph_Record is record
       Library : FT_Types.FT_Library;
       Clazz   : System.Address;
-      Format  : aliased FT_Image.FT_Glyph_Format;
-      Advance : aliased FT_Image.FT_Vector;
+      Format  : FT_Image.FT_Glyph_Format;
+      Advance : FT_Image.FT_Vector;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Record);
 
    type FT_Outline_Glyph_Record is record
-      root : aliased FT_Glyph_Record;
-      outline : aliased FT_Image.FT_Outline;
+      root    : FT_Glyph_Record;
+      outline : FT_Image.FT_Outline;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Outline_Glyph_Record);
 

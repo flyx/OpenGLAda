@@ -4,6 +4,8 @@ with System.Address_To_Access_Conversions;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Types;
+
 with FT_Interface.API; use FT_Interface.API;
 with FT_Glyphs;
 
@@ -15,7 +17,7 @@ package body FT_Interface is
    --  -------------------------------------------------------------------------
 
    procedure Done_Face (Face_Ptr : FT_Face) is
-      use Interfaces.C;
+      use GL.Types;
    begin
       if FT_Done_Face (Face_Ptr) /= 0 then
          Put_Line ("FT_Done_Face failed");
@@ -26,7 +28,7 @@ package body FT_Interface is
    --  -------------------------------------------------------------------------
 
    procedure Done_Library (Library_Ptr : FT_Library) is
-      use Interfaces.C;
+      use GL.Types;
    begin
       if FT_Done_Library (Library_Ptr) /= 0 then
          Put_Line ("FT_Done_Library failed");
@@ -37,7 +39,7 @@ package body FT_Interface is
    --  -------------------------------------------------------------------------
 
    function Get_Bitmap (Glyph_Slot : FT_Glyph_Slot) return FT_Image.FT_Bitmap is
-      use Interfaces.C;
+      use GL.Types;
       use Slot_Access;
       aGlyph_Ptr    : System.Address;
       Glyph_Pointer : Object_Pointer := To_Pointer (System.Address (Glyph_Slot));
@@ -63,8 +65,9 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Kerning (aFace : FT_Face; Left_Glyph : FT_UInt; Right_Glyph : FT_UInt;
-                         Kern_Mode : FT_UInt; aKerning : access FT_Image.FT_Vector) return FT_Error is
+   function Get_Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
+                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                         aKerning : access FT_Image.FT_Vector) return FT_Error is
    begin
       return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
    end Get_Kerning;
@@ -107,7 +110,8 @@ package body FT_Interface is
 
    function New_Face (Library : FT_Library;
                       File_Path_Name : String;
-                      Face_Index     : FT_Long; aFace : in out FT_Face) return FT_Error is
+                      Face_Index     : GL.Types.long; aFace : in out FT_Face)
+                      return FT_Error is
       Path : Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
    begin
@@ -126,8 +130,8 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-  function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width : FT_UInt;
-                             Pixel_Height : FT_UInt) return FT_Error is
+  function Set_Pixel_Sizes (Face : FT_Face; Pixel_Width :  GL.Types.UInt;
+                             Pixel_Height :  GL.Types.UInt) return FT_Error is
   begin
       return FT_Set_Pixel_Sizes (Face, Pixel_Width, Pixel_Height);
   end;

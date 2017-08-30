@@ -3,6 +3,8 @@ with System;
 with System.Address_To_Access_Conversions;
 with Interfaces.C; use Interfaces.C;
 
+with GL.Types;
+
 package FT_Types is
    package Unsigned_Char_To_Address is new
        System.Address_To_Access_Conversions (Interfaces.C.unsigned_char);
@@ -54,15 +56,9 @@ package FT_Types is
                            Render_Mode_LCD_V, Render_Mode_Max);
 
    subtype FT_Bool is unsigned_char;
-   subtype FT_Error is int;
-   subtype FT_Fixed is long;
-   subtype FT_Int is int;
-   subtype FT_Long is long;
-   subtype FT_Short is short;
+   subtype FT_Error is GL.Types.int;
    subtype FT_String is char;
    subtype FT_ULong is unsigned_long;
-   subtype FT_UInt is unsigned;
-   subtype FT_UShort is unsigned_short;
 
    FT_Exception : exception;
 

@@ -101,7 +101,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
-                                GL.Types.Int (Window_Height));
+                              GL.Types.Int (Window_Height));
+      --  Blending allows a fragment colour's alpha value to control the resulting
+      --  colour which will be transparent for all the glyph's background colours and
+      --  non-transparent for the actual character pixels.
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 

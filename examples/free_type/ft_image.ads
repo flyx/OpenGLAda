@@ -27,7 +27,7 @@ package FT_Image is
    procedure Print_Bitmap (Bitmap : FT_Bitmap);
 
 private
-    type FT_Bitmap is record
+   type FT_Bitmap is record
       Rows         : GL.Types.UInt;
       Width        : GL.Types.UInt;
       Pitch        : GL.Types.Int;
@@ -36,22 +36,22 @@ private
       Pixel_mode   : unsigned_char;
       Palette_mode : unsigned_char;
       Palette      : System.Address;
-    end record;
-
+   end record;
    pragma Convention (C_Pass_By_Copy, FT_Bitmap);
+
    type FT_Outline is record
-      Num_Contours : aliased short;
-      Num_Points   : aliased short;
-      Points     : access FT_Vector;
-      Tags       : Interfaces.C.Strings.chars_ptr;
-      Contours   : access short;
-      Flags      : aliased int;
+      Num_Contours : short;
+      Num_Points   : short;
+      Points       : access FT_Vector;
+      Tags         : Interfaces.C.Strings.chars_ptr;
+      Contours     : access short;
+      Flags        : int;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Outline);
 
-    type FT_Vector is record
-      x : aliased FT_Pos;
-      y : aliased FT_Pos;
-    end record;
+   type FT_Vector is record
+      x : FT_Pos;
+      y : FT_Pos;
+   end record;
    pragma Convention (C_Pass_By_Copy, FT_Vector);
 end FT_Image;
