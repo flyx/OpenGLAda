@@ -18,12 +18,15 @@ package FT_Image is
                             Outline     => unsigned (1869968492),
                             Plotter     => unsigned (1886154612));
    subtype FT_Pos is long;
+   type Bitmap_Array is array (GL.Types.Int range <>) of Interfaces.Unsigned_8;
 
+   function Get_Map (Bitmap : FT_Bitmap) return Bitmap_Array;
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source;
    function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int;
    function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt;
    function Vector_X (theVector : FT_Vector) return GL.Types.Int;
    function Vector_Y (theVector : FT_Vector) return GL.Types.Int;
+   procedure Print_Bitmap (Bitmap : FT_Bitmap);
 
 private
     type FT_Bitmap is record

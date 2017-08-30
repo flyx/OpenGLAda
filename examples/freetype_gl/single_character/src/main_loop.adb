@@ -100,7 +100,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
            Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
       --  Character position must be within window bounds.
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 2.0);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 10.0);
 
       Projection_Location :=
           GL.Objects.Programs.Uniform_Location (Rendering_Program, "projection_matrix");

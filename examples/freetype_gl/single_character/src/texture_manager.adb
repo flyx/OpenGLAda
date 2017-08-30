@@ -89,13 +89,23 @@ package body Texture_Manager is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
-                      (X_Pos, Y_Pos,                  0.0, 1.0),
-                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
-                      (X_Pos, Y_Pos + Height,         0.0, 0.0),
-                      (X_Pos + Width, Y_Pos,          1.0, 1.0),
-                      (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
+--        Vertex_Data := (
+--                        (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
+--                        (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
+--                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+--
+--                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+--                        (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
+--                        (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
 
+      Vertex_Data := (
+                      (X_Pos, Y_Pos,                  0.2, 0.2),  --  Lower left
+                      (X_Pos + Width, Y_Pos,          0.2, 0.2),  --  Lower right
+                      (X_Pos, Y_Pos + Height,         0.2, 0.2),  --  Upper left
+
+                      (X_Pos, Y_Pos + Height,         0.2, 0.2),  --  Upper left
+                      (X_Pos + Width, Y_Pos + Height, 0.2, 0.2),  --  Upper Right
+                      (X_Pos + Width, Y_Pos,          0.2, 0.2)); --  Lower right
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
@@ -159,13 +169,17 @@ package body Texture_Manager is
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
       Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
-      Texture_2D.Load_From_Data  (0, RGB, Width, Height, Red, Unsigned_Byte,
+      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                   Bitmap_Image);
+      Put_Line ("Setup_Texture, Width: " & Size'Image (Width));
+      Put_Line ("Setup_Texture, Height: " & Size'Image (Height));
       Put_Line ("Setup_Texture, Face_Ptr address: " & System.Address_Image
                 (System.Address (Texture_Manager.Get_Face_Ptr)));
       Put_Line ("Setup_Texture, Glyph_Slot address: " & System.Address_Image
                 (System.Address (aFace.Glyph_Slot)));
-      Put_Line ("Render, Raw texture type: " & GL.Low_Level.Enums.Texture_Kind'Image (Texture_2D.Raw_Kind));
+      Put_Line ("Render, Raw texture type: " &
+                  GL.Low_Level.Enums.Texture_Kind'Image (Texture_2D.Raw_Kind));
+      FT_Image.Print_Bitmap (FT_Glyphs.Get_Bitmap (aFace.Glyph_Slot));
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");

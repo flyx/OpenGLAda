@@ -9,6 +9,9 @@ uniform vec3 text_colour;
 
 void main()
 {
-    vec4 sampled = vec4 (1.0, 1.0, 1.0, texture(bitmap_image, texture_coords));
-    frag_colour = vec4(text_colour, 1.0) * sampled;
+    vec2 coords = vec2(0.2, 0.2);
+  //  vec4 sampled = vec4 (1.0, 1.0, 1.0, texture(bitmap_image, texture_coords).r);
+    vec4 sampled = vec4 (texture(bitmap_image, coords));
+  //  frag_colour = vec4(text_colour, 1.0) * sampled;
+  frag_colour = vec4(sampled.r, sampled.b, sampled.g, 1.0);
 }

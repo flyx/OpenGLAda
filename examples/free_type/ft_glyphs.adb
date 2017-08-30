@@ -8,7 +8,6 @@ with FT_Image;
 with FT_Interface;
 
 package body FT_Glyphs is
-   package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT_Image.FT_Bitmap);
    package Glyph_Slot_Access is new System.Address_To_Access_Conversions (FT_Interface.FT_Glyph_Slot_Record);
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph) is
@@ -17,6 +16,8 @@ package body FT_Glyphs is
    end Done_Glyph;
 
    --  -------------------------------------------------------------------------
+   --  FT_Glyph_Slot (SA) => FT_Glyph_Slot_Record => FT_Bitmap (record)
+   --  FT_Bitmap => Buffer (access unsigned_char)
 
    function Get_Bitmap (Slot_Ptr : FT_Types.FT_Glyph_Slot)
                               return FT_Image.FT_Bitmap is
@@ -25,6 +26,17 @@ package body FT_Glyphs is
                 To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap;
+   end Get_Bitmap;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Bitmap (Slot_Ptr : FT_Types.FT_Glyph_Slot)
+                              return FT_Image.Bitmap_Array is
+      use Glyph_Slot_Access;
+      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
+                To_Pointer (System.Address (Slot_Ptr)).all;
+   begin
+      return FT_Image.Get_Map (Glyph.Bitmap);
    end Get_Bitmap;
 
    --  -------------------------------------------------------------------------
@@ -65,8 +77,9 @@ package body FT_Glyphs is
       use Glyph_Slot_Access;
       Glyph : FT_Interface.FT_Glyph_Slot_Record :=
                 To_Pointer (System.Address (Slot_Ptr)).all;
+      Bitmap : FT_Image.FT_Bitmap := Glyph.Bitmap;
    begin
-      return GL.Types.Single (Glyph.Metrics.height);
+      return GL.Types.Single (FT_Image.Get_Rows (Bitmap));
    end Get_Bitmap_Height;
 
    --  -------------------------------------------------------------------------
