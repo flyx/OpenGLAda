@@ -6,6 +6,7 @@ with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
+with GL.Blending;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
@@ -13,6 +14,7 @@ with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
+with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -54,10 +56,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window)  is
       use GL.Types;
+      use GL.Types.Colors;
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
-      Num_Vertices  : GL.Types.Int := 6;
+      Num_Vertices   : GL.Types.Int := 2 * 3; -- Two triangles
+      Num_Components : GL.Types.Int := 4;     -- Coords vector size;
+      Text_Colour    : constant Basic_Color := (0.5, 0.2, 0.6);
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
       Vertex_Array.Bind;
@@ -67,10 +72,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Textures.Set_Active_Unit (0);
       Texture_2D.Bind (Char_Texture);
       GL.Uniforms.Set_Int (Texture_Location, 0);
-      GL.Uniforms.Set_Single (Colour_Location, 0.5, 0.8, 0.2);
+      GL.Uniforms.Set_Single (Colour_Location, Text_Colour (R), Text_Colour (G), Text_Colour (B));
       GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
 
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      Array_Buffer.Bind (Vertex_Buffer);   -- Essential?
+      GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
+                                               Kind   => Single_Type,
+                                               Stride => 0, Offset => 0);
+
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Render.");
@@ -90,6 +102,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                                 GL.Types.Int (Window_Height));
+      GL.Toggles.Enable (GL.Toggles.Blend);
+      GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
+
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                         Single (Window_Width), 0.1, -100.0, Projection_Matrix);
 
@@ -100,7 +115,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
            Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
       --  Character position must be within window bounds.
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 10.0);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 4.0);
 
       Projection_Location :=
           GL.Objects.Programs.Uniform_Location (Rendering_Program, "projection_matrix");

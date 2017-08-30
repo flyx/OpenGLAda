@@ -44,7 +44,7 @@ package body Texture_Manager is
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
                             aTexture      : in out GL.Objects.Textures.Texture;
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                            Char          : Character := 'G') is
+                            Char          : Character := 'g') is
       use Interfaces.C;
    begin
       if FT_Interface.Init_FreeType (theLibrary) /= 0 then
@@ -58,18 +58,19 @@ package body Texture_Manager is
          Put_Line ("A character failed to load.");
          raise FT_Types.FT_Exception;
       end if;
-      Put_Line ("Setup_Graphic, character code : " & Long_Integer'Image (Character'Pos (Char)));
+
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
          Put_Line ("A character failed to render.");
          raise FT_Types.FT_Exception;
       end if;
       FT_Utilities.Print_Character_Data (Face_Ptr, Char);
+
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
-      FT_Utilities.Print_Character_Data (Texture_Manager.Get_Face_Ptr, Char);
---        FT_Interface.Done_Face (Face_Ptr);
---        FT_Interface.Done_Library (theLibrary);
+
+      FT_Interface.Done_Face (Face_Ptr);
+      FT_Interface.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -89,23 +90,15 @@ package body Texture_Manager is
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
---        Vertex_Data := (
---                        (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
---                        (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
---                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
---
---                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
---                        (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
---                        (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
-
       Vertex_Data := (
-                      (X_Pos, Y_Pos,                  0.2, 0.2),  --  Lower left
-                      (X_Pos + Width, Y_Pos,          0.2, 0.2),  --  Lower right
-                      (X_Pos, Y_Pos + Height,         0.2, 0.2),  --  Upper left
+                      (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
+                      (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
+                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
 
-                      (X_Pos, Y_Pos + Height,         0.2, 0.2),  --  Upper left
-                      (X_Pos + Width, Y_Pos + Height, 0.2, 0.2),  --  Upper Right
-                      (X_Pos + Width, Y_Pos,          0.2, 0.2)); --  Lower right
+                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+                      (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
+                      (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
+
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
@@ -122,8 +115,8 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use Interfaces.C;
-      Font_File       : String := "/Library/Fonts/Arial.ttf";
---        Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
+--        Font_File       : String := "/Library/Fonts/Arial.ttf";
+      Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
       if FT_Interface.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
@@ -150,7 +143,7 @@ package body Texture_Manager is
       use GL.Pixels;
       use GL.Types;
       aFace        : FT_Interface.FT_Face_Record;
-      Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
+--        Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
@@ -171,15 +164,6 @@ package body Texture_Manager is
       Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
       Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                   Bitmap_Image);
-      Put_Line ("Setup_Texture, Width: " & Size'Image (Width));
-      Put_Line ("Setup_Texture, Height: " & Size'Image (Height));
-      Put_Line ("Setup_Texture, Face_Ptr address: " & System.Address_Image
-                (System.Address (Texture_Manager.Get_Face_Ptr)));
-      Put_Line ("Setup_Texture, Glyph_Slot address: " & System.Address_Image
-                (System.Address (aFace.Glyph_Slot)));
-      Put_Line ("Render, Raw texture type: " &
-                  GL.Low_Level.Enums.Texture_Kind'Image (Texture_2D.Raw_Kind));
-      FT_Image.Print_Bitmap (FT_Glyphs.Get_Bitmap (aFace.Glyph_Slot));
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");

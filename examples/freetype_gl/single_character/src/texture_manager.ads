@@ -17,5 +17,5 @@ package Texture_Manager is
                             aTexture      : in out GL.Objects.Textures.Texture;
                             X, Y          : GL.Types.Single;
                             Scale         : GL.Types.Single;
-                            Char          : Character := 'G');
+                            Char          : Character := 'g');
 end Texture_Manager;
