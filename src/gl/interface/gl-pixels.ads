@@ -23,7 +23,7 @@ package GL.Pixels is
 
    use GL.Types;
 
-   type Internal_Format is (Depth_Component, Alpha, RGB, RGBA, Luminance,
+   type Internal_Format is (Depth_Component, Red, Alpha, RGB, RGBA, Luminance,
                             Luminance_Alpha, R3_G3_B2, Alpha4, Alpha8, Alpha12,
                             Alpha16, Luminance4, Luminance8, Luminance12,
                             Luminance16, Luminance4_Alpha4, Luminance6_Alpha2,
@@ -151,6 +151,7 @@ package GL.Pixels is
 
 private
    for Internal_Format use (Depth_Component => 16#1902#,
+                            Red             => 16#1903#,
                             Alpha           => 16#1906#,
                             RGB             => 16#1907#,
                             RGBA            => 16#1908#,
