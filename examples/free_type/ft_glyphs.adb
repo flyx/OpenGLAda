@@ -30,17 +30,6 @@ package body FT_Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap (Slot_Ptr : FT_Types.FT_Glyph_Slot)
-                              return FT_Image.Bitmap_Array is
-      use Glyph_Slot_Access;
-      Glyph : FT_Interface.FT_Glyph_Slot_Record :=
-                To_Pointer (System.Address (Slot_Ptr)).all;
-   begin
-      return FT_Image.Get_Map (Glyph.Bitmap);
-   end Get_Bitmap;
-
-   --  -------------------------------------------------------------------------
-
    function Get_Bitmap_Image (Slot_Ptr : FT_Types.FT_Glyph_Slot)
                               return GL.Objects.Textures.Image_Source is
       use Glyph_Slot_Access;

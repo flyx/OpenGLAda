@@ -17,10 +17,8 @@ package FT_Image is
                             Composite   => unsigned (1668246896),
                             Outline     => unsigned (1869968492),
                             Plotter     => unsigned (1886154612));
-   subtype FT_Pos is long;
-   type Bitmap_Array is array (GL.Types.Int range <>) of Interfaces.Unsigned_8;
+   subtype FT_Pos is GL.Types.Long;
 
-   function Get_Map (Bitmap : FT_Bitmap) return Bitmap_Array;
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source;
    function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int;
    function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt;
@@ -30,13 +28,13 @@ package FT_Image is
 
 private
     type FT_Bitmap is record
-      Rows         : aliased unsigned;
-      Width        : aliased unsigned;
-      Pitch        : aliased int;
+      Rows         : GL.Types.UInt;
+      Width        : GL.Types.UInt;
+      Pitch        : GL.Types.Int;
       Buffer       : access unsigned_char;
-      Num_Grays    : aliased unsigned_short;
-      Pixel_mode   : aliased unsigned_char;
-      Palette_mode : aliased unsigned_char;
+      Num_Grays    : GL.Types.Short;
+      Pixel_mode   : unsigned_char;
+      Palette_mode : unsigned_char;
       Palette      : System.Address;
     end record;
 

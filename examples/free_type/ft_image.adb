@@ -12,20 +12,6 @@ package body FT_Image is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Map (Bitmap : FT_Bitmap) return Bitmap_Array is
-      use GL.Types;
-      Map_Size : GL.Types.Int := GL.Types.Int (Bitmap.Rows) * GL.Types.Int (Bitmap.Width);
-      Map_Source : Bitmap_Array (1 .. Map_Size);
-      for Map_Source'Address use Bitmap.buffer'address;
-      theMap : Bitmap_Array (1 .. Map_Size);
-   begin
-      for Index in 1 .. Map_Size loop
-         theMap (Index) := Map_Source (Index);
-      end loop;
-      return theMap;
-   end Get_Map;
-
-   --  -------------------------------------------------------------------------
    --  FT_Glyph_Slot (SA) => FT_Glyph_Slot_Record => FT_Bitmap (record)
    --  FT_Bitmap => Buffer (access unsigned_char)
 
@@ -52,18 +38,17 @@ package body FT_Image is
    --  -------------------------------------------------------------------------
 
    procedure Print_Bitmap (Bitmap : FT_Bitmap) is
+      use GL.Types;
    begin
       New_Line;
       Put_Line ("Bitmap data:");
-      Put_Line ("Rows: " & unsigned'Image (Bitmap.Rows));
-      Put_Line ("Width: " & unsigned'Image (Bitmap.Width));
-      Put_Line ("Pitch: " & int'Image (Bitmap.Pitch));
-      Put_Line ("Num_Grays: " & unsigned_short'Image (Bitmap.Num_Grays));
+      Put_Line ("Rows: " & uint'Image (Bitmap.Rows));
+      Put_Line ("Width: " & uint'Image (Bitmap.Width));
+      Put_Line ("Pitch: " & GL.Types.int'Image (Bitmap.Pitch));
+      Put_Line ("Num_Grays: " & GL.Types.short'Image (Bitmap.Num_Grays));
       Put_Line ("Pixel_mode: " & unsigned_char'Image (Bitmap.Pixel_mode));
       Put_Line ("Palette_mode: " & unsigned_char'Image (Bitmap.Palette_mode));
       New_Line;
---        Buffer       : access unsigned_char;
---        Palette      : System.Address;
    end Print_Bitmap;
 
    --  -------------------------------------------------------------------------
