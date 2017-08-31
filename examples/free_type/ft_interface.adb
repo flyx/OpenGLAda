@@ -55,6 +55,13 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Face_Record (Face_Ptr : FT_Face) return FT_Face_Record is
+   begin
+      return Face (Face_Ptr);
+   end Get_Face_Record;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr is
       theFace : FT_Face_Record := Face (Face_Ptr);
    begin

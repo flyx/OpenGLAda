@@ -133,10 +133,11 @@ package body FT_Glyphs is
    --  -------------------------------------------------------------------------
 
    function Get_Glyph_Record (Face_Ptr : FT_Interface.FT_Face) return FT_Glyph_Record is
+      use FT_Interface;
       use Glyph_Access;
-      theFace : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
+      theFace : FT_Face_Record := Get_Face_Record (Face_Ptr);
       Glyph_Pointer : Object_Pointer :=
-        To_Pointer (System.Address (theFace.Glyph_Slot));
+        To_Pointer (System.Address (Get_Glyph_Slot (Face_Ptr)));
    begin
       return Glyph_Pointer.all;
    end Get_Glyph_Record;
