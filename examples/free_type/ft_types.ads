@@ -13,12 +13,12 @@ package FT_Types is
    type FT_Driver is new System.Address;
    type FT_Face_Internal is new System.Address;
    type FT_Generic is private;
-   type FT_Glyph_Slot is new System.Address;
+   type FT_Glyph_Slot_Ptr is new System.Address;
    type FT_List is new System.Address;
    type FT_List_Node is new System.Address;
    type FT_List_Record is private;
    type FT_Library is new System.Address;
-   type FT_Size is new System.Address;
+   type FT_Size_Ptr is new System.Address;
    type FT_Slot_Internal is new System.Address;
    type FT_Subglyph is new System.Address;
 

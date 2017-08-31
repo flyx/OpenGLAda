@@ -55,7 +55,7 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot is
+   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr is
       theFace : FT_Face_Record := Face (Face_Ptr);
    begin
       return theFace.Glyph_Slot;
@@ -93,7 +93,7 @@ package body FT_Interface is
    function Render_Glyph (Face_Ptr : FT_Face;
                           Render_Mode : FT_Render_Mode := Render_Mode_Mono)
                           return FT_Error is
-      Slot : FT_Glyph_Slot := Get_Glyph_Slot (Face_Ptr);
+      Slot : FT_Glyph_Slot_Ptr := Get_Glyph_Slot (Face_Ptr);
    begin
       return  FT_Render_Glyph (Slot, Render_Mode);
    end Render_Glyph;

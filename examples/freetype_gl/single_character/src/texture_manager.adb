@@ -41,41 +41,6 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-                            aTexture      : in out GL.Objects.Textures.Texture;
-                            X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                            Char          : Character := 'g') is
-      use Interfaces.C;
-      use GL.Types;
-   begin
-      if FT_Interface.Init_FreeType (theLibrary) /= 0 then
-         Put_Line ("The Freetype Library failed to load.");
-         raise FT_Types.FT_Exception;
-      end if;
-
-      Setup_Font;
-      if FT_Interface.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT_Types.Load_Render) /= 0 then
-         Put_Line ("A character failed to load.");
-         raise FT_Types.FT_Exception;
-      end if;
-
-      --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
-         Put_Line ("A character failed to render.");
-         raise FT_Types.FT_Exception;
-      end if;
-      FT_Utilities.Print_Character_Data (Face_Ptr, Char);
-
-      Setup_Buffer (Vertex_Buffer, X, Y, Scale);
-      Setup_Texture (aTexture);
-
-      FT_Interface.Done_Face (Face_Ptr);
-      FT_Interface.Done_Library (theLibrary);
-   end Setup_Graphic;
-
-   --  ------------------------------------------------------------------------
-
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single) is
       use GL.Objects.Buffers;
@@ -114,7 +79,7 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
---        Font_File       : String := "/Library/Fonts/Arial.ttf";
+      --        Font_File       : String := "/Library/Fonts/Arial.ttf";
       Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
       if FT_Interface.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
@@ -136,13 +101,48 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
+   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
+                            aTexture      : in out GL.Objects.Textures.Texture;
+                            X, Y: GL.Types.Single; Scale : GL.Types.Single;
+                            Char          : Character := 'g') is
+      use Interfaces.C;
+      use GL.Types;
+   begin
+      if FT_Interface.Init_FreeType (theLibrary) /= 0 then
+         Put_Line ("The Freetype Library failed to load.");
+         raise FT_Types.FT_Exception;
+      end if;
+
+      Setup_Font;
+      if FT_Interface.Load_Character (Face_Ptr, Character'Pos (Char),
+                                      FT_Types.Load_Render) /= 0 then
+         Put_Line ("A character failed to load.");
+         raise FT_Types.FT_Exception;
+      end if;
+
+      --  Ensure that the glyph image is an anti-aliased bitmap
+      if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
+         Put_Line ("A character failed to render.");
+         raise FT_Types.FT_Exception;
+      end if;
+      FT_Utilities.Print_Character_Data (Face_Ptr, Char);
+
+      Setup_Buffer (Vertex_Buffer, X, Y, Scale);
+      Setup_Texture (aTexture);
+
+      FT_Interface.Done_Face (Face_Ptr);
+      FT_Interface.Done_Library (theLibrary);
+   end Setup_Graphic;
+
+   --  ------------------------------------------------------------------------
+
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture) is
       use Interfaces.C;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
       aFace        : FT_Interface.FT_Face_Record;
---        Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
+      --        Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
@@ -153,8 +153,8 @@ package body Texture_Manager is
       Height := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
---        Texture_2D.Set_Texture_Priority (Priority);
---        Texture_2D.Set_Border_Color (Border_Color);
+      --        Texture_2D.Set_Texture_Priority (Priority);
+      --        Texture_2D.Set_Border_Color (Border_Color);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S

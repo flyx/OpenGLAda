@@ -32,7 +32,7 @@ package FT_Interface.API is
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
-   function FT_Render_Glyph (Slot : FT_Glyph_Slot; Render_Mode : FT_Render_Mode)
+   function FT_Render_Glyph (Slot : FT_Glyph_Slot_Ptr; Render_Mode : FT_Render_Mode)
                              return FT_Error;
    pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
 

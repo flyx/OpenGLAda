@@ -17,7 +17,7 @@ package FT_Glyphs.API is
       destroy     : FT_Types.FT_Bool) return FT_Types.FT_Error;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
 
-   function FT_Get_Glyph (Slot_Ptr : FT_Types.FT_Glyph_Slot;
+   function FT_Get_Glyph (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr;
                           aGlyph   : in out System.Address)
                           return FT_Types.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
