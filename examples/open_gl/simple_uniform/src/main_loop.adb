@@ -60,7 +60,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Utilities.Load_UV_Buffer (Array_Buffer, Vertex_data.Vertices, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_data.Vertices, Static_Draw);
 
         Rendering_Program := Program_From
           ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
