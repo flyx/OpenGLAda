@@ -21,23 +21,6 @@ package FT_Interface is
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
                         Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
 
-   type FT_Bitmap_Size is record
-      Height : GL.Types.Short;
-      Width  : GL.Types.Short;
-      Size   : FT_Image.FT_Pos;
-      X_Ppem : FT_Image.FT_Pos;
-      Y_Ppem : FT_Image.FT_Pos;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
-
-   type FT_BBox is record
-      X_Min : FT_Image.FT_Pos;
-      Y_Min : FT_Image.FT_Pos;
-      X_Max : FT_Image.FT_Pos;
-      Y_Max : FT_Image.FT_Pos;
-   end record;
-   pragma Convention (C_Pass_By_Copy, FT_BBox);
-
    procedure Done_Face (Face_Ptr : FT_Face);
    procedure Done_Library (Library_Ptr : FT_Library);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
@@ -55,6 +38,23 @@ package FT_Interface is
    function Set_Pixel_Sizes (Face         : FT_Face; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
 private
+   type FT_Bitmap_Size is record
+      Height : GL.Types.Short;
+      Width  : GL.Types.Short;
+      Size   : FT_Image.FT_Pos;
+      X_Ppem : FT_Image.FT_Pos;
+      Y_Ppem : FT_Image.FT_Pos;
+   end record;
+   pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
+
+   type FT_BBox is record
+      X_Min : FT_Image.FT_Pos;
+      Y_Min : FT_Image.FT_Pos;
+      X_Max : FT_Image.FT_Pos;
+      Y_Max : FT_Image.FT_Pos;
+   end record;
+   pragma Convention (C_Pass_By_Copy, FT_BBox);
+
    type FT_Face_Record is record
       Num_Faces               : GL.Types.Long;
       --  Face_Index holds two different values.
