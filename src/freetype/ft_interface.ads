@@ -21,14 +21,14 @@ package FT_Interface is
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
    function Face_Record (Face_Ptr : FT_Face) return FT_Face_Record;
    function Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : FT_Library) return FT_Error;
+   function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
    function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT_Image.FT_Vector) return FT_Error;
    function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT_Types.Load_Flag) return FT_Error;
    function New_Face (Library    : FT_Library; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : FT_Face)
+                      Face_Index : GL.Types.long; aFace : in out FT_Face)
                       return FT_Error;
    function Render_Glyph (Face_Ptr : FT_Face;
                           Render_Mode : FT_Render_Mode := Render_Mode_Mono)

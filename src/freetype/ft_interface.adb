@@ -68,7 +68,7 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : FT_Library) return FT_Types.FT_Error is
+   function Init_FreeType (aLibrary : in out FT_Library) return FT_Types.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
@@ -85,7 +85,7 @@ package body FT_Interface is
 
    function New_Face (Library : FT_Library;
                       File_Path_Name : String;
-                      Face_Index     : GL.Types.long; aFace : FT_Face)
+                      Face_Index     : GL.Types.long; aFace : in out FT_Face)
                       return FT_Error is
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
