@@ -43,7 +43,7 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Get_Glyph_Slot (Face_Ptr);
+      Slot_Ptr    : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
       Width       : Single := FT_Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
@@ -136,7 +136,7 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr     : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Get_Glyph_Slot (Face_Ptr);
+      Slot_Ptr     : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
