@@ -7,6 +7,8 @@ with FT_Types;
 
 package body FT_Image is
 
+   package Unsigned_Char_To_Address is new
+       System.Address_To_Access_Conversions (Interfaces.C.unsigned_char);
    package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT_Image.FT_Bitmap);
 
    --  -------------------------------------------------------------------------
@@ -15,7 +17,7 @@ package body FT_Image is
    --  FT_Bitmap => Buffer (access unsigned_char)
 
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source is
-     Addr   : System.Address := FT_Types.Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
+     Addr   : System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
    begin
       return GL.Objects.Textures.Image_Source (Addr);
    end Get_Buffer;

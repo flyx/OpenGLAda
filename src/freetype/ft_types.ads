@@ -1,13 +1,10 @@
 
 with System;
-with System.Address_To_Access_Conversions;
 with Interfaces.C; use Interfaces.C;
 
 with GL.Types;
 
 package FT_Types is
-   package Unsigned_Char_To_Address is new
-       System.Address_To_Access_Conversions (Interfaces.C.unsigned_char);
 
    type FT_Char_Map is private;
    type FT_Driver is private;
