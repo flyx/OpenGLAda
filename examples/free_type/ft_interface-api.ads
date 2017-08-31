@@ -3,7 +3,6 @@ with System;
 
 with Interfaces.C.Strings;
 
-with FT_Config;
 with FT_Types; use FT_Types;
 
 package FT_Interface.API is
@@ -23,7 +22,7 @@ package FT_Interface.API is
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
    function FT_Load_Char (Face : FT_Face; Char_Code : FT_ULong;
-      Load_Flags : FT_Config.FT_Int32) return FT_Error;
+      Load_Flags : GL.Types.Int) return FT_Error;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
    function FT_New_Face (Library : FT_Library;

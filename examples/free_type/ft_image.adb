@@ -2,7 +2,6 @@
 with System.Address_To_Access_Conversions;
 
 with Ada.Text_IO; use  Ada.Text_IO;
-with Ada.Unchecked_Conversion;
 
 with FT_Types;
 
@@ -23,6 +22,34 @@ package body FT_Image is
 
    --  -------------------------------------------------------------------------
 
+   function Get_Num_Grays (Bitmap : FT_Bitmap) return GL.Types.Short is
+   begin
+      return Bitmap.Num_Grays;
+   end Get_Num_Grays;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Palette_Mode (Bitmap : FT_Bitmap) return unsigned_char is
+   begin
+      return Bitmap.Palette_Mode;
+   end Get_Palette_Mode;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Pitch (Bitmap : FT_Bitmap) return GL.Types.Int is
+   begin
+      return GL.Types.Int (Bitmap.Pitch);
+   end Get_Pitch;
+
+   --  -------------------------------------------------------------------------
+
+   function Get_Pixel_Mode (Bitmap : FT_Bitmap) return unsigned_char is
+   begin
+      return Bitmap.Pixel_Mode;
+   end Get_Pixel_Mode;
+
+   --  -------------------------------------------------------------------------
+
    function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int is
    begin
       return GL.Types.Int (Bitmap.Rows);
@@ -34,22 +61,6 @@ package body FT_Image is
    begin
       return GL.Types.UInt (Bitmap.Width);
    end Get_Width;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Print_Bitmap (Bitmap : FT_Bitmap) is
-      use GL.Types;
-   begin
-      New_Line;
-      Put_Line ("Bitmap data:");
-      Put_Line ("Rows: " & uint'Image (Bitmap.Rows));
-      Put_Line ("Width: " & uint'Image (Bitmap.Width));
-      Put_Line ("Pitch: " & GL.Types.int'Image (Bitmap.Pitch));
-      Put_Line ("Num_Grays: " & GL.Types.short'Image (Bitmap.Num_Grays));
-      Put_Line ("Pixel_mode: " & unsigned_char'Image (Bitmap.Pixel_mode));
-      Put_Line ("Palette_mode: " & unsigned_char'Image (Bitmap.Palette_mode));
-      New_Line;
-   end Print_Bitmap;
 
    --  -------------------------------------------------------------------------
 

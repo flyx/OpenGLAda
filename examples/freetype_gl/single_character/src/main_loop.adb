@@ -2,6 +2,7 @@
 with System;
 with System.Address_Image;
 
+with Ada.Command_Line;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -91,7 +92,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup (Window : in out Glfw.Windows.Window) is
+   procedure Setup (Window : in out Glfw.Windows.Window;
+                    Test_Character : Character) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures;
@@ -118,7 +120,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
            Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
       --  Character position must be within window bounds.
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 4.0);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 4.0, Test_Character);
 
       Projection_Location :=
           GL.Objects.Programs.Uniform_Location (Rendering_Program, "projection_matrix");
@@ -138,8 +140,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    use Glfw.Input;
    Running : Boolean := True;
+   Test_Character : Character := 'x';
 begin
-   Setup (Main_Window);
+   if Ada.Command_Line.Argument_Count /= 1 then
+      Ada.Text_IO.Put_Line ("No character entered, so dispalying default character.");
+   else
+      Test_Character := Ada.Command_Line.Argument (1) (1);
+   end if;
+
+   Setup (Main_Window, Test_Character);
    while Running loop
       Render (Main_Window);
       glfw.Windows.Context.Swap_Buffers (Main_Window'Access);

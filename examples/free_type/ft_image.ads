@@ -20,11 +20,14 @@ package FT_Image is
    subtype FT_Pos is GL.Types.Long;
 
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source;
+   function Get_Num_Grays (Bitmap : FT_Bitmap) return GL.Types.Short;
    function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int;
+   function Get_Palette_Mode (Bitmap : FT_Bitmap) return unsigned_char;
+   function Get_Pitch (Bitmap : FT_Bitmap) return GL.Types.Int;
+   function Get_Pixel_Mode (Bitmap : FT_Bitmap) return unsigned_char;
    function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt;
    function Vector_X (theVector : FT_Vector) return GL.Types.Int;
    function Vector_Y (theVector : FT_Vector) return GL.Types.Int;
-   procedure Print_Bitmap (Bitmap : FT_Bitmap);
 
 private
    type FT_Bitmap is record
@@ -33,8 +36,8 @@ private
       Pitch        : GL.Types.Int;
       Buffer       : access unsigned_char;
       Num_Grays    : GL.Types.Short;
-      Pixel_mode   : unsigned_char;
-      Palette_mode : unsigned_char;
+      Pixel_Mode   : unsigned_char;
+      Palette_Mode : unsigned_char;
       Palette      : System.Address;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Bitmap);

@@ -6,8 +6,6 @@ with Interfaces.C.Strings;
 
 with GL.Types;
 
-with FT_Config;
---  with FT_Glyphs;
 with FT_Image;
 with FT_System;
 with FT_Types; Use FT_Types;
