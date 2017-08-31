@@ -4,7 +4,7 @@ with Interfaces.C; use Interfaces.C;
 
 with GL.Types;
 
-package FT_Types is
+package FT.Types is
 
    type FT_Char_Map is private;
    type FT_Driver is private;
@@ -85,4 +85,4 @@ private
         Load_Compute_Metrics => 16#200000#,
         Load_Bitmap_Metrics_Only => 16#400000#);
 
-end FT_Types;
+end FT.Types;

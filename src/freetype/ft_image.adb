@@ -3,7 +3,7 @@ with System.Address_To_Access_Conversions;
 
 with Ada.Text_IO; use  Ada.Text_IO;
 
-with FT_Types;
+with FT.Types;
 
 package body FT_Image is
 

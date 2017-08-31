@@ -17,7 +17,7 @@ package body FT_Interface is
    begin
       if FT_Done_Face (Face_Ptr) /= 0 then
          Put_Line ("FT_Done_Face failed");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
    end Done_Face;
 
@@ -28,7 +28,7 @@ package body FT_Interface is
    begin
       if FT_Done_Library (Library_Ptr) /= 0 then
          Put_Line ("FT_Done_Library failed");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
    end Done_Library;
 
@@ -68,7 +68,7 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out FT_Library) return FT_Types.FT_Error is
+   function Init_FreeType (aLibrary : in out FT_Library) return FT.Types.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
@@ -76,7 +76,7 @@ package body FT_Interface is
    --  -------------------------------------------------------------------------
 
    function Load_Character (Face : FT_Face; Char_Code : FT_ULong;
-                            Load_Flags : FT_Types.Load_Flag) return FT_Error is
+                            Load_Flags : FT.Types.Load_Flag) return FT_Error is
    begin
       return FT_Load_Char (Face, Char_Code, Load_Flags'Enum_Rep);
    end Load_Character;

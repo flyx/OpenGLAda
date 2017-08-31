@@ -3,7 +3,7 @@ with System;
 
 with FT_Glyphs;
 with FT_Image;
-with FT_Types;
+with FT.Types;
 
 package FT_Glyphs.API is
 
@@ -12,14 +12,14 @@ package FT_Glyphs.API is
 
   function FT_Glyph_To_Bitmap
      (the_glyph   : System.Address;
-      render_mode : FT_Types.FT_Render_Mode;
+      render_mode : FT.Types.FT_Render_Mode;
       origin      : access FT_Image.FT_Vector;
-      destroy     : FT_Types.FT_Bool) return FT_Types.FT_Error;
+      destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
 
-   function FT_Get_Glyph (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr;
+   function FT_Get_Glyph (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr;
                           aGlyph   : in out System.Address)
-                          return FT_Types.FT_Error;
+                          return FT.Types.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
 end FT_Glyphs.API;

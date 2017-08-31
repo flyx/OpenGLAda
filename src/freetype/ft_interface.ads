@@ -3,9 +3,9 @@ with System;
 
 with GL.Types;
 
+with FT;
 with FT_Image;
-with FT_System;
-with FT_Types; Use FT_Types;
+with FT.Types; Use FT.Types;
 
 package FT_Interface is
 
@@ -26,7 +26,7 @@ package FT_Interface is
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT_Image.FT_Vector) return FT_Error;
    function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
-                            Load_Flags : FT_Types.Load_Flag) return FT_Error;
+                            Load_Flags : FT.Types.Load_Flag) return FT_Error;
    function New_Face (Library    : FT_Library; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT_Face)
                       return FT_Error;
@@ -81,8 +81,8 @@ private
       Size                    : FT_Size_Ptr;
       Character_Map           : FT_Char_Map;
       Driver                  : FT_Driver;
-      Memory                  : FT_System.FT_Memory;
-      Stream                  : FT_System.FT_Stream;
+      Memory                  : FT.Memory;
+      Stream                  : FT.Stream;
       Sizes_List              : FT_List_Record;
       Autohint                : FT_Generic;
       Extensions              : System.Address;

@@ -7,7 +7,7 @@ with GL.Types;
 
 with FT_Image;
 with FT_Interface;
-with FT_Types;
+with FT.Types;
 
 package FT_Glyphs is
 
@@ -20,22 +20,22 @@ package FT_Glyphs is
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
 
-   function Get_Bitmap (Glyph_Slot : FT_Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Bitmap;
-   function Get_Bitmap_Height (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Types.Single;
-   function Get_Bitmap_Image (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Objects.Textures.Image_Source;
-   function Get_Bitmap_Left (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Rows (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Top (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Width (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return GL.Types.Single;
-   function Get_Glyph_Advance (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Vector;
+   function Get_Bitmap (Glyph_Slot : FT.Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Bitmap;
+   function Get_Bitmap_Height (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Types.Single;
+   function Get_Bitmap_Image (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Objects.Textures.Image_Source;
+   function Get_Bitmap_Left (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
+   function Get_Bitmap_Rows (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
+   function Get_Bitmap_Top (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Types.Int;
+   function Get_Bitmap_Width (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return GL.Types.Single;
+   function Get_Glyph_Advance (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Vector;
    function Get_Glyph_Record (Face_Ptr : FT_Interface.FT_Face) return FT_Glyph_Record;
-   function Get_Glyph_Format (Slot_Ptr : FT_Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Glyph_Format;
+   function Get_Glyph_Format (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr) return FT_Image.FT_Glyph_Format;
    function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Render_Mode : FT_Types.FT_Render_Mode;
+     (theGlyph    : System.Address; Render_Mode : FT.Types.FT_Render_Mode;
       Origin      : access FT_Image.FT_Vector;
-      Destroy     : FT_Types.FT_Bool) return FT_Types.FT_Error;
-   function Get_Glyph (Slot_Ptr  : FT_Types.FT_Glyph_Slot_Ptr;
-                       Glyph_Ptr : in out System.Address) return FT_Types.FT_Error;
+      Destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
+   function Get_Glyph (Slot_Ptr  : FT.Types.FT_Glyph_Slot_Ptr;
+                       Glyph_Ptr : in out System.Address) return FT.Types.FT_Error;
 private
    type FT_Glyph_Metrics is record
       Width        : FT_Image.FT_Pos;
@@ -50,7 +50,7 @@ private
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Metrics);
 
    type FT_Glyph_Record is record
-      Library : FT_Types.FT_Library;
+      Library : FT.Types.FT_Library;
       Clazz   : System.Address;
       Format  : FT_Image.FT_Glyph_Format;
       Advance : FT_Image.FT_Vector;
@@ -64,11 +64,11 @@ private
    pragma Convention (C_Pass_By_Copy, FT_Outline_Glyph_Record);
 
    type FT_Glyph_Slot_Record is record
-      Library           : FT_Types.FT_Library;
+      Library           : FT.Types.FT_Library;
       Face              : FT_Interface.FT_Face;
-      Next              : FT_Types.FT_Glyph_Slot_Ptr;
+      Next              : FT.Types.FT_Glyph_Slot_Ptr;
       Reserved          : GL.Types.UInt;
-      C_Generic         : FT_Types.FT_Generic;
+      C_Generic         : FT.Types.FT_Generic;
       Metrics           : FT_Glyph_Metrics;
       LinearHoriAdvance : GL.Types.long;
       LinearVertAdvance : GL.Types.long;
@@ -79,13 +79,13 @@ private
       Bitmap_top        : GL.Types.Int;
       Outline           : FT_Image.FT_Outline;
       Num_subglyphs     : GL.Types.UInt;
-      Subglyphs         : FT_Types.FT_SubGlyph;
+      Subglyphs         : FT.Types.FT_SubGlyph;
       Control_data      : System.Address;
       Control_len       : GL.Types.long;
       Lsb_Delta         : FT_Image.FT_Pos;
       Rsb_Delta         : FT_Image.FT_Pos;
       Other             : System.Address;
-      Internal          : FT_Types.FT_Slot_Internal;
+      Internal          : FT.Types.FT_Slot_Internal;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
 
