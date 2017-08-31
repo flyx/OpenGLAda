@@ -76,7 +76,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Projection_Location, Projection_Matrix);
 
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      Array_Buffer.Bind (Vertex_Buffer);   -- Essential?
+      Array_Buffer.Bind (Vertex_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                Kind   => Single_Type,
                                                Stride => 0, Offset => 0);

@@ -43,11 +43,11 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      aFace       : FT_Interface.FT_Face_Record := FT_Interface.Face (Face_Ptr);
+      Slot_Ptr    : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Get_Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
-      Width       : Single := FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot) * Scale;
-      Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot)) * Scale;
+      Width       : Single := FT_Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
+      Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (Slot_Ptr)) * Scale;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
    begin
@@ -136,15 +136,14 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      aFace        : FT_Interface.FT_Face_Record;
+      Slot_Ptr     : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Get_Glyph_Slot (Face_Ptr);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
    begin
-      aFace := FT_Interface.Face (Face_Ptr);
-      Width := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
-      Height := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+      Width := Size (FT_Glyphs.Get_Bitmap_Width (Slot_Ptr));
+      Height := Size (FT_Glyphs.Get_Bitmap_Rows (Slot_Ptr));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -153,7 +152,7 @@ package body Texture_Manager is
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-      Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (aFace.Glyph_Slot);
+      Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (Slot_Ptr);
       Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                   Bitmap_Image);
    exception
