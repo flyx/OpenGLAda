@@ -1,13 +1,11 @@
 
+with Interfaces.C.Strings;
+
 with System.Address_To_Access_Conversions;
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Types;
-
 with FT_Interface.API; use FT_Interface.API;
-with FT_Glyphs;
 
 package body FT_Interface is
    package Face_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
@@ -39,45 +37,45 @@ package body FT_Interface is
    function Face (Face_Ptr : FT_Face) return FT_Face_Record is
       use Face_Access;
       --  type Object_Pointer is access all Object;
-      Face_Pointer : Object_Pointer := To_Pointer (System.Address (Face_Ptr));
+      Face_Pointer : constant Object_Pointer := To_Pointer (System.Address (Face_Ptr));
    begin
       return Face_Pointer.all;
    end Face;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
+   function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT_Image.FT_Vector) return FT_Error is
    begin
       return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
-   end Get_Kerning;
+   end Kerning;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Face_Record (Face_Ptr : FT_Face) return FT_Face_Record is
+   function Face_Record (Face_Ptr : FT_Face) return FT_Face_Record is
    begin
       return Face (Face_Ptr);
-   end Get_Face_Record;
+   end Face_Record;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr is
-      theFace : FT_Face_Record := Face (Face_Ptr);
+   function Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr is
+      theFace : constant FT_Face_Record := Face (Face_Ptr);
    begin
       return theFace.Glyph_Slot;
-   end Get_Glyph_Slot;
+   end Glyph_Slot;
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out FT_Library) return FT_Types.FT_Error is
+   function Init_FreeType (aLibrary : FT_Library) return FT_Types.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
 
    --  -------------------------------------------------------------------------
 
-   function Load_Character (Face : in out FT_Face; Char_Code : FT_ULong;
+   function Load_Character (Face : FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT_Types.Load_Flag) return FT_Error is
    begin
       return FT_Load_Char (Face, Char_Code, Load_Flags'Enum_Rep);
@@ -87,9 +85,9 @@ package body FT_Interface is
 
    function New_Face (Library : FT_Library;
                       File_Path_Name : String;
-                      Face_Index     : GL.Types.long; aFace : in out FT_Face)
+                      Face_Index     : GL.Types.long; aFace : FT_Face)
                       return FT_Error is
-      Path : Interfaces.C.Strings.chars_ptr :=
+      Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
    begin
       return  FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
@@ -100,7 +98,7 @@ package body FT_Interface is
    function Render_Glyph (Face_Ptr : FT_Face;
                           Render_Mode : FT_Render_Mode := Render_Mode_Mono)
                           return FT_Error is
-      Slot : FT_Glyph_Slot_Ptr := Get_Glyph_Slot (Face_Ptr);
+      Slot : constant FT_Glyph_Slot_Ptr := Glyph_Slot (Face_Ptr);
    begin
       return  FT_Render_Glyph (Slot, Render_Mode);
    end Render_Glyph;

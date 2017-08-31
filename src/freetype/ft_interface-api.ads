@@ -3,8 +3,6 @@ with System;
 
 with Interfaces.C.Strings;
 
-with FT_Types; use FT_Types;
-
 package FT_Interface.API is
 
    function FT_Done_Face (face : FT_Face) return FT_Error;
@@ -18,7 +16,7 @@ package FT_Interface.API is
       Kern_Mode : GL.Types.UInt; aKerning : access FT_Image.FT_Vector) return FT_Error;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
-  function FT_Init_FreeType (aLibrary : in out System.Address) return FT_Error;
+  function FT_Init_FreeType (aLibrary : System.Address) return FT_Error;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
    function FT_Load_Char (Face : FT_Face; Char_Code : FT_ULong;
@@ -27,7 +25,7 @@ package FT_Interface.API is
 
    function FT_New_Face (Library : FT_Library;
                File_Path_Name : Interfaces.C.Strings.chars_ptr;
-               Face_Index     : GL.Types.long; aFace : in out System.Address)
+               Face_Index     : GL.Types.long; aFace : System.Address)
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 

@@ -33,7 +33,7 @@ package body FT_Utilities is
    procedure Print_Character_Data (Face_Ptr : FT_Interface.FT_Face; aChar : Character) is
       use GL.Types;
       use FT_Glyphs;
-      Slot_Ptr  : constant FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Get_Glyph_Slot (Face_Ptr);
+      Slot_Ptr  : constant FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
       Advance_X : constant GL.Types.Int := FT_Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
    begin
       Put_Line ("Character " & aChar & " Data");

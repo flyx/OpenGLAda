@@ -1,9 +1,6 @@
 
 with System;
 
-with Interfaces.C;
-with Interfaces.C.Strings;
-
 with GL.Types;
 
 with FT_Image;
@@ -22,13 +19,16 @@ package FT_Interface is
    procedure Done_Face (Face_Ptr : FT_Face);
    procedure Done_Library (Library_Ptr : FT_Library);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Get_Face_Record (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Get_Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
-   function Load_Character (Face       : in out FT_Face; Char_Code : FT_ULong;
+   function Face_Record (Face_Ptr : FT_Face) return FT_Face_Record;
+   function Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr;
+   function Init_FreeType (alibrary : FT_Library) return FT_Error;
+   function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
+                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                         aKerning : access FT_Image.FT_Vector) return FT_Error;
+   function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT_Types.Load_Flag) return FT_Error;
    function New_Face (Library    : FT_Library; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT_Face)
+                      Face_Index : GL.Types.long; aFace : FT_Face)
                       return FT_Error;
    function Render_Glyph (Face_Ptr : FT_Face;
                           Render_Mode : FT_Render_Mode := Render_Mode_Mono)

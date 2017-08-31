@@ -126,7 +126,7 @@ package body FT_Glyphs is
       use FT_Interface;
       use Glyph_Access;
       Glyph_Pointer : Object_Pointer :=
-        To_Pointer (System.Address (Get_Glyph_Slot (Face_Ptr)));
+        To_Pointer (System.Address (Glyph_Slot (Face_Ptr)));
    begin
       return Glyph_Pointer.all;
    end Get_Glyph_Record;
