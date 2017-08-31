@@ -2,8 +2,6 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Errors;
-
 with Glfw;
 with Glfw.Input.Mouse;
 with Glfw.Windows;
@@ -51,7 +49,7 @@ begin
 
 exception
     when others =>
-        Put_Line ("An exceptiom occurred in Initialize.");
+        Put_Line ("An exception occurred in Initialize.");
         raise;
 
 end Initialize;
