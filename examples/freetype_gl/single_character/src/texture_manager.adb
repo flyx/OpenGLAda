@@ -1,13 +1,10 @@
 
 with System;
-with System.Address_Image;
-with Interfaces.C;
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Low_Level.Enums;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Types.Colors;
@@ -105,7 +102,6 @@ package body Texture_Manager is
                             aTexture      : in out GL.Objects.Textures.Texture;
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
-      use Interfaces.C;
       use GL.Types;
    begin
       if FT_Interface.Init_FreeType (theLibrary) /= 0 then
@@ -137,12 +133,10 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture) is
-      use Interfaces.C;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
       aFace        : FT_Interface.FT_Face_Record;
-      --        Border_Color : GL.Types.Colors.Color := (1.0, 0.0, 0.0, 1.0);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
@@ -151,10 +145,9 @@ package body Texture_Manager is
       aFace := FT_Interface.Face (Face_Ptr);
       Width := Size (FT_Glyphs.Get_Bitmap_Width (aFace.Glyph_Slot));
       Height := Size (FT_Glyphs.Get_Bitmap_Rows (aFace.Glyph_Slot));
+
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
-      --        Texture_2D.Set_Texture_Priority (Priority);
-      --        Texture_2D.Set_Border_Color (Border_Color);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
