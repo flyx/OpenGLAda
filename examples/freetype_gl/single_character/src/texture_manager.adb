@@ -10,6 +10,7 @@ with GL.Pixels;
 with GL.Types.Colors;
 
 with FT;
+with FT.API;
 with FT.Glyphs;
 with FT.Image;
 with FT.Interfac;
@@ -19,8 +20,8 @@ with Utilities;
 
 package body Texture_Manager is
 
-   theLibrary    : FT.Library_Ptr;
-   Face_Ptr      : FT.Face_Ptr;
+   theLibrary    : FT.API.Library_Ptr;
+   Face_Ptr      : FT.API.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
    Image_Error : exception;
@@ -32,7 +33,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Face_Ptr return FT.Face_Ptr is
+   function Get_Face_Ptr return FT.API.Face_Ptr is
    begin
       return Face_Ptr;
    end Get_Face_Ptr;
@@ -44,7 +45,7 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
       Width       : Single := FT.Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
@@ -137,7 +138,7 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr     : FT.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr     : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
