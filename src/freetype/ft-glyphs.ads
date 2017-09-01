@@ -28,7 +28,7 @@ package FT.Glyphs is
    function Get_Bitmap_Top (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Int;
    function Get_Bitmap_Width (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Single;
    function Get_Glyph_Advance (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Vector;
-   function Get_Glyph_Record (Face_Ptr : FT.Interfac.FT_Face) return FT_Glyph_Record;
+   function Get_Glyph_Record (aFace : FT.Interfac.Face_Ptr) return FT_Glyph_Record;
    function Get_Glyph_Format (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Glyph_Format;
    function Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.Types.Render_Mode;
@@ -65,7 +65,7 @@ private
 
    type FT_Glyph_Slot_Record is record
       Library           : FT.Interfac.Library_Ptr;
-      Face              : FT.Interfac.FT_Face;
+      Face              : FT.Interfac.Face_Ptr;
       Next              : FT.Interfac.Glyph_Slot_Ptr;
       Reserved          : GL.Types.UInt;
       C_Generic         : FT.Types.Generic_Record;

@@ -30,10 +30,10 @@ package body FT.Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (Face_Ptr : FT.Interfac.FT_Face; aChar : Character) is
+   procedure Print_Character_Metadata (aFace : FT.Interfac.Face_Ptr; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
-      Slot_Ptr  : constant FT.Interfac.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr  : constant FT.Interfac.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (aFace);
       Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
    begin
       Put_Line ("Character " & aChar & " Data");

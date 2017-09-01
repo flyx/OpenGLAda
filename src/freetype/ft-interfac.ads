@@ -9,7 +9,7 @@ with FT.Types; Use FT.Types;
 
 package FT.Interfac is
 
-   type FT_Face is new System.Address;
+   type Face_Ptr is new System.Address;
    type FT_Face_Record is private;
 
    type Library_Ptr is new System.Address;
@@ -20,24 +20,24 @@ package FT.Interfac is
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
                         Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
 
-   procedure Done_Face (Face_Ptr : FT_Face);
+   procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
-   function Face (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Face_Record (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Glyph_Slot (Face_Ptr : FT_Face) return Glyph_Slot_Ptr;
+   function Face (aFace : Face_Ptr) return FT_Face_Record;
+   function Face_Record (aFace : Face_Ptr) return FT_Face_Record;
+   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr;
    function Init_FreeType (alibrary : in out Library_Ptr) return FT_Error;
-   function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
+   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT.Image.FT_Vector) return FT_Error;
-   function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
+   function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
                             Load_Flags : FT.Types.Load_Flag) return FT_Error;
    function New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT_Face)
+                      Face_Index : GL.Types.long; aFace : in out Face_Ptr)
                       return FT_Error;
-   function Render_Glyph (Face_Ptr : FT_Face;
+   function Render_Glyph (aFace : Face_Ptr;
                           Mode : Render_Mode := Render_Mode_Mono)
                           return FT_Error;
-   function Set_Pixel_Sizes (Face         : FT_Face; Pixel_Width : GL.Types.UInt;
+   function Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
 private
    type FT_Bitmap_Size is record
