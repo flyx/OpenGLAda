@@ -1,15 +1,10 @@
 
 with System.Address_To_Access_Conversions;
 
-with Ada.Text_IO; use  Ada.Text_IO;
-
-with FT.Types;
-
 package body FT.Image is
 
    package Unsigned_Char_To_Address is new
        System.Address_To_Access_Conversions (Interfaces.C.unsigned_char);
-   package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT.Image.FT_Bitmap);
 
    --  -------------------------------------------------------------------------
 
@@ -17,7 +12,7 @@ package body FT.Image is
    --  FT_Bitmap => Buffer (access unsigned_char)
 
    function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source is
-     Addr   : System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
+     Addr   : constant System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
    begin
       return GL.Objects.Textures.Image_Source (Addr);
    end Get_Buffer;
@@ -40,7 +35,7 @@ package body FT.Image is
 
    function Get_Pitch (Bitmap : FT_Bitmap) return GL.Types.Int is
    begin
-      return GL.Types.Int (Bitmap.Pitch);
+      return Bitmap.Pitch;
    end Get_Pitch;
 
    --  -------------------------------------------------------------------------
@@ -61,7 +56,7 @@ package body FT.Image is
 
    function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt is
    begin
-      return GL.Types.UInt (Bitmap.Width);
+      return Bitmap.Width;
    end Get_Width;
 
    --  -------------------------------------------------------------------------
