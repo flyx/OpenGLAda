@@ -9,17 +9,17 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Types.Colors;
 
-with FT_Glyphs;
-with FT_Image;
-with FT_Types;
-with FT_Utilities;
+with FT.Glyphs;
+with FT.Image;
+with FT.Types;
+with FT.Utilities;
 
 with Utilities;
 
 package body Texture_Manager is
 
-   theLibrary    : FT_Types.FT_Library;
-   Face_Ptr      : FT_Interface.FT_Face;
+   theLibrary    : FT.Types.FT_Library;
+   Face_Ptr      : FT.Interfac.FT_Face;
    Vertex_Data   : Vertex_Array;
 
    Image_Error : exception;
@@ -31,7 +31,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Face_Ptr return FT_Interface.FT_Face is
+   function Get_Face_Ptr return FT.Interfac.FT_Face is
    begin
       return Face_Ptr;
    end Get_Face_Ptr;
@@ -43,11 +43,11 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
+      Slot_Ptr    : FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
-      Width       : Single := FT_Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
-      Height      : Single := Single (FT_Glyphs.Get_Bitmap_Rows (Slot_Ptr)) * Scale;
+      Width       : Single := FT.Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
+      Height      : Single := Single (FT.Glyphs.Get_Bitmap_Rows (Slot_Ptr)) * Scale;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
    begin
@@ -79,14 +79,14 @@ package body Texture_Manager is
       --        Font_File       : String := "/Library/Fonts/Arial.ttf";
       Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
-      if FT_Interface.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
+      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
       --  Set pixel size to 48 x 48
-      if FT_Interface.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
+      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
          Put_Line ("Unable to set pixel sizes.");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
 
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
@@ -104,30 +104,30 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT_Interface.Init_FreeType (theLibrary) /= 0 then
+      if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
          Put_Line ("The Freetype Library failed to load.");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
 
       Setup_Font;
-      if FT_Interface.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT_Types.Load_Render) /= 0 then
+      if FT.Interfac.Load_Character (Face_Ptr, Character'Pos (Char),
+                                      FT.Types.Load_Render) /= 0 then
          Put_Line ("A character failed to load.");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT_Interface.Render_Glyph (Face_Ptr) /= 0 then
+      if FT.Interfac.Render_Glyph (Face_Ptr) /= 0 then
          Put_Line ("A character failed to render.");
-         raise FT_Types.FT_Exception;
+         raise FT.Types.FT_Exception;
       end if;
-      FT_Utilities.Print_Character_Data (Face_Ptr, Char);
+      FT.Utilities.Print_Character_Data (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT_Interface.Done_Face (Face_Ptr);
-      FT_Interface.Done_Library (theLibrary);
+      FT.Interfac.Done_Face (Face_Ptr);
+      FT.Interfac.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -136,14 +136,14 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr     : FT_Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
+      Slot_Ptr     : FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
    begin
-      Width := Size (FT_Glyphs.Get_Bitmap_Width (Slot_Ptr));
-      Height := Size (FT_Glyphs.Get_Bitmap_Rows (Slot_Ptr));
+      Width := Size (FT.Glyphs.Get_Bitmap_Width (Slot_Ptr));
+      Height := Size (FT.Glyphs.Get_Bitmap_Rows (Slot_Ptr));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -152,7 +152,7 @@ package body Texture_Manager is
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-      Bitmap_Image := FT_Glyphs.Get_Bitmap_Image (Slot_Ptr);
+      Bitmap_Image := FT.Glyphs.Get_Bitmap_Image (Slot_Ptr);
       Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                   Bitmap_Image);
    exception

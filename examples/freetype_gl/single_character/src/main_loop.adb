@@ -25,9 +25,9 @@ with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
-with FT_Glyphs;
-with FT_Interface;
-with FT_Utilities;
+with FT.Glyphs;
+with FT.Interfac;
+with FT.Utilities;
 
 with Maths;
 with Program_Loader;
