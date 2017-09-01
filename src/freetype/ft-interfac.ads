@@ -11,18 +11,28 @@ package FT.Interfac is
    type Face_Ptr is new System.Address;
    type FT_Face_Record is private;
    type List_Record is private;
-   type Load_Flag is private;
 
    type Library_Ptr is new System.Address;
 
    type Generic_Record is private;
    type Glyph_Slot_Ptr is new System.Address;
-   type Render_Mode is private;
    type Size_Ptr is private;
 
    type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
                         Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
+
+   type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
+                      Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
+                      Load_Crop_Bitmap, Load_Pedantic, Load_Advance_Only,
+                      Load_Ignore_Gloabl_Advance_Width, Load_No_Recourse,
+                      Load_Ignore_Transform, Load_Monochrome, Load_Linear_Design,
+                      Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
+                      Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
+
+   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
+                           Render_Mode_Mono, Render_Mode_LCD,
+                           Render_Mode_LCD_V, Render_Mode_Max);
 
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
@@ -119,18 +129,6 @@ private
       Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Face_Record);
-
-   type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
-                      Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
-                      Load_Crop_Bitmap, Load_Pedantic, Load_Advance_Only,
-                      Load_Ignore_Gloabl_Advance_Width, Load_No_Recourse,
-                      Load_Ignore_Transform, Load_Monochrome, Load_Linear_Design,
-                      Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
-                      Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
-
-   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
-                           Render_Mode_Mono, Render_Mode_LCD,
-                           Render_Mode_LCD_V, Render_Mode_Max);
 
    --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)
