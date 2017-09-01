@@ -8,14 +8,10 @@ with FT.Image;
 
 package FT.Interfac is
 
-   type Face_Ptr is new System.Address;
    type FT_Face_Record is private;
    type List_Record is private;
 
-   type Library_Ptr is new System.Address;
-
    type Generic_Record is private;
-   type Glyph_Slot_Ptr is new System.Address;
    type Size_Ptr is private;
 
    type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
@@ -29,10 +25,6 @@ package FT.Interfac is
                       Load_Ignore_Transform, Load_Monochrome, Load_Linear_Design,
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
-
-   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
-                           Render_Mode_Mono, Render_Mode_LCD,
-                           Render_Mode_LCD_V, Render_Mode_Max);
 
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);

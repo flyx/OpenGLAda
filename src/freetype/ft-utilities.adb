@@ -7,13 +7,13 @@ with Ada.Text_IO; use Ada.Text_IO;
 with GL.Types;
 
 with FT.Glyphs;
+with FT.Interfac;
 
 package body FT.Utilities is
 
    procedure Print_Bitmap_Metadata (Bitmap : FT.Image.FT_Bitmap) is
       use GL.Types;
       use FT.Image;
-      use FT.Interfac;
    begin
       New_Line;
       Put_Line ("Bitmap data:");
@@ -28,10 +28,10 @@ package body FT.Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (aFace : FT.Interfac.Face_Ptr; aChar : Character) is
+   procedure Print_Character_Metadata (aFace : FT.Face_Ptr; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
-      Slot_Ptr  : constant FT.Interfac.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (aFace);
+      Slot_Ptr  : constant FT.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (aFace);
       Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
    begin
       Put_Line ("Character " & aChar & " Data");
