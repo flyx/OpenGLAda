@@ -28,7 +28,7 @@ package body FT.Glyphs is
       --  Get_Glyph calls the FT_Get_Glyph C function.
       if Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
          Put_Line ("FT_Interfac.Bitmap raised an Exception");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
       return theGlyph.Bitmap;
    end Get_Bitmap;
@@ -88,7 +88,7 @@ package body FT.Glyphs is
 
    function Get_Glyph (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr;
                        Glyph_Ptr : in out System.Address)
-                       return FT.Types.FT_Error is
+                       return FT.FT_Error is
    begin
       return FT.Glyphs.API.FT_Get_Glyph (Slot_Ptr, Glyph_Ptr);
    end Get_Glyph;
@@ -127,9 +127,9 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.Types.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.Interfac.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error is
+      Destroy     : FT.FT_Bool) return FT.FT_Error is
    begin
       return FT.Glyphs.API.FT_Glyph_To_Bitmap (theGlyph, Mode,
                                                Origin, Destroy);

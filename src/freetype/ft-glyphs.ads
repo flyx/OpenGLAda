@@ -7,7 +7,6 @@ with GL.Types;
 
 with FT.Image;
 with FT.Interfac;
-with FT.Types;
 
 package FT.Glyphs is
 
@@ -16,6 +15,8 @@ package FT.Glyphs is
    type FT_Glyph_Slot_Record is private;
    type FT_Glyph is new System.Address;
    type FT_Outline_Glyph is new System.Address;
+   type Slot_Internal_Ptr is new System.Address;
+
    subtype FT_Pos is Interfaces.C.long;
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
@@ -31,12 +32,15 @@ package FT.Glyphs is
    function Get_Glyph_Record (aFace : FT.Interfac.Face_Ptr) return FT_Glyph_Record;
    function Get_Glyph_Format (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Glyph_Format;
    function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.Types.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.Interfac.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
+      Destroy     : FT.FT_Bool) return FT.FT_Error;
    function Get_Glyph (Slot_Ptr  : FT.Interfac.Glyph_Slot_Ptr;
-                       Glyph_Ptr : in out System.Address) return FT.Types.FT_Error;
+                       Glyph_Ptr : in out System.Address) return FT.FT_Error;
 private
+
+   type Subglyph_Ptr is new System.Address;
+
    type FT_Glyph_Metrics is record
       Width        : FT.Image.FT_Pos;
       Height       : FT.Image.FT_Pos;
@@ -68,7 +72,7 @@ private
       Face              : FT.Interfac.Face_Ptr;
       Next              : FT.Interfac.Glyph_Slot_Ptr;
       Reserved          : GL.Types.UInt;
-      C_Generic         : FT.Types.Generic_Record;
+      C_Generic         : FT.Interfac.Generic_Record;
       Metrics           : FT_Glyph_Metrics;
       LinearHoriAdvance : GL.Types.long;
       LinearVertAdvance : GL.Types.long;
@@ -79,13 +83,13 @@ private
       Bitmap_top        : GL.Types.Int;
       Outline           : FT.Image.FT_Outline;
       Num_subglyphs     : GL.Types.UInt;
-      Subglyphs         : FT.Types.Subglyph_Ptr;
+      Subglyphs         : Subglyph_Ptr;
       Control_data      : System.Address;
       Control_len       : GL.Types.long;
       Lsb_Delta         : FT.Image.FT_Pos;
       Rsb_Delta         : FT.Image.FT_Pos;
       Other             : System.Address;
-      Internal          : FT.Types.Slot_Internal_Ptr;
+      Internal          : Slot_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Slot_Record);
 

@@ -17,7 +17,7 @@ package body FT.Interfac is
    begin
       if FT_Done_Face (aFace) /= 0 then
          Put_Line ("FT_Done_Face failed");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
    end Done_Face;
 
@@ -28,7 +28,7 @@ package body FT.Interfac is
    begin
       if FT_Done_Library (Library) /= 0 then
          Put_Line ("FT_Done_Library failed");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
    end Done_Library;
 
@@ -68,7 +68,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out Library_Ptr) return FT.Types.FT_Error is
+   function Init_FreeType (aLibrary : in out Library_Ptr) return FT.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
@@ -76,9 +76,9 @@ package body FT.Interfac is
    --  -------------------------------------------------------------------------
 
    function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
-                            Load_Flags : FT.Types.Load_Flag) return FT_Error is
+                            Flags : Load_Flag) return FT_Error is
    begin
-      return FT_Load_Char (aFace, Char_Code, Load_Flags'Enum_Rep);
+      return FT_Load_Char (aFace, Char_Code, Flags'Enum_Rep);
    end Load_Character;
 
    --  -------------------------------------------------------------------------
@@ -96,7 +96,7 @@ package body FT.Interfac is
    --  -------------------------------------------------------------------------
 
    function Render_Glyph (aFace : Face_Ptr;
-                          Mode : Render_Mode := Render_Mode_Mono)
+                          Mode : Render_Mode)
                           return FT_Error is
       Slot : constant Glyph_Slot_Ptr := Glyph_Slot (aFace);
    begin

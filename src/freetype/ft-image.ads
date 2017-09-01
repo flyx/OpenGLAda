@@ -1,6 +1,6 @@
 
 with System;
-with Interfaces.C; use Interfaces.C;
+
 with Interfaces.C.Strings;
 
 with GL.Objects.Textures;

@@ -2,8 +2,6 @@
 with System;
 with System.Address_Image;
 
-with Interfaces.C; use Interfaces.C;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types;
