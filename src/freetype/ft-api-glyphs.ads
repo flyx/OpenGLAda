@@ -3,8 +3,9 @@ with System;
 
 with FT.Glyphs;
 with FT.Image;
+with FT.Interfac;
 
-package FT.Glyphs.API is
+package FT.API.Glyphs is
 
    procedure FT_Done_Glyph (Glyph : FT.Glyphs.FT_Glyph);
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
@@ -20,4 +21,4 @@ package FT.Glyphs.API is
                           return FT.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
-end FT.Glyphs.API;
+end FT.API.Glyphs;

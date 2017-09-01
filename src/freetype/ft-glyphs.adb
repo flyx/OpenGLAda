@@ -3,7 +3,7 @@ with System.Address_To_Access_Conversions;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with FT.Glyphs.API;
+with FT.API.Glyphs;
 
 package body FT.Glyphs is
    package Glyph_Access is new
@@ -13,7 +13,7 @@ package body FT.Glyphs is
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph) is
    begin
-      FT.Glyphs.API.FT_Done_Glyph (Glyph_Ptr);
+      FT.API.Glyphs.FT_Done_Glyph (Glyph_Ptr);
    end Done_Glyph;
 
    --  -------------------------------------------------------------------------
@@ -99,7 +99,7 @@ package body FT.Glyphs is
                        Glyph_Ptr : in out System.Address)
                        return FT.FT_Error is
    begin
-      return FT.Glyphs.API.FT_Get_Glyph (Slot_Ptr, Glyph_Ptr);
+      return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, Glyph_Ptr);
    end Get_Glyph;
 
    --  -------------------------------------------------------------------------
@@ -143,7 +143,7 @@ package body FT.Glyphs is
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error is
    begin
-      return FT.Glyphs.API.FT_Glyph_To_Bitmap (theGlyph, Mode,
+      return FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode,
                                                Origin, Destroy);
    end Glyph_To_Bitmap;
 
