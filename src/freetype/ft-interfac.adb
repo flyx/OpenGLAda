@@ -97,7 +97,7 @@ package body FT.Interfac is
    --  -------------------------------------------------------------------------
 
    function Render_Glyph (aFace : FT.API.Face_Ptr;
-                          Mode : Render_Mode)
+                          Mode : FT.API.Render_Mode)
                           return FT_Error is
       Slot : constant FT.API.Glyph_Slot_Ptr := Glyph_Slot (aFace);
    begin

@@ -42,7 +42,7 @@ package FT.Interfac is
                       Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
                       return FT_Error;
    function Render_Glyph (aFace : FT.API.Face_Ptr;
-                          Mode  : Render_Mode)
+                          Mode  : FT.API.Render_Mode)
                           return FT_Error;
    function Set_Pixel_Sizes (aFace : FT.API.Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;

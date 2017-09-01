@@ -119,7 +119,7 @@ package body Texture_Manager is
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Interfac.Render_Glyph (Face_Ptr, FT.Render_Mode_Mono) /= 0 then
+      if FT.Interfac.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
          Put_Line ("A character failed to render.");
          raise FT.FT_Exception;
       end if;

@@ -10,7 +10,7 @@ package FT.API.Glyphs is
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
 
   function FT_Glyph_To_Bitmap
-     (theGlyph   : System.Address; Mode : FT.Render_Mode;
+     (theGlyph   : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");

@@ -8,9 +8,6 @@ with GL.Types;
 package FT is
    pragma Preelaborate;
 
-   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
-                           Render_Mode_Mono, Render_Mode_LCD,
-                           Render_Mode_LCD_V, Render_Mode_Max);
    type Memory is private;
    type Stream is private;
 

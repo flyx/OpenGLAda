@@ -139,7 +139,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error is
    begin

@@ -39,7 +39,7 @@ package FT.Glyphs is
    function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return FT.Image.FT_Glyph_Format;
    function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error;
    function Get_Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
