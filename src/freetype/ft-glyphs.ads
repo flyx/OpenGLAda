@@ -1,6 +1,5 @@
 
 with System;
-with Interfaces.C;
 
 with GL.Objects.Textures;
 with GL.Types;
@@ -16,8 +15,6 @@ package FT.Glyphs is
    type FT_Glyph is new System.Address;
    type FT_Outline_Glyph is new System.Address;
    type Slot_Internal_Ptr is new System.Address;
-
-   subtype FT_Pos is Interfaces.C.long;
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
 
