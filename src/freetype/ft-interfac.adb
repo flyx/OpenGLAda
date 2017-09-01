@@ -8,7 +8,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with FT.Interfac.API; use FT.Interfac.API;
 
 package body FT.Interfac is
-   package Face_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
+   package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Face (aFace : FT.API.Face_Ptr) return FT_Face_Record is
+   function Face (aFace : FT.API.Face_Ptr) return Face_Record is
       use Face_Access;
       --  type Object_Pointer is access all Object;
       Face_Pointer : constant Object_Pointer := To_Pointer (System.Address (aFace));
@@ -53,15 +53,8 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Face_Record (aFace : FT.API.Face_Ptr) return FT_Face_Record is
-   begin
-      return Face (aFace);
-   end Face_Record;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr is
-      theFace : constant FT_Face_Record := Face (aFace);
+    function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr is
+      theFace : constant Face_Record := Face (aFace);
    begin
       return theFace.Glyph_Slot;
    end Glyph_Slot;

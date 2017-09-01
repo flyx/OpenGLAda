@@ -9,7 +9,7 @@ with FT.Image;
 
 package FT.Interfac is
 
-   type FT_Face_Record is private;
+   type Face_Record is private;
    type List_Record is private;
 
    type Generic_Record is private;
@@ -29,9 +29,8 @@ package FT.Interfac is
 
    procedure Done_Face (aFace : FT.API.Face_Ptr);
    procedure Done_Library (Library : FT.API.Library_Ptr);
-   function Face (aFace : FT.API.Face_Ptr) return FT_Face_Record;
-   function Face_Record (aFace : FT.API.Face_Ptr) return FT_Face_Record;
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr;
+   function Face (aFace : FT.API.Face_Ptr) return Face_Record;
+    function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr;
    function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
    function Kerning (aFace : FT.API.Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
@@ -86,7 +85,7 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, List_Record);
 
-   type FT_Face_Record is record
+   type Face_Record is record
       Num_Faces               : GL.Types.Long;
       --  Face_Index holds two different values.
       --  Bits 0-15 are the index of the face in the font file (starting with ~0)
@@ -121,7 +120,7 @@ private
       Extensions              : System.Address;
       Internal                : Face_Internal_Ptr;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_Face_Record);
+   pragma Convention (C_Pass_By_Copy, Face_Record);
 
    --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)
