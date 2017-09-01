@@ -21,16 +21,25 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
 
-   function Get_Bitmap (Glyph_Slot : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Bitmap;
-   function Get_Bitmap_Height (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Single;
-   function Get_Bitmap_Image (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Objects.Textures.Image_Source;
-   function Get_Bitmap_Left (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Rows (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Top (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Int;
-   function Get_Bitmap_Width (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return GL.Types.Single;
-   function Get_Glyph_Advance (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Vector;
+   function Get_Bitmap (Glyph_Slot : FT.Interfac.Glyph_Slot_Ptr)
+                        return FT.Image.FT_Bitmap;
+   function Get_Bitmap_Height (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                               return GL.Types.Single;
+   function Get_Bitmap_Image (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                              return GL.Objects.Textures.Image_Source;
+   function Get_Bitmap_Left (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                             return GL.Types.Int;
+   function Get_Bitmap_Rows (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                             return GL.Types.Int;
+   function Get_Bitmap_Top (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                            return GL.Types.Int;
+   function Get_Bitmap_Width (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                              return GL.Types.Single;
+   function Get_Glyph_Advance (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                               return FT.Image.FT_Vector;
    function Get_Glyph_Record (aFace : FT.Interfac.Face_Ptr) return FT_Glyph_Record;
-   function Get_Glyph_Format (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr) return FT.Image.FT_Glyph_Format;
+   function Get_Glyph_Format (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr)
+                              return FT.Image.FT_Glyph_Format;
    function Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.Interfac.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
