@@ -8,6 +8,10 @@ library project OpenGL.Freetype is
    for Object_Dir use "obj";
    for Library_Dir use "lib";
 
+package Compiler is
+    for Default_Switches ("ada") use ("-gnatwa", "-O2", "-gnatn2", "-fstack-check");
+end Compiler;
+
    package Linker is
       for Linker_Options use ("-L/usr/local/lib", "-lfreetype");
    end Linker;
