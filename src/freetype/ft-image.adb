@@ -5,11 +5,11 @@ with Ada.Text_IO; use  Ada.Text_IO;
 
 with FT.Types;
 
-package body FT_Image is
+package body FT.Image is
 
    package Unsigned_Char_To_Address is new
        System.Address_To_Access_Conversions (Interfaces.C.unsigned_char);
-   package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT_Image.FT_Bitmap);
+   package Glyph_Bitmap_Access is new System.Address_To_Access_Conversions (FT.Image.FT_Bitmap);
 
    --  -------------------------------------------------------------------------
 
@@ -80,4 +80,4 @@ package body FT_Image is
 
    --  -------------------------------------------------------------------------
 
-end FT_Image;
+end FT.Image;

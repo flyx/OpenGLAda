@@ -6,7 +6,7 @@ with Interfaces.C.Strings;
 with GL.Objects.Textures;
 with GL.Types;
 
-package FT_Image is
+package FT.Image is
 
    type FT_Bitmap is private;
    type FT_Outline is private;
@@ -57,4 +57,4 @@ private
       y : FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Vector);
-end FT_Image;
+end FT.Image;

@@ -8,14 +8,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types;
 
-with FT_Glyphs;
+with FT.Glyphs;
 with FT.Types;
 
-package body FT_Utilities is
+package body FT.Utilities is
 
-   procedure Print_Bitmap (Bitmap : FT_Image.FT_Bitmap) is
+   procedure Print_Bitmap (Bitmap : FT.Image.FT_Bitmap) is
       use GL.Types;
-      use FT_Image;
+      use FT.Image;
    begin
       New_Line;
       Put_Line ("Bitmap data:");
@@ -30,11 +30,11 @@ package body FT_Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Data (Face_Ptr : FT_Interface.FT_Face; aChar : Character) is
+   procedure Print_Character_Data (Face_Ptr : FT.Interfac.FT_Face; aChar : Character) is
       use GL.Types;
-      use FT_Glyphs;
-      Slot_Ptr  : constant FT.Types.FT_Glyph_Slot_Ptr := FT_Interface.Glyph_Slot (Face_Ptr);
-      Advance_X : constant GL.Types.Int := FT_Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
+      use FT.Glyphs;
+      Slot_Ptr  : constant FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
    begin
       Put_Line ("Character " & aChar & " Data");
       Put_Line ("Width: " & Single'Image (Get_Bitmap_Width (Slot_Ptr)));
@@ -42,7 +42,7 @@ package body FT_Utilities is
       Put_Line ("Left: " & GL.Types.Int'Image (Get_Bitmap_Left (Slot_Ptr)));
       Put_Line ("Top: " & GL.Types.Int'Image (Get_Bitmap_Top (Slot_Ptr)));
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X) & " bits");
-      Put_Line ("Glyph format: " & FT_Image.FT_Glyph_Format'Image (Get_Glyph_Format (Slot_Ptr)));
+      Put_Line ("Glyph format: " & FT.Image.FT_Glyph_Format'Image (Get_Glyph_Format (Slot_Ptr)));
       Put_Line ("Bitmap address: " & System.Address_Image
                 (System.Address (Get_Bitmap_Image (Slot_Ptr))));
       New_Line;
@@ -50,4 +50,4 @@ package body FT_Utilities is
 
    --  ------------------------------------------------------------------------
 
-end FT_Utilities;
+end FT.Utilities;

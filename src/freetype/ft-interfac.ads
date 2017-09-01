@@ -4,10 +4,10 @@ with System;
 with GL.Types;
 
 with FT;
-with FT_Image;
+with FT.Image;
 with FT.Types; Use FT.Types;
 
-package FT_Interface is
+package FT.Interfac is
 
    type FT_Face is new System.Address;
    type FT_Face_Record is private;
@@ -24,7 +24,7 @@ package FT_Interface is
    function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
    function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                         aKerning : access FT_Image.FT_Vector) return FT_Error;
+                         aKerning : access FT.Image.FT_Vector) return FT_Error;
    function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT.Types.Load_Flag) return FT_Error;
    function New_Face (Library    : FT_Library; File_Path_Name : String;
@@ -39,17 +39,17 @@ private
    type FT_Bitmap_Size is record
       Height : GL.Types.Short;
       Width  : GL.Types.Short;
-      Size   : FT_Image.FT_Pos;
-      X_Ppem : FT_Image.FT_Pos;
-      Y_Ppem : FT_Image.FT_Pos;
+      Size   : FT.Image.FT_Pos;
+      X_Ppem : FT.Image.FT_Pos;
+      Y_Ppem : FT.Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
 
    type FT_BBox is record
-      X_Min : FT_Image.FT_Pos;
-      Y_Min : FT_Image.FT_Pos;
-      X_Max : FT_Image.FT_Pos;
-      Y_Max : FT_Image.FT_Pos;
+      X_Min : FT.Image.FT_Pos;
+      Y_Min : FT.Image.FT_Pos;
+      X_Max : FT.Image.FT_Pos;
+      Y_Max : FT.Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_BBox);
 
@@ -157,4 +157,4 @@ private
                           Character'Pos ('r') * 2**16 +
                           Character'Pos ('m') * 2**8 +
                           Character'Pos ('n'));
-end FT_Interface;
+end FT.Interfac;

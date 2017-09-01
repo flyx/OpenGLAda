@@ -5,9 +5,9 @@ with System.Address_To_Access_Conversions;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with FT_Interface.API; use FT_Interface.API;
+with FT.Interfac.API; use FT.Interfac.API;
 
-package body FT_Interface is
+package body FT.Interfac is
    package Face_Access is new System.Address_To_Access_Conversions (FT_Face_Record);
 
    --  -------------------------------------------------------------------------
@@ -46,7 +46,7 @@ package body FT_Interface is
 
    function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                         aKerning : access FT_Image.FT_Vector) return FT_Error is
+                         aKerning : access FT.Image.FT_Vector) return FT_Error is
    begin
       return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
    end Kerning;
@@ -113,4 +113,4 @@ package body FT_Interface is
 
    --  -------------------------------------------------------------------------
 
-end FT_Interface;
+end FT.Interfac;

@@ -1,19 +1,19 @@
 
 with System;
 
-with FT_Glyphs;
-with FT_Image;
+with FT.Glyphs;
+with FT.Image;
 with FT.Types;
 
-package FT_Glyphs.API is
+package FT.Glyphs.API is
 
-   procedure FT_Done_Glyph (Glyph : FT_Glyphs.FT_Glyph);
+   procedure FT_Done_Glyph (Glyph : FT.Glyphs.FT_Glyph);
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
 
   function FT_Glyph_To_Bitmap
      (the_glyph   : System.Address;
       render_mode : FT.Types.FT_Render_Mode;
-      origin      : access FT_Image.FT_Vector;
+      origin      : access FT.Image.FT_Vector;
       destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
 
@@ -22,4 +22,4 @@ package FT_Glyphs.API is
                           return FT.Types.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
-end FT_Glyphs.API;
+end FT.Glyphs.API;
