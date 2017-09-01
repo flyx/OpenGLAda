@@ -7,6 +7,7 @@ with GL.Objects.Textures;
 with GL.Types;
 
 package FT.Image is
+   pragma Preelaborate;
 
    type FT_Bitmap is private;
    type FT_Outline is private;

@@ -1,5 +1,6 @@
 
 package FT.API is
+   pragma Preelaborate;
 
    type Face_Ptr is new System.Address;
    type Glyph_Slot_Ptr is new System.Address;

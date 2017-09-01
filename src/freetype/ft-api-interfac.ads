@@ -6,6 +6,7 @@ with Interfaces.C.Strings;
 with FT.Image;
 
 package FT.API.Interfac is
+   pragma Preelaborate;
 
    function FT_Done_Face (aFace : Face_Ptr) return FT_Error;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
