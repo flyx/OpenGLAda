@@ -43,12 +43,12 @@ private
    pragma Convention (C_Pass_By_Copy, FT_Bitmap);
 
    type FT_Outline is record
-      Num_Contours : short;
-      Num_Points   : short;
+      Num_Contours : GL.Types.short;
+      Num_Points   : GL.Types.short;
       Points       : access FT_Vector;
       Tags         : Interfaces.C.Strings.chars_ptr;
-      Contours     : access short;
-      Flags        : int;
+      Contours     : access GL.Types.short;
+      Flags        : GL.Types.int;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Outline);
 
