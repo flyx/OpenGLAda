@@ -12,7 +12,6 @@ with GL.Types.Colors;
 with FT.Glyphs;
 with FT.Image;
 with FT.Interfac;
-with FT.Types;
 with FT.Utilities;
 
 with Utilities;
@@ -20,7 +19,7 @@ with Utilities;
 package body Texture_Manager is
 
    theLibrary    : FT.Interfac.Library_Ptr;
-   Face_Ptr      : FT.Interfac.FT_Face;
+   Face_Ptr      : FT.Interfac.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
    Image_Error : exception;
@@ -32,7 +31,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Face_Ptr return FT.Interfac.FT_Face is
+   function Get_Face_Ptr return FT.Interfac.Face_Ptr is
    begin
       return Face_Ptr;
    end Get_Face_Ptr;
@@ -82,12 +81,12 @@ package body Texture_Manager is
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
       --  Set pixel size to 48 x 48
       if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
          Put_Line ("Unable to set pixel sizes.");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
 
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
@@ -107,20 +106,20 @@ package body Texture_Manager is
    begin
       if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
          Put_Line ("The Freetype Library failed to load.");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
 
       Setup_Font;
       if FT.Interfac.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT.Types.Load_Render) /= 0 then
+                                      FT.Interfac.Load_Render) /= 0 then
          Put_Line ("A character failed to load.");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Interfac.Render_Glyph (Face_Ptr) /= 0 then
+      if FT.Interfac.Render_Glyph (Face_Ptr, FT.Interfac.Render_Mode_Mono) /= 0 then
          Put_Line ("A character failed to render.");
-         raise FT.Types.FT_Exception;
+         raise FT.FT_Exception;
       end if;
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
