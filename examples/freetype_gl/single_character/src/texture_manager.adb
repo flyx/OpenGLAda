@@ -11,6 +11,7 @@ with GL.Types.Colors;
 
 with FT.Glyphs;
 with FT.Image;
+with FT.Interfac;
 with FT.Types;
 with FT.Utilities;
 
@@ -18,7 +19,7 @@ with Utilities;
 
 package body Texture_Manager is
 
-   theLibrary    : FT.Types.FT_Library;
+   theLibrary    : FT.Interfac.Library_Ptr;
    Face_Ptr      : FT.Interfac.FT_Face;
    Vertex_Data   : Vertex_Array;
 
@@ -43,7 +44,7 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr    : FT.Interfac.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
       Width       : Single := FT.Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
@@ -121,7 +122,7 @@ package body Texture_Manager is
          Put_Line ("A character failed to render.");
          raise FT.Types.FT_Exception;
       end if;
-      FT.Utilities.Print_Character_Data (Face_Ptr, Char);
+      FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
@@ -136,7 +137,7 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr     : FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr     : FT.Interfac.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;

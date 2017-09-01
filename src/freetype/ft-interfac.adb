@@ -23,10 +23,10 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   procedure Done_Library (Library_Ptr : FT_Library) is
+   procedure Done_Library (Library : Library_Ptr) is
       use GL.Types;
    begin
-      if FT_Done_Library (Library_Ptr) /= 0 then
+      if FT_Done_Library (Library) /= 0 then
          Put_Line ("FT_Done_Library failed");
          raise FT.Types.FT_Exception;
       end if;
@@ -60,7 +60,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr is
+   function Glyph_Slot (Face_Ptr : FT_Face) return Glyph_Slot_Ptr is
       theFace : constant FT_Face_Record := Face (Face_Ptr);
    begin
       return theFace.Glyph_Slot;
@@ -68,7 +68,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out FT_Library) return FT.Types.FT_Error is
+   function Init_FreeType (aLibrary : in out Library_Ptr) return FT.Types.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
@@ -83,7 +83,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function New_Face (Library : FT_Library;
+   function New_Face (Library : Library_Ptr;
                       File_Path_Name : String;
                       Face_Index     : GL.Types.long; aFace : in out FT_Face)
                       return FT_Error is
@@ -96,11 +96,11 @@ package body FT.Interfac is
    --  -------------------------------------------------------------------------
 
    function Render_Glyph (Face_Ptr : FT_Face;
-                          Render_Mode : FT_Render_Mode := Render_Mode_Mono)
+                          Mode : Render_Mode := Render_Mode_Mono)
                           return FT_Error is
-      Slot : constant FT_Glyph_Slot_Ptr := Glyph_Slot (Face_Ptr);
+      Slot : constant Glyph_Slot_Ptr := Glyph_Slot (Face_Ptr);
    begin
-      return  FT_Render_Glyph (Slot, Render_Mode);
+      return  FT_Render_Glyph (Slot, Mode);
    end Render_Glyph;
 
    --  -------------------------------------------------------------------------

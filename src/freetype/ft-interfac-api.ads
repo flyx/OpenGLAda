@@ -8,7 +8,7 @@ package FT.Interfac.API is
    function FT_Done_Face (face : FT_Face) return FT_Error;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
 
-   function FT_Done_Library (Library : FT_Library) return FT_Error;
+   function FT_Done_Library (Library : Library_Ptr) return FT_Error;
    pragma Import (C, FT_Done_Library, "FT_Done_Library");
 
    function FT_Get_Kerning
@@ -23,13 +23,13 @@ package FT.Interfac.API is
       Load_Flags : GL.Types.Int) return FT_Error;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
-   function FT_New_Face (Library : FT_Library;
+   function FT_New_Face (Library : Library_Ptr;
                File_Path_Name : Interfaces.C.Strings.chars_ptr;
                Face_Index     : GL.Types.long; aFace : in out System.Address)
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
-   function FT_Render_Glyph (Slot : FT_Glyph_Slot_Ptr; Render_Mode : FT_Render_Mode)
+   function FT_Render_Glyph (Slot : Glyph_Slot_Ptr; Mode : Render_Mode)
                              return FT_Error;
    pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
 

@@ -6,17 +6,14 @@ with GL.Types;
 
 package FT.Types is
 
-   type FT_Char_Map is private;
-   type FT_Driver is private;
-   type FT_Face_Internal is private;
-   type FT_Generic is private;
-   type FT_Glyph_Slot_Ptr is new System.Address;
-   type FT_List_Node is private;
-   type FT_List_Record is private;
-   type FT_Library is new System.Address;
-   type FT_Size_Ptr is private;
-   type FT_Slot_Internal is private;
-   type FT_Subglyph is private;
+   type Char_Map_Ptr is private;
+   type Driver_Ptr is private;
+   type Face_Internal_Ptr is private;
+   type Generic_Record is private;
+   type List_Record is private;
+   type Size_Ptr is private;
+   type Slot_Internal_Ptr is private;
+   type Subglyph_Ptr is private;
 
    type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
                       Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
@@ -26,7 +23,7 @@ package FT.Types is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
-   type FT_Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
+   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
                            Render_Mode_Mono, Render_Mode_LCD,
                            Render_Mode_LCD_V, Render_Mode_Max);
 
@@ -39,29 +36,29 @@ package FT.Types is
 
 private
 
-   type FT_Char_Map is new System.Address;
-   type FT_Driver is new System.Address;
-   type FT_Face_Internal is new System.Address;
+   type Char_Map_Ptr is new System.Address;
+   type Driver_Ptr is new System.Address;
+   type Face_Internal_Ptr is new System.Address;
 
-   type FT_Generic_Finalizer is access procedure (theFinalizer : System.Address);
-   pragma Convention (C, FT_Generic_Finalizer);
+   type Generic_Finalizer is access procedure (theFinalizer : System.Address);
+   pragma Convention (C, Generic_Finalizer);
 
-   type FT_Generic is record
+   type Generic_Record is record
       Data      : System.Address;
-      Finalizer : FT_Generic_Finalizer;
+      Finalizer : Generic_Finalizer;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_Generic);
+   pragma Convention (C_Pass_By_Copy, Generic_Record);
 
-   type FT_List_Node is new System.Address;
-   type FT_List_Record is record
-      head : FT_List_Node;
-      tail : FT_List_Node;
+   type List_Node is new System.Address;
+   type List_Record is record
+      head : List_Node;
+      tail : List_Node;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_List_Record);
+   pragma Convention (C_Pass_By_Copy, List_Record);
 
-   type FT_Size_Ptr is new System.Address;
-   type FT_Slot_Internal is new System.Address;
-   type FT_Subglyph is new System.Address;
+   type Size_Ptr is new System.Address;
+   type Slot_Internal_Ptr is new System.Address;
+   type Subglyph_Ptr is new System.Address;
 
    for Load_Flag use
        (Load_Default => 16#000000#,

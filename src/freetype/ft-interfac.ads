@@ -12,26 +12,30 @@ package FT.Interfac is
    type FT_Face is new System.Address;
    type FT_Face_Record is private;
 
+   type Library_Ptr is new System.Address;
+
+   type Glyph_Slot_Ptr is new System.Address;
+
    type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
                         Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
 
    procedure Done_Face (Face_Ptr : FT_Face);
-   procedure Done_Library (Library_Ptr : FT_Library);
+   procedure Done_Library (Library : Library_Ptr);
    function Face (Face_Ptr : FT_Face) return FT_Face_Record;
    function Face_Record (Face_Ptr : FT_Face) return FT_Face_Record;
-   function Glyph_Slot (Face_Ptr : FT_Face) return FT_Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out FT_Library) return FT_Error;
+   function Glyph_Slot (Face_Ptr : FT_Face) return Glyph_Slot_Ptr;
+   function Init_FreeType (alibrary : in out Library_Ptr) return FT_Error;
    function Kerning (aFace : FT_Face; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT.Image.FT_Vector) return FT_Error;
    function Load_Character (Face       : FT_Face; Char_Code : FT_ULong;
                             Load_Flags : FT.Types.Load_Flag) return FT_Error;
-   function New_Face (Library    : FT_Library; File_Path_Name : String;
+   function New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT_Face)
                       return FT_Error;
    function Render_Glyph (Face_Ptr : FT_Face;
-                          Render_Mode : FT_Render_Mode := Render_Mode_Mono)
+                          Mode : Render_Mode := Render_Mode_Mono)
                           return FT_Error;
    function Set_Pixel_Sizes (Face         : FT_Face; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
@@ -68,7 +72,7 @@ private
       Available_Sizes         : access FT_Bitmap_Size;
       Num_Charmaps            : GL.Types.Int;
       Character_Map_List      : System.Address;
-      C_Generic               : FT_Generic;
+      C_Generic               : Generic_Record;
       Bbox                    : FT_BBox;
       Units_Per_EM            : GL.Types.UShort;
       Ascender                : GL.Types.Short;
@@ -77,16 +81,16 @@ private
       Max_Advance_Width       : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
-      Glyph_Slot              : FT_Glyph_Slot_Ptr;
-      Size                    : FT_Size_Ptr;
-      Character_Map           : FT_Char_Map;
-      Driver                  : FT_Driver;
+      Glyph_Slot              : Glyph_Slot_Ptr;
+      Size                    : Size_Ptr;
+      Character_Map           : Char_Map_Ptr;
+      Driver                  : Driver_Ptr;
       Memory                  : FT.Memory;
       Stream                  : FT.Stream;
-      Sizes_List              : FT_List_Record;
-      Autohint                : FT_Generic;
+      Sizes_List              : List_Record;
+      Autohint                : Generic_Record;
       Extensions              : System.Address;
-      Internal                : FT_Face_Internal;
+      Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Face_Record);
 

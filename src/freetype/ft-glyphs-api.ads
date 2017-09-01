@@ -11,13 +11,12 @@ package FT.Glyphs.API is
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
 
   function FT_Glyph_To_Bitmap
-     (the_glyph   : System.Address;
-      render_mode : FT.Types.FT_Render_Mode;
-      origin      : access FT.Image.FT_Vector;
-      destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
+     (theGlyph   : System.Address; Mode : FT.Types.Render_Mode;
+      Origin      : access FT.Image.FT_Vector;
+      Destroy     : FT.Types.FT_Bool) return FT.Types.FT_Error;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
 
-   function FT_Get_Glyph (Slot_Ptr : FT.Types.FT_Glyph_Slot_Ptr;
+   function FT_Get_Glyph (Slot_Ptr : FT.Interfac.Glyph_Slot_Ptr;
                           aGlyph   : in out System.Address)
                           return FT.Types.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
