@@ -13,7 +13,7 @@ with FT.Types;
 
 package body FT.Utilities is
 
-   procedure Print_Bitmap (Bitmap : FT.Image.FT_Bitmap) is
+   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.FT_Bitmap) is
       use GL.Types;
       use FT.Image;
    begin
@@ -26,11 +26,11 @@ package body FT.Utilities is
       Put_Line ("Pixel_mode: " & unsigned_char'Image (Get_Pixel_Mode (Bitmap)));
       Put_Line ("Palette_mode: " & unsigned_char'Image (Get_Palette_Mode (Bitmap)));
       New_Line;
-   end Print_Bitmap;
+   end Print_Bitmap_Metadata;
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Data (Face_Ptr : FT.Interfac.FT_Face; aChar : Character) is
+   procedure Print_Character_Metadata (Face_Ptr : FT.Interfac.FT_Face; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
       Slot_Ptr  : constant FT.Types.FT_Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
@@ -46,7 +46,7 @@ package body FT.Utilities is
       Put_Line ("Bitmap address: " & System.Address_Image
                 (System.Address (Get_Bitmap_Image (Slot_Ptr))));
       New_Line;
-   end Print_Character_Data;
+   end Print_Character_Metadata;
 
    --  ------------------------------------------------------------------------
 
