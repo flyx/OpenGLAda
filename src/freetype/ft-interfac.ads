@@ -4,6 +4,7 @@ with System;
 with GL.Types;
 
 with FT;
+with FT.API;
 with FT.Image;
 
 package FT.Interfac is
@@ -26,24 +27,24 @@ package FT.Interfac is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
-   procedure Done_Face (aFace : Face_Ptr);
-   procedure Done_Library (Library : Library_Ptr);
-   function Face (aFace : Face_Ptr) return FT_Face_Record;
-   function Face_Record (aFace : Face_Ptr) return FT_Face_Record;
-   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out Library_Ptr) return FT_Error;
-   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
+   procedure Done_Face (aFace : FT.API.Face_Ptr);
+   procedure Done_Library (Library : FT.API.Library_Ptr);
+   function Face (aFace : FT.API.Face_Ptr) return FT_Face_Record;
+   function Face_Record (aFace : FT.API.Face_Ptr) return FT_Face_Record;
+   function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr;
+   function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
+   function Kerning (aFace : FT.API.Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT.Image.FT_Vector) return FT_Error;
-   function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
+   function Load_Character (aFace : FT.API.Face_Ptr; Char_Code : FT_ULong;
                             Flags : Load_Flag) return FT_Error;
-   function New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out Face_Ptr)
+   function New_Face (Library    : FT.API.Library_Ptr; File_Path_Name : String;
+                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
                       return FT_Error;
-   function Render_Glyph (aFace : Face_Ptr;
+   function Render_Glyph (aFace : FT.API.Face_Ptr;
                           Mode  : Render_Mode)
                           return FT_Error;
-   function Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
+   function Set_Pixel_Sizes (aFace : FT.API.Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
 private
 
@@ -109,7 +110,7 @@ private
       Max_Advance_Width       : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
-      Glyph_Slot              : Glyph_Slot_Ptr;
+      Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
       Size                    : Size_Ptr;
       Character_Map           : Char_Map_Ptr;
       Driver                  : Driver_Ptr;

@@ -20,7 +20,7 @@ package body FT.Glyphs is
    --  FT_Glyph_Slot (SA) => FT_Glyph_Slot_Record => FT_Bitmap (record)
    --  FT_Bitmap => Buffer (access unsigned_char)
 
-   function Get_Bitmap (Glyph_Slot : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
                         return FT.Image.FT_Bitmap is
       use GL.Types;
       use Glyph_Slot_Access;
@@ -38,7 +38,7 @@ package body FT.Glyphs is
    end Get_Bitmap;
 
    --  -------------------------------------------------------------------------
-   function Get_Bitmap_Image (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Objects.Textures.Image_Source is
    begin
       return FT.Image.Get_Buffer (Get_Bitmap (Slot_Ptr));
@@ -46,7 +46,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Left (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
       use Glyph_Slot_Access;
       Glyph : constant FT_Glyph_Slot_Record :=
@@ -57,7 +57,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Width (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Types.Single is
       Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
    begin
@@ -66,7 +66,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Height (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single is
       Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
    begin
@@ -75,7 +75,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Rows (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
       Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
    begin
@@ -84,7 +84,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Top (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                             return GL.Types.Int is
       use Glyph_Slot_Access;
       Glyph : constant FT_Glyph_Slot_Record :=
@@ -95,7 +95,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph (Slot_Ptr : FT.Glyph_Slot_Ptr;
+   function Get_Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
                        Glyph_Ptr : in out System.Address)
                        return FT.FT_Error is
    begin
@@ -104,7 +104,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Advance (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return FT.Image.FT_Vector is
       use Glyph_Slot_Access;
       Glyph : constant FT_Glyph_Slot_Record :=
@@ -115,7 +115,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Format (Slot_Ptr : FT.Glyph_Slot_Ptr)
+   function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return FT.Image.FT_Glyph_Format is
       use Glyph_Slot_Access;
       Glyph : constant FT_Glyph_Slot_Record :=
@@ -126,7 +126,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Record (aFace : FT.Face_Ptr)
+   function Get_Glyph_Record (aFace : FT.API.Face_Ptr)
                               return FT_Glyph_Record is
       use FT.Interfac;
       use Glyph_Access;
