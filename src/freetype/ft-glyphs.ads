@@ -17,29 +17,31 @@ package FT.Glyphs is
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
    function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                        return FT.Image.Bitmap_Record;
+                    return FT.Image.Bitmap_Record;
    function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                               return GL.Types.Single;
+                           return GL.Types.Single;
    function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Objects.Textures.Image_Source;
+                          return GL.Objects.Textures.Image_Source;
    function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int;
+                         return GL.Types.Int;
    function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int;
+                         return GL.Types.Int;
    function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                            return GL.Types.Int;
+                        return GL.Types.Int;
    function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Types.Single;
-   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                               return FT.Image.FT_Vector;
-   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return FT.Image.Glyph_Format;
-   function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.FT_Bool) return FT.FT_Error;
+                          return GL.Types.Single;
    function Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
-                       Glyph_Ptr : in out System.Address) return FT.FT_Error;
+                   theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
+   function Glyph (Face_Ptr : FT.API.Face_Ptr) return Glyph_Record;
+   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
+   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+                           return FT.Image.FT_Vector;
+   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+                          return FT.Image.Glyph_Format;
+   function Glyph_To_Bitmap
+       (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
+        Origin      : access FT.Image.FT_Vector;
+        Destroy     : FT.FT_Bool) return FT.FT_Error;
 private
 
    type Bitmap_Glyph_Ptr is new System.Address;
