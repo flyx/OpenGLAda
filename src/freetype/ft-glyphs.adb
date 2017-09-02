@@ -7,18 +7,18 @@ with FT.API.Glyphs;
 
 package body FT.Glyphs is
    package Glyph_Access is new
-       System.Address_To_Access_Conversions (FT_Glyph_Record);
+       System.Address_To_Access_Conversions (Glyph_Record);
    package Glyph_Slot_Access is new
-       System.Address_To_Access_Conversions (FT_Glyph_Slot_Record);
+       System.Address_To_Access_Conversions (Glyph_Slot_Record);
 
-   procedure Done_Glyph (Glyph_Ptr : FT_Glyph) is
+   procedure Done_Glyph (Glyph : Glyph_Ptr) is
    begin
-      FT.API.Glyphs.FT_Done_Glyph (Glyph_Ptr);
+      FT.API.Glyphs.FT_Done_Glyph (Glyph);
    end Done_Glyph;
 
    --  -------------------------------------------------------------------------
-   --  FT_Glyph_Slot (SA) => FT_Glyph_Slot_Record => FT_Bitmap (record)
-   --  FT_Bitmap => Buffer (access unsigned_char)
+   --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
+   --  Bitmap_Record => Buffer (access unsigned_char)
 
    function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
                         return FT.Image.Bitmap_Record is
@@ -27,7 +27,7 @@ package body FT.Glyphs is
       aGlyph_Ptr    : System.Address;
       Glyph_Pointer : constant Object_Pointer :=
                         To_Pointer (System.Address (Glyph_Slot));
-      theGlyph      : constant FT_Glyph_Slot_Record := Glyph_Pointer.all;
+      theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
    begin
       --  Get_Glyph calls the FT_Get_Glyph C function.
       if Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
@@ -49,7 +49,7 @@ package body FT.Glyphs is
    function Get_Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
       use Glyph_Slot_Access;
-      Glyph : constant FT_Glyph_Slot_Record :=
+      Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Left;
@@ -87,7 +87,7 @@ package body FT.Glyphs is
    function Get_Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                             return GL.Types.Int is
       use Glyph_Slot_Access;
-      Glyph : constant FT_Glyph_Slot_Record :=
+      Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Top;
@@ -107,7 +107,7 @@ package body FT.Glyphs is
    function Get_Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return FT.Image.FT_Vector is
       use Glyph_Slot_Access;
-      Glyph : constant FT_Glyph_Slot_Record :=
+      Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Advance;
@@ -118,7 +118,7 @@ package body FT.Glyphs is
    function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return FT.Image.Glyph_Format is
       use Glyph_Slot_Access;
-      Glyph : constant FT_Glyph_Slot_Record :=
+      Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Format;
@@ -127,7 +127,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Get_Glyph_Record (aFace : FT.API.Face_Ptr)
-                              return FT_Glyph_Record is
+                              return Glyph_Record is
       use FT.Interfac;
       use Glyph_Access;
       Glyph_Pointer : constant Object_Pointer :=

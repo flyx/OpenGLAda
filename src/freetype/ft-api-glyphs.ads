@@ -6,7 +6,7 @@ with FT.Image;
 
 package FT.API.Glyphs is
 
-   procedure FT_Done_Glyph (Glyph : FT.Glyphs.FT_Glyph);
+   procedure FT_Done_Glyph (Glyph : FT.Glyphs.Glyph_Ptr);
    pragma Import (C, FT_Done_Glyph, "FT_Done_Glyph");
 
   function FT_Glyph_To_Bitmap
