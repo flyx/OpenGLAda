@@ -22,16 +22,51 @@ with Utilities;
 
 package body Texture_Manager is
 
-   theLibrary    : FT.API.Library_Ptr;
-   Face_Ptr      : FT.API.Face_Ptr;
-   Vertex_Data   : Vertex_Array;
+   theLibrary     : FT.API.Library_Ptr;
+   Face_Ptr       : FT.API.Face_Ptr;
+   Vertex_Data    : Vertex_Array;
+   Character_Data : Character_Data_Vector;
 
    Image_Error : exception;
+
+   --  ------------------------------------------------------------------------
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single);
    procedure Setup_Font;
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
+
+   --  ------------------------------------------------------------------------
+
+   function Advance_X (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Advance_X;
+   end Advance_X;
+
+   --  ------------------------------------------------------------------------
+
+   function Data (Index : Natural) return Character_Record is
+
+   begin
+      if Character_Data.Is_Empty then
+         raise Image_Error;
+      end if;
+      return Character_Data.Element (Index);
+   end Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Get_Face_Ptr return FT.API.Face_Ptr is
+   begin
+      return Face_Ptr;
+   end Get_Face_Ptr;
+
+   --  ------------------------------------------------------------------------
+
+   function Left (Data : Character_Record) return GL.Types.Single is
+   begin
+      return Data.Bearing.Left;
+   end Left;
 
    --  ------------------------------------------------------------------------
 
@@ -47,6 +82,13 @@ package body Texture_Manager is
       Put_Line ("Advance X: " & Int'Image (Data.Advance_X) & " bits");
       New_Line;
    end Print_Character_Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Rows (Data : Character_Record) return GL.Types.Single is
+   begin
+      return Data.Size.Rows;
+   end Rows;
 
    --  ------------------------------------------------------------------------
 
@@ -113,7 +155,7 @@ package body Texture_Manager is
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
                             aTexture      : in out GL.Objects.Textures.Texture;
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                            Char          : Character := 'g') is
+                            Text          : String) is
       use GL.Types;
    begin
       if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
@@ -154,7 +196,6 @@ package body Texture_Manager is
       Height         : Size;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
       Char_Data      : Character_Record;
-      Character_Data : Character_Data_Vector;
       aGlyph         : FT.Glyphs.Glyph_Record := FT.Glyphs.Glyph (Face_Ptr);
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
@@ -165,12 +206,12 @@ package body Texture_Manager is
             Put_Line ("A character failed to load.");
             raise FT.FT_Exception;
          end if;
-
-         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (aGlyph);
-         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (aGlyph));
-         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (aGlyph));
-         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (aGlyph));
-         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (aGlyph));
+         Char_Data := Data (Natural (Char));
+         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Slot_Ptr);
+         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
+         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Slot_Ptr));
+         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Slot_Ptr));
+         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Slot_Ptr));
          declare
             aTexture   : GL.Objects.Textures.Texture;
          begin
@@ -195,6 +236,27 @@ package body Texture_Manager is
          Put_Line ("An exceptiom occurred in Setup_Texture.");
          raise;
    end Setup_Texture;
+
+   --  ------------------------------------------------------------------------
+
+   function Char_Texture (Data : Character_Record)
+                          return GL.Objects.Textures.Texture is
+   begin
+      return Data.Texture;
+   end Char_Texture;
+
+   --  -----------------------------------------------------------------------
+   function Top (Data : Character_Record) return GL.Types.Single is
+   begin
+      return Data.Bearing.Top;
+   end Top;
+
+   --  ------------------------------------------------------------------------
+
+   function Width (Data : Character_Record) return GL.Types.Single is
+   begin
+      return Data.Size.Width;
+   end Width;
 
    --  ------------------------------------------------------------------------
 

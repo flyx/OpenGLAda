@@ -41,6 +41,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
+   aTexture              : GL.Objects.Textures.Texture;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
 
@@ -78,6 +79,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
+      use Texture_Manager;
 
       Char          : Character;
       Char_Data     : Texture_Manager.Character_Record;
@@ -85,7 +87,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Y_Orig        : Single := Y;
       X_Pos         : Single;
       Y_Pos         : Single;
-      Width         : Single;
+      Char_Width    : Single;
       Height        : Single;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data   : Singles.Vector4_Array (1 .. 6);
@@ -99,20 +101,20 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Texture_Manager.Character_Data.Element (index);
-         X_Pos := X_Orig + Char_Data.Bearing.Left * Scale;
-         Y_Pos := Y_Orig - (Char_Data.Size.Rows - Char_Data.Bearing.Top) * Scale;
-         Width := Char_Data.Size.Width;
-         Height := Char_Data.Size.Rows;
+         Char_Data := Data (Index);
+         X_Pos := X_Orig + Left (Char_Data) * Scale;
+         Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
+         Char_Width := Width (Char_Data);
+         Height := Rows (Char_Data);
          Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
                          (X_Pos, Y_Pos,                  0.0, 1.0),
-                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
                          (X_Pos, Y_Pos + Height,         0.0, 0.0),
-                         (X_Pos + Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos + Width, Y_Pos + Height, 1.0, 0.0));
+                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
 
          GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
-         Texture_2D.Bind (Char_Data.Texture);
+         Texture_2D.Bind (Char_Texture (Char_Data));
          Array_Buffer.Bind (Vertex_Buffer);
          Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
@@ -120,7 +122,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
-         X_Orig := X_Orig + Single (Char_Data.Advance_X) / 64.0 * Scale;
+         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
 --           Put_Line ("X origin: " & Single'Image (X_Orig));
       end loop;
 
@@ -140,6 +142,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
+      Pos_X           : GL.Types.Single := 10.0;
+      Pos_Y           : GL.Types.Single := 10.0;
+      Cache           : String := "Hello";
    begin
 --        FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
 --                                        "/System/Library/Fonts/Helvetica.dfont");
@@ -177,8 +182,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
 
-      Setup_Font;
-      Setup_Texture;
+      Texture_Manager.Setup_Graphic (Vertex_Buffer,
+                                     aTexture, Pos_X, Pos_Y, 1.0, Cache);
 
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
