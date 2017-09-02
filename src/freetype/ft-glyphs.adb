@@ -6,8 +6,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
-   package Glyph_Access is new
-       System.Address_To_Access_Conversions (Glyph_Record);
    package Glyph_Slot_Access is new
        System.Address_To_Access_Conversions (Glyph_Slot_Record);
 
@@ -20,7 +18,7 @@ package body FT.Glyphs is
    --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
    --  Bitmap_Record => Buffer (access unsigned_char)
 
-   function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
+   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
                         return FT.Image.Bitmap_Record is
       use GL.Types;
       use Glyph_Slot_Access;
@@ -29,112 +27,100 @@ package body FT.Glyphs is
                         To_Pointer (System.Address (Glyph_Slot));
       theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
    begin
-      --  Get_Glyph calls the FT_Get_Glyph C function.
-      if Get_Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
+      --  Glyph calls the FT_Glyph C function.
+      if Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
          Put_Line ("FT_Interfac.Bitmap raised an Exception");
          raise FT.FT_Exception;
       end if;
       return theGlyph.Bitmap;
-   end Get_Bitmap;
+   end Bitmap;
 
    --  -------------------------------------------------------------------------
-   function Get_Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Objects.Textures.Image_Source is
    begin
-      return FT.Image.Buffer (Get_Bitmap (Slot_Ptr));
-   end Get_Bitmap_Image;
+      return FT.Image.Buffer (Bitmap (Slot_Ptr));
+   end Bitmap_Image;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
       use Glyph_Slot_Access;
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Left;
-   end Get_Bitmap_Left;
+   end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Types.Single is
-      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
+      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
-      return GL.Types.Single (FT.Image.Width (Bitmap));
-   end Get_Bitmap_Width;
+      return GL.Types.Single (FT.Image.Width (theBitmap));
+   end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single is
-      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
+      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
-      return GL.Types.Single (FT.Image.Rows (Bitmap));
-   end Get_Bitmap_Height;
+      return GL.Types.Single (FT.Image.Rows (theBitmap));
+   end Bitmap_Height;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
-      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
+      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
-      return FT.Image.Rows (Bitmap);
-   end Get_Bitmap_Rows;
+      return FT.Image.Rows (theBitmap);
+   end Bitmap_Rows;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                             return GL.Types.Int is
       use Glyph_Slot_Access;
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Top;
-   end Get_Bitmap_Top;
+   end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+   function Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
                        Glyph_Ptr : in out System.Address)
                        return FT.FT_Error is
    begin
       return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, Glyph_Ptr);
-   end Get_Glyph;
+   end Glyph;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return FT.Image.FT_Vector is
       use Glyph_Slot_Access;
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Advance;
-   end Get_Glyph_Advance;
+   end Glyph_Advance;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return FT.Image.Glyph_Format is
       use Glyph_Slot_Access;
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Format;
-   end Get_Glyph_Format;
-
-   --  -------------------------------------------------------------------------
-
-   function Get_Glyph_Record (aFace : FT.API.Face_Ptr)
-                              return Glyph_Record is
-      use FT.Interfac;
-      use Glyph_Access;
-      Glyph_Pointer : constant Object_Pointer :=
-        To_Pointer (System.Address (Glyph_Slot (aFace)));
-   begin
-      return Glyph_Pointer.all;
-   end Get_Glyph_Record;
+   end Glyph_Format;
 
    --  -------------------------------------------------------------------------
 

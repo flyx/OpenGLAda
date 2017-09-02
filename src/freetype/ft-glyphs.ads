@@ -16,30 +16,29 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
+   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
                         return FT.Image.Bitmap_Record;
-   function Get_Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single;
-   function Get_Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Objects.Textures.Image_Source;
-   function Get_Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int;
-   function Get_Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int;
-   function Get_Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                             return GL.Types.Int;
-   function Get_Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Types.Single;
-   function Get_Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return FT.Image.FT_Vector;
-   function Get_Glyph_Record (aFace : FT.API.Face_Ptr) return Glyph_Record;
-   function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return FT.Image.Glyph_Format;
    function Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error;
-   function Get_Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
+   function Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
                        Glyph_Ptr : in out System.Address) return FT.FT_Error;
 private
 
