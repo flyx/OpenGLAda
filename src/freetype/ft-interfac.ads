@@ -50,7 +50,9 @@ private
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
+   type Memory_Ptr is new System.Address;
    type Size_Ptr is new System.Address;
+   type Stream_Ptr is new System.Address;
 
    type FT_Bitmap_Size is record
       Height : GL.Types.Short;
@@ -113,8 +115,8 @@ private
       Size                    : Size_Ptr;
       Character_Map           : Char_Map_Ptr;
       Driver                  : Driver_Ptr;
-      Memory                  : FT.Memory;
-      Stream                  : FT.Stream;
+      Memory                  : Memory_Ptr;
+      Stream                  : Stream_Ptr;
       Sizes_List              : List_Record;
       Autohint                : Generic_Record;
       Extensions              : System.Address;

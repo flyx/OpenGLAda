@@ -1,4 +1,6 @@
 
+with System;
+
 package FT.API is
    pragma Preelaborate;
 
