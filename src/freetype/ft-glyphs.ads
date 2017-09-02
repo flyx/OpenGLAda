@@ -10,12 +10,9 @@ with FT.Interfac;
 
 package FT.Glyphs is
 
-   type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Record is private;
    type Glyph_Slot_Record is private;
-   type Glyph_Ptr is new System.Address;
-   type Outline_Glyph_Ptr is new System.Address;
-   type Slot_Internal_Ptr is new System.Address;
+   type Glyph_Ptr is private;
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
@@ -46,6 +43,10 @@ package FT.Glyphs is
                        Glyph_Ptr : in out System.Address) return FT.FT_Error;
 private
 
+   type Bitmap_Glyph_Ptr is new System.Address;
+   type Glyph_Ptr is new System.Address;
+   type Outline_Glyph_Ptr is new System.Address;
+   type Slot_Internal_Ptr is new System.Address;
    type Subglyph_Ptr is new System.Address;
 
    type Glyph_Metrics is record
