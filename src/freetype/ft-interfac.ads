@@ -22,7 +22,7 @@ package FT.Interfac is
    type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
                       Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
                       Load_Crop_Bitmap, Load_Pedantic, Load_Advance_Only,
-                      Load_Ignore_Gloabl_Advance_Width, Load_No_Recourse,
+                      Load_Ignore_Global_Advance_Width, Load_No_Recourse,
                       Load_Ignore_Transform, Load_Monochrome, Load_Linear_Design,
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
@@ -200,7 +200,7 @@ private
         Load_Crop_Bitmap => 16#000040#,
         Load_Pedantic => 16#000080#,
         Load_Advance_Only => 16#000100#,
-        Load_Ignore_Gloabl_Advance_Width => 16#000200#,
+        Load_Ignore_Global_Advance_Width => 16#000200#,
         Load_No_Recourse => 16#000400#,
         Load_Ignore_Transform => 16#000800#,
         Load_Monochrome => 16#001000#,
