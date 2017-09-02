@@ -11,18 +11,18 @@ with FT.Interfac;
 
 package body FT.Utilities is
 
-   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.FT_Bitmap) is
+   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record) is
       use GL.Types;
       use FT.Image;
    begin
       New_Line;
       Put_Line ("Bitmap data:");
-      Put_Line ("Rows: " & GL.Types.int'Image (Get_Rows (Bitmap)));
-      Put_Line ("Width: " & uint'Image (Get_Width (Bitmap)));
-      Put_Line ("Pitch: " & GL.Types.int'Image (Get_Pitch (Bitmap)));
-      Put_Line ("Num_Grays: " & GL.Types.short'Image (Get_Num_Grays (Bitmap)));
-      Put_Line ("Pixel_mode: " & unsigned_char'Image (Get_Pixel_Mode (Bitmap)));
-      Put_Line ("Palette_mode: " & unsigned_char'Image (Get_Palette_Mode (Bitmap)));
+      Put_Line ("Rows: " & GL.Types.int'Image (Rows (Bitmap)));
+      Put_Line ("Width: " & uint'Image (Width (Bitmap)));
+      Put_Line ("Pitch: " & GL.Types.int'Image (Pitch (Bitmap)));
+      Put_Line ("Num_Grays: " & GL.Types.short'Image (Num_Grays (Bitmap)));
+      Put_Line ("Pixel_mode: " & unsigned_char'Image (Pixel_Mode (Bitmap)));
+      Put_Line ("Palette_mode: " & unsigned_char'Image (Palette_Mode (Bitmap)));
       New_Line;
    end Print_Bitmap_Metadata;
 
@@ -32,17 +32,17 @@ package body FT.Utilities is
       use GL.Types;
       use FT.Glyphs;
       Slot_Ptr  : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (aFace);
-      Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Get_Glyph_Advance (Slot_Ptr));
+      Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Glyph_Advance (Slot_Ptr));
    begin
       Put_Line ("Character " & aChar & " Data");
-      Put_Line ("Width: " & Single'Image (Get_Bitmap_Width (Slot_Ptr)));
-      Put_Line ("Rows: " & GL.Types.Int'Image (Get_Bitmap_Rows (Slot_Ptr)));
-      Put_Line ("Left: " & GL.Types.Int'Image (Get_Bitmap_Left (Slot_Ptr)));
-      Put_Line ("Top: " & GL.Types.Int'Image (Get_Bitmap_Top (Slot_Ptr)));
+      Put_Line ("Width: " & Single'Image (Bitmap_Width (Slot_Ptr)));
+      Put_Line ("Rows: " & GL.Types.Int'Image (Bitmap_Rows (Slot_Ptr)));
+      Put_Line ("Left: " & GL.Types.Int'Image (Bitmap_Left (Slot_Ptr)));
+      Put_Line ("Top: " & GL.Types.Int'Image (Bitmap_Top (Slot_Ptr)));
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X) & " bits");
-      Put_Line ("Glyph format: " & FT.Image.FT_Glyph_Format'Image (Get_Glyph_Format (Slot_Ptr)));
+      Put_Line ("Glyph format: " & FT.Image.Glyph_Format'Image (Glyph_Format (Slot_Ptr)));
       Put_Line ("Bitmap address: " & System.Address_Image
-                (System.Address (Get_Bitmap_Image (Slot_Ptr))));
+                (System.Address (Bitmap_Image (Slot_Ptr))));
       New_Line;
    end Print_Character_Metadata;
 

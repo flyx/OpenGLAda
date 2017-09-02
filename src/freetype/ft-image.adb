@@ -8,56 +8,56 @@ package body FT.Image is
 
    --  -------------------------------------------------------------------------
 
-   --  FT_Glyph_Slot (SA) => FT_Glyph_Slot_Record => FT_Bitmap (record)
-   --  FT_Bitmap => Buffer (access unsigned_char)
+   --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap (record)
+   --  Bitmap => Buffer (access unsigned_char)
 
-   function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source is
+   function Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source is
      Addr   : constant System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
    begin
       return GL.Objects.Textures.Image_Source (Addr);
-   end Get_Buffer;
+   end Buffer;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Num_Grays (Bitmap : FT_Bitmap) return GL.Types.Short is
+   function Num_Grays (Bitmap : Bitmap_Record) return GL.Types.Short is
    begin
       return Bitmap.Num_Grays;
-   end Get_Num_Grays;
+   end Num_Grays;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Palette_Mode (Bitmap : FT_Bitmap) return unsigned_char is
+   function Palette_Mode (Bitmap : Bitmap_Record) return unsigned_char is
    begin
       return Bitmap.Palette_Mode;
-   end Get_Palette_Mode;
+   end Palette_Mode;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Pitch (Bitmap : FT_Bitmap) return GL.Types.Int is
+   function Pitch (Bitmap : Bitmap_Record) return GL.Types.Int is
    begin
       return Bitmap.Pitch;
-   end Get_Pitch;
+   end Pitch;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Pixel_Mode (Bitmap : FT_Bitmap) return unsigned_char is
+   function Pixel_Mode (Bitmap : Bitmap_Record) return unsigned_char is
    begin
       return Bitmap.Pixel_Mode;
-   end Get_Pixel_Mode;
+   end Pixel_Mode;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int is
+   function Rows (Bitmap : Bitmap_Record) return GL.Types.Int is
    begin
       return GL.Types.Int (Bitmap.Rows);
-   end Get_Rows;
+   end Rows;
 
    --  -------------------------------------------------------------------------
 
-   function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt is
+   function Width (Bitmap : Bitmap_Record) return GL.Types.UInt is
    begin
       return Bitmap.Width;
-   end Get_Width;
+   end Width;
 
    --  -------------------------------------------------------------------------
 

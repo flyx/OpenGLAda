@@ -48,8 +48,8 @@ package body Texture_Manager is
       Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
-      Width       : Single := FT.Glyphs.Get_Bitmap_Width (Slot_Ptr) * Scale;
-      Height      : Single := Single (FT.Glyphs.Get_Bitmap_Rows (Slot_Ptr)) * Scale;
+      Width       : Single := FT.Glyphs.Bitmap_Width (Slot_Ptr) * Scale;
+      Height      : Single := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr)) * Scale;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
    begin
@@ -144,8 +144,8 @@ package body Texture_Manager is
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
    begin
-      Width := Size (FT.Glyphs.Get_Bitmap_Width (Slot_Ptr));
-      Height := Size (FT.Glyphs.Get_Bitmap_Rows (Slot_Ptr));
+      Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
+      Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -154,7 +154,7 @@ package body Texture_Manager is
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-      Bitmap_Image := FT.Glyphs.Get_Bitmap_Image (Slot_Ptr);
+      Bitmap_Image := FT.Glyphs.Bitmap_Image (Slot_Ptr);
       Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                   Bitmap_Image);
    exception

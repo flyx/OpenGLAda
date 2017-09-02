@@ -9,29 +9,30 @@ with GL.Types;
 package FT.Image is
    pragma Preelaborate;
 
-   type FT_Bitmap is private;
-   type FT_Outline is private;
+   type Bitmap_Record is private;
+   type Outline_Record is private;
    type FT_Vector is private;
-   type FT_Glyph_Format is (Format_None, Bitmap, Composite, Outline, Plotter);
-   for FT_Glyph_Format use (Format_None => unsigned (0000000000),
-                            Bitmap      => unsigned (1651078259),
-                            Composite   => unsigned (1668246896),
-                            Outline     => unsigned (1869968492),
-                            Plotter     => unsigned (1886154612));
+   type Glyph_Format is (Format_None, Bitmap_Format, Composite_Format,
+                         Outline_Format, Plotter_Format);
+   for Glyph_Format use (Format_None => unsigned (0000000000),
+                            Bitmap_Format      => unsigned (1651078259),
+                            Composite_Format   => unsigned (1668246896),
+                            Outline_Format     => unsigned (1869968492),
+                            Plotter_Format     => unsigned (1886154612));
    subtype FT_Pos is GL.Types.Long;
 
-   function Get_Buffer (Bitmap : FT_Bitmap) return GL.Objects.Textures.Image_Source;
-   function Get_Num_Grays (Bitmap : FT_Bitmap) return GL.Types.Short;
-   function Get_Rows (Bitmap : FT_Bitmap) return GL.Types.Int;
-   function Get_Palette_Mode (Bitmap : FT_Bitmap) return unsigned_char;
-   function Get_Pitch (Bitmap : FT_Bitmap) return GL.Types.Int;
-   function Get_Pixel_Mode (Bitmap : FT_Bitmap) return unsigned_char;
-   function Get_Width (Bitmap : FT_Bitmap) return GL.Types.UInt;
+   function Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source;
+   function Num_Grays (Bitmap : Bitmap_Record) return GL.Types.Short;
+   function Rows (Bitmap : Bitmap_Record) return GL.Types.Int;
+   function Palette_Mode (Bitmap : Bitmap_Record) return unsigned_char;
+   function Pitch (Bitmap : Bitmap_Record) return GL.Types.Int;
+   function Pixel_Mode (Bitmap : Bitmap_Record) return unsigned_char;
+   function Width (Bitmap : Bitmap_Record) return GL.Types.UInt;
    function Vector_X (theVector : FT_Vector) return GL.Types.Int;
    function Vector_Y (theVector : FT_Vector) return GL.Types.Int;
 
 private
-   type FT_Bitmap is record
+   type Bitmap_Record is record
       Rows         : GL.Types.UInt;
       Width        : GL.Types.UInt;
       Pitch        : GL.Types.Int;
@@ -41,9 +42,9 @@ private
       Palette_Mode : unsigned_char;
       Palette      : System.Address;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_Bitmap);
+   pragma Convention (C_Pass_By_Copy, Bitmap_Record);
 
-   type FT_Outline is record
+   type Outline_Record is record
       Num_Contours : GL.Types.short;
       Num_Points   : GL.Types.short;
       Points       : access FT_Vector;
@@ -51,7 +52,7 @@ private
       Contours     : access GL.Types.short;
       Flags        : GL.Types.int;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_Outline);
+   pragma Convention (C_Pass_By_Copy, Outline_Record);
 
    type FT_Vector is record
       x : FT_Pos;
