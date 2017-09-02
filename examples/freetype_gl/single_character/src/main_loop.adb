@@ -48,8 +48,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Projection_Location   : GL.Uniforms.Uniform;
    Texture_Location      : GL.Uniforms.Uniform;
    Position_Location     : GL.Attributes.Attribute;
-   Projection_Matrix     : Singles.Matrix4 := Singles.Identity4;
-   View_Matrix           : Singles.Matrix4 := Singles.Identity4;
+   Projection_Matrix     : Singles.Matrix4;
 
    Back_Colour   : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
 
