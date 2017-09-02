@@ -21,13 +21,13 @@ package FT.Image is
                             Plotter_Format     => unsigned (1886154612));
    subtype FT_Pos is GL.Types.Long;
 
-   function Get_Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source;
-   function Get_Num_Grays (Bitmap : Bitmap_Record) return GL.Types.Short;
-   function Get_Rows (Bitmap : Bitmap_Record) return GL.Types.Int;
-   function Get_Palette_Mode (Bitmap : Bitmap_Record) return unsigned_char;
-   function Get_Pitch (Bitmap : Bitmap_Record) return GL.Types.Int;
-   function Get_Pixel_Mode (Bitmap : Bitmap_Record) return unsigned_char;
-   function Get_Width (Bitmap : Bitmap_Record) return GL.Types.UInt;
+   function Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source;
+   function Num_Grays (Bitmap : Bitmap_Record) return GL.Types.Short;
+   function Rows (Bitmap : Bitmap_Record) return GL.Types.Int;
+   function Palette_Mode (Bitmap : Bitmap_Record) return unsigned_char;
+   function Pitch (Bitmap : Bitmap_Record) return GL.Types.Int;
+   function Pixel_Mode (Bitmap : Bitmap_Record) return unsigned_char;
+   function Width (Bitmap : Bitmap_Record) return GL.Types.UInt;
    function Vector_X (theVector : FT_Vector) return GL.Types.Int;
    function Vector_Y (theVector : FT_Vector) return GL.Types.Int;
 

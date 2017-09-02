@@ -17,12 +17,12 @@ package body FT.Utilities is
    begin
       New_Line;
       Put_Line ("Bitmap data:");
-      Put_Line ("Rows: " & GL.Types.int'Image (Get_Rows (Bitmap)));
-      Put_Line ("Width: " & uint'Image (Get_Width (Bitmap)));
-      Put_Line ("Pitch: " & GL.Types.int'Image (Get_Pitch (Bitmap)));
-      Put_Line ("Num_Grays: " & GL.Types.short'Image (Get_Num_Grays (Bitmap)));
-      Put_Line ("Pixel_mode: " & unsigned_char'Image (Get_Pixel_Mode (Bitmap)));
-      Put_Line ("Palette_mode: " & unsigned_char'Image (Get_Palette_Mode (Bitmap)));
+      Put_Line ("Rows: " & GL.Types.int'Image (Rows (Bitmap)));
+      Put_Line ("Width: " & uint'Image (Width (Bitmap)));
+      Put_Line ("Pitch: " & GL.Types.int'Image (Pitch (Bitmap)));
+      Put_Line ("Num_Grays: " & GL.Types.short'Image (Num_Grays (Bitmap)));
+      Put_Line ("Pixel_mode: " & unsigned_char'Image (Pixel_Mode (Bitmap)));
+      Put_Line ("Palette_mode: " & unsigned_char'Image (Palette_Mode (Bitmap)));
       New_Line;
    end Print_Bitmap_Metadata;
 

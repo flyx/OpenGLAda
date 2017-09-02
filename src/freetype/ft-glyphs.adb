@@ -41,7 +41,7 @@ package body FT.Glyphs is
    function Get_Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Objects.Textures.Image_Source is
    begin
-      return FT.Image.Get_Buffer (Get_Bitmap (Slot_Ptr));
+      return FT.Image.Buffer (Get_Bitmap (Slot_Ptr));
    end Get_Bitmap_Image;
 
    --  -------------------------------------------------------------------------
@@ -61,7 +61,7 @@ package body FT.Glyphs is
                               return GL.Types.Single is
       Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
-      return GL.Types.Single (FT.Image.Get_Width (Bitmap));
+      return GL.Types.Single (FT.Image.Width (Bitmap));
    end Get_Bitmap_Width;
 
    --  -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ package body FT.Glyphs is
                                return GL.Types.Single is
       Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
-      return GL.Types.Single (FT.Image.Get_Rows (Bitmap));
+      return GL.Types.Single (FT.Image.Rows (Bitmap));
    end Get_Bitmap_Height;
 
    --  -------------------------------------------------------------------------
@@ -79,7 +79,7 @@ package body FT.Glyphs is
                              return GL.Types.Int is
       Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
-      return FT.Image.Get_Rows (Bitmap);
+      return FT.Image.Rows (Bitmap);
    end Get_Bitmap_Rows;
 
    --  -------------------------------------------------------------------------
