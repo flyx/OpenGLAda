@@ -21,7 +21,7 @@ package body FT.Glyphs is
    --  FT_Bitmap => Buffer (access unsigned_char)
 
    function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                        return FT.Image.FT_Bitmap is
+                        return FT.Image.Bitmap_Record is
       use GL.Types;
       use Glyph_Slot_Access;
       aGlyph_Ptr    : System.Address;
@@ -59,7 +59,7 @@ package body FT.Glyphs is
 
    function Get_Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Types.Single is
-      Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
+      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
       return GL.Types.Single (FT.Image.Get_Width (Bitmap));
    end Get_Bitmap_Width;
@@ -68,7 +68,7 @@ package body FT.Glyphs is
 
    function Get_Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single is
-      Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
+      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
       return GL.Types.Single (FT.Image.Get_Rows (Bitmap));
    end Get_Bitmap_Height;
@@ -77,7 +77,7 @@ package body FT.Glyphs is
 
    function Get_Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
-      Bitmap : constant FT.Image.FT_Bitmap := Get_Bitmap (Slot_Ptr);
+      Bitmap : constant FT.Image.Bitmap_Record := Get_Bitmap (Slot_Ptr);
    begin
       return FT.Image.Get_Rows (Bitmap);
    end Get_Bitmap_Rows;
@@ -116,7 +116,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return FT.Image.FT_Glyph_Format is
+                              return FT.Image.Glyph_Format is
       use Glyph_Slot_Access;
       Glyph : constant FT_Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;

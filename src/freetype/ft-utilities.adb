@@ -11,7 +11,7 @@ with FT.Interfac;
 
 package body FT.Utilities is
 
-   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.FT_Bitmap) is
+   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record) is
       use GL.Types;
       use FT.Image;
    begin
@@ -40,7 +40,7 @@ package body FT.Utilities is
       Put_Line ("Left: " & GL.Types.Int'Image (Get_Bitmap_Left (Slot_Ptr)));
       Put_Line ("Top: " & GL.Types.Int'Image (Get_Bitmap_Top (Slot_Ptr)));
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X) & " bits");
-      Put_Line ("Glyph format: " & FT.Image.FT_Glyph_Format'Image (Get_Glyph_Format (Slot_Ptr)));
+      Put_Line ("Glyph format: " & FT.Image.Glyph_Format'Image (Get_Glyph_Format (Slot_Ptr)));
       Put_Line ("Bitmap address: " & System.Address_Image
                 (System.Address (Get_Bitmap_Image (Slot_Ptr))));
       New_Line;

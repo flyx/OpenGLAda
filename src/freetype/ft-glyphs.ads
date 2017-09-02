@@ -20,7 +20,7 @@ package FT.Glyphs is
    procedure Done_Glyph (Glyph_Ptr : FT_Glyph);
 
    function Get_Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                        return FT.Image.FT_Bitmap;
+                        return FT.Image.Bitmap_Record;
    function Get_Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single;
    function Get_Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
@@ -37,7 +37,7 @@ package FT.Glyphs is
                                return FT.Image.FT_Vector;
    function Get_Glyph_Record (aFace : FT.API.Face_Ptr) return FT_Glyph_Record;
    function Get_Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return FT.Image.FT_Glyph_Format;
+                              return FT.Image.Glyph_Format;
    function Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
@@ -63,14 +63,14 @@ private
    type FT_Glyph_Record is record
       Library : FT.API.Library_Ptr;
       Clazz   : System.Address;
-      Format  : FT.Image.FT_Glyph_Format;
+      Format  : FT.Image.Glyph_Format;
       Advance : FT.Image.FT_Vector;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Glyph_Record);
 
    type FT_Outline_Glyph_Record is record
       Root    : FT_Glyph_Record;
-      Outline : FT.Image.FT_Outline;
+      Outline : FT.Image.Outline_Record;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Outline_Glyph_Record);
 
@@ -84,11 +84,11 @@ private
       LinearHoriAdvance : GL.Types.long;
       LinearVertAdvance : GL.Types.long;
       Advance           : FT.Image.FT_Vector;
-      Format            : FT.Image.FT_Glyph_Format;
-      Bitmap            : FT.Image.FT_Bitmap;
+      Format            : FT.Image.Glyph_Format;
+      Bitmap            : FT.Image.Bitmap_Record;
       Bitmap_left       : GL.Types.Int;
       Bitmap_top        : GL.Types.Int;
-      Outline           : FT.Image.FT_Outline;
+      Outline           : FT.Image.Outline_Record;
       Num_subglyphs     : GL.Types.UInt;
       Subglyphs         : Subglyph_Ptr;
       Control_data      : System.Address;
