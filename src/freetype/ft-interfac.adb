@@ -12,7 +12,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   procedure Done_Face (aFace : FT.API.Face_Ptr) is
+   procedure Done_Face (aFace : Face_Ptr) is
       use GL.Types;
    begin
       if FT_Done_Face (aFace) /= 0 then
@@ -23,7 +23,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   procedure Done_Library (Library : FT.API.Library_Ptr) is
+   procedure Done_Library (Library : Library_Ptr) is
       use GL.Types;
    begin
       if FT_Done_Library (Library) /= 0 then
@@ -34,7 +34,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Face (aFace : FT.API.Face_Ptr) return Face_Record is
+   function Face (aFace : Face_Ptr) return Face_Record is
       use Face_Access;
       --  type Object_Pointer is access all Object;
       Face_Pointer : constant Object_Pointer := To_Pointer (System.Address (aFace));
@@ -44,7 +44,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Kerning (aFace : FT.API.Face_Ptr; Left_Glyph : GL.Types.UInt;
+   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                          aKerning : access FT.Image.FT_Vector) return FT_Error is
    begin
@@ -53,7 +53,7 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-    function Glyph_Slot (aFace : FT.API.Face_Ptr) return FT.API.Glyph_Slot_Ptr is
+    function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr is
       theFace : constant Face_Record := Face (aFace);
    begin
       return theFace.Glyph_Slot;
@@ -61,14 +61,14 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out FT.API.Library_Ptr) return FT.FT_Error is
+   function Init_FreeType (aLibrary : in out Library_Ptr) return FT.FT_Error is
    begin
       return FT_Init_FreeType (System.Address (aLibrary));
    end Init_FreeType;
 
    --  -------------------------------------------------------------------------
 
-   function Load_Character (aFace : FT.API.Face_Ptr; Char_Code : FT_ULong;
+   function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
                             Flags : Load_Flag) return FT_Error is
    begin
       return FT_Load_Char (aFace, Char_Code, Flags'Enum_Rep);
@@ -76,10 +76,8 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function New_Face (Library : FT.API.Library_Ptr;
-                      File_Path_Name : String;
-                      Face_Index     : GL.Types.long;
-                      aFace : in out FT.API.Face_Ptr)
+   function New_Face (Library : Library_Ptr; File_Path_Name : String;
+                      Face_Index : GL.Types.long; aFace : in out Face_Ptr)
                       return FT_Error is
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
@@ -89,17 +87,16 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Render_Glyph (aFace : FT.API.Face_Ptr;
-                          Mode : FT.API.Render_Mode)
+   function Render_Glyph (aFace : Face_Ptr; Mode : Render_Mode)
                           return FT_Error is
-      Slot : constant FT.API.Glyph_Slot_Ptr := Glyph_Slot (aFace);
+      Slot : constant Glyph_Slot_Ptr := Glyph_Slot (aFace);
    begin
       return  FT_Render_Glyph (Slot, Mode);
    end Render_Glyph;
 
    --  -------------------------------------------------------------------------
 
-  function Set_Pixel_Sizes (aFace : FT.API.Face_Ptr; Pixel_Width : GL.Types.UInt;
+  function Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                             Pixel_Height : GL.Types.UInt) return FT_Error is
   begin
       return FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);

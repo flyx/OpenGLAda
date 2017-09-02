@@ -14,11 +14,6 @@ package FT.Image is
    type FT_Vector is private;
    type Glyph_Format is (Format_None, Bitmap_Format, Composite_Format,
                          Outline_Format, Plotter_Format);
-   for Glyph_Format use (Format_None => unsigned (0000000000),
-                            Bitmap_Format      => unsigned (1651078259),
-                            Composite_Format   => unsigned (1668246896),
-                            Outline_Format     => unsigned (1869968492),
-                            Plotter_Format     => unsigned (1886154612));
    subtype FT_Pos is GL.Types.Long;
 
    function Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source;
@@ -59,4 +54,10 @@ private
       y : FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Vector);
+
+   for Glyph_Format use (Format_None => unsigned (0000000000),
+                            Bitmap_Format      => unsigned (1651078259),
+                            Composite_Format   => unsigned (1668246896),
+                            Outline_Format     => unsigned (1869968492),
+                            Plotter_Format     => unsigned (1886154612));
 end FT.Image;
