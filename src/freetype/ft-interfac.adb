@@ -5,7 +5,7 @@ with System.Address_To_Access_Conversions;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with FT.Interfac.API; use FT.Interfac.API;
+with FT.API.Interfac; use FT.API.Interfac;
 
 package body FT.Interfac is
    package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
