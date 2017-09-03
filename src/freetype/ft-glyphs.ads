@@ -16,12 +16,14 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                    return FT.Image.Bitmap_Record;
+   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr;
+                    theBitmap : out FT.Image.Bitmap_Record)
+                    return FT.FT_Error;
    function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                            return GL.Types.Single;
-   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                          return GL.Objects.Textures.Image_Source;
+   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+                          theImage : out GL.Objects.Textures.Image_Source)
+                          return FT.FT_Error;
    function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                          return GL.Types.Int;
    function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
@@ -32,7 +34,8 @@ package FT.Glyphs is
                           return GL.Types.Single;
    function Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
-   function Glyph (Face_Ptr : FT.API.Face_Ptr) return Glyph_Record;
+   function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
+                   return FT.FT_Error;
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
    function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                            return FT.Image.FT_Vector;

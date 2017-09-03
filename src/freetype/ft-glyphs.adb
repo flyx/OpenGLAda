@@ -17,7 +17,7 @@ package body FT.Glyphs is
       FT.API.Glyphs.FT_Done_Glyph (Glyph);
    exception
       when others =>
-         Put_Line ("FT.Interfac.Done_Glyph raised an Exception");
+         Put_Line ("FT.Glyphs.Done_Glyph raised an Exception");
          raise FT.FT_Exception;
    end Done_Glyph;
 
@@ -25,38 +25,43 @@ package body FT.Glyphs is
    --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
    --  Bitmap_Record => Buffer (access unsigned_char)
 
-   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                    return FT.Image.Bitmap_Record is
+   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr;
+                    theBitmap : out FT.Image.Bitmap_Record)
+                    return FT.FT_Error is
       use GL.Types;
       use Glyph_Slot_Access;
---        aGlyph_Ptr    : Glyph_Ptr;
+      aGlyph_Ptr    : Glyph_Ptr;
       Glyph_Pointer : constant Object_Pointer :=
                         To_Pointer (System.Address (Glyph_Slot));
       theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
---        Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
+      Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
    begin
       --  Glyph calls the FT_Glyph C function.
---        if Code /= 0 then
---           Put_Line ("FT.Interfac.Bitmap raised an exception: " &
---                         FT.Errors.Error (Code));
---           raise FT.FT_Exception;
---        end if;
-      return theGlyph.Bitmap;
+      theBitmap := theGlyph.Bitmap;
+      return Code;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Bitmap raised an Exception");
+         Put_Line ("FT.Glyphs.Bitmap raised an Exception");
          raise FT.FT_Exception;
    end Bitmap;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Objects.Textures.Image_Source is
+   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+                          theImage : out GL.Objects.Textures.Image_Source)
+                          return FT.FT_Error is
+      use GL.Types;
+      theBitmap  : FT.Image.Bitmap_Record;
+      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
-      return FT.Image.Buffer (Bitmap (Slot_Ptr));
+      if Error_Code = 0 then
+         theImage := FT.Image.Buffer (theBitmap);
+      end if;
+      return Error_Code;
+ --     return FT.Image.Buffer (Bitmap (Slot_Ptr));
    exception
       when others =>
-         Put_Line ("FT.Interfac.Bitmap_Image raised an Exception");
+         Put_Line ("FT.Glyphs.Bitmap_Image raised an Exception");
          raise FT.FT_Exception;
    end Bitmap_Image;
 
@@ -71,7 +76,7 @@ package body FT.Glyphs is
       return Glyph.Bitmap_Left;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Bitmap_Left raised an Exception");
+         Put_Line ("FT.Glyphs.Bitmap_Left raised an Exception");
          raise FT.FT_Exception;
    end Bitmap_Left;
 
@@ -79,39 +84,48 @@ package body FT.Glyphs is
 
    function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                               return GL.Types.Single is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
+      use GL.Types;
+      theBitmap  : FT.Image.Bitmap_Record;
+      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
-      return GL.Types.Single (FT.Image.Width (theBitmap));
-   exception
-      when others =>
-         Put_Line ("FT.Interfac.Bitmap_Width raised an Exception");
+      if Error_Code /= 0 then
+         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
+              FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
+      end if;
+      return GL.Types.Single (FT.Image.Width (theBitmap));
    end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
 
    function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                                return GL.Types.Single is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
+      use GL.Types;
+      theBitmap  : FT.Image.Bitmap_Record;
+      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
-      return GL.Types.Single (FT.Image.Rows (theBitmap));
-   exception
-      when others =>
-         Put_Line ("FT.Interfac.Bitmap_Height raised an Exception");
+      if Error_Code /= 0 then
+         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
+              FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
+      end if;
+      return GL.Types.Single (FT.Image.Rows (theBitmap));
    end Bitmap_Height;
 
    --  -------------------------------------------------------------------------
 
    function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                              return GL.Types.Int is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
+      use GL.Types;
+      theBitmap  : FT.Image.Bitmap_Record;
+      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
-      return FT.Image.Rows (theBitmap);
-   exception
-      when others =>
-         Put_Line ("FT.Interfac.Bitmap_Rows raised an Exception");
+      if Error_Code /= 0 then
+         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
+              FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
+      end if;
+      return FT.Image.Rows (theBitmap);
    end Bitmap_Rows;
 
    --  -------------------------------------------------------------------------
@@ -125,25 +139,26 @@ package body FT.Glyphs is
       return Glyph.Bitmap_Top;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Bitmap_Top raised an Exception");
+         Put_Line ("FT.Glyphs.Bitmap_Top raised an Exception");
          raise FT.FT_Exception;
    end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Face_Ptr : FT.API.Face_Ptr) return Glyph_Record is
+   function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
+                   return FT.FT_Error is
    use GL.Types;
       use Glyph_Access;
       aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr : Glyph_Ptr;
       Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
-      if Code /= 0 then
-         Put_Line ("FT.Glyphs.Glyph Face_Ptr raised error.");
-         Put_line (FT.Errors.Error (Code));
+      theGlyph := Glyph (aGlyph_Ptr);
+      return Code;
+   exception
+      when others =>
+         Put_Line ("FT.Glyphs.Glyph raised an Exception");
          raise FT.FT_Exception;
-      end if;
-      return Glyph (aGlyph_Ptr);
    end Glyph;
 
    --  -------------------------------------------------------------------------
@@ -182,7 +197,7 @@ package body FT.Glyphs is
       return Glyph.Advance;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Glyph_Advance raised an Exception");
+         Put_Line ("FT.Glyphs.Glyph_Advance raised an Exception");
          raise FT.FT_Exception;
    end Glyph_Advance;
 
@@ -197,7 +212,7 @@ package body FT.Glyphs is
       return Glyph.Format;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Glyph_Format raised an Exception");
+         Put_Line ("FT.Glyphs.Glyph_Format raised an Exception");
          raise FT.FT_Exception;
    end Glyph_Format;
 
@@ -212,7 +227,7 @@ package body FT.Glyphs is
                                                Origin, Destroy);
    exception
       when others =>
-         Put_Line ("FT.Interfac.Glyph_To_Bitmap raised an Exception");
+         Put_Line ("FT.Glyphs.Glyph_To_Bitmap raised an Exception");
          raise FT.FT_Exception;
    end Glyph_To_Bitmap;
 
