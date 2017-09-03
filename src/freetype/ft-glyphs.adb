@@ -43,7 +43,7 @@ package body FT.Glyphs is
       return theGlyph.Bitmap;
    exception
       when others =>
-         Put_Line ("FT.Interfac.Done_Glyph raised an Exception");
+         Put_Line ("FT.Interfac.Bitmap raised an Exception");
          raise FT.FT_Exception;
    end Bitmap;
 

@@ -11,8 +11,12 @@ package body FT.Errors is
 
    function Error (Code : GL.Types.Int) return String is
    begin
+   if Error_List.Contains (Natural (Code)) then
       return FT.FT_Error'Image (Code) & " " &
           String ( Error_List.Element (Natural (Code)));
+   else
+     return "Error code " & GL.Types.Int'Image (Code) & " not implemented yet.";
+   end if;
    end Error;
 
 begin
@@ -49,5 +53,20 @@ begin
    Error_List.Include (16#0026#, "invalid charmap handle              ");
    Error_List.Include (16#0027#, "invalid cache manager handle        ");
    Error_List.Include (16#0028#, "invalid stream handle               ");
+   --  driver errors
+   Error_List.Include (16#0030#, "too many modules                    ");
+   Error_List.Include (16#0031#, "too many extensions                 ");
+   -- memory errors
+   Error_List.Include (16#0040#, "out of memory                       ");
+   Error_List.Include (16#0041#, "unlisted object                     ");
+   --  stream errors
+   Error_List.Include (16#0051#, "cannot open stream                  ");
+   Error_List.Include (16#0052#, "invalid stream seek                 ");
+   Error_List.Include (16#0053#, "invalid stream skip                 ");
+   Error_List.Include (16#0054#, "invalid stream read                 ");
+   Error_List.Include (16#0055#, "invalid stream operation            ");
+   Error_List.Include (16#0056#, "invalid frame operation             ");
+   Error_List.Include (16#0057#, "nested frame access                 ");
+   Error_List.Include (16#0058#, "invalid frame read                  ");
 
 end FT.Errors;
