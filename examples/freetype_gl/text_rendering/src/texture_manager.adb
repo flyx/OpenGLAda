@@ -46,13 +46,13 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Data (Index : Natural) return Character_Record is
+   function Data (Index : GL.Types.Long) return Character_Record is
 
    begin
       if Character_Data.Is_Empty then
          raise Image_Error;
       end if;
-      return Character_Data.Element (Index);
+      return Character_Data.Element (Natural (Index));
    end Data;
 
    --  ------------------------------------------------------------------------
@@ -186,7 +186,7 @@ package body Texture_Manager is
       Height         : Size;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
       Char           : Character;
-      Char_Val       : Integer;
+      Char_Val       : GL.Types.Long;
       Char_Data      : Character_Record;
       aGlyph         : FT.Glyphs.Glyph_Record := FT.Glyphs.Glyph (Face_Ptr);
    begin
@@ -208,11 +208,11 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
-         if FT.Interfac.Load_Character (Face_Ptr, Char, FT.Interfac.Load_Render) /= 0 then
+         if FT.Interfac.Load_Character (Face_Ptr, Char_Val, FT.Interfac.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
             raise FT.FT_Exception;
          end if;
-         Char_Data := Data (Natural (Char));
+         Char_Data := Data (Char_Val);
          Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Slot_Ptr);
          Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
          Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Slot_Ptr));

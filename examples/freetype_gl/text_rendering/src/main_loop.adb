@@ -101,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Data (Index);
+         Char_Data := Data (GL.Types.Long (Index));
          X_Pos := X_Orig + Left (Char_Data) * Scale;
          Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Width (Char_Data);
@@ -182,8 +182,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer,
-                                     aTexture, Pos_X, Pos_Y, 1.0, Cache);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Pos_X, Pos_Y, 1.0, Cache);
 
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;

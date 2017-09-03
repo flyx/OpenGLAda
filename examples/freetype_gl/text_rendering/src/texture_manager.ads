@@ -16,7 +16,7 @@ package Texture_Manager is
    subtype Vertex_Array is GL.Types.Singles.Vector4_Array (1 .. 6);
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
-   function Data (Index : Natural) return Character_Record;
+   function Data (Index : GL.Types.Long) return Character_Record;
    function Left (Data : Character_Record) return GL.Types.Single;
    function Rows (Data : Character_Record) return GL.Types.Single;
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
