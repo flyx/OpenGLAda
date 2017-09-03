@@ -35,7 +35,7 @@ package FT.Interfac is
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector) return FT_Error;
-   function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
+   function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) return FT_Error;
    function New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)

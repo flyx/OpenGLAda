@@ -44,15 +44,6 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
-                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                         aKerning : access FT.Image.FT_Vector) return FT_Error is
-   begin
-      return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
-   end Kerning;
-
-   --  -------------------------------------------------------------------------
-
     function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr is
       theFace : constant Face_Record := Face (aFace);
    begin
@@ -68,10 +59,19 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-   function Load_Character (aFace : Face_Ptr; Char_Code : FT_ULong;
+   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
+                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                         aKerning : access FT.Image.FT_Vector) return FT_Error is
+   begin
+      return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
+   end Kerning;
+
+   --  -------------------------------------------------------------------------
+
+   function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) return FT_Error is
    begin
-      return FT_Load_Char (aFace, Char_Code, Flags'Enum_Rep);
+      return FT_Load_Char (aFace, FT_ULong (Char_Code), Flags'Enum_Rep);
    end Load_Character;
 
    --  -------------------------------------------------------------------------
