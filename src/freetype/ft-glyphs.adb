@@ -14,6 +14,10 @@ package body FT.Glyphs is
    procedure Done_Glyph (Glyph : Glyph_Ptr) is
    begin
       FT.API.Glyphs.FT_Done_Glyph (Glyph);
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Done_Glyph raised an Exception");
+         raise FT.FT_Exception;
    end Done_Glyph;
 
    --  -------------------------------------------------------------------------
@@ -43,6 +47,10 @@ package body FT.Glyphs is
                               return GL.Objects.Textures.Image_Source is
    begin
       return FT.Image.Buffer (Bitmap (Slot_Ptr));
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Image raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Image;
 
    --  -------------------------------------------------------------------------
@@ -54,6 +62,10 @@ package body FT.Glyphs is
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Left;
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Left raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
@@ -63,6 +75,10 @@ package body FT.Glyphs is
       theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
       return GL.Types.Single (FT.Image.Width (theBitmap));
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Width raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
@@ -72,6 +88,10 @@ package body FT.Glyphs is
       theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
       return GL.Types.Single (FT.Image.Rows (theBitmap));
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Height raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Height;
 
    --  -------------------------------------------------------------------------
@@ -81,6 +101,10 @@ package body FT.Glyphs is
       theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
    begin
       return FT.Image.Rows (theBitmap);
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Rows raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Rows;
 
    --  -------------------------------------------------------------------------
@@ -92,6 +116,10 @@ package body FT.Glyphs is
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Top;
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Bitmap_Top raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
@@ -143,6 +171,10 @@ package body FT.Glyphs is
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Advance;
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Glyph_Advance raised an Exception");
+         raise FT.FT_Exception;
    end Glyph_Advance;
 
    --  -------------------------------------------------------------------------
@@ -154,6 +186,10 @@ package body FT.Glyphs is
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Format;
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Glyph_Format raised an Exception");
+         raise FT.FT_Exception;
    end Glyph_Format;
 
    --  -------------------------------------------------------------------------
@@ -165,6 +201,10 @@ package body FT.Glyphs is
    begin
       return FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode,
                                                Origin, Destroy);
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Glyph_To_Bitmap raised an Exception");
+         raise FT.FT_Exception;
    end Glyph_To_Bitmap;
 
 end FT.Glyphs;
