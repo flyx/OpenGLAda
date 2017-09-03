@@ -89,7 +89,7 @@ package body FT.Glyphs is
       Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
       if Error_Code /= 0 then
-         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
+         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
               FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
@@ -105,7 +105,7 @@ package body FT.Glyphs is
       Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
    begin
       if Error_Code /= 0 then
-         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
+         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
               FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
