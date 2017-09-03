@@ -4,6 +4,7 @@ with System.Address_To_Access_Conversions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with FT.API.Glyphs;
+with FT.Errors;
 
 package body FT.Glyphs is
    package Glyph_Slot_Access is new
@@ -135,11 +136,11 @@ package body FT.Glyphs is
       use Glyph_Access;
       aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr : Glyph_Ptr;
-      Code       : FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
+      Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
       if Code /= 0 then
          Put_Line ("FT.Glyphs.Glyph Face_Ptr raised error.");
-         Put_line FT.Errors.Error (Code);
+         Put_line (FT.Errors.Error (Code));
          raise FT.FT_Exception;
       end if;
       return Glyph (aGlyph_Ptr);
