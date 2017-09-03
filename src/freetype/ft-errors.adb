@@ -11,7 +11,8 @@ package body FT.Errors is
 
    function Error (Code : GL.Types.Int) return String is
    begin
-      return String (Error_List.Element (Natural (Code)));
+      return FT.FT_Error'Image (Code) & " " &
+          String ( Error_List.Element (Natural (Code)));
    end Error;
 
 begin

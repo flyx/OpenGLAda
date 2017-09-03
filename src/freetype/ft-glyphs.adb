@@ -38,7 +38,7 @@ package body FT.Glyphs is
       --  Glyph calls the FT_Glyph C function.
       if Code /= 0 then
          Put_Line ("FT.Interfac.Bitmap raised an exception: " &
-                       FT.FT_Error'Image (Code) & FT.Errors.Error (Code));
+                       FT.Errors.Error (Code));
          raise FT.FT_Exception;
       end if;
       return theGlyph.Bitmap;
