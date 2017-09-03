@@ -11,6 +11,7 @@ with GL.Types.Colors;
 
 with FT;
 with FT.API;
+with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
 with FT.Interfac;
@@ -143,6 +144,7 @@ package body Texture_Manager is
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
+      Error_Code   : FT.FT_Error;
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
@@ -153,10 +155,13 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-
-      Bitmap_Image := FT.Glyphs.Bitmap_Image (Slot_Ptr);
-      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
-                                  Bitmap_Image);
+      Error_Code := FT.Glyphs.Bitmap_Image (Slot_Ptr, Bitmap_Image);
+      if Error_Code = 0 then
+         Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
+                                     Bitmap_Image);
+      else
+         Put_Line ("Setup_Texture error: " & FT.Errors.Error (Error_Code));
+      end if;
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Texture.");

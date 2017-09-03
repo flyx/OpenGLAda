@@ -1,7 +1,4 @@
 
-with System;
-with System.Address_Image;
-
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Types;
@@ -41,8 +38,7 @@ package body FT.Utilities is
       Put_Line ("Top: " & GL.Types.Int'Image (Bitmap_Top (Slot_Ptr)));
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X) & " bits");
       Put_Line ("Glyph format: " & FT.Image.Glyph_Format'Image (Glyph_Format (Slot_Ptr)));
-      Put_Line ("Bitmap address: " & System.Address_Image
-                (System.Address (Bitmap_Image (Slot_Ptr))));
+
       New_Line;
    end Print_Character_Metadata;
 
