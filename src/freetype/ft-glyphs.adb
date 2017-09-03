@@ -135,9 +135,11 @@ package body FT.Glyphs is
       use Glyph_Access;
       aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr : Glyph_Ptr;
+      Code       : FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
-      if Glyph (aGlyph_Slot, aGlyph_Ptr) /= 0 then
-         Put_Line ("FT.Glyphs.Glyph Face_Ptr raised an Exception");
+      if Code /= 0 then
+         Put_Line ("FT.Glyphs.Glyph Face_Ptr raised error.");
+         Put_line FT.Errors.Error (Code);
          raise FT.FT_Exception;
       end if;
       return Glyph (aGlyph_Ptr);
