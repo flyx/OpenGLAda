@@ -13,6 +13,7 @@ with GL.Types.Colors;
 
 with FT;
 with FT.API;
+with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
 with FT.Interfac;
@@ -185,10 +186,14 @@ package body Texture_Manager is
       Char_Val       : GL.Types.Long;
       Char_Data      : Character_Record;
       aGlyph         : FT.Glyphs.Glyph_Record;
+      Error_Code     : FT.FT_Error;
    begin
-
       Put_Line ("Slot_Ptr setup.");
-      aGlyph := FT.Glyphs.Glyph (Face_Ptr);
+      Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
+      if Error_Code /= 0 then
+         Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+         raise FT.FT_Exception;
+      end if;
       Put_Line ("aGlyph setup.");
       Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
@@ -227,7 +232,11 @@ package body Texture_Manager is
             Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
             Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-            Bitmap_Image := FT.Glyphs.Bitmap_Image (Slot_Ptr);
+            Error_Code := FT.Glyphs.Bitmap_Image (Slot_Ptr, Bitmap_Image);
+            if Error_Code /= 0 then
+               Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+               raise FT.FT_Exception;
+            end if;
             Texture_2D.Load_From_Data  (0, Red, Width, Height, Red,
                                          Unsigned_Byte, Bitmap_Image);
 
