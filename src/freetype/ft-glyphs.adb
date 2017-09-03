@@ -31,7 +31,7 @@ package body FT.Glyphs is
    begin
       --  Glyph calls the FT_Glyph C function.
       if Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
-         Put_Line ("FT_Interfac.Bitmap raised an Exception");
+         Put_Line ("FT.Interfac.Bitmap raised an Exception");
          raise FT.FT_Exception;
       end if;
       return theGlyph.Bitmap;
@@ -103,6 +103,7 @@ package body FT.Glyphs is
       aGlyph_Ptr : Glyph_Ptr;
    begin
       if Glyph (aGlyph_Slot, aGlyph_Ptr) /= 0 then
+         Put_Line ("FT.Glyphs.Glyph Face_Ptr raised an Exception");
          raise FT.FT_Exception;
       end if;
       return Glyph (aGlyph_Ptr);
@@ -115,14 +116,22 @@ package body FT.Glyphs is
       Glyph_Acc : constant access Glyph_Record := To_Pointer (System.Address (aGlyph_Ptr));
    begin
       return Glyph_Acc.all;
+   exception
+         when others =>
+            Put_Line ("FT.Glyphs.Glyph aGlyph_Ptr raised an Exception");
+            raise FT.FT_Exception;
    end Glyph;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+   function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error is
    begin
       return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
+   exception
+         when others =>
+            Put_Line ("FT.Glyphs.Glyph Slot_Ptr raised an Exception");
+            raise FT.FT_Exception;
    end Glyph;
 
    --  -------------------------------------------------------------------------
