@@ -57,13 +57,6 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Face_Ptr return FT.API.Face_Ptr is
-   begin
-      return Face_Ptr;
-   end Get_Face_Ptr;
-
-   --  ------------------------------------------------------------------------
-
    function Left (Data : Character_Record) return GL.Types.Single is
    begin
       return Data.Bearing.Left;
@@ -144,6 +137,7 @@ package body Texture_Manager is
          raise FT.FT_Exception;
       end if;
 
+      Put_Line ("Set_Unpack_Alignment.");
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
       when others =>
@@ -167,7 +161,9 @@ package body Texture_Manager is
       Setup_Font;
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
+      Put_Line ("Buffer setup.");
       Setup_Textures (X, Y, Scale, Text);
+      Put_Line ("Textures setup.");
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
@@ -188,19 +184,26 @@ package body Texture_Manager is
       Char           : Character;
       Char_Val       : GL.Types.Long;
       Char_Data      : Character_Record;
-      aGlyph         : FT.Glyphs.Glyph_Record := FT.Glyphs.Glyph (Face_Ptr);
+      aGlyph         : FT.Glyphs.Glyph_Record;
    begin
+
+      Put_Line ("Slot_Ptr setup.");
+      aGlyph := FT.Glyphs.Glyph (Face_Ptr);
+      Put_Line ("aGlyph setup.");
       Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
 
       for index in Text'Range loop
          Char := Text (index);
          Char_Val := Character'Pos (Char);
+         Put_Line ("Loading character.");
          if FT.Interfac.Load_Character (Face_Ptr, Char_Val,
                                         FT.Interfac.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
             raise FT.FT_Exception;
          end if;
+
+         Put_Line ("Character loaded.");
 
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Interfac.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
@@ -208,10 +211,6 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
-         if FT.Interfac.Load_Character (Face_Ptr, Char_Val, FT.Interfac.Load_Render) /= 0 then
-            Put_Line ("A character failed to load.");
-            raise FT.FT_Exception;
-         end if;
          Char_Data := Data (Char_Val);
          Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Slot_Ptr);
          Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
@@ -252,6 +251,7 @@ package body Texture_Manager is
    end Char_Texture;
 
    --  -----------------------------------------------------------------------
+
    function Top (Data : Character_Record) return GL.Types.Single is
    begin
       return Data.Bearing.Top;
