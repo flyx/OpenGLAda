@@ -4,7 +4,6 @@ with System.Address_To_Access_Conversions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with FT.API.Glyphs;
-with FT.Errors;
 
 package body FT.Glyphs is
    package Glyph_Slot_Access is new
@@ -29,19 +28,23 @@ package body FT.Glyphs is
                     return FT.Image.Bitmap_Record is
       use GL.Types;
       use Glyph_Slot_Access;
-      aGlyph_Ptr    : Glyph_Ptr;
+--        aGlyph_Ptr    : Glyph_Ptr;
       Glyph_Pointer : constant Object_Pointer :=
                         To_Pointer (System.Address (Glyph_Slot));
       theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
-      Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
+--        Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
    begin
       --  Glyph calls the FT_Glyph C function.
-      if Code /= 0 then
-         Put_Line ("FT.Interfac.Bitmap raised an exception: " &
-                       FT.Errors.Error (Code));
-         raise FT.FT_Exception;
-      end if;
+--        if Code /= 0 then
+--           Put_Line ("FT.Interfac.Bitmap raised an exception: " &
+--                         FT.Errors.Error (Code));
+--           raise FT.FT_Exception;
+--        end if;
       return theGlyph.Bitmap;
+   exception
+      when others =>
+         Put_Line ("FT.Interfac.Done_Glyph raised an Exception");
+         raise FT.FT_Exception;
    end Bitmap;
 
    --  -------------------------------------------------------------------------
