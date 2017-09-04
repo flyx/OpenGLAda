@@ -34,13 +34,6 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Face_Ptr return FT.API.Face_Ptr is
-   begin
-      return Face_Ptr;
-   end Get_Face_Ptr;
-
-   --  ------------------------------------------------------------------------
-
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single) is
       use GL.Objects.Buffers;
