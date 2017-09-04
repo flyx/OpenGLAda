@@ -32,8 +32,6 @@ package FT.Glyphs is
                         return GL.Types.Int;
    function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
                           return GL.Types.Single;
-   function Glyph (Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
-                   theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
    function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
                    return FT.FT_Error;
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;

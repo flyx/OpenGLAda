@@ -12,6 +12,11 @@ package body FT.Glyphs is
    package Glyph_Access is new
        System.Address_To_Access_Conversions (Glyph_Record);
 
+function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
+                   theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
+
+   --  -------------------------------------------------------------------------
+
    procedure Done_Glyph (Glyph : Glyph_Ptr) is
    begin
       FT.API.Glyphs.FT_Done_Glyph (Glyph);
