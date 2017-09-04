@@ -25,14 +25,12 @@ package body Texture_Manager is
 
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
-   Vertex_Data    : Vertex_Array;
    Character_Data : Character_Data_Vector;
 
    Image_Error : exception;
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer);
    procedure Setup_Font;
    procedure Setup_Textures;
 
@@ -85,41 +83,6 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer) is
-      use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
-      use GL.Types;
-      --        Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      --        X_Pos       : Single := X;
-      --        Y_Pos       : Single := Y ;
-      --        Width       : Single := FT.Glyphs.Bitmap_Width (Slot_Ptr) * Scale;
-      --        Height      : Single := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr)) * Scale;
-      --        Num_Triangles : Int := 2;
-      --        Stride        : Int := 4;
-   begin
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      --        Vertex_Data := (
-      --                        (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
-      --                        (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
-      --                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-      --
-      --                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-      --                        (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
-      --                        (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
-      --
-      --        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
-      --        GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
-      --                                                 Kind   => GL.Types.Single_Type,
-      --                                                 Stride => Stride, Offset => 0);
-   exception
-      when others =>
-         Put_Line ("An exceptiom occurred in Setup_Buffer.");
-         raise;
-   end Setup_Buffer;
-
-   --  ------------------------------------------------------------------------
-
    procedure Setup_Font is
       use GL.Types;
       --        Font_File       : String := "/Library/Fonts/Arial.ttf";
@@ -158,11 +121,9 @@ package body Texture_Manager is
       Setup_Textures;
       Put_Line ("Textures setup.");
 
-      Setup_Buffer (Vertex_Buffer);
-      Put_Line ("Buffer setup.");
-
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
+
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -210,7 +171,6 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
-         Texture_2D.Bind (aTexture);  --  Probably not necessary
          Texture_2D.Load_From_Data  (0, Red, GL.Types.Int (Char_Data.Size.Width),
                                      GL.Types.Int (Char_Data.Size.Rows), Red,
                                      Unsigned_Byte, Bitmap_Image);

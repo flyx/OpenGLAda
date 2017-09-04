@@ -22,6 +22,7 @@ with GL.Uniforms;
 
 with Glfw.Input;
 with Glfw.Input.Keys;
+with GL.Window;
 with Glfw.Windows.Context;
 
 with Maths;
@@ -46,7 +47,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
-   Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.2, 0.4, 0.0);
+   Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
 
    --  ------------------------------------------------------------------------
 
@@ -55,15 +56,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
+      procedure Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
    procedure Render is
       use GL.Types;
       use GL.Objects.Buffers;
+      Pos_X   : GL.Types.Single := 25.0;
+      Pos_Y   : GL.Types.Single := 25.0;
+      Scale   : GL.Types.Single := 1.0;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Background);
-      Render_The_Text ("Some sample text.", 25.0, 25.0, 1.0, Text_Colour);
+      Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
 
    exception
       when  others =>
@@ -95,26 +100,31 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
       GL.Objects.Textures.Set_Active_Unit (0);
-      GL.Uniforms.Set_Int (Texture_ID, 0);  --  Added
 
       Vertex_Array.Bind;
 
       for index in Text'Range loop
          Char := Text (index);
+         Put_Line ("Char: " & Char);
          Char_Data := Data (GL.Types.Long (Index));
          X_Pos := X_Orig + Left (Char_Data) * Scale;
          Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Width (Char_Data);
          Height := Rows (Char_Data);
-         Vertex_Data := ((X_Pos, Y_Pos + Height,         0.0, 0.0),
-                         (X_Pos, Y_Pos,                  0.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos, Y_Pos + Height,         0.0, 0.0),
-                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
+         Put_Line ("X Pos: " & Single'Image (X_Pos));
+         Put_Line ("Y Pos: " & Single'Image (Y_Pos));
+
+         Vertex_Data := ((X_Pos, Y_Pos,                       0.0, 0.0),
+                         (X_Pos+ Char_Width, Y_Pos,           1.0, 0.0),
+                         (X_Pos, Y_Pos + Height,              0.0, 1.0),
+
+                         (X_Pos, Y_Pos + Height,              0.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos,          1.0, 0.0));
 
          GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
          Texture_2D.Bind (Char_Texture (Char_Data));
+
          Array_Buffer.Bind (Vertex_Buffer);
          Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
@@ -123,7 +133,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
---           Put_Line ("X origin: " & Single'Image (X_Orig));
+         Put_Line ("X origin: " & Single'Image (X_Orig));
       end loop;
 
    exception
@@ -142,9 +152,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
-      Pos_X           : GL.Types.Single := 10.0;
-      Pos_Y           : GL.Types.Single := 10.0;
-      Cache           : String := "Hello";
    begin
 --        FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
 --                                        "/System/Library/Fonts/Helvetica.dfont");
@@ -155,12 +162,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --        FTGL_Interface.Setup_Font (Font_Buffer, Buffer_Font_Data,
 --                                        "/System/Library/Fonts/Helvetica.dfont");
 
-      Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+      Window.Get_Size (Window_Width, Window_Height);
+      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
+                              GL.Types.Int (Window_Height));
 
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      --  Blending allows a fragment colour's alpha value to control the resulting
+      --  colour which will be transparent for all the glyph's background colours and
+      --  non-transparent for the actual character pixels.
+
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
@@ -174,28 +187,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Colour_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "text_colour");
 
-      Maths.Init_Orthographic_Transform (0.0, Single (Window_Width),
-                                         0.0, Single (Window_Height),
-                                         -100.0, 100.0, Projection_Matrix);
+      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Vertex_Buffer.Initialize_Id;
-      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-
       Texture_Manager.Setup_Graphic (Vertex_Buffer);
-
-      Vertex_Array.Initialize_Id;
-      Vertex_Array.Bind;
-
-      Vertex_Buffer.Initialize_Id;
-      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
-                 Single'Size / 8 * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
-
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => 4,
-                                               Kind => Single_Type, Stride => 4,
-                                               Offset => 0);
+      Setup_Buffer;
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
@@ -203,6 +200,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    end Setup;
 
    --  ------------------------------------------------------------------------
+
+   procedure Setup_Buffer is
+      use GL.Types;
+   begin
+      Vertex_Array.Initialize_Id;
+      Vertex_Array.Bind;
+
+      Vertex_Buffer.Initialize_Id;
+      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
+                 (Single'Size  / 8) * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
+
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => 4,
+                                               Kind => GL.Types.Single_Type,
+                                               Stride => 4, Offset => 0);
+   end Setup_Buffer;
+
+     --  ------------------------------------------------------------------------
 
    use Glfw.Input;
    Running : Boolean := True;
