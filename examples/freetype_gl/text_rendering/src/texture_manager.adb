@@ -195,7 +195,6 @@ package body Texture_Manager is
          end if;
          Put_Line ("Glyph rendered.");
 
-         Char_Data := Data (long (index));
          Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
          Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Face_Ptr));
