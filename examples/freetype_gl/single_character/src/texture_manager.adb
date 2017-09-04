@@ -46,16 +46,17 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       X_Pos       : Single := X;
       Y_Pos       : Single := Y ;
-      Width       : Single := FT.Glyphs.Bitmap_Width (Slot_Ptr) * Scale;
-      Height      : Single := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr)) * Scale;
+      Width       : Single;
+      Height      : Single;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
+      Width := FT.Glyphs.Bitmap_Width (Face_Ptr) * Scale;
+      Height := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr)) * Scale;
       Vertex_Data := (
                       (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
                       (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
@@ -120,7 +121,7 @@ package body Texture_Manager is
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Interfac.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
+      if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
          Put_Line ("A character failed to render.");
          raise FT.FT_Exception;
       end if;
@@ -146,8 +147,8 @@ package body Texture_Manager is
       Bitmap_Image : GL.Objects.Textures.Image_Source;
       Error_Code   : FT.FT_Error;
    begin
-      Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
-      Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
+      Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
+      Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -155,7 +156,7 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      Error_Code := FT.Glyphs.Bitmap_Image (Slot_Ptr, Bitmap_Image);
+      Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
       if Error_Code = 0 then
          Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                      Bitmap_Image);
