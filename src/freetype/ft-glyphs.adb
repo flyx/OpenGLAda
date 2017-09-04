@@ -158,7 +158,9 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
       aGlyph_Ptr : Glyph_Ptr;
       Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
-      theGlyph := Glyph (aGlyph_Ptr);
+      if Code = 0 then
+         theGlyph := Glyph (aGlyph_Ptr);
+      end if;
       return Code;
    exception
       when others =>
