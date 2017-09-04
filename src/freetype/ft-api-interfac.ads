@@ -32,10 +32,6 @@ package FT.API.Interfac is
                return FT_Error;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
-   function FT_Render_Glyph (Slot : Glyph_Slot_Ptr; Mode : Render_Mode)
-                             return FT_Error;
-   pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
-
    function FT_Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                                 Pixel_Height : GL.Types.UInt) return FT_Error;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");

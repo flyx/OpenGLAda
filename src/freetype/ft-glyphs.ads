@@ -43,8 +43,9 @@ package FT.Glyphs is
        (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
         Origin      : access FT.Image.FT_Vector;
         Destroy     : FT.FT_Bool) return FT.FT_Error;
+   function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
+                          return FT_Error;
 private
-
    type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Ptr is new System.Address;
    type Outline_Glyph_Ptr is new System.Address;

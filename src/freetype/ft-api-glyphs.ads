@@ -20,4 +20,8 @@ package FT.API.Glyphs is
                           return FT.FT_Error;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
+   function FT_Render_Glyph (Slot : Glyph_Slot_Ptr; Mode : Render_Mode)
+                             return FT_Error;
+   pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
+
 end FT.API.Glyphs;

@@ -30,7 +30,7 @@ package FT.Interfac is
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
-   function Glyph_Slot (aFace : Face_Ptr) return FT.API.Glyph_Slot_Ptr;
+   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
    function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
@@ -40,8 +40,6 @@ package FT.Interfac is
    function New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
                       return FT_Error;
-   function Render_Glyph (aFace : Face_Ptr; Mode  : Render_Mode)
-                          return FT_Error;
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
 private

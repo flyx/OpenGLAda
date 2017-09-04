@@ -154,7 +154,8 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    return FT.FT_Error is
    use GL.Types;
       use Glyph_Access;
-      aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr :=
+                      FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr : Glyph_Ptr;
       Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
@@ -235,5 +236,16 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
          Put_Line ("FT.Glyphs.Glyph_To_Bitmap raised an Exception");
          raise FT.FT_Exception;
    end Glyph_To_Bitmap;
+
+   --  -------------------------------------------------------------------------
+
+   function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
+                          return FT_Error is
+      Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (aFace);
+   begin
+      return  FT.API.Glyphs.FT_Render_Glyph (Slot, Mode);
+   end Render_Glyph;
+
+   --  -------------------------------------------------------------------------
 
 end FT.Glyphs;

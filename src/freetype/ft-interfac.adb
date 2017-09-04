@@ -44,8 +44,8 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
-    function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr is
-      theFace : constant Face_Record := Face (aFace);
+   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr is
+     theFace : constant Face_Record := Face (aFace);
    begin
       return theFace.Glyph_Slot;
    end Glyph_Slot;
@@ -84,15 +84,6 @@ package body FT.Interfac is
    begin
       return  FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
    end New_Face;
-
-   --  -------------------------------------------------------------------------
-
-   function Render_Glyph (aFace : Face_Ptr; Mode : Render_Mode)
-                          return FT_Error is
-      Slot : constant Glyph_Slot_Ptr := Glyph_Slot (aFace);
-   begin
-      return  FT_Render_Glyph (Slot, Mode);
-   end Render_Glyph;
 
    --  -------------------------------------------------------------------------
 
