@@ -30,11 +30,12 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
    --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
    --  Bitmap_Record => Buffer (access unsigned_char)
 
-   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr;
+   function Bitmap (Face_Ptr : FT.API.Face_Ptr;
                     theBitmap : out FT.Image.Bitmap_Record)
                     return FT.FT_Error is
       use GL.Types;
       use Glyph_Slot_Access;
+      Glyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr    : Glyph_Ptr;
       Glyph_Pointer : constant Object_Pointer :=
                         To_Pointer (System.Address (Glyph_Slot));
@@ -52,12 +53,12 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+   function Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
                           theImage : out GL.Objects.Textures.Image_Source)
                           return FT.FT_Error is
       use GL.Types;
       theBitmap  : FT.Image.Bitmap_Record;
-      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
+      Error_Code : constant FT.FT_Error := Bitmap (Face_Ptr, theBitmap);
    begin
       if Error_Code = 0 then
          theImage := FT.Image.Buffer (theBitmap);
@@ -72,9 +73,9 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int is
+   function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
       use Glyph_Slot_Access;
+      Slot_Ptr   : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
@@ -87,11 +88,10 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Types.Single is
+   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
       use GL.Types;
       theBitmap  : FT.Image.Bitmap_Record;
-      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
+      Error_Code : constant FT.FT_Error := Bitmap (Face_Ptr, theBitmap);
    begin
       if Error_Code /= 0 then
          Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
@@ -103,11 +103,10 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                               return GL.Types.Single is
+   function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
       use GL.Types;
       theBitmap  : FT.Image.Bitmap_Record;
-      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
+      Error_Code : constant FT.FT_Error := Bitmap (Face_Ptr, theBitmap);
    begin
       if Error_Code /= 0 then
          Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
@@ -119,11 +118,10 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int is
+   function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
       use GL.Types;
       theBitmap  : FT.Image.Bitmap_Record;
-      Error_Code : constant FT.FT_Error := Bitmap (Slot_Ptr, theBitmap);
+      Error_Code : constant FT.FT_Error := Bitmap (Face_Ptr, theBitmap);
    begin
       if Error_Code /= 0 then
          Put ("FT.Glyphs.Bitmap_Width raised an exception " &
@@ -135,10 +133,11 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
                             return GL.Types.Int is
       use Glyph_Slot_Access;
-      Glyph : constant Glyph_Slot_Record :=
+      Slot_Ptr  : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Glyph     : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
       return Glyph.Bitmap_Top;
@@ -194,9 +193,11 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr)
                                return FT.Image.FT_Vector is
       use Glyph_Slot_Access;
+      Slot_Ptr : constant FT.API.Glyph_Slot_Ptr :=
+                      FT.Interfac.Glyph_Slot (Face_Ptr);
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin
@@ -209,9 +210,11 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
                               return FT.Image.Glyph_Format is
       use Glyph_Slot_Access;
+      Slot_Ptr : constant FT.API.Glyph_Slot_Ptr :=
+                      FT.Interfac.Glyph_Slot (Face_Ptr);
       Glyph : constant Glyph_Slot_Record :=
         To_Pointer (System.Address (Slot_Ptr)).all;
    begin

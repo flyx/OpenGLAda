@@ -16,28 +16,23 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr;
+   function Bitmap (Face_Ptr : FT.API.Face_Ptr;
                     theBitmap : out FT.Image.Bitmap_Record)
                     return FT.FT_Error;
-   function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                           return GL.Types.Single;
-   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+   function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
+   function Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
                           theImage : out GL.Objects.Textures.Image_Source)
                           return FT.FT_Error;
-   function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                         return GL.Types.Int;
-   function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                         return GL.Types.Int;
-   function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
+   function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
+   function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
                         return GL.Types.Int;
-   function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                          return GL.Types.Single;
+   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
    function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
                    return FT.FT_Error;
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
-   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                           return FT.Image.FT_Vector;
-   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
+   function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
+   function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
                           return FT.Image.Glyph_Format;
    function Glyph_To_Bitmap
        (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
