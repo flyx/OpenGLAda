@@ -135,7 +135,6 @@ package body Texture_Manager is
          raise FT.FT_Exception;
       end if;
 
-      Put_Line ("Set_Unpack_Alignment.");
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
       when others =>
@@ -155,7 +154,7 @@ package body Texture_Manager is
       end if;
 
       Setup_Font;
-
+      Put_Line ("Font setup.");
       Setup_Textures;
       Put_Line ("Textures setup.");
 
@@ -174,19 +173,14 @@ package body Texture_Manager is
       use GL.Types;
       aTexture       : GL.Objects.Textures.Texture;
       aGlyph         : FT.Glyphs.Glyph_Record;
-      Priority       : GL.Objects.Textures.Priority := 0.9;
-      Width          : Size;
-      Height         : Size;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
-      Char           : Character;
-      Char_Val       : GL.Types.Long;
       Char_Data      : Character_Record;
       Error_Code     : FT.FT_Error;
    begin
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
       for index in 0 .. 127 loop
          Put_Line ("Loading character.");
-         if FT.Interfac.Load_Character (Face_Ptr, Char_Val,
+         if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
             raise FT.FT_Exception;
@@ -199,6 +193,14 @@ package body Texture_Manager is
             Put_Line ("A character failed to render.");
             raise FT.FT_Exception;
          end if;
+         Put_Line ("Glyph rendered.");
+
+         Char_Data := Data (long (index));
+         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
+         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
+         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Face_Ptr));
+         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Face_Ptr));
+         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
 
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
@@ -206,21 +208,21 @@ package body Texture_Manager is
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
          Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
+         Put_Line ("Texture setup.");
 
          Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
          if Error_Code /= 0 then
             Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
             raise FT.FT_Exception;
          end if;
-         Texture_2D.Load_From_Data  (0, Red, Width, Height, Red,
-                                     Unsigned_Byte, Bitmap_Image);
+         Put_Line ("Bitmap_Image set.");
 
-         Char_Data := Data (Char_Val);
-         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
-         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Face_Ptr));
-         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Face_Ptr));
-         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+         Texture_2D.Bind (aTexture);  --  Probably not necessary
+         Texture_2D.Load_From_Data  (0, Red, GL.Types.Int (Char_Data.Size.Width),
+                                     GL.Types.Int (Char_Data.Size.Rows), Red,
+                                     Unsigned_Byte, Bitmap_Image);
+         Put_Line ("Data loaded.");
+
          Char_Data.Texture := aTexture;
 
          Character_Data.Append (Char_Data);
