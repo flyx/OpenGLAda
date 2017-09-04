@@ -32,11 +32,9 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
-                           X, Y, Scale   : GL.Types.Single);
+   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer);
    procedure Setup_Font;
-   procedure Setup_Textures (X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                             Text : String);
+   procedure Setup_Textures;
 
    --  ------------------------------------------------------------------------
 
@@ -87,34 +85,33 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
-                           X, Y, Scale   : GL.Types.Single) is
+   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      X_Pos       : Single := X;
-      Y_Pos       : Single := Y ;
-      Width       : Single := FT.Glyphs.Bitmap_Width (Slot_Ptr) * Scale;
-      Height      : Single := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr)) * Scale;
-      Num_Triangles : Int := 2;
-      Stride        : Int := 4;
+      --        Slot_Ptr    : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      --        X_Pos       : Single := X;
+      --        Y_Pos       : Single := Y ;
+      --        Width       : Single := FT.Glyphs.Bitmap_Width (Slot_Ptr) * Scale;
+      --        Height      : Single := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr)) * Scale;
+      --        Num_Triangles : Int := 2;
+      --        Stride        : Int := 4;
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Vertex_Data := (
-                      (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
-                      (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
-                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-
-                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-                      (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
-                      (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
-
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
-                                               Kind   => GL.Types.Single_Type,
-                                               Stride => Stride, Offset => 0);
+      --        Vertex_Data := (
+      --                        (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
+      --                        (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
+      --                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+      --
+      --                        (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+      --                        (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
+      --                        (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
+      --
+      --        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
+      --        GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
+      --                                                 Kind   => GL.Types.Single_Type,
+      --                                                 Stride => Stride, Offset => 0);
    exception
       when others =>
          Put_Line ("An exceptiom occurred in Setup_Buffer.");
@@ -148,9 +145,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-                            X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                            Text          : String) is
+   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer) is
       use GL.Types;
       aTexture      : GL.Objects.Textures.Texture;
    begin
@@ -161,10 +156,11 @@ package body Texture_Manager is
 
       Setup_Font;
 
-      Setup_Buffer (Vertex_Buffer, X, Y, Scale);
-      Put_Line ("Buffer setup.");
-      Setup_Textures (X, Y, Scale, Text);
+      Setup_Textures;
       Put_Line ("Textures setup.");
+
+      Setup_Buffer (Vertex_Buffer);
+      Put_Line ("Buffer setup.");
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
@@ -172,12 +168,12 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Textures (X, Y: GL.Types.Single; Scale : GL.Types.Single;
-                             Text : String) is
+   procedure Setup_Textures is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr       : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      aTexture       : GL.Objects.Textures.Texture;
+      aGlyph         : FT.Glyphs.Glyph_Record;
       Priority       : GL.Objects.Textures.Priority := 0.9;
       Width          : Size;
       Height         : Size;
@@ -185,22 +181,10 @@ package body Texture_Manager is
       Char           : Character;
       Char_Val       : GL.Types.Long;
       Char_Data      : Character_Record;
-      aGlyph         : FT.Glyphs.Glyph_Record;
       Error_Code     : FT.FT_Error;
    begin
-      Put_Line ("Slot_Ptr setup.");
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
-      if Error_Code /= 0 then
-         Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
-      end if;
-      Put_Line ("aGlyph setup.");
-      Width := Size (FT.Glyphs.Bitmap_Width (Slot_Ptr));
-      Height := Size (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
-
-      for index in Text'Range loop
-         Char := Text (index);
-         Char_Val := Character'Pos (Char);
+      for index in 0 .. 127 loop
          Put_Line ("Loading character.");
          if FT.Interfac.Load_Character (Face_Ptr, Char_Val,
                                         FT.Interfac.Load_Render) /= 0 then
@@ -211,37 +195,33 @@ package body Texture_Manager is
          Put_Line ("Character loaded.");
 
          --  Ensure that the glyph image is an anti-aliased bitmap
-         if FT.Interfac.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
+         if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
             Put_Line ("A character failed to render.");
             raise FT.FT_Exception;
          end if;
 
+         aTexture.Initialize_Id;
+         Texture_2D.Bind (aTexture);
+         Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+         Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+         Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
+         Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
+
+         Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+         if Error_Code /= 0 then
+            Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+            raise FT.FT_Exception;
+         end if;
+         Texture_2D.Load_From_Data  (0, Red, Width, Height, Red,
+                                     Unsigned_Byte, Bitmap_Image);
+
          Char_Data := Data (Char_Val);
-         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Slot_Ptr);
-         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Slot_Ptr));
-         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Slot_Ptr));
-         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Slot_Ptr));
-         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Slot_Ptr));
-         declare
-            aTexture   : GL.Objects.Textures.Texture;
-         begin
-            aTexture.Initialize_Id;
-            Texture_2D.Bind (aTexture);
-            Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
-            Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-            Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
-            Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-
-            Error_Code := FT.Glyphs.Bitmap_Image (Slot_Ptr, Bitmap_Image);
-            if Error_Code /= 0 then
-               Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
-               raise FT.FT_Exception;
-            end if;
-            Texture_2D.Load_From_Data  (0, Red, Width, Height, Red,
-                                         Unsigned_Byte, Bitmap_Image);
-
-            Char_Data.Texture := aTexture;
-         end;
+         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
+         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
+         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Face_Ptr));
+         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Face_Ptr));
+         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+         Char_Data.Texture := aTexture;
 
          Character_Data.Append (Char_Data);
       end loop;

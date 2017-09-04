@@ -182,7 +182,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Pos_X, Pos_Y, 1.0, Cache);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer);
 
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;

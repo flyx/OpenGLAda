@@ -19,10 +19,7 @@ package Texture_Manager is
    function Data (Index : GL.Types.Long) return Character_Record;
    function Left (Data : Character_Record) return GL.Types.Single;
    function Rows (Data : Character_Record) return GL.Types.Single;
-   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-                            X, Y          : GL.Types.Single;
-                            Scale         : GL.Types.Single;
-                            Text          : String);
+   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer);
    function Char_Texture (Data : Character_Record)
                           return GL.Objects.Textures.Texture;
    function Top (Data : Character_Record) return GL.Types.Single;
