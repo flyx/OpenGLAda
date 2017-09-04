@@ -51,23 +51,30 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-    procedure Load_Vertex_Sub_Buffer is new
+   procedure Load_Vertex_Sub_Buffer is new
       GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
-      procedure Setup_Buffer;
+   procedure Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
-   procedure Render is
+   procedure Render (Window  : in out Glfw.Windows.Window) is
       use GL.Types;
       use GL.Objects.Buffers;
-      Pos_X   : GL.Types.Single := 25.0;
-      Pos_Y   : GL.Types.Single := 25.0;
-      Scale   : GL.Types.Single := 1.0;
+      Window_Width    : Glfw.Size;
+      Window_Height   : Glfw.Size;
+      Pos_X           : GL.Types.Single := 25.0;
+      Pos_Y           : GL.Types.Single := 25.0;
+      Scale           : GL.Types.Single := 1.0;
    begin
+      Window.Get_Size (Window_Width, Window_Height);
+      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
+                              GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Background);
+      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
       Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
 
    exception
@@ -187,8 +194,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Colour_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "text_colour");
 
-      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       Texture_Manager.Setup_Graphic (Vertex_Buffer);
@@ -225,7 +230,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 begin
    Setup (Main_Window);
    while Running loop
-      Render;
+      Render (Main_Window);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then not
