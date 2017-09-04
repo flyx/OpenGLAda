@@ -179,21 +179,17 @@ package body Texture_Manager is
    begin
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
       for index in 0 .. 127 loop
-         Put_Line ("Loading character.");
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
             Put_Line ("A character failed to load.");
             raise FT.FT_Exception;
          end if;
 
-         Put_Line ("Character loaded.");
-
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
             Put_Line ("A character failed to render.");
             raise FT.FT_Exception;
          end if;
-         Put_Line ("Glyph rendered.");
 
          Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
          Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
@@ -207,23 +203,18 @@ package body Texture_Manager is
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
          Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-         Put_Line ("Texture setup.");
 
          Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
          if Error_Code /= 0 then
             Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
             raise FT.FT_Exception;
          end if;
-         Put_Line ("Bitmap_Image set.");
 
          Texture_2D.Bind (aTexture);  --  Probably not necessary
          Texture_2D.Load_From_Data  (0, Red, GL.Types.Int (Char_Data.Size.Width),
                                      GL.Types.Int (Char_Data.Size.Rows), Red,
                                      Unsigned_Byte, Bitmap_Image);
-         Put_Line ("Data loaded.");
-
          Char_Data.Texture := aTexture;
-
          Character_Data.Append (Char_Data);
       end loop;
    exception
