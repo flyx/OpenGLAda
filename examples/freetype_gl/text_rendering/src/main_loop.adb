@@ -93,6 +93,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use Texture_Manager;
 
+      Num_Triangles : Int := 2;
+      Stride        : Int := 0;
+      Num_Vertices   : GL.Types.Int := 2 * 3; -- Two triangles
+      Num_Components : GL.Types.Int := 4;     -- Coords vector size;
+
       Char          : Character;
       Char_Data     : Texture_Manager.Character_Record;
       X_Orig        : Single := X;
@@ -118,29 +123,39 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Width (Char_Data);
          Height := Rows (Char_Data);
-         Put_Line ("X Pos: " & Single'Image (X_Pos));
-         Put_Line ("Y Pos: " & Single'Image (Y_Pos));
+         Put_Line ("Char_Width: " & Single'Image (Char_Width));
+         Put_Line ("Height: " & Single'Image (Height));
 
-         Vertex_Data := ((X_Pos, Y_Pos,                       0.0, 0.0),
-                         (X_Pos+ Char_Width, Y_Pos,           1.0, 0.0),
-                         (X_Pos, Y_Pos + Height,              0.0, 1.0),
+--           Vertex_Data := ((X_Pos, Y_Pos,                       0.0, 0.0),
+--                           (X_Pos+ Char_Width, Y_Pos,           1.0, 0.0),
+--                           (X_Pos, Y_Pos + Height,              0.0, 1.0),
+--
+--                           (X_Pos, Y_Pos + Height,              0.0, 1.0),
+--                           (X_Pos + Char_Width, Y_Pos + Height, 1.0, 1.0),
+--                           (X_Pos + Char_Width, Y_Pos,          1.0, 0.0));
 
-                         (X_Pos, Y_Pos + Height,              0.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos,          1.0, 0.0));
+         Vertex_Data := ((50.0, 50.0,                       0.0, 0.0),
+                         (100.0, 50.0,           1.0, 0.0),
+                         (50.0, 100.0,              0.0, 1.0),
 
+                         (50.0, 100.0,              0.0, 1.0),
+                         (100.0, 100.0, 1.0, 1.0),
+                         (100.0, 50.0,          1.0, 0.0));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
          Texture_2D.Bind (Char_Texture (Char_Data));
 
          Array_Buffer.Bind (Vertex_Buffer);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => Num_Components,
+                                               Kind => GL.Types.Single_Type,
+                                               Stride => Stride, Offset => 0);
          Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
-         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 6);
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
-         Put_Line ("X origin: " & Single'Image (X_Orig));
+   --      Put_Line ("X origin: " & Single'Image (X_Orig));
       end loop;
 
    exception
@@ -208,6 +223,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup_Buffer is
       use GL.Types;
+      Single_Size : constant long := Single'Size  / 8;  --  bytes
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
@@ -215,12 +231,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
       GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
-                 (Single'Size  / 8) * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
+                 Single_Size * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
 
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => 4,
-                                               Kind => GL.Types.Single_Type,
-                                               Stride => 4, Offset => 0);
    end Setup_Buffer;
 
      --  ------------------------------------------------------------------------
