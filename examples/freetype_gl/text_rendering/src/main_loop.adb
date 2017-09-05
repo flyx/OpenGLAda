@@ -117,7 +117,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Data (GL.Types.Long (Index));
+         Char_Data := Data (GL.Types.Int (Index));
          X_Pos := X_Orig + Left (Char_Data) * Scale;
          Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Width (Char_Data);

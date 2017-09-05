@@ -43,7 +43,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Data (Index : GL.Types.Long) return Character_Record is
+   function Data (Index : GL.Types.Int) return Character_Record is
 
    begin
       if Character_Data.Is_Empty then
@@ -147,10 +147,10 @@ package body Texture_Manager is
          end if;
 
          --  Ensure that the glyph image is an anti-aliased bitmap
-         if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-            Put_Line ("A character failed to render.");
-            raise FT.FT_Exception;
-         end if;
+--           if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
+--              Put_Line ("A character failed to render.");
+--              raise FT.FT_Exception;
+--           end if;
 
          Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
          Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
