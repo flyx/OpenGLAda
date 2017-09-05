@@ -52,7 +52,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Load_Vertex_Sub_Buffer is new
-      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
+       GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
@@ -74,7 +74,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Background);
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
+                                         Single (Window_Width), 0.1, -100.0, Projection_Matrix);
       Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
 
    exception
@@ -93,21 +93,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use Texture_Manager;
 
-      Num_Triangles : Int := 2;
-      Stride        : Int := 0;
+      Num_Triangles  : Int := 2;
+      Stride         : Int := 0;
       Num_Vertices   : GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : GL.Types.Int := 4;     -- Coords vector size;
 
-      Char          : Character;
-      Char_Data     : Texture_Manager.Character_Record;
-      X_Orig        : Single := X;
-      Y_Orig        : Single := Y;
-      X_Pos         : Single;
-      Y_Pos         : Single;
-      Char_Width    : Single;
-      Height        : Single;
+      Char           : Character;
+      Char_Data      : Texture_Manager.Character_Record;
+      X_Orig         : Single := X;
+      Y_Orig         : Single := Y;
+      X_Pos          : Single;
+      Y_Pos          : Single;
+      Char_Width     : Single;
+      Height         : Single;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
-      Vertex_Data   : Singles.Vector4_Array (1 .. Num_Vertices);
+      Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
@@ -115,17 +115,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Vertex_Array.Bind;
 
-  --    for index in Text'Range loop
-      for index in integer range 1..1 loop
+      for index in Text'Range loop
          Char := Text (index);
---           Put_Line ("Char: " & Char);
          Char_Data := Data (GL.Types.Long (Index));
          X_Pos := X_Orig + Left (Char_Data) * Scale;
          Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Width (Char_Data);
          Height := Rows (Char_Data);
---           Put_Line ("Char_Width: " & Single'Image (Char_Width));
---           Put_Line ("Height: " & Single'Image (Height));
 
          Vertex_Data := ((X_Pos, Y_Pos + Height,             0.0, 0.0),
                          (X_Pos, Y_Pos,                      0.0, 1.0),
@@ -134,32 +130,23 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          (X_Pos, Y_Pos + Height,              0.0, 0.0),
                          (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
                          (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
-
---           Vertex_Data := ((50.0, 50.0,                       0.0, 0.0),
---                           (150.0, 50.0,           1.0, 0.0),
---                           (50.0, 150.0,              0.0, 1.0),
---
---                           (150.0, 50.0,              0.0, 1.0),
---                           (150.0, 150.0, 1.0, 1.0),
---                           (50.0, 150.0,          1.0, 0.0));
          Vertex_Array.Bind;
          GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
          GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix); --  Added
          Array_Buffer.Bind (Vertex_Buffer);
 
-        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
+         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
          Texture_2D.Bind (Char_Texture (Char_Data));
-         GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => Num_Components,
-                                               Kind => GL.Types.Single_Type,
-                                               Stride => Stride, Offset => 0);
---           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
+                                                  Kind   => GL.Types.Single_Type,
+                                                  Stride => Stride, Offset => 0);
+         --           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
-         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
-   --      Put_Line ("X origin: " & Single'Image (X_Orig));
+         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0;
       end loop;
 
    exception
@@ -179,14 +166,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
    begin
---        FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
---                                        "/System/Library/Fonts/Helvetica.dfont");
---        FTGL_Interface.Setup_Font (Font_Pixmap, Pixmap_Font_Data,
---                                        "/System/Library/Fonts/Helvetica.dfont");
---        FTGL_Interface.Setup_Font (Font_Polygon, Polygon_Font_Data,
---                                        "/System/Library/Fonts/Helvetica.dfont");
---        FTGL_Interface.Setup_Font (Font_Buffer, Buffer_Font_Data,
---                                        "/System/Library/Fonts/Helvetica.dfont");
+      --        FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
+      --                                        "/System/Library/Fonts/Helvetica.dfont");
+      --        FTGL_Interface.Setup_Font (Font_Pixmap, Pixmap_Font_Data,
+      --                                        "/System/Library/Fonts/Helvetica.dfont");
+      --        FTGL_Interface.Setup_Font (Font_Polygon, Polygon_Font_Data,
+      --                                        "/System/Library/Fonts/Helvetica.dfont");
+      --        FTGL_Interface.Setup_Font (Font_Buffer, Buffer_Font_Data,
+      --                                        "/System/Library/Fonts/Helvetica.dfont");
 
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -235,11 +222,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Buffer.Initialize_Id;
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
       GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
-                 Single_Size * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
+                                   Single_Size * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
 
    end Setup_Buffer;
 
-     --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
    use Glfw.Input;
    Running : Boolean := True;
@@ -259,9 +246,9 @@ begin
    Vertex_Array.Delete_Id;
    Render_Program.Delete_Id;
 exception
---     when anError : FTGL.FTGL_Error =>
---        Put_Line ("Main_Loop returned an FTGL error: ");
---        raise;
+      --     when anError : FTGL.FTGL_Error =>
+      --        Put_Line ("Main_Loop returned an FTGL error: ");
+      --        raise;
 
    when anError :  others =>
       Put_Line ("An exception occurred in Main_Loop.");
