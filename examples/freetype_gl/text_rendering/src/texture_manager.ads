@@ -43,7 +43,4 @@ private
       Advance_X : GL.Types.Int;
    end record;
 
-   package Data_Vector_Package is new Ada.Containers.Vectors (Natural, Character_Record);
-   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
-
 end Texture_Manager;

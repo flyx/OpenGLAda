@@ -23,6 +23,9 @@ with Utilities;
 
 package body Texture_Manager is
 
+   package Data_Vector_Package is new Ada.Containers.Vectors (Natural, Character_Record);
+   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
+
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
    Character_Data : Character_Data_Vector;
