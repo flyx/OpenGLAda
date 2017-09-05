@@ -100,6 +100,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Char           : Character;
       Char_Data      : Texture_Manager.Character_Record;
+      aTexture       : GL.Objects.Textures.Texture;
       X_Orig         : Single := X;
       Y_Orig         : Single := Y;
       X_Pos          : Single;
@@ -136,7 +137,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Array_Buffer.Bind (Vertex_Buffer);
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
-         Texture_2D.Bind (Char_Texture (Char_Data));
+         aTexture := Char_Texture (Char_Data);
+         Texture_2D.Bind (aTexture);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
                                                   Stride => Stride, Offset => 0);

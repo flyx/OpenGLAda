@@ -23,7 +23,8 @@ with Utilities;
 
 package body Texture_Manager is
 
-   package Data_Vector_Package is new Ada.Containers.Vectors (Natural, Character_Record);
+   package Data_Vector_Package is new
+     Ada.Containers.Vectors (Natural, Character_Record);
    type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
 
    theLibrary     : FT.API.Library_Ptr;
@@ -120,9 +121,7 @@ package body Texture_Manager is
       end if;
 
       Setup_Font;
-      Put_Line ("Font setup.");
       Setup_Textures;
-      Put_Line ("Textures setup.");
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
