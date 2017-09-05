@@ -65,9 +65,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
-      Pos_X           : GL.Types.Single := 25.0;
-      Pos_Y           : GL.Types.Single := 25.0;
-      Scale           : GL.Types.Single := 1.0;
+      Pos_X           : GL.Types.Single := 125.0;
+      Pos_Y           : GL.Types.Single := 125.0;
+      Scale           : GL.Types.Single := 10.0;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -93,9 +93,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use Texture_Manager;
 
-      Num_Triangles : Int := 2;
+      Num_Triangles : Int := 1;
       Stride        : Int := 0;
-      Num_Vertices   : GL.Types.Int := 2 * 3; -- Two triangles
+--        Num_Vertices   : GL.Types.Int := 2 * 3; -- Two triangles
+      Num_Vertices   : GL.Types.Int := 3;
       Num_Components : GL.Types.Int := 4;     -- Coords vector size;
 
       Char          : Character;
@@ -107,24 +108,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Char_Width    : Single;
       Height        : Single;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
-      Vertex_Data   : Singles.Vector4_Array (1 .. 6);
+      Vertex_Data   : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
-      GL.Objects.Textures.Set_Active_Unit (0);
+--        GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+--        GL.Objects.Textures.Set_Active_Unit (0);
 
       Vertex_Array.Bind;
 
-      for index in Text'Range loop
-         Char := Text (index);
-         Put_Line ("Char: " & Char);
-         Char_Data := Data (GL.Types.Long (Index));
-         X_Pos := X_Orig + Left (Char_Data) * Scale;
-         Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
-         Char_Width := Width (Char_Data);
-         Height := Rows (Char_Data);
-         Put_Line ("Char_Width: " & Single'Image (Char_Width));
-         Put_Line ("Height: " & Single'Image (Height));
+  --    for index in Text'Range loop
+--        for index in integer range 1..1 loop
+--           Char := Text (index);
+--           Put_Line ("Char: " & Char);
+--           Char_Data := Data (GL.Types.Long (Index));
+--           X_Pos := X_Orig + Left (Char_Data) * Scale;
+--           Y_Pos := Y_Orig - (Rows (Char_Data) - Top (Char_Data)) * Scale;
+--           Char_Width := Width (Char_Data);
+--           Height := Rows (Char_Data);
+--           Put_Line ("Char_Width: " & Single'Image (Char_Width));
+--           Put_Line ("Height: " & Single'Image (Height));
 
 --           Vertex_Data := ((X_Pos, Y_Pos,                       0.0, 0.0),
 --                           (X_Pos+ Char_Width, Y_Pos,           1.0, 0.0),
@@ -136,19 +138,23 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Vertex_Data := ((50.0, 50.0,                       0.0, 0.0),
                          (100.0, 50.0,           1.0, 0.0),
-                         (50.0, 100.0,              0.0, 1.0),
+                         (50.0, 100.0,              0.0, 1.0));
 
-                         (50.0, 100.0,              0.0, 1.0),
-                         (100.0, 100.0, 1.0, 1.0),
-                         (100.0, 50.0,          1.0, 0.0));
+--                           (50.0, 100.0,              0.0, 1.0),
+--                           (100.0, 100.0, 1.0, 1.0),
+--                           (100.0, 50.0,          1.0, 0.0));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
-         Texture_2D.Bind (Char_Texture (Char_Data));
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix); --  Added
+
+        Utilities.Load_Vertex_Buffer (Array_Buffer,
+                            Vertex_Data, Static_Draw);
+--           Texture_2D.Bind (Char_Texture (Char_Data));
 
          Array_Buffer.Bind (Vertex_Buffer);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count  => Num_Components,
                                                Kind => GL.Types.Single_Type,
                                                Stride => Stride, Offset => 0);
-         Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
+--           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
@@ -156,7 +162,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
    --      Put_Line ("X origin: " & Single'Image (X_Orig));
-      end loop;
+--        end loop;
 
    exception
       when  others =>
