@@ -131,8 +131,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
                          (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
          Vertex_Array.Bind;
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Added
-         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix); --  Added
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Needed
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix); --  Needed
          Array_Buffer.Bind (Vertex_Buffer);
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
@@ -140,7 +140,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
                                                   Stride => Stride, Offset => 0);
-         --           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
+--           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
@@ -214,15 +214,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup_Buffer is
       use GL.Types;
-      Single_Size : constant long := Single'Size  / 8;  --  bytes
+      use GL.Objects.Buffers;
+      Single_Size    : constant long := Single'Size  / 8;    --  bytes
+      Num_Triangles  : constant Int := 2;
+      Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
+      Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
 
       Vertex_Buffer.Initialize_Id;
-      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Objects.Buffers.Allocate (GL.Objects.Buffers.Array_Buffer,
-                                   Single_Size * 6 * 4,  GL.Objects.Buffers.Dynamic_Draw);
+      Array_Buffer.Bind (Vertex_Buffer);
+      Allocate (Array_Buffer, Single_Size * long (Num_Vertices * Num_Components), Dynamic_Draw);
 
    end Setup_Buffer;
 
