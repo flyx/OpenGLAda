@@ -4,15 +4,10 @@ with Interfaces;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL;
-with GL.Buffers;
-with GL.Errors;
-with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
-with GL.Objects.Textures.With_2D_Loader;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
 with GL.Types;
