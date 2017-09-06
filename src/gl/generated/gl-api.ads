@@ -595,10 +595,14 @@ private package GL.API is
    pragma Import (StdCall, Get_Tex_Level_Parameter_Bool, "glGetTexLevelParameteriv");
    procedure Gen_Textures (N : Size; Textures : access UInt);
    pragma Import (StdCall, Gen_Textures, "glGenTextures");
+   procedure Tex_SubImage_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; X_Offset, Y_Offset : Int; Width, Height : Size; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
+   pragma Import (StdCall, Tex_SubImage_2D, "glTexSubImage2D");
    procedure Bind_Texture (Target : Low_Level.Enums.Texture_Kind; Texture : UInt);
    pragma Import (StdCall, Bind_Texture, "glBindTexture");
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array);
    pragma Import (StdCall, Delete_Textures, "glDeleteTextures");
+   function Is_Texture (Texture : UInt) return Boolean;
+   pragma Import (StdCall, Is_Texture, "glIsTexture");
    procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width : Size; Border : Low_Level.Zero; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
    pragma Import (StdCall, Tex_Image_1D, "glTexImage1D");
    Compressed_Tex_Image_1D : T90;
