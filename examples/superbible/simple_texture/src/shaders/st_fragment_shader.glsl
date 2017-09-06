@@ -5,5 +5,5 @@ out vec4 colour;
 
 void main()
 {
-   colour = texture(s, gl_FragCoord.xy / textureSize(sampler, 0));
+   colour = texture(sampler, gl_FragCoord.xy / textureSize(sampler, 0));
 }
