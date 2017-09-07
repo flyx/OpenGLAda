@@ -99,9 +99,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Generate_Texture (Texture_Data, Width, Height);
 
       --  Assume the texture is already bound to the GL_TEXTURE_2D target
-      Texture_2D.Load_SubImage_From_Data (0, X_Offset, Y_Offset,  Width, Height,
-                                          GL.Pixels.RGBA, GL.Pixels.Float,
-                                          Image_Data);
+      Texture_2D.Load_Sub_Image_From_Data (0, X_Offset, Y_Offset,  Width, Height,
+                                           GL.Pixels.RGBA, GL.Pixels.Float,
+                                           Image_Data);
       Rendering_Program := Program_From
         ((Src ("src/shaders/st_vertex_shader.glsl", Vertex_Shader),
           Src ("src/shaders/st_fragment_shader.glsl", Fragment_Shader)));
