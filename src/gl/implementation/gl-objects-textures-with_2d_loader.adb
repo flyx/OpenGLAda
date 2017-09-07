@@ -47,7 +47,7 @@ package body GL.Objects.Textures.With_2D_Loader is
       Raise_Exception_On_OpenGL_Error;
    end Load_From_Data;
 
-   procedure Load_SubImage_From_Data
+   procedure Load_Sub_Image_From_Data
      (Object : Fillable_Target;
       Level  : Mipmap_Level;
        X_Offset, Y_Offset :Int;
@@ -56,10 +56,10 @@ package body GL.Objects.Textures.With_2D_Loader is
        Data_Type     : Pixels.Data_Type;
        Source        : Image_Source)  is
    begin
-      API.Tex_SubImage_2D (Texture_Proxy (Object).Kind, Level, X_Offset, Y_Offset,
+      API.Tex_Sub_Image_2D (Texture_Proxy (Object).Kind, Level, X_Offset, Y_Offset,
                         Width, Height, Format, Data_Type, Source);
       Raise_Exception_On_OpenGL_Error;
-   end Load_SubImage_From_Data;
+   end Load_Sub_Image_From_Data;
 
    procedure Load_Compressed
      (Object                    : Fillable_Target;

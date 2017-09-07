@@ -595,8 +595,6 @@ private package GL.API is
    pragma Import (StdCall, Get_Tex_Level_Parameter_Bool, "glGetTexLevelParameteriv");
    procedure Gen_Textures (N : Size; Textures : access UInt);
    pragma Import (StdCall, Gen_Textures, "glGenTextures");
-   procedure Tex_SubImage_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; X_Offset, Y_Offset : Int; Width, Height : Size; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
-   pragma Import (StdCall, Tex_SubImage_2D, "glTexSubImage2D");
    procedure Bind_Texture (Target : Low_Level.Enums.Texture_Kind; Texture : UInt);
    pragma Import (StdCall, Bind_Texture, "glBindTexture");
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array);
@@ -606,13 +604,19 @@ private package GL.API is
    procedure Tex_Image_1D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width : Size; Border : Low_Level.Zero; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
    pragma Import (StdCall, Tex_Image_1D, "glTexImage1D");
    Compressed_Tex_Image_1D : T90;
+   procedure Tex_Sub_Image_1D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; X_Offset, Y_Offset : Int; Width, Height : Size; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
+   pragma Import (StdCall, Tex_Sub_Image_1D, "glTexSubImage1D");
    Tex_Storage_1D : T91;
    procedure Tex_Image_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Internal_Format : Pixels.Internal_Format; Width, Height : Size; Border : Low_Level.Zero; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
    pragma Import (StdCall, Tex_Image_2D, "glTexImage2D");
    Compressed_Tex_Image_2D : T92;
+   procedure Tex_Sub_Image_2D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; X_Offset, Y_Offset : Int; Width, Height : Size; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
+   pragma Import (StdCall, Tex_Sub_Image_2D, "glTexSubImage2D");
    Tex_Storage_2D : T93;
    Tex_Image_3D : T94;
    Compressed_Tex_Image_3D : T95;
+   procedure Tex_Sub_Image_3D (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; X_Offset, Y_Offset : Int; Width, Height : Size; Format : Pixels.Data_Format; Data_Type : Pixels.Data_Type; Data : Objects.Textures.Image_Source);
+   pragma Import (StdCall, Tex_Sub_Image_3D, "glTexSubImage3D");
    Tex_Storage_3D : T96;
    procedure Tex_Env_Float (Target : Enums.Textures.Env_Target; Param_Name : Enums.Textures.Env_Parameter; Value : Single);
    pragma Import (StdCall, Tex_Env_Float, "glTexEnvf");

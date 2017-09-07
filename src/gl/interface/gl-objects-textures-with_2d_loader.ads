@@ -40,7 +40,7 @@ package GL.Objects.Textures.With_2D_Loader is
       Source_Type   : Pixels.Data_Type;
       Source        : Image_Source);
 
-   procedure Load_SubImage_From_Data
+   procedure Load_Sub_Image_From_Data
      (Object : Fillable_Target; Level : Mipmap_Level;
        X_Offset, Y_Offset :Int;
        Width, Height : Size;
