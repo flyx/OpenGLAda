@@ -17,23 +17,23 @@ package Texture_Manager is
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
    function Data (Index : GL.Types.Int) return Character_Record;
-   function Left (Data : Character_Record) return GL.Types.Single;
-   function Rows (Data : Character_Record) return GL.Types.Single;
+   function Left (Data : Character_Record) return GL.Types.Int;
+   function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer);
    function Char_Texture (Data : Character_Record)
                           return GL.Objects.Textures.Texture;
-   function Top (Data : Character_Record) return GL.Types.Single;
-   function Width (Data : Character_Record) return GL.Types.Single;
+   function Top (Data : Character_Record) return GL.Types.Int;
+   function Width (Data : Character_Record) return GL.Types.Int;
 private
 
    type Character_Size is record
-      Width     : GL.Types.Single;
-      Rows      : GL.Types.Single;
+      Width     : GL.Types.Int;
+      Rows      : GL.Types.Int;
    end record;
 
    type Character_Bearing is record
-      Left      : GL.Types.Single;
-      Top       : GL.Types.Single;
+      Left      : GL.Types.Int;
+      Top       : GL.Types.Int;
    end record;
 
    type Character_Record is record
