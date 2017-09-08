@@ -162,6 +162,9 @@ package body Texture_Manager is
 
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
+         if index = 0 then
+            Texture_2D.Storage (0, Red, Char_Data.Size.Width, Char_Data.Size.Rows);
+         end if;
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
