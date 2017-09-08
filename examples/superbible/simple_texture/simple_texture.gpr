@@ -1,0 +1,11 @@
+limited with "../../../opengl-glfw.gpr";
+
+project simple_texture is
+
+   for Source_Dirs use ("src", "../../common");
+   for Object_Dir use "obj/";
+   for Exec_Dir use ".";
+   for Main use ("simple_texturing.adb");
+
+end simple_texture;
+
