@@ -58,7 +58,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   function Left (Data : Character_Record) return GL.Types.Single is
+   function Left (Data : Character_Record) return GL.Types.Int is
    begin
       return Data.Bearing.Left;
    end Left;
@@ -70,17 +70,17 @@ package body Texture_Manager is
       use GL.Types;
    begin
       Put_Line ("Character" & Char & " Data");
-      Put_Line ("Width: " & Single'Image (Data.Size.Width));
-      Put_Line ("Rows: " & Single'Image (Data.Size.Rows));
-      Put_Line ("Left: " & Single'Image (Data.Bearing.Left));
-      Put_Line ("Top: " & Single'Image (Data.Bearing.Top));
+      Put_Line ("Width: " & Int'Image (Data.Size.Width));
+      Put_Line ("Rows: " & Int'Image (Data.Size.Rows));
+      Put_Line ("Left: " & Int'Image (Data.Bearing.Left));
+      Put_Line ("Top: " & Int'Image (Data.Bearing.Top));
       Put_Line ("Advance X: " & Int'Image (Data.Advance_X) & " bits");
       New_Line;
    end Print_Character_Data;
 
    --  ------------------------------------------------------------------------
 
-   function Rows (Data : Character_Record) return GL.Types.Single is
+   function Rows (Data : Character_Record) return GL.Types.Int is
    begin
       return Data.Size.Rows;
    end Rows;
@@ -135,6 +135,8 @@ package body Texture_Manager is
       use GL.Pixels;
       use GL.Types;
       aTexture       : GL.Objects.Textures.Texture;
+      X_Offset       : constant GL.Types.Int := 0;
+      Y_Offset       : constant GL.Types.Int := 0;
       aGlyph         : FT.Glyphs.Glyph_Record;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
       Char_Data      : Character_Record;
@@ -154,16 +156,17 @@ package body Texture_Manager is
 --              raise FT.FT_Exception;
 --           end if;
 
-         Char_Data.Size.Width := FT.Glyphs.Bitmap_Width (Face_Ptr);
-         Char_Data.Size.Rows := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         Char_Data.Bearing.Left := Single (FT.Glyphs.Bitmap_Left (Face_Ptr));
-         Char_Data.Bearing.Top := Single (FT.Glyphs.Bitmap_Top (Face_Ptr));
+         Char_Data.Size.Width := GL.Types.Int (FT.Glyphs.Bitmap_Width (Face_Ptr));
+         Char_Data.Size.Rows := FT.Glyphs.Bitmap_Rows (Face_Ptr);
+         Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
+         Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
          Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
 
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
          if index = 0 then
-            Texture_2D.Storage (0, Red, Char_Data.Size.Width, Char_Data.Size.Rows);
+            Texture_2D.Storage (0, Red, Char_Data.Size.Width,
+                                Char_Data.Size.Rows);
          end if;
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
@@ -176,9 +179,9 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
-         Texture_2D.Load_From_Data  (0, Red, GL.Types.Int (Char_Data.Size.Width),
-                                     GL.Types.Int (Char_Data.Size.Rows), Red,
-                                     Unsigned_Byte, Bitmap_Image);
+         Texture_2D.Load_Sub_Image_From_Data
+             (0, X_Offset, Y_Offset, Char_Data.Size.Width,
+              Char_Data.Size.Rows, Red, Unsigned_Byte, Bitmap_Image);
          Char_Data.Texture := aTexture;
          Character_Data.Append (Char_Data);
       end loop;
@@ -198,14 +201,14 @@ package body Texture_Manager is
 
    --  -----------------------------------------------------------------------
 
-   function Top (Data : Character_Record) return GL.Types.Single is
+   function Top (Data : Character_Record) return GL.Types.Int is
    begin
       return Data.Bearing.Top;
    end Top;
 
    --  ------------------------------------------------------------------------
 
-   function Width (Data : Character_Record) return GL.Types.Single is
+   function Width (Data : Character_Record) return GL.Types.Int is
    begin
       return Data.Size.Width;
    end Width;
