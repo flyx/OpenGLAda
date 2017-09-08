@@ -132,7 +132,6 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
