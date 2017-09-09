@@ -132,8 +132,6 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Slot_Ptr     : FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      Priority     : GL.Objects.Textures.Priority := 0.9;
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
