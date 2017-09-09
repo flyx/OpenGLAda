@@ -185,8 +185,15 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error is
+     use GL.Types;
+     Code : constant FT.FT_Error := FT.API.Glyphs.FT_Get_Glyph
+                           (Slot_Ptr, System.Address (theGlyph_Ptr));
    begin
-      return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
+      if Code /= 0 then
+            Put_Line ("FT.Glyphs.Glyph Slot_Ptr error code : " &
+                       FT.Errors.Error (Code));
+      end if;
+      return Code;
    exception
          when others =>
             Put_Line ("FT.Glyphs.Glyph Slot_Ptr raised an Exception");
