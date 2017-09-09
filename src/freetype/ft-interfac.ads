@@ -95,20 +95,57 @@ private
       Num_Glyphs              : GL.Types.Long;
       Family_Name             : access FT_String;
       Style_Name              : access FT_String;
+      --  Num_Fixed_Sizes is the number of bitmap strikes in the face.
+      --  Even if the face is scalable, there might still be bitmap strikes,
+      --  which are called `sbits' in that case.
+
       Num_Fixed_sizes         : GL.Types.Int;
+      --  Available_Sizes is an array of FT_Bitmap_Size records for all bitmap
+      --  strikes in the face.  It is NULL if there is no bitmap strike.
       Available_Sizes         : access FT_Bitmap_Size;
       Num_Charmaps            : GL.Types.Int;
       Character_Map_List      : System.Address;
       C_Generic               : Generic_Record;
+      --  The following member variables (down to `underline_thickness')
+      --  are only relevant to scalable outlines.
+
+      --  Bbox is the font bounding box.  Coordinates are expressed in font units
+      --  The box is large enough to contain any glyph from the font.
+      --  Thus, bbox.yMax can be seen as the maximum  ascender' and
+      --  bbox.yMin as the `minimum descender.
+      --   Bbox is only relevant for scalable   formats.
+
       Bbox                    : FT_BBox;
+      --  Units_per_EM is the number of font units per EM square for  this face.
+      --  This is typically 2048 for TrueType fonts and 1000 for Type~1 fonts.
+      --  Units_per_EM is only relevant for scalable formats.
+
       Units_Per_EM            : GL.Types.UShort;
+      --  Ascender and descender are the typographic ascender  and descender of
+      --  the face expressed in font units.
+      --  For font formats not having this information, they are set to
+      --  bbox.yMax and bbox.yMin.
+      --  Ascender is only relevant for scalable formats.
+
       Ascender                : GL.Types.Short;
       Descender               : GL.Types.Short;
+      --  Height is the vertical distance   between two consecutive baselines,
+      --  expressed in font units and is always positive.
+      --  Height is only relevant for scalable formats.
+      --  For the global glyph height use  ascender - descender.
+
       Height                  : GL.Types.Short;
+      --  Max_Advance_Width and Max_Advance_Height are the maximum and advance
+      --  width in font units for all glyphs in this face.
+      --  They are only relevant for scalable formats.
+      --  They can be used to make word wrapping computations faster.
+
       Max_Advance_Width       : GL.Types.Short;
+      Max_Advance_Height      : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
       Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
+      --  Size is the current active size for this face.
       Size                    : Size_Ptr;
       Character_Map           : Char_Map_Ptr;
       Driver                  : Driver_Ptr;
