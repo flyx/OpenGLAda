@@ -59,6 +59,18 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
+   --  A FT_Glyph can be typecast to a FT_OutlineGlyph if
+   --    glyph->format == FT_GLYPH_FORMAT_OUTLINE.
+   --  This provides easy access the outline's content.
+   --  As the outline is extracted from a glyph slot, its coordinates are
+   --  expressed normally in 26.6 pixels, unless the flag
+   --  FT_LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
+   type Outline_Glyph_Record is record
+      Root    : Glyph_Record;
+      Outline : FT.Image.Outline_Record;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
+
    type Glyph_Record is record
       Library : FT.API.Library_Ptr;
       Clazz   : System.Address;
@@ -66,12 +78,6 @@ private
       Advance : FT.Image.FT_Vector;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Record);
-
-   type Outline_Glyph_Record is record
-      Root    : Glyph_Record;
-      Outline : FT.Image.Outline_Record;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Slot_Record is record
       Library              : FT.API.Library_Ptr;
