@@ -135,8 +135,8 @@ package body Texture_Manager is
       use GL.Pixels;
       use GL.Types;
       aTexture       : GL.Objects.Textures.Texture;
-      Width          : constant GL.Types.Int := FT.Interfac.Face_Width (Face_Ptr);
-      Height         : constant GL.Types.Int := FT.Interfac.Face_Height (Face_Ptr);
+      Width          : GL.Types.Size;
+      Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
       aGlyph         : FT.Glyphs.Glyph_Record;
@@ -145,6 +145,8 @@ package body Texture_Manager is
       Error_Code     : FT.FT_Error;
    begin
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
+      Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
+      Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
       if Error_Code /= 0 then
          Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
