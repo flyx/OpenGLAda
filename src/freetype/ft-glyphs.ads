@@ -67,6 +67,12 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Record);
 
+   --  A FT_Glyph can be typecast to a FT_OutlineGlyph if
+   --  glyph->format == FT_GLYPH_FORMAT_OUTLINE.
+   --  This provides easy access the outline's content.
+   --  As the outline is extracted from a glyph slot, its coordinates are
+   --  expressed normally in 26.6 pixels, unless the flag
+   --  FT_LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
    type Outline_Glyph_Record is record
       Root    : Glyph_Record;
       Outline : FT.Image.Outline_Record;
@@ -74,28 +80,28 @@ private
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Slot_Record is record
-      Library             : FT.API.Library_Ptr;
-      Face                : FT.API.Face_Ptr;
-      Next                : FT.API.Glyph_Slot_Ptr;
-      Reserved            : GL.Types.UInt;
-      C_Generic           : FT.Interfac.Generic_Record;
-      Metrics             : Glyph_Metrics;
-      Linear_Hori_Advance : GL.Types.long;
-      Linear_Vert_Advance : GL.Types.long;
-      Advance             : FT.Image.FT_Vector;
-      Format              : FT.Image.Glyph_Format;
-      Bitmap              : FT.Image.Bitmap_Record;
-      Bitmap_Left         : GL.Types.Int;
-      Bitmap_Top          : GL.Types.Int;
-      Outline             : FT.Image.Outline_Record;
-      Num_Subglyphs       : GL.Types.UInt;
-      Subglyphs           : Subglyph_Ptr;
-      Control_Data        : System.Address;
-      Control_Length      : GL.Types.long;
-      Lsb_Delta           : FT.Image.FT_Pos;
-      Rsb_Delta           : FT.Image.FT_Pos;
-      Other               : System.Address;
-      Internal            : Slot_Internal_Ptr;
+      Library              : FT.API.Library_Ptr;
+      Face                 : FT.API.Face_Ptr;
+      Next                 : FT.API.Glyph_Slot_Ptr;
+      Reserved             : GL.Types.UInt;
+      C_Generic            : FT.Interfac.Generic_Record;
+      Metrics              : Glyph_Metrics;
+      Linear_Horiz_Advance : GL.Types.long;
+      Linear_Vert_Advance  : GL.Types.long;
+      Advance              : FT.Image.FT_Vector;
+      Format               : FT.Image.Glyph_Format;
+      Bitmap               : FT.Image.Bitmap_Record;
+      Bitmap_Left          : GL.Types.Int;
+      Bitmap_Top           : GL.Types.Int;
+      Outline              : FT.Image.Outline_Record;
+      Num_Subglyphs        : GL.Types.UInt;
+      Subglyphs            : Subglyph_Ptr;
+      Control_Data         : System.Address;
+      Control_Length       : GL.Types.long;
+      Lsb_Delta            : FT.Image.FT_Pos;
+      Rsb_Delta            : FT.Image.FT_Pos;
+      Other                : System.Address;
+      Internal             : Slot_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Slot_Record);
 
