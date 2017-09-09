@@ -135,6 +135,8 @@ package body Texture_Manager is
       use GL.Pixels;
       use GL.Types;
       aTexture       : GL.Objects.Textures.Texture;
+      Width          : constant GL.Types.Int := FT.Interfac.Face_Width (Face_Ptr);
+      Height         : constant GL.Types.Int := FT.Interfac.Face_Height (Face_Ptr);
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
       aGlyph         : FT.Glyphs.Glyph_Record;
@@ -143,10 +145,14 @@ package body Texture_Manager is
       Error_Code     : FT.FT_Error;
    begin
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
+      if Error_Code /= 0 then
+         Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
+         raise FT.FT_Exception;
+      end if;
       for index in 0 .. 127 loop
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
-            Put_Line ("A character failed to load.");
+            Put_Line ("Setup_Textures, a character failed to load.");
             raise FT.FT_Exception;
          end if;
 
@@ -162,12 +168,9 @@ package body Texture_Manager is
          Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
          Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
 
+         Texture_2D.Storage (0, Red, Width, Height);
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
-         if index = 0 then
-            Texture_2D.Storage (0, Red, Char_Data.Size.Width,
-                                Char_Data.Size.Rows);
-         end if;
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
