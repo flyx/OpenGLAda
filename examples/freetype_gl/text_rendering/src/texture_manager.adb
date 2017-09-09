@@ -145,12 +145,11 @@ package body Texture_Manager is
       Error_Code     : FT.FT_Error;
    begin
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
-      Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
-      Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
       if Error_Code /= 0 then
          Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
+
       for index in 0 .. 127 loop
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
@@ -158,14 +157,17 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
+         Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          --  Ensure that the glyph image is an anti-aliased bitmap
 --           if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
 --              Put_Line ("A character failed to render.");
 --              raise FT.FT_Exception;
 --           end if;
 
-         Char_Data.Size.Width := GL.Types.Int (FT.Glyphs.Bitmap_Width (Face_Ptr));
-         Char_Data.Size.Rows := FT.Glyphs.Bitmap_Rows (Face_Ptr);
+         Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
+         Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
+         Char_Data.Size.Width := Width;
+         Char_Data.Size.Rows := Height;
          Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
          Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
          Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
