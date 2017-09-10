@@ -131,6 +131,7 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Textures is
+      use System;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
@@ -145,6 +146,11 @@ package body Texture_Manager is
       Error_Code     : FT.FT_Error;
    begin
       Put_Line ("Entering Setup_Textures");
+      if System.Address (Face_Ptr) = System.Null_Address then
+         Put_Line ("Face_Ptr is null.");
+      else
+         Put_Line ("Face_Ptr is not null.");
+      end if;
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
       Put_Line ("Setup_Textures error code 1: " & FT.Errors.Error (Error_Code));
       if Error_Code /= 0 then
