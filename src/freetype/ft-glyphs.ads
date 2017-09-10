@@ -55,7 +55,7 @@ private
       Horiz_Advance  : FT.Image.FT_Pos;
       Vert_Bearing_X : FT.Image.FT_Pos;
       Vert_Bearing_Y : FT.Image.FT_Pos;
-      Vert_Advance  : FT.Image.FT_Pos;
+      Vert_Advance   : FT.Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
