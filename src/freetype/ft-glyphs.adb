@@ -192,6 +192,7 @@ package body FT.Glyphs is
    begin
       Check_Glyph_Slot_Ptr (aGlyph_Slot);
       Code := Glyph (aGlyph_Slot, aGlyph_Ptr);
+      Check_Glyph_Ptr (aGlyph_Ptr);
       if Code = 0 then
          theGlyph := Glyph (aGlyph_Ptr);
       end if;
