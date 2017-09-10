@@ -106,6 +106,7 @@ private
       Descender               : GL.Types.Short;
       Height                  : GL.Types.Short;
       Max_Advance_Width       : GL.Types.Short;
+      Max_Advance_Height       : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
       Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
