@@ -117,8 +117,13 @@ package body FT.Interfac is
    --  -------------------------------------------------------------------------
 
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr is
+   use System;
      theFace : constant Face_Record := Face (aFace);
    begin
+      if System.Address (theFace.Glyph_Slot) = System.Null_Address then
+         Put_Line ("No Glyph is loaded.");
+         raise FT.FT_Exception;
+      end if;
       return theFace.Glyph_Slot;
    end Glyph_Slot;
 
