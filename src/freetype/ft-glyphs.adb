@@ -12,13 +12,15 @@ package body FT.Glyphs is
    package Glyph_Access is new
        System.Address_To_Access_Conversions (Glyph_Record);
 
-function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
+   procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
+   function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
 
    --  -------------------------------------------------------------------------
 
    procedure Done_Glyph (Glyph : Glyph_Ptr) is
    begin
+      Check_Glyph_Ptr (Glyph);
       FT.API.Glyphs.FT_Done_Glyph (Glyph);
    exception
       when others =>
@@ -35,13 +37,15 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                     return FT.FT_Error is
       use GL.Types;
       use Glyph_Slot_Access;
-      Glyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Glyph_Slot    : constant FT.API.Glyph_Slot_Ptr
+                      := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr    : Glyph_Ptr;
       Glyph_Pointer : constant Object_Pointer :=
                         To_Pointer (System.Address (Glyph_Slot));
       theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
       Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
    begin
+      Check_Glyph_Ptr (aGlyph_Ptr);
       --  Glyph calls the FT_Glyph C function.
       theBitmap := theGlyph.Bitmap;
       return Code;
@@ -149,6 +153,17 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
+   procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr) is
+      use System;
+   begin
+      if System.Address (thePtr) = System.Null_Address then
+         Put_Line ("No glyph is loaded");
+         raise FT.FT_Exception;
+      end if;
+   end Check_Glyph_Ptr;
+
+   --  -------------------------------------------------------------------------
+
    function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
                    return FT.FT_Error is
    use GL.Types;
@@ -158,6 +173,7 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
       aGlyph_Ptr : Glyph_Ptr;
       Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
    begin
+      Check_Glyph_Ptr (aGlyph_Ptr);
       if Code = 0 then
          theGlyph := Glyph (aGlyph_Ptr);
       end if;
@@ -172,8 +188,10 @@ function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
 
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record is
       use Glyph_Access;
-      Glyph_Acc : constant access Glyph_Record := To_Pointer (System.Address (aGlyph_Ptr));
+      Glyph_Acc : access Glyph_Record;
    begin
+      Check_Glyph_Ptr (aGlyph_Ptr);
+      Glyph_Acc := To_Pointer (System.Address (aGlyph_Ptr));
       return Glyph_Acc.all;
    exception
          when others =>
