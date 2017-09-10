@@ -144,12 +144,14 @@ package body Texture_Manager is
       Char_Data      : Character_Record;
       Error_Code     : FT.FT_Error;
    begin
+      Put_Line ("Entering Setup_Textures");
       Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
+      Put_Line ("Setup_Textures error code 1: " & FT.Errors.Error (Error_Code));
       if Error_Code /= 0 then
          Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
-      Put_Line ("Setup_Textures error code: " & FT.Errors.Error (Error_Code));
+      Put_Line ("Setup_Textures error code 2: " & FT.Errors.Error (Error_Code));
 
       for index in 0 .. 127 loop
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
