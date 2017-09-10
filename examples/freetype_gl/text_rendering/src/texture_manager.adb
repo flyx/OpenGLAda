@@ -145,13 +145,12 @@ package body Texture_Manager is
       Error_Code     : FT.FT_Error;
    begin
       for index in 0 .. 127 loop
+         Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
             Put_Line ("Setup_Textures, a character failed to load.");
             raise FT.FT_Exception;
          end if;
-
-         Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          --  Ensure that the glyph image is an anti-aliased bitmap
 --           if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
 --              Put_Line ("A character failed to render.");
@@ -160,34 +159,40 @@ package body Texture_Manager is
 
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         Char_Data.Size.Width := Width;
-         Char_Data.Size.Rows := Height;
-         Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
-         Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
-         Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
-         Put_Line ("Setup_Textures, Char_Data.Advance_X set.");
+         if Width > 0 and then Height > 0 then
+            Char_Data.Size.Width := Width;
+            Char_Data.Size.Rows := Height;
+            Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
+            Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
+            Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+            Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
+            Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
 
-         aTexture.Initialize_Id;
-         Texture_2D.Bind (aTexture);
-         Put_Line ("Setup_Textures, texture bound.");
-         Texture_2D.Storage (0, Red, Width, Height);
-         Put_Line ("Setup_Textures, storage set.");
-         Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
-         Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-         Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
-         Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
+            aTexture.Initialize_Id;
+            Texture_2D.Bind (aTexture);
+            Put_Line ("Setup_Textures, texture bound.");
+            Texture_2D.Storage (1, RGBA32I, Width, Height);
+            Put_Line ("Setup_Textures, storage set.");
+            Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
+            Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-         Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
-         if Error_Code /= 0 then
+            Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+            if Error_Code /= 0 then
+               Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+               raise FT.FT_Exception;
+            end if;
             Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
-            raise FT.FT_Exception;
-         end if;
 
-         Texture_2D.Load_Sub_Image_From_Data
-             (0, X_Offset, Y_Offset, Char_Data.Size.Width,
-              Char_Data.Size.Rows, Red, Unsigned_Byte, Bitmap_Image);
-         Char_Data.Texture := aTexture;
-         Character_Data.Append (Char_Data);
+            Put_Line ("Setup_Textures, X_Offset: " & GL.Types.Size'Image (X_Offset));
+            Put_Line ("Setup_Textures, Y_Offset: " & GL.Types.Size'Image (Y_Offset));
+            Texture_2D.Load_Sub_Image_From_Data
+              (1, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+               Bitmap_Image);
+            Char_Data.Texture := aTexture;
+            Character_Data.Append (Char_Data);
+         end if;
       end loop;
    exception
       when others =>
