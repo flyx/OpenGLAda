@@ -13,6 +13,8 @@ package body FT.Glyphs is
        System.Address_To_Access_Conversions (Glyph_Record);
 
    procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
+   procedure Check_Glyph_Slot_Ptr (thePtr : FT.API.Glyph_Slot_Ptr);
+
    function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error;
 
@@ -40,12 +42,14 @@ package body FT.Glyphs is
       Glyph_Slot    : constant FT.API.Glyph_Slot_Ptr
                       := FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr    : Glyph_Ptr;
-      Glyph_Pointer : constant Object_Pointer :=
-                        To_Pointer (System.Address (Glyph_Slot));
-      theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
-      Code          : constant FT.FT_Error := Glyph (Glyph_Slot, aGlyph_Ptr);
+      Glyph_Pointer :  Object_Pointer;
+      theGlyph      :  Glyph_Slot_Record;
+      Code          :  FT.FT_Error;
    begin
-      Check_Glyph_Ptr (aGlyph_Ptr);
+      Check_Glyph_Slot_Ptr (Glyph_Slot);
+      Glyph_Pointer:= To_Pointer (System.Address (Glyph_Slot));
+      theGlyph := Glyph_Pointer.all;
+      Code := Glyph (Glyph_Slot, aGlyph_Ptr);
       --  Glyph calls the FT_Glyph C function.
       theBitmap := theGlyph.Bitmap;
       return Code;
@@ -79,10 +83,11 @@ package body FT.Glyphs is
 
    function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
       use Glyph_Slot_Access;
-      Slot_Ptr   : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
+      Slot_Ptr : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Glyph    :  Glyph_Slot_Record;
    begin
+      Check_Glyph_Slot_Ptr (Slot_Ptr);
+      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Bitmap_Left;
    exception
       when others =>
@@ -141,9 +146,10 @@ package body FT.Glyphs is
                             return GL.Types.Int is
       use Glyph_Slot_Access;
       Slot_Ptr  : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      Glyph     : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
+      Glyph     : Glyph_Slot_Record;
    begin
+      Check_Glyph_Slot_Ptr (Slot_Ptr);
+      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Bitmap_Top;
    exception
       when others =>
@@ -157,10 +163,21 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
-         Put_Line ("No glyph is loaded");
+         Put_Line ("No glyph is loaded.");
          raise FT.FT_Exception;
       end if;
    end Check_Glyph_Ptr;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Check_Glyph_Slot_Ptr (thePtr : FT.API.Glyph_Slot_Ptr) is
+      use System;
+   begin
+      if System.Address (thePtr) = System.Null_Address then
+         Put_Line ("No glyph is loaded.");
+         raise FT.FT_Exception;
+      end if;
+   end Check_Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
@@ -171,9 +188,10 @@ package body FT.Glyphs is
       aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr :=
                       FT.Interfac.Glyph_Slot (Face_Ptr);
       aGlyph_Ptr : Glyph_Ptr;
-      Code       : constant FT.FT_Error := Glyph (aGlyph_Slot, aGlyph_Ptr);
+      Code       : FT.FT_Error;
    begin
-      Check_Glyph_Ptr (aGlyph_Ptr);
+      Check_Glyph_Slot_Ptr (aGlyph_Slot);
+      Code := Glyph (aGlyph_Slot, aGlyph_Ptr);
       if Code = 0 then
          theGlyph := Glyph (aGlyph_Ptr);
       end if;
@@ -207,11 +225,8 @@ package body FT.Glyphs is
      Code : constant FT.FT_Error := FT.API.Glyphs.FT_Get_Glyph
                            (Slot_Ptr, System.Address (theGlyph_Ptr));
    begin
-      if Code /= 0 then
-            Put_Line ("FT.Glyphs.Glyph Slot_Ptr error code : " &
-                       FT.Errors.Error (Code));
-      end if;
-      return Code;
+      Check_Glyph_Slot_Ptr (Slot_Ptr);
+      return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
    exception
          when others =>
             Put_Line ("FT.Glyphs.Glyph Slot_Ptr raised an Exception");
@@ -225,9 +240,10 @@ package body FT.Glyphs is
       use Glyph_Slot_Access;
       Slot_Ptr : constant FT.API.Glyph_Slot_Ptr :=
                       FT.Interfac.Glyph_Slot (Face_Ptr);
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
+      Glyph : Glyph_Slot_Record;
    begin
+      Check_Glyph_Slot_Ptr (Slot_Ptr);
+      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Advance;
    exception
       when others =>
@@ -242,9 +258,10 @@ package body FT.Glyphs is
       use Glyph_Slot_Access;
       Slot_Ptr : constant FT.API.Glyph_Slot_Ptr :=
                       FT.Interfac.Glyph_Slot (Face_Ptr);
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
+      Glyph : Glyph_Slot_Record;
    begin
+      Check_Glyph_Slot_Ptr (Slot_Ptr);
+      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Format;
    exception
       when others =>
