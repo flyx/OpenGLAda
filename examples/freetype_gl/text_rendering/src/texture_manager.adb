@@ -140,25 +140,10 @@ package body Texture_Manager is
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
-      aGlyph         : FT.Glyphs.Glyph_Record;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
       Char_Data      : Character_Record;
       Error_Code     : FT.FT_Error;
    begin
-      Put_Line ("Entering Setup_Textures");
-      if System.Address (Face_Ptr) = System.Null_Address then
-         Put_Line ("Face_Ptr is null.");
-      else
-         Put_Line ("Face_Ptr is not null.");
-      end if;
-      Error_Code := FT.Glyphs.Glyph (Face_Ptr, aGlyph);
-      Put_Line ("Setup_Textures error code 1: " & FT.Errors.Error (Error_Code));
-      if Error_Code /= 0 then
-         Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
-      end if;
-      Put_Line ("Setup_Textures error code 2: " & FT.Errors.Error (Error_Code));
-
       for index in 0 .. 127 loop
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
@@ -180,10 +165,13 @@ package body Texture_Manager is
          Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
          Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
          Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+         Put_Line ("Setup_Textures, Char_Data.Advance_X set.");
 
-         Texture_2D.Storage (0, Red, Width, Height);
          aTexture.Initialize_Id;
          Texture_2D.Bind (aTexture);
+         Put_Line ("Setup_Textures, texture bound.");
+         Texture_2D.Storage (0, Red, Width, Height);
+         Put_Line ("Setup_Textures, storage set.");
          Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
          Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
