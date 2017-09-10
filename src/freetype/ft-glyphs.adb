@@ -222,8 +222,6 @@ package body FT.Glyphs is
    function Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error is
      use GL.Types;
-     Code : constant FT.FT_Error := FT.API.Glyphs.FT_Get_Glyph
-                           (Slot_Ptr, System.Address (theGlyph_Ptr));
    begin
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
