@@ -73,7 +73,7 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
+      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");

@@ -35,9 +35,9 @@ package FT.Glyphs is
    function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
                           return FT.Image.Glyph_Format;
    function Glyph_To_Bitmap
-       (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-        Origin      : access FT.Image.FT_Vector;
-        Destroy     : FT.FT_Bool) return FT.FT_Error;
+     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
+      Origin      : access FT.Image.FT_Vector;
+      Destroy     : FT.FT_Bool) return FT.FT_Error;
    function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
                           return FT_Error;
 private
@@ -50,12 +50,12 @@ private
    type Glyph_Metrics is record
       Width        : FT.Image.FT_Pos;
       Height       : FT.Image.FT_Pos;
-      HoriBearingX : FT.Image.FT_Pos;
-      HoriBearingY : FT.Image.FT_Pos;
-      HoriAdvance  : FT.Image.FT_Pos;
-      VertBearingX : FT.Image.FT_Pos;
-      VertBearingY : FT.Image.FT_Pos;
-      VertAdvance  : FT.Image.FT_Pos;
+      Horiz_Bearing_X : FT.Image.FT_Pos;
+      Horiz_Bearing_Y : FT.Image.FT_Pos;
+      Horiz_Advance  : FT.Image.FT_Pos;
+      Vert_Bearing_X : FT.Image.FT_Pos;
+      Vert_Bearing_Y : FT.Image.FT_Pos;
+      Vert_Advance  : FT.Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
@@ -67,6 +67,12 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Record);
 
+   --  A FT_Glyph can be typecast to a FT_OutlineGlyph if
+   --  glyph->format == FT_GLYPH_FORMAT_OUTLINE.
+   --  This provides easy access the outline's content.
+   --  As the outline is extracted from a glyph slot, its coordinates are
+   --  expressed normally in 26.6 pixels, unless the flag
+   --  FT_LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
    type Outline_Glyph_Record is record
       Root    : Glyph_Record;
       Outline : FT.Image.Outline_Record;
@@ -74,28 +80,28 @@ private
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Slot_Record is record
-      Library           : FT.API.Library_Ptr;
-      Face              : FT.API.Face_Ptr;
-      Next              : FT.API.Glyph_Slot_Ptr;
-      Reserved          : GL.Types.UInt;
-      C_Generic         : FT.Interfac.Generic_Record;
-      Metrics           : Glyph_Metrics;
-      LinearHoriAdvance : GL.Types.long;
-      LinearVertAdvance : GL.Types.long;
-      Advance           : FT.Image.FT_Vector;
-      Format            : FT.Image.Glyph_Format;
-      Bitmap            : FT.Image.Bitmap_Record;
-      Bitmap_left       : GL.Types.Int;
-      Bitmap_top        : GL.Types.Int;
-      Outline           : FT.Image.Outline_Record;
-      Num_subglyphs     : GL.Types.UInt;
-      Subglyphs         : Subglyph_Ptr;
-      Control_data      : System.Address;
-      Control_len       : GL.Types.long;
-      Lsb_Delta         : FT.Image.FT_Pos;
-      Rsb_Delta         : FT.Image.FT_Pos;
-      Other             : System.Address;
-      Internal          : Slot_Internal_Ptr;
+      Library              : FT.API.Library_Ptr;
+      Face                 : FT.API.Face_Ptr;
+      Next                 : FT.API.Glyph_Slot_Ptr;
+      Reserved             : GL.Types.UInt;
+      C_Generic            : FT.Interfac.Generic_Record;
+      Metrics              : Glyph_Metrics;
+      Linear_Horiz_Advance : GL.Types.long;
+      Linear_Vert_Advance  : GL.Types.long;
+      Advance              : FT.Image.FT_Vector;
+      Format               : FT.Image.Glyph_Format;
+      Bitmap               : FT.Image.Bitmap_Record;
+      Bitmap_Left          : GL.Types.Int;
+      Bitmap_Top           : GL.Types.Int;
+      Outline              : FT.Image.Outline_Record;
+      Num_Subglyphs        : GL.Types.UInt;
+      Subglyphs            : Subglyph_Ptr;
+      Control_Data         : System.Address;
+      Control_Length       : GL.Types.long;
+      Lsb_Delta            : FT.Image.FT_Pos;
+      Rsb_Delta            : FT.Image.FT_Pos;
+      Other                : System.Address;
+      Internal             : Slot_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Slot_Record);
 
