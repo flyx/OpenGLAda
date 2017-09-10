@@ -177,7 +177,7 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (Face_Ptr) = System.Null_Address then
-         Put_Line ("No face is loaded.");
+         Put_Line ("No face is loaded, Face_Ptr is null.");
          raise FT.FT_Exception;
       end if;
    end Check_Face_Ptr;
@@ -188,7 +188,7 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
-         Put_Line ("No glyph is loaded.");
+         Put_Line ("No glyph is loaded, Glyph_Ptr is null.");
          raise FT.FT_Exception;
       end if;
    end Check_Glyph_Ptr;
@@ -199,7 +199,7 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
-         Put_Line ("No glyph is loaded.");
+         Put_Line ("No glyph is loaded, Glyph_Slot_Ptr is null.");
          raise FT.FT_Exception;
       end if;
    end Check_Glyph_Slot_Ptr;
