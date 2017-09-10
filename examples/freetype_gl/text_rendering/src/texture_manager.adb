@@ -149,6 +149,7 @@ package body Texture_Manager is
          Put_Line ("Setup_Textures error: " & FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
+      Put_Line ("Setup_Textures error code: " & FT.Errors.Error (Error_Code));
 
       for index in 0 .. 127 loop
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
