@@ -38,9 +38,6 @@ package FT.Glyphs is
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : FT.FT_Bool) return FT.FT_Error;
-       (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-        Origin      : access FT.Image.FT_Vector;
-        Destroy     : FT.FT_Bool) return FT.FT_Error;
    function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
                           return FT_Error;
 private
@@ -58,21 +55,9 @@ private
       Horiz_Advance  : FT.Image.FT_Pos;
       Vert_Bearing_X : FT.Image.FT_Pos;
       Vert_Bearing_Y : FT.Image.FT_Pos;
-      Vert_Advance  : FT.Image.FT_Pos;
+      Vert_Advance   : FT.Image.FT_Pos;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
-
-   --  A FT_Glyph can be typecast to a FT_OutlineGlyph if
-   --    glyph->format == FT_GLYPH_FORMAT_OUTLINE.
-   --  This provides easy access the outline's content.
-   --  As the outline is extracted from a glyph slot, its coordinates are
-   --  expressed normally in 26.6 pixels, unless the flag
-   --  FT_LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
-   type Outline_Glyph_Record is record
-      Root    : Glyph_Record;
-      Outline : FT.Image.Outline_Record;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Record is record
       Library : FT.API.Library_Ptr;
