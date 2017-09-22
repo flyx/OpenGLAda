@@ -615,7 +615,7 @@ spec GL.API is
      Static  => "glTexSubImage1D",
      Wrapper => "GL.Objects.Textures.With_1D_Loader.Load_Sub_Image_From_Data";
    procedure Tex_Storage_1D
-     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+     (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level;
       Internal_Format : Pixels.Internal_Format;
       Width : Size) with
      Dynamic => "glTexStorage1D",
@@ -651,7 +651,7 @@ spec GL.API is
      Static  => "glTexSubImage2D",
      Wrapper => "GL.Objects.Textures.With_2D_Loader.Load_Sub_Image_From_Data";
    procedure Tex_Storage_2D
-     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+     (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level;
       Internal_Format : Pixels.Internal_Format;
       Width, Height : Size) with
      Dynamic => "glTexStorage2D",
@@ -687,7 +687,7 @@ spec GL.API is
      Static  => "glTexSubImage3D",
      Wrapper => "GL.Objects.Textures.With_3D_Loader.Load_Sub_Image_From_Data";
    procedure Tex_Storage_3D
-     (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
+     (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level;
       Internal_Format : Pixels.Internal_Format;
       Width, Height, Depth : Size) with
      Dynamic => "glTexStorage3D",

@@ -26,7 +26,7 @@ package GL.Objects.Textures.With_2D_Loader is
       Internal_Format : Pixels.Internal_Format;
       Width, Height : Types.Size);
 
-   procedure Storage (Object : Target; Levels : Types.Size;
+   procedure Storage (Object : Target; Level : Objects.Textures.Mipmap_Level;
                       Internal_Format : Pixels.Internal_Format;
                       Width, Height : Types.Size);
 
