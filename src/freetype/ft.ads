@@ -8,6 +8,7 @@ package FT is
 
    subtype FT_Bool is unsigned_char;
    subtype FT_Error is GL.Types.int;
+   subtype FT_Fixed is long;
    subtype FT_String is char;
    subtype FT_ULong is unsigned_long;
 
