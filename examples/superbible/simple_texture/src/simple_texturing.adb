@@ -1,4 +1,4 @@
--- Program A_Dot
+-- Program Simple Texturing
 -- Author Roger Mc Murtrie
 -- Created 6 September 2017
 

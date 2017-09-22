@@ -74,11 +74,11 @@ package body GL.Objects.Textures.With_2D_Loader is
       Raise_Exception_On_OpenGL_Error;
    end Load_Compressed;
 
-   procedure Storage (Object : Target; Level : Objects.Textures.Mipmap_Level;
+   procedure Storage (Object : Target; Number_Of_Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;
                       Width, Height : Types.Size) is
    begin
-      API.Tex_Storage_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
+      API.Tex_Storage_2D (Texture_Proxy (Object).Kind, Number_Of_Levels, Internal_Format,
                           Width, Height);
       Raise_Exception_On_OpenGL_Error;
    end Storage;
