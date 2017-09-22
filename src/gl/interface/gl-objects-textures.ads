@@ -192,6 +192,8 @@ package GL.Objects.Textures is
 
    procedure Bind (Target : Texture_Target; Object : Texture'Class);
 
+   function Is_Texture (Texture : UInt) return Boolean;
+
    function Current_Texture (Target : Texture_Target) return Texture'Class;
 
    overriding
