@@ -9,6 +9,35 @@ with FT.API.Interfac; use FT.API.Interfac;
 
 package body FT.Interfac is
    package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
+   package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
+
+   --  -------------------------------------------------------------------------
+
+   function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
+      theFace  : constant Face_Record := Face (aFace);
+      Sizes    : FT_Bitmap_Size;
+   begin
+      if theFace.Available_Sizes = null then
+         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
+         raise FT.FT_Exception;
+      end if;
+      Sizes:= theFace.Available_Sizes.all;
+      return GL.Types.Int (Sizes.Height);
+   end Bitmap_Height;
+
+   --  -------------------------------------------------------------------------
+
+   function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int is
+      theFace : constant Face_Record := Face (aFace);
+      Sizes   : FT_Bitmap_Size;
+   begin
+      if theFace.Available_Sizes = null then
+         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
+         raise FT.FT_Exception;
+      end if;
+      Sizes:= theFace.Available_Sizes.all;
+      return GL.Types.Int (Sizes.Width);
+   end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
 
@@ -41,6 +70,49 @@ package body FT.Interfac is
    begin
       return Face_Pointer.all;
    end Face;
+
+   --  -------------------------------------------------------------------------
+
+   function Face_Size (aFace : Face_Ptr) return Size_Record is
+      use Size_Access;
+      theFace      : constant Face_Record := Face (aFace);
+      Size_Pointer : constant Object_Pointer :=
+                       To_Pointer (System.Address (theFace.Size));
+   begin
+      if Size_Pointer = null then
+         Put_Line ("Face_Size failed, theFace.Size is null.");
+         raise FT.FT_Exception;
+      end if;
+      return Size_Pointer.all;
+   exception
+         when others =>
+            Put_Line ("Face_Size raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Size;
+
+   --  -------------------------------------------------------------------------
+
+   function Face_Height (aFace : Face_Ptr) return GL.Types.Int is
+   use GL.Types;
+   begin
+      return GL.Types.Int (Face_Size (aFace).Metrics.Ascender -
+                               Face_Size (aFace).Metrics.Descender);
+   exception
+         when others =>
+            Put_Line ("Face_Height raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Height;
+
+   --  -------------------------------------------------------------------------
+
+   function Face_Width (aFace : Face_Ptr) return GL.Types.Int is
+   begin
+      return GL.Types.Int (Face_Size (aFace).Metrics.X_Ppem);
+   exception
+         when others =>
+            Put_Line ("Face_Width raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Width;
 
    --  -------------------------------------------------------------------------
 
@@ -97,6 +169,14 @@ package body FT.Interfac is
   begin
       return FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
   end;
+
+   --  -------------------------------------------------------------------------
+
+   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record is
+     Size : constant Size_Record := Face_Size (aFace);
+   begin
+      return Size.Metrics;
+   end Size_Metrics;
 
    --  -------------------------------------------------------------------------
 

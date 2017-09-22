@@ -13,7 +13,9 @@ package FT.Interfac is
    type List_Record is private;
 
    type Generic_Record is private;
+   type Size_Metrics_Record is private;
    type Size_Ptr is private;
+   type Size_Record is private;
 
    type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
@@ -27,9 +29,13 @@ package FT.Interfac is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
+   function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
+   function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
+   function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
+   function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
    function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
@@ -42,6 +48,7 @@ package FT.Interfac is
                       return FT_Error;
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
+   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
 private
 
    type Char_Map_Ptr is new System.Address;
@@ -49,6 +56,7 @@ private
    type Face_Internal_Ptr is new System.Address;
    type Memory_Ptr is new System.Address;
    type Size_Ptr is new System.Address;
+   type Size_Internal_Ptr is new System.Address;
    type Stream_Ptr is new System.Address;
 
    type FT_Bitmap_Size is record
@@ -157,6 +165,25 @@ private
       Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Face_Record);
+
+   type Size_Metrics_Record is record
+      X_Ppem      : GL.Types.UShort;
+      Y_Ppem      : GL.Types.Int;
+      Y_Scale     : GL.Types.Int;
+      Ascender    : FT.Image.FT_Pos;
+      Descender   : FT.Image.FT_Pos;
+      Height      : FT.Image.FT_Pos;
+      Max_Advance : FT.Image.FT_Pos;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Size_Metrics_Record);
+
+   type Size_Record is record
+      Face       : Face_Record;
+      C_Generic  : Generic_Record;
+      Metrics    : Size_Metrics_Record;
+      Internal   : Size_Internal_Ptr;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Size_Record);
 
    --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)
