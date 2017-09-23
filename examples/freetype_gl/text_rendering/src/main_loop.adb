@@ -206,7 +206,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data, 10.0, 10.0);
       Setup_Buffer;
    exception
       when others =>

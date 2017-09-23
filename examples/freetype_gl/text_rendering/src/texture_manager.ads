@@ -11,6 +11,7 @@ package Texture_Manager is
    subtype Vertex_Array is GL.Types.Singles.Vector4_Array (1 .. 6);
 
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-                  Character_Data : in out FT.Interfac.Character_Data_Vector);
+                  Character_Data : in out FT.Interfac.Character_Data_Vector;
+                  X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0);
 
 end Texture_Manager;

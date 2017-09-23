@@ -23,13 +23,50 @@ with Utilities;
 package body Texture_Manager is
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
-
-   Image_Error : exception;
+   Vertex_Data    : Vertex_Array;
 
    --  ------------------------------------------------------------------------
 
    procedure Setup_Font;
-   procedure Setup_Textures (Character_Data : in out FT.Interfac.Character_Data_Vector);
+   procedure Setup_Textures
+     (Character_Data : in out FT.Interfac.Character_Data_Vector;
+      Vertex_Buffer : in out V_Buffer; X, Y, Scale : GL.Types.Single);
+
+   --  ------------------------------------------------------------------------
+
+   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
+                           X, Y, Scale   : GL.Types.Single) is
+      use GL.Objects.Buffers;
+      use GL.Objects.Textures.Targets;
+      use GL.Types;
+      X_Pos         : Single := X;
+      Y_Pos         : Single := Y ;
+      Width         : Single;
+      Height        : Single;
+      Num_Triangles : Int := 2;
+      Stride        : Int := 4;
+   begin
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
+
+      Width := FT.Glyphs.Bitmap_Width (Face_Ptr) * Scale;
+      Height := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr)) * Scale;
+      Vertex_Data := (
+                      (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
+                      (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
+                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+
+                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
+                      (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
+                      (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
+
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
+
+   exception
+      when others =>
+         Put_Line ("An exceptiom occurred in Setup_Buffer.");
+         raise;
+   end Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
@@ -58,7 +95,8 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-              Character_Data : in out FT.Interfac.Character_Data_Vector) is
+              Character_Data : in out FT.Interfac.Character_Data_Vector;
+              X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0) is
       use GL.Types;
       aTexture      : GL.Objects.Textures.Texture;
    begin
@@ -68,7 +106,7 @@ package body Texture_Manager is
       end if;
 
       Setup_Font;
-      Setup_Textures (Character_Data);
+      Setup_Textures (Character_Data, Vertex_Buffer, X, Y, Scale);
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
@@ -77,7 +115,9 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Textures (Character_Data : in out FT.Interfac.Character_Data_Vector) is
+   procedure Setup_Textures
+     (Character_Data : in out FT.Interfac.Character_Data_Vector;
+      Vertex_Buffer : in out V_Buffer; X, Y, Scale : GL.Types.Single) is
       use System;
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
@@ -87,6 +127,8 @@ package body Texture_Manager is
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
+      Num_Levels     : constant GL.Types.Size := 1;
+      Mip_Level_0    : constant GL.Objects.Textures.Mipmap_Level := 0;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
       Char_Data      : FT.Interfac.Character_Record;
       Error_Code     : FT.FT_Error;
@@ -104,6 +146,7 @@ package body Texture_Manager is
 --              raise FT.FT_Exception;
 --           end if;
 
+         Setup_Buffer (Vertex_Buffer, X, Y, Scale);
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          if Width > 0 and then Height > 0 then
@@ -116,13 +159,15 @@ package body Texture_Manager is
 
             aTexture.Initialize_Id;
             Texture_2D.Bind (aTexture);
-            Put_Line ("Setup_Textures, texture bound.");
-            Texture_2D.Storage (1, RGBA8, Width, Height);
-            Put_Line ("Setup_Textures, storage set.");
             Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
             Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
             Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
             Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
+--              Texture_2D.Load_Empty_Texture (Mip_Level_0, RGBA8, Width, Height);
+            Put_Line ("Setup_Textures, texture bound.");
+
+            Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
+            Put_Line ("Setup_Textures, storage set.");
 
             Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
             if Error_Code /= 0 then
@@ -134,10 +179,12 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, X_Offset: " & GL.Types.Size'Image (X_Offset));
             Put_Line ("Setup_Textures, Y_Offset: " & GL.Types.Size'Image (Y_Offset));
             Texture_2D.Load_Sub_Image_From_Data
-              (0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+              (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
                Bitmap_Image);
             FT.Interfac.Set_Texture (Char_Data, aTexture);
             FT.Interfac.Append_Data (Character_Data, Char_Data);
+            aTexture.Invalidate_Sub_Image (Mip_Level_0, X_Offset, Y_Offset,
+                                           0, Width, Height, 0);
          end if;
       end loop;
    exception
