@@ -43,6 +43,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Texture_ID            : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
    aTexture              : GL.Objects.Textures.Texture;
+   Character_Data        : FT.Interfac.Character_Data_Vector;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
 
@@ -91,6 +92,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
+      use FT.Interfac;
       use Texture_Manager;
 
       Num_Triangles  : Int := 2;
@@ -99,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Num_Components : GL.Types.Int := 4;     -- Coords vector size;
 
       Char           : Character;
-      Char_Data      : Texture_Manager.Character_Record;
+      Char_Data      : FT.Interfac.Character_Record;
       aTexture       : GL.Objects.Textures.Texture;
       X_Orig         : Single := X;
       Y_Orig         : Single := Y;
@@ -118,7 +120,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Data (GL.Types.Int (Index));
+         Char_Data := Data (Character_Data, GL.Types.Int (Index));
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Single (Width (Char_Data));
@@ -137,7 +139,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Array_Buffer.Bind (Vertex_Buffer);
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
-         aTexture := Char_Texture (Char_Data);
+         aTexture := Character_Texture (Char_Data);
          Texture_2D.Bind (aTexture);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
@@ -204,7 +206,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data);
       Setup_Buffer;
    exception
       when others =>
