@@ -117,7 +117,7 @@ package body Texture_Manager is
             aTexture.Initialize_Id;
             Texture_2D.Bind (aTexture);
             Put_Line ("Setup_Textures, texture bound.");
-            Texture_2D.Storage (1, RGBA32I, Width, Height);
+            Texture_2D.Storage (1, RGBA8, Width, Height);
             Put_Line ("Setup_Textures, storage set.");
             Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
             Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
@@ -134,7 +134,7 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, X_Offset: " & GL.Types.Size'Image (X_Offset));
             Put_Line ("Setup_Textures, Y_Offset: " & GL.Types.Size'Image (Y_Offset));
             Texture_2D.Load_Sub_Image_From_Data
-              (1, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+              (0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
                Bitmap_Image);
             FT.Interfac.Set_Texture (Char_Data, aTexture);
             FT.Interfac.Append_Data (Character_Data, Char_Data);
