@@ -20,21 +20,11 @@ package body FT.Interfac is
 
    --  ------------------------------------------------------------------------
 
-   function Data (Character_Data : Character_Data_Vector;
-                  Index          : GL.Types.Int) return Character_Record is
+   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
+                          Data : Character_Record) is
    begin
-      if Character_Data.Is_Empty then
-         raise Image_Error;
-      end if;
-      return Character_Data.Element (Natural (Index));
-   end Data;
-
-   --  ------------------------------------------------------------------------
-
-   function Left (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Left;
-   end Left;
+      Data_Vector.Append (Data);
+   end Append_Data;
 
    --  ------------------------------------------------------------------------
 
@@ -65,6 +55,25 @@ package body FT.Interfac is
    end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
+
+   function Character_Texture (Data : Character_Record)
+                               return GL.Objects.Textures.Texture is
+   begin
+      return Data.Texture;
+   end Character_Texture;
+
+   --  ------------------------------------------------------------------------
+
+   function Data (Character_Data : Character_Data_Vector;
+                  Index          : GL.Types.Int) return Character_Record is
+   begin
+      if Character_Data.Is_Empty then
+         raise Image_Error;
+      end if;
+      return Character_Data.Element (Natural (Index));
+   end Data;
+
+   --  ------------------------------------------------------------------------
 
    procedure Done_Face (aFace : Face_Ptr) is
       use GL.Types;
@@ -170,6 +179,13 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   function Left (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Left;
+   end Left;
+
+   --  ------------------------------------------------------------------------
+
    function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) return FT_Error is
    begin
@@ -233,6 +249,14 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   procedure Set_Texture (Char_Data : in out Character_Record;
+                          Texture   : GL.Objects.Textures.Texture) is
+   begin
+      Char_Data.Texture := Texture;
+   end Set_Texture;
+
+   --  -------------------------------------------------------------------------
+
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record is
      Size : constant Size_Record := Face_Size (aFace);
    begin
@@ -240,5 +264,19 @@ package body FT.Interfac is
    end Size_Metrics;
 
    --  -------------------------------------------------------------------------
+
+   function Top (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Top;
+   end Top;
+
+   --  ------------------------------------------------------------------------
+
+   function Width (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Width;
+   end Width;
+
+   --  ------------------------------------------------------------------------
 
 end FT.Interfac;

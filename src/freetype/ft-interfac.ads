@@ -36,10 +36,14 @@ package FT.Interfac is
 
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
+   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
+                          Data : Character_Record);
    function Data (Character_Data : Character_Data_Vector;
                   Index          : GL.Types.Int) return Character_Record;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
+   function Character_Texture (Data : Character_Record)
+                               return GL.Objects.Textures.Texture;
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
@@ -64,7 +68,11 @@ package FT.Interfac is
                             Advance_X : GL.Types.Int);
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
+   procedure Set_Texture (Char_Data : in out Character_Record;
+                          Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
+   function Top (Data : Character_Record) return GL.Types.Int;
+   function Width (Data : Character_Record) return GL.Types.Int;
 
    Image_Error : exception;
 private
