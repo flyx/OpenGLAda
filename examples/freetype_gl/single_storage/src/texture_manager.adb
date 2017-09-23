@@ -1,7 +1,6 @@
 
 with System;
 
-with Ada.Containers.Vectors;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -22,78 +21,16 @@ with Utilities;
 
 package body Texture_Manager is
 
-   type Character_Record is record
-      Texture   : GL.Objects.Textures.Texture;
-      Width     : GL.Types.Int;
-      Rows      : GL.Types.Int;
-      Left      : GL.Types.Int;
-      Top       : GL.Types.Int;
-      Advance_X : GL.Types.Int;
-   end record;
-
-   package Data_Vector_Package is new
-     Ada.Containers.Vectors (Natural, Character_Record);
-   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
-
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
-   Character_Data : Character_Data_Vector;
+   Character_Data : FT.Interfac.Character_Data_Vector;
    Vertex_Data    : Vertex_Array;
-
-   Image_Error : exception;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            Char          : Character;
                            X, Y, Scale   : GL.Types.Single);
    procedure Setup_Font;
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
-
-   --  ------------------------------------------------------------------------
-
-   function Advance_X (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Advance_X;
-   end Advance_X;
-
-   --  ------------------------------------------------------------------------
-
-   function Data (Index : GL.Types.Int) return Character_Record is
-
-   begin
-      if Character_Data.Is_Empty then
-         raise Image_Error;
-      end if;
-      return Character_Data.Element (Natural (Index));
-   end Data;
-
-   --  ------------------------------------------------------------------------
-
-   function Left (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Left;
-   end Left;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Print_Character_Data (Char : Character;
-                                   Data : Character_Record) is
-      use GL.Types;
-   begin
-      Put_Line ("Character" & Char & " Data");
-      Put_Line ("Width: " & Int'Image (Data.Width));
-      Put_Line ("Rows: " & Int'Image (Data.Rows));
-      Put_Line ("Left: " & Int'Image (Data.Left));
-      Put_Line ("Top: " & Int'Image (Data.Top));
-      Put_Line ("Advance X: " & Int'Image (Data.Advance_X) & " bits");
-      New_Line;
-   end Print_Character_Data;
-
-   --  ------------------------------------------------------------------------
-
-   function Rows (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Rows;
-   end Rows;
 
    --  ------------------------------------------------------------------------
 
@@ -199,18 +136,16 @@ package body Texture_Manager is
       X_Offset     : constant GL.Types.Int := 0;
       Y_Offset     : constant GL.Types.Int := 0;
       Num_Levels   : constant GL.Types.Size := 1;
-      Char_Data    : Character_Record;
+      Char_Data    : FT.Interfac.Character_Record;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
       Error_Code   : FT.FT_Error;
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-
-      Char_Data.Width := Width;
-      Char_Data.Rows := Height;
-      Char_Data.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
-      Char_Data.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
-      Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+      FT.Interfac.Set_Char_Data
+                     (Char_Data, Width, Height, FT.Glyphs.Bitmap_Left (Face_Ptr),
+                     FT.Glyphs.Bitmap_Top (Face_Ptr),
+                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
@@ -223,7 +158,7 @@ package body Texture_Manager is
 
       Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
       if Error_Code = 0 then
-         Texture_2D.Load_Sub_Image_From_Data     --  glTexSubImage2D
+         Texture_2D.Load_Sub_Image_From_Data
               (0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
                Bitmap_Image);
       else

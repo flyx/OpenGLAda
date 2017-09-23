@@ -142,7 +142,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Test_Character : Character := 'x';
 begin
    if Ada.Command_Line.Argument_Count /= 1 then
-      Ada.Text_IO.Put_Line ("No character entered, so dispalying default character.");
+      Ada.Text_IO.Put_Line ("No character entered, so displaying default character.");
    else
       Test_Character := Ada.Command_Line.Argument (1) (1);
    end if;

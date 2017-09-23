@@ -13,6 +13,31 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   function Advance_X (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Advance_X;
+   end Advance_X;
+
+   --  ------------------------------------------------------------------------
+
+   function Data (Character_Data : Character_Data_Vector;
+                  Index          : GL.Types.Int) return Character_Record is
+   begin
+      if Character_Data.Is_Empty then
+         raise Image_Error;
+      end if;
+      return Character_Data.Element (Natural (Index));
+   end Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Left (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Left;
+   end Left;
+
+   --  ------------------------------------------------------------------------
+
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
       theFace  : constant Face_Record := Face (aFace);
       Sizes    : FT_Bitmap_Size;
@@ -161,6 +186,42 @@ package body FT.Interfac is
    begin
       return  FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
    end New_Face;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Print_Character_Data (Char : Character;
+                                   Data : Character_Record) is
+      use GL.Types;
+   begin
+      Put_Line ("Character" & Char & " Data");
+      Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
+      Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
+      Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
+      Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
+      Put_Line ("Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits");
+      New_Line;
+   end Print_Character_Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Rows (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Rows;
+   end Rows;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Char_Data (Char_Data : in out Character_Record;
+                            Width     : GL.Types.Int; Height : GL.Types.Int;
+                            Left      : GL.Types.Int; Top    : GL.Types.Int;
+                            Advance_X : GL.Types.Int) is
+   begin
+      Char_Data.Width := Width;
+      Char_Data.Rows := Height;
+      Char_Data.Left := Left;
+      Char_Data.Top := Top;
+      Char_Data.Advance_X := Advance_X;
+   end Set_Char_Data;
 
    --  -------------------------------------------------------------------------
 
