@@ -102,7 +102,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Char           : Character;
       Char_Data      : FT.Interfac.Character_Record;
-      aTexture       : GL.Objects.Textures.Texture;
+      Char_Texture   : GL.Objects.Textures.Texture;
       X_Orig         : Single := X;
       Y_Orig         : Single := Y;
       X_Pos          : Single;
@@ -112,11 +112,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
-      GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
-      GL.Objects.Textures.Set_Active_Unit (0);
-
+      Utilities.Clear_Background_Colour_And_Depth (Background);
       Vertex_Array.Bind;
+      GL.Objects.Programs.Use_Program (Render_Program);
 
       for index in Text'Range loop
          Char := Text (index);
@@ -134,24 +132,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
                          (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
          Vertex_Array.Bind;
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);  --  Needed
-         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix); --  Needed
-         Array_Buffer.Bind (Vertex_Buffer);
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
-         aTexture := Character_Texture (Char_Data);
-         if not GL.Objects.Textures.Is_Texture  (aTexture.Raw_Id) then
+         Char_Texture := Character_Texture (Char_Data);
+         if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
             Put_Line ("aTexture is invalid.");
          end if;
-         Texture_2D.Bind (aTexture);
-         GL.Uniforms.Set_Single (Texture_ID, aTexture);
+
+         GL.Objects.Textures.Set_Active_Unit (0);
+         Texture_2D.Bind (Char_Texture);
+         GL.Uniforms.Set_Int (Texture_ID, 0);
+         GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         Array_Buffer.Bind (Vertex_Buffer);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
                                                   Stride => Stride, Offset => 0);
---           Load_Vertex_Sub_Buffer (Array_Buffer, 0, Vertex_Data);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
-         GL.Attributes.Disable_Vertex_Attrib_Array (0);  --  Added
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0;
@@ -174,15 +175,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
    begin
-      --        FTGL_Interface.Setup_Font (Font_Bitmap, Texture_Map,
-      --                                        "/System/Library/Fonts/Helvetica.dfont");
-      --        FTGL_Interface.Setup_Font (Font_Pixmap, Pixmap_Font_Data,
-      --                                        "/System/Library/Fonts/Helvetica.dfont");
-      --        FTGL_Interface.Setup_Font (Font_Polygon, Polygon_Font_Data,
-      --                                        "/System/Library/Fonts/Helvetica.dfont");
-      --        FTGL_Interface.Setup_Font (Font_Buffer, Buffer_Font_Data,
-      --                                        "/System/Library/Fonts/Helvetica.dfont");
-
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
@@ -194,7 +186,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+--        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),

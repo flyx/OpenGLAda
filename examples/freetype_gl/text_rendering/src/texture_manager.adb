@@ -156,8 +156,8 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
 
             declare
-               aTexture       : GL.Objects.Textures.Texture;
-               Bitmap_Image   : GL.Objects.Textures.Image_Source;
+               aTexture          : GL.Objects.Textures.Texture;
+               Bitmap_Image_Ptr  : GL.Objects.Textures.Image_Source;
             begin
                aTexture.Initialize_Id;
                Texture_2D.Bind (aTexture);
@@ -168,7 +168,7 @@ package body Texture_Manager is
 
                Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
 
-               Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+               Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image_Ptr);
                if Error_Code /= 0 then
                   Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
                   raise FT.FT_Exception;
@@ -176,7 +176,7 @@ package body Texture_Manager is
 
                Texture_2D.Load_Sub_Image_From_Data
                    (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-                    Bitmap_Image);
+                    Bitmap_Image_Ptr);
                FT.Interfac.Set_Texture (Char_Data, aTexture);
                FT.Interfac.Append_Data (Character_Data, Char_Data);
             end;  -- declare block
