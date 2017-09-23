@@ -122,15 +122,13 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      aTexture       : GL.Objects.Textures.Texture;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
+      Char_Data      : FT.Interfac.Character_Record;
       Num_Levels     : constant GL.Types.Size := 1;
       Mip_Level_0    : constant GL.Objects.Textures.Mipmap_Level := 0;
-      Bitmap_Image   : GL.Objects.Textures.Image_Source;
-      Char_Data      : FT.Interfac.Character_Record;
       Error_Code     : FT.FT_Error;
    begin
       for index in 0 .. 127 loop
@@ -141,10 +139,10 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
          --  Ensure that the glyph image is an anti-aliased bitmap
---           if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
---              Put_Line ("A character failed to render.");
---              raise FT.FT_Exception;
---           end if;
+         if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
+            Put_Line ("A character failed to render.");
+            raise FT.FT_Exception;
+         end if;
 
          Setup_Buffer (Vertex_Buffer, X, Y, Scale);
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
@@ -157,34 +155,31 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
             Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
 
-            aTexture.Initialize_Id;
-            Texture_2D.Bind (aTexture);
-            Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
-            Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-            Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
-            Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
---              Texture_2D.Load_Empty_Texture (Mip_Level_0, RGBA8, Width, Height);
-            Put_Line ("Setup_Textures, texture bound.");
+            declare
+               aTexture       : GL.Objects.Textures.Texture;
+               Bitmap_Image   : GL.Objects.Textures.Image_Source;
+            begin
+               aTexture.Initialize_Id;
+               Texture_2D.Bind (aTexture);
+               Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+               Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+               Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
+               Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
-            Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
-            Put_Line ("Setup_Textures, storage set.");
+               Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
 
-            Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
-            if Error_Code /= 0 then
-               Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
-               raise FT.FT_Exception;
-            end if;
-            Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+               Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+               if Error_Code /= 0 then
+                  Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+                  raise FT.FT_Exception;
+               end if;
 
-            Put_Line ("Setup_Textures, X_Offset: " & GL.Types.Size'Image (X_Offset));
-            Put_Line ("Setup_Textures, Y_Offset: " & GL.Types.Size'Image (Y_Offset));
-            Texture_2D.Load_Sub_Image_From_Data
-              (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-               Bitmap_Image);
-            FT.Interfac.Set_Texture (Char_Data, aTexture);
-            FT.Interfac.Append_Data (Character_Data, Char_Data);
-            aTexture.Invalidate_Sub_Image (Mip_Level_0, X_Offset, Y_Offset,
-                                           0, Width, Height, 0);
+               Texture_2D.Load_Sub_Image_From_Data
+                   (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+                    Bitmap_Image);
+               FT.Interfac.Set_Texture (Char_Data, aTexture);
+               FT.Interfac.Append_Data (Character_Data, Char_Data);
+            end;  -- declare block
          end if;
       end loop;
    exception

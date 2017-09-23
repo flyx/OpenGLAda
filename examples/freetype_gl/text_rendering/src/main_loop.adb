@@ -140,7 +140,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
          aTexture := Character_Texture (Char_Data);
+         if not GL.Objects.Textures.Is_Texture  (aTexture.Raw_Id) then
+            Put_Line ("aTexture is invalid.");
+         end if;
          Texture_2D.Bind (aTexture);
+         GL.Uniforms.Set_Single (Texture_ID, aTexture);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
                                                   Stride => Stride, Offset => 0);
