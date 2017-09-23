@@ -141,7 +141,7 @@ package body Texture_Manager is
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
       Bitmap_Image   : GL.Objects.Textures.Image_Source;
-      Char_Data      : Character_Record;
+      Char_Data      : FT.Interfac.Character_Record;
       Error_Code     : FT.FT_Error;
    begin
       for index in 0 .. 127 loop
@@ -160,11 +160,10 @@ package body Texture_Manager is
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          if Width > 0 and then Height > 0 then
-            Char_Data.Size.Width := Width;
-            Char_Data.Size.Rows := Height;
-            Char_Data.Bearing.Left := FT.Glyphs.Bitmap_Left (Face_Ptr);
-            Char_Data.Bearing.Top := FT.Glyphs.Bitmap_Top (Face_Ptr);
-            Char_Data.Advance_X := FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr));
+            FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
+                                       FT.Glyphs.Bitmap_Left (Face_Ptr),
+                                       FT.Glyphs.Bitmap_Top (Face_Ptr),
+                                       FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
             Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
             Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
 
