@@ -61,9 +61,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
-      Pos_X           : GL.Types.Single := 125.0;
-      Pos_Y           : GL.Types.Single := 125.0;
-      Scale           : GL.Types.Single := 10.0;
+      Pos_X           : GL.Types.Single := 5.0;
+      Pos_Y           : GL.Types.Single := 5.0;
+      Scale           : GL.Types.Single := 0.1;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -72,8 +72,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
-      Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
---      Render_The_Text ("abcd", Pos_X, Pos_Y, Scale, Text_Colour);
+      Render_The_Text ("The Quick Brown Fox jumps over the Lazy Dog.", Pos_X, Pos_Y, Scale, Text_Colour);
+      Render_The_Text ("1234567890.", Pos_X, 150.0, Scale, Text_Colour);
 
    exception
       when  others =>
@@ -109,14 +109,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
-      Utilities.Clear_Background_Colour_And_Depth (Background);
       GL.Objects.Programs.Use_Program (Render_Program);
 
       Put_Line ("Text: " & Text);
       for index in Text'Range loop
          Char := Text (index);
          Put_Line ("Text character: " & Char & Integer'Image (Character'Pos (Char)));
---           Char_Data := Data (Character_Data_List, GL.Types.Int (Index));
          Char_Data := Character_Data_List (Character'Pos (Char));
          FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
@@ -205,8 +203,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data_List, 10.0, 10.0);
       Setup_Buffer;
-      Put_Line ("Setup, Character_Data (99):");
-      FT.Utilities.Print_Character_Metadata (Character_Data_List (99));
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
