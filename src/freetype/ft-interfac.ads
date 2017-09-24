@@ -1,6 +1,9 @@
 
 with System;
 
+with Ada.Containers.Vectors;
+
+with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
@@ -8,12 +11,16 @@ with FT.API; use FT.API;
 with FT.Image;
 
 package FT.Interfac is
+   type Character_Record is private;
+   type Character_Data_Vector is private;
 
    type Face_Record is private;
    type List_Record is private;
 
    type Generic_Record is private;
+   type Size_Metrics_Record is private;
    type Size_Ptr is private;
+   type Size_Record is private;
 
    type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                         Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
@@ -27,21 +34,47 @@ package FT.Interfac is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
+
+   function Advance_X (Data : Character_Record) return GL.Types.Int;
+   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
+                          Data : Character_Record);
+   function Data (Character_Data : Character_Data_Vector;
+                  Index          : GL.Types.Int) return Character_Record;
+   function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
+   function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
+   function Character_Texture (Data : Character_Record)
+                               return GL.Objects.Textures.Texture;
    procedure Done_Face (aFace : Face_Ptr);
    procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
+   function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
+   function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
    function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector) return FT_Error;
+   function Left (Data : Character_Record) return GL.Types.Int;
    function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) return FT_Error;
    function New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
                       return FT_Error;
+   procedure Print_Character_Data (Char : Character; Data : Character_Record);
+   function Rows (Data : Character_Record) return GL.Types.Int;
+   procedure Set_Char_Data (Char_Data : in out Character_Record;
+                            Width     : GL.Types.Int; Height : GL.Types.Int;
+                            Left      : GL.Types.Int; Top    : GL.Types.Int;
+                            Advance_X : GL.Types.Int);
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
+   procedure Set_Texture (Char_Data : in out Character_Record;
+                          Texture   : GL.Objects.Textures.Texture);
+   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
+   function Top (Data : Character_Record) return GL.Types.Int;
+   function Width (Data : Character_Record) return GL.Types.Int;
+
+   Image_Error : exception;
 private
 
    type Char_Map_Ptr is new System.Address;
@@ -49,7 +82,21 @@ private
    type Face_Internal_Ptr is new System.Address;
    type Memory_Ptr is new System.Address;
    type Size_Ptr is new System.Address;
+   type Size_Internal_Ptr is new System.Address;
    type Stream_Ptr is new System.Address;
+
+   type Character_Record is record
+      Texture   : GL.Objects.Textures.Texture;
+      Width     : GL.Types.Int;
+      Rows      : GL.Types.Int;
+      Left      : GL.Types.Int;
+      Top       : GL.Types.Int;
+      Advance_X : GL.Types.Int;
+   end record;
+
+   package Data_Vector_Package is new
+     Ada.Containers.Vectors (Natural, Character_Record);
+   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
 
    type FT_Bitmap_Size is record
       Height : GL.Types.Short;
@@ -157,6 +204,25 @@ private
       Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Face_Record);
+
+   type Size_Metrics_Record is record
+      X_Ppem      : GL.Types.UShort;
+      Y_Ppem      : GL.Types.Int;
+      Y_Scale     : GL.Types.Int;
+      Ascender    : FT.Image.FT_Pos;
+      Descender   : FT.Image.FT_Pos;
+      Height      : FT.Image.FT_Pos;
+      Max_Advance : FT.Image.FT_Pos;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Size_Metrics_Record);
+
+   type Size_Record is record
+      Face       : Face_Record;
+      C_Generic  : Generic_Record;
+      Metrics    : Size_Metrics_Record;
+      Internal   : Size_Internal_Ptr;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Size_Record);
 
    --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)

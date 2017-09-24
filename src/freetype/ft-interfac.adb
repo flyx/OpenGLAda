@@ -9,8 +9,71 @@ with FT.API.Interfac; use FT.API.Interfac;
 
 package body FT.Interfac is
    package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
+   package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
 
    --  -------------------------------------------------------------------------
+
+   function Advance_X (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Advance_X;
+   end Advance_X;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
+                          Data : Character_Record) is
+   begin
+      Data_Vector.Append (Data);
+   end Append_Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
+      theFace  : constant Face_Record := Face (aFace);
+      Sizes    : FT_Bitmap_Size;
+   begin
+      if theFace.Available_Sizes = null then
+         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
+         raise FT.FT_Exception;
+      end if;
+      Sizes:= theFace.Available_Sizes.all;
+      return GL.Types.Int (Sizes.Height);
+   end Bitmap_Height;
+
+   --  -------------------------------------------------------------------------
+
+   function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int is
+      theFace : constant Face_Record := Face (aFace);
+      Sizes   : FT_Bitmap_Size;
+   begin
+      if theFace.Available_Sizes = null then
+         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
+         raise FT.FT_Exception;
+      end if;
+      Sizes:= theFace.Available_Sizes.all;
+      return GL.Types.Int (Sizes.Width);
+   end Bitmap_Width;
+
+   --  -------------------------------------------------------------------------
+
+   function Character_Texture (Data : Character_Record)
+                               return GL.Objects.Textures.Texture is
+   begin
+      return Data.Texture;
+   end Character_Texture;
+
+   --  ------------------------------------------------------------------------
+
+   function Data (Character_Data : Character_Data_Vector;
+                  Index          : GL.Types.Int) return Character_Record is
+   begin
+      if Character_Data.Is_Empty then
+         raise Image_Error;
+      end if;
+      return Character_Data.Element (Natural (Index));
+   end Data;
+
+   --  ------------------------------------------------------------------------
 
    procedure Done_Face (aFace : Face_Ptr) is
       use GL.Types;
@@ -44,6 +107,49 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   function Face_Size (aFace : Face_Ptr) return Size_Record is
+      use Size_Access;
+      theFace      : constant Face_Record := Face (aFace);
+      Size_Pointer : constant Object_Pointer :=
+                       To_Pointer (System.Address (theFace.Size));
+   begin
+      if Size_Pointer = null then
+         Put_Line ("Face_Size failed, theFace.Size is null.");
+         raise FT.FT_Exception;
+      end if;
+      return Size_Pointer.all;
+   exception
+         when others =>
+            Put_Line ("Face_Size raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Size;
+
+   --  -------------------------------------------------------------------------
+
+   function Face_Height (aFace : Face_Ptr) return GL.Types.Int is
+   use GL.Types;
+   begin
+      return GL.Types.Int (Face_Size (aFace).Metrics.Ascender -
+                               Face_Size (aFace).Metrics.Descender);
+   exception
+         when others =>
+            Put_Line ("Face_Height raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Height;
+
+   --  -------------------------------------------------------------------------
+
+   function Face_Width (aFace : Face_Ptr) return GL.Types.Int is
+   begin
+      return GL.Types.Int (Face_Size (aFace).Metrics.X_Ppem);
+   exception
+         when others =>
+            Put_Line ("Face_Width raised an exception.");
+            raise FT.FT_Exception;
+   end Face_Width;
+
+   --  -------------------------------------------------------------------------
+
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr is
    use System;
      theFace : constant Face_Record := Face (aFace);
@@ -73,6 +179,13 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   function Left (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Left;
+   end Left;
+
+   --  ------------------------------------------------------------------------
+
    function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) return FT_Error is
    begin
@@ -92,6 +205,42 @@ package body FT.Interfac is
 
    --  -------------------------------------------------------------------------
 
+   procedure Print_Character_Data (Char : Character;
+                                   Data : Character_Record) is
+      use GL.Types;
+   begin
+      Put_Line ("Character" & Char & " Data");
+      Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
+      Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
+      Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
+      Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
+      Put_Line ("Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits");
+      New_Line;
+   end Print_Character_Data;
+
+   --  ------------------------------------------------------------------------
+
+   function Rows (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Rows;
+   end Rows;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Char_Data (Char_Data : in out Character_Record;
+                            Width     : GL.Types.Int; Height : GL.Types.Int;
+                            Left      : GL.Types.Int; Top    : GL.Types.Int;
+                            Advance_X : GL.Types.Int) is
+   begin
+      Char_Data.Width := Width;
+      Char_Data.Rows := Height;
+      Char_Data.Left := Left;
+      Char_Data.Top := Top;
+      Char_Data.Advance_X := Advance_X;
+   end Set_Char_Data;
+
+   --  -------------------------------------------------------------------------
+
   function Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                             Pixel_Height : GL.Types.UInt) return FT_Error is
   begin
@@ -99,5 +248,35 @@ package body FT.Interfac is
   end;
 
    --  -------------------------------------------------------------------------
+
+   procedure Set_Texture (Char_Data : in out Character_Record;
+                          Texture   : GL.Objects.Textures.Texture) is
+   begin
+      Char_Data.Texture := Texture;
+   end Set_Texture;
+
+   --  -------------------------------------------------------------------------
+
+   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record is
+     Size : constant Size_Record := Face_Size (aFace);
+   begin
+      return Size.Metrics;
+   end Size_Metrics;
+
+   --  -------------------------------------------------------------------------
+
+   function Top (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Top;
+   end Top;
+
+   --  ------------------------------------------------------------------------
+
+   function Width (Data : Character_Record) return GL.Types.Int is
+   begin
+      return Data.Width;
+   end Width;
+
+   --  ------------------------------------------------------------------------
 
 end FT.Interfac;
