@@ -36,7 +36,20 @@ package body FT.Utilities is
       Put_Line ("Top: " & GL.Types.Int'Image (Bitmap_Top (aFace)));
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X) & " bits");
       Put_Line ("Glyph format: " & FT.Image.Glyph_Format'Image (Glyph_Format (aFace)));
+      New_Line;
+   end Print_Character_Metadata;
 
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Character_Metadata (Data : FT.Interfac.Character_Record) is
+      use GL.Types;
+      use FT.Interfac;
+   begin
+      Put_Line ("Width: " & GL.Types.Int'Image (Width (Data)));
+      Put_Line ("Rows: " & GL.Types.Int'Image (Rows (Data)));
+      Put_Line ("Left: " & GL.Types.Int'Image (Left (Data)));
+      Put_Line ("Top: " & GL.Types.Int'Image (Top (Data)));
+      Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
       New_Line;
    end Print_Character_Metadata;
 
