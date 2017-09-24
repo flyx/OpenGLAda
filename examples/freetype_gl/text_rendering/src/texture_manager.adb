@@ -96,6 +96,8 @@ package body Texture_Manager is
    begin
       for index in 0 .. 127 loop
          Put_Line ("Setup_Textures, index: " & Integer'Image (index));
+         --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
+         --  that can be accessed via face->glyph->bitmap.
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
                                         FT.Interfac.Load_Render) /= 0 then
             Put_Line ("Setup_Textures, a character failed to load.");

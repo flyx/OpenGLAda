@@ -26,6 +26,7 @@ with Program_Loader;
 with Utilities;
 
 with FT.Interfac;
+with FT.Utilities;
 
 with Texture_Manager;
 
@@ -90,9 +91,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Texture_Manager;
 
       Num_Triangles  : Int := 2;
-      Stride         : Int := 0;
       Num_Vertices   : GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : GL.Types.Int := 4;                 -- Coords vector size;
+      Stride         : Int := 0;
 
       Char           : Character;
       Char_Data      : FT.Interfac.Character_Record;
@@ -107,12 +108,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
       Utilities.Clear_Background_Colour_And_Depth (Background);
-      Vertex_Array.Bind;
       GL.Objects.Programs.Use_Program (Render_Program);
 
+      Put_Line ("Text: " & Text);
       for index in Text'Range loop
          Char := Text (index);
+         Put_Line ("Text character: " & Char);
          Char_Data := Data (Character_Data, GL.Types.Int (Index));
+         FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Single (Width (Char_Data));
@@ -125,12 +128,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                          (X_Pos, Y_Pos + Height,              0.0, 0.0),
                          (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
                          (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
-         Vertex_Array.Bind;
 
+         Vertex_Array.Bind;
          Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
+
          Char_Texture := Character_Texture (Char_Data);
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("aTexture is invalid.");
+            Put_Line ("Render_The_Text, aTexture is invalid.");
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -219,7 +223,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Allocate (Array_Buffer, Single_Size * long (Num_Vertices * Num_Components), Dynamic_Draw);
 
    end Setup_Buffer;
 
