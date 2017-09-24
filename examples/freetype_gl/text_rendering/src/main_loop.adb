@@ -35,11 +35,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
-   Colour_ID             : GL.Uniforms.Uniform;
    aTexture              : GL.Objects.Textures.Texture;
    Character_Data        : FT.Interfac.Character_Data_Vector;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
+   Colour_ID             : GL.Uniforms.Uniform;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
@@ -92,7 +92,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Num_Triangles  : Int := 2;
       Stride         : Int := 0;
       Num_Vertices   : GL.Types.Int := Num_Triangles * 3; -- Two triangles
-      Num_Components : GL.Types.Int := 4;     -- Coords vector size;
+      Num_Components : GL.Types.Int := 4;                 -- Coords vector size;
 
       Char           : Character;
       Char_Data      : FT.Interfac.Character_Record;
