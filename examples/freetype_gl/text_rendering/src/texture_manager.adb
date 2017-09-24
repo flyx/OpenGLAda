@@ -23,7 +23,6 @@ with Utilities;
 package body Texture_Manager is
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
-   Vertex_Data    : Vertex_Array;
 
    --  ------------------------------------------------------------------------
 
@@ -31,42 +30,6 @@ package body Texture_Manager is
    procedure Setup_Textures
      (Character_Data : in out FT.Interfac.Character_Data_Vector;
       Vertex_Buffer : in out V_Buffer; X, Y, Scale : GL.Types.Single);
-
-   --  ------------------------------------------------------------------------
-
-   procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
-                           X, Y, Scale   : GL.Types.Single) is
-      use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
-      use GL.Types;
-      X_Pos         : Single := X;
-      Y_Pos         : Single := Y ;
-      Width         : Single;
-      Height        : Single;
-      Num_Triangles : Int := 2;
-      Stride        : Int := 4;
-   begin
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-
-      Width := FT.Glyphs.Bitmap_Width (Face_Ptr) * Scale;
-      Height := Single (FT.Glyphs.Bitmap_Rows (Face_Ptr)) * Scale;
-      Vertex_Data := (
-                      (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
-                      (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
-                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-
-                      (X_Pos, Y_Pos + Height,         0.0, 1.0),  --  Upper left
-                      (X_Pos + Width, Y_Pos + Height, 1.0, 1.0),  --  Upper Right
-                      (X_Pos + Width, Y_Pos,          1.0, 0.0)); --  Lower right
-
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
-
-   exception
-      when others =>
-         Put_Line ("An exceptiom occurred in Setup_Buffer.");
-         raise;
-   end Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
@@ -144,7 +107,6 @@ package body Texture_Manager is
             raise FT.FT_Exception;
          end if;
 
-         Setup_Buffer (Vertex_Buffer, X, Y, Scale);
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          if Width > 0 and then Height > 0 then
