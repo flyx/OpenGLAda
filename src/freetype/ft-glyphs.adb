@@ -87,36 +87,19 @@ package body FT.Glyphs is
 
    function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
       use Glyph_Slot_Access;
-      Slot_Ptr : FT.API.Glyph_Slot_Ptr;
-      Glyph    : Glyph_Slot_Record;
+      Slot_Ptr   : FT.API.Glyph_Slot_Ptr;
+      Glyph_Slot : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
       Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
-      return Glyph.Bitmap_Left;
+      Glyph_Slot := To_Pointer (System.Address (Slot_Ptr)).all;
+      return Glyph_Slot.Bitmap_Left;
    exception
       when others =>
          Put_Line ("FT.Glyphs.Bitmap_Left raised an Exception");
          raise FT.FT_Exception;
    end Bitmap_Left;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
-      use GL.Types;
-      theBitmap  : FT.Image.Bitmap_Record;
-      Error_Code : FT.FT_Error;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Error_Code := Bitmap (Face_Ptr, theBitmap);
-      if Error_Code /= 0 then
-         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
-              FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
-      end if;
-      return GL.Types.Single (FT.Image.Width (theBitmap));
-   end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
 
@@ -170,6 +153,23 @@ package body FT.Glyphs is
          Put_Line ("FT.Glyphs.Bitmap_Top raised an Exception");
          raise FT.FT_Exception;
    end Bitmap_Top;
+
+   --  -------------------------------------------------------------------------
+
+   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
+      use GL.Types;
+      theBitmap  : FT.Image.Bitmap_Record;
+      Error_Code : FT.FT_Error;
+   begin
+      Check_Face_Ptr (Face_Ptr);
+      Error_Code := Bitmap (Face_Ptr, theBitmap);
+      if Error_Code /= 0 then
+         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
+              FT.Errors.Error (Error_Code));
+         raise FT.FT_Exception;
+      end if;
+      return GL.Types.Single (FT.Image.Width (theBitmap));
+   end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
 
