@@ -37,7 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
    aTexture              : GL.Objects.Textures.Texture;
-   Character_Data        : FT.Interfac.Character_Data_Vector;
+   Character_Data_List   : FT.Interfac.Character_Data_Vector;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -70,8 +70,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Background);
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                                         Single (Window_Width), 0.1, -100.0, Projection_Matrix);
-      Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
+                                         Single (Window_Width), 0.1, -100.0,
+                                         Projection_Matrix);
+--        Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
+      Render_The_Text ("abcd", Pos_X, Pos_Y, Scale, Text_Colour);
 
    exception
       when  others =>
@@ -113,8 +115,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Put_Line ("Text: " & Text);
       for index in Text'Range loop
          Char := Text (index);
-         Put_Line ("Text character: " & Char);
-         Char_Data := Data (Character_Data, GL.Types.Int (Index));
+         Put_Line ("Text character: " & Char & Integer'Image (Character'Pos (Char)));
+         Char_Data := Data (Character_Data_List, GL.Types.Int (Index));
          FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
@@ -200,7 +202,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data, 10.0, 10.0);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data_List, 10.0, 10.0);
       Setup_Buffer;
    exception
       when others =>

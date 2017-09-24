@@ -94,7 +94,8 @@ package body Texture_Manager is
       Mip_Level_0    : constant GL.Objects.Textures.Mipmap_Level := 0;
       Error_Code     : FT.FT_Error;
    begin
-      for index in 0 .. 127 loop
+--        for index in 0 .. 127 loop
+      for index in 95 .. 127 loop
          Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
