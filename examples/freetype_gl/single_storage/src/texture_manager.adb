@@ -23,7 +23,7 @@ package body Texture_Manager is
 
    theLibrary     : FT.API.Library_Ptr;
    Face_Ptr       : FT.API.Face_Ptr;
-   Character_Data : FT.Interfac.Character_Data_Vector;
+   Character_Data : FT.Interfac.Character_Data_Vector (0 .. 127);
    Vertex_Data    : Vertex_Array;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
