@@ -12,7 +12,7 @@ with Main_Loop;
 
 procedure Store_Character is
    Main_Window : Glfw.Windows.Window;
-   Window_Title : constant String := "Single Freetype Character Example";
+   Window_Title : constant String := "Single Freetype Character Using Texture Storage";
 begin
    Glfw.Init;
    Initialize (Main_Window, Window_Title);
