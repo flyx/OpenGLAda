@@ -37,7 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
    aTexture              : GL.Objects.Textures.Texture;
-   Character_Data_List   : FT.Interfac.Character_Data_Vector;
+   Character_Data_List   : FT.Interfac.Character_Data_Vector (0 .. 127);
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -72,8 +72,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
---        Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
-      Render_The_Text ("abcd", Pos_X, Pos_Y, Scale, Text_Colour);
+      Render_The_Text ("Some sample text.", Pos_X, Pos_Y, Scale, Text_Colour);
+--      Render_The_Text ("abcd", Pos_X, Pos_Y, Scale, Text_Colour);
 
    exception
       when  others =>
@@ -116,7 +116,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       for index in Text'Range loop
          Char := Text (index);
          Put_Line ("Text character: " & Char & Integer'Image (Character'Pos (Char)));
-         Char_Data := Data (Character_Data_List, GL.Types.Int (Index));
+--           Char_Data := Data (Character_Data_List, GL.Types.Int (Index));
+         Char_Data := Character_Data_List (Character'Pos (Char));
          FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
@@ -204,6 +205,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data_List, 10.0, 10.0);
       Setup_Buffer;
+      Put_Line ("Setup, Character_Data (99):");
+      FT.Utilities.Print_Character_Metadata (Character_Data_List (99));
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");

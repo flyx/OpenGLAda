@@ -73,7 +73,6 @@ package body Texture_Manager is
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
-
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -94,8 +93,7 @@ package body Texture_Manager is
       Mip_Level_0    : constant GL.Objects.Textures.Mipmap_Level := 0;
       Error_Code     : FT.FT_Error;
    begin
---        for index in 0 .. 127 loop
-      for index in 95 .. 127 loop
+      for index in Character_Data'First .. Character_Data'Last loop
          Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
@@ -104,6 +102,7 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, a character failed to load.");
             raise FT.FT_Exception;
          end if;
+         Put_Line ("Character: " & Character'Val (index));
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
             Put_Line ("A character failed to render.");
@@ -119,7 +118,7 @@ package body Texture_Manager is
                                        FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
             Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
             Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
-
+            New_Line;
             declare
                aTexture          : GL.Objects.Textures.Texture;
                Bitmap_Image_Ptr  : GL.Objects.Textures.Image_Source;
@@ -143,8 +142,10 @@ package body Texture_Manager is
                    (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
                     Bitmap_Image_Ptr);
                FT.Interfac.Set_Texture (Char_Data, aTexture);
-               FT.Interfac.Append_Data (Character_Data, Char_Data);
             end;  -- declare block
+
+            Character_Data (index) := Char_Data;
+            FT.Utilities.Print_Character_Metadata (Character_Data (index));
          end if;
       end loop;
    exception

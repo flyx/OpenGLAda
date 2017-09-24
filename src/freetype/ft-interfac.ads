@@ -1,7 +1,7 @@
 
 with System;
 
-with Ada.Containers.Vectors;
+--  with Ada.Containers.Vectors;
 
 with GL.Objects.Textures;
 with GL.Types;
@@ -12,7 +12,7 @@ with FT.Image;
 
 package FT.Interfac is
    type Character_Record is private;
-   type Character_Data_Vector is private;
+   type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
    type Face_Record is private;
    type List_Record is private;
@@ -36,10 +36,6 @@ package FT.Interfac is
 
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
-   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
-                          Data : Character_Record);
-   function Data (Character_Data : Character_Data_Vector;
-                  Index          : GL.Types.Int) return Character_Record;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Character_Texture (Data : Character_Record)
@@ -66,6 +62,7 @@ package FT.Interfac is
                             Width     : GL.Types.Int; Height : GL.Types.Int;
                             Left      : GL.Types.Int; Top    : GL.Types.Int;
                             Advance_X : GL.Types.Int);
+
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                              Pixel_Height : GL.Types.UInt) return FT_Error;
    procedure Set_Texture (Char_Data : in out Character_Record;
@@ -87,16 +84,12 @@ private
 
    type Character_Record is record
       Texture   : GL.Objects.Textures.Texture;
-      Width     : GL.Types.Int;
-      Rows      : GL.Types.Int;
-      Left      : GL.Types.Int;
-      Top       : GL.Types.Int;
-      Advance_X : GL.Types.Int;
+      Width     : GL.Types.Int := 0;
+      Rows      : GL.Types.Int := 0;
+      Left      : GL.Types.Int := 0;
+      Top       : GL.Types.Int := 0;
+      Advance_X : GL.Types.Int := 0;
    end record;
-
-   package Data_Vector_Package is new
-     Ada.Containers.Vectors (Natural, Character_Record);
-   type Character_Data_Vector is new Data_Vector_Package.Vector with null record;
 
    type FT_Bitmap_Size is record
       Height : GL.Types.Short;
