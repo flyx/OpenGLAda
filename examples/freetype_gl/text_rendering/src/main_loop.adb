@@ -1,8 +1,4 @@
 
-with Interfaces.C;
-with Interfaces.C.Strings;
-with System;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -29,9 +25,7 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with FT.Glyphs;
 with FT.Interfac;
-with FT.Utilities;
 
 with Texture_Manager;
 
