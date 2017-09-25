@@ -126,7 +126,6 @@ package body Texture_Manager is
       Char_Data      : FT.Interfac.Character_Record;
    begin
       for index in Character_Data'First .. Character_Data'Last loop
-         Put_Line ("Setup_Textures, index: " & Integer'Image (index));
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
          if FT.Interfac.Load_Character (Face_Ptr, long (index),
@@ -134,7 +133,6 @@ package body Texture_Manager is
             Put_Line ("Setup_Textures, a character failed to load.");
             raise FT.FT_Exception;
          end if;
-         Put_Line ("Character: " & Character'Val (index));
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
             Put_Line ("A character failed to render.");
@@ -147,13 +145,9 @@ package body Texture_Manager is
                                     FT.Glyphs.Bitmap_Left (Face_Ptr),
                                     FT.Glyphs.Bitmap_Top (Face_Ptr),
                                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
-         Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
-         Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
-         New_Line;
 
          Load_Texture (Char_Data, Width, Height, X_Offset, Y_Offset);
          Character_Data (index) := Char_Data;
-         FT.Utilities.Print_Character_Metadata (Character_Data (index));
       end loop;
    exception
       when others =>

@@ -111,12 +111,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
 
-      Put_Line ("Text: " & Text);
       for index in Text'Range loop
          Char := Text (index);
-         Put_Line ("Text character: " & Char & Integer'Image (Character'Pos (Char)));
          Char_Data := Character_Data_List (Character'Pos (Char));
-         FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Single (Width (Char_Data)) * Scale;
@@ -241,7 +238,6 @@ begin
           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
-   Put_Line ("Finished.");
 
    Vertex_Buffer.Delete_Id;
    Vertex_Array.Delete_Id;
