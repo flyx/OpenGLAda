@@ -37,7 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
    aTexture              : GL.Objects.Textures.Texture;
-   Character_Data_List   : FT.Interfac.Character_Data_Vector (0 .. 127);
+   Extended_Ascii_List   : FT.Interfac.Character_Data_Vector (0 .. 255);
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -113,7 +113,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Character_Data_List (Character'Pos (Char));
+         Char_Data := Extended_Ascii_List (Character'Pos (Char));
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Single (Width (Char_Data)) * Scale;
@@ -198,7 +198,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Character_Data_List, 10.0, 10.0);
+      Texture_Manager.Setup_Graphic (Vertex_Buffer, Extended_Ascii_List, 10.0, 10.0);
       Setup_Buffer;
    exception
       when others =>
