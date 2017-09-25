@@ -208,12 +208,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Buffer is
-      use GL.Types;
       use GL.Objects.Buffers;
-      Single_Size    : constant long := Single'Size  / 8;    --  bytes
-      Num_Triangles  : constant Int := 2;
-      Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
-      Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
