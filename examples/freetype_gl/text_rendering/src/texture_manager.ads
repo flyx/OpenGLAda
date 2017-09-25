@@ -10,7 +10,7 @@ package Texture_Manager is
    --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
    subtype Vertex_Array is GL.Types.Singles.Vector4_Array (1 .. 6);
 
-   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
+   procedure Setup_Graphic (Font_File : String; Vertex_Buffer : in out V_Buffer;
                   Character_Data : in out FT.Interfac.Character_Data_Vector;
                   X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0);
 

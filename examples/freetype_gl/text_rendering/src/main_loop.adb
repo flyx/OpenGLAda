@@ -36,7 +36,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
-   aTexture              : GL.Objects.Textures.Texture;
    Extended_Ascii_List   : FT.Interfac.Character_Data_Vector (0 .. 255);
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
@@ -44,11 +43,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
+   Font_File_1     : String := "/Library/Fonts/Arial.ttf";
+   Font_File_2     : String := "/System/Library/Fonts/Helvetica.dfont";
 
    --  ------------------------------------------------------------------------
-
-   procedure Load_Vertex_Sub_Buffer is new
-       GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
@@ -182,7 +180,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
---        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
@@ -198,7 +196,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Vertex_Buffer, Extended_Ascii_List, 10.0, 10.0);
+      Texture_Manager.Setup_Graphic (Font_File_2, Vertex_Buffer,
+                                     Extended_Ascii_List, 10.0, 10.0);
       Setup_Buffer;
    exception
       when others =>

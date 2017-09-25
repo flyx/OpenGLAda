@@ -23,10 +23,8 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font is
+   procedure Setup_Font (Font_File : String) is
       use GL.Types;
-      --        Font_File       : String := "/Library/Fonts/Arial.ttf";
-      Font_File       : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
@@ -47,7 +45,7 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
+   procedure Setup_Graphic (Font_File : String; Vertex_Buffer : in out V_Buffer;
                             Character_Data : in out FT.Interfac.Character_Data_Vector;
                             X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0) is
       use GL.Types;
@@ -58,7 +56,7 @@ package body Texture_Manager is
          raise FT.FT_Exception;
       end if;
 
-      Setup_Font;
+      Setup_Font (Font_File);
       FT.Utilities.Setup_Character_Textures (Face_Ptr, Character_Data);
 
       FT.Interfac.Done_Face (Face_Ptr);
