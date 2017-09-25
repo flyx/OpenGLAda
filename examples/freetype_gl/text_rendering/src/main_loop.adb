@@ -34,7 +34,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
-   Extended_Ascii_Data   : FT.Interfac.Character_Data_Vector (0 .. 255);
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -82,74 +81,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color) is
-      use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
-      use GL.Types.Colors;
-      use GL.Types;
-      use FT.Interfac;
-
-      Num_Triangles  : Int := 2;
-      Num_Vertices   : GL.Types.Int := Num_Triangles * 3; -- Two triangles
-      Num_Components : GL.Types.Int := 4;                 -- Coords vector size;
-      Stride         : Int := 0;
-
-      Char           : Character;
-      Char_Data      : FT.Interfac.Character_Record;
-      Char_Texture   : GL.Objects.Textures.Texture;
-      X_Orig         : Single := X;
-      Y_Orig         : constant Single := Y;
-      X_Pos          : Single;
-      Y_Pos          : Single;
-      Char_Width     : Single;
-      Height         : Single;
-      --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
-      Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
-      GL.Objects.Programs.Use_Program (Render_Program);
-
-      for index in Text'Range loop
-         Char := Text (index);
-         Char_Data := Extended_Ascii_Data (Character'Pos (Char));
-         X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
-         Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
-         Char_Width := Single (Width (Char_Data)) * Scale;
-         Height := Single (Rows (Char_Data)) * Scale;
-
-         Vertex_Data := ((X_Pos, Y_Pos + Height,             0.0, 0.0),
-                         (X_Pos, Y_Pos,                      0.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos,         1.0, 1.0),
-
-                         (X_Pos, Y_Pos + Height,              0.0, 0.0),
-                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
-                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
-
-         Vertex_Array.Bind;
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
-
-         Char_Texture := Character_Texture (Char_Data);
-         if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("Render_The_Text, aTexture is invalid.");
-         end if;
-
-         GL.Objects.Textures.Set_Active_Unit (0);
-         Texture_2D.Bind (Char_Texture);
-         GL.Uniforms.Set_Int (Texture_ID, 0);
-         GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
-         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         Array_Buffer.Bind (Vertex_Buffer);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
-                                                  Kind   => GL.Types.Single_Type,
-                                                  Stride => Stride, Offset => 0);
-
-         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
-         GL.Attributes.Disable_Vertex_Attrib_Array (0);
-         --  Bitshift by 6 to get value in pixels (2^6 = 64
-         --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
-         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
-      end loop;
-
+      FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
+                                Texture_ID, Projection_Matrix_ID, Colour_ID,
+                                Vertex_Array, Vertex_Buffer, Projection_Matrix);
    exception
       when  others =>
          Put_Line ("An exception occurred in Render_The_Text.");
@@ -194,7 +129,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.Utilities.Initialize_Font_Data (Font_File_1, Extended_Ascii_Data);
+      FT.Utilities.Initialize_Font_Data (Font_File_1);
       Setup_Buffer;
    exception
       when others =>

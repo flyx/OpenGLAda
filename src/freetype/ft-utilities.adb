@@ -1,17 +1,22 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Attributes;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
-with GL.Types;
 
 with FT.Errors;
 with FT.Glyphs;
 
 package body FT.Utilities is
+    procedure Load_Vertex_Buffer is new
+     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
-   theLibrary     : FT.API.Library_Ptr;
-   Face_Ptr       : FT.API.Face_Ptr;
+   theLibrary           : FT.API.Library_Ptr;
+   Face_Ptr             : FT.API.Face_Ptr;
+   Extended_Ascii_Data  : FT.Interfac.Character_Data_Vector (0 .. 255);
+
+   procedure Setup_Character_Textures (Face_Ptr  : FT.API.Face_Ptr);
 
    --  ------------------------------------------------------------------------
 
@@ -37,8 +42,7 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Initialize_Font_Data (Font_File : String;
-                  Character_Data : in out FT.Interfac.Character_Data_Vector) is
+   procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
    begin
       if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
@@ -47,7 +51,7 @@ package body FT.Utilities is
       end if;
 
       Setup_Font (Font_File);
-      FT.Utilities.Setup_Character_Textures (Face_Ptr, Character_Data);
+      Setup_Character_Textures (Face_Ptr);
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
@@ -143,9 +147,91 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
+                          Text   : String; X, Y, Scale : GL.Types.Single;
+                          Colour : GL.Types.Colors.Basic_Color;
+                          Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
+                          Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+                          Vertex_Buffer : GL.Objects.Buffers.Buffer;
+                          Projection_Matrix : GL.Types.Singles.Matrix4) is
+      use GL.Objects.Buffers;
+      use GL.Objects.Textures.Targets;
+      use GL.Types.Colors;
+      use GL.Types;
+      use FT.Interfac;
+
+      Num_Triangles  : constant GL.Types.Int := 2;
+      Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
+      Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
+      Stride         : constant GL.Types.Int := 0;
+
+      Char           : Character;
+      Char_Data      : FT.Interfac.Character_Record;
+      Char_Texture   : GL.Objects.Textures.Texture;
+      X_Orig         : Single := X;
+      Y_Orig         : constant Single := Y;
+      X_Pos          : Single;
+      Y_Pos          : Single;
+      Char_Width     : Single;
+      Height         : Single;
+      --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
+      Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
+   begin
+      GL.Objects.Programs.Use_Program (Render_Program);
+
+      for index in Text'Range loop
+         Char := Text (index);
+         Char_Data := Extended_Ascii_Data (Character'Pos (Char));
+         X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
+         Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
+         Char_Width := Single (Width (Char_Data)) * Scale;
+         Height := Single (Rows (Char_Data)) * Scale;
+
+         Vertex_Data := ((X_Pos, Y_Pos + Height,             0.0, 0.0),
+                         (X_Pos, Y_Pos,                      0.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos,         1.0, 1.0),
+
+                         (X_Pos, Y_Pos + Height,              0.0, 0.0),
+                         (X_Pos + Char_Width, Y_Pos,          1.0, 1.0),
+                         (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
+
+         Vertex_Array.Bind;
+         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
+
+         Char_Texture := Character_Texture (Char_Data);
+         if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
+            Put_Line ("Render_The_Text, aTexture is invalid.");
+         end if;
+
+         GL.Objects.Textures.Set_Active_Unit (0);
+         Texture_2D.Bind (Char_Texture);
+         GL.Uniforms.Set_Int (Texture_ID, 0);
+         GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+         GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         Array_Buffer.Bind (Vertex_Buffer);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
+                                                  Kind   => GL.Types.Single_Type,
+                                                  Stride => Stride, Offset => 0);
+
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+         --  Bitshift by 6 to get value in pixels (2^6 = 64
+         --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
+         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
+      end loop;
+
+   exception
+      when  others =>
+         Put_Line ("An exception occurred in Render_The_Text.");
+         raise;
+   end Render_Text;
+
+   --  ------------------------------------------------------------------------
+
    procedure Setup_Character_Textures
-     (Face_Ptr  : FT.API.Face_Ptr;
-      Character_Data : in out FT.Interfac.Character_Data_Vector) is
+     (Face_Ptr  : FT.API.Face_Ptr) is
       use GL.Types;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
@@ -153,7 +239,7 @@ package body FT.Utilities is
       Y_Offset       : constant GL.Types.Int := 0;
       Char_Data      : FT.Interfac.Character_Record;
    begin
-      for index in Character_Data'First .. Character_Data'Last loop
+      for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
          if FT.Interfac.Load_Character (Face_Ptr, GL.Types.long (index),
@@ -175,7 +261,7 @@ package body FT.Utilities is
                                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
-         Character_Data (index) := Char_Data;
+         Extended_Ascii_Data (index) := Char_Data;
       end loop;
    exception
       when others =>
