@@ -3,6 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
+with GL.Types;
 
 with FT.Errors;
 with FT.Glyphs;
@@ -94,6 +95,48 @@ package body FT.Utilities is
       Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
       New_Line;
    end Print_Character_Metadata;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Setup_Character_Textures
+     (Face_Ptr  : FT.API.Face_Ptr;
+      Character_Data : in out FT.Interfac.Character_Data_Vector) is
+      use GL.Types;
+      Width          : GL.Types.Size;
+      Height         : GL.Types.Size;
+      X_Offset       : constant GL.Types.Int := 0;
+      Y_Offset       : constant GL.Types.Int := 0;
+      Char_Data      : FT.Interfac.Character_Record;
+   begin
+      for index in Character_Data'First .. Character_Data'Last loop
+         --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
+         --  that can be accessed via face->glyph->bitmap.
+         if FT.Interfac.Load_Character (Face_Ptr, GL.Types.long (index),
+                                        FT.Interfac.Load_Render) /= 0 then
+            Put_Line ("Setup_Textures, a character failed to load.");
+            raise FT.FT_Exception;
+         end if;
+         --  Ensure that the glyph image is an anti-aliased bitmap
+         if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
+            Put_Line ("A character failed to render.");
+            raise FT.FT_Exception;
+         end if;
+
+         Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
+         Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
+         FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
+                                    FT.Glyphs.Bitmap_Left (Face_Ptr),
+                                    FT.Glyphs.Bitmap_Top (Face_Ptr),
+                                    FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
+
+         Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
+         Character_Data (index) := Char_Data;
+      end loop;
+   exception
+      when others =>
+         Put_Line ("An exceptiom occurred in FT.Utilities.Setup_Character_Textures.");
+         raise;
+   end Setup_Character_Textures;
 
    --  ------------------------------------------------------------------------
 

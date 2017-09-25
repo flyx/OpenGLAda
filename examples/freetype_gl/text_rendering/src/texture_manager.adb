@@ -23,13 +23,6 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font;
-   procedure Setup_Textures
-     (Character_Data : in out FT.Interfac.Character_Data_Vector;
-      Vertex_Buffer : in out V_Buffer; X, Y, Scale : GL.Types.Single);
-
-   --  ------------------------------------------------------------------------
-
    procedure Setup_Font is
       use GL.Types;
       --        Font_File       : String := "/Library/Fonts/Arial.ttf";
@@ -66,54 +59,11 @@ package body Texture_Manager is
       end if;
 
       Setup_Font;
-      Setup_Textures (Character_Data, Vertex_Buffer, X, Y, Scale);
+      FT.Utilities.Setup_Character_Textures (Face_Ptr, Character_Data);
 
       FT.Interfac.Done_Face (Face_Ptr);
       FT.Interfac.Done_Library (theLibrary);
    end Setup_Graphic;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Setup_Textures
-     (Character_Data : in out FT.Interfac.Character_Data_Vector;
-      Vertex_Buffer : in out V_Buffer; X, Y, Scale : GL.Types.Single) is
-      use System;
-      use GL.Types;
-      Width          : GL.Types.Size;
-      Height         : GL.Types.Size;
-      X_Offset       : constant GL.Types.Int := 0;
-      Y_Offset       : constant GL.Types.Int := 0;
-      Char_Data      : FT.Interfac.Character_Record;
-   begin
-      for index in Character_Data'First .. Character_Data'Last loop
-         --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
-         --  that can be accessed via face->glyph->bitmap.
-         if FT.Interfac.Load_Character (Face_Ptr, long (index),
-                                        FT.Interfac.Load_Render) /= 0 then
-            Put_Line ("Setup_Textures, a character failed to load.");
-            raise FT.FT_Exception;
-         end if;
-         --  Ensure that the glyph image is an anti-aliased bitmap
-         if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-            Put_Line ("A character failed to render.");
-            raise FT.FT_Exception;
-         end if;
-
-         Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
-         Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
-                                    FT.Glyphs.Bitmap_Left (Face_Ptr),
-                                    FT.Glyphs.Bitmap_Top (Face_Ptr),
-                                    FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
-
-         FT.Utilities.Load_Texture (Face_Ptr,Char_Data, Width, Height, X_Offset, Y_Offset);
-         Character_Data (index) := Char_Data;
-      end loop;
-   exception
-      when others =>
-         Put_Line ("An exceptiom occurred in Setup_Texture.");
-         raise;
-   end Setup_Textures;
 
    --  ------------------------------------------------------------------------
 
