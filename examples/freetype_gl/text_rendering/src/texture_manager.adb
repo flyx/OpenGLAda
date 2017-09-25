@@ -1,8 +1,6 @@
 
 with System;
 
-with Interfaces.C;
-
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -58,8 +56,8 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
-              Character_Data : in out FT.Interfac.Character_Data_Vector;
-              X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0) is
+                            Character_Data : in out FT.Interfac.Character_Data_Vector;
+                            X, Y: GL.Types.Single; Scale : GL.Types.Single := 1.0) is
       use GL.Types;
       aTexture      : GL.Objects.Textures.Texture;
    begin
@@ -111,42 +109,44 @@ package body Texture_Manager is
 
          Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         if Width > 0 and then Height > 0 then
-            FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
-                                       FT.Glyphs.Bitmap_Left (Face_Ptr),
-                                       FT.Glyphs.Bitmap_Top (Face_Ptr),
-                                       FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
-            Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
-            Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
-            New_Line;
-            declare
-               aTexture          : GL.Objects.Textures.Texture;
-               Bitmap_Image_Ptr  : GL.Objects.Textures.Image_Source;
-            begin
-               aTexture.Initialize_Id;
-               Texture_2D.Bind (aTexture);
-               Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
-               Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
-               Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
-               Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
+         FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
+                                    FT.Glyphs.Bitmap_Left (Face_Ptr),
+                                    FT.Glyphs.Bitmap_Top (Face_Ptr),
+                                    FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
+         Put_Line ("Setup_Textures, Width: " & GL.Types.Size'Image (Width));
+         Put_Line ("Setup_Textures, Height: " & GL.Types.Size'Image (Height));
+         New_Line;
+         declare
+            aTexture          : GL.Objects.Textures.Texture;
+            Bitmap_Image_Ptr  : GL.Objects.Textures.Image_Source;
+         begin
+            aTexture.Initialize_Id;
+            Texture_2D.Bind (aTexture);
+            Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
+            Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
+            Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
 
+            if Width > 0 and then Height > 0 then
                Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
+            else
+               Texture_2D.Storage (Num_Levels, RGBA8, 1, 1);
+            end if;
 
-               Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image_Ptr);
-               if Error_Code /= 0 then
-                  Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
-                  raise FT.FT_Exception;
-               end if;
+            Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image_Ptr);
+            if Error_Code /= 0 then
+               Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+               raise FT.FT_Exception;
+            end if;
 
-               Texture_2D.Load_Sub_Image_From_Data
-                   (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-                    Bitmap_Image_Ptr);
-               FT.Interfac.Set_Texture (Char_Data, aTexture);
-            end;  -- declare block
+            Texture_2D.Load_Sub_Image_From_Data
+              (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+               Bitmap_Image_Ptr);
+            FT.Interfac.Set_Texture (Char_Data, aTexture);
+         end;  -- declare block
 
-            Character_Data (index) := Char_Data;
-            FT.Utilities.Print_Character_Metadata (Character_Data (index));
-         end if;
+         Character_Data (index) := Char_Data;
+         FT.Utilities.Print_Character_Metadata (Character_Data (index));
       end loop;
    exception
       when others =>
