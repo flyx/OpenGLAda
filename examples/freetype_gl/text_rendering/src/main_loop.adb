@@ -62,8 +62,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
       Pos_X           : GL.Types.Single := 5.0;
-      Pos_Y           : GL.Types.Single := 5.0;
-      Scale           : GL.Types.Single := 0.1;
+      Pos_Y           : GL.Types.Single := 50.0;
+      Scale           : GL.Types.Single := 0.5;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -73,7 +73,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
       Render_The_Text ("The Quick Brown Fox jumps over the Lazy Dog.", Pos_X, Pos_Y, Scale, Text_Colour);
-      Render_The_Text ("1234567890.", Pos_X, 150.0, Scale, Text_Colour);
+      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`", Pos_X, 200.0, 0.8, Text_Colour);
 
    exception
       when  others =>
@@ -101,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Char_Data      : FT.Interfac.Character_Record;
       Char_Texture   : GL.Objects.Textures.Texture;
       X_Orig         : Single := X;
-      Y_Orig         : Single := Y;
+      Y_Orig         : constant Single := Y;
       X_Pos          : Single;
       Y_Pos          : Single;
       Char_Width     : Single;
@@ -119,8 +119,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          FT.Utilities.Print_Character_Metadata (Char_Data);
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
-         Char_Width := Single (Width (Char_Data));
-         Height := Single (Rows (Char_Data));
+         Char_Width := Single (Width (Char_Data)) * Scale;
+         Height := Single (Rows (Char_Data)) * Scale;
 
          Vertex_Data := ((X_Pos, Y_Pos + Height,             0.0, 0.0),
                          (X_Pos, Y_Pos,                      0.0, 1.0),
@@ -154,7 +154,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Attributes.Disable_Vertex_Attrib_Array (0);
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
-         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0;
+         X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
       end loop;
 
    exception
