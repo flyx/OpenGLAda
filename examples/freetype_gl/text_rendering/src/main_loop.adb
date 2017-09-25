@@ -61,7 +61,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Height   : Glfw.Size;
       Pos_X           : GL.Types.Single := 5.0;
       Pos_Y           : GL.Types.Single := 50.0;
-      Scale           : GL.Types.Single := 0.5;
+      Scale_1         : GL.Types.Single := 0.5;
+      Scale_2         : GL.Types.Single := 0.8;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -70,8 +71,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
-      Render_The_Text ("The Quick Brown Fox jumps over the Lazy Dog.", Pos_X, Pos_Y, Scale, Text_Colour);
-      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`", Pos_X, 200.0, 0.8, Text_Colour);
+      Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.", Pos_X, Pos_Y, Scale_1, Text_Colour);
+      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`", Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
 
    exception
       when  others =>
