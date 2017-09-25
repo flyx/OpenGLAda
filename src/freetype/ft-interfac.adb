@@ -20,14 +20,6 @@ package body FT.Interfac is
 
    --  ------------------------------------------------------------------------
 
-   procedure Append_Data (Data_Vector : in out FT.Interfac.Character_Data_Vector;
-                          Data : Character_Record) is
-   begin
-      Data_Vector.Append (Data);
-   end Append_Data;
-
-   --  ------------------------------------------------------------------------
-
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
       theFace  : constant Face_Record := Face (aFace);
       Sizes    : FT_Bitmap_Size;
@@ -61,17 +53,6 @@ package body FT.Interfac is
    begin
       return Data.Texture;
    end Character_Texture;
-
-   --  ------------------------------------------------------------------------
-
-   function Data (Character_Data : Character_Data_Vector;
-                  Index          : GL.Types.Int) return Character_Record is
-   begin
-      if Character_Data.Is_Empty then
-         raise Image_Error;
-      end if;
-      return Character_Data.Element (Natural (Index));
-   end Data;
 
    --  ------------------------------------------------------------------------
 
