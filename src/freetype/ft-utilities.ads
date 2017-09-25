@@ -4,6 +4,8 @@ with FT.Image;
 with FT.Interfac;
 
 package FT.Utilities is
+   procedure Initialize_Font_Data (Font_File : String;
+                    Character_Data : in out FT.Interfac.Character_Data_Vector);
 
    procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record);
    procedure Print_Character_Metadata (aFace : FT.API.Face_Ptr;

@@ -10,6 +10,51 @@ with FT.Glyphs;
 
 package body FT.Utilities is
 
+   theLibrary     : FT.API.Library_Ptr;
+   Face_Ptr       : FT.API.Face_Ptr;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Setup_Font (Font_File : String) is
+      use GL.Types;
+   begin
+      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
+         Put_Line ("A face failed to load.");
+         raise FT.FT_Exception;
+      end if;
+      --  Set pixel size to 48 x 48
+      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
+         Put_Line ("Unable to set pixel sizes.");
+         raise FT.FT_Exception;
+      end if;
+
+      GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Setup_Font.");
+         raise;
+   end Setup_Font;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Initialize_Font_Data (Font_File : String;
+                  Character_Data : in out FT.Interfac.Character_Data_Vector) is
+      use GL.Types;
+   begin
+      if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
+         Put_Line ("The Freetype Library failed to load.");
+         raise FT.FT_Exception;
+      end if;
+
+      Setup_Font (Font_File);
+      FT.Utilities.Setup_Character_Textures (Face_Ptr, Character_Data);
+
+      FT.Interfac.Done_Face (Face_Ptr);
+      FT.Interfac.Done_Library (theLibrary);
+   end Initialize_Font_Data;
+
+   --  ------------------------------------------------------------------------
+
    procedure Load_Texture (Face_Ptr  : FT.API.Face_Ptr;
                            Char_Data : in out FT.Interfac.Character_Record;
                            Width, Height : GL.Types.Size;

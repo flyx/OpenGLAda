@@ -28,15 +28,13 @@ with Utilities;
 with FT.Interfac;
 with FT.Utilities;
 
-with Texture_Manager;
-
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
-   Extended_Ascii_List   : FT.Interfac.Character_Data_Vector (0 .. 255);
+   Extended_Ascii_Data   : FT.Interfac.Character_Data_Vector (0 .. 255);
    Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -89,7 +87,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types.Colors;
       use GL.Types;
       use FT.Interfac;
-      use Texture_Manager;
 
       Num_Triangles  : Int := 2;
       Num_Vertices   : GL.Types.Int := Num_Triangles * 3; -- Two triangles
@@ -112,7 +109,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Extended_Ascii_List (Character'Pos (Char));
+         Char_Data := Extended_Ascii_Data (Character'Pos (Char));
          X_Pos := X_Orig + Single (Left (Char_Data)) * Scale;
          Y_Pos := Y_Orig - Single (Rows (Char_Data) - Top (Char_Data)) * Scale;
          Char_Width := Single (Width (Char_Data)) * Scale;
@@ -197,8 +194,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Manager.Setup_Graphic (Font_File_2, Vertex_Buffer,
-                                     Extended_Ascii_List, 10.0, 10.0);
+      FT.Utilities.Initialize_Font_Data (Font_File_1, Extended_Ascii_Data);
       Setup_Buffer;
    exception
       when others =>
