@@ -224,6 +224,14 @@ package body GL.Objects.Textures is
       end if;
    end Bind;
 
+   function Is_Texture (Texture : UInt) return Boolean is
+      Ret : Boolean;
+   begin
+      Ret := API.Is_Texture (Texture);
+      Raise_Exception_On_OpenGL_Error;
+      return Ret;
+   end Is_Texture;
+
    function Current_Texture (Target : Texture_Target) return Texture'Class is
       Cursor : constant Texture_Maps.Cursor
         := Current_Textures.Find (Target.Kind);
