@@ -26,7 +26,7 @@ package GL.Objects.Textures.With_2D_Loader is
       Internal_Format : Pixels.Internal_Format;
       Width, Height : Types.Size);
 
-   procedure Storage (Object : Target; Levels : Types.Size;
+   procedure Storage (Object : Target; Number_Of_Levels : Types.Size;
                       Internal_Format : Pixels.Internal_Format;
                       Width, Height : Types.Size);
 
@@ -39,6 +39,14 @@ package GL.Objects.Textures.With_2D_Loader is
       Source_Format : Pixels.Data_Format;
       Source_Type   : Pixels.Data_Type;
       Source        : Image_Source);
+
+   procedure Load_Sub_Image_From_Data
+     (Object : Fillable_Target; Level : Mipmap_Level;
+       X_Offset, Y_Offset :Int;
+       Width, Height : Size;
+       Format        : Pixels.Data_Format;
+       Data_Type     : Pixels.Data_Type;
+      Source         : Image_Source);
 
    procedure Load_Compressed
      (Object                    : Fillable_Target;
