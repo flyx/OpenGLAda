@@ -25,7 +25,6 @@ with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
@@ -78,7 +77,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                                 Texture_ID, Projection_Matrix_ID, Colour_ID,
-                                Vertex_Array, Vertex_Buffer, Projection_Matrix);
+                                Vertex_Buffer, Projection_Matrix);
    exception
       when  others =>
          Put_Line ("An exception occurred in Render_The_Text.");
@@ -136,12 +135,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup_Buffer is
       use GL.Objects.Buffers;
    begin
-      Vertex_Array.Initialize_Id;
-      Vertex_Array.Bind;
-
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-
    end Setup_Buffer;
 
    --  ------------------------------------------------------------------------
@@ -160,7 +155,6 @@ begin
    end loop;
 
    Vertex_Buffer.Delete_Id;
-   Vertex_Array.Delete_Id;
    Render_Program.Delete_Id;
 exception
       --     when anError : FTGL.FTGL_Error =>

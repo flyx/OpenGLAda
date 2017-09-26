@@ -3,6 +3,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Objects.Textures.Targets;
+with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
 
 with FT.Errors;
@@ -14,6 +15,7 @@ package body FT.Utilities is
 
    theLibrary           : FT.API.Library_Ptr;
    Face_Ptr             : FT.API.Face_Ptr;
+   Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Extended_Ascii_Data  : FT.Interfac.Character_Data_Vector (0 .. 255);
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.API.Face_Ptr);
@@ -151,7 +153,6 @@ package body FT.Utilities is
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
                           Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
-                          Vertex_Array  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
                           Vertex_Buffer : GL.Objects.Buffers.Buffer;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
@@ -239,6 +240,9 @@ package body FT.Utilities is
       Y_Offset       : constant GL.Types.Int := 0;
       Char_Data      : FT.Interfac.Character_Record;
    begin
+      Vertex_Array.Initialize_Id;
+      Vertex_Array.Bind;
+
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
