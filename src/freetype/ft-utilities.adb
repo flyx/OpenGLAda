@@ -2,6 +2,7 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
+with GL.Objects.Buffers;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
@@ -16,6 +17,7 @@ package body FT.Utilities is
    theLibrary           : FT.API.Library_Ptr;
    Face_Ptr             : FT.API.Face_Ptr;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : FT.Interfac.Character_Data_Vector (0 .. 255);
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.API.Face_Ptr);
@@ -35,7 +37,8 @@ package body FT.Utilities is
          raise FT.FT_Exception;
       end if;
 
-      GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
+      --  Disable byte-alignment restriction
+      GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
    exception
       when others =>
          Put_Line ("An exception occurred in Setup_Font.");
@@ -153,7 +156,6 @@ package body FT.Utilities is
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
                           Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
-                          Vertex_Buffer : GL.Objects.Buffers.Buffer;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
@@ -233,6 +235,7 @@ package body FT.Utilities is
 
    procedure Setup_Character_Textures
      (Face_Ptr  : FT.API.Face_Ptr) is
+      use GL.Objects.Buffers;
       use GL.Types;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
@@ -242,6 +245,9 @@ package body FT.Utilities is
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
+
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
 
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
@@ -257,8 +263,8 @@ package body FT.Utilities is
             raise FT.FT_Exception;
          end if;
 
-         Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
-         Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
+         Width := GL.Types.Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
+         Height := GL.Types.Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
                                     FT.Glyphs.Bitmap_Left (Face_Ptr),
                                     FT.Glyphs.Bitmap_Top (Face_Ptr),

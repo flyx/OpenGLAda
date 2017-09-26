@@ -25,12 +25,11 @@ with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   Vertex_Buffer         : GL.Objects.Buffers.Buffer;
    Render_Program        : GL.Objects.Programs.Program;
    Texture_ID            : GL.Uniforms.Uniform;
-   Projection_Matrix     : GL.Types.Singles.Matrix4;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
+   Projection_Matrix     : GL.Types.Singles.Matrix4;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
@@ -41,7 +40,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
-   procedure Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
@@ -77,7 +75,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                                 Texture_ID, Projection_Matrix_ID, Colour_ID,
-                                Vertex_Buffer, Projection_Matrix);
+                                Projection_Matrix);
    exception
       when  others =>
          Put_Line ("An exception occurred in Render_The_Text.");
@@ -123,21 +121,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       FT.Utilities.Initialize_Font_Data (Font_File_1);
-      Setup_Buffer;
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
          raise;
    end Setup;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Setup_Buffer is
-      use GL.Objects.Buffers;
-   begin
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-   end Setup_Buffer;
 
    --  ------------------------------------------------------------------------
 
@@ -154,13 +142,8 @@ begin
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 
-   Vertex_Buffer.Delete_Id;
    Render_Program.Delete_Id;
 exception
-      --     when anError : FTGL.FTGL_Error =>
-      --        Put_Line ("Main_Loop returned an FTGL error: ");
-      --        raise;
-
    when anError :  others =>
       Put_Line ("An exception occurred in Main_Loop.");
       raise;

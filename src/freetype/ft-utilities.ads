@@ -1,5 +1,4 @@
 
-with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Types;
 with GL.Types.Colors;
@@ -20,6 +19,5 @@ package FT.Utilities is
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
                           Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
-                          Vertex_Buffer : GL.Objects.Buffers.Buffer;
                           Projection_Matrix : GL.Types.Singles.Matrix4);
 end FT.Utilities;
