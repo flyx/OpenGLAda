@@ -139,7 +139,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    use Glfw.Input;
    Running : Boolean := True;
-   Test_Character : Character := 'x';
+   Test_Character : Character := '@';
 begin
    if Ada.Command_Line.Argument_Count /= 1 then
       Ada.Text_IO.Put_Line ("No character entered, so displaying default character.");

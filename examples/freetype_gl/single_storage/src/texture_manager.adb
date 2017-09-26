@@ -153,8 +153,11 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-
-      Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
+      If Width < 1 and then Height < 1 then
+         Texture_2D.Storage (Num_Levels, RGBA8, 1, 1);
+      else
+         Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
+      end if;
 
       Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
       if Error_Code = 0 then
