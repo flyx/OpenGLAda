@@ -2,15 +2,11 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
-with GL.Objects.Textures;
-with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
@@ -25,7 +21,6 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with FT.Interfac;
 with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
@@ -53,7 +48,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window  : in out Glfw.Windows.Window) is
       use GL.Types;
-      use GL.Objects.Buffers;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
       Pos_X           : GL.Types.Single := 5.0;
