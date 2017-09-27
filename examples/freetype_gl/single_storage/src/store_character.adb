@@ -21,10 +21,10 @@ begin
 
 exception
    when anError : Constraint_Error =>
-      Put ("Store_Character returned constraint error: ");
+      Put ("Store_Character returned a constraint error: ");
       Put_Line (Exception_Information (anError));
 
    when anError :  others =>
-      Put_Line ("An exceptiom occurred in Hello_Character.");
+      Put_Line ("An exception occurred in Hello_Character.");
       Put_Line (Exception_Information (anError));
 end Store_Character;
