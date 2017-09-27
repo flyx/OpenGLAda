@@ -5,10 +5,12 @@ with GL.Objects.Textures;
 with GL.Types;
 
 with FT.API;
+with FT.Errors;
 with FT.Image;
 with FT.Interfac;
 
 package FT.Glyphs is
+   pragma Preelaborate;
 
    type Glyph_Record is private;
    type Glyph_Slot_Record is private;
@@ -18,18 +20,18 @@ package FT.Glyphs is
 
    function Bitmap (Face_Ptr : FT.API.Face_Ptr;
                     theBitmap : out FT.Image.Bitmap_Record)
-                    return FT.FT_Error;
+                    return Errors.Error_Code;
    function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
    function Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
                           theImage : out GL.Objects.Textures.Image_Source)
-                          return FT.FT_Error;
+                          return Errors.Error_Code;
    function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
                         return GL.Types.Int;
    function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
    function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
-                   return FT.FT_Error;
+                   return Errors.Error_Code;
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
    function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
    function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
@@ -37,9 +39,9 @@ package FT.Glyphs is
    function Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.FT_Bool) return FT.FT_Error;
+      Destroy     : Bool) return Errors.Error_Code;
    function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
-                          return FT_Error;
+                          return Errors.Error_Code;
 private
    type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Ptr is new System.Address;

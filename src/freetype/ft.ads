@@ -1,17 +1,14 @@
 
-with Interfaces.C; use Interfaces.C;
+with Interfaces.C;
 
-with GL.Types;
+with GL.Low_Level;
 
 package FT is
    pragma Preelaborate;
 
-   subtype FT_Bool is unsigned_char;
-   subtype FT_Error is GL.Types.int;
-   subtype FT_Fixed is long;
-   subtype FT_String is char;
-   subtype FT_ULong is unsigned_long;
+   subtype Bool is GL.Low_Level.Bool;
+   subtype Fixed is Interfaces.C.long;
+   subtype ULong is Interfaces.C.unsigned_long;
 
-   FT_Exception : exception;
-
+   FreeType_Exception : exception;
 end FT;

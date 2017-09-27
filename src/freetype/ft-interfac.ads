@@ -1,16 +1,19 @@
 
 with System;
 
---  with Ada.Containers.Vectors;
-
 with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
 with FT.API; use FT.API;
+with FT.Errors;
 with FT.Image;
 
+private with Interfaces.C.Strings;
+
 package FT.Interfac is
+   pragma Preelaborate;
+
    type Character_Record is private;
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
@@ -46,17 +49,20 @@ package FT.Interfac is
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
+   function Init_FreeType (alibrary : in out FT.API.Library_Ptr)
+                           return Errors.Error_Code;
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning    : access FT.Image.FT_Vector) return FT_Error;
+                     aKerning    : access FT.Image.FT_Vector)
+                     return Errors.Error_Code;
    function Left (Data : Character_Record) return GL.Types.Int;
    function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) return FT_Error;
+                            Flags : Load_Flag) return Errors.Error_Code;
    function New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
-                      return FT_Error;
-   procedure Print_Character_Data (Char : Character; Data : Character_Record);
+                      return Errors.Error_Code;
+   function Character_Data_To_String (Char : Character; Data : Character_Record)
+                                      return String;
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;
                             Width     : GL.Types.Int; Height : GL.Types.Int;
@@ -64,7 +70,8 @@ package FT.Interfac is
                             Advance_X : GL.Types.Int);
 
    function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                             Pixel_Height : GL.Types.UInt) return FT_Error;
+                             Pixel_Height : GL.Types.UInt)
+                             return Errors.Error_Code;
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
@@ -133,8 +140,8 @@ private
       Face_Flags              : GL.Types.Long;
       Style_Flags             : GL.Types.Long;
       Num_Glyphs              : GL.Types.Long;
-      Family_Name             : access FT_String;
-      Style_Name              : access FT_String;
+      Family_Name             : Interfaces.C.Strings.chars_ptr;
+      Style_Name              : Interfaces.C.Strings.chars_ptr;
       --  Num_Fixed_Sizes is the number of bitmap strikes in the face.
       --  Even if the face is scalable, there might still be bitmap strikes,
       --  which are called `sbits' in that case.

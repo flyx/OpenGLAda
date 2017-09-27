@@ -26,7 +26,8 @@ package body FT.Image is
 
    --  -------------------------------------------------------------------------
 
-   function Palette_Mode (Bitmap : Bitmap_Record) return unsigned_char is
+   function Palette_Mode (Bitmap : Bitmap_Record)
+                          return Interfaces.C.unsigned_char is
    begin
       return Bitmap.Palette_Mode;
    end Palette_Mode;
@@ -40,7 +41,8 @@ package body FT.Image is
 
    --  -------------------------------------------------------------------------
 
-   function Pixel_Mode (Bitmap : Bitmap_Record) return unsigned_char is
+   function Pixel_Mode (Bitmap : Bitmap_Record)
+                        return Interfaces.C.unsigned_char is
    begin
       return Bitmap.Pixel_Mode;
    end Pixel_Mode;

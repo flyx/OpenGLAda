@@ -6,6 +6,7 @@ with GL.Types;
 with FT.Glyphs;
 
 package body FT.Utilities is
+   use Interfaces.C;
 
    procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record) is
       use GL.Types;

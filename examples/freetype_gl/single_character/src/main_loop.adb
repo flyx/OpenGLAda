@@ -116,8 +116,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array.Bind;
 
       Rendering_Program := Program_From
-          ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
-           Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
+          ((Src ("src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
+           Src ("src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
       --  Character position must be within window bounds.
       Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 4.0, Test_Character);
 
