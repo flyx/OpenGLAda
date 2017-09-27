@@ -1,0 +1,9 @@
+lib
+obj
+bin
+.DS_Store
+.#*#
+hello_character
+store_character
+render_text
+
