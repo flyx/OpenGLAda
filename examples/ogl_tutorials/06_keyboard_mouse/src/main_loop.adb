@@ -156,7 +156,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         UVs_Buffer.Initialize_Id;
         Array_Buffer.Bind (UVs_Buffer);
-        Utilities.Load_UV_Buffer (Array_Buffer, Cube_Data.UV_Data, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.UV_Data, Static_Draw);
         Utilities.Enable_Mouse_Callbacks (Window, True);
         Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
         Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
