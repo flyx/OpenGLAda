@@ -2,10 +2,12 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
+with GL.Blending;
 with GL.Objects.Buffers;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
+with GL.Toggles;
 
 with FT.Errors;
 with FT.Glyphs;
@@ -28,12 +30,12 @@ package body FT.Utilities is
       use GL.Types;
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
-         Put_Line ("A face failed to load.");
+         Put_Line ("FT.Utilities.Setup_Font; a face failed to load.");
          raise FT.FT_Exception;
       end if;
       --  Set pixel size to 48 x 48
       if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
-         Put_Line ("Unable to set pixel sizes.");
+         Put_Line ("FT.Utilities.Setup_Font; unable to set pixel sizes.");
          raise FT.FT_Exception;
       end if;
 
@@ -41,7 +43,7 @@ package body FT.Utilities is
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Font.");
+         Put_Line ("An exception occurred in FT.Utilities.Setup_Font.");
          raise;
    end Setup_Font;
 
@@ -51,7 +53,7 @@ package body FT.Utilities is
       use GL.Types;
    begin
       if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
-         Put_Line ("The Freetype Library failed to load.");
+         Put_Line ("FT.Utilities.Initialize_Font_Data; the Freetype Library failed to load.");
          raise FT.FT_Exception;
       end if;
 
@@ -92,7 +94,7 @@ package body FT.Utilities is
 
       Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image_Ptr);
       if Error_Code /= 0 then
-         Put_Line ("Setup_Texture: " & FT.Errors.Error (Error_Code));
+         Put_Line ("FT.Utilities.Load_Texture error: " & FT.Errors.Error (Error_Code));
          raise FT.FT_Exception;
       end if;
 
@@ -100,6 +102,10 @@ package body FT.Utilities is
         (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
          Bitmap_Image_Ptr);
       FT.Interfac.Set_Texture (Char_Data, aTexture);
+   exception
+      when others =>
+         Put_Line ("An exception occurred in FT.Utilities.Load_Texture.");
+         raise;
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
@@ -180,6 +186,12 @@ package body FT.Utilities is
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
+      --  Blending allows a fragment colour's alpha value to control the resulting
+      --  colour which will be transparent for all the glyph's background colours and
+      --  non-transparent for the actual character pixels.
+      GL.Toggles.Enable (GL.Toggles.Blend);
+      GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
+                                  GL.Blending.One_Minus_Src_Alpha);
       GL.Objects.Programs.Use_Program (Render_Program);
 
       for index in Text'Range loop
@@ -199,11 +211,12 @@ package body FT.Utilities is
                          (X_Pos + Char_Width, Y_Pos + Height, 1.0, 0.0));
 
          Vertex_Array.Bind;
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
+         Array_Buffer.Bind (Vertex_Buffer);
+         Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Dynamic_Draw);
 
          Char_Texture := Character_Texture (Char_Data);
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("Render_The_Text, aTexture is invalid.");
+            Put_Line ("FT.Utilities.Render_Text, aTexture is invalid.");
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -220,14 +233,16 @@ package body FT.Utilities is
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);
+
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
       end loop;
+      GL.Toggles.Disable (GL.Toggles.Blend);
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in Render_The_Text.");
+         Put_Line ("An exception occurred in FT.Utilities.Render_Text.");
          raise;
    end Render_Text;
 
@@ -243,6 +258,13 @@ package body FT.Utilities is
       Y_Offset       : constant GL.Types.Int := 0;
       Char_Data      : FT.Interfac.Character_Record;
    begin
+      --  Blending allows a fragment colour's alpha value to control the resulting
+      --  colour which will be transparent for all the glyph's background colours and
+      --  non-transparent for the actual character pixels.
+      GL.Toggles.Enable (GL.Toggles.Blend);
+      GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
+                                  GL.Blending.One_Minus_Src_Alpha);
+
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
 
@@ -254,12 +276,12 @@ package body FT.Utilities is
          --  that can be accessed via face->glyph->bitmap.
          if FT.Interfac.Load_Character (Face_Ptr, GL.Types.long (index),
                                         FT.Interfac.Load_Render) /= 0 then
-            Put_Line ("Setup_Textures, a character failed to load.");
+            Put_Line ("FT.Utilities.Setup_Character_Textures, a character failed to load.");
             raise FT.FT_Exception;
          end if;
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-            Put_Line ("A character failed to render.");
+            Put_Line ("FT.Utilities.Setup_Character_Textures; a character failed to render.");
             raise FT.FT_Exception;
          end if;
 
@@ -273,9 +295,10 @@ package body FT.Utilities is
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
       end loop;
+
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in FT.Utilities.Setup_Character_Textures.");
+         Put_Line ("An exception occurred in FT.Utilities.Setup_Character_Textures.");
          raise;
    end Setup_Character_Textures;
 
