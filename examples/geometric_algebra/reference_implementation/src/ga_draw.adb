@@ -127,7 +127,7 @@ package body GA_Draw is
     begin
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
---              Utilities.Load_UV_Buffer (Array_Buffer, Vertices, Static_Draw);
+--              Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 --              GL.Attributes.Enable_Vertex_Attrib_Array (0);
 --              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
 --
@@ -195,7 +195,7 @@ package body GA_Draw is
     begin
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_UV_Buffer (Array_Buffer, Vertices, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
 
@@ -240,7 +240,7 @@ package body GA_Draw is
 
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_UV_Buffer (Array_Buffer, Vertices, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
             GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
 
