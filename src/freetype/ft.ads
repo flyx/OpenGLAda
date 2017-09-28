@@ -12,6 +12,6 @@ package FT is
    subtype FT_String is char;
    subtype FT_ULong is unsigned_long;
 
-   FT_Exception : exception;
+   FreeType_Exception : exception;
 
 end FT;

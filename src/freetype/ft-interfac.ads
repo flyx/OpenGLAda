@@ -1,8 +1,6 @@
 
 with System;
 
---  with Ada.Containers.Vectors;
-
 with GL.Objects.Textures;
 with GL.Types;
 
@@ -11,6 +9,7 @@ with FT.API; use FT.API;
 with FT.Image;
 
 package FT.Interfac is
+
    type Character_Record is private;
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 

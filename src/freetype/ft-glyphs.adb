@@ -1,8 +1,6 @@
 
 with System.Address_To_Access_Conversions;
 
-with Ada.Text_IO; use Ada.Text_IO;
-
 with FT.API.Glyphs;
 with FT.Errors;
 
@@ -27,8 +25,7 @@ package body FT.Glyphs is
       FT.API.Glyphs.FT_Done_Glyph (Glyph);
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Done_Glyph raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Done_Glyph raised an Exception";
    end Done_Glyph;
 
    --  -------------------------------------------------------------------------
@@ -57,8 +54,7 @@ package body FT.Glyphs is
       return Code;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Bitmap raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Bitmap raised an Exception";
    end Bitmap;
 
    --  -------------------------------------------------------------------------
@@ -79,8 +75,7 @@ package body FT.Glyphs is
  --     return FT.Image.Buffer (Bitmap (Slot_Ptr));
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Bitmap_Image raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Bitmap_Image raised an Exception";
    end Bitmap_Image;
 
    --  -------------------------------------------------------------------------
@@ -97,8 +92,7 @@ package body FT.Glyphs is
       return Glyph_Slot.Bitmap_Left;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Bitmap_Left raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Bitmap_Left raised an Exception";
    end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
@@ -111,9 +105,9 @@ package body FT.Glyphs is
       Check_Face_Ptr (Face_Ptr);
       Error_Code := Bitmap (Face_Ptr, theBitmap);
       if Error_Code /= 0 then
-         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
-              FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Glyphs.Bitmap_Height raised an exception " &
+              FT.Errors.Error (Error_Code);
       end if;
       return GL.Types.Single (FT.Image.Rows (theBitmap));
    end Bitmap_Height;
@@ -128,9 +122,9 @@ package body FT.Glyphs is
       Check_Face_Ptr (Face_Ptr);
       Error_Code := Bitmap (Face_Ptr, theBitmap);
       if Error_Code /= 0 then
-         Put ("FT.Glyphs.Bitmap_Width raised an exception " &
-              FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+          "FT.Glyphs.Bitmap_Rows raised an exception " &
+          FT.Errors.Error (Error_Code);
       end if;
       return FT.Image.Rows (theBitmap);
    end Bitmap_Rows;
@@ -150,8 +144,7 @@ package body FT.Glyphs is
       return Glyph.Bitmap_Top;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Bitmap_Top raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Bitmap_Top raised an Exception";
    end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
@@ -164,9 +157,9 @@ package body FT.Glyphs is
       Check_Face_Ptr (Face_Ptr);
       Error_Code := Bitmap (Face_Ptr, theBitmap);
       if Error_Code /= 0 then
-         Put_Line ("FT.Glyphs.Bitmap_Width raised an exception " &
-              FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Glyphs.Bitmap_Width raised an exception " &
+              FT.Errors.Error (Error_Code);
       end if;
       return GL.Types.Single (FT.Image.Width (theBitmap));
    end Bitmap_Width;
@@ -177,8 +170,8 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (Face_Ptr) = System.Null_Address then
-         Put_Line ("No face is loaded, Face_Ptr is null.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Glyphs.Check_Face_Ptr; No face is loaded, Face_Ptr is null.";
       end if;
    end Check_Face_Ptr;
 
@@ -188,8 +181,8 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
-         Put_Line ("No glyph is loaded, Glyph_Ptr is null.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Glyphs.Check_Face_Ptr; No glyph is loaded, Glyph_Ptr is null.";
       end if;
    end Check_Glyph_Ptr;
 
@@ -199,8 +192,7 @@ package body FT.Glyphs is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
-         Put_Line ("No glyph is loaded, Glyph_Slot_Ptr is null.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "No glyph is loaded, Glyph_Slot_Ptr is null.";
       end if;
    end Check_Glyph_Slot_Ptr;
 
@@ -225,8 +217,7 @@ package body FT.Glyphs is
       return Code;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Glyph raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Glyph raised an Exception";
    end Glyph;
 
    --  -------------------------------------------------------------------------
@@ -240,8 +231,8 @@ package body FT.Glyphs is
       return Glyph_Acc.all;
    exception
          when others =>
-            Put_Line ("FT.Glyphs.Glyph aGlyph_Ptr raised an Exception");
-            raise FT.FT_Exception;
+            raise FreeType_Exception with
+             "FT.Glyphs.Glyph; aGlyph_Ptr raised an Exception";
    end Glyph;
 
    --  -------------------------------------------------------------------------
@@ -254,8 +245,7 @@ package body FT.Glyphs is
       return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
    exception
          when others =>
-            Put_Line ("FT.Glyphs.Glyph Slot_Ptr raised an Exception");
-            raise FT.FT_Exception;
+            raise FreeType_Exception with "FT.Glyphs.Glyph Slot_Ptr raised an Exception";
    end Glyph;
 
    --  -------------------------------------------------------------------------
@@ -273,8 +263,7 @@ package body FT.Glyphs is
       return Glyph.Advance;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Glyph_Advance raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Glyph_Advance raised an Exception";
    end Glyph_Advance;
 
    --  -------------------------------------------------------------------------
@@ -292,8 +281,7 @@ package body FT.Glyphs is
       return Glyph.Format;
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Glyph_Format raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Glyph_Format raised an Exception";
    end Glyph_Format;
 
    --  -------------------------------------------------------------------------
@@ -307,8 +295,7 @@ package body FT.Glyphs is
                                                Origin, Destroy);
    exception
       when others =>
-         Put_Line ("FT.Glyphs.Glyph_To_Bitmap raised an Exception");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap raised an Exception";
    end Glyph_To_Bitmap;
 
    --  -------------------------------------------------------------------------

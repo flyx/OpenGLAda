@@ -25,8 +25,8 @@ package body FT.Interfac is
       Sizes    : FT_Bitmap_Size;
    begin
       if theFace.Available_Sizes = null then
-         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "Bitmap_Height failed, there are no sizes available for this face.";
       end if;
       Sizes:= theFace.Available_Sizes.all;
       return GL.Types.Int (Sizes.Height);
@@ -39,8 +39,8 @@ package body FT.Interfac is
       Sizes   : FT_Bitmap_Size;
    begin
       if theFace.Available_Sizes = null then
-         Put_Line ("Bitmap_Height failed, there are no sizes available for this face.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "Bitmap_Height failed, there are no sizes available for this face.";
       end if;
       Sizes:= theFace.Available_Sizes.all;
       return GL.Types.Int (Sizes.Width);
@@ -60,8 +60,7 @@ package body FT.Interfac is
       use GL.Types;
    begin
       if FT_Done_Face (aFace) /= 0 then
-         Put_Line ("FT_Done_Face failed");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT_Done_Face failed";
       end if;
    end Done_Face;
 
@@ -71,8 +70,7 @@ package body FT.Interfac is
       use GL.Types;
    begin
       if FT_Done_Library (Library) /= 0 then
-         Put_Line ("FT_Done_Library failed");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "FT_Done_Library failed";
       end if;
    end Done_Library;
 
@@ -95,14 +93,12 @@ package body FT.Interfac is
                        To_Pointer (System.Address (theFace.Size));
    begin
       if Size_Pointer = null then
-         Put_Line ("Face_Size failed, theFace.Size is null.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "Face_Size failed, theFace.Size is null.";
       end if;
       return Size_Pointer.all;
    exception
          when others =>
-            Put_Line ("Face_Size raised an exception.");
-            raise FT.FT_Exception;
+         raise FreeType_Exception with "Face_Size raised an exception.";
    end Face_Size;
 
    --  -------------------------------------------------------------------------
@@ -114,8 +110,7 @@ package body FT.Interfac is
                                Face_Size (aFace).Metrics.Descender);
    exception
          when others =>
-            Put_Line ("Face_Height raised an exception.");
-            raise FT.FT_Exception;
+         raise FreeType_Exception with "Face_Height raised an exception.";
    end Face_Height;
 
    --  -------------------------------------------------------------------------
@@ -125,8 +120,7 @@ package body FT.Interfac is
       return GL.Types.Int (Face_Size (aFace).Metrics.X_Ppem);
    exception
          when others =>
-            Put_Line ("Face_Width raised an exception.");
-            raise FT.FT_Exception;
+         raise FreeType_Exception with "Face_Width raised an exception.";
    end Face_Width;
 
    --  -------------------------------------------------------------------------
@@ -136,8 +130,7 @@ package body FT.Interfac is
      theFace : constant Face_Record := Face (aFace);
    begin
       if System.Address (theFace.Glyph_Slot) = System.Null_Address then
-         Put_Line ("No Glyph is loaded.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with "No Glyph is loaded.";
       end if;
       return theFace.Glyph_Slot;
    end Glyph_Slot;

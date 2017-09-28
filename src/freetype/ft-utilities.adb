@@ -30,21 +30,21 @@ package body FT.Utilities is
       use GL.Types;
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
-         Put_Line ("FT.Utilities.Setup_Font; a face failed to load.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Utilities.Setup_Font; a face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
       if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
-         Put_Line ("FT.Utilities.Setup_Font; unable to set pixel sizes.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Utilities.Setup_Font; unable to set pixel sizes.";
       end if;
 
       --  Disable byte-alignment restriction
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Setup_Font.");
-         raise;
+         raise FreeType_Exception with
+             "An exception occurred in FT.Utilities.Setup_Font.";
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
@@ -53,8 +53,8 @@ package body FT.Utilities is
       use GL.Types;
    begin
       if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
-         Put_Line ("FT.Utilities.Initialize_Font_Data; the Freetype Library failed to load.");
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Utilities.Initialize_Font_Data; the Freetype Library failed to load.";
       end if;
 
       Setup_Font (Font_File);
@@ -94,8 +94,8 @@ package body FT.Utilities is
 
       Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image_Ptr);
       if Error_Code /= 0 then
-         Put_Line ("FT.Utilities.Load_Texture error: " & FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
+         raise FreeType_Exception with
+             "FT.Utilities.Load_Texture error: " & FT.Errors.Error (Error_Code);
       end if;
 
       Texture_2D.Load_Sub_Image_From_Data
@@ -104,8 +104,8 @@ package body FT.Utilities is
       FT.Interfac.Set_Texture (Char_Data, aTexture);
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Load_Texture.");
-         raise;
+         raise FT.FreeType_Exception with
+             "An exception occurred in FT.Utilities.Load_Texture.";
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
@@ -276,13 +276,13 @@ package body FT.Utilities is
          --  that can be accessed via face->glyph->bitmap.
          if FT.Interfac.Load_Character (Face_Ptr, GL.Types.long (index),
                                         FT.Interfac.Load_Render) /= 0 then
-            Put_Line ("FT.Utilities.Setup_Character_Textures, a character failed to load.");
-            raise FT.FT_Exception;
+            raise FreeType_Exception with
+                "FT.Utilities.Setup_Character_Textures, a character failed to load.";
          end if;
          --  Ensure that the glyph image is an anti-aliased bitmap
          if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-            Put_Line ("FT.Utilities.Setup_Character_Textures; a character failed to render.");
-            raise FT.FT_Exception;
+            raise FreeType_Exception with
+                "FT.Utilities.Setup_Character_Textures; a character failed to render.";
          end if;
 
          Width := GL.Types.Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
