@@ -62,4 +62,5 @@ package FT.API is
                                 Pixel_Height : GL.Types.UInt)
                                 return Errors.Error_Code;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");
+
 end FT.API;

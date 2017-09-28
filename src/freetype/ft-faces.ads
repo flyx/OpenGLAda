@@ -91,8 +91,8 @@ package FT.Faces is
    function Width (Data : Character_Record) return GL.Types.Int;
 
    Image_Error : exception;
-private
 
+private
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
