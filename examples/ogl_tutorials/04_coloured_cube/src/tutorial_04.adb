@@ -8,7 +8,7 @@ with Glfw.Windows;
 with Initialize;
 with Main_Loop;
 
-procedure Tutorial_4 is
+procedure Tutorial_04 is
     Main_Window : Glfw.Windows.Window;
     Window_Title : String := "Tutorial 4 - Coloured Cube";
 begin
@@ -24,4 +24,4 @@ exception
     when anError :  others =>
         Put_Line ("An exception occurred in Tutorial_4.");
         Put_Line (Exception_Information (anError));
-end Tutorial_4;
+end Tutorial_04;
