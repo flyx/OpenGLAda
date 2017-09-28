@@ -74,7 +74,7 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "/System/Library/Fonts/Arial.ttf";
+      Font_File  : String := "../../noto_fonts/NotoSerif-Regular";
    begin
       if FT.Freetype.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
