@@ -20,7 +20,7 @@ with Interfaces.C.Strings;
 
 with GL.Types;
 
-with FT.Errors;
+with Errors;
 with FT.Image;
 
 package FT.API.Faces is

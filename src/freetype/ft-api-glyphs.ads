@@ -16,7 +16,7 @@
 
 with System;
 
-with FT.Errors;
+with Errors;
 with FT.Glyphs;
 with FT.Image;
 

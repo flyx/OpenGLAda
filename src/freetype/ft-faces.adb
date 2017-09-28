@@ -151,14 +151,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Init_FreeType (aLibrary : in out Library_Ptr)
-                           return Errors.Error_Code is
-   begin
-      return FT_Init_FreeType (System.Address (aLibrary));
-   end Init_FreeType;
-
-   --  -------------------------------------------------------------------------
-
    function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning : access FT.Image.FT_Vector)

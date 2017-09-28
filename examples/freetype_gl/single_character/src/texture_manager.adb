@@ -12,7 +12,7 @@ with GL.Types.Colors;
 
 with FT;
 with FT.API;
-with FT.Errors;
+with Errors;
 with FT.Glyphs;
 with FT.Image;
 with FT.Faces;
@@ -21,9 +21,9 @@ with FT.Utilities;
 with Utilities;
 
 package body Texture_Manager is
-   use type FT.Errors.Error_Code;
+   use type Errors.Error_Code;
 
-   theLibrary    : FT.API.Library_Ptr;
+   theLibrary    : FT.Library_Ptr;
    Face_Ptr      : FT.API.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
@@ -82,12 +82,12 @@ package body Texture_Manager is
            "Texture_Manager.Setup_Font cannot find " & Font_File;
       end if;
       if FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
-        FT.Errors.Ok then
+        Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Font - A face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
-      if FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
+      if FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= Errors.Ok then
          raise FT.FreeType_Exception with "Unable to set pixel sizes.";
       end if;
 
@@ -105,9 +105,9 @@ package body Texture_Manager is
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use GL.Types;
-      Error_Code   : FT.Errors.Error_Code;
+      Error_Code   : Errors.Error_Code;
    begin
-      if FT.Faces.Init_FreeType (theLibrary) /= FT.Errors.Ok then
+      if FT.Initialize (theLibrary) /= Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Graphic - The Freetype Library failed to load.";
       end if;
@@ -115,15 +115,15 @@ package body Texture_Manager is
       Setup_Font;
       Error_Code := FT.Faces.Load_Character
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
-      if Error_Code /= FT.Errors.Ok then
+      if Error_Code /= Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Graphic - A character failed to load."
-             & FT.Errors.Description (Error_Code);
+             & Errors.Description (Error_Code);
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /=
-        FT.Errors.Ok then
+        Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Graphic - A character failed to render.";
       end if;

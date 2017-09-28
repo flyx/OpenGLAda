@@ -234,9 +234,9 @@ package body FT.Glyphs is
    begin
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       Code := FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
-      if Code /= FT.Errors.Ok then
+      if Code /= Errors.Ok then
          raise FreeType_Exception with
-           "FT.Glyphs.Glyph error :" & FT.Errors.Description (Code);
+           "FT.Glyphs.Glyph error :" & Errors.Description (Code);
       end if;
    exception
       when others =>

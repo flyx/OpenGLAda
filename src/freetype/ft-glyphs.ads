@@ -20,7 +20,7 @@ with GL.Objects.Textures;
 with GL.Types;
 
 with FT.API;
-with FT.Errors;
+with Errors;
 with FT.Image;
 with FT.Faces;
 
@@ -74,7 +74,7 @@ private
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
    type Glyph_Record is record
-      Library : FT.API.Library_Ptr;
+      Library : FT.Library_Ptr;
       Clazz   : System.Address;
       Format  : FT.Image.Glyph_Format;
       Advance : FT.Image.FT_Vector;
@@ -94,7 +94,7 @@ private
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Slot_Record is record
-      Library              : FT.API.Library_Ptr;
+      Library              : FT.Library_Ptr;
       Face                 : FT.API.Face_Ptr;
       Next                 : FT.API.Glyph_Slot_Ptr;
       Reserved             : GL.Types.UInt;

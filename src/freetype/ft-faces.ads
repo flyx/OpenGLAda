@@ -21,7 +21,7 @@ with GL.Types;
 
 with FT;
 with FT.API; use FT.API;
-with FT.Errors;
+with Errors;
 with FT.Image;
 
 private with Interfaces.C.Strings;
@@ -64,8 +64,6 @@ package FT.Faces is
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out FT.API.Library_Ptr)
-                           return Errors.Error_Code;
    function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector)

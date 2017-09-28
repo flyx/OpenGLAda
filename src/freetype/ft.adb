@@ -14,25 +14,16 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
+with FT.API.Faces;
 
-with Interfaces.C;
+package body FT is
 
-with GL.Low_Level;
+   function Initialize (aLibrary : in out Library_Ptr)
+                           return Errors.Error_Code is
+   begin
+      return FT.API.Faces.FT_Init_FreeType (System.Address (aLibrary));
+   end Initialize;
 
-with Errors;
+   --  -------------------------------------------------------------------------
 
-package FT is
-   pragma Preelaborate;
-
-   type Library_Ptr is new System.Address;
-
-   subtype Bool is GL.Low_Level.Bool;
-   subtype Fixed is Interfaces.C.long;
-   subtype ULong is Interfaces.C.unsigned_long;
-
-   FreeType_Exception : exception;
-
-   function Initialize (alibrary : in out Library_Ptr)
-                           return Errors.Error_Code;
 end FT;
