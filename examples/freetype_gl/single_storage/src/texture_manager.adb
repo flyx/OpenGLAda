@@ -77,7 +77,7 @@ package body Texture_Manager is
 
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Setup_Buffer.");
+         Put_Line ("An exception occurred in Setup_Buffer.");
          raise;
    end Setup_Buffer;
 
