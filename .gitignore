@@ -3,6 +3,7 @@ obj
 bin
 .DS_Store
 .#*#
+*~
 colour_fragments
 simple_geometry
 simple_tessellation
@@ -25,5 +26,7 @@ render_text
 hello_character
 wave
 bivectors
+simple_texturing
+
 
 

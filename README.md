@@ -78,6 +78,28 @@ by executing:
 
 (Substitute `windows` with `x11` or `quartz` if needed.)
 
+## Detailed Instructions
+
+### Windows / GNAT GPL 2017 / GLFW 3
+
+ * Download and install GNAT GPL 2017 Windows x86 from
+   [AdaCore's Libre Site][1]. We assume you install it to `C:\GNAT\2017`. Make
+   sure the `bin` folder is in he path of your shell (whichever you are using).
+ * Download *32-bit Windows binaries* from the [GLFW download section][14]
+   (tested with GLFW 3.2.1).
+ * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw`
+   folder into `C:\GNAT\2017\lib`.
+ * Open your shell and navigate to the root folder of OpenGLAda. Execute:
+
+        gprbuild -P opengl_test.gpr -XWindowing_System=windows -XGLFW_Version=3
+
+ * This should produce executables in the `bin` folder inside OpenGLAda. Now
+   copy the `glfw3.dll` to that `bin` folder.
+ * You should now be able to start the executables either by double-click using
+   the explorer or from the shell.
+ * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
+   for them to work.
+
 ## Using OpenGLAda in your project
 
 ### With GPRBuild
@@ -217,3 +239,4 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [11]: https://sourceforge.net/projects/ftgl/
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: https://github.com/flyx/OpenGLAda/issues/15
+ [14]: http://www.glfw.org/download.html
