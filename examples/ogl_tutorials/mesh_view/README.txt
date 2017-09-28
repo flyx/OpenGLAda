@@ -1,15 +1,33 @@
+-- 07 Sep 2017 ----------------------------------------------------------------
+
+This is simple example of triangle mesh viewer using OpenGLAda.
+
+The code borrows extensively from other examples in this folder.
+
+The code reads only very basic Wavefront .obj file (allowing for only the simplest
+of .obj files, see the examples in the meshes directory).
+
+Controls are simple:
+
+1) left mouse down and drag to rotate the view
+2) scroll wheel to move in or out
+3) arrow keys to shift the view left, right, up and down
+4) press "r" to reset to the initial view
+5) press "esc" to terminate
+
+When dragging with the left mouse down you can get the view to spin if you
+drag to an abrupt halt and continue to hold the button down. The spinning will
+stop when you release the left mouse button.
+
 -- 06 Sep 2017 ----------------------------------------------------------------
-1) Unpack the .tar.gz archive so that the meshview directory is in
 
-   OpenGLAda-0.4/examples/ogl_tutorials/meshview
+1) Compile and run
 
-2) Compile and run
-
-   cd OpenGLAda-0.4/examples/ogl_tutorials/meshview
+   cd OpenGLAda-0.4/examples/ogl_tutorials/mesh_view
    make
-   meshview
+   meshview obj-file colour-map
 
-3) Other examples
+2) Other examples
 
    meshview meshes/lattice.obj
    meshview meshes/suzanne.obj
