@@ -66,7 +66,7 @@ package body Texture_Manager is
                                                Stride => Stride, Offset => 0);
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Buffer.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Buffer.");
          raise;
    end Setup_Buffer;
 
@@ -78,7 +78,8 @@ package body Texture_Manager is
    begin
       if FT.Freetype.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
-         raise FT.FreeType_Exception with "A face failed to load.";
+         raise FT.FreeType_Exception with
+             "Texture_Manager.Setup_Font - A face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
       if FT.Freetype.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
@@ -88,7 +89,7 @@ package body Texture_Manager is
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Font.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Font.");
          raise;
    end Setup_Font;
 
@@ -99,22 +100,27 @@ package body Texture_Manager is
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use GL.Types;
+      Error_Code   : FT.Errors.Error_Code;
    begin
       if FT.Freetype.Init_FreeType (theLibrary) /= FT.Errors.Ok then
-         raise FT.FreeType_Exception with "The Freetype Library failed to load.";
+         raise FT.FreeType_Exception with
+             "Texture_Manager.Setup_Graphic - The Freetype Library failed to load.";
       end if;
 
       Setup_Font;
-      if FT.Freetype.Load_Character
-        (Face_Ptr, Character'Pos (Char),
-         FT.Freetype.Load_Render) /= FT.Errors.Ok then
-         raise FT.FreeType_Exception with "A character failed to load.";
+      Error_Code := FT.Freetype.Load_Character
+          (Face_Ptr, Character'Pos (Char), FT.Freetype.Load_Render);
+      if Error_Code /= FT.Errors.Ok then
+         raise FT.FreeType_Exception with
+             "Texture_Manager.Setup_Graphic - A character failed to load."
+             & FT.Errors.Description (Error_Code);
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /=
         FT.Errors.Ok then
-         raise FT.FreeType_Exception with "A character failed to render.";
+         raise FT.FreeType_Exception with
+             "Texture_Manager.Setup_Graphic - A character failed to render.";
       end if;
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
@@ -150,11 +156,11 @@ package body Texture_Manager is
          Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                      Bitmap_Image);
       else
-         Put_Line ("Setup_Texture error: " & FT.Errors.Description (Error_Code));
+         Put_Line ("Texture_Manager.Setup_Texture error: " & FT.Errors.Description (Error_Code));
       end if;
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Texture.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
          raise;
    end Setup_Texture;
 
