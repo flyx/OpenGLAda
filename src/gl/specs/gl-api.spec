@@ -612,7 +612,7 @@ spec GL.API is
      Format : Pixels.Data_Format;
      Data_Type : Pixels.Data_Type;
      Data : Objects.Textures.Image_Source) with
-     Static  => "glTexSubImage1D",
+     Dynamic => "glTexSubImage1D",
      Wrapper => "GL.Objects.Textures.With_1D_Loader.Load_Sub_Image_From_Data";
    procedure Tex_Storage_1D
      (Target : Low_Level.Enums.Texture_Kind; Levels : Size;
@@ -684,7 +684,7 @@ spec GL.API is
      Format : Pixels.Data_Format;
      Data_Type : Pixels.Data_Type;
      Data : Objects.Textures.Image_Source) with
-     Static  => "glTexSubImage3D",
+     Dynamic => "glTexSubImage3D",
      Wrapper => "GL.Objects.Textures.With_3D_Loader.Load_Sub_Image_From_Data";
    procedure Tex_Storage_3D
      (Target : Low_Level.Enums.Texture_Kind; Levels : Size;

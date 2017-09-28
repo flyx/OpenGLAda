@@ -16,8 +16,10 @@
 
 with Ada.Unchecked_Conversion;
 
+with GL;
 with Glfw.API;
 with Glfw.Enums;
+with GLFW.Windows.Context;
 
 package body Glfw.Windows is
    procedure Raw_Position_Callback (Raw  : System.Address;
@@ -175,6 +177,8 @@ package body Glfw.Windows is
          raise Creation_Error;
       end if;
       API.Set_Window_User_Pointer (Object.Handle, Object);
+      Context.Make_Current (Object);
+      GL.Init;
    end Init;
 
    function Initialized (Object : not null access Window) return Boolean is
