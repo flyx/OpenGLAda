@@ -33,20 +33,17 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   function Bitmap (Face_Ptr : FT.API.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record)
-                    return Errors.Error_Code;
+   procedure Bitmap (Face_Ptr : FT.API.Face_Ptr;
+                    theBitmap : out FT.Image.Bitmap_Record);
    function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   function Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
-                          theImage : out GL.Objects.Textures.Image_Source)
-                          return Errors.Error_Code;
+   procedure Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
+                          theImage : out GL.Objects.Textures.Image_Source);
    function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
                         return GL.Types.Int;
    function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
-                   return Errors.Error_Code;
+   procedure Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record);
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
    function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
    function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
