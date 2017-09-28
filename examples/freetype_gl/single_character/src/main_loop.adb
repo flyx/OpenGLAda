@@ -85,7 +85,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Render.");
+         Put_Line ("An exception occurred in Render.");
          raise;
    end Render;
 
@@ -131,7 +131,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           GL.Objects.Programs.Attrib_Location (Rendering_Program, "vertices");
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Setup.");
+         Put_Line ("An exception occurred in Setup.");
          raise;
    end Setup;
 
@@ -142,7 +142,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Test_Character : Character := 'x';
 begin
    if Ada.Command_Line.Argument_Count /= 1 then
-      Ada.Text_IO.Put_Line ("No character entered, so dispalying default character.");
+      Ada.Text_IO.Put_Line ("No character entered, so displaying default character.");
    else
       Test_Character := Ada.Command_Line.Argument (1) (1);
    end if;
@@ -161,6 +161,6 @@ exception
       --  message has been written to stdout
       raise;
    when anError :  others =>
-      Put_Line ("An exceptiom occurred in Main_Loop.");
+      Put_Line ("An exception occurred in Main_Loop.");
       raise;
 end Main_Loop;
