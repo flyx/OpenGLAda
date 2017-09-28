@@ -1,6 +1,7 @@
 
 with System;
 
+with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -85,22 +86,27 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
+--        Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
+      Font_File  : String := "../../noto_fonts/NotoSerif-Regular";
    begin
+      if not Ada.Directories.Exists (Font_File) then
+         raise FT.FT_Exception with
+           "Texture_Manager.Setup_Font cannot find " & Font_File;
+      end if;
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
-         Put_Line ("A face failed to load.");
-         raise FT.FT_Exception;
+         raise FT.FT_Exception with
+           "Texture_Manager.Setup_Font - A face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
       if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
-         Put_Line ("Unable to set pixel sizes.");
-         raise FT.FT_Exception;
+         raise FT.FT_Exception with
+           "Texture_Manager.Setup_Font - Unable to set pixel sizes.";
       end if;
 
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Font.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Font.");
          raise;
    end Setup_Font;
 
