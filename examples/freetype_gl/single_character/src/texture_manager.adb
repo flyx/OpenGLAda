@@ -1,6 +1,7 @@
 
 with System;
 
+with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
@@ -74,8 +75,13 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "../../noto_fonts/NotoSerif-Regular";
+      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
+--        Font_File  : String := "../../noto_fonts/NotoSerif-Regular";
    begin
+      if not Ada.Directories.Exists (Font_File) then
+         raise FT.FreeType_Exception with
+           "Texture_Manager.Setup_Font cannot find " & Font_File;
+      end if;
       if FT.Freetype.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
          raise FT.FreeType_Exception with
