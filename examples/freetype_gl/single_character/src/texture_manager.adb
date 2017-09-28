@@ -14,7 +14,7 @@ with FT.API;
 with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
-with FT.Interfac;
+with FT.Freetype;
 with FT.Utilities;
 
 with Utilities;
@@ -76,12 +76,12 @@ package body Texture_Manager is
       use GL.Types;
       Font_File  : String := "/System/Library/Fonts/Arial.ttf";
    begin
-      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
+      if FT.Freetype.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
          raise FT.FreeType_Exception with "A face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
-      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
+      if FT.Freetype.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
          raise FT.FreeType_Exception with "Unable to set pixel sizes.";
       end if;
 
@@ -100,14 +100,14 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT.Interfac.Init_FreeType (theLibrary) /= FT.Errors.Ok then
+      if FT.Freetype.Init_FreeType (theLibrary) /= FT.Errors.Ok then
          raise FT.FreeType_Exception with "The Freetype Library failed to load.";
       end if;
 
       Setup_Font;
-      if FT.Interfac.Load_Character
+      if FT.Freetype.Load_Character
         (Face_Ptr, Character'Pos (Char),
-         FT.Interfac.Load_Render) /= FT.Errors.Ok then
+         FT.Freetype.Load_Render) /= FT.Errors.Ok then
          raise FT.FreeType_Exception with "A character failed to load.";
       end if;
 
@@ -121,8 +121,8 @@ package body Texture_Manager is
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT.Interfac.Done_Face (Face_Ptr);
-      FT.Interfac.Done_Library (theLibrary);
+      FT.Freetype.Done_Face (Face_Ptr);
+      FT.Freetype.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------

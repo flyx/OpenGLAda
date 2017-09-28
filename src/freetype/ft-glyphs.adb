@@ -46,7 +46,7 @@ package body FT.Glyphs is
       Code          :  Errors.Error_Code;
    begin
       Check_Face_Ptr (Face_Ptr);
-      Glyph_Slot := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Glyph_Slot := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Glyph_Slot);
       Glyph_Pointer:= To_Pointer (System.Address (Glyph_Slot));
       theGlyph := Glyph_Pointer.all;
@@ -89,7 +89,7 @@ package body FT.Glyphs is
       Glyph_Slot : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       Glyph_Slot := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph_Slot.Bitmap_Left;
@@ -142,7 +142,7 @@ package body FT.Glyphs is
       Glyph     : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Bitmap_Top;
@@ -213,7 +213,7 @@ package body FT.Glyphs is
       Code       : Errors.Error_Code;
    begin
       Check_Face_Ptr (Face_Ptr);
-      aGlyph_Slot := FT.Interfac.Glyph_Slot (Face_Ptr);
+      aGlyph_Slot := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (aGlyph_Slot);
       Code := Glyph (aGlyph_Slot, aGlyph_Ptr);
       Check_Glyph_Ptr (aGlyph_Ptr);
@@ -265,7 +265,7 @@ package body FT.Glyphs is
       Glyph    : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Advance;
@@ -284,7 +284,7 @@ package body FT.Glyphs is
       Glyph    : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
+      Slot_Ptr := FT.Freetype.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
       Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
       return Glyph.Format;
@@ -316,7 +316,7 @@ package body FT.Glyphs is
       Slot : FT.API.Glyph_Slot_Ptr;
    begin
       Check_Face_Ptr (aFace);
-      Slot := FT.Interfac.Glyph_Slot (aFace);
+      Slot := FT.Freetype.Glyph_Slot (aFace);
       return  FT.API.Glyphs.FT_Render_Glyph (Slot, Mode);
    end Render_Glyph;
 

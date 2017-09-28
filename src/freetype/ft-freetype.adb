@@ -1,9 +1,9 @@
 
 with System.Address_To_Access_Conversions;
 
-with FT.API.Interfac; use FT.API.Interfac;
+with FT.API.Freetype; use FT.API.Freetype;
 
-package body FT.Interfac is
+package body FT.Freetype is
    use type Errors.Error_Code;
 
    package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
@@ -254,4 +254,4 @@ package body FT.Interfac is
 
    --  ------------------------------------------------------------------------
 
-end FT.Interfac;
+end FT.Freetype;

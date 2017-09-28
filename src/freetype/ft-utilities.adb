@@ -42,9 +42,9 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (Data : FT.Interfac.Character_Record) is
+   procedure Print_Character_Metadata (Data : FT.Freetype.Character_Record) is
       use GL.Types;
-      use FT.Interfac;
+      use FT.Freetype;
    begin
       Put_Line ("Width: " & GL.Types.Int'Image (Width (Data)));
       Put_Line ("Rows: " & GL.Types.Int'Image (Rows (Data)));

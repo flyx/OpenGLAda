@@ -11,7 +11,7 @@ with FT.Image;
 
 private with Interfaces.C.Strings;
 
-package FT.Interfac is
+package FT.Freetype is
    pragma Preelaborate;
 
    type Character_Record is private;
@@ -193,14 +193,14 @@ private
       Underline_Thickness     : GL.Types.Short;
       Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
-      Size                    : Size_Ptr;
+      Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
       Character_Map           : Char_Map_Ptr;
       Driver                  : Driver_Ptr;
       Memory                  : Memory_Ptr;
       Stream                  : Stream_Ptr;
       Sizes_List              : List_Record;
       Autohint                : Generic_Record;
-      Extensions              : System.Address;
+      Extensions              : System.Address := System.Null_Address;
       Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Face_Record);
@@ -313,4 +313,4 @@ private
         Load_Compute_Metrics             => 16#200000#,
         Load_Bitmap_Metrics_Only         => 16#400000#);
 
-end FT.Interfac;
+end FT.Freetype;

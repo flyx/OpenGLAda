@@ -8,7 +8,7 @@ with GL.Types;
 with FT.Errors;
 with FT.Image;
 
-package FT.API.Interfac is
+package FT.API.Freetype is
    pragma Preelaborate;
 
    function FT_Done_Face (aFace : Face_Ptr) return Errors.Error_Code;
@@ -42,4 +42,4 @@ package FT.API.Interfac is
                                 return Errors.Error_Code;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");
 
-end FT.API.Interfac;
+end FT.API.Freetype;
