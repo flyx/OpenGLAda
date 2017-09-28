@@ -25,10 +25,6 @@ with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
-with FT.Glyphs;
-with FT.Freetype;
-with FT.Utilities;
-
 with Maths;
 with Program_Loader;
 with Utilities;

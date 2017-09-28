@@ -22,7 +22,7 @@ with GL.Types;
 with FT.API;
 with FT.Errors;
 with FT.Image;
-with FT.Freetype;
+with FT.Faces;
 
 package FT.Glyphs is
    pragma Preelaborate;
@@ -98,7 +98,7 @@ private
       Face                 : FT.API.Face_Ptr;
       Next                 : FT.API.Glyph_Slot_Ptr;
       Reserved             : GL.Types.UInt;
-      C_Generic            : FT.Freetype.Generic_Record;
+      C_Generic            : FT.Faces.Generic_Record;
       Metrics              : Glyph_Metrics;
       Linear_Horiz_Advance : GL.Types.long;
       Linear_Vert_Advance  : GL.Types.long;

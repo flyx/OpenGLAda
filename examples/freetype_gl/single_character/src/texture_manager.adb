@@ -15,7 +15,7 @@ with FT.API;
 with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
-with FT.Freetype;
+with FT.Faces;
 with FT.Utilities;
 
 with Utilities;
@@ -75,19 +75,19 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "../../noto_fonts/NotoSerif-Regular.ttf";
+      Font_File  : String := "../../fonts/NotoSerif-Regular.ttf";
    begin
       if not Ada.Directories.Exists (Font_File) then
          raise FT.FreeType_Exception with
            "Texture_Manager.Setup_Font cannot find " & Font_File;
       end if;
-      if FT.Freetype.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
+      if FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Font - A face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
-      if FT.Freetype.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
+      if FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= FT.Errors.Ok then
          raise FT.FreeType_Exception with "Unable to set pixel sizes.";
       end if;
 
@@ -107,14 +107,14 @@ package body Texture_Manager is
       use GL.Types;
       Error_Code   : FT.Errors.Error_Code;
    begin
-      if FT.Freetype.Init_FreeType (theLibrary) /= FT.Errors.Ok then
+      if FT.Faces.Init_FreeType (theLibrary) /= FT.Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Graphic - The Freetype Library failed to load.";
       end if;
 
       Setup_Font;
-      Error_Code := FT.Freetype.Load_Character
-          (Face_Ptr, Character'Pos (Char), FT.Freetype.Load_Render);
+      Error_Code := FT.Faces.Load_Character
+          (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
       if Error_Code /= FT.Errors.Ok then
          raise FT.FreeType_Exception with
              "Texture_Manager.Setup_Graphic - A character failed to load."
@@ -132,8 +132,8 @@ package body Texture_Manager is
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT.Freetype.Done_Face (Face_Ptr);
-      FT.Freetype.Done_Library (theLibrary);
+      FT.Faces.Done_Face (Face_Ptr);
+      FT.Faces.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
