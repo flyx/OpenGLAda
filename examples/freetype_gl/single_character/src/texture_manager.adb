@@ -74,7 +74,7 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
+      Font_File  : String := "/System/Library/Fonts/Arial.ttf";
    begin
       if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
         FT.Errors.Ok then
