@@ -31,9 +31,10 @@ package FT.API.Freetype is
                           Load_Flags : GL.Types.Int) return Errors.Error_Code;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
-   function FT_New_Face (Library : Library_Ptr;
+   function FT_New_Face (Library        : Library_Ptr;
                          File_Path_Name : Interfaces.C.Strings.chars_ptr;
-                         Face_Index     : GL.Types.long; aFace : in out System.Address)
+                         Face_Index     : GL.Types.long;
+                         aFace          : in out System.Address)
                          return Errors.Error_Code;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
