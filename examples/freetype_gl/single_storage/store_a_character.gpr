@@ -12,10 +12,5 @@ project Store_A_Character is
       for Default_Switches ("ada") use ("-gnatyclux");
    end Compiler;
 
-   package Linker is
-      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype");
-   end Linker;
-
-
 end Store_A_Character;
 
