@@ -14,7 +14,7 @@ with FT.API;
 with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
-with FT.Interfac;
+with FT.FreeType;
 with FT.Utilities;
 
 with Utilities;
@@ -75,14 +75,14 @@ package body Texture_Manager is
       use GL.Types;
       Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
-      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
+      if FT.FreeType.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          Put_Line ("A face failed to load.");
-         raise FT.FT_Exception;
+         raise FT.FreeType_Exception;
       end if;
       --  Set pixel size to 48 x 48
-      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
+      if FT.FreeType.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
          Put_Line ("Unable to set pixel sizes.");
-         raise FT.FT_Exception;
+         raise FT.FreeType_Exception;
       end if;
 
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
@@ -100,30 +100,30 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
+      if FT.FreeType.Init_FreeType (theLibrary) /= 0 then
          Put_Line ("The Freetype Library failed to load.");
-         raise FT.FT_Exception;
+         raise FT.FreeType_Exception;
       end if;
 
       Setup_Font;
-      if FT.Interfac.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT.Interfac.Load_Render) /= 0 then
+      if FT.FreeType.Load_Character (Face_Ptr, Character'Pos (Char),
+                                      FT.FreeType.Load_Render) /= 0 then
          Put_Line ("A character failed to load.");
-         raise FT.FT_Exception;
+         raise FT.FreeType_Exception;
       end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
          Put_Line ("A character failed to render.");
-         raise FT.FT_Exception;
+         raise FT.FreeType_Exception;
       end if;
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT.Interfac.Done_Face (Face_Ptr);
-      FT.Interfac.Done_Library (theLibrary);
+      FT.FreeType.Done_Face (Face_Ptr);
+      FT.FreeType.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
