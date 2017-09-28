@@ -21,9 +21,10 @@ describes how OpenGL features are wrapped by OpenGLAda.
 
 ## OpenGL Versions
 
-OpenGLAda aims to provide the feature set of OpenGL 3.2, but quite some
-functionality of newer OpenGL version (up to 4.4) is also available. Features
-are being added when requested.
+OpenGLAda aims to provide the feature set of OpenGL 4.5, but is not complete
+yet as the main developer has few time for maintaining this library. Features
+are being added when requested. Refer to the mapping table to check whether a
+feature you need is wrapped by OpenGLAda.
 
 OpenGL 3.0 has deprecated a lot of functionality that was part of earlier versions.
 OpenGLAda provides some of this older functionality that seems to be important enough
@@ -60,63 +61,14 @@ available. OpenGLAda queries the neccessary function pointers at runtime and rai
 `Feature_Not_Supported_Exception` when a function is not available from the system's
 OpenGL implementation. The querying will be done once by calling `GL.Init`.
 
+The call to `GL.Init` should be made after an OpenGL context has been created
+and has been made current. Note that the `Glfw` package does this automatically
+when you create a Window so typically, you do not have to worry about it.
+
 ## Getting Started
 
-Reading lots of documentation can be exhausting, so here is some code that gives you a
-basic idea of how to use OpenGLAda:
-
-<?prettify lang=ada?>
-
-    with GL.Buffers;         use GL.Buffers;
-    with GL.Colors;          use GL.Colors;
-    with GL.Fixed.Immediate; use GL.Fixed.Immediate;
-    with GL.Fixed.Matrix;    use GL.Fixed.Matrix;
-    with GL.Types;           use GL.Types;
-    use GL.Fixed;
-
-    with Glfw.Display;
-    with Glfw.Events.Keys;
-
-    procedure GL_Test.Immediate is
-       use GL.Types.Doubles;
-    begin
-       Glfw.Init;
-
-       Glfw.Display.Open (Mode  => Glfw.Display.Window,
-                          Width => 500, Height => 500);
-
-       Projection.Load_Identity;
-       Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-
-       while not Glfw.Events.Keys.Pressed (Glfw.Events.Keys.Esc) and
-             Glfw.Display.Opened loop
-          Clear (Buffer_Bits'(others => True));
-
-          Projection.Push;
-
-          for I in 1 .. 12 loop
-             declare
-                Token : Input_Token := Start (Line_Strip);
-             begin
-                Set_Color (GL.Colors.Color'(1.0, 0.0, 0.0, 0.0));
-                Token.Add_Vertex (Vector4'(0.1, 0.4, 0.0, 1.0));
-                Token.Add_Vertex (Vector4'(0.1, 0.6, 0.0, 1.0));
-                Token.Add_Vertex (Vector4'(-0.1, 0.6, 0.0, 1.0));
-                Token.Add_Vertex (Vector4'(-0.1, 0.4, 0.0, 1.0));
-             end;
-             Projection.Apply_Rotation (360.0 / 12.0, 0.0, 0.0, 1.0);
-          end loop;
-
-          Projection.Pop;
-          Projection.Apply_Rotation (0.8, 0.0, 0.0, 1.0);
-
-          GL.Flush;
-
-          Glfw.Display.Swap_Buffers;
-
-          Glfw.Events.Poll_Events;
-       end loop;
-
-       Glfw.Terminate_Glfw;
-
-    end GL_Test.Immediate;
+If you want to see OpenGLAda in action, go to the `examples` folder and have a
+look at the provided examples. They give you an idea of how to use the API. In
+particular, the examples under `examples/superbible` may be interesting since
+they are taken from http://www.openglsuperbible.com which teaches the reader to
+use modern OpenGL 4.5 features.
