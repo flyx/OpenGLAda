@@ -145,7 +145,6 @@ package body Texture_Manager is
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
-      Error_Code   : FT.Errors.Error_Code;
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
@@ -156,13 +155,9 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
-      if Error_Code = FT.Errors.Ok then
-         Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
-                                     Bitmap_Image);
-      else
-         Put_Line ("Texture_Manager.Setup_Texture error: " & FT.Errors.Description (Error_Code));
-      end if;
+      FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
+                                  Bitmap_Image);
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
