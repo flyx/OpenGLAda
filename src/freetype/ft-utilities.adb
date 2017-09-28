@@ -20,7 +20,7 @@ package body FT.Utilities is
    Face_Ptr             : FT.API.Face_Ptr;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-   Extended_Ascii_Data  : FT.Interfac.Character_Data_Vector (0 .. 255);
+   Extended_Ascii_Data  : FT.FreeType.Character_Data_Vector (0 .. 255);
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.API.Face_Ptr);
 
@@ -29,12 +29,12 @@ package body FT.Utilities is
    procedure Setup_Font (Font_File : String) is
       use GL.Types;
    begin
-      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
+      if FT.FreeType.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
          raise FreeType_Exception with
              "FT.Utilities.Setup_Font; a face failed to load.";
       end if;
       --  Set pixel size to 48 x 48
-      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
+      if FT.FreeType.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
          raise FreeType_Exception with
              "FT.Utilities.Setup_Font; unable to set pixel sizes.";
       end if;
@@ -52,7 +52,7 @@ package body FT.Utilities is
    procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
    begin
-      if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
+      if FT.FreeType.Init_FreeType (theLibrary) /= 0 then
          raise FreeType_Exception with
              "FT.Utilities.Initialize_Font_Data; the Freetype Library failed to load.";
       end if;
@@ -60,14 +60,14 @@ package body FT.Utilities is
       Setup_Font (Font_File);
       Setup_Character_Textures (Face_Ptr);
 
-      FT.Interfac.Done_Face (Face_Ptr);
-      FT.Interfac.Done_Library (theLibrary);
+      FT.FreeType.Done_Face (Face_Ptr);
+      FT.FreeType.Done_Library (theLibrary);
    end Initialize_Font_Data;
 
    --  ------------------------------------------------------------------------
 
    procedure Load_Texture (Face_Ptr  : FT.API.Face_Ptr;
-                           Char_Data : in out FT.Interfac.Character_Record;
+                           Char_Data : in out FT.FreeType.Character_Record;
                            Width, Height : GL.Types.Size;
                            X_Offset, Y_Offset : GL.Types.Int) is
       use GL.Objects.Textures.Targets;
@@ -101,7 +101,7 @@ package body FT.Utilities is
       Texture_2D.Load_Sub_Image_From_Data
         (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
          Bitmap_Image_Ptr);
-      FT.Interfac.Set_Texture (Char_Data, aTexture);
+      FT.FreeType.Set_Texture (Char_Data, aTexture);
    exception
       when others =>
          raise FT.FreeType_Exception with
@@ -144,9 +144,9 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (Data : FT.Interfac.Character_Record) is
+   procedure Print_Character_Metadata (Data : FT.FreeType.Character_Record) is
       use GL.Types;
-      use FT.Interfac;
+      use FT.FreeType;
    begin
       Put_Line ("Width: " & GL.Types.Int'Image (Width (Data)));
       Put_Line ("Rows: " & GL.Types.Int'Image (Rows (Data)));
@@ -167,7 +167,7 @@ package body FT.Utilities is
       use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
-      use FT.Interfac;
+      use FT.FreeType;
 
       Num_Triangles  : constant GL.Types.Int := 2;
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
@@ -175,7 +175,7 @@ package body FT.Utilities is
       Stride         : constant GL.Types.Int := 0;
 
       Char           : Character;
-      Char_Data      : FT.Interfac.Character_Record;
+      Char_Data      : FT.FreeType.Character_Record;
       Char_Texture   : GL.Objects.Textures.Texture;
       X_Orig         : Single := X;
       Y_Orig         : constant Single := Y;
@@ -256,7 +256,7 @@ package body FT.Utilities is
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
       Y_Offset       : constant GL.Types.Int := 0;
-      Char_Data      : FT.Interfac.Character_Record;
+      Char_Data      : FT.FreeType.Character_Record;
    begin
       --  Blending allows a fragment colour's alpha value to control the resulting
       --  colour which will be transparent for all the glyph's background colours and
@@ -274,8 +274,8 @@ package body FT.Utilities is
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
-         if FT.Interfac.Load_Character (Face_Ptr, GL.Types.long (index),
-                                        FT.Interfac.Load_Render) /= 0 then
+         if FT.FreeType.Load_Character (Face_Ptr, GL.Types.long (index),
+                                        FT.FreeType.Load_Render) /= 0 then
             raise FreeType_Exception with
                 "FT.Utilities.Setup_Character_Textures, a character failed to load.";
          end if;
@@ -287,7 +287,7 @@ package body FT.Utilities is
 
          Width := GL.Types.Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := GL.Types.Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-         FT.Interfac.Set_Char_Data (Char_Data, Width, Height,
+         FT.FreeType.Set_Char_Data (Char_Data, Width, Height,
                                     FT.Glyphs.Bitmap_Left (Face_Ptr),
                                     FT.Glyphs.Bitmap_Top (Face_Ptr),
                                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
