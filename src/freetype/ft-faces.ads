@@ -59,7 +59,6 @@ package FT.Faces is
    function Character_Texture (Data : Character_Record)
                                return GL.Objects.Textures.Texture;
    procedure Done_Face (aFace : Face_Ptr);
-   procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;

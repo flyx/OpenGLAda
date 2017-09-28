@@ -14,14 +14,24 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with FT.API.Faces;
+with FT.API.Faces; use FT.API.Faces;
 
 package body FT is
+
+   procedure Done_Library (Library : Library_Ptr) is
+      use Errors;
+   begin
+      if FT_Done_Library (Library) /= Errors.Ok then
+         raise FreeType_Exception with "FT_Done_Library failed";
+      end if;
+   end Done_Library;
+
+   --  -------------------------------------------------------------------------
 
    function Initialize (aLibrary : in out Library_Ptr)
                            return Errors.Error_Code is
    begin
-      return FT.API.Faces.FT_Init_FreeType (System.Address (aLibrary));
+      return FT_Init_FreeType (System.Address (aLibrary));
    end Initialize;
 
    --  -------------------------------------------------------------------------

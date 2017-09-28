@@ -79,16 +79,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Done_Library (Library : Library_Ptr) is
-      use GL.Types;
-   begin
-      if FT_Done_Library (Library) /= Errors.Ok then
-         raise FreeType_Exception with "FT_Done_Library failed";
-      end if;
-   end Done_Library;
-
-   --  -------------------------------------------------------------------------
-
    function Face (aFace : Face_Ptr) return Face_Record is
       use Face_Access;
       --  type Object_Pointer is access all Object;
