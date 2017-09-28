@@ -136,6 +136,29 @@ These instructions are for building 64bit binaries on Windows.
  * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
    for them to work.
 
+### macOS High Sierra / GNAT GPL 2017 / GLFW 3
+
+ * Download and install GNAT GPL 2017 x86_64 Mac OS X from
+   [AdaCore's Libre Site][1]. We assume you install it to `/usr/local/gnat`. Make
+   sure the `bin` folder is in the `PATH` of your shell.
+ * There are multiple ways to install `glfw`; the most popular one is probably
+   using [Homebrew][18] and executing `brew install glfw`.
+ * Open your shell and navigate to the root folder of OpenGLAda. Execute:
+
+        gprbuild -p -P opengl_test.gpr -XWindowing_System=quartz -XGLFW_Version=3
+
+   This should produce executables in the `bin` folder inside OpenGLAda.
+ * Some of the test binaries require to be launched from the `bin` folder as
+   working directory because they are loading shader files from hardcoded paths.
+ * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
+   for them to work.
+
+### Linux
+
+Please refer to your package manager documentation. Most Linux distributions
+provide packages for GNAT and GLFW. On Debian, you need to install `gprbuild` as
+separate package.
+
 ## Using OpenGLAda in your project
 
 ### With GPRBuild
@@ -268,3 +291,4 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [15]: http://tdm-gcc.tdragon.net/download
  [16]: http://getadanow.com/#get_windows
  [17]: http://tdm-gcc.tdragon.net/
+ [18]: https://brew.sh
