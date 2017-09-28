@@ -75,8 +75,7 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
---        Font_File  : String := "../../noto_fonts/NotoSerif-Regular";
+      Font_File  : String := "../../noto_fonts/NotoSerif-Regular.ttf";
    begin
       if not Ada.Directories.Exists (Font_File) then
          raise FT.FreeType_Exception with
