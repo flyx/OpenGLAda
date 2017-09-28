@@ -16,8 +16,6 @@
 
 with System.Address_To_Access_Conversions;
 
-with FT.API.Faces; use FT.API.Faces;
-
 package body FT.Faces is
    use type Errors.Error_Code;
 

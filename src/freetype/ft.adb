@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with FT.API.Faces; use FT.API.Faces;
+with FT.API; use FT.API;
 
 package body FT is
 
