@@ -39,7 +39,11 @@ In order to build OpenGLAda, you need to have:
    [GnuAda][12], [AdaCore GNAT GPL 2017][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
-   can get it from [here][[16].
+   can get it from [here][[16] (**NOTE: The gprbuild bundled in this zip is
+   known not to work. For the time being, if you're using TDM-GCC, replace
+   gprbuild with gnatmake in all commands even though that will tell you that
+   project support in gnatmake is deprecated and will soon be removed.** The
+   reason for this incompatibility has not been found yet).
  * An OpenGL implementation (usually comes bundled with your graphics driver)
  * Optionally [GLFW][3] (OpenGLAda is pretty useless without the ability to
    create an OpenGL context.)
@@ -107,15 +111,21 @@ These instructions are for building 64bit binaries on Windows.
  * Download and install the 64bit TDM-GCC compiler from [here][15]. In the
    installation wizard, make sure to check the (by default unchecked) *ada*
    option. Make sure the `bin` folder is in the `PATH` of your shell.
+
+<!-- These currently do not work – uncomment when fixed
+
  * Download `gpr-tools.zip` from [here][16] and extract its contents to the
    folder where you installed TDM-GCC (e.g. `C:\TDM-GCC-64\`).
+
+-->
+
  * Download the *64-bit Windows binaries* from the [GLFW download section][14]
    (tested with GLFW 3.2.1).
  * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw-w64`
    folder into `C:\TDM-GCC-64\lib`.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gprbuild -p -P opengl_test.gpr -XWindowing_System=windows =XGLFW_Version=3
+        gnatmake -p -P opengl_test.gpr -XWindowing_System=windows =XGLFW_Version=3
 
    This should produce executables in the `bin` folder inside OpenGLAda.
  * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
