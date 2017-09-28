@@ -20,9 +20,11 @@ package body FT is
 
    procedure Done_Library (Library : Library_Ptr) is
       use Errors;
+      Code : constant Errors.Error_Code := FT_Done_Library (Library);
    begin
-      if FT_Done_Library (Library) /= Errors.Ok then
-         raise FreeType_Exception with "FT_Done_Library failed";
+      if Code /= Ok then
+         raise FreeType_Exception with "FT_Done_Library failed" &
+             Description (Code);
       end if;
    end Done_Library;
 
