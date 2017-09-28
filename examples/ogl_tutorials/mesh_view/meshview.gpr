@@ -1,0 +1,26 @@
+limited with "../../../opengl-glfw.gpr";
+
+project meshview is
+   for Source_Dirs use ("src", "src/png", "src/zlib", "../../common");
+   for Object_Dir use "obj/";
+   for Exec_Dir use ".";
+   for Main use ("meshview.adb");
+
+   -- package Compiler is
+   --    for Default_Switches ("ada") use ("-gnatycltux");
+   -- end Compiler;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnatwA");
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("ada") use ("-lz");  -- libPNG requires -lz
+   end Linker;
+
+   -- use: "gnat pp -P meshview.gpr  -XWindowing_System=quartz -XGLFW_Version=3" to run the pretty printer
+   package Pretty_Printer is
+      for Default_Switches ("ada") use ("-M128","--par_threshold=2","--output-dir=pretty");
+   end Pretty_Printer;
+
+end meshview;
