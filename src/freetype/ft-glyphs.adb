@@ -89,7 +89,6 @@ package body FT.Glyphs is
          theImage := FT.Image.Buffer (theBitmap);
       end if;
       return Error_Code;
- --     return FT.Image.Buffer (Bitmap (Slot_Ptr));
    exception
       when others =>
          raise FreeType_Exception with
