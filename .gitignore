@@ -4,6 +4,7 @@ bin
 .DS_Store
 .#*#
 *~
+*.exe
 colour_fragments
 simple_geometry
 simple_tessellation
