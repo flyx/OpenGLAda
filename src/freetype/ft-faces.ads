@@ -21,7 +21,6 @@ with GL.Types;
 
 with FT;
 with FT.API; use FT.API;
-with Errors;
 with FT.Image;
 
 private with Interfaces.C.Strings;
@@ -63,16 +62,14 @@ package FT.Faces is
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
-   function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
+   procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning    : access FT.Image.FT_Vector)
-                     return Errors.Error_Code;
+                     aKerning    : access FT.Image.FT_Vector);
    function Left (Data : Character_Record) return GL.Types.Int;
-   function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) return Errors.Error_Code;
-   function New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
-                      return Errors.Error_Code;
+   procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
+                            Flags : Load_Flag);
+   procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
+                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr);
    function Character_Data_To_String (Char : Character; Data : Character_Record)
                                       return String;
    function Rows (Data : Character_Record) return GL.Types.Int;
@@ -80,10 +77,8 @@ package FT.Faces is
                             Width     : GL.Types.Int; Height : GL.Types.Int;
                             Left      : GL.Types.Int; Top    : GL.Types.Int;
                             Advance_X : GL.Types.Int);
-
-   function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                             Pixel_Height : GL.Types.UInt)
-                             return Errors.Error_Code;
+   procedure Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
+                             Pixel_Height : GL.Types.UInt);
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;

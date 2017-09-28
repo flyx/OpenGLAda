@@ -81,15 +81,9 @@ package body Texture_Manager is
          raise FT.FreeType_Exception with
            "Texture_Manager.Setup_Font cannot find " & Font_File;
       end if;
-      if FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr) /=
-        Errors.Ok then
-         raise FT.FreeType_Exception with
-             "Texture_Manager.Setup_Font - A face failed to load.";
-      end if;
+      FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
-      if FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= Errors.Ok then
-         raise FT.FreeType_Exception with "Unable to set pixel sizes.";
-      end if;
+      FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
 
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
@@ -105,7 +99,6 @@ package body Texture_Manager is
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use GL.Types;
-      Error_Code   : Errors.Error_Code;
    begin
       if FT.Initialize (theLibrary) /= Errors.Ok then
          raise FT.FreeType_Exception with
@@ -113,13 +106,8 @@ package body Texture_Manager is
       end if;
 
       Setup_Font;
-      Error_Code := FT.Faces.Load_Character
+      FT.Faces.Load_Character
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
-      if Error_Code /= Errors.Ok then
-         raise FT.FreeType_Exception with
-             "Texture_Manager.Setup_Graphic - A character failed to load."
-             & Errors.Description (Error_Code);
-      end if;
 
       --  Ensure that the glyph image is an anti-aliased bitmap
       if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /=

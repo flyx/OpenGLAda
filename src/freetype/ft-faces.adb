@@ -37,7 +37,7 @@ package body FT.Faces is
    begin
       if theFace.Available_Sizes = null then
          raise FreeType_Exception with
-           "Bitmap_Height failed, there are no sizes available for this face.";
+           "FT.Faces.Bitmap_Height failed, there are no sizes available for this face.";
       end if;
       Sizes:= theFace.Available_Sizes.all;
       return GL.Types.Int (Sizes.Height);
@@ -51,7 +51,7 @@ package body FT.Faces is
    begin
       if theFace.Available_Sizes = null then
          raise FreeType_Exception with
-           "Bitmap_Height failed, there are no sizes available for this face.";
+           "FT.Faces.Bitmap_Height failed, there are no sizes available for this face.";
       end if;
       Sizes:= theFace.Available_Sizes.all;
       return GL.Types.Int (Sizes.Width);
@@ -71,7 +71,7 @@ package body FT.Faces is
       use GL.Types;
    begin
       if FT_Done_Face (aFace) /= Errors.Ok then
-         raise FreeType_Exception with "FT_Done_Face failed";
+         raise FreeType_Exception with "FT.Faces.FT_Done_Face failed";
       end if;
    end Done_Face;
 
@@ -95,12 +95,12 @@ package body FT.Faces is
    begin
       if Size_Pointer = null then
          raise FreeType_Exception with
-           "Face_Size failed, theFace.Size is null.";
+           "FT.Faces.Face_Size failed, theFace.Size is null.";
       end if;
       return Size_Pointer.all;
    exception
          when others =>
-            raise FreeType_Exception with "Face_Size raised an exception.";
+            raise FreeType_Exception with "FT.Faces.Face_Size raised an exception.";
    end Face_Size;
 
    --  -------------------------------------------------------------------------
@@ -112,7 +112,7 @@ package body FT.Faces is
                                Face_Size (aFace).Metrics.Descender);
    exception
          when others =>
-            raise FreeType_Exception with "Face_Height raised an exception.";
+            raise FreeType_Exception with "FT.Faces.Face_Height raised an exception.";
    end Face_Height;
 
    --  -------------------------------------------------------------------------
@@ -122,7 +122,7 @@ package body FT.Faces is
       return GL.Types.Int (Face_Size (aFace).Metrics.X_Ppem);
    exception
          when others =>
-            raise FreeType_Exception with "Face_Width raised an exception.";
+            raise FreeType_Exception with "FT.Faces.Face_Width raised an exception.";
    end Face_Width;
 
    --  -------------------------------------------------------------------------
@@ -132,19 +132,23 @@ package body FT.Faces is
      theFace : constant Face_Record := Face (aFace);
    begin
       if System.Address (theFace.Glyph_Slot) = System.Null_Address then
-         raise FreeType_Exception with "No Glyph is loaded.";
+         raise FreeType_Exception with "FT.Faces.Glyph_Slot - No Glyph is loaded.";
       end if;
       return theFace.Glyph_Slot;
    end Glyph_Slot;
 
    --  -------------------------------------------------------------------------
 
-   function Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
+   procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning : access FT.Image.FT_Vector)
-                     return Errors.Error_Code is
+                     aKerning : access FT.Image.FT_Vector) is
+      Code : constant Errors.Error_Code :=
+               FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
    begin
-      return  FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
+      if Code /= Errors.Ok then
+         raise FT.FreeType_Exception with "FT.Faces.Kerning error: " &
+             Errors.Description (Code);
+      end if;
    end Kerning;
 
    --  -------------------------------------------------------------------------
@@ -156,21 +160,30 @@ package body FT.Faces is
 
    --  ------------------------------------------------------------------------
 
-   function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) return Errors.Error_Code is
+   procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
+                            Flags : Load_Flag) is
+      Code : constant Errors.Error_Code :=
+                FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
    begin
-      return FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
+      if Code /= Errors.Ok then
+         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+             Errors.Description (Code);
+      end if;
    end Load_Character;
 
    --  -------------------------------------------------------------------------
 
-   function New_Face (Library : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out Face_Ptr)
-                      return Errors.Error_Code is
+   procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
+                      Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
+      Code : constant Errors.Error_Code :=
+               FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
    begin
-      return  FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
+      if Code /= Errors.Ok then
+         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+             Errors.Description (Code);
+      end if;
    end New_Face;
 
    --  -------------------------------------------------------------------------
@@ -210,11 +223,15 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-  function Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                            Pixel_Height : GL.Types.UInt)
-                            return Errors.Error_Code is
+  procedure Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
+                            Pixel_Height : GL.Types.UInt) is
+      Code : constant Errors.Error_Code :=
+               FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
   begin
-      return FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
+      if Code /= Errors.Ok then
+         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+             Errors.Description (Code);
+      end if;
   end;
 
    --  -------------------------------------------------------------------------
