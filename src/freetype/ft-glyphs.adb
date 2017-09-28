@@ -316,8 +316,7 @@ package body FT.Glyphs is
       Origin      : access FT.Image.FT_Vector;
       Destroy     : Bool) return Errors.Error_Code is
    begin
-      return FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode,
-                                               Origin, Destroy);
+      return FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, Destroy);
    exception
       when others =>
          raise FreeType_Exception with
