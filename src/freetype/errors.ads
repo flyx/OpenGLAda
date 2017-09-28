@@ -16,7 +16,7 @@
 
 with GL.Types;
 
-package FT.Errors is
+package Errors is
    pragma Preelaborate;
 
    type Error_Code is
@@ -167,4 +167,4 @@ package FT.Errors is
      Missing_Startfont_Field .. Corrupted_Font_Glyphs;
 
    function Description (Code : Error_Code) return String;
-end FT.Errors;
+end Errors;
