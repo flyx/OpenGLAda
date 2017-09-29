@@ -1,6 +1,7 @@
 
 with System;
 
+with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -11,20 +12,20 @@ with GL.Types.Colors;
 
 with FT;
 with FT.API;
-with FT.Errors;
+with Errors;
 with FT.Glyphs;
 with FT.Image;
-with FT.Interfac;
+with FT.Faces;
 with FT.Utilities;
 
 with Utilities;
 
 package body Texture_Manager is
+   use type Errors.Error_Code;
 
-   theLibrary     : FT.API.Library_Ptr;
-   Face_Ptr       : FT.API.Face_Ptr;
-   Character_Data : FT.Interfac.Character_Data_Vector (0 .. 127);
-   Vertex_Data    : Vertex_Array;
+   theLibrary    : FT.Library_Ptr;
+   Face_Ptr      : FT.API.Face_Ptr;
+   Vertex_Data   : Vertex_Array;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            Char          : Character;
@@ -47,18 +48,10 @@ package body Texture_Manager is
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
    begin
-     if FT.Interfac.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT.Interfac.Load_Render) /= 0 then
-         Put_Line ("A character failed to load.");
-         raise FT.FT_Exception;
-     end if;
+     FT.Faces.Load_Character (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-         Put_Line ("A character failed to render.");
-         raise FT.FT_Exception;
-      end if;
-      FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -77,7 +70,7 @@ package body Texture_Manager is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Buffer.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Buffer.");
          raise;
    end Setup_Buffer;
 
@@ -85,22 +78,16 @@ package body Texture_Manager is
 
    procedure Setup_Font is
       use GL.Types;
-      Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
+      Font_File  : String := "../../fonts/NotoSerif-Regular.ttf";
    begin
-      if FT.Interfac.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
-         Put_Line ("A face failed to load.");
-         raise FT.FT_Exception;
-      end if;
+      FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
-      if FT.Interfac.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
-         Put_Line ("Unable to set pixel sizes.");
-         raise FT.FT_Exception;
-      end if;
-
+      FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
+
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Font.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Font.");
          raise;
    end Setup_Font;
 
@@ -112,17 +99,20 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT.Interfac.Init_FreeType (theLibrary) /= 0 then
-         Put_Line ("The Freetype Library failed to load.");
-         raise FT.FT_Exception;
-      end if;
-
+      FT.Initialize (theLibrary);
       Setup_Font;
+      FT.Faces.Load_Character
+          (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
+
+      --  Ensure that the glyph image is an anti-aliased bitmap
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+      FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
+
       Setup_Buffer (Vertex_Buffer, Char, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT.Interfac.Done_Face (Face_Ptr);
-      FT.Interfac.Done_Library (theLibrary);
+      FT.Faces.Done_Face (Face_Ptr);
+      FT.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -136,13 +126,12 @@ package body Texture_Manager is
       X_Offset     : constant GL.Types.Int := 0;
       Y_Offset     : constant GL.Types.Int := 0;
       Num_Levels   : constant GL.Types.Size := 1;
-      Char_Data    : FT.Interfac.Character_Record;
+      Char_Data    : FT.Faces.Character_Record;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
-      Error_Code   : FT.FT_Error;
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
-      FT.Interfac.Set_Char_Data
+      FT.Faces.Set_Char_Data
                      (Char_Data, Width, Height, FT.Glyphs.Bitmap_Left (Face_Ptr),
                      FT.Glyphs.Bitmap_Top (Face_Ptr),
                      FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
@@ -159,19 +148,13 @@ package body Texture_Manager is
          Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
       end if;
 
-      Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
-      if Error_Code = 0 then
-         Texture_2D.Load_Sub_Image_From_Data
-              (0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-               Bitmap_Image);
-      else
-         Put_Line ("Setup_Texture Bitmap_Image error: " &
-                       FT.Errors.Error (Error_Code));
-         raise FT.FT_Exception;
-      end if;
+      FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+      Texture_2D.Load_Sub_Image_From_Data (0, X_Offset, Y_Offset, Width, Height,
+                                           Red, Unsigned_Byte, Bitmap_Image);
+
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Texture.");
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
          raise;
    end Setup_Texture;
 

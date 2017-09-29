@@ -3,22 +3,22 @@ with "opengl";
 
 library project OpenGL.Glfw is
    for Languages use ("ada");
-   
+
    for Library_Name use "GlfwAda";
    for Library_Kind use OpenGL_Shared'Library_Kind;
 
-   
+
    type GLFW_Version_Type is ("2", "3");
    GLFW_Version : GLFW_Version_Type := external ("GLFW_Version");
-   
+
    GLFW_Sources := ("src/glfw");
-   
+
    -- Most tests need a GLFW window. An abstraction layer is provided
    -- so that the test work with GLFW 2 and 3. Test project can reference
    -- this variable in order to include the appropriate sources for
    -- the defined GLFW version.
    Shared_Test_Sources := ("tests/shared");
-   
+
    GLFW_Lib := "";
    case GLFW_Version is
       when "2" =>
@@ -28,9 +28,12 @@ library project OpenGL.Glfw is
       when "3" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v3";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw3_backend";
-         GLFW_Lib := "-lglfw";
+         case OpenGL_Shared.Windowing_System is
+            when "windows" => GLFW_Lib := "-lglfw3";
+            when "x11" | "quartz" => GLFW_Lib := "-lglfw";
+         end case;
    end case;
-   
+
    for Source_Dirs use GLFW_Sources;
    for Object_Dir use "obj";
    for Library_Dir use "lib";
@@ -38,7 +41,7 @@ library project OpenGL.Glfw is
    package Ide renames OpenGL_Shared.Ide;
    package Builder renames OpenGL_Shared.Builder;
    package Compiler renames OpenGL_Shared.Compiler;
-   
+
    package Linker is
       case OpenGL_Shared.Windowing_System is
          when "quartz" =>
