@@ -14,24 +14,33 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
+with Errors;
+with FT.API; use FT.API;
 
-with Interfaces.C;
+package body FT is
 
-with GL.Low_Level;
+   procedure Done_Library (Library : Library_Ptr) is
+      use Errors;
+      Code : constant Errors.Error_Code := FT_Done_Library (Library);
+   begin
+      if Code /= Ok then
+         raise FreeType_Exception with "FT.Done_Library failed with error: " &
+             Description (Code);
+      end if;
+   end Done_Library;
 
-package FT is
-   pragma Preelaborate;
+   --  -------------------------------------------------------------------------
 
-   type Library_Ptr is new System.Address;
+   procedure Initialize (aLibrary : in out Library_Ptr)is
+      use Errors;
+      Code : constant Errors.Error_Code := FT_Init_FreeType (System.Address (aLibrary));
+   begin
+      if Code /= Ok then
+         raise FreeType_Exception with "FT.Initialize failed" &
+             Description (Code);
+      end if;
+   end Initialize;
 
-   subtype Bool is GL.Low_Level.Bool;
-   subtype Fixed is Interfaces.C.long;
-   subtype ULong is Interfaces.C.unsigned_long;
-
-   FreeType_Exception : exception;
-
-   procedure Done_Library (Library : Library_Ptr);
-   procedure Initialize (alibrary : in out Library_Ptr);
+   --  -------------------------------------------------------------------------
 
 end FT;

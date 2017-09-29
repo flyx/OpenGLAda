@@ -1,3 +1,18 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+--
+-- Permission to use, copy, modify, and/or distribute this software for any
+-- purpose with or without fee is hereby granted, provided that the above
+-- copyright notice and this permission notice appear in all copies.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+-- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+-- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+-- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------------------
 
 with System;
 
@@ -6,9 +21,10 @@ with GL.Types;
 
 with FT.API;
 with FT.Image;
-with FT.FreeType;
+with FT.Faces;
 
 package FT.Glyphs is
+   pragma Preelaborate;
 
    type Glyph_Record is private;
    type Glyph_Slot_Record is private;
@@ -16,30 +32,25 @@ package FT.Glyphs is
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   function Bitmap (Face_Ptr : FT.API.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record)
-                    return FT.FT_Error;
+   procedure Bitmap (Face_Ptr : FT.API.Face_Ptr;
+                    theBitmap : out FT.Image.Bitmap_Record);
    function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   function Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
-                          theImage : out GL.Objects.Textures.Image_Source)
-                          return FT.FT_Error;
+   procedure Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
+                          theImage : out GL.Objects.Textures.Image_Source);
    function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
    function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
                         return GL.Types.Int;
    function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   function Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record)
-                   return FT.FT_Error;
+   procedure Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record);
    function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
    function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
    function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
                           return FT.Image.Glyph_Format;
-   function Glyph_To_Bitmap
+   procedure Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.FT_Bool) return FT.FT_Error;
-   function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
-                          return FT_Error;
+      Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
+   procedure Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode);
 private
    type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Ptr is new System.Address;
@@ -60,7 +71,7 @@ private
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
    type Glyph_Record is record
-      Library : FT.API.Library_Ptr;
+      Library : FT.Library_Ptr;
       Clazz   : System.Address;
       Format  : FT.Image.Glyph_Format;
       Advance : FT.Image.FT_Vector;
@@ -80,11 +91,11 @@ private
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
 
    type Glyph_Slot_Record is record
-      Library              : FT.API.Library_Ptr;
+      Library              : FT.Library_Ptr;
       Face                 : FT.API.Face_Ptr;
       Next                 : FT.API.Glyph_Slot_Ptr;
       Reserved             : GL.Types.UInt;
-      C_Generic            : FT.FreeType.Generic_Record;
+      C_Generic            : FT.Faces.Generic_Record;
       Metrics              : Glyph_Metrics;
       Linear_Horiz_Advance : GL.Types.long;
       Linear_Vert_Advance  : GL.Types.long;

@@ -1,3 +1,18 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+--
+-- Permission to use, copy, modify, and/or distribute this software for any
+-- purpose with or without fee is hereby granted, provided that the above
+-- copyright notice and this permission notice appear in all copies.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+-- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+-- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+-- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------------------
 
 with System;
 
@@ -8,7 +23,10 @@ with FT;
 with FT.API; use FT.API;
 with FT.Image;
 
-package FT.FreeType is
+private with Interfaces.C.Strings;
+
+package FT.Faces is
+   pragma Preelaborate;
 
    type Character_Record is private;
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
@@ -40,30 +58,27 @@ package FT.FreeType is
    function Character_Texture (Data : Character_Record)
                                return GL.Objects.Textures.Texture;
    procedure Done_Face (aFace : Face_Ptr);
-   procedure Done_Library (Library : Library_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
-   function Init_FreeType (alibrary : in out FT.API.Library_Ptr) return FT_Error;
-   function Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
+   procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning    : access FT.Image.FT_Vector) return FT_Error;
+                     aKerning    : access FT.Image.FT_Vector);
    function Left (Data : Character_Record) return GL.Types.Int;
-   function Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) return FT_Error;
-   function New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr)
-                      return FT_Error;
-   procedure Print_Character_Data (Char : Character; Data : Character_Record);
+   procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
+                            Flags : Load_Flag);
+   procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
+                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr);
+   function Character_Data_To_String (Char : Character; Data : Character_Record)
+                                      return String;
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;
                             Width     : GL.Types.Int; Height : GL.Types.Int;
                             Left      : GL.Types.Int; Top    : GL.Types.Int;
                             Advance_X : GL.Types.Int);
-
-   function Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                             Pixel_Height : GL.Types.UInt) return FT_Error;
+   procedure Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
+                             Pixel_Height : GL.Types.UInt);
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
@@ -71,8 +86,8 @@ package FT.FreeType is
    function Width (Data : Character_Record) return GL.Types.Int;
 
    Image_Error : exception;
-private
 
+private
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
@@ -132,8 +147,8 @@ private
       Face_Flags              : GL.Types.Long;
       Style_Flags             : GL.Types.Long;
       Num_Glyphs              : GL.Types.Long;
-      Family_Name             : access FT_String;
-      Style_Name              : access FT_String;
+      Family_Name             : Interfaces.C.Strings.chars_ptr;
+      Style_Name              : Interfaces.C.Strings.chars_ptr;
       --  Num_Fixed_Sizes is the number of bitmap strikes in the face.
       --  Even if the face is scalable, there might still be bitmap strikes,
       --  which are called `sbits' in that case.
@@ -185,14 +200,14 @@ private
       Underline_Thickness     : GL.Types.Short;
       Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
-      Size                    : Size_Ptr;
+      Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
       Character_Map           : Char_Map_Ptr;
       Driver                  : Driver_Ptr;
       Memory                  : Memory_Ptr;
       Stream                  : Stream_Ptr;
       Sizes_List              : List_Record;
       Autohint                : Generic_Record;
-      Extensions              : System.Address;
+      Extensions              : System.Address := System.Null_Address;
       Internal                : Face_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Face_Record);
@@ -305,4 +320,4 @@ private
         Load_Compute_Metrics             => 16#200000#,
         Load_Bitmap_Metrics_Only         => 16#400000#);
 
-end FT.FreeType;
+end FT.Faces;
