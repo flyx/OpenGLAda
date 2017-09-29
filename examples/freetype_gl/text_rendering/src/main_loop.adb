@@ -33,8 +33,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
-   Font_File_1     : String := "/Library/Fonts/Arial.ttf";
-   Font_File_2     : String := "/System/Library/Fonts/Helvetica.dfont";
+   Font_File_1     : String := "../../noto_fonts/NotoSerif-Regular.ttf";
+   Font_File_2     : String := "../../noto_fonts/NotoMono-Regular.ttf";
+--     Font_File_1     : String := "/Library/Fonts/Arial.ttf";
+--     Font_File_2     : String := "/System/Library/Fonts/Helvetica.dfont";
 
    --  ------------------------------------------------------------------------
 
@@ -49,8 +51,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Height   : Glfw.Size;
       Pos_X           : GL.Types.Single := 5.0;
       Pos_Y           : GL.Types.Single := 50.0;
-      Scale_1         : GL.Types.Single := 0.5;
-      Scale_2         : GL.Types.Single := 0.8;
+      Scale_1         : GL.Types.Single := 0.4;
+      Scale_2         : GL.Types.Single := 0.6;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
