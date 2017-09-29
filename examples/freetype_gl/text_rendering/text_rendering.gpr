@@ -12,9 +12,5 @@ project Text_Rendering is
       for Default_Switches ("ada") use ("-gnatyclux", "-fstack-check");
    end Compiler;
 
-   package Linker is
-      for Switches ("ada") use ("-L/usr/local/lib", "-lfreetype");
-   end Linker;
-
 end Text_Rendering;
 
