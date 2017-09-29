@@ -20,8 +20,6 @@ with Interfaces.C;
 
 with GL.Low_Level;
 
-with Errors;
-
 package FT is
    pragma Preelaborate;
 
@@ -34,6 +32,6 @@ package FT is
    FreeType_Exception : exception;
 
    procedure Done_Library (Library : Library_Ptr);
-   function Initialize (alibrary : in out Library_Ptr)
-                           return Errors.Error_Code;
+   procedure Initialize (alibrary : in out Library_Ptr);
+
 end FT;

@@ -16,8 +16,9 @@
 
 with System.Address_To_Access_Conversions;
 
+with Errors;
+
 package body FT.Faces is
-   use type Errors.Error_Code;
 
    package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
    package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
@@ -69,6 +70,7 @@ package body FT.Faces is
 
    procedure Done_Face (aFace : Face_Ptr) is
       use GL.Types;
+      use Errors;
    begin
       if FT_Done_Face (aFace) /= Errors.Ok then
          raise FreeType_Exception with "FT.Faces.FT_Done_Face failed";
@@ -142,6 +144,7 @@ package body FT.Faces is
    procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                          Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning : access FT.Image.FT_Vector) is
+      use Errors;
       Code : constant Errors.Error_Code :=
                FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
    begin
@@ -162,6 +165,7 @@ package body FT.Faces is
 
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag) is
+      use Errors;
       Code : constant Errors.Error_Code :=
                 FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
    begin
@@ -175,14 +179,20 @@ package body FT.Faces is
 
    procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
+      use Errors;
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
       Code : constant Errors.Error_Code :=
                FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
    begin
       if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
-             Errors.Description (Code);
+         if Code = Errors.Cannot_Open_Resource then
+            raise FT.FreeType_Exception with "The file " &
+                File_Path_Name & " cannot be found.";
+         else
+            raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+                Errors.Description (Code);
+         end if;
       end if;
    end New_Face;
 
@@ -225,6 +235,7 @@ package body FT.Faces is
 
   procedure Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                             Pixel_Height : GL.Types.UInt) is
+      use Errors;
       Code : constant Errors.Error_Code :=
                FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
   begin

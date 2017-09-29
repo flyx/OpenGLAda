@@ -20,7 +20,6 @@ with GL.Objects.Textures;
 with GL.Types;
 
 with FT.API;
-with Errors;
 with FT.Image;
 with FT.Faces;
 
@@ -48,12 +47,10 @@ package FT.Glyphs is
    function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
    function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
                           return FT.Image.Glyph_Format;
-   function Glyph_To_Bitmap
+   procedure Glyph_To_Bitmap
      (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector;
-      Destroy     : Bool) return Errors.Error_Code;
-   function Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode)
-                          return Errors.Error_Code;
+      Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
+   procedure Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode);
 private
    type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Ptr is new System.Address;

@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Errors;
 with FT.API; use FT.API;
 
 package body FT is
@@ -23,17 +24,21 @@ package body FT is
       Code : constant Errors.Error_Code := FT_Done_Library (Library);
    begin
       if Code /= Ok then
-         raise FreeType_Exception with "FT_Done_Library failed" &
+         raise FreeType_Exception with "FT.Done_Library failed with error: " &
              Description (Code);
       end if;
    end Done_Library;
 
    --  -------------------------------------------------------------------------
 
-   function Initialize (aLibrary : in out Library_Ptr)
-                           return Errors.Error_Code is
+   procedure Initialize (aLibrary : in out Library_Ptr)is
+      use Errors;
+      Code : constant Errors.Error_Code := FT_Init_FreeType (System.Address (aLibrary));
    begin
-      return FT_Init_FreeType (System.Address (aLibrary));
+      if Code /= Ok then
+         raise FreeType_Exception with "FT.Initialize failed" &
+             Description (Code);
+      end if;
    end Initialize;
 
    --  -------------------------------------------------------------------------

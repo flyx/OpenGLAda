@@ -77,15 +77,11 @@ package body Texture_Manager is
       use GL.Types;
       Font_File  : String := "../../fonts/NotoSerif-Regular.ttf";
    begin
-      if not Ada.Directories.Exists (Font_File) then
-         raise FT.FreeType_Exception with
-           "Texture_Manager.Setup_Font cannot find " & Font_File;
-      end if;
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
       FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
-
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
+
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Manager.Setup_Font.");
@@ -100,21 +96,13 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT.Initialize (theLibrary) /= Errors.Ok then
-         raise FT.FreeType_Exception with
-             "Texture_Manager.Setup_Graphic - The Freetype Library failed to load.";
-      end if;
-
+      FT.Initialize (theLibrary);
       Setup_Font;
       FT.Faces.Load_Character
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /=
-        Errors.Ok then
-         raise FT.FreeType_Exception with
-             "Texture_Manager.Setup_Graphic - A character failed to render.";
-      end if;
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
