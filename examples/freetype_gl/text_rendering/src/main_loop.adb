@@ -33,10 +33,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
-   Font_File_1     : String := "../../noto_fonts/NotoSerif-Regular.ttf";
-   Font_File_2     : String := "../../noto_fonts/NotoMono-Regular.ttf";
---     Font_File_1     : String := "/Library/Fonts/Arial.ttf";
---     Font_File_2     : String := "/System/Library/Fonts/Helvetica.dfont";
+   Font_File_1     : String := "../../fonts/NotoSerif-Regular.ttf";
+   Font_File_2     : String := "../../fonts/NotoMono-Regular.ttf";
 
    --  ------------------------------------------------------------------------
 
@@ -66,7 +64,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in Render.");
+         Put_Line ("An exception occurred in FT.Utilities.Render.");
          raise;
    end Render;
 
@@ -75,12 +73,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color) is
    begin
-      FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
-                                Texture_ID, Projection_Matrix_ID, Colour_ID,
-                                Projection_Matrix);
+     FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
+                              Texture_ID, Projection_Matrix_ID, Colour_ID,
+                              Projection_Matrix);
    exception
       when  others =>
-         Put_Line ("An exception occurred in Render_The_Text.");
+         Put_Line ("An exception occurred in FT.Utilities.Render_The_Text.");
          raise;
    end Render_The_Text;
 
