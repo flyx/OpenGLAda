@@ -27,6 +27,9 @@ private with Interfaces.C.Strings;
 package FT.Faces is
    pragma Preelaborate;
 
+   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
+                           Render_Mode_Mono, Render_Mode_LCD,
+                           Render_Mode_LCD_V, Render_Mode_Max);
    type Face_Ptr is private;
    type Glyph_Slot_Ptr is private;
    type Character_Record is private;

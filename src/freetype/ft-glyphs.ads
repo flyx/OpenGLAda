@@ -19,7 +19,6 @@ with System;
 with GL.Objects.Textures;
 with GL.Types;
 
-with FT.API;
 with FT.Image;
 with FT.Faces;
 
@@ -48,9 +47,9 @@ package FT.Glyphs is
    function Glyph_Format (Face_Ptr : FT.Faces.Face_Ptr)
                           return FT.Image.Glyph_Format;
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.Faces.Render_Mode;
       Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
-   procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.API.Render_Mode);
+   procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
    type Bitmap_Glyph_Ptr is new System.Address;
    type Glyph_Ptr is new System.Address;

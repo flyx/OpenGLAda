@@ -27,10 +27,6 @@ with FT.Image;
 package FT.API is
    pragma Preelaborate;
 
-   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
-                           Render_Mode_Mono, Render_Mode_LCD,
-                           Render_Mode_LCD_V, Render_Mode_Max);
-
    function FT_Done_Face (aFace : FT.Faces.Face_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
 

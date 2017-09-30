@@ -17,6 +17,7 @@
 with System.Address_To_Access_Conversions;
 
 with Errors;
+with FT.API;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
@@ -286,7 +287,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
+     (theGlyph    : System.Address; Mode : FT.Faces.Render_Mode;
       Origin      : access FT.Image.FT_Vector; Destroy     : Bool) is
       use Errors;
       Code : constant Errors.Error_Code :=
@@ -300,7 +301,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.API.Render_Mode) is
+   procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode) is
       use Errors;
       Slot : FT.Faces.Glyph_Slot_Ptr;
       Code : Errors.Error_Code;

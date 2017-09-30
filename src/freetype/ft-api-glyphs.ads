@@ -30,7 +30,7 @@ package FT.API.Glyphs is
    --  be a char on the C side.
    pragma Warnings (Off, "8-bit Ada Boolean");
    function FT_Glyph_To_Bitmap
-     (theGlyph   : System.Address; Mode : FT.API.Render_Mode;
+     (theGlyph   : System.Address; Mode : FT.Faces.Render_Mode;
       Origin      : access FT.Image.FT_Vector;
       Destroy     : Bool) return Errors.Error_Code;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
@@ -41,7 +41,8 @@ package FT.API.Glyphs is
                           return Errors.Error_Code;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
-   function FT_Render_Glyph (Slot : FT.Faces.Glyph_Slot_Ptr; Mode : Render_Mode)
+   function FT_Render_Glyph (Slot : FT.Faces.Glyph_Slot_Ptr;
+                             Mode : FT.Faces.Render_Mode)
                              return Errors.Error_Code;
    pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
 
