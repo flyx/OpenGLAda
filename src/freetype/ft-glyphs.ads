@@ -53,7 +53,9 @@ package FT.Glyphs is
 private
    type Bitmap_Glyph_Ptr is new System.Address;
 
-   type Glyph_Ptr is new System.Address;
+   type Glyph_Ptr is access Glyph_Record;
+   pragma Convention (C, Glyph_Ptr);
+
    type Outline_Glyph_Ptr is new System.Address;
    type Slot_Internal_Ptr is new System.Address;
    type Subglyph_Ptr is new System.Address;

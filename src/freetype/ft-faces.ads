@@ -61,8 +61,12 @@ package FT.Faces is
    function Advance_X (Data : Character_Record) return GL.Types.Int;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
+   function Character_Data_To_String (Char : Character; Data : Character_Record)
+                                      return String;
    function Character_Texture (Data : Character_Record)
                                return GL.Objects.Textures.Texture;
+   procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr);
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr);
    procedure Done_Face (aFace : Face_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
@@ -76,8 +80,6 @@ package FT.Faces is
                             Flags : Load_Flag);
    procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
                       Face_Index : GL.Types.long; aFace : in out Face_Ptr);
-   function Character_Data_To_String (Char : Character; Data : Character_Record)
-                                      return String;
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;
                             Width     : GL.Types.Int; Height : GL.Types.Int;
@@ -103,6 +105,7 @@ private
    type Size_Internal_Ptr is new System.Address;
    type Glyph_Slot_Ptr is access FT.Glyphs.Glyph_Slot_Record;
    pragma Convention (C, Glyph_Slot_Ptr);
+
    type Stream_Ptr is new System.Address;
 
    type Character_Record is record

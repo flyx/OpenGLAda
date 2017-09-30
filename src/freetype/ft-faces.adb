@@ -69,6 +69,28 @@ package body FT.Faces is
 
    --  ------------------------------------------------------------------------
 
+   procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr) is
+      use System;
+   begin
+      if System.Address (Face_Ptr) = System.Null_Address then
+         raise FreeType_Exception with
+           "FT.Faces.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
+      end if;
+   end Check_Face_Ptr;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Check_Glyph_Slot_Ptr (thePtr :Glyph_Slot_Ptr) is
+      use System;
+   begin
+      if thePtr = Null then
+         raise FreeType_Exception with
+           "FT.Faces.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
+      end if;
+   end Check_Glyph_Slot_Ptr;
+
+   --  -------------------------------------------------------------------------
+
    procedure Done_Face (aFace : Face_Ptr) is
       use GL.Types;
       use Errors;
@@ -130,11 +152,11 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr is
+   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr is
    use System;
      theFace : constant Face_Record := Face (aFace);
    begin
-      if System.Address (theFace.Glyph_Slot) = System.Null_Address then
+      if theFace.Glyph_Slot = Null then
          raise FreeType_Exception with "FT.Faces.Glyph_Slot - No Glyph is loaded.";
       end if;
       return theFace.Glyph_Slot;
