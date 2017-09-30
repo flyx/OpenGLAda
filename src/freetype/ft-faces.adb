@@ -17,6 +17,7 @@
 with System.Address_To_Access_Conversions;
 
 with Errors;
+with FT.API; use FT.API;
 
 package body FT.Faces is
 

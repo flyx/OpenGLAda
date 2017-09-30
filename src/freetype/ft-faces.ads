@@ -20,7 +20,6 @@ with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
-with FT.API; use FT.API;
 with FT.Image;
 
 private with Interfaces.C.Strings;
@@ -28,6 +27,8 @@ private with Interfaces.C.Strings;
 package FT.Faces is
    pragma Preelaborate;
 
+   type Face_Ptr is private;
+   type Glyph_Slot_Ptr is private;
    type Character_Record is private;
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
@@ -61,7 +62,7 @@ package FT.Faces is
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
+   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr;
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector);
@@ -69,7 +70,7 @@ package FT.Faces is
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag);
    procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr);
+                      Face_Index : GL.Types.long; aFace : in out Face_Ptr);
    function Character_Data_To_String (Char : Character; Data : Character_Record)
                                       return String;
    function Rows (Data : Character_Record) return GL.Types.Int;
@@ -88,6 +89,8 @@ package FT.Faces is
    Image_Error : exception;
 
 private
+   type Face_Ptr is new System.Address;
+   type Glyph_Slot_Ptr is new System.Address;
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
@@ -198,7 +201,7 @@ private
       Max_Advance_Height      : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
-      Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
+      Glyph_Slot              : Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
       Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
       Character_Map           : Char_Map_Ptr;

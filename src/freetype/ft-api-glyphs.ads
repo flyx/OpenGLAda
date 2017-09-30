@@ -36,12 +36,12 @@ package FT.API.Glyphs is
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
    pragma Warnings (On, "8-bit Ada Boolean");
 
-   function FT_Get_Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
+   function FT_Get_Glyph (Slot_Ptr : FT.Faces.Glyph_Slot_Ptr;
                           aGlyph   : in out System.Address)
                           return Errors.Error_Code;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 
-   function FT_Render_Glyph (Slot : Glyph_Slot_Ptr; Mode : Render_Mode)
+   function FT_Render_Glyph (Slot : FT.Faces.Glyph_Slot_Ptr; Mode : Render_Mode)
                              return Errors.Error_Code;
    pragma Import (C, FT_Render_Glyph, "FT_Render_Glyph");
 
