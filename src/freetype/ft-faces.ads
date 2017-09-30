@@ -64,7 +64,7 @@ package FT.Faces is
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
-   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr;
+   function Glyph_Slot (aFace : Face_Ptr) return FT.Glyphs.Glyph_Slot_Ptr;
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector);
@@ -202,7 +202,7 @@ private
       Max_Advance_Height      : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
-      Glyph_Slot              : Glyph_Slot_Ptr;
+      Glyph_Slot              : FT.Glyphs.Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
       Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
       Character_Map           : Char_Map_Ptr;
