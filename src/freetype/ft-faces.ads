@@ -71,7 +71,6 @@ package FT.Faces is
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
-   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr;
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector);
@@ -90,6 +89,7 @@ package FT.Faces is
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
+   function Slot_Ptr (aFace : Face_Ptr) return Glyph_Slot_Ptr;
    function Top (Data : Character_Record) return GL.Types.Int;
    function Width (Data : Character_Record) return GL.Types.Int;
 

@@ -152,15 +152,14 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Slot (aFace : Face_Ptr) return Glyph_Slot_Ptr is
-   use System;
+   function Slot_Ptr (aFace : Face_Ptr) return Glyph_Slot_Ptr is
      theFace : constant Face_Record := Face (aFace);
    begin
       if theFace.Glyph_Slot = Null then
-         raise FreeType_Exception with "FT.Faces.Glyph_Slot - No Glyph is loaded.";
+         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
       end if;
       return theFace.Glyph_Slot;
-   end Glyph_Slot;
+   end Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
