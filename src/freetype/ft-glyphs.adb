@@ -56,14 +56,11 @@ package body FT.Glyphs is
       use Glyph_Slot_Access;
       Slot_Ptr      : FT.Faces.Glyph_Slot_Ptr;
       aGlyph_Ptr    : Glyph_Ptr;
-      Glyph_Pointer :  Object_Pointer;
       theGlyph      :  Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
       Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
       Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph_Pointer := To_Pointer (System.Address (Slot_Ptr));
-      theGlyph := Glyph_Pointer.all;
       Glyph (Slot_Ptr, aGlyph_Ptr);
       --  Glyph calls the FT_Glyph C function.
       theBitmap := theGlyph.Bitmap;
