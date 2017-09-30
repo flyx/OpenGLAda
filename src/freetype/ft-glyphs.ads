@@ -25,9 +25,10 @@ with FT.Faces;
 package FT.Glyphs is
    pragma Preelaborate;
 
-   type Glyph_Record is private;
-   type Glyph_Slot_Record is private;
    type Glyph_Ptr is private;
+   type Glyph_Record is private;
+   type Glyph_Slot_Ptr is private;
+   type Glyph_Slot_Record is private;
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
@@ -52,6 +53,8 @@ package FT.Glyphs is
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
    type Bitmap_Glyph_Ptr is new System.Address;
+   type Glyph_Slot_Ptr is access Glyph_Slot_Record;
+   pragma Convention (C, Glyph_Slot_Ptr);
    type Glyph_Ptr is new System.Address;
    type Outline_Glyph_Ptr is new System.Address;
    type Slot_Internal_Ptr is new System.Address;
@@ -92,7 +95,7 @@ private
    type Glyph_Slot_Record is record
       Library              : FT.Library_Ptr;
       Face                 : FT.Faces.Face_Ptr;
-      Next                 : FT.Faces.Glyph_Slot_Ptr;
+      Next                 : Glyph_Slot_Ptr;
       Reserved             : GL.Types.UInt;
       C_Generic            : FT.Faces.Generic_Record;
       Metrics              : Glyph_Metrics;

@@ -31,7 +31,6 @@ package FT.Faces is
                            Render_Mode_Mono, Render_Mode_LCD,
                            Render_Mode_LCD_V, Render_Mode_Max);
    type Face_Ptr is private;
-   type Glyph_Slot_Ptr is private;
    type Character_Record is private;
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
@@ -93,7 +92,6 @@ package FT.Faces is
 
 private
    type Face_Ptr is new System.Address;
-   type Glyph_Slot_Ptr is new System.Address;
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;

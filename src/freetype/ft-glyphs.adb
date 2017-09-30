@@ -29,9 +29,9 @@ package body FT.Glyphs is
 
    procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr);
    procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
-   procedure Check_Glyph_Slot_Ptr (thePtr : FT.Faces.Glyph_Slot_Ptr);
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr);
 
-   procedure Glyph (Slot_Ptr     : FT.Faces.Glyph_Slot_Ptr;
+   procedure Glyph (Slot_Ptr     : Glyph_Slot_Ptr;
                     theGlyph_Ptr : in out Glyph_Ptr);
 
    --  -------------------------------------------------------------------------
@@ -54,7 +54,7 @@ package body FT.Glyphs is
                      theBitmap : out FT.Image.Bitmap_Record) is
       use GL.Types;
       use Glyph_Slot_Access;
-      Slot_Ptr      : FT.Faces.Glyph_Slot_Ptr;
+      Slot_Ptr      : Glyph_Slot_Ptr;
       aGlyph_Ptr    : Glyph_Ptr;
       Glyph_Pointer :  Object_Pointer;
       theGlyph      :  Glyph_Slot_Record;
@@ -92,7 +92,7 @@ package body FT.Glyphs is
 
    function Bitmap_Left (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Int is
       use Glyph_Slot_Access;
-      Slot_Ptr   : FT.Faces.Glyph_Slot_Ptr;
+      Slot_Ptr   : Glyph_Slot_Ptr;
       Glyph_Slot : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
@@ -133,7 +133,7 @@ package body FT.Glyphs is
    function Bitmap_Top (Face_Ptr : FT.Faces.Face_Ptr)
                             return GL.Types.Int is
       use Glyph_Slot_Access;
-      Slot_Ptr  : FT.Faces.Glyph_Slot_Ptr;
+      Slot_Ptr  : Glyph_Slot_Ptr;
       Glyph     : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
@@ -182,7 +182,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   procedure Check_Glyph_Slot_Ptr (thePtr : FT.Faces.Glyph_Slot_Ptr) is
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr) is
       use System;
    begin
       if System.Address (thePtr) = System.Null_Address then
@@ -196,7 +196,7 @@ package body FT.Glyphs is
    procedure Glyph (Face_Ptr : FT.Faces.Face_Ptr; theGlyph : out Glyph_Record) is
    use GL.Types;
       use Glyph_Access;
-      aGlyph_Slot : FT.Faces.Glyph_Slot_Ptr ;
+      aGlyph_Slot : Glyph_Slot_Ptr ;
       aGlyph_Ptr : Glyph_Ptr;
    begin
       Check_Face_Ptr (Face_Ptr);
@@ -228,7 +228,7 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   procedure Glyph (Slot_Ptr    : FT.Faces.Glyph_Slot_Ptr;
+   procedure Glyph (Slot_Ptr    : Glyph_Slot_Ptr;
                    theGlyph_Ptr : in out Glyph_Ptr) is
       use GL.Types;
       use Errors;
@@ -251,7 +251,7 @@ package body FT.Glyphs is
    function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr)
                                return FT.Image.FT_Vector is
       use Glyph_Slot_Access;
-      Slot_Ptr : FT.Faces.Glyph_Slot_Ptr;
+      Slot_Ptr : Glyph_Slot_Ptr;
       Glyph    : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
@@ -270,7 +270,7 @@ package body FT.Glyphs is
    function Glyph_Format (Face_Ptr : FT.Faces.Face_Ptr)
                               return FT.Image.Glyph_Format is
       use Glyph_Slot_Access;
-      Slot_Ptr : FT.Faces.Glyph_Slot_Ptr;
+      Slot_Ptr : Glyph_Slot_Ptr;
       Glyph    : Glyph_Slot_Record;
    begin
       Check_Face_Ptr (Face_Ptr);
@@ -303,7 +303,7 @@ package body FT.Glyphs is
 
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode) is
       use Errors;
-      Slot : FT.Faces.Glyph_Slot_Ptr;
+      Slot : Glyph_Slot_Ptr;
       Code : Errors.Error_Code;
    begin
       Check_Face_Ptr (aFace);
