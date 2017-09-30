@@ -33,7 +33,7 @@ package FT.Glyphs is
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
    procedure Bitmap (Face_Ptr : FT.Faces.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record);
+                     theBitmap : out FT.Image.Bitmap_Record);
    function Bitmap_Height (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Single;
    procedure Bitmap_Image (Face_Ptr : FT.Faces.Face_Ptr;
                           theImage : out GL.Objects.Textures.Image_Source);
