@@ -89,7 +89,7 @@ package FT.Faces is
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
-   function Slot_Ptr (aFace : Face_Ptr) return Glyph_Slot_Ptr;
+   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record;
    function Top (Data : Character_Record) return GL.Types.Int;
    function Width (Data : Character_Record) return GL.Types.Int;
 
