@@ -15,7 +15,6 @@
 --------------------------------------------------------------------------------
 
 with Errors;
-with FT.API;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
@@ -25,7 +24,7 @@ package body FT.Glyphs is
    procedure Glyph_Slot (Face_Ptr : FT.Faces.Face_Ptr;
                          theGlyph_Slot : out Glyph_Slot_Record);
    procedure Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record;
-                    theGlyph_Ptr : access FT.Glyphs.Glyph_Record);
+                           theGlyph_Ptr : access FT.Glyphs.Glyph_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -182,9 +181,7 @@ package body FT.Glyphs is
       aSlot_Ptr    : access Glyph_Slot_Record;
    begin
       FT.Faces.Check_Face_Ptr (Face_Ptr);
-      --  theSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
       aSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
-      --  type Glyph_Slot_Ptr is access FT.Glyphs.Glyph_Slot_Record;
       theGlyph_Slot := aSlot_Ptr.all;
    exception
       when others =>
@@ -195,7 +192,6 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    procedure Glyph (Face_Ptr : FT.Faces.Face_Ptr; theGlyph : out Glyph_Record) is
-     -- aGlyph_Slot : FT.Faces.Glyph_Slot_Ptr ;
       aSlot_Ptr  : access Glyph_Slot_Record;
       aGlyph_Ptr : access Glyph_Record;
    begin
