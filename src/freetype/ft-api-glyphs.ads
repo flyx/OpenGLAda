@@ -29,7 +29,7 @@ package FT.API.Glyphs is
    pragma Warnings (Off, "8-bit Ada Boolean");
    function FT_Glyph_To_Bitmap
      (theGlyph   : access FT.Glyphs.Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin     : access FT.Image.FT_Vector;
+      Origin     : access FT.Image.Vector;
       Destroy    : Bool) return Errors.Error_Code;
    pragma Import (C, FT_Glyph_To_Bitmap, "FT_Glyph_To_Bitmap");
    pragma Warnings (On, "8-bit Ada Boolean");

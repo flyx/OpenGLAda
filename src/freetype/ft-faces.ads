@@ -42,9 +42,9 @@ package FT.Faces is
    type Size_Ptr is private;
    type Size_Record is private;
 
-   type FT_Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
-                        Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
-                        Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
+   type Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
+                     Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
+                     Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
 
    type Load_Flag is (Load_Default, Load_No_Scale, Load_No_Hinting, Load_Render,
                       Load_No_Bitmap, Load_Vertical_Layout, Load_Force_Autohint,
@@ -72,20 +72,20 @@ package FT.Faces is
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
-                     Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning    : access FT.Image.FT_Vector);
+                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                      aKerning    : access FT.Image.Vector);
    function Left (Data : Character_Record) return GL.Types.Int;
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag);
+                             Flags : Load_Flag);
    procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out Face_Ptr);
+                       Face_Index : GL.Types.long; aFace : in out Face_Ptr);
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;
                             Width     : GL.Types.Int; Height : GL.Types.Int;
                             Left      : GL.Types.Int; Top    : GL.Types.Int;
                             Advance_X : GL.Types.Int);
    procedure Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                             Pixel_Height : GL.Types.UInt);
+                              Pixel_Height : GL.Types.UInt);
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
@@ -120,17 +120,17 @@ private
    type FT_Bitmap_Size is record
       Height : GL.Types.Short;
       Width  : GL.Types.Short;
-      Size   : FT.Image.FT_Pos;
-      X_Ppem : FT.Image.FT_Pos;
-      Y_Ppem : FT.Image.FT_Pos;
+      Size   : FT.Image.Position;
+      X_Ppem : FT.Image.Position;
+      Y_Ppem : FT.Image.Position;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
 
    type FT_BBox is record
-      X_Min : FT.Image.FT_Pos;
-      Y_Min : FT.Image.FT_Pos;
-      X_Max : FT.Image.FT_Pos;
-      Y_Max : FT.Image.FT_Pos;
+      X_Min : FT.Image.Position;
+      Y_Min : FT.Image.Position;
+      X_Max : FT.Image.Position;
+      Y_Max : FT.Image.Position;
    end record;
    pragma Convention (C_Pass_By_Copy, FT_BBox);
 
@@ -228,10 +228,10 @@ private
       X_Ppem      : GL.Types.UShort;
       Y_Ppem      : GL.Types.Int;
       Y_Scale     : GL.Types.Int;
-      Ascender    : FT.Image.FT_Pos;
-      Descender   : FT.Image.FT_Pos;
-      Height      : FT.Image.FT_Pos;
-      Max_Advance : FT.Image.FT_Pos;
+      Ascender    : FT.Image.Position;
+      Descender   : FT.Image.Position;
+      Height      : FT.Image.Position;
+      Max_Advance : FT.Image.Position;
    end record;
    pragma Convention (C_Pass_By_Copy, Size_Metrics_Record);
 
@@ -245,91 +245,91 @@ private
 
    --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)
-   for FT_Encoding use (None      => 0,
-                        MS_Symbol => Character'Pos ('s') * 2 ** 24 +
-                            Character'Pos ('y') * 2 ** 16 +
-                            Character'Pos ('m') * 2 ** 8  +
-                            Character'Pos ('b'),
+   for Encoding use (None      => 0,
+                     MS_Symbol => Character'Pos ('s') * 2 ** 24 +
+                       Character'Pos ('y') * 2 ** 16 +
+                       Character'Pos ('m') * 2 ** 8  +
+                       Character'Pos ('b'),
 
-                        Unicode   => Character'Pos ('u') * 2 ** 24 +
-                            Character'Pos ('n') * 2 ** 16 +
-                            Character'Pos ('i') * 2 ** 8 +
-                            Character'Pos ('c'),
+                     Unicode   => Character'Pos ('u') * 2 ** 24 +
+                       Character'Pos ('n') * 2 ** 16 +
+                       Character'Pos ('i') * 2 ** 8 +
+                       Character'Pos ('c'),
 
-                        SJIS      => Character'Pos ('s') * 2 ** 24 +
-                            Character'Pos ('j') * 2 ** 16 +
-                            Character'Pos ('i') * 2 ** 8 +
-                            Character'Pos ('s'),
+                     SJIS      => Character'Pos ('s') * 2 ** 24 +
+                       Character'Pos ('j') * 2 ** 16 +
+                       Character'Pos ('i') * 2 ** 8 +
+                       Character'Pos ('s'),
 
-                        GB2312    => Character'Pos ('g') * 2 ** 24 +
-                            Character'Pos ('b') * 2 ** 16 +
-                            Character'Pos (' ') * 2 ** 8 +
-                            Character'Pos (' '),
+                     GB2312    => Character'Pos ('g') * 2 ** 24 +
+                       Character'Pos ('b') * 2 ** 16 +
+                       Character'Pos (' ') * 2 ** 8 +
+                       Character'Pos (' '),
 
-                        Big5      => Character'Pos ('b') * 2 ** 24 +
-                            Character'Pos ('i') * 2 ** 16 +
-                            Character'Pos ('g') * 2 ** 8 +
-                            Character'Pos ('5'),
+                     Big5      => Character'Pos ('b') * 2 ** 24 +
+                       Character'Pos ('i') * 2 ** 16 +
+                       Character'Pos ('g') * 2 ** 8 +
+                       Character'Pos ('5'),
 
-                        Wansung   => Character'Pos ('w') * 2 ** 24 +
-                            Character'Pos ('a') * 2 ** 16 +
-                            Character'Pos ('n') * 2 ** 8 +
-                            Character'Pos ('s'),
+                     Wansung   => Character'Pos ('w') * 2 ** 24 +
+                       Character'Pos ('a') * 2 ** 16 +
+                       Character'Pos ('n') * 2 ** 8 +
+                       Character'Pos ('s'),
 
-                        Johab     => Character'Pos ('j') * 2 ** 24 +
-                            Character'Pos ('o') * 2 ** 16 +
-                            Character'Pos ('h') * 2 ** 8 +
-                            Character'Pos ('a'),
+                     Johab     => Character'Pos ('j') * 2 ** 24 +
+                       Character'Pos ('o') * 2 ** 16 +
+                       Character'Pos ('h') * 2 ** 8 +
+                       Character'Pos ('a'),
 
-                        Adobe_Standard => Character'Pos ('A') * 2 ** 24 +
-                            Character'Pos ('D') * 2 ** 16 +
-                            Character'Pos ('O') * 2 ** 8 +
-                            Character'Pos ('B'),
+                     Adobe_Standard => Character'Pos ('A') * 2 ** 24 +
+                       Character'Pos ('D') * 2 ** 16 +
+                       Character'Pos ('O') * 2 ** 8 +
+                       Character'Pos ('B'),
 
-                        Adobe_Expert   => Character'Pos ('A') * 2 ** 24 +
-                            Character'Pos ('D') * 2 ** 16 +
-                            Character'Pos ('B') * 2 ** 8 +
-                            Character'Pos ('E'),
+                     Adobe_Expert   => Character'Pos ('A') * 2 ** 24 +
+                       Character'Pos ('D') * 2 ** 16 +
+                       Character'Pos ('B') * 2 ** 8 +
+                       Character'Pos ('E'),
 
-                        Adobe_Custom   => Character'Pos ('A') * 2 ** 24 +
-                            Character'Pos ('D') * 2 ** 16 +
-                            Character'Pos ('B') * 2 ** 8 +
-                            Character'Pos ('C'),
+                     Adobe_Custom   => Character'Pos ('A') * 2 ** 24 +
+                       Character'Pos ('D') * 2 ** 16 +
+                       Character'Pos ('B') * 2 ** 8 +
+                       Character'Pos ('C'),
 
-                        Adobe_Latin_1  => Character'Pos ('l') * 2 ** 24 +
-                            Character'Pos ('a') * 2 ** 16 +
-                            Character'Pos ('t') * 2 ** 8 +
-                            Character'Pos ('1'),
+                     Adobe_Latin_1  => Character'Pos ('l') * 2 ** 24 +
+                       Character'Pos ('a') * 2 ** 16 +
+                       Character'Pos ('t') * 2 ** 8 +
+                       Character'Pos ('1'),
 
-                        Old_Latin_2    => Character'Pos ('l') * 2 ** 24 +
-                            Character'Pos ('a') * 2 ** 16 +
-                            Character'Pos ('t') * 2 ** 8 +
-                            Character'Pos ('2'),
+                     Old_Latin_2    => Character'Pos ('l') * 2 ** 24 +
+                       Character'Pos ('a') * 2 ** 16 +
+                       Character'Pos ('t') * 2 ** 8 +
+                       Character'Pos ('2'),
 
-                        Apple_Roman    => Character'Pos ('a') * 2 ** 24 +
-                            Character'Pos ('r') * 2 ** 16 +
-                            Character'Pos ('m') * 2 ** 8 +
-                            Character'Pos ('n'));
+                     Apple_Roman    => Character'Pos ('a') * 2 ** 24 +
+                       Character'Pos ('r') * 2 ** 16 +
+                       Character'Pos ('m') * 2 ** 8 +
+                       Character'Pos ('n'));
    for Load_Flag use
-       (Load_Default                     => 16#000000#,
-        Load_No_Scale                    => 16#000001#,
-        Load_No_Hinting                  => 16#000002#,
-        Load_Render                      => 16#000004#,
-        Load_No_Bitmap                   => 16#000008#,
-        Load_Vertical_Layout             => 16#000010#,
-        Load_Force_Autohint              => 16#000020#,
-        Load_Crop_Bitmap                 => 16#000040#,
-        Load_Pedantic                    => 16#000080#,
-        Load_Advance_Only                => 16#000100#,
-        Load_Ignore_Global_Advance_Width => 16#000200#,
-        Load_No_Recourse                 => 16#000400#,
-        Load_Ignore_Transform            => 16#000800#,
-        Load_Monochrome                  => 16#001000#,
-        Load_Linear_Design               => 16#002000#,
-        Load_SBits_Only                  => 16#0004000#,
-        Load_No_Autohint                 => 16#008000#,
-        Load_Load_Colour                 => 16#100000#,
-        Load_Compute_Metrics             => 16#200000#,
-        Load_Bitmap_Metrics_Only         => 16#400000#);
+     (Load_Default                     => 16#000000#,
+      Load_No_Scale                    => 16#000001#,
+      Load_No_Hinting                  => 16#000002#,
+      Load_Render                      => 16#000004#,
+      Load_No_Bitmap                   => 16#000008#,
+      Load_Vertical_Layout             => 16#000010#,
+      Load_Force_Autohint              => 16#000020#,
+      Load_Crop_Bitmap                 => 16#000040#,
+      Load_Pedantic                    => 16#000080#,
+      Load_Advance_Only                => 16#000100#,
+      Load_Ignore_Global_Advance_Width => 16#000200#,
+      Load_No_Recourse                 => 16#000400#,
+      Load_Ignore_Transform            => 16#000800#,
+      Load_Monochrome                  => 16#001000#,
+      Load_Linear_Design               => 16#002000#,
+      Load_SBits_Only                  => 16#0004000#,
+      Load_No_Autohint                 => 16#008000#,
+      Load_Load_Colour                 => 16#100000#,
+      Load_Compute_Metrics             => 16#200000#,
+      Load_Bitmap_Metrics_Only         => 16#400000#);
 
 end FT.Faces;

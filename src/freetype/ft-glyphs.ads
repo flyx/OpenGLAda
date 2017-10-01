@@ -43,12 +43,12 @@ package FT.Glyphs is
    function Bitmap_Width (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Single;
    procedure Glyph (Face_Ptr : FT.Faces.Face_Ptr; theGlyph : out Glyph_Record);
    function Glyph (aGlyph_Ptr : access Glyph_Record) return Glyph_Record;
-   function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr) return FT.Image.FT_Vector;
+   function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr) return FT.Image.Vector;
    function Glyph_Format (Face_Ptr : FT.Faces.Face_Ptr)
                           return FT.Image.Glyph_Format;
    procedure Glyph_To_Bitmap
      (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Boolean);
+      Origin      : access FT.Image.Vector; Destroy     : Boolean);
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
    type Glyph_Ptr is access Glyph_Record;
@@ -62,14 +62,14 @@ private
    type Subglyph_Ptr is new System.Address;
 
    type Glyph_Metrics is record
-      Width        : FT.Image.FT_Pos;
-      Height       : FT.Image.FT_Pos;
-      Horiz_Bearing_X : FT.Image.FT_Pos;
-      Horiz_Bearing_Y : FT.Image.FT_Pos;
-      Horiz_Advance  : FT.Image.FT_Pos;
-      Vert_Bearing_X : FT.Image.FT_Pos;
-      Vert_Bearing_Y : FT.Image.FT_Pos;
-      Vert_Advance   : FT.Image.FT_Pos;
+      Width        : FT.Image.Position;
+      Height       : FT.Image.Position;
+      Horiz_Bearing_X : FT.Image.Position;
+      Horiz_Bearing_Y : FT.Image.Position;
+      Horiz_Advance  : FT.Image.Position;
+      Vert_Bearing_X : FT.Image.Position;
+      Vert_Bearing_Y : FT.Image.Position;
+      Vert_Advance   : FT.Image.Position;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
 
@@ -77,7 +77,7 @@ private
       Library : FT.Library_Ptr;
       Clazz   : System.Address;
       Format  : FT.Image.Glyph_Format;
-      Advance : FT.Image.FT_Vector;
+      Advance : FT.Image.Vector;
    end record;
    pragma Convention (C_Pass_By_Copy, Glyph_Record);
 
@@ -102,7 +102,7 @@ private
       Metrics              : Glyph_Metrics;
       Linear_Horiz_Advance : GL.Types.long;
       Linear_Vert_Advance  : GL.Types.long;
-      Advance              : FT.Image.FT_Vector;
+      Advance              : FT.Image.Vector;
       Format               : FT.Image.Glyph_Format;
       Bitmap               : FT.Image.Bitmap_Record;
       Bitmap_Left          : GL.Types.Int;
@@ -112,8 +112,8 @@ private
       Subglyphs            : Subglyph_Ptr;
       Control_Data         : System.Address;
       Control_Length       : GL.Types.long;
-      Lsb_Delta            : FT.Image.FT_Pos;
-      Rsb_Delta            : FT.Image.FT_Pos;
+      Lsb_Delta            : FT.Image.Position;
+      Rsb_Delta            : FT.Image.Position;
       Other                : System.Address;
       Internal             : Slot_Internal_Ptr;
    end record;

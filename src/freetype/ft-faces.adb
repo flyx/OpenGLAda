@@ -152,7 +152,7 @@ package body FT.Faces is
 
    procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                       Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                      aKerning : access FT.Image.FT_Vector) is
+                      aKerning : access FT.Image.Vector) is
       use Errors;
       Code : constant Errors.Error_Code :=
                FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);

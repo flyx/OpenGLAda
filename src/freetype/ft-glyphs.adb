@@ -225,7 +225,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr)
-                               return FT.Image.FT_Vector is
+                               return FT.Image.Vector is
       aGlyph_Slot : Glyph_Slot_Record;
    begin
       Glyph_Slot (Face_Ptr, aGlyph_Slot);
@@ -254,7 +254,7 @@ package body FT.Glyphs is
 
    procedure Glyph_To_Bitmap
      (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Boolean) is
+      Origin      : access FT.Image.Vector; Destroy     : Boolean) is
       use Errors;
       Code : constant Errors.Error_Code :=
                FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, FT.API.Bool (Destroy));
