@@ -16,6 +16,7 @@
 
 with Interfaces.C.Strings;
 
+with GL.Low_Level;
 with GL.Types;
 
 with Errors;
@@ -24,6 +25,8 @@ with FT.Image;
 
 package FT.API is
    pragma Preelaborate;
+
+   subtype Bool is GL.Low_Level.Bool;
 
    function FT_Done_Face (aFace : FT.Faces.Face_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");

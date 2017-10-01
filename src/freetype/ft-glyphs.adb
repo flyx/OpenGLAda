@@ -254,10 +254,10 @@ package body FT.Glyphs is
 
    procedure Glyph_To_Bitmap
      (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Bool) is
+      Origin      : access FT.Image.FT_Vector; Destroy     : Boolean) is
       use Errors;
       Code : constant Errors.Error_Code :=
-               FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, Destroy);
+               FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, FT.API.Bool (Destroy));
    begin
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &

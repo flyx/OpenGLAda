@@ -48,7 +48,7 @@ package FT.Glyphs is
                           return FT.Image.Glyph_Format;
    procedure Glyph_To_Bitmap
      (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
+      Origin      : access FT.Image.FT_Vector; Destroy     : Boolean);
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
    type Glyph_Ptr is access Glyph_Record;
