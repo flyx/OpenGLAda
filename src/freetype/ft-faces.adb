@@ -56,6 +56,20 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
+   function Character_Data_To_String (Char : Character;
+                                      Data : Character_Record) return String is
+      use GL.Types;
+   begin
+      return "Character" & Char & " Data" & Character'Val (10) &
+             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
+             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
+             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
+             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
+             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
+   end Character_Data_To_String;
+
+   --  ------------------------------------------------------------------------
+
    function Character_Texture (Data : Character_Record)
                                return GL.Objects.Textures.Texture is
    begin
@@ -139,17 +153,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
-     theFace : constant Face_Record := Face (aFace);
-   begin
-      if theFace.Glyph_Slot = Null then
-         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
-      end if;
-      return theFace.Glyph_Slot;
-   end Slot_Ptr;
-
-   --  -------------------------------------------------------------------------
-
    procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
                       Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                       aKerning : access FT.Image.Vector) is
@@ -186,6 +189,14 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
+   function Metrics (aFace : Face_Ptr) return Size_Metrics is
+     Size : constant Size_Record := Face_Size (aFace);
+   begin
+      return Size.Metrics;
+   end Metrics;
+
+   --  -------------------------------------------------------------------------
+
    procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
                        Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
       use Errors;
@@ -206,20 +217,6 @@ package body FT.Faces is
    end New_Face;
 
    --  -------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
-
-   --  ------------------------------------------------------------------------
 
    function Rows (Data : Character_Record) return GL.Types.Int is
    begin
@@ -264,11 +261,14 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record is
-     Size : constant Size_Record := Face_Size (aFace);
+   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
+     theFace : constant Face_Record := Face (aFace);
    begin
-      return Size.Metrics;
-   end Size_Metrics;
+      if theFace.Glyph_Slot = Null then
+         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
+      end if;
+      return theFace.Glyph_Slot;
+   end Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 

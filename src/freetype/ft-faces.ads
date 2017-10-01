@@ -38,7 +38,7 @@ package FT.Faces is
    type List_Record is private;
 
    type Generic_Record is private;
-   type Size_Metrics_Record is private;
+   type Size_Metrics is private;
    type Size_Ptr is private;
    type Size_Record is private;
 
@@ -77,6 +77,7 @@ package FT.Faces is
    function Left (Data : Character_Record) return GL.Types.Int;
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                              Flags : Load_Flag);
+   function Metrics (aFace : Face_Ptr) return Size_Metrics;
    procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
                        Face_Index : GL.Types.long; aFace : in out Face_Ptr);
    function Rows (Data : Character_Record) return GL.Types.Int;
@@ -88,7 +89,6 @@ package FT.Faces is
                               Pixel_Height : GL.Types.UInt);
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
-   function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
    function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record;
    function Top (Data : Character_Record) return GL.Types.Int;
    function Width (Data : Character_Record) return GL.Types.Int;
@@ -224,7 +224,7 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, Face_Record);
 
-   type Size_Metrics_Record is record
+   type Size_Metrics is record
       X_Ppem      : GL.Types.UShort;
       Y_Ppem      : GL.Types.Int;
       Y_Scale     : GL.Types.Int;
@@ -233,12 +233,12 @@ private
       Height      : FT.Image.Position;
       Max_Advance : FT.Image.Position;
    end record;
-   pragma Convention (C_Pass_By_Copy, Size_Metrics_Record);
+   pragma Convention (C_Pass_By_Copy, Size_Metrics);
 
    type Size_Record is record
       Face       : Face_Record;
       C_Generic  : Generic_Record;
-      Metrics    : Size_Metrics_Record;
+      Metrics    : Size_Metrics;
       Internal   : Size_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Size_Record);
