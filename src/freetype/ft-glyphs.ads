@@ -51,12 +51,13 @@ package FT.Glyphs is
       Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
-   type Bitmap_Glyph_Ptr is new System.Address;
-
    type Glyph_Ptr is access Glyph_Record;
    pragma Convention (C, Glyph_Ptr);
 
-   type Outline_Glyph_Ptr is new System.Address;
+   type Outline_Glyph_Record;
+   type Outline_Glyph_Ptr is access Outline_Glyph_Record;
+   pragma Convention (C, Outline_Glyph_Ptr);
+
    type Slot_Internal_Ptr is new System.Address;
    type Subglyph_Ptr is new System.Address;
 
