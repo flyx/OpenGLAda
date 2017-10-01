@@ -28,7 +28,7 @@ with FT.Glyphs;
 
 package body FT.Utilities is
    use Interfaces.C;
-    procedure Load_Vertex_Buffer is new
+   procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
    theLibrary           : FT.Library_Ptr;
@@ -43,7 +43,6 @@ package body FT.Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
-      use GL.Types;
    begin
       FT.Initialize (theLibrary);
       Setup_Font (Font_File);
@@ -145,7 +144,8 @@ package body FT.Utilities is
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
-                          Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
+                          Texture_ID, Projection_Matrix_ID,
+                          Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
@@ -266,9 +266,9 @@ package body FT.Utilities is
          Width := GL.Types.Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := GL.Types.Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
          FT.Faces.Set_Char_Data (Char_Data, Width, Height,
-                     FT.Glyphs.Bitmap_Left (Face_Ptr),
-                     FT.Glyphs.Bitmap_Top (Face_Ptr),
-                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
+                                 FT.Glyphs.Bitmap_Left (Face_Ptr),
+                                 FT.Glyphs.Bitmap_Top (Face_Ptr),
+                                 FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
