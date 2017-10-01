@@ -10,18 +10,16 @@ with GL.Pixels;
 with GL.Types.Colors;
 
 with FT;
-with FT.API;
-with FT.Errors;
 with FT.Glyphs;
 with FT.Image;
-with FT.FreeType;
+with FT.Faces;
 with FT.Utilities;
 
 with Utilities;
 
 package body Texture_Manager is
 
-   theLibrary    : FT.API.Library_Ptr;
+   theLibrary    : FT.Library_Ptr;
    Face_Ptr      : FT.API.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
@@ -75,20 +73,13 @@ package body Texture_Manager is
       use GL.Types;
       Font_File  : String := "/System/Library/Fonts/Helvetica.dfont";
    begin
-      if FT.FreeType.New_Face (theLibrary, Font_File, 0, Face_Ptr) /= 0 then
-         Put_Line ("A face failed to load.");
-         raise FT.FreeType_Exception;
-      end if;
+      FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
-      if FT.FreeType.Set_Pixel_Sizes (Face_Ptr, 0, 48) /= 0 then
-         Put_Line ("Unable to set pixel sizes.");
-         raise FT.FreeType_Exception;
-      end if;
-
+      FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup_Font.");
+         Put_Line ("An exception occurred in Texture_Maager.Setup_Font.");
          raise;
    end Setup_Font;
 
@@ -100,30 +91,20 @@ package body Texture_Manager is
                             Char          : Character := 'g') is
       use GL.Types;
    begin
-      if FT.FreeType.Init_FreeType (theLibrary) /= 0 then
-         Put_Line ("The Freetype Library failed to load.");
-         raise FT.FreeType_Exception;
-      end if;
+      FT.Initialize (theLibrary);
 
       Setup_Font;
-      if FT.FreeType.Load_Character (Face_Ptr, Character'Pos (Char),
-                                      FT.FreeType.Load_Render) /= 0 then
-         Put_Line ("A character failed to load.");
-         raise FT.FreeType_Exception;
-      end if;
-
+      FT.Faces.Load_Character (Face_Ptr, Character'Pos (Char),
+                                      FT.Faces.Load_Render);
       --  Ensure that the glyph image is an anti-aliased bitmap
-      if FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono) /= 0 then
-         Put_Line ("A character failed to render.");
-         raise FT.FreeType_Exception;
-      end if;
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
 
-      FT.FreeType.Done_Face (Face_Ptr);
-      FT.FreeType.Done_Library (theLibrary);
+      FT.Faces.Done_Face (Face_Ptr);
+      FT.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
@@ -135,7 +116,6 @@ package body Texture_Manager is
       Width        : Size;
       Height       : Size;
       Bitmap_Image : GL.Objects.Textures.Image_Source;
-      Error_Code   : FT.FT_Error;
    begin
       Width := Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
       Height := Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));
@@ -146,16 +126,12 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      Error_Code := FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
-      if Error_Code = 0 then
-         Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
+      FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
                                      Bitmap_Image);
-      else
-         Put_Line ("Setup_Texture error: " & FT.Errors.Error (Error_Code));
-      end if;
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Setup_Texture.");
+         Put_Line ("An exceptiom occurred in Texture_Manager.Setup_Texture.");
          raise;
    end Setup_Texture;
 

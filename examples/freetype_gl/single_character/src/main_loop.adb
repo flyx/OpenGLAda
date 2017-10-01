@@ -26,7 +26,7 @@ with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
 with FT.Glyphs;
-with FT.FreeType;
+with FT.Faces;
 with FT.Utilities;
 
 with Maths;
