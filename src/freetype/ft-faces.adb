@@ -14,14 +14,10 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System.Address_To_Access_Conversions;
-
 with Errors;
+with FT.API; use FT.API;
 
 package body FT.Faces is
-
-   package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
-   package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -68,8 +64,27 @@ package body FT.Faces is
 
    --  ------------------------------------------------------------------------
 
+   procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr) is
+   begin
+      if Face_Ptr = Null then
+         raise FreeType_Exception with
+           "FT.Faces.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
+      end if;
+   end Check_Face_Ptr;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr) is
+   begin
+      if thePtr = Null then
+         raise FreeType_Exception with
+           "FT.Faces.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
+      end if;
+   end Check_Glyph_Slot_Ptr;
+
+   --  -------------------------------------------------------------------------
+
    procedure Done_Face (aFace : Face_Ptr) is
-      use GL.Types;
       use Errors;
    begin
       if FT_Done_Face (aFace) /= Errors.Ok then
@@ -80,26 +95,21 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    function Face (aFace : Face_Ptr) return Face_Record is
-      use Face_Access;
-      --  type Object_Pointer is access all Object;
-      Face_Pointer : constant Object_Pointer := To_Pointer (System.Address (aFace));
    begin
-      return Face_Pointer.all;
+      return aFace.all;
    end Face;
 
    --  -------------------------------------------------------------------------
 
    function Face_Size (aFace : Face_Ptr) return Size_Record is
-      use Size_Access;
       theFace      : constant Face_Record := Face (aFace);
-      Size_Pointer : constant Object_Pointer :=
-                       To_Pointer (System.Address (theFace.Size));
    begin
-      if Size_Pointer = null then
+      if theFace.Size = null then
          raise FreeType_Exception with
            "FT.Faces.Face_Size failed, theFace.Size is null.";
       end if;
-      return Size_Pointer.all;
+      return theFace.Size.all;
+
    exception
          when others =>
             raise FreeType_Exception with "FT.Faces.Face_Size raised an exception.";
@@ -108,7 +118,7 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int is
-   use GL.Types;
+      use GL.Types;
    begin
       return GL.Types.Int (Face_Size (aFace).Metrics.Ascender -
                                Face_Size (aFace).Metrics.Descender);
@@ -129,21 +139,20 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr is
-   use System;
+   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
      theFace : constant Face_Record := Face (aFace);
    begin
-      if System.Address (theFace.Glyph_Slot) = System.Null_Address then
-         raise FreeType_Exception with "FT.Faces.Glyph_Slot - No Glyph is loaded.";
+      if theFace.Glyph_Slot = Null then
+         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
       end if;
       return theFace.Glyph_Slot;
-   end Glyph_Slot;
+   end Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
    procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
-                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning : access FT.Image.FT_Vector) is
+                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                      aKerning : access FT.Image.FT_Vector) is
       use Errors;
       Code : constant Errors.Error_Code :=
                FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
@@ -164,7 +173,7 @@ package body FT.Faces is
    --  ------------------------------------------------------------------------
 
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) is
+                             Flags : Load_Flag) is
       use Errors;
       Code : constant Errors.Error_Code :=
                 FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
@@ -178,12 +187,12 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
+                       Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
       use Errors;
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
       Code : constant Errors.Error_Code :=
-               FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
+               FT_New_Face (Library, Path, Face_Index, aFace);
    begin
       if Code /= Errors.Ok then
          if Code = Errors.Cannot_Open_Resource then

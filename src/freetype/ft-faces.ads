@@ -16,19 +16,22 @@
 
 with System;
 
+private with Interfaces.C.Strings;
+
 with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
-with FT.API; use FT.API;
+limited with FT.Glyphs;
 with FT.Image;
-
-private with Interfaces.C.Strings;
 
 package FT.Faces is
    pragma Preelaborate;
 
+   type Face_Ptr is private;
    type Character_Record is private;
+   type Glyph_Slot_Ptr is private;
+
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
    type Face_Record is private;
@@ -51,17 +54,23 @@ package FT.Faces is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
+   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
+                        Render_Mode_Mono, Render_Mode_LCD,
+                        Render_Mode_LCD_V, Render_Mode_Max);
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
+   function Character_Data_To_String (Char : Character; Data : Character_Record)
+                                      return String;
    function Character_Texture (Data : Character_Record)
                                return GL.Objects.Textures.Texture;
+   procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr);
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr);
    procedure Done_Face (aFace : Face_Ptr);
    function Face (aFace : Face_Ptr) return Face_Record;
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Face_Width (aFace : Face_Ptr) return GL.Types.Int;
-   function Glyph_Slot (aFace : FT.API.Face_Ptr) return Glyph_Slot_Ptr;
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                      aKerning    : access FT.Image.FT_Vector);
@@ -69,9 +78,7 @@ package FT.Faces is
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                             Flags : Load_Flag);
    procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out FT.API.Face_Ptr);
-   function Character_Data_To_String (Char : Character; Data : Character_Record)
-                                      return String;
+                      Face_Index : GL.Types.long; aFace : in out Face_Ptr);
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;
                             Width     : GL.Types.Int; Height : GL.Types.Int;
@@ -82,18 +89,23 @@ package FT.Faces is
    procedure Set_Texture (Char_Data : in out Character_Record;
                           Texture   : GL.Objects.Textures.Texture);
    function Size_Metrics (aFace : Face_Ptr) return Size_Metrics_Record;
+   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record;
    function Top (Data : Character_Record) return GL.Types.Int;
    function Width (Data : Character_Record) return GL.Types.Int;
 
    Image_Error : exception;
 
 private
-   type Char_Map_Ptr is new System.Address;
+   type Face_Ptr is access Face_Record;
+   type Character_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
    type Memory_Ptr is new System.Address;
-   type Size_Ptr is new System.Address;
+   type Size_Ptr is access Size_Record;
    type Size_Internal_Ptr is new System.Address;
+   type Glyph_Slot_Ptr is access FT.Glyphs.Glyph_Slot_Record;
+   pragma Convention (C, Glyph_Slot_Ptr);
+
    type Stream_Ptr is new System.Address;
 
    type Character_Record is record
@@ -198,10 +210,10 @@ private
       Max_Advance_Height      : GL.Types.Short;
       Underline_Position      : GL.Types.Short;
       Underline_Thickness     : GL.Types.Short;
-      Glyph_Slot              : FT.API.Glyph_Slot_Ptr;
+      Glyph_Slot              : Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
       Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
-      Character_Map           : Char_Map_Ptr;
+      Character_Map           : Character_Map_Ptr;
       Driver                  : Driver_Ptr;
       Memory                  : Memory_Ptr;
       Stream                  : Stream_Ptr;
