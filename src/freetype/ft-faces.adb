@@ -30,7 +30,7 @@ package body FT.Faces is
 
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
       theFace  : constant Face_Record := Face (aFace);
-      Sizes    : FT_Bitmap_Size;
+      Sizes    : Bitmap_Size;
    begin
       if theFace.Available_Sizes = null then
          raise FreeType_Exception with
@@ -44,7 +44,7 @@ package body FT.Faces is
 
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int is
       theFace : constant Face_Record := Face (aFace);
-      Sizes   : FT_Bitmap_Size;
+      Sizes   : Bitmap_Size;
    begin
       if theFace.Available_Sizes = null then
          raise FreeType_Exception with
@@ -88,7 +88,7 @@ package body FT.Faces is
       use Errors;
    begin
       if FT_Done_Face (aFace) /= Errors.Ok then
-         raise FreeType_Exception with "FT.Faces.FT_Done_Face failed";
+         raise FreeType_Exception with "FT.Faces.Done_Face failed";
       end if;
    end Done_Face;
 

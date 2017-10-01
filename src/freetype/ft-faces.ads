@@ -117,22 +117,22 @@ private
       Advance_X : GL.Types.Int := 0;
    end record;
 
-   type FT_Bitmap_Size is record
+   type Bitmap_Size is record
       Height : GL.Types.Short;
       Width  : GL.Types.Short;
       Size   : FT.Image.Position;
       X_Ppem : FT.Image.Position;
       Y_Ppem : FT.Image.Position;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_Bitmap_Size);
+   pragma Convention (C_Pass_By_Copy, Bitmap_Size);
 
-   type FT_BBox is record
+   type Bounding_Box is record
       X_Min : FT.Image.Position;
       Y_Min : FT.Image.Position;
       X_Max : FT.Image.Position;
       Y_Max : FT.Image.Position;
    end record;
-   pragma Convention (C_Pass_By_Copy, FT_BBox);
+   pragma Convention (C_Pass_By_Copy, Bounding_Box);
 
    type Generic_Finalizer is access procedure (theFinalizer : System.Address);
    pragma Convention (C, Generic_Finalizer);
@@ -166,22 +166,22 @@ private
       --  which are called `sbits' in that case.
 
       Num_Fixed_sizes         : GL.Types.Int;
-      --  Available_Sizes is an array of FT_Bitmap_Size records for all bitmap
+      --  Available_Sizes is an array of Bitmap_Size records for all bitmap
       --  strikes in the face.  It is NULL if there is no bitmap strike.
-      Available_Sizes         : access FT_Bitmap_Size;
+      Available_Sizes         : access Bitmap_Size;
       Num_Charmaps            : GL.Types.Int;
       Character_Map_List      : System.Address;
       C_Generic               : Generic_Record;
       --  The following member variables (down to `underline_thickness')
       --  are only relevant to scalable outlines.
 
-      --  Bbox is the font bounding box.  Coordinates are expressed in font units
+      --  Bounding_Box coordinates are expressed in font units.
       --  The box is large enough to contain any glyph from the font.
       --  Thus, bbox.yMax can be seen as the maximum  ascender' and
       --  bbox.yMin as the `minimum descender.
       --   Bbox is only relevant for scalable   formats.
 
-      Bbox                    : FT_BBox;
+      Bbox                    : Bounding_Box;
       --  Units_per_EM is the number of font units per EM square for  this face.
       --  This is typically 2048 for TrueType fonts and 1000 for Type~1 fonts.
       --  Units_per_EM is only relevant for scalable formats.
@@ -212,7 +212,7 @@ private
       Underline_Thickness     : GL.Types.Short;
       Glyph_Slot              : Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
-      Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
+      Size                    : Size_Ptr;          -- Ptr to a Size_Record
       Character_Map           : Character_Map_Ptr;
       Driver                  : Driver_Ptr;
       Memory                  : Memory_Ptr;
@@ -243,7 +243,7 @@ private
    end record;
    pragma Convention (C_Pass_By_Copy, Size_Record);
 
-   --  FT_Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
+   --  Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)
    for Encoding use (None      => 0,
                      MS_Symbol => Character'Pos ('s') * 2 ** 24 +
