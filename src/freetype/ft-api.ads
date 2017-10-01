@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
-
 with Interfaces.C.Strings;
 
 with GL.Types;
@@ -50,7 +48,7 @@ package FT.API is
    function FT_New_Face (Library        : Library_Ptr;
                          File_Path_Name : Interfaces.C.Strings.chars_ptr;
                          Face_Index     : GL.Types.long;
-                         aFace          : in out System.Address)
+                         aFace          : in out FT.Faces.Face_Ptr)
                          return Errors.Error_Code;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 

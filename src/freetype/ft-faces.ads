@@ -28,9 +28,6 @@ private with Interfaces.C.Strings;
 package FT.Faces is
    pragma Preelaborate;
 
-   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
-                           Render_Mode_Mono, Render_Mode_LCD,
-                           Render_Mode_LCD_V, Render_Mode_Max);
    type Face_Ptr is private;
    type Character_Record is private;
    type Glyph_Slot_Ptr is private;
@@ -57,6 +54,9 @@ package FT.Faces is
                       Load_SBits_Only, Load_No_Autohint, Load_Load_Colour,
                       Load_Compute_Metrics, Load_Bitmap_Metrics_Only);
 
+   type Render_Mode is (Render_Mode_Normal, Render_Mode_Light,
+                        Render_Mode_Mono, Render_Mode_LCD,
+                        Render_Mode_LCD_V, Render_Mode_Max);
 
    function Advance_X (Data : Character_Record) return GL.Types.Int;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
@@ -96,7 +96,7 @@ package FT.Faces is
    Image_Error : exception;
 
 private
-   type Face_Ptr is new System.Address;
+   type Face_Ptr is access Face_Record;
    type Char_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;

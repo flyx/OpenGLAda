@@ -21,7 +21,6 @@ with FT.API; use FT.API;
 
 package body FT.Faces is
 
-   package Face_Access is new System.Address_To_Access_Conversions (Face_Record);
    package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
 
    --  -------------------------------------------------------------------------
@@ -70,9 +69,8 @@ package body FT.Faces is
    --  ------------------------------------------------------------------------
 
    procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr) is
-      use System;
    begin
-      if System.Address (Face_Ptr) = System.Null_Address then
+      if Face_Ptr = Null then
          raise FreeType_Exception with
            "FT.Faces.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
       end if;
@@ -81,7 +79,6 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr) is
-      use System;
    begin
       if thePtr = Null then
          raise FreeType_Exception with
@@ -103,11 +100,8 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    function Face (aFace : Face_Ptr) return Face_Record is
-      use Face_Access;
-      --  type Object_Pointer is access all Object;
-      Face_Pointer : constant Object_Pointer := To_Pointer (System.Address (aFace));
    begin
-      return Face_Pointer.all;
+      return aFace.all;
    end Face;
 
    --  -------------------------------------------------------------------------
@@ -205,7 +199,7 @@ package body FT.Faces is
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
       Code : constant Errors.Error_Code :=
-               FT_New_Face (Library, Path, Face_Index, System.Address (aFace));
+               FT_New_Face (Library, Path, Face_Index, aFace);
    begin
       if Code /= Errors.Ok then
          if Code = Errors.Cannot_Open_Resource then
