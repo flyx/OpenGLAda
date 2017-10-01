@@ -101,7 +101,7 @@ private
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
    type Memory_Ptr is new System.Address;
-   type Size_Ptr is new System.Address;
+   type Size_Ptr is access Size_Record;
    type Size_Internal_Ptr is new System.Address;
    type Glyph_Slot_Ptr is access FT.Glyphs.Glyph_Slot_Record;
    pragma Convention (C, Glyph_Slot_Ptr);

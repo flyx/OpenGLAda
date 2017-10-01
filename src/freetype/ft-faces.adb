@@ -14,14 +14,10 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System.Address_To_Access_Conversions;
-
 with Errors;
 with FT.API; use FT.API;
 
 package body FT.Faces is
-
-   package Size_Access is new System.Address_To_Access_Conversions (Size_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -107,16 +103,13 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    function Face_Size (aFace : Face_Ptr) return Size_Record is
-      use Size_Access;
       theFace      : constant Face_Record := Face (aFace);
-      Size_Pointer : constant Object_Pointer :=
-                       To_Pointer (System.Address (theFace.Size));
    begin
-      if Size_Pointer = null then
+      if theFace.Size = null then
          raise FreeType_Exception with
            "FT.Faces.Face_Size failed, theFace.Size is null.";
       end if;
-      return Size_Pointer.all;
+      return theFace.Size.all;
    exception
          when others =>
             raise FreeType_Exception with "FT.Faces.Face_Size raised an exception.";
