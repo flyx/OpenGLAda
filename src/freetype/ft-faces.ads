@@ -16,14 +16,14 @@
 
 with System;
 
+private with Interfaces.C.Strings;
+
 with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
 limited with FT.Glyphs;
 with FT.Image;
-
-private with Interfaces.C.Strings;
 
 package FT.Faces is
    pragma Preelaborate;

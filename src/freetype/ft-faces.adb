@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-
 with Errors;
 with FT.API; use FT.API;
 
@@ -86,7 +85,6 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure Done_Face (aFace : Face_Ptr) is
-      use GL.Types;
       use Errors;
    begin
       if FT_Done_Face (aFace) /= Errors.Ok then
@@ -111,6 +109,7 @@ package body FT.Faces is
            "FT.Faces.Face_Size failed, theFace.Size is null.";
       end if;
       return theFace.Size.all;
+
    exception
          when others =>
             raise FreeType_Exception with "FT.Faces.Face_Size raised an exception.";
@@ -119,7 +118,7 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    function Face_Height (aFace : Face_Ptr) return GL.Types.Int is
-   use GL.Types;
+      use GL.Types;
    begin
       return GL.Types.Int (Face_Size (aFace).Metrics.Ascender -
                                Face_Size (aFace).Metrics.Descender);
