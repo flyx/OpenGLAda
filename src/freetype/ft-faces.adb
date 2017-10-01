@@ -80,7 +80,7 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Check_Glyph_Slot_Ptr (thePtr :Glyph_Slot_Ptr) is
+   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr) is
       use System;
    begin
       if thePtr = Null then
@@ -152,7 +152,7 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Slot_Ptr (aFace : Face_Ptr) return Glyph_Slot_Ptr is
+   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
      theFace : constant Face_Record := Face (aFace);
    begin
       if theFace.Glyph_Slot = Null then

@@ -21,10 +21,11 @@ with FT.API.Glyphs;
 package body FT.Glyphs is
 
    procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
-   procedure Glyph (Slot_Ptr     : FT.Faces.Glyph_Slot_Ptr;
-                    theGlyph_Ptr : in out Glyph_Ptr);
+   procedure Check_Glyph_Access (thePtr : access Glyph_Record);
    procedure Glyph_Slot (Face_Ptr : FT.Faces.Face_Ptr;
-                         theGlyph_Slot : out FT.Glyphs.Glyph_Slot_Record);
+                         theGlyph_Slot : out Glyph_Slot_Record);
+   procedure Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record;
+                    theGlyph_Ptr : access FT.Glyphs.Glyph_Record);
 
    --  -------------------------------------------------------------------------
 
@@ -127,8 +128,17 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
+   procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record) is
+   begin
+      if thePtr = Null then
+         raise FreeType_Exception with
+           "FT.Glyphs.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
+      end if;
+   end Check_Glyph_Slot_Ptr;
+
+   --  -------------------------------------------------------------------------
+
    procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr) is
-      use System;
    begin
       if thePtr = Null then
          raise FreeType_Exception with
@@ -138,15 +148,44 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
+   procedure Check_Glyph_Access (thePtr : access Glyph_Record) is
+   begin
+      if thePtr = Null then
+         raise FreeType_Exception with
+           "FT.Glyphs.Check_Glyph_Access - No glyph is loaded, Glyph_Ptr is null.";
+      end if;
+   end Check_Glyph_Access;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record;
+                           theGlyph_Ptr : access FT.Glyphs.Glyph_Record) is
+      use Errors;
+      Code : Errors.Error_Code;
+   begin
+      Check_Glyph_Slot_Ptr (aSlot_Ptr);
+      Code := FT.API.Glyphs.FT_Get_Glyph (aSlot_Ptr, theGlyph_Ptr);
+      if Code /= Errors.Ok then
+         raise FreeType_Exception with
+           "FT.Glyphs.Glyph_Access error :" & Errors.Description (Code);
+      end if;
+   exception
+      when others =>
+         raise FreeType_Exception with
+           "FT.Glyphs.Glyph raised an Exception";
+   end Glyph_Access;
+
+   --  -------------------------------------------------------------------------
+
    procedure Glyph_Slot (Face_Ptr : FT.Faces.Face_Ptr;
-                         theGlyph_Slot : out FT.Glyphs.Glyph_Slot_Record) is
-      Slot_Ptr    : FT.Faces.Glyph_Slot_Ptr;
-      aGlyph_Ptr  : Glyph_Ptr;
+                         theGlyph_Slot : out Glyph_Slot_Record) is
+      aSlot_Ptr    : access Glyph_Slot_Record;
    begin
       FT.Faces.Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
+      --  theSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
+      aSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
       --  type Glyph_Slot_Ptr is access FT.Glyphs.Glyph_Slot_Record;
-      theGlyph_Slot := Slot_Ptr.all;
+      theGlyph_Slot := aSlot_Ptr.all;
    exception
       when others =>
          raise FreeType_Exception with
@@ -156,14 +195,15 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    procedure Glyph (Face_Ptr : FT.Faces.Face_Ptr; theGlyph : out Glyph_Record) is
-      aGlyph_Slot : FT.Faces.Glyph_Slot_Ptr ;
-      aGlyph_Ptr : Glyph_Ptr;
+     -- aGlyph_Slot : FT.Faces.Glyph_Slot_Ptr ;
+      aSlot_Ptr  : access Glyph_Slot_Record;
+      aGlyph_Ptr : access Glyph_Record;
    begin
       FT.Faces.Check_Face_Ptr (Face_Ptr);
-      aGlyph_Slot := FT.Faces.Glyph_Slot (Face_Ptr);
-      FT.Faces.Check_Glyph_Slot_Ptr (aGlyph_Slot);
-      Glyph (aGlyph_Slot, aGlyph_Ptr);
-      Check_Glyph_Ptr (aGlyph_Ptr);
+      aSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
+      Check_Glyph_Slot_Ptr (aSlot_Ptr);
+      Glyph_Access (aSlot_Ptr, aGlyph_Ptr);
+      Check_Glyph_Access (aGlyph_Ptr);
       theGlyph := Glyph (aGlyph_Ptr);
    exception
       when others =>
@@ -173,33 +213,14 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record is
+   function Glyph (aGlyph_Ptr : access Glyph_Record) return Glyph_Record is
    begin
-      Check_Glyph_Ptr (aGlyph_Ptr);
+      Check_Glyph_Access (aGlyph_Ptr);
       return aGlyph_Ptr.all;
    exception
       when others =>
          raise FreeType_Exception with
            "FT.Glyphs.Glyph aGlyph_Ptr raised an Exception";
-   end Glyph;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Glyph (Slot_Ptr    : FT.Faces.Glyph_Slot_Ptr;
-                   theGlyph_Ptr : in out Glyph_Ptr) is
-      use Errors;
-      Code : Errors.Error_Code;
-   begin
-      FT.Faces.Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Code := FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, theGlyph_Ptr);
-      if Code /= Errors.Ok then
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph error :" & Errors.Description (Code);
-      end if;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
    end Glyph;
 
    --  -------------------------------------------------------------------------
@@ -233,7 +254,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.Faces.Render_Mode;
+     (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
       Origin      : access FT.Image.FT_Vector; Destroy     : Bool) is
       use Errors;
       Code : constant Errors.Error_Code :=
@@ -249,11 +270,11 @@ package body FT.Glyphs is
 
    procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode) is
       use Errors;
-      Slot : FT.Faces.Glyph_Slot_Ptr;
+      Slot : access Glyph_Slot_Record;
       Code : Errors.Error_Code;
    begin
       FT.Faces.Check_Face_Ptr (aFace);
-      Slot := FT.Faces.Glyph_Slot (aFace);
+      Slot := FT.Faces.Slot_Ptr (aFace);
       Code := FT.API.Glyphs.FT_Render_Glyph (Slot, Mode);
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Render_Glyph error: " &

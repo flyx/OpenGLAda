@@ -24,7 +24,7 @@ package body Texture_Manager is
    use type Errors.Error_Code;
 
    theLibrary    : FT.Library_Ptr;
-   Face_Ptr      : FT.API.Face_Ptr;
+   Face_Ptr      : FT.Faces.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
    Image_Error : exception;
@@ -102,7 +102,7 @@ package body Texture_Manager is
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.Faces.Render_Mode_Mono);
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
