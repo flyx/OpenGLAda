@@ -19,42 +19,45 @@ with System;
 with GL.Objects.Textures;
 with GL.Types;
 
-with FT.API;
 with FT.Image;
 with FT.Faces;
 
 package FT.Glyphs is
    pragma Preelaborate;
 
+   type Glyph_Ptr is private;
    type Glyph_Record is private;
    type Glyph_Slot_Record is private;
-   type Glyph_Ptr is private;
 
    procedure Done_Glyph (Glyph : Glyph_Ptr);
 
-   procedure Bitmap (Face_Ptr : FT.API.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record);
-   function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   procedure Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
+   procedure Bitmap (Face_Ptr : FT.Faces.Face_Ptr;
+                     theBitmap : out FT.Image.Bitmap_Record);
+   function Bitmap_Height (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Single;
+   procedure Bitmap_Image (Face_Ptr : FT.Faces.Face_Ptr;
                           theImage : out GL.Objects.Textures.Image_Source);
-   function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
-   function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
-   function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
+   function Bitmap_Left (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Int;
+   function Bitmap_Rows (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Int;
+   function Bitmap_Top (Face_Ptr : FT.Faces.Face_Ptr)
                         return GL.Types.Int;
-   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   procedure Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record);
-   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
-   function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
-   function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
+   function Bitmap_Width (Face_Ptr : FT.Faces.Face_Ptr) return GL.Types.Single;
+   procedure Glyph (Face_Ptr : FT.Faces.Face_Ptr; theGlyph : out Glyph_Record);
+   function Glyph (aGlyph_Ptr : access Glyph_Record) return Glyph_Record;
+   function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr) return FT.Image.FT_Vector;
+   function Glyph_Format (Face_Ptr : FT.Faces.Face_Ptr)
                           return FT.Image.Glyph_Format;
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
+     (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
       Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
-   procedure Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode);
+   procedure Render_Glyph (aFace : FT.Faces.Face_Ptr; Mode : FT.Faces.Render_Mode);
 private
-   type Bitmap_Glyph_Ptr is new System.Address;
-   type Glyph_Ptr is new System.Address;
-   type Outline_Glyph_Ptr is new System.Address;
+   type Glyph_Ptr is access Glyph_Record;
+   pragma Convention (C, Glyph_Ptr);
+
+   type Outline_Glyph_Record;
+   type Outline_Glyph_Ptr is access Outline_Glyph_Record;
+   pragma Convention (C, Outline_Glyph_Ptr);
+
    type Slot_Internal_Ptr is new System.Address;
    type Subglyph_Ptr is new System.Address;
 
@@ -92,8 +95,8 @@ private
 
    type Glyph_Slot_Record is record
       Library              : FT.Library_Ptr;
-      Face                 : FT.API.Face_Ptr;
-      Next                 : FT.API.Glyph_Slot_Ptr;
+      Face                 : FT.Faces.Face_Ptr;
+      Next                 : FT.Faces.Glyph_Slot_Ptr;
       Reserved             : GL.Types.UInt;
       C_Generic            : FT.Faces.Generic_Record;
       Metrics              : Glyph_Metrics;

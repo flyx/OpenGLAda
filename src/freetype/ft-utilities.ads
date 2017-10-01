@@ -19,14 +19,13 @@ with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
 
-with FT.API;
 with FT.Image;
 with FT.Faces;
 
 package FT.Utilities is
    procedure Initialize_Font_Data (Font_File : String);
    procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record);
-   procedure Print_Character_Metadata (aFace : FT.API.Face_Ptr;
+   procedure Print_Character_Metadata (aFace : FT.Faces.Face_Ptr;
                                        aChar : Character);
    procedure Print_Character_Metadata (Data : FT.Faces.Character_Record);
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;

@@ -32,12 +32,12 @@ package body FT.Utilities is
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
    theLibrary           : FT.Library_Ptr;
-   Face_Ptr             : FT.API.Face_Ptr;
+   Face_Ptr             : FT.Faces.Face_Ptr;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : FT.Faces.Character_Data_Vector (0 .. 255);
 
-   procedure Setup_Character_Textures (Face_Ptr  : FT.API.Face_Ptr);
+   procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Ptr);
    procedure Setup_Font (Font_File : String);
 
    --  ------------------------------------------------------------------------
@@ -55,7 +55,7 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Texture (Face_Ptr  : FT.API.Face_Ptr;
+   procedure Load_Texture (Face_Ptr  : FT.Faces.Face_Ptr;
                            Char_Data : in out FT.Faces.Character_Record;
                            Width, Height : GL.Types.Size;
                            X_Offset, Y_Offset : GL.Types.Int) is
@@ -111,7 +111,7 @@ package body FT.Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (aFace : FT.API.Face_Ptr; aChar : Character) is
+   procedure Print_Character_Metadata (aFace : FT.Faces.Face_Ptr; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
       Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Glyph_Advance (aFace));
@@ -233,7 +233,7 @@ package body FT.Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Character_Textures
-     (Face_Ptr  : FT.API.Face_Ptr) is
+     (Face_Ptr  : FT.Faces.Face_Ptr) is
       use GL.Objects.Buffers;
       use GL.Types;
       Width          : GL.Types.Size;
@@ -261,7 +261,7 @@ package body FT.Utilities is
          FT.Faces.Load_Character (Face_Ptr, GL.Types.long (index),
                                   FT.Faces.Load_Render);
          --  Ensure that the glyph image is an anti-aliased bitmap
-         FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+         FT.Glyphs.Render_Glyph (Face_Ptr, FT.Faces.Render_Mode_Mono);
 
          Width := GL.Types.Size (FT.Glyphs.Bitmap_Width (Face_Ptr));
          Height := GL.Types.Size (FT.Glyphs.Bitmap_Rows (Face_Ptr));

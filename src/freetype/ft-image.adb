@@ -27,7 +27,7 @@ package body FT.Image is
    --  Bitmap => Buffer (access unsigned_char)
 
    function Buffer (Bitmap : Bitmap_Record) return GL.Objects.Textures.Image_Source is
-     Addr   : constant System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
+      Addr   : constant System.Address := Unsigned_Char_To_Address.To_Address (Bitmap.Buffer);
    begin
       return GL.Objects.Textures.Image_Source (Addr);
    end Buffer;
