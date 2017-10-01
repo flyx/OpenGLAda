@@ -97,7 +97,7 @@ package FT.Faces is
 
 private
    type Face_Ptr is access Face_Record;
-   type Char_Map_Ptr is new System.Address;
+   type Character_Map_Ptr is new System.Address;
    type Driver_Ptr is new System.Address;
    type Face_Internal_Ptr is new System.Address;
    type Memory_Ptr is new System.Address;
@@ -213,7 +213,7 @@ private
       Glyph_Slot              : Glyph_Slot_Ptr;
       --  Size is the current active size for this face.
       Size                    : Size_Ptr;             -- Ptr to a FT_SizeRec
-      Character_Map           : Char_Map_Ptr;
+      Character_Map           : Character_Map_Ptr;
       Driver                  : Driver_Ptr;
       Memory                  : Memory_Ptr;
       Stream                  : Stream_Ptr;

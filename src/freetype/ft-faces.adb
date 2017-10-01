@@ -14,6 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+
 with Errors;
 with FT.API; use FT.API;
 
@@ -151,8 +152,8 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
-                         Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                     aKerning : access FT.Image.FT_Vector) is
+                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+                      aKerning : access FT.Image.FT_Vector) is
       use Errors;
       Code : constant Errors.Error_Code :=
                FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
@@ -173,7 +174,7 @@ package body FT.Faces is
    --  ------------------------------------------------------------------------
 
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                            Flags : Load_Flag) is
+                             Flags : Load_Flag) is
       use Errors;
       Code : constant Errors.Error_Code :=
                 FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
@@ -187,7 +188,7 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
-                      Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
+                       Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
       use Errors;
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
