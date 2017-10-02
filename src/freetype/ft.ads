@@ -14,6 +14,8 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
+with Ada.Finalization;
+
 with System;
 
 with Interfaces.C;
@@ -21,17 +23,34 @@ with Interfaces.C;
 package FT is
    pragma Preelaborate;
 
-   type Library_Ptr is private;
+   --  reference-counted smart pointer
+   type Library_Reference is new Ada.Finalization.Controlled with private;
 
    subtype Fixed is Interfaces.C.long;
    subtype ULong is Interfaces.C.unsigned_long;
 
    FreeType_Exception : exception;
 
-   procedure Done_Library (Library : Library_Ptr);
-   procedure Initialize (alibrary : in out Library_Ptr);
+   --  instantiates a new library object and makes the given reference point to
+   --  that object.
+   procedure Init (Object : in out Library_Reference);
 
+   --  true iff the reference points to a valid library object (i.e. has been
+   --  initialized).
+   function Initialized (Object : Library_Reference) return Boolean;
+
+   --  you may call this manually if you want to make the given reference
+   --  uninitialized. the actual object it pointed to will only be deallocated
+   --  if the reference count reaches zero.
+   --
+   --  post-condition : Object.Initialized = False
+   overriding procedure Finalize (Object : in out Library_Reference);
 private
-   type Library_Ptr is new System.Address;
+   subtype Library_Ptr is System.Address;
 
+   type Library_Reference is new Ada.Finalization.Controlled with record
+      Data : Library_Ptr;
+   end record;
+
+   overriding procedure Adjust (Object : in out Library_Reference);
 end FT;

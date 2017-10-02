@@ -11,7 +11,6 @@ with GL.Pixels;
 with GL.Types.Colors;
 
 with FT;
-with FT.API;
 with Errors;
 with FT.Glyphs;
 with FT.Image;
@@ -23,7 +22,6 @@ with Utilities;
 package body Texture_Manager is
    use type Errors.Error_Code;
 
-   theLibrary    : FT.Library_Ptr;
    Face_Ptr      : FT.Faces.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
@@ -31,7 +29,7 @@ package body Texture_Manager is
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single);
-   procedure Setup_Font;
+   procedure Setup_Font (My_Library : FT.Library_Reference);
    procedure Setup_Texture (aTexture : in out GL.Objects.Textures.Texture);
 
    --  ------------------------------------------------------------------------
@@ -73,11 +71,11 @@ package body Texture_Manager is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font is
+   procedure Setup_Font (My_Library : FT.Library_Reference) is
       use GL.Types;
       Font_File  : String := "../../fonts/NotoSerif-Regular.ttf";
    begin
-      FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
+      FT.Faces.New_Face (My_Library, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
       FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
@@ -95,9 +93,11 @@ package body Texture_Manager is
                             X, Y: GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use GL.Types;
+
+      My_Library : FT.Library_Reference;
    begin
-      FT.Initialize (theLibrary);
-      Setup_Font;
+      My_Library.Init;
+      Setup_Font (My_Library);
       FT.Faces.Load_Character
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
@@ -109,7 +109,6 @@ package body Texture_Manager is
       Setup_Texture (aTexture);
 
       FT.Faces.Done_Face (Face_Ptr);
-      FT.Done_Library (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------

@@ -197,13 +197,13 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
+   procedure New_Face (Library : Library_Reference; File_Path_Name : String;
                        Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
       use Errors;
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
       Code : constant Errors.Error_Code :=
-               FT_New_Face (Library, Path, Face_Index, aFace);
+               FT_New_Face (Library.Data, Path, Face_Index, aFace);
    begin
       if Code /= Errors.Ok then
          if Code = Errors.Cannot_Open_Resource then

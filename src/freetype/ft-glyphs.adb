@@ -18,6 +18,7 @@ with Errors;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
+   use type Errors.Error_Code;
 
    procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
    procedure Check_Glyph_Access (thePtr : access Glyph_Record);
@@ -159,8 +160,7 @@ package body FT.Glyphs is
 
    function Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record)
                           return access FT.Glyphs.Glyph_Record is
-      use Errors;
-      theGlyph_Ptr : access FT.Glyphs.Glyph_Record;
+      theGlyph_Ptr : FT.Glyphs.Glyph_Ptr;
       Code         : Errors.Error_Code;
    begin
       Check_Glyph_Slot_Ptr (aSlot_Ptr);
