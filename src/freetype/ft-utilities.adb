@@ -114,7 +114,7 @@ package body FT.Utilities is
    procedure Print_Character_Metadata (aFace : FT.Faces.Face_Ptr; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
-      Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Glyph_Advance (aFace));
+      Advance_X : constant GL.Types.Int := GL.Types.int (Glyph_Advance (aFace).X);
    begin
       Put_Line ("Character " & aChar & " Data");
       Put_Line ("Width: " & Single'Image (Bitmap_Width (aFace)));
@@ -268,7 +268,7 @@ package body FT.Utilities is
          FT.Faces.Set_Char_Data (Char_Data, Width, Height,
                      FT.Glyphs.Bitmap_Left (Face_Ptr),
                      FT.Glyphs.Bitmap_Top (Face_Ptr),
-                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
+                     GL.Types.Int (FT.Glyphs.Glyph_Advance (Face_Ptr).X));
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;

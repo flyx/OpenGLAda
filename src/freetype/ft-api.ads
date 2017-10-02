@@ -16,6 +16,7 @@
 
 with Interfaces.C.Strings;
 
+with GL.Low_Level;
 with GL.Types;
 
 with Errors;
@@ -25,6 +26,8 @@ with FT.Image;
 package FT.API is
    pragma Preelaborate;
 
+   subtype Bool is GL.Low_Level.Bool;
+
    function FT_Done_Face (aFace : FT.Faces.Face_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
 
@@ -32,8 +35,9 @@ package FT.API is
    pragma Import (C, FT_Done_Library, "FT_Done_Library");
 
    function FT_Get_Kerning
-     (aFace : FT.Faces.Face_Ptr; Left_Glyph : GL.Types.UInt; Right_Glyph :  GL.Types.UInt;
-      Kern_Mode : GL.Types.UInt; aKerning : access FT.Image.FT_Vector)
+     (aFace : FT.Faces.Face_Ptr; Left_Glyph : GL.Types.UInt;
+      Right_Glyph :  GL.Types.UInt;
+      Kern_Mode : GL.Types.UInt; aKerning : access FT.Image.Vector)
       return Errors.Error_Code;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
