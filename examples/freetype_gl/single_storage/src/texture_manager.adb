@@ -132,7 +132,7 @@ package body Texture_Manager is
       FT.Faces.Set_Char_Data
                      (Char_Data, Width, Height, FT.Glyphs.Bitmap_Left (Face_Ptr),
                      FT.Glyphs.Bitmap_Top (Face_Ptr),
-                     FT.Image.Vector_X (FT.Glyphs.Glyph_Advance (Face_Ptr)));
+                     GL.Types.Int (FT.Glyphs.Glyph_Advance (Face_Ptr).X));
 
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);

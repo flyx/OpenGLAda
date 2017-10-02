@@ -23,8 +23,8 @@ package body FT.Glyphs is
    procedure Check_Glyph_Access (thePtr : access Glyph_Record);
    procedure Glyph_Slot (Face_Ptr : FT.Faces.Face_Ptr;
                          theGlyph_Slot : out Glyph_Slot_Record);
-   procedure Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record;
-                           theGlyph_Ptr : access FT.Glyphs.Glyph_Record);
+   function Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record)
+                          return access FT.Glyphs.Glyph_Record;
 
    --  -------------------------------------------------------------------------
 
@@ -157,10 +157,11 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   procedure Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record;
-                           theGlyph_Ptr : access FT.Glyphs.Glyph_Record) is
+   function Glyph_Access (aSlot_Ptr    : access Glyph_Slot_Record)
+                          return access FT.Glyphs.Glyph_Record is
       use Errors;
-      Code : Errors.Error_Code;
+      theGlyph_Ptr : access FT.Glyphs.Glyph_Record;
+      Code         : Errors.Error_Code;
    begin
       Check_Glyph_Slot_Ptr (aSlot_Ptr);
       Code := FT.API.Glyphs.FT_Get_Glyph (aSlot_Ptr, theGlyph_Ptr);
@@ -168,6 +169,8 @@ package body FT.Glyphs is
          raise FreeType_Exception with
            "FT.Glyphs.Glyph_Access error :" & Errors.Description (Code);
       end if;
+      return theGlyph_Ptr;
+
    exception
       when others =>
          raise FreeType_Exception with
@@ -198,7 +201,7 @@ package body FT.Glyphs is
       FT.Faces.Check_Face_Ptr (Face_Ptr);
       aSlot_Ptr := FT.Faces.Slot_Ptr (Face_Ptr);
       Check_Glyph_Slot_Ptr (aSlot_Ptr);
-      Glyph_Access (aSlot_Ptr, aGlyph_Ptr);
+      aGlyph_Ptr := Glyph_Access (aSlot_Ptr);
       Check_Glyph_Access (aGlyph_Ptr);
       theGlyph := Glyph (aGlyph_Ptr);
    exception
@@ -222,7 +225,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Glyph_Advance (Face_Ptr : FT.Faces.Face_Ptr)
-                               return FT.Image.FT_Vector is
+                               return FT.Image.Vector is
       aGlyph_Slot : Glyph_Slot_Record;
    begin
       Glyph_Slot (Face_Ptr, aGlyph_Slot);
@@ -251,10 +254,10 @@ package body FT.Glyphs is
 
    procedure Glyph_To_Bitmap
      (theGlyph    : access Glyph_Record; Mode : FT.Faces.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Bool) is
+      Origin      : access FT.Image.Vector; Destroy     : Boolean) is
       use Errors;
       Code : constant Errors.Error_Code :=
-               FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, Destroy);
+               FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, FT.API.Bool (Destroy));
    begin
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
