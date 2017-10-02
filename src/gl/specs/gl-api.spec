@@ -807,7 +807,7 @@ spec GL.API is
                               Offset : Low_Level.IntPtr;
                               Size   : Low_Level.SizeIPtr;
                               Data   : System.Address) with
-     Dynamic => "glBufferSubData", Wrapper => "GL.Objects.Buffers.Get_Sub_Data";
+     Dynamic => "glBufferSubData", Wrapper => "GL.Objects.Buffers.Set_Sub_Data";
    procedure Unmap_Buffer (Target : Low_Level.Enums.Buffer_Kind) with
      Dynamic => "glUnmapBuffer", Wrapper => "GL.Objects.Buffers.Unmap";
    procedure Get_Buffer_Parameter_Access_Kind

@@ -122,7 +122,7 @@ package body GL.Objects.Buffers is
       return To_Pointer (Ret);
    end Pointer;
 
-   procedure Get_Sub_Data (Target : in out Buffer_Target;
+   procedure Set_Sub_Data (Target : in out Buffer_Target;
                            Offset : Types.Size;
                            Data   : in out Pointers.Element_Array) is
    begin
@@ -130,7 +130,7 @@ package body GL.Objects.Buffers is
                            Low_Level.SizeIPtr (Data'Length),
                            Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
-   end Get_Sub_Data;
+   end Set_Sub_Data;
 
    function Access_Type (Target : Buffer_Target) return Access_Kind is
       Ret : Access_Kind := Access_Kind'First;

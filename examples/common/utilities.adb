@@ -47,6 +47,10 @@ package body Utilities is
     begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, True, True, True));
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Clear_All.");
+            raise;
     end Clear_All;
 
     --  ------------------------------------------------------------------------
@@ -55,6 +59,10 @@ package body Utilities is
     begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((False, False, False, True));
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Clear_Background_Colour.");
+            raise;
     end Clear_Background_Colour;
 
     --  ------------------------------------------------------------------------
@@ -63,6 +71,10 @@ package body Utilities is
     begin
         GL.Buffers.Set_Color_Clear_Value (Colour);
         GL.Buffers.Clear ((True, False, False, True));
+    exception
+        when others =>
+            Put_Line ("An exception occurred in Clear_Background_Colour_And_Depth.");
+            raise;
     end Clear_Background_Colour_And_Depth;
 
     --  ------------------------------------------------------------------------
@@ -228,7 +240,7 @@ package body Utilities is
 
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Show_Shader_Program_Data.");
+            Put_Line ("An exception occurred in Show_Shader_Program_Data.");
             raise;
 
     end Show_Shader_Program_Data;
@@ -260,7 +272,7 @@ package body Utilities is
         New_Line;
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Show_Shader_Info_Log.");
+            Put_Line ("An exception occurred in Show_Shader_Info_Log.");
             raise;
 
     end Show_Shader_Info_Log;
