@@ -50,7 +50,7 @@ package body FT.Utilities is
       Setup_Character_Textures (Face_Ptr);
 
       FT.Faces.Done_Face (Face_Ptr);
-      FT.Done_Library (theLibrary);
+      FT.Done_FreeTYpe (theLibrary);
    end Initialize_Font_Data;
 
    --  ------------------------------------------------------------------------

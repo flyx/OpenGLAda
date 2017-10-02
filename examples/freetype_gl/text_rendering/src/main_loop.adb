@@ -123,7 +123,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       FT.Utilities.Initialize_Font_Data (Font_File_1);
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup.");
+         Put_Line ("An exception occurred in FT.Utilities.Setup.");
          raise;
    end Setup;
 
@@ -145,6 +145,6 @@ begin
    Render_Program.Delete_Id;
 exception
    when anError :  others =>
-      Put_Line ("An exception occurred in Main_Loop.");
+      Put_Line ("An exception occurred in FT.Utilities.Main_Loop.");
       raise;
 end Main_Loop;
