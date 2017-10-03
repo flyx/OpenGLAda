@@ -18,7 +18,6 @@ with System;
 
 private with Interfaces.C.Strings;
 
-with GL.Objects.Textures;
 with GL.Types;
 
 with FT;
@@ -29,10 +28,7 @@ package FT.Faces is
    pragma Preelaborate;
 
    type Face_Ptr is private;
-   type Character_Record is private;
    type Glyph_Slot_Ptr is private;
-
-   type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
    type Face_Record is private;
    type List_Record is private;
@@ -58,13 +54,8 @@ package FT.Faces is
                         Render_Mode_Mono, Render_Mode_LCD,
                         Render_Mode_LCD_V, Render_Mode_Max);
 
-   function Advance_X (Data : Character_Record) return GL.Types.Int;
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int;
    function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int;
-   function Character_Data_To_String (Char : Character; Data : Character_Record)
-                                      return String;
-   function Character_Texture (Data : Character_Record)
-                               return GL.Objects.Textures.Texture;
    procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr);
    procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr);
    procedure Done_Face (aFace : Face_Ptr);
@@ -74,24 +65,14 @@ package FT.Faces is
    procedure Kerning (aFace       : Face_Ptr; Left_Glyph : GL.Types.UInt;
                       Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                       aKerning    : access FT.Image.Vector);
-   function Left (Data : Character_Record) return GL.Types.Int;
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                              Flags : Load_Flag);
    function Metrics (aFace : Face_Ptr) return Size_Metrics;
    procedure New_Face (Library    : Library_Reference; File_Path_Name : String;
                        Face_Index : GL.Types.long; aFace : in out Face_Ptr);
-   function Rows (Data : Character_Record) return GL.Types.Int;
-   procedure Set_Char_Data (Char_Data : in out Character_Record;
-                            Width     : GL.Types.Int; Height : GL.Types.Int;
-                            Left      : GL.Types.Int; Top    : GL.Types.Int;
-                            Advance_X : GL.Types.Int);
    procedure Set_Pixel_Sizes (aFace        : Face_Ptr; Pixel_Width : GL.Types.UInt;
                               Pixel_Height : GL.Types.UInt);
-   procedure Set_Texture (Char_Data : in out Character_Record;
-                          Texture   : GL.Objects.Textures.Texture);
    function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record;
-   function Top (Data : Character_Record) return GL.Types.Int;
-   function Width (Data : Character_Record) return GL.Types.Int;
 
    Image_Error : exception;
 
@@ -107,15 +88,6 @@ private
    pragma Convention (C, Glyph_Slot_Ptr);
 
    type Stream_Ptr is new System.Address;
-
-   type Character_Record is record
-      Texture   : GL.Objects.Textures.Texture;
-      Width     : GL.Types.Int := 0;
-      Rows      : GL.Types.Int := 0;
-      Left      : GL.Types.Int := 0;
-      Top       : GL.Types.Int := 0;
-      Advance_X : GL.Types.Int := 0;
-   end record;
 
    type Bitmap_Size is record
       Height : GL.Types.Short;

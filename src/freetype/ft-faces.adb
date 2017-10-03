@@ -21,13 +21,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Advance_X (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Advance_X;
-   end Advance_X;
-
-   --  ------------------------------------------------------------------------
-
    function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
       theFace  : constant Face_Record := Face (aFace);
       Sizes    : Bitmap_Size;
@@ -55,28 +48,6 @@ package body FT.Faces is
    end Bitmap_Width;
 
    --  -------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
-
-   --  ------------------------------------------------------------------------
-
-   function Character_Texture (Data : Character_Record)
-                               return GL.Objects.Textures.Texture is
-   begin
-      return Data.Texture;
-   end Character_Texture;
-
-   --  ------------------------------------------------------------------------
 
    procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr) is
    begin
@@ -168,13 +139,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Left (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Left;
-   end Left;
-
-   --  ------------------------------------------------------------------------
-
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                              Flags : Load_Flag) is
       use Errors;
@@ -218,26 +182,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   function Rows (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Rows;
-   end Rows;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Char_Data (Char_Data : in out Character_Record;
-                            Width     : GL.Types.Int; Height : GL.Types.Int;
-                            Left      : GL.Types.Int; Top    : GL.Types.Int;
-                            Advance_X : GL.Types.Int) is
-   begin
-      Char_Data.Width := Width;
-      Char_Data.Rows := Height;
-      Char_Data.Left := Left;
-      Char_Data.Top := Top;
-      Char_Data.Advance_X := Advance_X;
-   end Set_Char_Data;
-
-   --  -------------------------------------------------------------------------
 
   procedure Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
                             Pixel_Height : GL.Types.UInt) is
@@ -253,14 +197,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Texture (Char_Data : in out Character_Record;
-                          Texture   : GL.Objects.Textures.Texture) is
-   begin
-      Char_Data.Texture := Texture;
-   end Set_Texture;
-
-   --  -------------------------------------------------------------------------
-
    function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
      theFace : constant Face_Record := Face (aFace);
    begin
@@ -271,19 +207,5 @@ package body FT.Faces is
    end Slot_Ptr;
 
    --  -------------------------------------------------------------------------
-
-   function Top (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Top;
-   end Top;
-
-   --  ------------------------------------------------------------------------
-
-   function Width (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Width;
-   end Width;
-
-   --  ------------------------------------------------------------------------
 
 end FT.Faces;

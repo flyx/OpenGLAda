@@ -21,6 +21,7 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with FT.OGL;
 with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
@@ -73,7 +74,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color) is
    begin
-     FT.Utilities.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
+     FT.OGL.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                               Texture_ID, Projection_Matrix_ID, Colour_ID,
                               Projection_Matrix);
    exception
@@ -120,7 +121,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.Utilities.Initialize_Font_Data;
+      FT.OGL.Initialize_Font_Data;
    exception
       when others =>
          Put_Line ("An exception occurred in Main_Loop.Setup.");
