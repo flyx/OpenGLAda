@@ -4,7 +4,7 @@ with GL.Objects.Buffers;
 with GL.Objects.Textures;
 with GL.Types;
 
-with FT.API;
+with FT;
 
 package Texture_Manager is
 

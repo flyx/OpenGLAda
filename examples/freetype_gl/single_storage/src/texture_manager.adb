@@ -12,7 +12,6 @@ with GL.Types.Colors;
 
 with Errors;
 with FT.Glyphs;
-with FT.Image;
 with FT.Faces;
 with FT.Utilities;
 
@@ -22,7 +21,7 @@ package body Texture_Manager is
    use type Errors.Error_Code;
 
    theLibrary    : FT.Library_Ptr;
-   Face_Ptr      : FT.Faces.Face_Ptr;
+   Face_Ptr      : FT.Faces.Face_Reference;
    Vertex_Data   : Vertex_Array;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
