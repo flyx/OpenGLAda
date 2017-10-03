@@ -109,6 +109,11 @@ package body Texture_Manager is
       Setup_Texture (aTexture);
 
       FT.Faces.Done_Face (Face_Ptr);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Texture_Manager.Setup_Graphic.");
+         raise;
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
