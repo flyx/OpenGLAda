@@ -48,7 +48,7 @@ package body FT.Faces is
    begin
       if theFace.Available_Sizes = null then
          raise FreeType_Exception with
-           "FT.Faces.Bitmap_Height failed, there are no sizes available for this face.";
+           "FT.Faces.Bitmap_Width failed, there are no sizes available for this face.";
       end if;
       Sizes:= theFace.Available_Sizes.all;
       return GL.Types.Int (Sizes.Width);
@@ -210,7 +210,7 @@ package body FT.Faces is
             raise FT.FreeType_Exception with "The file " &
                 File_Path_Name & " cannot be found.";
          else
-            raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+            raise FT.FreeType_Exception with "FT.Faces.New_Face error: " &
                 Errors.Description (Code);
          end if;
       end if;
@@ -246,10 +246,10 @@ package body FT.Faces is
                FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
   begin
       if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+         raise FT.FreeType_Exception with "FT.Faces.Set_Pixel_Sizes error: " &
              Errors.Description (Code);
       end if;
-  end;
+  end Set_Pixel_Sizes;
 
    --  -------------------------------------------------------------------------
 
