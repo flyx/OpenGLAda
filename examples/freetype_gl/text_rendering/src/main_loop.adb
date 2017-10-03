@@ -120,7 +120,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.Utilities.Initialize_Font_Data (Font_File_1);
+      FT.Utilities.Initialize_Font_Data;
    exception
       when others =>
          Put_Line ("An exception occurred in Main_Loop.Setup.");

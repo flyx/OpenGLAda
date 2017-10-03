@@ -23,7 +23,8 @@ with FT.Image;
 with FT.Faces;
 
 package FT.Utilities is
-   procedure Initialize_Font_Data (Font_File : String);
+   procedure Initialize_Font_Data (Font_File : String :=
+                                   "../../fonts/NotoSerif-Regular.ttf");
    procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record);
    procedure Print_Character_Metadata (aFace : FT.Faces.Face_Ptr;
                                        aChar : Character);

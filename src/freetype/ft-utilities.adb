@@ -41,7 +41,8 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Initialize_Font_Data (Font_File : String) is
+   procedure Initialize_Font_Data (Font_File : String :=
+                                   "../../fonts/NotoSerif-Regular.ttf") is
       use GL.Types;
       theLibrary : FT.Library_Reference;
    begin
