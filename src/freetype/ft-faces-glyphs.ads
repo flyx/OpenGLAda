@@ -14,18 +14,19 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
-
 with GL.Objects.Textures;
 with GL.Types;
 
 package FT.Faces.Glyphs is
    pragma Preelaborate;
 
-   type Glyph_Record is private;
-   type Glyph_Ptr is private;
+   type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled
+   with private;
 
-   procedure Done_Glyph (Glyph : Glyph_Ptr);
+   --  call this to destruct the
+   overriding procedure Finalize (Object : in out Glyph_Reference);
+
+   procedure Get_Glyph (Object : Face_Reference; Target : out Glyph_Reference);
 
    procedure Bitmap (Object : Face_Reference;
                      theBitmap : out Bitmap_Record);
@@ -40,27 +41,18 @@ package FT.Faces.Glyphs is
    function Glyph_Advance (Object : Face_Reference) return Vector;
    function Format (Object : Face_Reference) return Glyph_Format;
    procedure Glyph_To_Bitmap
-     (theGlyph    : Glyph_Ptr; Mode : FT.Faces.Render_Mode;
-      Origin      : access Vector; Destroy     : Boolean);
+     (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
+      Origin : access Vector; Destroy     : Boolean);
    procedure Render_Glyph (Object : Face_Reference; Mode : FT.Faces.Render_Mode);
 private
-   procedure Glyph (Object : Face_Reference; theGlyph : out Glyph_Record);
-   function Glyph (aGlyph_Ptr : access Glyph_Record) return Glyph_Record;
-
-   type Glyph_Ptr is access Glyph_Record;
-   pragma Convention (C, Glyph_Ptr);
+   type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled with
+      record
+         Data : Glyph_Ptr;
+      end record;
 
    type Outline_Glyph_Record;
    type Outline_Glyph_Ptr is access Outline_Glyph_Record;
    pragma Convention (C, Outline_Glyph_Ptr);
-
-   type Glyph_Record is record
-      Library : FT.Library_Ptr;
-      Clazz   : System.Address;
-      Format  : Glyph_Format;
-      Advance : Vector;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Glyph_Record);
 
    --  A Glyph can be typecast to an Outline_Glyph if
    --  glyph->format == GLYPH_FORMAT_OUTLINE.

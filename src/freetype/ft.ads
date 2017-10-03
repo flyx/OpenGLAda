@@ -277,4 +277,15 @@ private
       Internal   : Size_Internal_Ptr;
    end record;
    pragma Convention (C_Pass_By_Copy, Size_Record);
+
+   type Glyph_Record is record
+      Library : FT.Library_Ptr;
+      Clazz   : System.Address;
+      Format  : Glyph_Format;
+      Advance : Vector;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Glyph_Record);
+
+   type Glyph_Ptr is access Glyph_Record;
+   pragma Convention (C, Glyph_Ptr);
 end FT;
