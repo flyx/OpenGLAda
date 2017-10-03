@@ -37,20 +37,19 @@ package body FT.Utilities is
    Extended_Ascii_Data  : FT.Faces.Character_Data_Vector (0 .. 255);
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Ptr);
-   procedure Setup_Font (theLibrary : FT.Library_Ptr; Font_File : String);
+   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String);
 
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
-      theLibrary : FT.Library_Ptr;
+      theLibrary : FT.Library_Reference;
    begin
       FT.Initialize (theLibrary);
       Setup_Font (theLibrary, Font_File);
       Setup_Character_Textures (Face_Ptr);
 
       FT.Faces.Done_Face (Face_Ptr);
-      FT.Done_FreeTYpe (theLibrary);
    end Initialize_Font_Data;
 
    --  ------------------------------------------------------------------------
@@ -282,7 +281,7 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (theLibrary : FT.Library_Ptr; Font_File : String) is
+   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String) is
       use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
