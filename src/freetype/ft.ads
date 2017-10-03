@@ -19,6 +19,7 @@ with Interfaces.C;
 with System;
 
 with GL.Types;
+with GL.Objects.Textures;
 
 private with Interfaces.C.Strings;
 
@@ -63,7 +64,6 @@ package FT is
    type Glyph_Format is (Format_None, Bitmap_Format, Composite_Format,
                          Outline_Format, Plotter_Format);
 
-   type Bitmap_Record is private;
 
    type Glyph_Metrics is record
       Width, Height : Position;
@@ -91,8 +91,32 @@ package FT is
       Max_Advance : Position;
    end record;
    pragma Convention (C_Pass_By_Copy, Size_Metrics);
+
+   type Palette_Type is private;
+
+   type Bitmap_Record is record
+      Rows         : GL.Types.UInt;
+      Width        : GL.Types.UInt;
+      Pitch        : GL.Types.Int;
+      Buffer       : GL.Objects.Textures.Image_Source;
+      Num_Grays    : GL.Types.Short;
+      Pixel_Mode   : Interfaces.C.unsigned_char;
+      Palette_Mode : Interfaces.C.unsigned_char;
+      Palette      : Palette_Type;
+   end record;
+   pragma Convention (C_Pass_By_Copy, Bitmap_Record);
+
+   --  this type is designed not to be store anywhere besides local variables.
+   --  it is basically a pointer into a Face_Reference and therefore must not
+   --  outlive that reference.
+   --
+   --  this type is not reference-counted since it cannot be copied and cannot
+   --  outlive the lifespan of the parent Face_Reference.
+   type Glyph_Slot_Reference (<>) is limited private;
 private
    subtype Library_Ptr is System.Address;
+
+   type Palette_Type is new System.Address;
 
    type Library_Reference is new Ada.Finalization.Controlled with record
       Data : Library_Ptr := System.Null_Address;
@@ -127,18 +151,6 @@ private
    subtype List_Node is System.Address;
    subtype Stream_Ptr is System.Address;
 
-   type Bitmap_Record is record
-      Rows         : GL.Types.UInt;
-      Width        : GL.Types.UInt;
-      Pitch        : GL.Types.Int;
-      Buffer       : access Interfaces.C.unsigned_char;
-      Num_Grays    : GL.Types.Short;
-      Pixel_Mode   : Interfaces.C.unsigned_char;
-      Palette_Mode : Interfaces.C.unsigned_char;
-      Palette      : System.Address;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Bitmap_Record);
-
    type Face_Record;
    type Face_Ptr is access Face_Record;
 
@@ -146,6 +158,10 @@ private
 
    type Glyph_Slot_Ptr is access Glyph_Slot_Record;
    pragma Convention (C, Glyph_Slot_Ptr);
+
+   type Glyph_Slot_Reference is limited record
+      Data : Glyph_Slot_Ptr;
+   end record;
 
    type Outline_Record is record
       Num_Contours : GL.Types.short;

@@ -20,5 +20,4 @@ package FT.Utilities is
    procedure Print_Bitmap_Metadata (Bitmap : FT.Bitmap_Record);
    procedure Print_Character_Metadata (aFace : FT.Faces.Face_Reference;
                                        aChar : Character);
-   procedure Print_Character_Metadata (Data : FT.Faces.Character_Record);
 end FT.Utilities;

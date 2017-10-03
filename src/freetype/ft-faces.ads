@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Objects.Textures;
 with GL.Types;
 
 package FT.Faces is
@@ -22,17 +21,6 @@ package FT.Faces is
 
    --  reference-counted smart pointer
    type Face_Reference is new Ada.Finalization.Controlled with private;
-
-   type Character_Record is private;
-   type Character_Size_Type is record
-      Width     : GL.Types.Int := 0;
-      Rows      : GL.Types.Int := 0;
-      Left      : GL.Types.Int := 0;
-      Top       : GL.Types.Int := 0;
-      Advance_X : GL.Types.Int := 0;
-   end record;
-
-   type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
    type Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                      Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
@@ -63,31 +51,22 @@ package FT.Faces is
    overriding procedure Finalize (Object : in out Face_Reference);
 
    function Size (Object : Face_Reference) return Bitmap_Size;
-   function Character_Size (Char : Character_Record) return Character_Size_Type;
-   function Character_Data_To_String (Char : Character; Data : Character_Record)
-                                      return String;
-   function Character_Texture (Data : Character_Record)
-                               return GL.Objects.Textures.Texture;
    procedure Kerning (Object      : Face_Reference; Left_Glyph : GL.Types.UInt;
                       Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
                       aKerning    : access Vector);
    procedure Load_Character (Object : Face_Reference; Char_Code : GL.Types.Long;
                              Flags  : Load_Flag);
    function Metrics (Object : Face_Reference) return Size_Metrics;
-   procedure Set_Char_Size (Char_Data : in out Character_Record;
-                            Value : Character_Size_Type);
    procedure Set_Pixel_Sizes (Object       : Face_Reference;
                               Pixel_Width  : GL.Types.UInt;
                               Pixel_Height : GL.Types.UInt);
-   procedure Set_Texture (Char_Data : in out Character_Record;
-                          Texture   : GL.Objects.Textures.Texture);
+
+   function Slot (Object : Face_Reference) return Glyph_Slot_Reference;
 
    Image_Error : exception;
 private
    procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record);
    procedure Check_Face_Ptr (Object : Face_Reference);
-
-   function Slot_Ptr (Object : Face_Reference) return Glyph_Slot_Ptr;
 
    type Face_Reference is new Ada.Finalization.Controlled with record
       Data : Face_Ptr;
@@ -98,11 +77,6 @@ private
    end record;
 
    overriding procedure Adjust (Object : in out Face_Reference);
-
-   type Character_Record is record
-      Texture   : GL.Objects.Textures.Texture;
-      Size      : Character_Size_Type;
-   end record;
 
    --  Encoding courtesy of OpenGLAda.src.ftgl.ftgl.ads type Charset
    --  (Felix Krause <contact@flyx.org>, 2013)

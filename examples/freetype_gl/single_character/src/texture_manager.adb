@@ -12,8 +12,8 @@ with GL.Types.Colors;
 
 with FT;
 with Errors;
-with FT.Faces.Glyphs;
-with FT.Image;
+with FT.Faces;
+with FT.Glyphs;
 with FT.Faces;
 with FT.Utilities;
 
@@ -45,11 +45,12 @@ package body Texture_Manager is
       Height      : Single;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
+      Bitmap : constant FT.Bitmap_Record := FT.Glyphs.Bitmap (Face_Ptr.Slot);
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-      Width := FT.Faces.Glyphs.Bitmap_Width (Face_Ptr) * Scale;
-      Height := Single (FT.Faces.Glyphs.Bitmap_Rows (Face_Ptr)) * Scale;
+      Width := Single (Bitmap.Width) * Scale;
+      Height := Single (Bitmap.Rows) * Scale;
       Vertex_Data := (
                       (X_Pos, Y_Pos,                  0.0, 0.0),  --  Lower left
                       (X_Pos + Width, Y_Pos,          1.0, 0.0),  --  Lower right
@@ -102,8 +103,8 @@ package body Texture_Manager is
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      FT.Faces.Glyphs.Render_Glyph (Face_Ptr, FT.Faces.Render_Mode_Mono);
-      --  FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
+      FT.Glyphs.Render_Glyph (Face_Ptr.Slot, FT.Faces.Render_Mode_Mono);
+      FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
@@ -119,22 +120,19 @@ package body Texture_Manager is
       use GL.Objects.Textures.Targets;
       use GL.Pixels;
       use GL.Types;
-      Width        : Size;
-      Height       : Size;
-      Bitmap_Image : GL.Objects.Textures.Image_Source;
-   begin
-      Width := Size (FT.Faces.Glyphs.Bitmap_Width (Face_Ptr));
-      Height := Size (FT.Faces.Glyphs.Bitmap_Rows (Face_Ptr));
 
+      Bitmap : constant FT.Bitmap_Record := FT.Glyphs.Bitmap (Face_Ptr.Slot);
+      Width        : constant Size := Size (Bitmap.Width);
+      Height       : constant Size := Size (Bitmap.Rows);
+   begin
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      FT.Faces.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
       Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
-                                  Bitmap_Image);
+                                  Bitmap.Buffer);
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");

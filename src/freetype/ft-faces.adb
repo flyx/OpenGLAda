@@ -56,35 +56,6 @@ package body FT.Faces is
       return Object.Data.Available_Sizes.all;
    end Size;
 
-   --  -------------------------------------------------------------------------
-
-   function Character_Size (Char : Character_Record) return Character_Size_Type is
-   begin
-      return Char.Size;
-   end Character_Size;
-
-   --  -------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Size.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Size.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Size.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Size.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Size.Advance_X) & " bits";
-   end Character_Data_To_String;
-
-   --  ------------------------------------------------------------------------
-
-   function Character_Texture (Data : Character_Record)
-                               return GL.Objects.Textures.Texture is
-   begin
-      return Data.Texture;
-   end Character_Texture;
-
    --  ------------------------------------------------------------------------
 
    procedure Check_Face_Ptr (Object : Face_Reference) is
@@ -179,14 +150,6 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Char_Size (Char_Data : in out Character_Record;
-                            Value : Character_Size_Type) is
-   begin
-      Char_Data.Size := Value;
-   end Set_Char_Size;
-
-   --  -------------------------------------------------------------------------
-
    procedure Set_Pixel_Sizes (Object : Face_Reference;
                               Pixel_Width : GL.Types.UInt;
                               Pixel_Height : GL.Types.UInt) is
@@ -202,22 +165,14 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Texture (Char_Data : in out Character_Record;
-                          Texture   : GL.Objects.Textures.Texture) is
+   function Slot (Object : Face_Reference) return Glyph_Slot_Reference is
    begin
-      Char_Data.Texture := Texture;
-   end Set_Texture;
-
-   --  -------------------------------------------------------------------------
-
-   function Slot_Ptr (Object : Face_Reference) return Glyph_Slot_Ptr is
-     theFace : constant access Face_Record := Object.Data;
-   begin
-      if theFace.Glyph_Slot = Null then
-         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
+      Check_Face_Ptr (Object);
+      if Object.Data.Glyph_Slot = null then
+         raise FreeType_Exception with "FT.Faces.Sloc - no Glyph is loaded.";
       end if;
-      return theFace.Glyph_Slot;
-   end Slot_Ptr;
+      return (Data => Object.Data.Glyph_Slot);
+   end Slot;
 
    --  ------------------------------------------------------------------------
 

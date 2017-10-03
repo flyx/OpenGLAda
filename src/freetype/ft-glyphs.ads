@@ -14,10 +14,10 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Objects.Textures;
 with GL.Types;
+with FT.Faces;
 
-package FT.Faces.Glyphs is
+package FT.Glyphs is
    pragma Preelaborate;
 
    type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled
@@ -26,24 +26,19 @@ package FT.Faces.Glyphs is
    --  call this to destruct the
    overriding procedure Finalize (Object : in out Glyph_Reference);
 
-   procedure Get_Glyph (Object : Face_Reference; Target : out Glyph_Reference);
+   procedure Get_Glyph (Object : Glyph_Slot_Reference;
+                        Target : out Glyph_Reference);
 
-   procedure Bitmap (Object : Face_Reference;
-                     theBitmap : out Bitmap_Record);
-   function Bitmap_Height (Object : Face_Reference) return GL.Types.Single;
-   procedure Bitmap_Image (Object : Face_Reference;
-                          theImage : out GL.Objects.Textures.Image_Source);
-   function Bitmap_Left (Object : Face_Reference) return GL.Types.Int;
-   function Bitmap_Rows (Object : Face_Reference) return GL.Types.Int;
-   function Bitmap_Top (Object : Face_Reference)
+   function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record;
+   function Bitmap_Top (Object : Glyph_Slot_Reference)
                         return GL.Types.Int;
-   function Bitmap_Width (Object : Face_Reference) return GL.Types.Single;
-   function Glyph_Advance (Object : Face_Reference) return Vector;
-   function Format (Object : Face_Reference) return Glyph_Format;
+   function Bitmap_Left (Object : Glyph_Slot_Reference) return GL.Types.Int;
+   function Advance (Object : Glyph_Slot_Reference) return Vector;
+   function Format (Object : Glyph_Slot_Reference) return Glyph_Format;
    procedure Glyph_To_Bitmap
      (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
       Origin : access Vector; Destroy     : Boolean);
-   procedure Render_Glyph (Object : Face_Reference; Mode : FT.Faces.Render_Mode);
+   procedure Render_Glyph (Object : Glyph_Slot_Reference; Mode : FT.Faces.Render_Mode);
 private
    type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled with
       record
@@ -65,4 +60,4 @@ private
       Outline : Outline_Record;
    end record;
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
-end FT.Faces.Glyphs;
+end FT.Glyphs;
