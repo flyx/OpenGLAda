@@ -49,7 +49,7 @@ private
    subtype Library_Ptr is System.Address;
 
    type Library_Reference is new Ada.Finalization.Controlled with record
-      Data : Library_Ptr;
+      Data : Library_Ptr := System.Null_Address;
    end record;
 
    overriding procedure Adjust (Object : in out Library_Reference);
