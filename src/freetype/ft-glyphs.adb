@@ -174,7 +174,7 @@ package body FT.Glyphs is
    exception
       when others =>
          raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
+           "FT.Glyphs.Glyph_Access raised an Exception";
    end Glyph_Access;
 
    --  -------------------------------------------------------------------------
