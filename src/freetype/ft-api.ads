@@ -20,16 +20,11 @@ with GL.Low_Level;
 with GL.Types;
 
 with Errors;
-with FT.Faces;
-with FT.Image;
 
 private package FT.API is
    pragma Preelaborate;
 
    subtype Bool is GL.Low_Level.Bool;
-
-   function FT_Done_Face (aFace : FT.Faces.Face_Ptr) return Errors.Error_Code;
-   pragma Import (C, FT_Done_Face, "FT_Done_Face");
 
    function FT_Reference_Library (Ptr : Library_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Reference_Library, "FT_Reference_Library");
@@ -38,9 +33,9 @@ private package FT.API is
    pragma Import (C, FT_Done_Library, "FT_Done_Library");
 
    function FT_Get_Kerning
-     (aFace : FT.Faces.Face_Ptr; Left_Glyph : GL.Types.UInt;
+     (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
       Right_Glyph :  GL.Types.UInt;
-      Kern_Mode : GL.Types.UInt; aKerning : access FT.Image.Vector)
+      Kern_Mode : GL.Types.UInt; aKerning : access Vector)
       return Errors.Error_Code;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
@@ -48,18 +43,25 @@ private package FT.API is
                               return Errors.Error_Code;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
-   function FT_Load_Char (aFace : FT.Faces.Face_Ptr; Char_Code : ULong;
+   function FT_Load_Char (aFace : Face_Ptr; Char_Code : ULong;
                           Load_Flags : GL.Types.Int) return Errors.Error_Code;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
    function FT_New_Face (Library        : Library_Ptr;
                          File_Path_Name : Interfaces.C.Strings.chars_ptr;
                          Face_Index     : GL.Types.long;
-                         aFace          : in out FT.Faces.Face_Ptr)
+                         aFace          : in out Face_Ptr)
                          return Errors.Error_Code;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 
-   function FT_Set_Pixel_Sizes (aFace : FT.Faces.Face_Ptr;
+   function FT_Reference_Face (Face : Face_Ptr)
+                               return Errors.Error_Code;
+   pragma Import (C, FT_Reference_Face, "FT_Reference_Face");
+
+   function FT_Done_Face (aFace : Face_Ptr) return Errors.Error_Code;
+   pragma Import (C, FT_Done_Face, "FT_Done_Face");
+
+   function FT_Set_Pixel_Sizes (aFace : Face_Ptr;
                                 Pixel_Width : GL.Types.UInt;
                                 Pixel_Height : GL.Types.UInt)
                                 return Errors.Error_Code;
