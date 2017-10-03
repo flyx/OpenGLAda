@@ -43,17 +43,7 @@ package body GL.Objects is
          Reference.Reference_Count := Reference.Reference_Count - 1;
          if Reference.Reference_Count = 0 then
             if Reference.Initialized = Allocated then
-               begin
-                  Reference.Destructor (Reference);
-               exception
-                  when others =>
-                     --  cannot let this escape as we're in a Finalize call and
-                     --  thus that error cannot be properly catched. Chances are
-                     --  that if the destructor fails, the context already has
-                     --  vanished and thus we do not need to worry about
-                     --  anything.
-                     null;
-               end;
+               Reference.Destructor (Reference);
             end if;
             Free (Reference);
          end if;
