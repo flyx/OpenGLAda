@@ -81,7 +81,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
    exception
       when others =>
-         Put_Line ("An exception occurred in Render.");
+         Put_Line ("An exception occurred in Main_Loop.Render.");
          raise;
    end Render;
 
@@ -127,7 +127,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           GL.Objects.Programs.Attrib_Location (Rendering_Program, "vertices");
    exception
       when others =>
-         Put_Line ("An exception occurred in Setup.");
+         Put_Line ("An exception occurred in Main_Loop.Setup.");
          raise;
    end Setup;
 

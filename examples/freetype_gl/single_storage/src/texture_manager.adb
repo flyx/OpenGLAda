@@ -110,7 +110,7 @@ package body Texture_Manager is
       Setup_Texture (aTexture);
 
       FT.Faces.Done_Face (Face_Ptr);
-      FT.Done_Library (theLibrary);
+      FT.FT_Done_FreeType (theLibrary);
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------

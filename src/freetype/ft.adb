@@ -19,6 +19,18 @@ with FT.API; use FT.API;
 
 package body FT is
 
+   procedure FT_Done_FreeType (Library : Library_Ptr) is
+      use Errors;
+      Code : constant Errors.Error_Code := FT_Done_FreeType (Library);
+   begin
+      if Code /= Ok then
+         raise FreeType_Exception with "FT.FT_Done_FreeType failed with error: " &
+             Description (Code);
+      end if;
+   end FT_Done_FreeType;
+
+   --  -------------------------------------------------------------------------
+
    procedure Done_Library (Library : Library_Ptr) is
       use Errors;
       Code : constant Errors.Error_Code := FT_Done_Library (Library);

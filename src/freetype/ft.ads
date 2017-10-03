@@ -28,6 +28,7 @@ package FT is
 
    FreeType_Exception : exception;
 
+   procedure FT_Done_FreeType (Library : Library_Ptr);
    procedure Done_Library (Library : Library_Ptr);
    procedure Initialize (alibrary : in out Library_Ptr);
 
