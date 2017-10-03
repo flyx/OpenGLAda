@@ -15,44 +15,55 @@
 --------------------------------------------------------------------------------
 
 with Errors;
-with FT.API; use FT.API;
+with FT.API;
 
 package body FT is
+   use type Errors.Error_Code;
+   use type Library_Ptr;
 
-   procedure FT_Done_FreeType (Library : Library_Ptr) is
-      use Errors;
-      Code : constant Errors.Error_Code := FT_Done_FreeType (Library);
+   procedure Init (Object : in out Library_Reference) is
    begin
-      if Code /= Ok then
-         raise FreeType_Exception with "FT.FT_Done_FreeType failed with error: " &
-             Description (Code);
-      end if;
-   end FT_Done_FreeType;
+      --  make sure a possibly existing reference gets properly disposed of.
+      Finalize (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.FT_Init_FreeType (Object.Data);
+      begin
+         if Code /= Errors.Ok then
+            raise FreeType_Exception with "FT.Initialize failed" &
+              Errors.Description (Code);
+         end if;
+      end;
+   end Init;
 
-   --  -------------------------------------------------------------------------
-
-   procedure Done_Library (Library : Library_Ptr) is
-      use Errors;
-      Code : constant Errors.Error_Code := FT_Done_Library (Library);
+   function Initialized (Object : Library_Reference) return Boolean is
    begin
-      if Code /= Ok then
-         raise FreeType_Exception with "FT.Done_Library failed with error: " &
-             Description (Code);
-      end if;
-   end Done_Library;
+      return Object.Data /= System.Null_Address;
+   end Initialized;
 
-   --  -------------------------------------------------------------------------
-
-   procedure Initialize (aLibrary : in out Library_Ptr)is
-      use Errors;
-      Code : constant Errors.Error_Code := FT_Init_FreeType (aLibrary);
+   procedure Adjust (Object : in out Library_Reference) is
    begin
-      if Code /= Ok then
-         raise FreeType_Exception with "FT.Initialize failed" &
-             Description (Code);
+      if Object.Data /= System.Null_Address then
+         if API.FT_Reference_Library (Object.Data) /= Errors.Ok then
+            --  we cannot raise an exception from inside Adjust; however, since
+            --  we checked that the pointer is not null, there should be no
+            --  error.
+            null;
+         end if;
       end if;
-   end Initialize;
+   end Adjust;
 
-   --  -------------------------------------------------------------------------
-
+   procedure Finalize (Object : in out Library_Reference) is
+      Ptr : constant Library_Ptr := Object.Data;
+   begin
+      Object.Data := System.Null_Address;
+      if Ptr /= System.Null_Address then
+         if API.FT_Done_Library (Ptr) /= Errors.Ok then
+            --  we cannot raise an exception from inside Finalize; however,
+            --  since we checked that the pointer is not null, there should be
+            --  no error.
+            null;
+         end if;
+      end if;
+   end Finalize;
 end FT;

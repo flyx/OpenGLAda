@@ -18,69 +18,49 @@ with Errors;
 with FT.API; use FT.API;
 
 package body FT.Faces is
+   use type Errors.Error_Code;
 
-   --  -------------------------------------------------------------------------
-
-   function Advance_X (Data : Character_Record) return GL.Types.Int is
+   procedure Adjust (Object : in out Face_Reference) is
    begin
-      return Data.Advance_X;
-   end Advance_X;
-
-   --  ------------------------------------------------------------------------
-
-   function Bitmap_Height (aFace : Face_Ptr) return GL.Types.Int is
-      theFace  : constant Face_Record := Face (aFace);
-      Sizes    : Bitmap_Size;
-   begin
-      if theFace.Available_Sizes = null then
-         raise FreeType_Exception with
-           "FT.Faces.Bitmap_Height failed, there are no sizes available for this face.";
+      if Object.Data /= null then
+         if API.FT_Reference_Face (Object.Data) /= Errors.Ok then
+            null;
+         end if;
       end if;
-      Sizes:= theFace.Available_Sizes.all;
-      return GL.Types.Int (Sizes.Height);
-   end Bitmap_Height;
+   end Adjust;
 
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Width (aFace : Face_Ptr) return GL.Types.Int is
-      theFace : constant Face_Record := Face (aFace);
-      Sizes   : Bitmap_Size;
+   function Initialized (Object : Face_Reference) return Boolean is
    begin
-      if theFace.Available_Sizes = null then
-         raise FreeType_Exception with
-           "FT.Faces.Bitmap_Height failed, there are no sizes available for this face.";
+      return Object.Data /= null;
+   end Initialized;
+
+   procedure Finalize (Object : in out Face_Reference) is
+      Ptr : constant Face_Ptr := Object.Data;
+   begin
+      Object.Data := null;
+      if Ptr /= null then
+         if API.FT_Done_Face (Ptr) /= Errors.Ok then
+            null;
+         end if;
       end if;
-      Sizes:= theFace.Available_Sizes.all;
-      return GL.Types.Int (Sizes.Width);
-   end Bitmap_Width;
-
-   --  -------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
+   end Finalize;
 
    --  ------------------------------------------------------------------------
 
-   function Character_Texture (Data : Character_Record)
-                               return GL.Objects.Textures.Texture is
+   function Size (Object : Face_Reference) return Bitmap_Size is
    begin
-      return Data.Texture;
-   end Character_Texture;
+      if Object.Data.Available_Sizes = null then
+         raise FreeType_Exception with
+           "FT.Faces.Size failed, there are no sizes available for this face.";
+      end if;
+      return Object.Data.Available_Sizes.all;
+   end Size;
 
    --  ------------------------------------------------------------------------
 
-   procedure Check_Face_Ptr (Face_Ptr : FT.Faces.Face_Ptr) is
+   procedure Check_Face_Ptr (Object : Face_Reference) is
    begin
-      if Face_Ptr = Null then
+      if Object.Data = null then
          raise FreeType_Exception with
            "FT.Faces.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
       end if;
@@ -88,9 +68,9 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Check_Glyph_Slot_Ptr (thePtr : Glyph_Slot_Ptr) is
+   procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record) is
    begin
-      if thePtr = Null then
+      if thePtr = null then
          raise FreeType_Exception with
            "FT.Faces.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
       end if;
@@ -98,191 +78,101 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Done_Face (aFace : Face_Ptr) is
-      use Errors;
-   begin
-      if FT_Done_Face (aFace) /= Errors.Ok then
-         raise FreeType_Exception with "FT.Faces.Done_Face failed";
-      end if;
-   end Done_Face;
-
-   --  -------------------------------------------------------------------------
-
-   function Face (aFace : Face_Ptr) return Face_Record is
-   begin
-      return aFace.all;
-   end Face;
-
-   --  -------------------------------------------------------------------------
-
-   function Face_Size (aFace : Face_Ptr) return Size_Record is
-      theFace      : constant Face_Record := Face (aFace);
-   begin
-      if theFace.Size = null then
-         raise FreeType_Exception with
-           "FT.Faces.Face_Size failed, theFace.Size is null.";
-      end if;
-      return theFace.Size.all;
-
-   exception
-         when others =>
-            raise FreeType_Exception with "FT.Faces.Face_Size raised an exception.";
-   end Face_Size;
-
-   --  -------------------------------------------------------------------------
-
-   function Face_Height (aFace : Face_Ptr) return GL.Types.Int is
-      use GL.Types;
-   begin
-      return GL.Types.Int (Face_Size (aFace).Metrics.Ascender -
-                               Face_Size (aFace).Metrics.Descender);
-   exception
-         when others =>
-            raise FreeType_Exception with "FT.Faces.Face_Height raised an exception.";
-   end Face_Height;
-
-   --  -------------------------------------------------------------------------
-
-   function Face_Width (aFace : Face_Ptr) return GL.Types.Int is
-   begin
-      return GL.Types.Int (Face_Size (aFace).Metrics.X_Ppem);
-   exception
-         when others =>
-            raise FreeType_Exception with "FT.Faces.Face_Width raised an exception.";
-   end Face_Width;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Kerning (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
+   procedure Kerning (Object      : Face_Reference; Left_Glyph : GL.Types.UInt;
                       Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
-                      aKerning : access FT.Image.Vector) is
-      use Errors;
-      Code : constant Errors.Error_Code :=
-               FT_Get_Kerning (aFace, Left_Glyph, Right_Glyph, Kern_Mode, aKerning);
+                      aKerning    : access Vector) is
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Kerning error: " &
-             Errors.Description (Code);
-      end if;
+      Check_Face_Ptr (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           FT_Get_Kerning (Object.Data, Left_Glyph, Right_Glyph, Kern_Mode,
+                           aKerning);
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Faces.Kerning error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Kerning;
-
-   --  -------------------------------------------------------------------------
-
-   function Left (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Left;
-   end Left;
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
-                             Flags : Load_Flag) is
-      use Errors;
-      Code : constant Errors.Error_Code :=
-                FT_Load_Char (aFace, ULong (Char_Code), Flags'Enum_Rep);
+   procedure Load_Character (Object : Face_Reference; Char_Code : GL.Types.Long;
+                             Flags  : Load_Flag) is
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
-             Errors.Description (Code);
-      end if;
+      Check_Face_Ptr (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           FT_Load_Char (Object.Data, ULong (Char_Code), Flags'Enum_Rep);
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Load_Character;
 
    --  -------------------------------------------------------------------------
 
-   function Metrics (aFace : Face_Ptr) return Size_Metrics is
-     Size : constant Size_Record := Face_Size (aFace);
+   function Metrics (Object : Face_Reference) return Size_Metrics is
    begin
-      return Size.Metrics;
+      Check_Face_Ptr (Object);
+      return Object.Data.Size.Metrics;
    end Metrics;
 
    --  -------------------------------------------------------------------------
 
-   procedure New_Face (Library : Library_Ptr; File_Path_Name : String;
-                       Face_Index : GL.Types.long; aFace : in out Face_Ptr) is
+   procedure New_Face (Library : Library_Reference; File_Path_Name : String;
+                       Face_Index : GL.Types.long;
+                       Object : in out Face_Reference) is
       use Errors;
       Path : constant Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
-      Code : constant Errors.Error_Code :=
-               FT_New_Face (Library, Path, Face_Index, aFace);
    begin
-      if Code /= Errors.Ok then
-         if Code = Errors.Cannot_Open_Resource then
-            raise FT.FreeType_Exception with "The file " &
-                File_Path_Name & " cannot be found.";
-         else
-            raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
-                Errors.Description (Code);
+      --  cleanup possible old reference
+      Object.Finalize;
+      declare
+         Code : constant Errors.Error_Code :=
+           FT_New_Face (Library.Data, Path, Face_Index, Object.Data);
+      begin
+         if Code /= Errors.Ok then
+            if Code = Errors.Cannot_Open_Resource then
+               raise FT.FreeType_Exception with "The file " &
+                 File_Path_Name & " cannot be found.";
+            else
+               raise FT.FreeType_Exception with "FT.Faces.New_Face error: " &
+                 Errors.Description (Code);
+            end if;
          end if;
-      end if;
+      end;
+      Object.Library := Library;
    end New_Face;
 
    --  -------------------------------------------------------------------------
 
-   function Rows (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Rows;
-   end Rows;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Char_Data (Char_Data : in out Character_Record;
-                            Width     : GL.Types.Int; Height : GL.Types.Int;
-                            Left      : GL.Types.Int; Top    : GL.Types.Int;
-                            Advance_X : GL.Types.Int) is
-   begin
-      Char_Data.Width := Width;
-      Char_Data.Rows := Height;
-      Char_Data.Left := Left;
-      Char_Data.Top := Top;
-      Char_Data.Advance_X := Advance_X;
-   end Set_Char_Data;
-
-   --  -------------------------------------------------------------------------
-
-  procedure Set_Pixel_Sizes (aFace : Face_Ptr; Pixel_Width : GL.Types.UInt;
-                            Pixel_Height : GL.Types.UInt) is
+   procedure Set_Pixel_Sizes (Object : Face_Reference;
+                              Pixel_Width : GL.Types.UInt;
+                              Pixel_Height : GL.Types.UInt) is
       use Errors;
       Code : constant Errors.Error_Code :=
-               FT_Set_Pixel_Sizes (aFace, Pixel_Width, Pixel_Height);
-  begin
+        FT_Set_Pixel_Sizes (Object.Data, Pixel_Width, Pixel_Height);
+   begin
       if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
-             Errors.Description (Code);
+         raise FT.FreeType_Exception with "FT.Faces.Set_Pixel_Sizes error: " &
+           Errors.Description (Code);
       end if;
-  end;
+   end Set_Pixel_Sizes;
 
    --  -------------------------------------------------------------------------
 
-   procedure Set_Texture (Char_Data : in out Character_Record;
-                          Texture   : GL.Objects.Textures.Texture) is
+   function Slot (Object : Face_Reference) return Glyph_Slot_Reference is
    begin
-      Char_Data.Texture := Texture;
-   end Set_Texture;
-
-   --  -------------------------------------------------------------------------
-
-   function Slot_Ptr (aFace : Face_Ptr) return access FT.Glyphs.Glyph_Slot_Record is
-     theFace : constant Face_Record := Face (aFace);
-   begin
-      if theFace.Glyph_Slot = Null then
-         raise FreeType_Exception with "FT.Faces.Slot_Ptr - No Glyph is loaded.";
+      Check_Face_Ptr (Object);
+      if Object.Data.Glyph_Slot = null then
+         raise FreeType_Exception with "FT.Faces.Sloc - no Glyph is loaded.";
       end if;
-      return theFace.Glyph_Slot;
-   end Slot_Ptr;
-
-   --  -------------------------------------------------------------------------
-
-   function Top (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Top;
-   end Top;
-
-   --  ------------------------------------------------------------------------
-
-   function Width (Data : Character_Record) return GL.Types.Int is
-   begin
-      return Data.Width;
-   end Width;
+      return (Data => Object.Data.Glyph_Slot);
+   end Slot;
 
    --  ------------------------------------------------------------------------
 
