@@ -31,22 +31,22 @@ package body FT.Utilities is
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
-   theLibrary           : FT.Library_Ptr;
    Face_Ptr             : FT.Faces.Face_Ptr;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : FT.Faces.Character_Data_Vector (0 .. 255);
 
    procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Ptr);
-   procedure Setup_Font (Font_File : String);
+   procedure Setup_Font (theLibrary : FT.Library_Ptr; Font_File : String);
 
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
+      theLibrary : FT.Library_Ptr;
    begin
       FT.Initialize (theLibrary);
-      Setup_Font (Font_File);
+      Setup_Font (theLibrary, Font_File);
       Setup_Character_Textures (Face_Ptr);
 
       FT.Faces.Done_Face (Face_Ptr);
@@ -282,7 +282,7 @@ package body FT.Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (Font_File : String) is
+   procedure Setup_Font (theLibrary : FT.Library_Ptr; Font_File : String) is
       use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);

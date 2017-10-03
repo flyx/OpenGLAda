@@ -64,7 +64,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in FT.Utilities.Render.");
+         Put_Line ("An exception occurred in Main_Loop.Render.");
          raise;
    end Render;
 
@@ -78,7 +78,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               Projection_Matrix);
    exception
       when  others =>
-         Put_Line ("An exception occurred in FT.Utilities.Render_The_Text.");
+         Put_Line ("An exception occurred in Main_Loop.Render_The_Text.");
          raise;
    end Render_The_Text;
 
@@ -123,7 +123,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       FT.Utilities.Initialize_Font_Data (Font_File_1);
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Setup.");
+         Put_Line ("An exception occurred in Main_Loop.Setup.");
          raise;
    end Setup;
 
@@ -145,6 +145,6 @@ begin
    Render_Program.Delete_Id;
 exception
    when anError :  others =>
-      Put_Line ("An exception occurred in FT.Utilities.Main_Loop.");
+      Put_Line ("An exception occurred in Main_Loop.");
       raise;
 end Main_Loop;
