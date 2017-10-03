@@ -78,7 +78,7 @@ package FT.Faces is
    procedure Load_Character (aFace : Face_Ptr; Char_Code : GL.Types.Long;
                              Flags : Load_Flag);
    function Metrics (aFace : Face_Ptr) return Size_Metrics;
-   procedure New_Face (Library    : Library_Ptr; File_Path_Name : String;
+   procedure New_Face (Library    : Library_Reference; File_Path_Name : String;
                        Face_Index : GL.Types.long; aFace : in out Face_Ptr);
    function Rows (Data : Character_Record) return GL.Types.Int;
    procedure Set_Char_Data (Char_Data : in out Character_Record;

@@ -23,7 +23,7 @@ with Errors;
 with FT.Faces;
 with FT.Image;
 
-package FT.API is
+private package FT.API is
    pragma Preelaborate;
 
    subtype Bool is GL.Low_Level.Bool;
@@ -31,8 +31,8 @@ package FT.API is
    function FT_Done_Face (aFace : FT.Faces.Face_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
 
-   function FT_Done_FreeType (Library : Library_Ptr) return Errors.Error_Code;
-   pragma Import (C, FT_Done_FreeType, "FT_Done_FreeType");
+   function FT_Reference_Library (Ptr : Library_Ptr) return Errors.Error_Code;
+   pragma Import (C, FT_Reference_Library, "FT_Reference_Library");
 
    function FT_Done_Library (Library : Library_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Done_Library, "FT_Done_Library");

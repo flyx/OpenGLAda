@@ -27,11 +27,13 @@ package FT.Image is
    type Bitmap_Record is private;
    type Outline_Record is private;
    subtype Position is GL.Types.Long;
+
    type Vector is record
       X : Position;
       Y : Position;
    end record;
    pragma Convention (C_Pass_By_Copy, Vector);
+
    type Glyph_Format is (Format_None, Bitmap_Format, Composite_Format,
                          Outline_Format, Plotter_Format);
 
