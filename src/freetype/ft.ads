@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -160,7 +160,7 @@ private
    pragma Convention (C, Glyph_Slot_Ptr);
 
    type Glyph_Slot_Reference is limited record
-      Data : Glyph_Slot_Ptr;
+      Data : not null Glyph_Slot_Ptr;
    end record;
 
    type Outline_Record is record

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------------
 
 with Errors;
-with FT.API; use FT.API;
+with FT.API;
 
 package body FT.Faces is
    use type Errors.Error_Code;
@@ -49,6 +49,7 @@ package body FT.Faces is
 
    function Size (Object : Face_Reference) return Bitmap_Size is
    begin
+      Check_Face_Ptr (Object);
       if Object.Data.Available_Sizes = null then
          raise FreeType_Exception with
            "FT.Faces.Size failed, there are no sizes available for this face.";
@@ -61,20 +62,9 @@ package body FT.Faces is
    procedure Check_Face_Ptr (Object : Face_Reference) is
    begin
       if Object.Data = null then
-         raise FreeType_Exception with
-           "FT.Faces.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
+         raise Constraint_Error with "Face_Reference not initialized";
       end if;
    end Check_Face_Ptr;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record) is
-   begin
-      if thePtr = null then
-         raise FreeType_Exception with
-           "FT.Faces.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
-      end if;
-   end Check_Glyph_Slot_Ptr;
 
    --  -------------------------------------------------------------------------
 
@@ -85,8 +75,8 @@ package body FT.Faces is
       Check_Face_Ptr (Object);
       declare
          Code : constant Errors.Error_Code :=
-           FT_Get_Kerning (Object.Data, Left_Glyph, Right_Glyph, Kern_Mode,
-                           aKerning);
+           API.FT_Get_Kerning (Object.Data, Left_Glyph, Right_Glyph, Kern_Mode,
+                               aKerning);
       begin
          if Code /= Errors.Ok then
             raise FT.FreeType_Exception with "FT.Faces.Kerning error: " &
@@ -103,7 +93,7 @@ package body FT.Faces is
       Check_Face_Ptr (Object);
       declare
          Code : constant Errors.Error_Code :=
-           FT_Load_Char (Object.Data, ULong (Char_Code), Flags'Enum_Rep);
+           API.FT_Load_Char (Object.Data, ULong (Char_Code), Flags'Enum_Rep);
       begin
          if Code /= Errors.Ok then
             raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
@@ -125,15 +115,14 @@ package body FT.Faces is
    procedure New_Face (Library : Library_Reference; File_Path_Name : String;
                        Face_Index : GL.Types.long;
                        Object : in out Face_Reference) is
-      use Errors;
-      Path : constant Interfaces.C.Strings.chars_ptr :=
+      Path : Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
    begin
       --  cleanup possible old reference
       Object.Finalize;
       declare
          Code : constant Errors.Error_Code :=
-           FT_New_Face (Library.Data, Path, Face_Index, Object.Data);
+           API.FT_New_Face (Library.Data, Path, Face_Index, Object.Data);
       begin
          if Code /= Errors.Ok then
             if Code = Errors.Cannot_Open_Resource then
@@ -145,6 +134,7 @@ package body FT.Faces is
             end if;
          end if;
       end;
+      Interfaces.C.Strings.Free (Path);
       Object.Library := Library;
    end New_Face;
 
@@ -153,26 +143,29 @@ package body FT.Faces is
    procedure Set_Pixel_Sizes (Object : Face_Reference;
                               Pixel_Width : GL.Types.UInt;
                               Pixel_Height : GL.Types.UInt) is
-      use Errors;
-      Code : constant Errors.Error_Code :=
-        FT_Set_Pixel_Sizes (Object.Data, Pixel_Width, Pixel_Height);
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Faces.Set_Pixel_Sizes error: " &
-           Errors.Description (Code);
-      end if;
+      Check_Face_Ptr (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.FT_Set_Pixel_Sizes (Object.Data, Pixel_Width, Pixel_Height);
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Faces.Set_Pixel_Sizes error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Set_Pixel_Sizes;
 
    --  -------------------------------------------------------------------------
 
-   function Slot (Object : Face_Reference) return Glyph_Slot_Reference is
+   function Glyph_Slot (Object : Face_Reference) return Glyph_Slot_Reference is
    begin
       Check_Face_Ptr (Object);
       if Object.Data.Glyph_Slot = null then
          raise FreeType_Exception with "FT.Faces.Sloc - no Glyph is loaded.";
       end if;
       return (Data => Object.Data.Glyph_Slot);
-   end Slot;
+   end Glyph_Slot;
 
    --  ------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -41,7 +41,7 @@ package body FT.Utilities is
 
    procedure Print_Character_Metadata (aFace : FT.Faces.Face_Reference;
                                        aChar : Character) is
-      Slot : constant FT.Glyph_Slot_Reference := aFace.Slot;
+      Slot : constant FT.Glyph_Slot_Reference := aFace.Glyph_Slot;
       Bitmap : constant FT.Bitmap_Record := Glyphs.Bitmap (Slot);
    begin
       Put_Line ("Character " & aChar & " Data");

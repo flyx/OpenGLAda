@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -19,6 +19,13 @@ with FT.API.Glyphs;
 
 package body FT.Glyphs is
    use type Errors.Error_Code;
+
+   procedure Check_Glyph (Object : Glyph_Reference) is
+   begin
+      if Object.Data = null then
+         raise Constraint_Error with "Glyph_Reference is not initialized";
+      end if;
+   end Check_Glyph;
 
    procedure Finalize (Object : in out Glyph_Reference) is
       Ptr : constant Glyph_Ptr := Object.Data;
@@ -41,10 +48,6 @@ package body FT.Glyphs is
       end if;
       Target.Finalize;
       Target.Data := Ret;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
    end Get_Glyph;
 
    --  -------------------------------------------------------------------------
@@ -89,13 +92,18 @@ package body FT.Glyphs is
      (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
       Origin : access Vector; Destroy     : Boolean) is
       use Errors;
-      Code : constant Errors.Error_Code :=
-               API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
-             Errors.Description (Code);
-      end if;
+      Check_Glyph (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Glyph_To_Bitmap;
 
    --  -------------------------------------------------------------------------

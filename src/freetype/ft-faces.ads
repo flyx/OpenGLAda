@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -61,11 +61,10 @@ package FT.Faces is
                               Pixel_Width  : GL.Types.UInt;
                               Pixel_Height : GL.Types.UInt);
 
-   function Slot (Object : Face_Reference) return Glyph_Slot_Reference;
+   function Glyph_Slot (Object : Face_Reference) return Glyph_Slot_Reference;
 
    Image_Error : exception;
 private
-   procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record);
    procedure Check_Face_Ptr (Object : Face_Reference);
 
    type Face_Reference is new Ada.Finalization.Controlled with record

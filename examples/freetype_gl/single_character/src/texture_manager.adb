@@ -45,7 +45,8 @@ package body Texture_Manager is
       Height      : Single;
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
-      Bitmap : constant FT.Bitmap_Record := FT.Glyphs.Bitmap (Face_Ptr.Slot);
+      Bitmap : constant FT.Bitmap_Record :=
+        FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -103,7 +104,7 @@ package body Texture_Manager is
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      FT.Glyphs.Render_Glyph (Face_Ptr.Slot, FT.Faces.Render_Mode_Mono);
+      FT.Glyphs.Render_Glyph (Face_Ptr.Glyph_Slot, FT.Faces.Render_Mode_Mono);
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
@@ -121,7 +122,8 @@ package body Texture_Manager is
       use GL.Pixels;
       use GL.Types;
 
-      Bitmap : constant FT.Bitmap_Record := FT.Glyphs.Bitmap (Face_Ptr.Slot);
+      Bitmap : constant FT.Bitmap_Record :=
+        FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
       Width        : constant Size := Size (Bitmap.Width);
       Height       : constant Size := Size (Bitmap.Rows);
    begin
