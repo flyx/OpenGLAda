@@ -75,7 +75,7 @@ package body Texture_Manager is
 
    procedure Setup_Font (My_Library : FT.Library_Reference) is
       use GL.Types;
-      Font_File  : String := "../../fonts/NotoSerif-Regular.ttf";
+      Font_File  : String := "../fonts/NotoSerif-Regular.ttf";
    begin
       FT.Faces.New_Face (My_Library, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
