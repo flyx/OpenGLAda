@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Errors;
+with FT.Errors;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
@@ -59,7 +59,8 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Left (Object : Glyph_Slot_Reference) return GL.Types.Int is
+   function Bitmap_Left (Object : Glyph_Slot_Reference)
+                         return Interfaces.C.int is
    begin
       return Object.Data.Bitmap_Left;
    end Bitmap_Left;
@@ -67,7 +68,7 @@ package body FT.Glyphs is
    --  -------------------------------------------------------------------------
 
    function Bitmap_Top (Object : Glyph_Slot_Reference)
-                            return GL.Types.Int is
+                            return Interfaces.C.int is
    begin
       return Object.Data.Bitmap_Top;
    end Bitmap_Top;

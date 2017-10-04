@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-package body Errors is
+package body FT.Errors is
    function Description (Code : Error_Code) return String is
    begin
       case Code is
@@ -113,4 +113,4 @@ package body Errors is
          when Corrupted_Font_Glyphs => return "Font glyphs corrupted or missing fields";
       end case;
    end Description;
-end Errors;
+end FT.Errors;

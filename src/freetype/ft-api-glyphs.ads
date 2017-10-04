@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Errors;
+with FT.Errors;
 with FT.Faces;
 
 package FT.API.Glyphs is

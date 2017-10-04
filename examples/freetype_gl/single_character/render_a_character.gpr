@@ -12,5 +12,8 @@ project Render_A_Character is
       for Default_Switches ("ada") use ("-gnatyclux");
    end Compiler;
 
+   package Linker is
+      for Default_Switches ("ada") use ("-L/nix/store/k6cqsl1aczf4zxn22xk1fjpada0gip5f-freetype-2.6.5/lib/");
+   end Linker;
 end Render_A_Character;
 

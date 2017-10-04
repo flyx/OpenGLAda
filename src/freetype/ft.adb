@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Errors;
+with FT.Errors;
 with FT.API;
 
 package body FT is

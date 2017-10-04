@@ -11,7 +11,7 @@ with GL.Pixels;
 with GL.Types.Colors;
 
 with FT;
-with Errors;
+with FT.Errors;
 with FT.Faces;
 with FT.Glyphs;
 with FT.Faces;
@@ -20,7 +20,7 @@ with FT.Utilities;
 with Utilities;
 
 package body Texture_Manager is
-   use type Errors.Error_Code;
+   use type FT.Errors.Error_Code;
 
    Face_Ptr      : FT.Faces.Face_Reference;
    Vertex_Data   : Vertex_Array;

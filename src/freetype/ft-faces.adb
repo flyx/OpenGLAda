@@ -14,7 +14,7 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Errors;
+with FT.Errors;
 with FT.API;
 
 package body FT.Faces is
@@ -68,8 +68,8 @@ package body FT.Faces is
 
    --  -------------------------------------------------------------------------
 
-   procedure Kerning (Object      : Face_Reference; Left_Glyph : GL.Types.UInt;
-                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+   procedure Kerning (Object      : Face_Reference; Left_Glyph : UInt;
+                      Right_Glyph : UInt; Kern_Mode : UInt;
                       aKerning    : access Vector) is
    begin
       Check_Face_Ptr (Object);
@@ -87,13 +87,13 @@ package body FT.Faces is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Character (Object : Face_Reference; Char_Code : GL.Types.Long;
+   procedure Load_Character (Object : Face_Reference; Char_Code : ULong;
                              Flags  : Load_Flag) is
    begin
       Check_Face_Ptr (Object);
       declare
          Code : constant Errors.Error_Code :=
-           API.FT_Load_Char (Object.Data, ULong (Char_Code), Flags'Enum_Rep);
+           API.FT_Load_Char (Object.Data, Char_Code, Flags);
       begin
          if Code /= Errors.Ok then
             raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
@@ -113,7 +113,7 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure New_Face (Library : Library_Reference; File_Path_Name : String;
-                       Face_Index : GL.Types.long;
+                       Face_Index : Face_Index_Type;
                        Object : in out Face_Reference) is
       Path : Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (File_Path_Name);
@@ -141,8 +141,8 @@ package body FT.Faces is
    --  -------------------------------------------------------------------------
 
    procedure Set_Pixel_Sizes (Object : Face_Reference;
-                              Pixel_Width : GL.Types.UInt;
-                              Pixel_Height : GL.Types.UInt) is
+                              Pixel_Width : UInt;
+                              Pixel_Height : UInt) is
    begin
       Check_Face_Ptr (Object);
       declare
