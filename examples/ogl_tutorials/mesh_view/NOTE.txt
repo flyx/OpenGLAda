@@ -1,0 +1,6 @@
+
+This example contains a version of the "common" directory that differs from that
+used by all of the other examples. The changes in the "common" code would have
+broken the other examples and thus a local copy is used here (the alternative of
+updating all the other examples to suit was deemed too ivolved to be worth the
+effort on this occassion -- it may be worth the effort for later versions).
