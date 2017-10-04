@@ -69,7 +69,7 @@ package body FT.OGL is
       use GL.Types;
       theLibrary : FT.Library_Reference;
    begin
-      FT.Initialize (theLibrary);
+      theLibrary.Init;
       Setup_Font (theLibrary, Font_File);
       Setup_Character_Textures (Face_Ptr);
    end Initialize_Font_Data;
@@ -110,7 +110,7 @@ package body FT.OGL is
       Char_Data.Texture := aTexture;
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Load_Texture.");
+         Put_Line ("An exception occurred in FT.OGL.Load_Texture.");
          raise;
    end Load_Texture;
 
@@ -188,7 +188,7 @@ package body FT.OGL is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("FT.Utilities.Render_Text, aTexture is invalid.");
+            Put_Line ("FT.OGL.Render_Text, aTexture is invalid.");
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -214,7 +214,7 @@ package body FT.OGL is
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in FT.Utilities.Render_Text.");
+         Put_Line ("An exception occurred in FT.OGL.Render_Text.");
          raise;
    end Render_Text;
 
@@ -280,7 +280,7 @@ package body FT.OGL is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Setup_Character_Textures.");
+         Put_Line ("An exception occurred in FT.OGL.Setup_Character_Textures.");
          raise;
    end Setup_Character_Textures;
 
@@ -296,7 +296,7 @@ package body FT.OGL is
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
    exception
       when others =>
-         Put_Line ("An exception occurred in FT.Utilities.Setup_Font.");
+         Put_Line ("An exception occurred in FT.OGL.Setup_Font.");
          raise;
    end Setup_Font;
 
