@@ -205,7 +205,6 @@ package body FT.OGL is
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
          GL.Attributes.Disable_Vertex_Attrib_Array (0);
-
          --  Bitshift by 6 to get value in pixels (2^6 = 64
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
@@ -239,7 +238,6 @@ package body FT.OGL is
       use GL.Objects.Buffers;
       use GL.Types;
       Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Slot;
-      Bitmap         : constant FT.Bitmap_Record := FT.Glyphs.Bitmap (Face_Ptr.Slot);
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
@@ -267,8 +265,8 @@ package body FT.OGL is
          --  Ensure that the glyph image is an anti-aliased bitmap
          FT.Glyphs.Render_Glyph (Glyph_Slot, FT.Faces.Render_Mode_Mono);
 
-         Width := GL.Types.Int (Bitmap.Width);
-         Height := GL.Types.Size (Bitmap.Rows);
+         Width := FT.Glyphs.Bitmap_Width (Glyph_Slot);
+         Height := FT.Glyphs.Bitmap_Rows (Glyph_Slot);
          Set_Char_Data (Char_Data, Width, Height,
                         FT.Glyphs.Bitmap_Left (Glyph_Slot),
                         FT.Glyphs.Bitmap_Top (Glyph_Slot),
@@ -276,6 +274,7 @@ package body FT.OGL is
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
+         Print_Character_Metadata (Char_Data);
       end loop;
 
    exception

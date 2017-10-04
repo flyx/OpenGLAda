@@ -71,6 +71,22 @@ package body FT.Glyphs is
 
    --  -------------------------------------------------------------------------
 
+   function Bitmap_Rows (Object : Glyph_Slot_Reference)
+                            return GL.Types.Int is
+   begin
+      return GL.Types.Int (Object.Data.Bitmap.Rows);
+   end Bitmap_Rows;
+
+   --  ------------------------------------------------------------------
+
+   function Bitmap_Width (Object : Glyph_Slot_Reference)
+                            return GL.Types.Int is
+   begin
+      return GL.Types.Int (Object.Data.Bitmap.Width);
+   end Bitmap_Width;
+
+   --  ------------------------------------------------------------------
+
    function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
       return Object.Data.Advance;

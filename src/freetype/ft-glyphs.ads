@@ -32,6 +32,9 @@ package FT.Glyphs is
    function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record;
    function Bitmap_Top (Object : Glyph_Slot_Reference)
                         return GL.Types.Int;
+   function Bitmap_Rows (Object : Glyph_Slot_Reference) return GL.Types.Int;
+   function Bitmap_Width (Object : Glyph_Slot_Reference)
+                            return GL.Types.Int;
    function Bitmap_Left (Object : Glyph_Slot_Reference) return GL.Types.Int;
    function Advance (Object : Glyph_Slot_Reference) return Vector;
    function Format (Object : Glyph_Slot_Reference) return Glyph_Format;
