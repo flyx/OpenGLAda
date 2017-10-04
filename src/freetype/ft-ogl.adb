@@ -274,7 +274,6 @@ package body FT.OGL is
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
-         Print_Character_Metadata (Char_Data);
       end loop;
 
    exception
