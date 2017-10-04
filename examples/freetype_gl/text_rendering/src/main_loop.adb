@@ -121,7 +121,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.OGL.Initialize_Font_Data;
+      FT.OGL.Initialize_Font_Data ("../fonts/NotoSerif-Regular.ttf");
    exception
       when others =>
          Put_Line ("An exception occurred in Main_Loop.Setup.");
