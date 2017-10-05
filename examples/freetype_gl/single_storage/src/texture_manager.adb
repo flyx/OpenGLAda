@@ -13,7 +13,6 @@ with GL.Types.Colors;
 with FT;
 with FT.Errors;
 with FT.Glyphs;
-with FT.Image;
 with FT.Faces;
 with FT.Utilities;
 
