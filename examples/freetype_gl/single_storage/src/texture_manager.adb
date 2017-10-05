@@ -1,7 +1,6 @@
 
 with System;
 
-with Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -10,11 +9,9 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Types.Colors;
 
-with FT;
 with FT.Errors;
 with FT.Faces;
 with FT.Glyphs;
-with FT.Faces;
 with FT.Utilities;
 
 with Utilities;
@@ -48,7 +45,7 @@ package body Texture_Manager is
       Num_Triangles : Int := 2;
       Stride        : Int := 4;
       Bitmap : constant FT.Bitmap_Record :=
-        FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
+                        FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
    begin
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -113,8 +110,8 @@ package body Texture_Manager is
 
       Bitmap : constant FT.Bitmap_Record :=
         FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
-      Width        : constant Size := Size (Bitmap.Width);
-      Height       : constant Size := Size (Bitmap.Rows);
+      Width  : constant Size := Size (Bitmap.Width);
+      Height : constant Size := Size (Bitmap.Rows);
    begin
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
