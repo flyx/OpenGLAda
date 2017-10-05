@@ -22,15 +22,6 @@ with Utilities;
 package body Texture_Manager is
    use type FT.Errors.Error_Code;
 
-   type Character_Record is record
-      Texture   : GL.Objects.Textures.Texture;
-      Width     : GL.Types.Int := 0;
-      Rows      : GL.Types.Int := 0;
-      Left      : GL.Types.Int := 0;
-      Top       : GL.Types.Int := 0;
-      Advance_X : GL.Types.Int := 0;
-   end record;
-
    Face_Ptr      : FT.Faces.Face_Reference;
    Vertex_Data   : Vertex_Array;
 
@@ -137,15 +128,7 @@ package body Texture_Manager is
       X_Offset     : constant GL.Types.Int := 0;
       Y_Offset     : constant GL.Types.Int := 0;
       Num_Levels   : constant GL.Types.Size := 1;
-      Char_Data    : Character_Record;
    begin
-
-      Char_Data.Width := Width;
-      Char_Data.Rows := Height;
-      Char_Data.Left := GL.Types.Int (FT.Glyphs.Bitmap_Left (Slot));
-      Char_Data.Top := GL.Types.Int (FT.Glyphs.Bitmap_Top (Slot));
-      Char_Data.Advance_X := GL.Types.Int (FT.Glyphs.Advance (Slot).X);
-
       aTexture.Initialize_Id;
       Texture_2D.Bind (aTexture);
       Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
@@ -157,7 +140,6 @@ package body Texture_Manager is
       else
          Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
       end if;
-      Char_Data.Texture := aTexture;
       Texture_2D.Load_Sub_Image_From_Data (0, X_Offset, Y_Offset, Width, Height,
                                            Red, Unsigned_Byte, Bitmap.Buffer);
 
