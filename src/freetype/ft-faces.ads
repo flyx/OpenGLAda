@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,13 +14,13 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Types;
-
 package FT.Faces is
    pragma Preelaborate;
 
    --  reference-counted smart pointer
    type Face_Reference is new Ada.Finalization.Controlled with private;
+
+   type Face_Index_Type is new Interfaces.C.long;
 
    type Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                      Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
@@ -39,7 +39,7 @@ package FT.Faces is
                         Render_Mode_LCD_V, Render_Mode_Max);
 
    procedure New_Face (Library    : Library_Reference; File_Path_Name : String;
-                       Face_Index : GL.Types.long;
+                       Face_Index : Face_Index_Type;
                        Object : in out Face_Reference);
 
    function Initialized (Object : Face_Reference) return Boolean;
@@ -51,21 +51,20 @@ package FT.Faces is
    overriding procedure Finalize (Object : in out Face_Reference);
 
    function Size (Object : Face_Reference) return Bitmap_Size;
-   procedure Kerning (Object      : Face_Reference; Left_Glyph : GL.Types.UInt;
-                      Right_Glyph : GL.Types.UInt; Kern_Mode : GL.Types.UInt;
+   procedure Kerning (Object      : Face_Reference; Left_Glyph : UInt;
+                      Right_Glyph : UInt; Kern_Mode : UInt;
                       aKerning    : access Vector);
-   procedure Load_Character (Object : Face_Reference; Char_Code : GL.Types.Long;
+   procedure Load_Character (Object : Face_Reference; Char_Code : ULong;
                              Flags  : Load_Flag);
    function Metrics (Object : Face_Reference) return Size_Metrics;
    procedure Set_Pixel_Sizes (Object       : Face_Reference;
-                              Pixel_Width  : GL.Types.UInt;
-                              Pixel_Height : GL.Types.UInt);
+                              Pixel_Width  : UInt;
+                              Pixel_Height : UInt);
 
-   function Slot (Object : Face_Reference) return Glyph_Slot_Reference;
+   function Glyph_Slot (Object : Face_Reference) return Glyph_Slot_Reference;
 
    Image_Error : exception;
 private
-   procedure Check_Glyph_Slot_Ptr (thePtr : access Glyph_Slot_Record);
    procedure Check_Face_Ptr (Object : Face_Reference);
 
    type Face_Reference is new Ada.Finalization.Controlled with record
@@ -166,5 +165,6 @@ private
       Load_Load_Colour                 => 16#100000#,
       Load_Compute_Metrics             => 16#200000#,
       Load_Bitmap_Metrics_Only         => 16#400000#);
+   for Load_Flag'Size use 32;
 
 end FT.Faces;

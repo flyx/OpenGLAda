@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -16,15 +16,14 @@
 
 with Interfaces.C.Strings;
 
-with GL.Low_Level;
-with GL.Types;
+with FT.Faces;
 
-with Errors;
+with FT.Errors;
 
 private package FT.API is
    pragma Preelaborate;
 
-   subtype Bool is GL.Low_Level.Bool;
+   type Bool is new Boolean;
 
    function FT_Reference_Library (Ptr : Library_Ptr) return Errors.Error_Code;
    pragma Import (C, FT_Reference_Library, "FT_Reference_Library");
@@ -33,9 +32,8 @@ private package FT.API is
    pragma Import (C, FT_Done_Library, "FT_Done_Library");
 
    function FT_Get_Kerning
-     (aFace : Face_Ptr; Left_Glyph : GL.Types.UInt;
-      Right_Glyph :  GL.Types.UInt;
-      Kern_Mode : GL.Types.UInt; aKerning : access Vector)
+     (aFace : Face_Ptr; Left_Glyph : UInt; Right_Glyph :  UInt;
+      Kern_Mode : UInt; aKerning : access Vector)
       return Errors.Error_Code;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
@@ -44,12 +42,13 @@ private package FT.API is
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
    function FT_Load_Char (aFace : Face_Ptr; Char_Code : ULong;
-                          Load_Flags : GL.Types.Int) return Errors.Error_Code;
+                          Load_Flags : Faces.Load_Flag)
+                          return Errors.Error_Code;
    pragma Import (C, FT_Load_Char, "FT_Load_Char");
 
    function FT_New_Face (Library        : Library_Ptr;
                          File_Path_Name : Interfaces.C.Strings.chars_ptr;
-                         Face_Index     : GL.Types.long;
+                         Face_Index     : Faces.Face_Index_Type;
                          aFace          : in out Face_Ptr)
                          return Errors.Error_Code;
    pragma Import (C, FT_New_Face, "FT_New_Face");
@@ -62,9 +61,11 @@ private package FT.API is
    pragma Import (C, FT_Done_Face, "FT_Done_Face");
 
    function FT_Set_Pixel_Sizes (aFace : Face_Ptr;
-                                Pixel_Width : GL.Types.UInt;
-                                Pixel_Height : GL.Types.UInt)
+                                Pixel_Width : UInt;
+                                Pixel_Height : UInt)
                                 return Errors.Error_Code;
    pragma Import (C, FT_Set_Pixel_Sizes, "FT_Set_Pixel_Sizes");
-
+private
+   for Bool use (False => 0, True => 1);
+   for Bool'Size use Interfaces.C.unsigned_char'Size;
 end FT.API;

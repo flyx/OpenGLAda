@@ -1,7 +1,7 @@
 Author: Roger Mc Murtrie
 These examples are loosely based on text rendering code that uses shaders from various sources.
 Most text rendering tutorials and examples that I could find do not use shaders but use the now-deprecated immediate pipeline.
-A useful tutorial is Learn OpenGL>In Practice>Text Rendering at https://learnopengl.com/#!In-Practice/Text-Rendering. This tutorial uses FreeType directly.
+A useful tutorial is Learn OpenGL>In Practice>Text Rendering at https://learnopengl.com/#!In-Practice/Text-Rendering. This tutorial uses FreeType directly to load fonts.
 The version numbers in the shader programs may need modification depending on your
 platform.
 
