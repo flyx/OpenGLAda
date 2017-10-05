@@ -22,7 +22,15 @@ tutorial_4
 uniform_example
 keyboard_mouse
 textured_cube
+<<<<<<< HEAD
+wave
+
+
+
+
+=======
 render_text
 hello_character
 wave
 simple_texturing
+>>>>>>> ftgl_shader_example
