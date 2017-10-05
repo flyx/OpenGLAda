@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,7 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Types;
 with FT.Faces;
 
 package FT.Glyphs is
@@ -31,8 +30,8 @@ package FT.Glyphs is
 
    function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record;
    function Bitmap_Top (Object : Glyph_Slot_Reference)
-                        return GL.Types.Int;
-   function Bitmap_Left (Object : Glyph_Slot_Reference) return GL.Types.Int;
+                        return Interfaces.C.int;
+   function Bitmap_Left (Object : Glyph_Slot_Reference) return Interfaces.C.int;
    function Advance (Object : Glyph_Slot_Reference) return Vector;
    function Format (Object : Glyph_Slot_Reference) return Glyph_Format;
    procedure Glyph_To_Bitmap

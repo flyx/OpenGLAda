@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,7 @@
 
 with GL.Types;
 
-package Errors is
+package FT.Errors is
    pragma Preelaborate;
 
    type Error_Code is
@@ -167,4 +167,4 @@ package Errors is
      Missing_Startfont_Field .. Corrupted_Font_Glyphs;
 
    function Description (Code : Error_Code) return String;
-end Errors;
+end FT.Errors;

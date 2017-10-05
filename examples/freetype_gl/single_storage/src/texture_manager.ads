@@ -4,8 +4,6 @@ with GL.Objects.Buffers;
 with GL.Objects.Textures;
 with GL.Types;
 
-with FT;
-
 package Texture_Manager is
 
    subtype V_Buffer is GL.Objects.Buffers.Buffer;

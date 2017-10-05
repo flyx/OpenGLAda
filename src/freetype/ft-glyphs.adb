@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,11 +14,29 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Errors;
+with FT.Errors;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
    use type Errors.Error_Code;
+
+   procedure Check_Glyph (Object : Glyph_Reference) is
+   begin
+      if Object.Data = null then
+         raise Constraint_Error with "Glyph_Reference is not initialized";
+      end if;
+   end Check_Glyph;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Check_Glyph_Slot (Object : Glyph_Slot_Reference) is
+   begin
+      if Object.Data = null then
+         raise Constraint_Error with "Glyph_Slot_Reference is not initialized";
+      end if;
+   end Check_Glyph_Slot;
+
+   --  -------------------------------------------------------------------------
 
    procedure Finalize (Object : in out Glyph_Reference) is
       Ptr : constant Glyph_Ptr := Object.Data;
@@ -29,11 +47,14 @@ package body FT.Glyphs is
       end if;
    end Finalize;
 
+   --  -------------------------------------------------------------------------
+
    procedure Get_Glyph (Object : Glyph_Slot_Reference;
                         Target : out Glyph_Reference) is
       Ret  : Glyph_Ptr;
       Code : Errors.Error_Code;
    begin
+      Check_Glyph_Slot (Object);
       Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret);
       if Code /= Errors.Ok then
          raise FreeType_Exception with
@@ -41,31 +62,31 @@ package body FT.Glyphs is
       end if;
       Target.Finalize;
       Target.Data := Ret;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
    end Get_Glyph;
 
    --  -------------------------------------------------------------------------
 
    function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record is
    begin
+      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap;
    end Bitmap;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Left (Object : Glyph_Slot_Reference) return GL.Types.Int is
+   function Bitmap_Left (Object : Glyph_Slot_Reference)
+                         return Interfaces.C.int is
    begin
+      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap_Left;
    end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
 
    function Bitmap_Top (Object : Glyph_Slot_Reference)
-                            return GL.Types.Int is
+                            return Interfaces.C.int is
    begin
+      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap_Top;
    end Bitmap_Top;
 
@@ -73,6 +94,7 @@ package body FT.Glyphs is
 
    function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
+      Check_Glyph_Slot (Object);
       return Object.Data.Advance;
    end Advance;
 
@@ -80,6 +102,7 @@ package body FT.Glyphs is
 
    function Format (Object : Glyph_Slot_Reference) return Glyph_Format is
    begin
+      Check_Glyph_Slot (Object);
       return Object.Data.Format;
    end Format;
 
@@ -89,13 +112,18 @@ package body FT.Glyphs is
      (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
       Origin : access Vector; Destroy     : Boolean) is
       use Errors;
-      Code : constant Errors.Error_Code :=
-               API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
-             Errors.Description (Code);
-      end if;
+      Check_Glyph (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Glyph_To_Bitmap;
 
    --  -------------------------------------------------------------------------
@@ -104,6 +132,7 @@ package body FT.Glyphs is
                            Mode : FT.Faces.Render_Mode) is
       Code : Errors.Error_Code;
    begin
+      Check_Glyph_Slot (Object);
       Code := FT.API.Glyphs.FT_Render_Glyph (Object.Data, Mode);
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Render_Glyph error: " &
