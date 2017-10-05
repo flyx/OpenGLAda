@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,300 +14,106 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System.Address_To_Access_Conversions;
-
-with Errors;
+with FT.Errors;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
+   use type Errors.Error_Code;
 
-   package Glyph_Slot_Access is new
-       System.Address_To_Access_Conversions (Glyph_Slot_Record);
-   package Glyph_Access is new
-       System.Address_To_Access_Conversions (Glyph_Record);
-
-   procedure Check_Face_Ptr (Face_Ptr : FT.API.Face_Ptr);
-   procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr);
-   procedure Check_Glyph_Slot_Ptr (thePtr : FT.API.Glyph_Slot_Ptr);
-
-   procedure Glyph (Slot_Ptr     : FT.API.Glyph_Slot_Ptr;
-                    theGlyph_Ptr : in out Glyph_Ptr);
-
-   --  -------------------------------------------------------------------------
-
-   procedure Done_Glyph (Glyph : Glyph_Ptr) is
+   procedure Check_Glyph (Object : Glyph_Reference) is
    begin
-      Check_Glyph_Ptr (Glyph);
-      FT.API.Glyphs.FT_Done_Glyph (Glyph);
-   exception
-      when others =>
+      if Object.Data = null then
+         raise Constraint_Error with "Glyph_Reference is not initialized";
+      end if;
+   end Check_Glyph;
+
+   procedure Finalize (Object : in out Glyph_Reference) is
+      Ptr : constant Glyph_Ptr := Object.Data;
+   begin
+      Object.Data := null;
+      if Ptr /= null then
+         API.Glyphs.FT_Done_Glyph (Ptr);
+      end if;
+   end Finalize;
+
+   procedure Get_Glyph (Object : Glyph_Slot_Reference;
+                        Target : out Glyph_Reference) is
+      Ret  : Glyph_Ptr;
+      Code : Errors.Error_Code;
+   begin
+      Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret);
+      if Code /= Errors.Ok then
          raise FreeType_Exception with
-           "FT.Glyphs.Done_Glyph raised an Exception";
-   end Done_Glyph;
+           "FT.Faces.Glyphs.Get_Glyph error :" & Errors.Description (Code);
+      end if;
+      Target.Finalize;
+      Target.Data := Ret;
+   end Get_Glyph;
 
    --  -------------------------------------------------------------------------
-   --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
-   --  Bitmap_Record => Buffer (access unsigned_char)
 
-   procedure Bitmap (Face_Ptr : FT.API.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record) is
-      use GL.Types;
-      use Glyph_Slot_Access;
-      Glyph_Slot    : FT.API.Glyph_Slot_Ptr;
-      aGlyph_Ptr    : Glyph_Ptr;
-      Glyph_Pointer :  Object_Pointer;
-      theGlyph      :  Glyph_Slot_Record;
+   function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record is
    begin
-      Check_Face_Ptr (Face_Ptr);
-      Glyph_Slot := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (Glyph_Slot);
-      Glyph_Pointer:= To_Pointer (System.Address (Glyph_Slot));
-      theGlyph := Glyph_Pointer.all;
-      Glyph (Glyph_Slot, aGlyph_Ptr);
-      --  Glyph calls the FT_Glyph C function.
-      theBitmap := theGlyph.Bitmap;
-   exception
-      when others =>
-         raise FreeType_Exception with "FT.Glyphs.Bitmap raised an Exception";
+      return Object.Data.Bitmap;
    end Bitmap;
 
    --  -------------------------------------------------------------------------
 
-   procedure Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
-                          theImage : out GL.Objects.Textures.Image_Source) is
-      use GL.Types;
-      theBitmap  : FT.Image.Bitmap_Record;
+   function Bitmap_Left (Object : Glyph_Slot_Reference)
+                         return Interfaces.C.int is
    begin
-      Check_Face_Ptr (Face_Ptr);
-      Bitmap (Face_Ptr, theBitmap);
-      theImage := FT.Image.Buffer (theBitmap);
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Bitmap_Image raised an Exception";
-   end Bitmap_Image;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
-      use Glyph_Slot_Access;
-      Slot_Ptr   : FT.API.Glyph_Slot_Ptr;
-      Glyph_Slot : Glyph_Slot_Record;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph_Slot := To_Pointer (System.Address (Slot_Ptr)).all;
-      return Glyph_Slot.Bitmap_Left;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Bitmap_Left raised an Exception";
+      return Object.Data.Bitmap_Left;
    end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
-      use GL.Types;
-      theBitmap  : FT.Image.Bitmap_Record;
+   function Bitmap_Top (Object : Glyph_Slot_Reference)
+                            return Interfaces.C.int is
    begin
-      Check_Face_Ptr (Face_Ptr);
-      Bitmap (Face_Ptr, theBitmap);
-      return GL.Types.Single (FT.Image.Rows (theBitmap));
-   end Bitmap_Height;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int is
-      use GL.Types;
-      theBitmap  : FT.Image.Bitmap_Record;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Bitmap (Face_Ptr, theBitmap);
-      return FT.Image.Rows (theBitmap);
-   end Bitmap_Rows;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
-                            return GL.Types.Int is
-      use Glyph_Slot_Access;
-      Slot_Ptr  : FT.API.Glyph_Slot_Ptr;
-      Glyph     : Glyph_Slot_Record;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
-      return Glyph.Bitmap_Top;
-   exception
-      when others =>
-              raise FreeType_Exception with
-                "FT.Glyphs.Bitmap_Top raised an Exception";
+      return Object.Data.Bitmap_Top;
    end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single is
-      use GL.Types;
-      theBitmap  : FT.Image.Bitmap_Record;
+   function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
-      Check_Face_Ptr (Face_Ptr);
-      Bitmap (Face_Ptr, theBitmap);
-      return GL.Types.Single (FT.Image.Width (theBitmap));
-   end Bitmap_Width;
+      return Object.Data.Advance;
+   end Advance;
 
    --  -------------------------------------------------------------------------
 
-   procedure Check_Face_Ptr (Face_Ptr : FT.API.Face_Ptr) is
-      use System;
+   function Format (Object : Glyph_Slot_Reference) return Glyph_Format is
    begin
-      if System.Address (Face_Ptr) = System.Null_Address then
-         raise FreeType_Exception with
-           "FT.Glyphs.Check_Face_Ptr - No face is loaded, Face_Ptr is null.";
-      end if;
-   end Check_Face_Ptr;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Check_Glyph_Ptr (thePtr : Glyph_Ptr) is
-      use System;
-   begin
-      if System.Address (thePtr) = System.Null_Address then
-         raise FreeType_Exception with
-           "FT.Glyphs.Check_Glyph_Ptr - No glyph is loaded, Glyph_Ptr is null.";
-      end if;
-   end Check_Glyph_Ptr;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Check_Glyph_Slot_Ptr (thePtr : FT.API.Glyph_Slot_Ptr) is
-      use System;
-   begin
-      if System.Address (thePtr) = System.Null_Address then
-         raise FreeType_Exception with
-           "FT.Glyphs.Check_Glyph_Slot_Ptr - No glyph is loaded, Glyph_Slot_Ptr is null.";
-      end if;
-   end Check_Glyph_Slot_Ptr;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record) is
-   use GL.Types;
-      use Glyph_Access;
-      aGlyph_Slot : FT.API.Glyph_Slot_Ptr ;
-      aGlyph_Ptr : Glyph_Ptr;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      aGlyph_Slot := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (aGlyph_Slot);
-      Glyph (aGlyph_Slot, aGlyph_Ptr);
-      Check_Glyph_Ptr (aGlyph_Ptr);
-      theGlyph := Glyph (aGlyph_Ptr);
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
-   end Glyph;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record is
-      use Glyph_Access;
-      Glyph_Acc : access Glyph_Record;
-   begin
-      Check_Glyph_Ptr (aGlyph_Ptr);
-      Glyph_Acc := To_Pointer (System.Address (aGlyph_Ptr));
-      return Glyph_Acc.all;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph aGlyph_Ptr raised an Exception";
-   end Glyph;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Glyph (Slot_Ptr    : FT.API.Glyph_Slot_Ptr;
-                   theGlyph_Ptr : in out Glyph_Ptr) is
-      use GL.Types;
-      use Errors;
-      Code : Errors.Error_Code;
-   begin
-      Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Code := FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
-      if Code /= Errors.Ok then
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph error :" & Errors.Description (Code);
-      end if;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph raised an Exception";
-   end Glyph;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr)
-                               return FT.Image.FT_Vector is
-      use Glyph_Slot_Access;
-      Slot_Ptr : FT.API.Glyph_Slot_Ptr;
-      Glyph    : Glyph_Slot_Record;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
-      return Glyph.Advance;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph_Advance raised an Exception";
-   end Glyph_Advance;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
-                              return FT.Image.Glyph_Format is
-      use Glyph_Slot_Access;
-      Slot_Ptr : FT.API.Glyph_Slot_Ptr;
-      Glyph    : Glyph_Slot_Record;
-   begin
-      Check_Face_Ptr (Face_Ptr);
-      Slot_Ptr := FT.Faces.Glyph_Slot (Face_Ptr);
-      Check_Glyph_Slot_Ptr (Slot_Ptr);
-      Glyph := To_Pointer (System.Address (Slot_Ptr)).all;
-      return Glyph.Format;
-   exception
-      when others =>
-         raise FreeType_Exception with
-           "FT.Glyphs.Glyph_Format raised an Exception";
-   end Glyph_Format;
+      return Object.Data.Format;
+   end Format;
 
    --  -------------------------------------------------------------------------
 
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Bool) is
+     (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
+      Origin : access Vector; Destroy     : Boolean) is
       use Errors;
-      Code : constant Errors.Error_Code :=
-               FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode, Origin, Destroy);
+
    begin
-      if Code /= Errors.Ok then
-         raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
-             Errors.Description (Code);
-      end if;
+      Check_Glyph (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Glyph_To_Bitmap;
 
    --  -------------------------------------------------------------------------
 
-   procedure Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode) is
-      use Errors;
-      Slot : FT.API.Glyph_Slot_Ptr;
+   procedure Render_Glyph (Object : Glyph_Slot_Reference;
+                           Mode : FT.Faces.Render_Mode) is
       Code : Errors.Error_Code;
    begin
-      Check_Face_Ptr (aFace);
-      Slot := FT.Faces.Glyph_Slot (aFace);
-      Code := FT.API.Glyphs.FT_Render_Glyph (Slot, Mode);
+      Code := FT.API.Glyphs.FT_Render_Glyph (Object.Data, Mode);
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Render_Glyph error: " &
              Errors.Description (Code);

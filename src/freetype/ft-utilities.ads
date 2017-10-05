@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,13 +14,10 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with FT.API;
-with FT.Image;
 with FT.Faces;
 
 package FT.Utilities is
-   procedure Print_Bitmap_Metadata (Bitmap : FT.Image.Bitmap_Record);
-   procedure Print_Character_Metadata (aFace : FT.API.Face_Ptr;
+   procedure Print_Bitmap_Metadata (Bitmap : FT.Bitmap_Record);
+   procedure Print_Character_Metadata (aFace : FT.Faces.Face_Reference;
                                        aChar : Character);
-   procedure Print_Character_Metadata (Data : FT.Faces.Character_Record);
 end FT.Utilities;

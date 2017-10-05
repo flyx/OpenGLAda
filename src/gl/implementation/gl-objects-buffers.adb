@@ -122,9 +122,9 @@ package body GL.Objects.Buffers is
       return To_Pointer (Ret);
    end Pointer;
 
-   procedure Set_Sub_Data (Target : in out Buffer_Target;
+   procedure Set_Sub_Data (Target : Buffer_Target;
                            Offset : Types.Size;
-                           Data   : in out Pointers.Element_Array) is
+                           Data   : Pointers.Element_Array) is
    begin
       API.Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
                            Low_Level.SizeIPtr (Data'Length),

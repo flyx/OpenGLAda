@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
 --
 -- Permission to use, copy, modify, and/or distribute this software for any
 -- purpose with or without fee is hereby granted, provided that the above
@@ -14,106 +14,49 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with System;
-
-with GL.Objects.Textures;
-with GL.Types;
-
-with FT.API;
-with FT.Image;
 with FT.Faces;
 
 package FT.Glyphs is
    pragma Preelaborate;
 
-   type Glyph_Record is private;
-   type Glyph_Slot_Record is private;
-   type Glyph_Ptr is private;
+   type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled
+   with private;
 
-   procedure Done_Glyph (Glyph : Glyph_Ptr);
+   --  call this to destruct the
+   overriding procedure Finalize (Object : in out Glyph_Reference);
 
-   procedure Bitmap (Face_Ptr : FT.API.Face_Ptr;
-                    theBitmap : out FT.Image.Bitmap_Record);
-   function Bitmap_Height (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   procedure Bitmap_Image (Face_Ptr : FT.API.Face_Ptr;
-                          theImage : out GL.Objects.Textures.Image_Source);
-   function Bitmap_Left (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
-   function Bitmap_Rows (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Int;
-   function Bitmap_Top (Face_Ptr : FT.API.Face_Ptr)
-                        return GL.Types.Int;
-   function Bitmap_Width (Face_Ptr : FT.API.Face_Ptr) return GL.Types.Single;
-   procedure Glyph (Face_Ptr : FT.API.Face_Ptr; theGlyph : out Glyph_Record);
-   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record;
-   function Glyph_Advance (Face_Ptr : FT.API.Face_Ptr) return FT.Image.FT_Vector;
-   function Glyph_Format (Face_Ptr : FT.API.Face_Ptr)
-                          return FT.Image.Glyph_Format;
+   procedure Get_Glyph (Object : Glyph_Slot_Reference;
+                        Target : out Glyph_Reference);
+
+   function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record;
+   function Bitmap_Top (Object : Glyph_Slot_Reference)
+                        return Interfaces.C.int;
+   function Bitmap_Left (Object : Glyph_Slot_Reference) return Interfaces.C.int;
+   function Advance (Object : Glyph_Slot_Reference) return Vector;
+   function Format (Object : Glyph_Slot_Reference) return Glyph_Format;
    procedure Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector; Destroy     : Bool);
-   procedure Render_Glyph (aFace : FT.API.Face_Ptr; Mode : FT.API.Render_Mode);
+     (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
+      Origin : access Vector; Destroy     : Boolean);
+   procedure Render_Glyph (Object : Glyph_Slot_Reference; Mode : FT.Faces.Render_Mode);
 private
-   type Bitmap_Glyph_Ptr is new System.Address;
-   type Glyph_Ptr is new System.Address;
-   type Outline_Glyph_Ptr is new System.Address;
-   type Slot_Internal_Ptr is new System.Address;
-   type Subglyph_Ptr is new System.Address;
+   type Glyph_Reference is limited new Ada.Finalization.Limited_Controlled with
+      record
+         Data : Glyph_Ptr;
+      end record;
 
-   type Glyph_Metrics is record
-      Width        : FT.Image.FT_Pos;
-      Height       : FT.Image.FT_Pos;
-      Horiz_Bearing_X : FT.Image.FT_Pos;
-      Horiz_Bearing_Y : FT.Image.FT_Pos;
-      Horiz_Advance  : FT.Image.FT_Pos;
-      Vert_Bearing_X : FT.Image.FT_Pos;
-      Vert_Bearing_Y : FT.Image.FT_Pos;
-      Vert_Advance   : FT.Image.FT_Pos;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Glyph_Metrics);
+   type Outline_Glyph_Record;
+   type Outline_Glyph_Ptr is access Outline_Glyph_Record;
+   pragma Convention (C, Outline_Glyph_Ptr);
 
-   type Glyph_Record is record
-      Library : FT.Library_Ptr;
-      Clazz   : System.Address;
-      Format  : FT.Image.Glyph_Format;
-      Advance : FT.Image.FT_Vector;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Glyph_Record);
-
-   --  A FT_Glyph can be typecast to a FT_OutlineGlyph if
-   --  glyph->format == FT_GLYPH_FORMAT_OUTLINE.
+   --  A Glyph can be typecast to an Outline_Glyph if
+   --  glyph->format == GLYPH_FORMAT_OUTLINE.
    --  This provides easy access the outline's content.
    --  As the outline is extracted from a glyph slot, its coordinates are
    --  expressed normally in 26.6 pixels, unless the flag
-   --  FT_LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
+   --  LOAD_NO_SCALE was used in FT_Load_Glyph() or FT_Load_Char().
    type Outline_Glyph_Record is record
       Root    : Glyph_Record;
-      Outline : FT.Image.Outline_Record;
+      Outline : Outline_Record;
    end record;
    pragma Convention (C_Pass_By_Copy, Outline_Glyph_Record);
-
-   type Glyph_Slot_Record is record
-      Library              : FT.Library_Ptr;
-      Face                 : FT.API.Face_Ptr;
-      Next                 : FT.API.Glyph_Slot_Ptr;
-      Reserved             : GL.Types.UInt;
-      C_Generic            : FT.Faces.Generic_Record;
-      Metrics              : Glyph_Metrics;
-      Linear_Horiz_Advance : GL.Types.long;
-      Linear_Vert_Advance  : GL.Types.long;
-      Advance              : FT.Image.FT_Vector;
-      Format               : FT.Image.Glyph_Format;
-      Bitmap               : FT.Image.Bitmap_Record;
-      Bitmap_Left          : GL.Types.Int;
-      Bitmap_Top           : GL.Types.Int;
-      Outline              : FT.Image.Outline_Record;
-      Num_Subglyphs        : GL.Types.UInt;
-      Subglyphs            : Subglyph_Ptr;
-      Control_Data         : System.Address;
-      Control_Length       : GL.Types.long;
-      Lsb_Delta            : FT.Image.FT_Pos;
-      Rsb_Delta            : FT.Image.FT_Pos;
-      Other                : System.Address;
-      Internal             : Slot_Internal_Ptr;
-   end record;
-   pragma Convention (C_Pass_By_Copy, Glyph_Slot_Record);
-
 end FT.Glyphs;
