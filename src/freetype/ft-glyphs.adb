@@ -26,6 +26,8 @@ package body FT.Glyphs is
          raise Constraint_Error with "Glyph_Reference is not initialized";
       end if;
    end Check_Glyph;
+   
+   --  -------------------------------------------------------------------------
 
    procedure Finalize (Object : in out Glyph_Reference) is
       Ptr : constant Glyph_Ptr := Object.Data;
@@ -35,6 +37,8 @@ package body FT.Glyphs is
          API.Glyphs.FT_Done_Glyph (Ptr);
       end if;
    end Finalize;
+
+   --  -------------------------------------------------------------------------
 
    procedure Get_Glyph (Object : Glyph_Slot_Reference;
                         Target : out Glyph_Reference) is
