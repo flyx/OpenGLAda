@@ -27,17 +27,6 @@ package body FT.Glyphs is
       end if;
    end Check_Glyph;
 
-   --  -------------------------------------------------------------------------
-
-   procedure Check_Glyph_Slot (Object : Glyph_Slot_Reference) is
-   begin
-      if Object.Data = null then
-         raise Constraint_Error with "Glyph_Slot_Reference is not initialized";
-      end if;
-   end Check_Glyph_Slot;
-
-   --  -------------------------------------------------------------------------
-
    procedure Finalize (Object : in out Glyph_Reference) is
       Ptr : constant Glyph_Ptr := Object.Data;
    begin
@@ -47,14 +36,11 @@ package body FT.Glyphs is
       end if;
    end Finalize;
 
-   --  -------------------------------------------------------------------------
-
    procedure Get_Glyph (Object : Glyph_Slot_Reference;
                         Target : out Glyph_Reference) is
       Ret  : Glyph_Ptr;
       Code : Errors.Error_Code;
    begin
-      Check_Glyph_Slot (Object);
       Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret);
       if Code /= Errors.Ok then
          raise FreeType_Exception with
@@ -68,7 +54,6 @@ package body FT.Glyphs is
 
    function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record is
    begin
-      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap;
    end Bitmap;
 
@@ -77,7 +62,6 @@ package body FT.Glyphs is
    function Bitmap_Left (Object : Glyph_Slot_Reference)
                          return Interfaces.C.int is
    begin
-      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap_Left;
    end Bitmap_Left;
 
@@ -86,7 +70,6 @@ package body FT.Glyphs is
    function Bitmap_Top (Object : Glyph_Slot_Reference)
                             return Interfaces.C.int is
    begin
-      Check_Glyph_Slot (Object);
       return Object.Data.Bitmap_Top;
    end Bitmap_Top;
 
@@ -94,7 +77,6 @@ package body FT.Glyphs is
 
    function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
-      Check_Glyph_Slot (Object);
       return Object.Data.Advance;
    end Advance;
 
@@ -102,7 +84,6 @@ package body FT.Glyphs is
 
    function Format (Object : Glyph_Slot_Reference) return Glyph_Format is
    begin
-      Check_Glyph_Slot (Object);
       return Object.Data.Format;
    end Format;
 
@@ -132,7 +113,6 @@ package body FT.Glyphs is
                            Mode : FT.Faces.Render_Mode) is
       Code : Errors.Error_Code;
    begin
-      Check_Glyph_Slot (Object);
       Code := FT.API.Glyphs.FT_Render_Glyph (Object.Data, Mode);
       if Code /= Errors.Ok then
          raise FT.FreeType_Exception with "FT.Glyphs.Render_Glyph error: " &
