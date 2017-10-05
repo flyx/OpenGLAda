@@ -1,8 +1,8 @@
 limited with "../../../opengl-glfw.gpr";
 
-project Tutorial_3 is
+project Tutorial_03 is
 for Source_Dirs use ("src", "../../common");
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
    for Main use ("tutorial_03.adb");
-end Tutorial_3;
+end Tutorial_03;

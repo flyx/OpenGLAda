@@ -121,7 +121,7 @@ package body GA_Draw is
         --              GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Lines,
         --                                                    First => 0,
         --                                                    Count => 4 * 2);
-        --              GL.Attributes.Disable_Vertex_Attrib_Array (0);
+        --              GL.Attributes.Disable_Vertex_Attrib_Array (0)
 
     exception
         when anError :  others =>
@@ -270,8 +270,6 @@ package body GA_Draw is
         Vertex_Buffer          : GL.Objects.Buffers.Buffer;
         Vertices               : Singles.Vector3_Array (1 .. 2);
     begin
-        Vertices := ((0.0, 0.0, 0.0),
-                     (0.98 * Dir_e1, 0.98 * Dir_e2, 0.98 * Dir_e3));
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
@@ -328,6 +326,7 @@ package body GA_Draw is
         Saved_Cull_Face : Face_Selector := Cull_Face;
     begin
         if Scale /= 0.0 then
+
             GL.Objects.Programs.Use_Program (Render_Program);
             Vertex_Array_Object.Initialize_Id;
             Vertex_Array_Object.Bind;
@@ -337,6 +336,7 @@ package body GA_Draw is
             Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
               (Render_Program, "Proj_Matrix");
             GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+
             Colour_Location := GL.Objects.Programs.Uniform_Location
               (Render_Program, "vector_colour");
             Model_View_Matrix := MV_Matrix;
