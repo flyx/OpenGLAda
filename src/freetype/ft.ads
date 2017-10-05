@@ -23,7 +23,7 @@ with GL.Low_Level;
 package FT is
    pragma Preelaborate;
 
-   type Library_Ptr is private;
+   type Library_Ptr is new System.Address;
 
    subtype Bool is GL.Low_Level.Bool;
    subtype Fixed is Interfaces.C.long;
@@ -33,8 +33,5 @@ package FT is
 
    procedure Done_Library (Library : Library_Ptr);
    procedure Initialize (alibrary : in out Library_Ptr);
-
-private
-   type Library_Ptr is new System.Address;
 
 end FT;

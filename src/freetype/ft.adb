@@ -33,7 +33,7 @@ package body FT is
 
    procedure Initialize (aLibrary : in out Library_Ptr)is
       use Errors;
-      Code : constant Errors.Error_Code := FT_Init_FreeType (aLibrary);
+      Code : constant Errors.Error_Code := FT_Init_FreeType (System.Address (aLibrary));
    begin
       if Code /= Ok then
          raise FreeType_Exception with "FT.Initialize failed" &
