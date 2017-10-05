@@ -47,6 +47,11 @@ package body Texture_Manager is
       Bitmap : constant FT.Bitmap_Record :=
                         FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
    begin
+     FT.Faces.Load_Character (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
+
+      --  Ensure that the glyph image is an anti-aliased bitmap
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
       Width := Single (Bitmap.Width) * Scale;
@@ -119,8 +124,16 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
-                                  Bitmap.Buffer);
+      If Width < 1 and then Height < 1 then
+         Texture_2D.Storage (Num_Levels, RGBA8, 1, 1);
+      else
+         Texture_2D.Storage (Num_Levels, RGBA8, Width, Height);
+      end if;
+
+      FT.Glyphs.Bitmap_Image (Face_Ptr, Bitmap_Image);
+      Texture_2D.Load_Sub_Image_From_Data (0, X_Offset, Y_Offset, Width, Height,
+                                           Red, Unsigned_Byte, Bitmap_Image);
+
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
