@@ -40,7 +40,7 @@ package body FT.Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (aFace : FT.Faces.Face_Ptr; aChar : Character) is
+   procedure Print_Character_Metadata (aFace : FT.API.Face_Ptr; aChar : Character) is
       use GL.Types;
       use FT.Glyphs;
       Advance_X : constant GL.Types.Int := FT.Image.Vector_X (Glyph_Advance (aFace));
