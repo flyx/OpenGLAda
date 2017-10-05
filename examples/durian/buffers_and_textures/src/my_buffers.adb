@@ -69,7 +69,7 @@ package body My_Buffers is
         Stride : GL.Types.Size := GL.Types.Size (Vertex_Data.Vertex_Array_Size);
     begin
        Make_Buffer (GL.Objects.Buffers.Array_Buffer, Vertex_Buffer);
-       Utilities.Load_UV_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
+       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
 
        Make_Buffer (GL.Objects.Buffers.Element_Array_Buffer, Element_Buffer);
        Vertex_Data.Load_Element_Buffer (Element_Array_Buffer,

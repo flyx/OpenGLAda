@@ -4,10 +4,11 @@ bin
 .DS_Store
 .#*#
 *~
+*.exe
 colour_fragments
 simple_geometry
 simple_tessellation
-examples/superbible/fragment_colouring/colour_fragments
+colour_fragments
 tutorial_02
 hello_textures
 tutorial_03
@@ -16,7 +17,6 @@ triangle
 coloured_square
 element_buffers
 squares
-examples/superbible/rotating_squares/squares
 spinner
 tutorial_4
 uniform_example
@@ -24,3 +24,4 @@ keyboard_mouse
 textured_cube
 wave
 simple_texturing
+
