@@ -8,7 +8,7 @@ bin
 colour_fragments
 simple_geometry
 simple_tessellation
-examples/superbible/fragment_colouring/colour_fragments
+colour_fragments
 tutorial_02
 hello_textures
 tutorial_03
@@ -17,21 +17,9 @@ triangle
 coloured_square
 element_buffers
 squares
-examples/superbible/rotating_squares/squares
 spinner
 tutorial_4
 uniform_example
 keyboard_mouse
 textured_cube
-<<<<<<< HEAD
 wave
-
-
-
-
-=======
-render_text
-hello_character
-wave
-simple_texturing
->>>>>>> ftgl_shader_example
