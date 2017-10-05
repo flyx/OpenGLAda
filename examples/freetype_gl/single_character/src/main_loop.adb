@@ -25,10 +25,6 @@ with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
-with FT.Glyphs;
-with FT.Interfac;
-with FT.Utilities;
-
 with Maths;
 with Program_Loader;
 with Utilities;
@@ -85,7 +81,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Render.");
+         Put_Line ("An exception occurred in Main_Loop.Render.");
          raise;
    end Render;
 
@@ -116,8 +112,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array.Bind;
 
       Rendering_Program := Program_From
-          ((Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
-           Src ("/Ada_Source/OpenGLAda/examples/freetype_gl/single_character/src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
+          ((Src ("src/shaders/gl1_vertex_shader.glsl", Vertex_Shader),
+           Src ("src/shaders/gl1_fragment_shader.glsl", Fragment_Shader)));
       --  Character position must be within window bounds.
       Texture_Manager.Setup_Graphic (Vertex_Buffer, Char_Texture, 50.0, 50.0, 4.0, Test_Character);
 
@@ -131,7 +127,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           GL.Objects.Programs.Attrib_Location (Rendering_Program, "vertices");
    exception
       when others =>
-         Put_Line ("An exceptiom occurred in Setup.");
+         Put_Line ("An exception occurred in Main_Loop.Setup.");
          raise;
    end Setup;
 
@@ -142,7 +138,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Test_Character : Character := 'x';
 begin
    if Ada.Command_Line.Argument_Count /= 1 then
-      Ada.Text_IO.Put_Line ("No character entered, so dispalying default character.");
+      Ada.Text_IO.Put_Line ("No character entered, so displaying the default character.");
    else
       Test_Character := Ada.Command_Line.Argument (1) (1);
    end if;
@@ -161,6 +157,6 @@ exception
       --  message has been written to stdout
       raise;
    when anError :  others =>
-      Put_Line ("An exceptiom occurred in Main_Loop.");
+      Put_Line ("An exception occurred in Main_Loop.");
       raise;
 end Main_Loop;

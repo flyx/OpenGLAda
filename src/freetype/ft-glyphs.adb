@@ -1,161 +1,125 @@
+--------------------------------------------------------------------------------
+-- Copyright (c) 2017, Felix Krause <contact@flyx.org>
+--
+-- Permission to use, copy, modify, and/or distribute this software for any
+-- purpose with or without fee is hereby granted, provided that the above
+-- copyright notice and this permission notice appear in all copies.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+-- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+-- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+-- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------------------
 
-with System.Address_To_Access_Conversions;
-
-with Ada.Text_IO; use Ada.Text_IO;
-
+with FT.Errors;
 with FT.API.Glyphs;
 
 package body FT.Glyphs is
-   package Glyph_Slot_Access is new
-       System.Address_To_Access_Conversions (Glyph_Slot_Record);
-   package Glyph_Access is new
-       System.Address_To_Access_Conversions (Glyph_Record);
+   use type Errors.Error_Code;
 
-   procedure Done_Glyph (Glyph : Glyph_Ptr) is
+   procedure Check_Glyph (Object : Glyph_Reference) is
    begin
-      FT.API.Glyphs.FT_Done_Glyph (Glyph);
-   end Done_Glyph;
+      if Object.Data = null then
+         raise Constraint_Error with "Glyph_Reference is not initialized";
+      end if;
+   end Check_Glyph;
+
+   procedure Finalize (Object : in out Glyph_Reference) is
+      Ptr : constant Glyph_Ptr := Object.Data;
+   begin
+      Object.Data := null;
+      if Ptr /= null then
+         API.Glyphs.FT_Done_Glyph (Ptr);
+      end if;
+   end Finalize;
+
+   procedure Get_Glyph (Object : Glyph_Slot_Reference;
+                        Target : out Glyph_Reference) is
+      Ret  : Glyph_Ptr;
+      Code : Errors.Error_Code;
+   begin
+      Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret);
+      if Code /= Errors.Ok then
+         raise FreeType_Exception with
+           "FT.Faces.Glyphs.Get_Glyph error :" & Errors.Description (Code);
+      end if;
+      Target.Finalize;
+      Target.Data := Ret;
+   end Get_Glyph;
 
    --  -------------------------------------------------------------------------
-   --  Glyph_Slot (SA) => Glyph_Slot_Record => Bitmap_Record
-   --  Bitmap_Record => Buffer (access unsigned_char)
 
-   function Bitmap (Glyph_Slot : FT.API.Glyph_Slot_Ptr)
-                    return FT.Image.Bitmap_Record is
-      use GL.Types;
-      use Glyph_Slot_Access;
-      aGlyph_Ptr    : Glyph_Ptr;
-      Glyph_Pointer : constant Object_Pointer :=
-                        To_Pointer (System.Address (Glyph_Slot));
-      theGlyph      : constant Glyph_Slot_Record := Glyph_Pointer.all;
+   function Bitmap (Object : Glyph_Slot_Reference) return Bitmap_Record is
    begin
-      --  Glyph calls the FT_Glyph C function.
-      if Glyph (Glyph_Slot, aGlyph_Ptr) /= 0 then
-         Put_Line ("FT_Interfac.Bitmap raised an Exception");
-         raise FT.FT_Exception;
-      end if;
-      return theGlyph.Bitmap;
+      return Object.Data.Bitmap;
    end Bitmap;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Image (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Objects.Textures.Image_Source is
+   function Bitmap_Left (Object : Glyph_Slot_Reference)
+                         return Interfaces.C.int is
    begin
-      return FT.Image.Buffer (Bitmap (Slot_Ptr));
-   end Bitmap_Image;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Left (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int is
-      use Glyph_Slot_Access;
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
-   begin
-      return Glyph.Bitmap_Left;
+      return Object.Data.Bitmap_Left;
    end Bitmap_Left;
 
    --  -------------------------------------------------------------------------
 
-   function Bitmap_Width (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return GL.Types.Single is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
+   function Bitmap_Top (Object : Glyph_Slot_Reference)
+                            return Interfaces.C.int is
    begin
-      return GL.Types.Single (FT.Image.Width (theBitmap));
-   end Bitmap_Width;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Height (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                               return GL.Types.Single is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
-   begin
-      return GL.Types.Single (FT.Image.Rows (theBitmap));
-   end Bitmap_Height;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Rows (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                             return GL.Types.Int is
-      theBitmap : constant FT.Image.Bitmap_Record := Bitmap (Slot_Ptr);
-   begin
-      return FT.Image.Rows (theBitmap);
-   end Bitmap_Rows;
-
-   --  -------------------------------------------------------------------------
-
-   function Bitmap_Top (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                            return GL.Types.Int is
-      use Glyph_Slot_Access;
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
-   begin
-      return Glyph.Bitmap_Top;
+      return Object.Data.Bitmap_Top;
    end Bitmap_Top;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Face_Ptr : FT.API.Face_Ptr) return Glyph_Record is
-   use GL.Types;
-      use Glyph_Access;
-      aGlyph_Slot : constant FT.API.Glyph_Slot_Ptr := FT.Interfac.Glyph_Slot (Face_Ptr);
-      aGlyph_Ptr : Glyph_Ptr;
+   function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
-      if Glyph (aGlyph_Slot, aGlyph_Ptr) /= 0 then
-         raise FT.FT_Exception;
-      end if;
-      return Glyph (aGlyph_Ptr);
-   end Glyph;
+      return Object.Data.Advance;
+   end Advance;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (aGlyph_Ptr : Glyph_Ptr) return Glyph_Record is
-      use Glyph_Access;
-      Glyph_Acc : constant access Glyph_Record := To_Pointer (System.Address (aGlyph_Ptr));
+   function Format (Object : Glyph_Slot_Reference) return Glyph_Format is
    begin
-      return Glyph_Acc.all;
-   end Glyph;
+      return Object.Data.Format;
+   end Format;
 
    --  -------------------------------------------------------------------------
 
-   function Glyph (Slot_Ptr : FT.API.Glyph_Slot_Ptr;
-                   theGlyph_Ptr : in out Glyph_Ptr) return FT.FT_Error is
+   procedure Glyph_To_Bitmap
+     (Object : Glyph_Reference; Mode : FT.Faces.Render_Mode;
+      Origin : access Vector; Destroy     : Boolean) is
+      use Errors;
+
    begin
-      return FT.API.Glyphs.FT_Get_Glyph (Slot_Ptr, System.Address (theGlyph_Ptr));
-   end Glyph;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_Advance (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                               return FT.Image.FT_Vector is
-      use Glyph_Slot_Access;
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
-   begin
-      return Glyph.Advance;
-   end Glyph_Advance;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_Format (Slot_Ptr : FT.API.Glyph_Slot_Ptr)
-                              return FT.Image.Glyph_Format is
-      use Glyph_Slot_Access;
-      Glyph : constant Glyph_Slot_Record :=
-        To_Pointer (System.Address (Slot_Ptr)).all;
-   begin
-      return Glyph.Format;
-   end Glyph_Format;
-
-   --  -------------------------------------------------------------------------
-
-   function Glyph_To_Bitmap
-     (theGlyph    : System.Address; Mode : FT.API.Render_Mode;
-      Origin      : access FT.Image.FT_Vector;
-      Destroy     : FT.FT_Bool) return FT.FT_Error is
-   begin
-      return FT.API.Glyphs.FT_Glyph_To_Bitmap (theGlyph, Mode,
-                                               Origin, Destroy);
+      Check_Glyph (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.Glyphs.FT_Glyph_To_Bitmap (Object.Data, Mode, Origin, FT.API.Bool (Destroy));
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Glyphs.Glyph_To_Bitmap error: " &
+              Errors.Description (Code);
+         end if;
+      end;
    end Glyph_To_Bitmap;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Render_Glyph (Object : Glyph_Slot_Reference;
+                           Mode : FT.Faces.Render_Mode) is
+      Code : Errors.Error_Code;
+   begin
+      Code := FT.API.Glyphs.FT_Render_Glyph (Object.Data, Mode);
+      if Code /= Errors.Ok then
+         raise FT.FreeType_Exception with "FT.Glyphs.Render_Glyph error: " &
+             Errors.Description (Code);
+      end if;
+   end Render_Glyph;
+
+   --  -------------------------------------------------------------------------
 
 end FT.Glyphs;

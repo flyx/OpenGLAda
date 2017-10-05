@@ -27,6 +27,6 @@ exception
       Put_Line (Exception_Information (anError));
 
    when anError :  others =>
-      Put_Line ("An exceptiom occurred in Hello_Character.");
+      Put_Line ("An exception occurred in Hello_Character.");
       Put_Line (Exception_Information (anError));
 end Hello_Character;
