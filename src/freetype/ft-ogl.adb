@@ -86,7 +86,7 @@ package body FT.OGL is
       aTexture          : GL.Objects.Textures.Texture;
       Bitmap_Image_Ptr  : GL.Objects.Textures.Image_Source;
       Bitmap            : constant FT.Bitmap_Record :=
-                                   FT.Glyphs.Bitmap (Face_Ptr.Slot);
+                                   FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
       Num_Levels        : constant GL.Types.Size := 1;
       Mip_Level_0       : constant GL.Objects.Textures.Mipmap_Level := 0;
    begin
@@ -237,7 +237,7 @@ package body FT.OGL is
      (Face_Ptr  : FT.Faces.Face_Reference) is
       use GL.Objects.Buffers;
       use GL.Types;
-      Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Slot;
+      Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
@@ -260,16 +260,16 @@ package body FT.OGL is
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
-         FT.Faces.Load_Character (Face_Ptr, GL.Types.long (index),
+         FT.Faces.Load_Character (Face_Ptr, unsigned_long (index),
                                   FT.Faces.Load_Render);
          --  Ensure that the glyph image is an anti-aliased bitmap
          FT.Glyphs.Render_Glyph (Glyph_Slot, FT.Faces.Render_Mode_Mono);
 
-         Width := FT.Glyphs.Bitmap_Width (Glyph_Slot);
-         Height := FT.Glyphs.Bitmap_Rows (Glyph_Slot);
+         Width := GL.Types.Int (Glyph_Slot.Data.Bitmap.Width);
+         Height := GL.Types.Int (Glyph_Slot.Data.Bitmap.Rows);
          Set_Char_Data (Char_Data, Width, Height,
-                        FT.Glyphs.Bitmap_Left (Glyph_Slot),
-                        FT.Glyphs.Bitmap_Top (Glyph_Slot),
+                        GL.Types.Int (FT.Glyphs.Bitmap_Left (Glyph_Slot)),
+                        GL.Types.Int (FT.Glyphs.Bitmap_Top (Glyph_Slot)),
                         GL.Types.Int (FT.Glyphs.Advance (Glyph_Slot).X));
 
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
