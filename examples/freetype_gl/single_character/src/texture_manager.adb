@@ -65,10 +65,6 @@ package body Texture_Manager is
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
                                                Stride => Stride, Offset => 0);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Texture_Manager.Setup_Buffer.");
-         raise;
    end Setup_Buffer;
 
    --  ------------------------------------------------------------------------
@@ -81,11 +77,6 @@ package body Texture_Manager is
       --  Set pixel size to 48 x 48
       FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);  --  Disable byte-alignment restriction
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Texture_Manager.Setup_Font.");
-         raise;
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
@@ -109,10 +100,6 @@ package body Texture_Manager is
 
       Setup_Buffer (Vertex_Buffer, X, Y, Scale);
       Setup_Texture (aTexture);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Texture_Manager.Setup_Graphic.");
-         raise;
    end Setup_Graphic;
 
    --  ------------------------------------------------------------------------
