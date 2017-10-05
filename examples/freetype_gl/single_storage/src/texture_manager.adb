@@ -10,8 +10,6 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Types.Colors;
 
-with FT;
-with FT.API;
 with Errors;
 with FT.Glyphs;
 with FT.Image;
@@ -24,7 +22,7 @@ package body Texture_Manager is
    use type Errors.Error_Code;
 
    theLibrary    : FT.Library_Ptr;
-   Face_Ptr      : FT.API.Face_Ptr;
+   Face_Ptr      : FT.Faces.Face_Ptr;
    Vertex_Data   : Vertex_Array;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
@@ -51,7 +49,7 @@ package body Texture_Manager is
      FT.Faces.Load_Character (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.Faces.Render_Mode_Mono);
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -105,7 +103,7 @@ package body Texture_Manager is
           (Face_Ptr, Character'Pos (Char), FT.Faces.Load_Render);
 
       --  Ensure that the glyph image is an anti-aliased bitmap
-      FT.Glyphs.Render_Glyph (Face_Ptr, FT.API.Render_Mode_Mono);
+      FT.Glyphs.Render_Glyph (Face_Ptr, FT.Faces.Render_Mode_Mono);
       FT.Utilities.Print_Character_Metadata (Face_Ptr, Char);
 
       Setup_Buffer (Vertex_Buffer, Char, X, Y, Scale);
