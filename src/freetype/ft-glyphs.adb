@@ -69,7 +69,7 @@ package body FT.Glyphs is
       return Object.Data.Bitmap_Left;
    end Bitmap_Left;
 
-   --  -------------------------------------------------------------------------
+   --  ------------------------------------------------------------------
 
    function Bitmap_Top (Object : Glyph_Slot_Reference)
                             return Interfaces.C.int is
@@ -77,7 +77,7 @@ package body FT.Glyphs is
       return Object.Data.Bitmap_Top;
    end Bitmap_Top;
 
-   --  -------------------------------------------------------------------------
+   --  ------------------------------------------------------------------
 
    function Advance (Object : Glyph_Slot_Reference) return Vector is
    begin
