@@ -1,6 +1,8 @@
 --  Program Store_Character
 --  Author Roger Mc Murtrie
 --  Created 22 September 2017
+--  This example demonstrates the storage of one, or more,
+--  textures for later, possibly selective, use.
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
