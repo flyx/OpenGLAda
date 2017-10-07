@@ -29,10 +29,14 @@ package body FT.Faces is
       end if;
    end Adjust;
 
+   --  ------------------------------------------------------------------------
+
    function Initialized (Object : Face_Reference) return Boolean is
    begin
       return Object.Data /= null;
    end Initialized;
+
+   --  ------------------------------------------------------------------------
 
    procedure Finalize (Object : in out Face_Reference) is
       Ptr : constant Face_Ptr := Object.Data;
