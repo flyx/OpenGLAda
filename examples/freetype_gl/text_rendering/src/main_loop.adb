@@ -35,7 +35,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
    Font_File_1     : String := "../fonts/NotoSerif-Regular.ttf";
-   Font_File_2     : String := "../fonts/NotoMono-Regular.ttf";
 
    --  ------------------------------------------------------------------------
 
@@ -60,13 +59,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
-      Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.", Pos_X, Pos_Y, Scale_1, Text_Colour);
-      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`", Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
-
-   exception
-      when  others =>
-         Put_Line ("An exception occurred in Main_Loop.Render.");
-         raise;
+      Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.",
+                       Pos_X, Pos_Y, Scale_1, Text_Colour);
+      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
+                       Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
    end Render;
 
    --  ------------------------------------------------------------------------
@@ -77,10 +73,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      FT.OGL.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                          Texture_ID, Projection_Matrix_ID, Colour_ID,
                          Projection_Matrix);
-   exception
-      when  others =>
-         Put_Line ("An exception occurred in Main_Loop.Render_The_Text.");
-         raise;
    end Render_The_Text;
 
    --  ------------------------------------------------------------------------
@@ -121,11 +113,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.OGL.Initialize_Font_Data (Font_File_2);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Main_Loop.Setup.");
-         raise;
+      FT.OGL.Initialize_Font_Data (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
