@@ -28,22 +28,25 @@ bindings to the following OpenGL-related libraries:
    include a wrapper to FreeType, the more low-level functionality has been
    excluded.
 
-OpenGLAda supports MacOSX, Windows and X11-based systems.
+OpenGLAda supports MacOSX, Windows and X11-based systems. API documentation can
+be found on the [project's homepage][4].
 
 ## Prerequisites
 
 In order to build OpenGLAda, you need to have:
 
- * A GNAT compiler¹. The GNAT/GCC binary release from [GnuAda][12] is known to
-   work as of November 2016 and is preferable if you do not fancy a GPL'd
-   runtime. A GPL'd version is available on [AdaCore's Libre Site][1],
-   though it is known to have issues at least on OSX 10.11². More information
+ * A GNAT compiler¹. Compilers known to work well with OpenGLAda are
+   [GnuAda][12], [AdaCore GNAT GPL 2017][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
- * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). Minimum
-   supported version is the one that comes with GNAT GPL 2012 (20120509). Do
-   not use `gnatmake` to build the project files, it won't work.
+ * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
+   can get it from [here][[16] (**NOTE: The gprbuild bundled in this zip is
+   known not to work. For the time being, if you're using TDM-GCC, replace
+   gprbuild with gnatmake in all commands even though that will tell you that
+   project support in gnatmake is deprecated and will soon be removed.** The
+   reason for this incompatibility has not been found yet).
  * An OpenGL implementation (usually comes bundled with your graphics driver)
- * Optionally [GLFW][3]
+ * Optionally [GLFW][3] (OpenGLAda is pretty useless without the ability to
+   create an OpenGL context.)
  * Optionally [FTGL][11]
 
 ¹: You may also be able to build OpenGLAda with another Ada compiler and/or
@@ -51,11 +54,6 @@ without using the `*.gpr` files. You just have to import the sources to your
 project and whichever build system you are using. I never used other Ada
 compilers apart from GNAT, so if I accidentally used some GNAT-specific features
 in the code, please drop me a message.
-
-²: With GNAT GPL 2016, runtime loading of OpenGL function pointers does not
-seem to work on OSX 10.11, see [this bug][13]. It is unknown whether this
-affects other OSX versions or operation systems. The exact cause for this error
-is unknown. Therefore, using GNAT/GCC is currently strongly recommended.
 
 ## Compilation
 
@@ -78,27 +76,88 @@ by executing:
 
 (Substitute `windows` with `x11` or `quartz` if needed.)
 
-## Detailed Instructions
+## Detailed Installation & Compilation Instructions
 
-### Windows / GNAT GPL 2017 / GLFW 3
+Each section has in its title the major version numbers of the environment in
+which it has been tested. Chances are that the instructions also work with other
+versions (e.g. on Windows 7 instead of Windows 10).
+
+### Windows 10 / GNAT GPL 2017 / GLFW 3
 
  * Download and install GNAT GPL 2017 Windows x86 from
    [AdaCore's Libre Site][1]. We assume you install it to `C:\GNAT\2017`. Make
-   sure the `bin` folder is in he path of your shell (whichever you are using).
+   sure the `bin` folder is in the `PATH` of your shell.
  * Download *32-bit Windows binaries* from the [GLFW download section][14]
    (tested with GLFW 3.2.1).
  * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw`
    folder into `C:\GNAT\2017\lib`.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gprbuild -P opengl_test.gpr -XWindowing_System=windows -XGLFW_Version=3
+        gprbuild -p -P opengl_test.gpr -XWindowing_System=windows -XGLFW_Version=3
 
- * This should produce executables in the `bin` folder inside OpenGLAda. Now
-   copy the `glfw3.dll` to that `bin` folder.
- * You should now be able to start the executables either by double-click using
-   the explorer or from the shell.
+   This should produce executables in the `bin` folder inside OpenGLAda.
+ * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
+   `glfw3.dll` from there to the `bin` folder. One of those two options is
+   necessary so that the binaries can find the dll.
+ * Some of the test binaries require to be launched from the `bin` folder as
+   working directory because they are loading shader files from hardcoded paths.
  * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
    for them to work.
+
+### Windows 10 / TDM-GCC 64bit / GLFW 3
+
+These instructions are for building 64bit binaries on Windows.
+
+ * Download and install the 64bit TDM-GCC compiler from [here][15]. In the
+   installation wizard, make sure to check the (by default unchecked) *ada*
+   option. Make sure the `bin` folder is in the `PATH` of your shell.
+
+<!-- These currently do not work – uncomment when fixed
+
+ * Download `gpr-tools.zip` from [here][16] and extract its contents to the
+   folder where you installed TDM-GCC (e.g. `C:\TDM-GCC-64\`).
+
+-->
+
+ * Download the *64-bit Windows binaries* from the [GLFW download section][14]
+   (tested with GLFW 3.2.1).
+ * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw-w64`
+   folder into `C:\TDM-GCC-64\lib`.
+ * Open your shell and navigate to the root folder of OpenGLAda. Execute:
+
+        gnatmake -p -P opengl_test.gpr -XWindowing_System=windows =XGLFW_Version=3
+
+   This should produce executables in the `bin` folder inside OpenGLAda.
+ * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
+   `glfw3.dll` from there to the `bin` folder. One of those two options is
+   necessary so that the binary can find the dll.
+ * Some of the test binaries require to be launched from the `bin` folder as
+   working directory because they are loading shader files from hardcoded paths.
+ * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
+   for them to work.
+
+### macOS High Sierra / GNAT GPL 2017 / GLFW 3
+
+ * Download and install GNAT GPL 2017 x86_64 Mac OS X from
+   [AdaCore's Libre Site][1]. We assume you install it to `/usr/local/gnat`. Make
+   sure the `bin` folder is in the `PATH` of your shell.
+ * There are multiple ways to install `glfw`; the most popular one is probably
+   using [Homebrew][18] and executing `brew install glfw`.
+ * Open your shell and navigate to the root folder of OpenGLAda. Execute:
+
+        gprbuild -p -P opengl_test.gpr -XWindowing_System=quartz -XGLFW_Version=3
+
+   This should produce executables in the `bin` folder inside OpenGLAda.
+ * Some of the test binaries require to be launched from the `bin` folder as
+   working directory because they are loading shader files from hardcoded paths.
+ * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
+   for them to work.
+
+### Linux
+
+Please refer to your package manager documentation. Most Linux distributions
+provide packages for GNAT and GLFW. On Debian, you need to install `gprbuild` as
+separate package.
 
 ## Using OpenGLAda in your project
 
@@ -126,7 +185,7 @@ in your *.gpr file:
 Alternatively, you can specify the path to the OpenGL project file in as
 environment variable:
 
-    export ADA_PROJECT_PATH=dependencies/OpenGLAda
+    export GPR_PROJECT_PATH=dependencies/OpenGLAda
 
 ... and then specify the dependency without the path:
 
@@ -167,17 +226,9 @@ scenario parameters:
 
 ### With other build systems
 
-You can add the OpenGLAda sources to your code, then use whatever build system
-you want. Just make sure that you link properly against your OpenGL
-implementation:
-
- * OS X: `-framework OpenGL -framework CoreFoundation`
- * Windows: `-lOpenGL32 -lGdi32`
- * X11-based (Linux, BSD, etc): `-lGL -lX11`
-
-If you're using GLFW, add `-lglfw` for GLFW 2 or `-lglfw3` for GLFW 3. If you're
-on Windows and link against GLFW as dynamic library, you also need to add
-`-lwinmm`. If you're using FTGL, add `-lftgl`.
+If you want to use another build system, take a look at the `.gpr` files bundled
+with OpenGLAda, they tell you which compiler and linker options you need to give
+in order to compile it.
 
 ## Installation
 
@@ -187,16 +238,13 @@ functionality on its own. Therefore, maintaining a library installing routine
 does not seem worth the effort - even less as it would be expected to support
 multiple platforms.
 
-## Tests
+## Examples
 
-As mentioned, OpenGLAda contains some tests. You can also see them as examples
-that demonstrate the basic usage of the API. After building them as described
-above, you can execute them in the `bin` directory. Some tests load shader
-files from the source directory by using relative paths, so they only work with
-`bin` as working directory.
+OpenGLAda comes bundled with a lot of examples. They have mostly been translated
+from C examples from OpenGL textbooks. They are located inside the `examples`
+folder. Each example has a separate `.gpr` file with which it can be built.
 
-For additional information and documentation, see the
-[project's homepage][4].
+Contributions of examples are always welcome.
 
 ## Developer Documentation
 
@@ -240,3 +288,7 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: https://github.com/flyx/OpenGLAda/issues/15
  [14]: http://www.glfw.org/download.html
+ [15]: http://tdm-gcc.tdragon.net/download
+ [16]: http://getadanow.com/#get_windows
+ [17]: http://tdm-gcc.tdragon.net/
+ [18]: https://brew.sh
