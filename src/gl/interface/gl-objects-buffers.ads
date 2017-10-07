@@ -64,9 +64,12 @@ package GL.Objects.Buffers is
    function Size        (Target : Buffer_Target) return Size;
    function Usage       (Target : Buffer_Target) return Buffer_Usage;
 
-
+   --  Unlike the underlying glDrawElements, this function takes the offset as
+   --  number of elements (not bytes). The correct byte value is calculated in
+   --  this wrapper based on the given Index_Type.
    procedure Draw_Elements (Mode : Connection_Mode; Count : Types.Size;
-                            Index_Type : Unsigned_Numeric_Type);
+                            Index_Type : Unsigned_Numeric_Type;
+                            Element_Offset : Natural := 0);
 
    overriding
    procedure Initialize_Id (Object : in out Buffer);

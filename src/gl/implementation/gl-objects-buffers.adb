@@ -91,9 +91,17 @@ package body GL.Objects.Buffers is
    end Allocate;
 
    procedure Draw_Elements (Mode : Connection_Mode; Count : Types.Size;
-                            Index_Type : Unsigned_Numeric_Type) is
+                            Index_Type : Unsigned_Numeric_Type;
+                            Element_Offset : Natural := 0) is
+      Element_Bytes : Natural;
    begin
-      API.Draw_Elements (Mode, Count, Index_Type, 0);
+      case Index_Type is
+         when UByte_Type => Element_Bytes := 1;
+         when UShort_Type => Element_Bytes := 2;
+         when UInt_Type => Element_Bytes := 4;
+      end case;
+      API.Draw_Elements (Mode, Count, Index_Type,
+                         Low_Level.IntPtr (Element_Bytes * Element_Offset));
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
