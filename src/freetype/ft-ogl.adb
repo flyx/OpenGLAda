@@ -108,10 +108,6 @@ package body FT.OGL is
         (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
          Bitmap_Image_Ptr);
       Char_Data.Texture := aTexture;
-   exception
-      when others =>
-         Put_Line ("An exception occurred in FT.OGL.Load_Texture.");
-         raise;
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
@@ -210,11 +206,6 @@ package body FT.OGL is
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
       end loop;
       GL.Toggles.Disable (GL.Toggles.Blend);
-
-   exception
-      when  others =>
-         Put_Line ("An exception occurred in FT.OGL.Render_Text.");
-         raise;
    end Render_Text;
 
    --  ------------------------------------------------------------------------
@@ -275,14 +266,9 @@ package body FT.OGL is
          Load_Texture (Face_Ptr, Char_Data, Width, Height, X_Offset, Y_Offset);
          Extended_Ascii_Data (index) := Char_Data;
       end loop;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in FT.OGL.Setup_Character_Textures.");
-         raise;
    end Setup_Character_Textures;
 
-   --  ------------------------------------------------------------------------
+      --  ------------------------------------------------------------------------
 
    procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String) is
       use GL.Types;
@@ -292,10 +278,6 @@ package body FT.OGL is
       FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
       --  Disable byte-alignment restriction
       GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in FT.OGL.Setup_Font.");
-         raise;
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
