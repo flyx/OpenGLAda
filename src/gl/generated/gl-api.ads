@@ -464,7 +464,7 @@ private package GL.API is
    pragma Import (StdCall, Disable_Client_State, "glDisableClientState");
    procedure Draw_Arrays (Mode : Connection_Mode; First : Int; Count : Size);
    pragma Import (StdCall, Draw_Arrays, "glDrawArrays");
-   procedure Draw_Elements (Mode : Connection_Mode; Count : Size; Index_Type : Unsigned_Numeric_Type; Indices : Low_Level.Zero);
+   procedure Draw_Elements (Mode : Connection_Mode; Count : Size; Index_Type : Unsigned_Numeric_Type; Indices : Low_Level.IntPtr);
    pragma Import (StdCall, Draw_Elements, "glDrawElements");
    procedure Load_Matrix (Value : Types.Doubles.Matrix4);
    pragma Import (StdCall, Load_Matrix, "glLoadMatrixd");

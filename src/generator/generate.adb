@@ -1,4 +1,5 @@
 with Ada.Command_Line;
+with Ada.Containers.Indefinite_Vectors;
 with Ada.Directories; use Ada.Directories;
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO;
@@ -8,6 +9,12 @@ with Specs;
 procedure Generate is
    Proc : Specs.Processor;
 
+   package Spec_Vectors is new Ada.Containers.Indefinite_Vectors
+     (Positive, String);
+
+   Spec_Paths : Spec_Vectors.Vector;
+   package Path_Sorting is new Spec_Vectors.Generic_Sorting;
+
    Source_Folder    : constant String := "src/gl/specs";
    Target_Folder    : constant String := "src/gl/generated";
    Interface_Folder : constant String := "src/gl/interface";
@@ -16,13 +23,18 @@ procedure Generate is
       Path : constant String := Full_Name (Directory_Entry);
    begin
       Ada.Text_IO.Put_Line ("Processing " & Path & " ...");
-      Specs.Parse_File (Proc, Path);
+      Spec_Paths.Append (Path);
       Ada.Text_IO.Put_Line ("Done processing " & Path & " .");
    end Process_File;
 
 begin
    Search (Source_Folder, "*.spec", (Ordinary_File => True, others => False),
-     Process_File'Access);
+           Process_File'Access);
+   Path_Sorting.Sort (Spec_Paths);
+   for Path of Spec_Paths loop
+      Specs.Parse_File (Proc, Path);
+   end loop;
+
    Create_Path (Target_Folder);
    declare
       use type Specs.Spec;
