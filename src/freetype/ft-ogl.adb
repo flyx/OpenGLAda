@@ -34,13 +34,14 @@ package body FT.OGL is
 
    type Character_Data_Vector is array (Natural range <>) of Character_Record;
 
-   Face_Ptr             : FT.Faces.Face_Reference;
    Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : Character_Data_Vector (0 .. 255);
 
-   procedure Setup_Character_Textures (Face_Ptr  : FT.Faces.Face_Reference);
-   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String);
+   procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference);
+   procedure Setup_Font (theLibrary : FT.Library_Reference;
+                         Face_Ptr   : out FT.Faces.Face_Reference;
+                         Font_File  : String);
 
    --  ------------------------------------------------------------------------
 
@@ -68,9 +69,10 @@ package body FT.OGL is
    procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
       theLibrary : FT.Library_Reference;
+      Face_Ptr   : FT.Faces.Face_Reference;
    begin
       theLibrary.Init;
-      Setup_Font (theLibrary, Font_File);
+      Setup_Font (theLibrary, Face_Ptr, Font_File);
       Setup_Character_Textures (Face_Ptr);
    end Initialize_Font_Data;
 
@@ -210,8 +212,7 @@ package body FT.OGL is
 
    --  -------------------------------------------------------------------------
 
-   procedure Setup_Character_Textures
-     (Face_Ptr  : FT.Faces.Face_Reference) is
+   procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference) is
       use GL.Objects.Buffers;
       use GL.Types;
       Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
@@ -256,7 +257,8 @@ package body FT.OGL is
 
       --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (theLibrary : FT.Library_Reference; Font_File : String) is
+   procedure Setup_Font (theLibrary : FT.Library_Reference;
+                         Face_Ptr   : out FT.Faces.Face_Reference; Font_File : String) is
       use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
