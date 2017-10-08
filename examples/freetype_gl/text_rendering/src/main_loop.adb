@@ -38,6 +38,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+--     procedure Print_Character_Metadata (Data : FT.OGL.Character_Record) is
+--        use GL.Types;
+--     begin
+--        Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
+--        Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
+--        Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
+--        Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
+--        Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
+--        New_Line;
+--     end Print_Character_Metadata;
+
+   --  ------------------------------------------------------------------------
+
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color);
 

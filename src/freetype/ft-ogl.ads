@@ -25,7 +25,6 @@ package FT.OGL is
    function Character_Data_To_String (Char : Character;
                                       Data : Character_Record) return String;
    procedure Initialize_Font_Data (Font_File : String);
-   procedure Print_Character_Metadata (Data : Character_Record);
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;

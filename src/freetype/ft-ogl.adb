@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
-
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
@@ -29,6 +27,8 @@ with FT.Glyphs;
 
 package body FT.OGL is
    use Interfaces.C;
+   OGL_Exception : Exception;
+
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
@@ -112,20 +112,6 @@ package body FT.OGL is
 
    -- --------------------------------------------------------------------------
 
-   procedure Print_Character_Metadata (Data : Character_Record) is
-      use GL.Types;
-      use FT.Faces;
-   begin
-      Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
-      Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
-      Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
-      Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
-      Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
-      New_Line;
-   end Print_Character_Metadata;
-
-   --  ------------------------------------------------------------------------
-
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
@@ -184,7 +170,7 @@ package body FT.OGL is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            Put_Line ("FT.OGL.Render_Text, aTexture is invalid.");
+            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid.";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
