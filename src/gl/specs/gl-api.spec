@@ -221,7 +221,7 @@ spec GL.API is
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
-                            Indices    : Low_Level.Zero) with
+                            Indices    : Low_Level.IntPtr) with
      Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
