@@ -1,3 +1,6 @@
+--  Program Render Text Example
+--  Author: Roger Mc Murtrie
+--  8 October 2017
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
