@@ -129,7 +129,12 @@ package body FT.OGL is
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
       Stride         : constant GL.Types.Int := 0;
-
+      Blend_State    : constant GL.Toggles.Toggle_State :=
+        GL.Toggles.State (GL.Toggles.Blend);
+      Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+                                  GL.Blending.Blend_Func_Src_Alpha;
+      One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+                                  GL.Blending.One_Minus_Src_Alpha;
       Char           : Character;
       Char_Data      : Character_Record;
       Char_Texture   : GL.Objects.Textures.Texture;
@@ -193,7 +198,8 @@ package body FT.OGL is
          --  (divide amount of 1/64th pixels by 64 to get amount of pixels))
          X_Orig := X_Orig + Single (Advance_X (Char_Data)) / 64.0 * Scale;
       end loop;
-      GL.Toggles.Disable (GL.Toggles.Blend);
+      GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
+      GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
    end Render_Text;
 
    --  ------------------------------------------------------------------------
