@@ -26,6 +26,4 @@ package FT.OGL is
                           Colour : GL.Types.Colors.Basic_Color;
                           Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4);
-private
-
 end FT.OGL;
