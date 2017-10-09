@@ -17,16 +17,17 @@
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
+with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Toggles;
+with GL.Uniforms;
 
 with FT.Faces;
 with FT.Glyphs;
 
-with Maths;
-with Program_Loader;
+--  with Program_Loader;
 
 package body FT.OGL is
    use Interfaces.C;
@@ -41,7 +42,7 @@ package body FT.OGL is
    end record;
 
    Render_Program     : GL.Objects.Programs.Program;
-   Projection_Matrix  : GL.Types.Singles.Matrix4;
+   Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
    OGL_Exception      : Exception;
 
     procedure Load_Vertex_Buffer is new
@@ -67,14 +68,12 @@ package body FT.OGL is
 
    --  ------------------------------------------------------------------------
 
-   procedure Initialize_Font_Data (Font_File : String) is
+   procedure Initialize_Font_Data (Font_File : String;
+                                   Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Types;
       theLibrary : FT.Library_Reference;
       Face_Ptr   : FT.Faces.Face_Reference;
    begin
-      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                                         Single (Window_Width), 0.1, -100.0,
-                                         Projection_Matrix);
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
@@ -130,10 +129,8 @@ package body FT.OGL is
 
    -- --------------------------------------------------------------------------
 
-   procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
-                          Text   : String; X, Y, Scale : GL.Types.Single;
+   procedure Render_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
-                          Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
@@ -170,6 +167,8 @@ package body FT.OGL is
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
       GL.Objects.Programs.Use_Program (Render_Program);
+
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       for index in Text'Range loop
          Char := Text (index);

@@ -18,7 +18,6 @@ with GL.Window;
 with Glfw.Windows.Context;
 
 with Maths;
-with Program_Loader;
 with Utilities;
 
 with FT.OGL;
@@ -26,7 +25,6 @@ with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   Render_Program        : GL.Objects.Programs.Program;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
@@ -35,8 +33,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-                              Colour : GL.Types.Colors.Basic_Color);
+--     procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
+--                                Colour : GL.Types.Colors.Basic_Color);
 
    --  ------------------------------------------------------------------------
 
@@ -53,11 +51,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Utilities.Clear_Background_Colour_And_Depth (Background);
-
+      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+                                         Single (Window_Width), 0.1, -100.0,
+                                         Projection_Matrix);
       FT.OGL.Render_Text  ("The Quick Brown Fox jumps over the zoo's Lazy Dog.",
-                       Pos_X, Pos_Y, Scale_1, Text_Colour);
+                            Pos_X, Pos_Y, Scale_1, Text_Colour, Projection_Matrix);
       FT.OGL.Render_Text  ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
-                       Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
+                            Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour, Projection_Matrix);
    end Render;
 
    --  ------------------------------------------------------------------------
@@ -74,7 +74,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
       use GL.Types;
-      use Program_Loader;
 
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
@@ -85,9 +84,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-
-      FT.OGL.Initialize_Font_Data (Font_File_1);
+      FT.OGL.Initialize_Font_Data (Font_File_1, Projection_Matrix);
    end Setup;
 
    --  ------------------------------------------------------------------------
@@ -105,7 +102,7 @@ begin
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 
-   Render_Program.Delete_Id;
+--     Render_Program.Delete_Id;
 exception
    when anError :  others =>
       Put_Line ("An exception occurred in Main_Loop.");
