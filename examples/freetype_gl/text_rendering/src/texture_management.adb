@@ -10,6 +10,7 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Toggles;
 
+with FT;
 with FT.Faces;
 with FT.Glyphs;
 
