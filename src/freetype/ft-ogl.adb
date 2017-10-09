@@ -25,6 +25,9 @@ with GL.Toggles;
 with FT.Faces;
 with FT.Glyphs;
 
+with Maths;
+with Program_Loader;
+
 package body FT.OGL is
    use Interfaces.C;
 
@@ -37,7 +40,9 @@ package body FT.OGL is
       Advance_X : GL.Types.Int := 0;
    end record;
 
-   OGL_Exception : Exception;
+   Render_Program     : GL.Objects.Programs.Program;
+   Projection_Matrix  : GL.Types.Singles.Matrix4;
+   OGL_Exception      : Exception;
 
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
@@ -67,6 +72,21 @@ package body FT.OGL is
       theLibrary : FT.Library_Reference;
       Face_Ptr   : FT.Faces.Face_Reference;
    begin
+      Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
+                                         Single (Window_Width), 0.1, -100.0,
+                                         Projection_Matrix);
+      Render_Program := Program_From
+          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
+           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
+      Use_Program (Render_Program);
+
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "projection_matrix");
+      Texture_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "text_sampler");
+      Colour_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "text_colour");
+
       theLibrary.Init;
       Setup_Font (theLibrary, Face_Ptr, Font_File);
       Setup_Character_Textures (Face_Ptr);
