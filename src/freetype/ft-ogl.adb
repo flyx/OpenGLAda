@@ -27,6 +27,16 @@ with FT.Glyphs;
 
 package body FT.OGL is
    use Interfaces.C;
+
+   type Character_Record is record
+      Texture   : GL.Objects.Textures.Texture;
+      Width     : GL.Types.Int := 0;
+      Rows      : GL.Types.Int := 0;
+      Left      : GL.Types.Int := 0;
+      Top       : GL.Types.Int := 0;
+      Advance_X : GL.Types.Int := 0;
+   end record;
+
    OGL_Exception : Exception;
 
     procedure Load_Vertex_Buffer is new
@@ -49,20 +59,6 @@ package body FT.OGL is
    begin
       return Data.Advance_X;
    end Advance_X;
-
-   --  ------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
 
    --  ------------------------------------------------------------------------
 
