@@ -77,7 +77,7 @@ package body FT.OGL is
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
-      Use_Program (Render_Program);
+      GL.Objects.Programs.Use_Program (Render_Program);
 
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "projection_matrix");
