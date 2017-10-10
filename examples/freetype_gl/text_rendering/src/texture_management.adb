@@ -39,7 +39,6 @@ package body Texture_Management is
    Vertex_Buffer        : GL.Objects.Buffers.Buffer;
    Extended_Ascii_Data  : Character_Data_Vector (0 .. 255);
 
-   procedure Print_Character_Metadata (Data : Character_Record);
    procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference);
    procedure Setup_Font (theLibrary : FT.Library_Reference;
                          Face_Ptr   : out FT.Faces.Face_Reference;
@@ -51,20 +50,6 @@ package body Texture_Management is
    begin
       return Data.Advance_X;
    end Advance_X;
-
-   --  ------------------------------------------------------------------------
-
-   function Character_Data_To_String (Char : Character;
-                                      Data : Character_Record) return String is
-      use GL.Types;
-   begin
-      return "Character" & Char & " Data" & Character'Val (10) &
-             "Width: " & GL.Types.Int'Image (Data.Width) & Character'Val (10) &
-             "Rows: " & GL.Types.Int'Image (Data.Rows) & Character'Val (10) &
-             "Left: " & GL.Types.Int'Image (Data.Left) & Character'Val (10) &
-             "Top: " & GL.Types.Int'Image (Data.Top) & Character'Val (10) &
-             "Advance X: " & GL.Types.Int'Image (Data.Advance_X) & " bits";
-   end Character_Data_To_String;
 
    --  ------------------------------------------------------------------------
 
@@ -115,20 +100,6 @@ package body Texture_Management is
    end Load_Texture;
 
    -- --------------------------------------------------------------------------
-
-   procedure Print_Character_Metadata (Data : Character_Record) is
-      use GL.Types;
-      use FT.Faces;
-   begin
-      Put_Line ("Width: " & GL.Types.Int'Image (Data.Width));
-      Put_Line ("Rows: " & GL.Types.Int'Image (Data.Rows));
-      Put_Line ("Left: " & GL.Types.Int'Image (Data.Left));
-      Put_Line ("Top: " & GL.Types.Int'Image (Data.Top));
-      Put_Line ("Advance X: " & GL.Types.Int'Image (Advance_X (Data)) & " bits");
-      New_Line;
-   end Print_Character_Metadata;
-
-   --  ------------------------------------------------------------------------
 
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
