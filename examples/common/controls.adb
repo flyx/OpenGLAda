@@ -10,7 +10,7 @@ with Maths;
 
 package body Controls is
     Half_Pi            : constant Single := 0.5 * Ada.Numerics.Pi;
-    -- Position, position of camera.
+    --  Position, position of camera.
     Position           : GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
     Horizontal_Angle   : Single := Ada.Numerics.Pi;
     Vertical_Angle     : Single := 0.0;
@@ -41,7 +41,7 @@ package body Controls is
         View_Angle         : Maths.Degree := Initial_View_Angle;
         X_Position         : Mouse.Coordinate := 0.00001;
         Y_Position         : Mouse.Coordinate := 0.00002;
-        -- Direction, the position of the target with respect to camera.
+        --  Direction, the position of the target with respect to camera.
         Direction          : Vector3;
         Right              : Vector3;
         Up                 : Vector3;
