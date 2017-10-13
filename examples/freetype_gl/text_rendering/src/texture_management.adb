@@ -1,18 +1,8 @@
 --------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <flyx@isobeef.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+
+with Interfaces.C;
+
+with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Blending;
@@ -24,12 +14,11 @@ with GL.Pixels;
 with GL.Toggles;
 with GL.Uniforms;
 
+with FT;
 with FT.Faces;
 with FT.Glyphs;
 
---  with Program_Loader;
-
-package body FT.OGL is
+package body Texture_Management is
    use Interfaces.C;
 
    type Character_Record is record
@@ -236,7 +225,7 @@ package body FT.OGL is
    procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference) is
       use GL.Objects.Buffers;
       use GL.Types;
-      Glyph_Slot     : constant Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
+      Glyph_Slot     : constant FT.Glyph_Slot_Reference := Face_Ptr.Glyph_Slot;
       Width          : GL.Types.Size;
       Height         : GL.Types.Size;
       X_Offset       : constant GL.Types.Int := 0;
@@ -255,7 +244,6 @@ package body FT.OGL is
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
-
       for index in Extended_Ascii_Data'Range loop
          --  Load_Render asks FreeType to create an 8-bit grayscale bitmap image
          --  that can be accessed via face->glyph->bitmap.
@@ -264,8 +252,8 @@ package body FT.OGL is
          --  Ensure that the glyph image is an anti-aliased bitmap
          FT.Glyphs.Render_Glyph (Glyph_Slot, FT.Faces.Render_Mode_Mono);
 
-         Width := GL.Types.Int (Glyph_Slot.Data.Bitmap.Width);
-         Height := GL.Types.Int (Glyph_Slot.Data.Bitmap.Rows);
+         Width := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Width);
+         Height := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Rows);
          Set_Char_Data (Char_Data, Width, Height,
                         GL.Types.Int (FT.Glyphs.Bitmap_Left (Glyph_Slot)),
                         GL.Types.Int (FT.Glyphs.Bitmap_Top (Glyph_Slot)),
@@ -291,4 +279,4 @@ package body FT.OGL is
 
    --  ------------------------------------------------------------------------
 
-end FT.OGL;
+end Texture_Management;

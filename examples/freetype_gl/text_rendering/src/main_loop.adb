@@ -21,7 +21,7 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with FT.OGL;
+with Texture_Management;
 with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
@@ -70,7 +70,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Basic_Color) is
    begin
-     FT.OGL.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
+     Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                          Texture_ID, Projection_Matrix_ID, Colour_ID,
                          Projection_Matrix);
    end Render_The_Text;
@@ -106,7 +106,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      FT.OGL.Initialize_Font_Data (Font_File_1);
+      Texture_Management.Initialize_Font_Data (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
