@@ -90,9 +90,10 @@ package GL.Pixels is
    type Framebuffer_Format is (Color_Index, Red, Green, Blue, Alpha, RGB, RGBA,
                                Luminance, Luminance_Alpha, BGR, BGRA);
 
-   type Data_Format is (Stencil_Index, Depth_Component, Red, RGB, RGBA, BGR,
-                        BGRA, RG, RG_Integer, Depth_Stencil, Red_Integer,
-                        RGB_Integer, RGBA_Integer, BGR_Integer, BGRA_Integer);
+   type Data_Format is (Stencil_Index, Depth_Component, Red,
+                        RGB, RGBA, BGR, BGRA, RG, RG_Integer, Depth_Stencil,
+                        Red_Integer, RGB_Integer, RGBA_Integer, BGR_Integer,
+                        BGRA_Integer);
 
    type Data_Type is (Byte, Unsigned_Byte, Short, Unsigned_Short, Int,
                       Unsigned_Int, Float, Bitmap, Unsigned_Byte_3_3_2,
