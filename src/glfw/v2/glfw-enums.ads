@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with Interfaces.C;
 
@@ -65,7 +52,7 @@ private package Glfw.Enums is
                     Key_Repeat           => 16#30005#,
                     Auto_Poll_Events     => 16#30006#);
    for Feature'Size use Interfaces.C.int'Size;
-   
+
    type Joystick_ID is (
       Joystick_1, Joystick_2, Joystick_3, Joystick_4, Joystick_5,
       Joystick_6, Joystick_7, Joystick_8, Joystick_9, Joystick_10,
@@ -80,7 +67,7 @@ private package Glfw.Enums is
       Joystick_16 => 15
    );
    for Joystick_ID'Size use Interfaces.C.int'Size;
-   
+
    type Joystick_Param is (Present, Axis, Buttons);
    for Joystick_Param use (Present => 16#50001#,
                            Axis    => 16#50002#,
