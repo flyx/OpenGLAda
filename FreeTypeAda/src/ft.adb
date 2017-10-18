@@ -27,7 +27,7 @@ package body FT is
       Finalize (Object);
       declare
          Code : constant Errors.Error_Code :=
-           API.FT_Init_FreeType (Object.Data);
+           API.FT_Init_FreeType (Object.Data'Unchecked_Access);
       begin
          if Code /= Errors.Ok then
             raise FreeType_Exception with "FT.Initialize failed" &

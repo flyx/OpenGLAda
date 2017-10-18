@@ -34,7 +34,7 @@ package FT.API.Glyphs is
    pragma Warnings (On, "8-bit Ada Boolean");
 
    function FT_Get_Glyph (Slot_Ptr : Glyph_Slot_Ptr;
-                          aGlyph   : out Glyph_Ptr)
+                          aGlyph   : access Glyph_Ptr)
                           return Errors.Error_Code;
    pragma Import (C, FT_Get_Glyph, "FT_Get_Glyph");
 

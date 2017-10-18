@@ -42,10 +42,10 @@ package body FT.Glyphs is
 
    procedure Get_Glyph (Object : Glyph_Slot_Reference;
                         Target : out Glyph_Reference) is
-      Ret  : Glyph_Ptr;
+      Ret  : aliased Glyph_Ptr;
       Code : Errors.Error_Code;
    begin
-      Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret);
+      Code := API.Glyphs.FT_Get_Glyph (Object.Data, Ret'Unchecked_Access);
       if Code /= Errors.Ok then
          raise FreeType_Exception with
            "FT.Faces.Glyphs.Get_Glyph error :" & Errors.Description (Code);
