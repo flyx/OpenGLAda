@@ -49,7 +49,7 @@ package GL.Pixels is
                             Compressed_RGB_BPTC_Unsigned_Float, R8_SNorm,
                             RG8_SNorm, RGB8_SNorm, RGBA8_SNorm, R16_SNorm,
                             RG16_SNorm, RGB16_SNorm, RGBA16_SNorm, RGB10_A2UI,
-                            Compressed_RGBA_ASTC_4x4,Compressed_RGBA_ASTC_5x4,
+                            Compressed_RGBA_ASTC_4x4, Compressed_RGBA_ASTC_5x4,
                             Compressed_RGBA_ASTC_5x5, Compressed_RGBA_ASTC_6x5,
                             Compressed_RGBA_ASTC_6x6, Compressed_RGBA_ASTC_8x5,
                             Compressed_RGBA_ASTC_8x6, Compressed_RGBA_ASTC_8x8,

@@ -15,7 +15,7 @@ package body GL.Fixed.Textures is
    end Set_Tex_Function;
 
    function Tex_Function return Texture_Function is
-      Ret : Texture_Function := Texture_Function'Val(0);
+      Ret : Texture_Function := Texture_Function'Val (0);
    begin
       API.Get_Tex_Env_Tex_Func (Enums.Textures.Texture_Env, Enums.Textures.Env_Mode,
                                 Ret);
@@ -31,7 +31,7 @@ package body GL.Fixed.Textures is
    end Set_RGB_Combine;
 
    function RGB_Combine return Combine_Function is
-      Ret : Combine_Function := Combine_Function'Val(0);
+      Ret : Combine_Function := Combine_Function'Val (0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_RGB, Ret);
@@ -47,7 +47,7 @@ package body GL.Fixed.Textures is
    end Set_Alpha_Combine;
 
    function Alpha_Combine return Alpha_Combine_Function is
-      Ret : Combine_Function := Combine_Function'Val(0);
+      Ret : Combine_Function := Combine_Function'Val (0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_Alpha, Ret);
@@ -69,7 +69,7 @@ package body GL.Fixed.Textures is
 
    function RGB_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind := Source_Kind'Val(0);
+      Ret   : Source_Kind := Source_Kind'Val (0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_RGB;
@@ -95,7 +95,7 @@ package body GL.Fixed.Textures is
 
    function Alpha_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind := Source_Kind'Val(0);
+      Ret   : Source_Kind := Source_Kind'Val (0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_Alpha;

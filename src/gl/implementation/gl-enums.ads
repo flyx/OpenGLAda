@@ -43,7 +43,7 @@ private package GL.Enums is
      Local_Viewer .. Two_Side;
 
    type Light_Param is (Ambient, Diffuse, Specular, Position,
-                        Spot_Direction, Spot_Exponent,Spot_Cutoff,
+                        Spot_Direction, Spot_Exponent, Spot_Cutoff,
                         Constant_Attenduation, Linear_Attenduation,
                         Quadratic_Attenduation);
 

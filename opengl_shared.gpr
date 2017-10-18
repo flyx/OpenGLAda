@@ -39,18 +39,14 @@ project OpenGL_Shared is
    end Builder;
    
    package Compiler is
+      Base_Switches := ("-gnat05", "-gnatwa", "-gnatwl", "-gnatwe",
+                        "-fstack-check", "-gnaty3abcefhiklmNprt");
       case Mode is
          when "debug" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnatwa",
-                                              "-g", "-E", "-gnatE",
-                                              "-fstack-check");
+            for Default_Switches ("ada") use Base_Switches &
+              ("-g", "-E", "-gnatE");
          when "release" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnatwa",
-                                              "-O2",
-                                              "-gnatn2",
-                                              "-fstack-check");
+            for Default_Switches ("ada") use Base_Switches & ("-O3", "-gnatn2");
       end case;
    end Compiler;
-   
-   
 end OpenGL_Shared;

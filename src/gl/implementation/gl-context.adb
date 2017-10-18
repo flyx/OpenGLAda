@@ -93,7 +93,7 @@ package body GL.Context is
       API.Get_Integer (Enums.Getter.Num_Extensions, Count'Access);
       if API.Get_Error = Errors.No_Error then
          -- we are on OpenGL 3
-         for i in 1 .. Count loop
+         for I in 1 .. Count loop
             declare
                Extension : constant String := C.Strings.Value
                  (API.Get_String_I (Enums.Getter.Extensions, UInt (I - 1)));

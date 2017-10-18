@@ -24,7 +24,7 @@ package GL.Rasterization is
    procedure Set_Polygon_Mode (Value : Polygon_Mode_Type);
    function Polygon_Mode return Polygon_Mode_Type;
 
-   procedure Set_Point_Size (Value: Single);
+   procedure Set_Point_Size (Value : Single);
    function Point_Size return Single;
    function Point_Size_Range return Singles.Vector2;
    function Point_Size_Granularity return Single;

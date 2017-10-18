@@ -7,7 +7,7 @@ with GL.API;
 
 package body GL.Objects.Textures.With_3D_Loader is
 
-   procedure Load_Empty_Texture (Object: Target;
+   procedure Load_Empty_Texture (Object : Target;
                                  Level : Mipmap_Level;
                                  Internal_Format : Pixels.Internal_Format;
                                  Width, Height, Depth : Types.Size) is
@@ -36,7 +36,7 @@ package body GL.Objects.Textures.With_3D_Loader is
    procedure Load_Sub_Image_From_Data
      (Object : Fillable_Target;
       Level  : Mipmap_Level;
-       X_Offset, Y_Offset :Int;
+       X_Offset, Y_Offset : Int;
        Width, Height : Size;
        Format        : Pixels.Data_Format;
        Data_Type     : Pixels.Data_Type;

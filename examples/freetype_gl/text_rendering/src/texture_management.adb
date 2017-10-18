@@ -2,8 +2,6 @@
 
 with Interfaces.C;
 
-with Ada.Text_IO; use Ada.Text_IO;
-
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;

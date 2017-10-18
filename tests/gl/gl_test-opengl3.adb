@@ -32,11 +32,11 @@ procedure GL_Test.OpenGL3 is
       Triangle1 : constant Singles.Vector3_Array
         := ((-0.3,  0.5, -1.0),
             (-0.8, -0.5, -1.0),
-            ( 0.2, -0.5, -1.0));
+            (0.2, -0.5, -1.0));
       Triangle2 : constant Singles.Vector3_Array
         := ((-0.2,  0.5, -1.0),
-            ( 0.3, -0.5, -1.0),
-            ( 0.8,  0.5, -1.0));
+            (0.3, -0.5, -1.0),
+            (0.8,  0.5, -1.0));
       Color_Array : constant Colors.Basic_Color_Array
         := ((1.0, 0.0, 0.0),
             (0.0, 1.0, 0.0),
@@ -62,7 +62,7 @@ procedure GL_Test.OpenGL3 is
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
    end Load_Data;
 
-   procedure Load_Shaders (Program :out GL.Objects.Programs.Program) is
+   procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is
       Vertex_Shader   : GL.Objects.Shaders.Shader
         (Kind => GL.Objects.Shaders.Vertex_Shader);
       Fragment_Shader : GL.Objects.Shaders.Shader
@@ -135,11 +135,11 @@ begin
       Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
 
       Array1.Bind;
-      GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 
       Array2.Bind;
       GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
-      GL.Objects.Vertex_Arrays.Draw_Arrays(Triangles, 0, 3);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 
       GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
 

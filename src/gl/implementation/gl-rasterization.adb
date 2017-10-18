@@ -59,7 +59,7 @@ package body GL.Rasterization is
       return Ret;
    end Polygon_Mode;
 
-   procedure Set_Point_Size (Value: Single) is
+   procedure Set_Point_Size (Value : Single) is
    begin
       API.Set_Point_Size (Value);
       Raise_Exception_On_OpenGL_Error;

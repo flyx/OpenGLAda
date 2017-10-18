@@ -1,7 +1,7 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Glfw.Api;
+with Glfw.API;
 with Glfw.Enums;
 
 package body Glfw.Events.Keys is
@@ -89,7 +89,7 @@ package body Glfw.Events.Keys is
 
    function Pressed (Query : Key) return Boolean is
    begin
-      return Api.Get_Key (Query) = Press;
+      return API.Get_Key (Query) = Press;
    end Pressed;
 
    procedure Raw_Key_Callback (Subject : Key; Action : Button_State);
@@ -120,9 +120,9 @@ package body Glfw.Events.Keys is
    begin
       User_Key_Callback := Callback;
       if Callback /= null then
-         Api.Set_Key_Callback (Raw_Key_Callback'Access);
+         API.Set_Key_Callback (Raw_Key_Callback'Access);
       else
-         Api.Set_Key_Callback (null);
+         API.Set_Key_Callback (null);
       end if;
    end Set_Key_Callback;
 
@@ -130,36 +130,36 @@ package body Glfw.Events.Keys is
    begin
       User_Character_Callback := Callback;
       if Callback /= null then
-         Api.Set_Char_Callback (Raw_Character_Callback'Access);
+         API.Set_Char_Callback (Raw_Character_Callback'Access);
       else
-         Api.Set_Char_Callback (null);
+         API.Set_Char_Callback (null);
       end if;
    end Set_Character_Callback;
 
    procedure Toggle_Key_Repeat  (Enable  : Boolean) is
    begin
       if Enable then
-         Api.Enable (Enums.Key_Repeat);
+         API.Enable (Enums.Key_Repeat);
       else
-         Api.Disable (Enums.Key_Repeat);
+         API.Disable (Enums.Key_Repeat);
       end if;
    end Toggle_Key_Repeat;
 
    procedure Toggle_Sticky_Keys (Enable  : Boolean) is
    begin
       if Enable then
-         Api.Enable (Enums.Sticky_Keys);
+         API.Enable (Enums.Sticky_Keys);
       else
-         Api.Disable (Enums.Sticky_Keys);
+         API.Disable (Enums.Sticky_Keys);
       end if;
    end Toggle_Sticky_Keys;
 
    procedure Toggle_System_Keys (Enable  : Boolean) is
    begin
       if Enable then
-         Api.Enable (Enums.System_Keys);
+         API.Enable (Enums.System_Keys);
       else
-         Api.Disable (Enums.System_Keys);
+         API.Disable (Enums.System_Keys);
       end if;
    end Toggle_System_Keys;
 

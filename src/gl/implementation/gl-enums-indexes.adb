@@ -5,7 +5,7 @@ with GL.API;
 
 package body GL.Enums.Indexes is
 
-   function Representation(Value : Index) return Int is
+   function Representation (Value : Index) return Int is
    begin
       return Min_Representation + Value;
    end Representation;

@@ -29,7 +29,7 @@ package body Glfw.Windows.Context is
       if Raw = System.Null_Address then
          return null;
       else
-         return API.Get_Window_User_Pointer (Raw);
+         return Window_Ptr (Raw);
       end if;
    end Current;
 

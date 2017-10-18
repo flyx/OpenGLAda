@@ -8,7 +8,7 @@ with GL.API;
 with GL.Enums;
 
 package body GL.Objects.Programs is
-   procedure Attach(Subject : Program; Shader : Shaders.Shader) is
+   procedure Attach (Subject : Program; Shader : Shaders.Shader) is
    begin
       API.Attach_Shader (Subject.Reference.GL_Id, Shader.Raw_Id);
       Raise_Exception_On_OpenGL_Error;
@@ -20,7 +20,7 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Link;
 
-   function Program_Bool_Param (Subject : Program; Param: Enums.Program_Param)
+   function Program_Bool_Param (Subject : Program; Param : Enums.Program_Param)
                                 return Boolean is
       Value : Int := 0;
    begin

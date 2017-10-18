@@ -240,7 +240,7 @@ package body GL.Objects.Textures is
    end Destructor;
 
    procedure Initialize_Id (Object : in out Texture) is
-      New_Id : Low_Level.UInt_Array (1..2) := (1 => 0, 2 => 0);
+      New_Id : Low_Level.UInt_Array (1 .. 2) := (1 => 0, 2 => 0);
    begin
       API.Gen_Textures (1, New_Id (1)'Access);
       Raise_Exception_On_OpenGL_Error;

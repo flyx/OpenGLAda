@@ -187,7 +187,7 @@ package body GL.Attributes is
    begin
       API.UInts.Vertex_Attrib2v (Index, Value);
       Raise_Exception_On_OpenGL_Error;
-   end Set_Uint;
+   end Set_UInt;
    procedure Set_UInt (Index : Attribute; V1, V2, V3 : UInt) is
    begin
       API.UInts.Vertex_Attrib3 (Index, V1, V2, V3);

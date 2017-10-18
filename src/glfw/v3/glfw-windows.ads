@@ -130,4 +130,7 @@ private
    type Window is new Ada.Finalization.Controlled with record
       Handle : System.Address := System.Null_Address;
    end record;
+
+   function Window_Ptr (Raw : System.Address)
+                        return not null access Window'Class;
 end Glfw.Windows;
