@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with GL.Enums.Textures;
 with GL.Helpers;
@@ -28,7 +15,7 @@ package body GL.Fixed.Textures is
    end Set_Tex_Function;
 
    function Tex_Function return Texture_Function is
-      Ret : Texture_Function := Texture_Function'Val(0);
+      Ret : Texture_Function := Texture_Function'Val (0);
    begin
       API.Get_Tex_Env_Tex_Func (Enums.Textures.Texture_Env, Enums.Textures.Env_Mode,
                                 Ret);
@@ -44,7 +31,7 @@ package body GL.Fixed.Textures is
    end Set_RGB_Combine;
 
    function RGB_Combine return Combine_Function is
-      Ret : Combine_Function := Combine_Function'Val(0);
+      Ret : Combine_Function := Combine_Function'Val (0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_RGB, Ret);
@@ -60,7 +47,7 @@ package body GL.Fixed.Textures is
    end Set_Alpha_Combine;
 
    function Alpha_Combine return Alpha_Combine_Function is
-      Ret : Combine_Function := Combine_Function'Val(0);
+      Ret : Combine_Function := Combine_Function'Val (0);
    begin
       API.Get_Tex_Env_Combine_Func (Enums.Textures.Texture_Env,
                                     Enums.Textures.Combine_Alpha, Ret);
@@ -82,7 +69,7 @@ package body GL.Fixed.Textures is
 
    function RGB_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind := Source_Kind'Val(0);
+      Ret   : Source_Kind := Source_Kind'Val (0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_RGB;
@@ -108,7 +95,7 @@ package body GL.Fixed.Textures is
 
    function Alpha_Source (Index : Source_Index) return Source_Kind is
       Param : Enums.Textures.Env_Parameter;
-      Ret   : Source_Kind := Source_Kind'Val(0);
+      Ret   : Source_Kind := Source_Kind'Val (0);
    begin
       case Index is
          when 0 => Param := Enums.Textures.Src0_Alpha;

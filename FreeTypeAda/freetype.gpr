@@ -1,0 +1,45 @@
+library project FreeType is
+   for Languages use ("ada");
+   for Library_Name use "FreeTypeAda";
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+
+   type Library_Kinds is ("static", "relocatable");
+   Library_Kind : Library_Kinds := external ("Library_Type", "static");
+
+   type Mode_Type is ("debug", "release");
+   Mode : Mode_Type := external ("Mode", "debug");
+
+   for Library_Kind use Library_Kind;
+
+   package Ide is
+      for Vcs_Kind use "Git";
+   end Ide;
+
+   package Builder is
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use ("-s", "-gnatE", "-g");
+         when "release" =>
+            for Default_Switches ("ada") use ("-s");
+      end case;
+   end Builder;
+
+   package Compiler is
+      Base_Switches := ("-gnat05", "-gnatwa", "-gnatwl",
+                        "-gnaty3abcefhiklmNprt", "-fstack-check");
+      case Mode is
+         when "debug" =>
+            for Default_Switches ("ada") use Base_Switches &
+              ("-gnata", "-E", "-g");
+         when "release" =>
+            for Default_Switches ("ada") use Base_Switches & ("-O3");
+      end case;
+   end Compiler;
+
+   package Linker is
+      for Linker_Options use ("-l" & external ("FREETYPE_LIBRARY_NAME",
+                                               "freetype"));
+   end Linker;
+end FreeType;

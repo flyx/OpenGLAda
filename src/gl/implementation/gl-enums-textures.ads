@@ -1,24 +1,11 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 private with GL.Low_Level;
 
 package GL.Enums.Textures is
    pragma Preelaborate;
-   
+
    -- Texture_Kind is declared in GL.Low_Level.Enums to be accessible for
    -- OpenCLAda
 
@@ -58,15 +45,15 @@ package GL.Enums.Textures is
                           Src0_Alpha, Src1_Alpha, Src2_Alpha, Operand0_RGB,
                           Operand1_RGB, Operand2_RGB, Operand0_Alpha,
                           Operand1_Alpha, Operand2_Alpha, Coord_Replace);
-   
+
    type Level_Parameter is (Width, Height, Internal_Format, Red_Size,
                             Green_Size, Blue_Size, Alpha_Size, Luminance_Size,
                             Intensity_Size,  Compressed_Image_Size, Compressed,
                             Depth_Size, Red_Type, Green_Type, Blue_Type,
                             Alpha_Type, Depth_Type, Buffer_Offset, Buffer_Size);
-   
+
    Texture_Unit_Start_Rep : constant := 16#84C0#;
-   
+
    -- oh god why
    --type Texture_Unit is (Texture0,  Texture1,  Texture2,  Texture3,  Texture4,
    --                      Texture5,  Texture6,  Texture7,  Texture8,  Texture9,
@@ -89,7 +76,7 @@ private
    for Env_Parameter use (Alpha_Scale    => 16#0D1C#,
                           Env_Mode       => 16#2200#,
                           Env_Color      => 16#2201#,
-                          Lod_Bias       => 16#8501#,
+                          LoD_Bias       => 16#8501#,
                           Combine_RGB    => 16#8571#,
                           Combine_Alpha  => 16#8572#,
                           RGB_Scale      => 16#8573#,
@@ -107,7 +94,7 @@ private
                           Operand2_Alpha => 16#859A#,
                           Coord_Replace  => 16#8862#);
    for Env_Parameter'Size use Low_Level.Enum'Size;
-   
+
    for Level_Parameter use (Width           => 16#1000#,
                             Height          => 16#1001#,
                             Internal_Format => 16#1002#,
@@ -128,7 +115,7 @@ private
                             Buffer_Offset   => 16#919D#,
                             Buffer_Size     => 16#919E#);
    for Level_Parameter'Size use Low_Level.Enum'Size;
-   
+
    --for Texture_Unit use (Texture0  => 16#84C0#,
    --                      Texture1  => 16#84C1#,
    --                      Texture2  => 16#84C2#,

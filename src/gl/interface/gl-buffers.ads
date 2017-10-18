@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with GL.Low_Level;
 with GL.Types.Colors;
@@ -20,18 +7,18 @@ with GL.Culling;
 
 package GL.Buffers is
    pragma Preelaborate;
-   
+
    use GL.Types;
-   
+
    type Buffer_Bits is record
       Depth   : Boolean := False;
       Accum   : Boolean := False;
       Stencil : Boolean := False;
       Color   : Boolean := False;
    end record;
-   
+
    subtype Depth is Double range 0.0 .. 1.0;
-   
+
    subtype Stencil_Index is Int;
 
    type Stencil_Action is (Zero, Invert, Keep, Replace,
@@ -44,7 +31,7 @@ package GL.Buffers is
    type Color_Buffer_Selector is (None, Front_Left,
                                   Front_Right, Back_Left, Back_Right,
                                   Front, Back, Left, Right, Front_And_Back);
-   
+
    -- defined here because of following subtype declaration
    for Color_Buffer_Selector use (None           => 0,
                                   Front_Left     => 16#0400#,
@@ -89,19 +76,19 @@ package GL.Buffers is
      range Culling.Front .. Culling.Back;
 
    procedure Clear (Bits : Buffer_Bits);
-   
+
    procedure Set_Active_Buffer (Selector : Explicit_Color_Buffer_Selector);
    procedure Set_Active_Buffers (List : Explicit_Color_Buffer_List);
-   
+
    procedure Set_Color_Clear_Value (Value : Colors.Color);
    function Color_Clear_Value return Colors.Color;
-   
+
    procedure Set_Depth_Clear_Value (Value : Depth);
    function Depth_Clear_Value return Depth;
-   
+
    procedure Set_Stencil_Clear_Value (Value : Stencil_Index);
    function Stencil_Clear_Value return Stencil_Index;
-   
+
    -- dropped in OpenGL 3
    procedure Set_Accum_Clear_Value (Value : Colors.Color);
    function Accum_Clear_Value return Colors.Color;
@@ -146,22 +133,22 @@ package GL.Buffers is
    function Stencil_Mask (Face : Single_Face_Selector) return UInt;
 
    -- The following procedures are available since OpenGL 3.0
-   
+
    -- for one or multiple color buffers
    procedure Clear_Color_Buffers (Selector : Base_Color_Buffer_Selector;
                                   Value    : Colors.Color);
-   
+
    -- for one specific draw buffer
    procedure Clear_Draw_Buffer (Index : Draw_Buffer_Index;
                                 Value : Colors.Color);
-   
+
    procedure Clear_Depth_Buffer (Value : Depth);
-   
+
    procedure Clear_Stencil_Buffer (Value : Stencil_Index);
-   
+
    procedure Clear_Depth_And_Stencil_Buffer (Depth_Value   : Depth;
                                              Stencil_Value : Stencil_Index);
-   
+
 private
    for Buffer_Bits use record
       Depth   at 0 range 8 .. 8;
@@ -203,7 +190,7 @@ private
                                            Color_Attachment14 => 16#8CEE#,
                                            Color_Attachment15 => 16#8CEF#);
    for Explicit_Color_Buffer_Selector'Size use Low_Level.Enum'Size;
-   
+
    pragma Convention (C, Explicit_Color_Buffer_List);
-   
+
 end GL.Buffers;

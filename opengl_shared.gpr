@@ -21,7 +21,7 @@ project OpenGL_Shared is
    Auto_Exceptions : Toggle_Type := external ("Auto_Exceptions", "enabled");
    
    type Library_Kinds is ("static", "relocatable");
-   Library_Kind : Library_Kinds := external ("LIBRARY_TYPE", "static");
+   Library_Kind : Library_Kinds := external ("Library_Type", "static");
 
    for Library_Kind use Library_Kind;
    
@@ -32,27 +32,21 @@ project OpenGL_Shared is
    package Builder is
       case Mode is
          when "debug" =>
-            for Default_Switches ("ada") use ("-s",
-                                              "-gnatE",
-                                              "-g");
+            for Default_Switches ("ada") use ("-s", "-gnatE", "-g");
          when "release" =>
             for Default_Switches ("ada") use ("-s");
       end case;
    end Builder;
    
    package Compiler is
+      Base_Switches := ("-gnat05", "-gnatwa", "-gnatwl", "-gnatwe",
+                        "-fstack-check", "-gnaty3abcefhiklmNprt");
       case Mode is
          when "debug" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnatwa",
-                                              "-g",
-                                              "-fstack-check");
+            for Default_Switches ("ada") use Base_Switches &
+              ("-g", "-E", "-gnatE");
          when "release" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnatwa",
-                                              "-O2",
-                                              "-gnatn2",
-                                              "-fstack-check");
+            for Default_Switches ("ada") use Base_Switches & ("-O3", "-gnatn2");
       end case;
    end Compiler;
-   
-   
 end OpenGL_Shared;

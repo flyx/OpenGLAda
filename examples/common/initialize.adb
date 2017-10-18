@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Glfw;
@@ -38,7 +37,8 @@ procedure Initialize (Main_Window  : in out Glfw.Windows.Window;
 
    Window_Width  : constant Glfw.Size := 800;
    Window_Height : constant Glfw.Size := 600;
-   Cursor        : Glfw.Input.Mouse.Cursor_Mode := Glfw.Input.Mouse.Hidden;
+   Cursor        : constant Glfw.Input.Mouse.Cursor_Mode :=
+     Glfw.Input.Mouse.Hidden;
 begin
    Set_Window_Hints;
    Main_Window.Init (Window_Width, Window_Height, Window_Title);

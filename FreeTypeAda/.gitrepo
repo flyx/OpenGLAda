@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:flyx/FreeTypeAda.git
+	branch = master
+	commit = 67ece44224bf550b7a1742b1845e27434e89d462
+	parent = d077dc7446c165c82e33cbd9f4427e870d1e0ad9
+	cmdver = 0.3.1

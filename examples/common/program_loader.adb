@@ -1,11 +1,8 @@
 
 with Ada.Directories;
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Files;
-with GL.Objects.Programs;
-with GL.Objects.Shaders;
 
 package body Program_Loader is
 
@@ -31,7 +28,8 @@ package body Program_Loader is
       for I in List'Range loop
          declare
             My_Shader : GL.Objects.Shaders.Shader (List (I).Kind);
-            File_Path : String := Ada.Strings.Unbounded.To_String (List (I).Path);
+            File_Path : constant String :=
+              Ada.Strings.Unbounded.To_String (List (I).Path);
          begin
             if Ada.Directories.Exists (File_Path) then
                My_Shader.Initialize_Id;
