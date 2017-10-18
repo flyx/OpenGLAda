@@ -3,7 +3,6 @@
 
 with System;
 with Interfaces.C.Pointers;
-with Interfaces.C.Strings;
 
 with FTGL.Errors;
 with FTGL.Fonts;

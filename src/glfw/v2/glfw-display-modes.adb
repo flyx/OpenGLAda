@@ -12,9 +12,9 @@ package body Glfw.Display.Modes is
    begin
       loop
          declare
-            Raw_Modes : Api.Video_Mode_List (1 .. Max_Modes);
+            Raw_Modes : API.Video_Mode_List (1 .. Max_Modes);
          begin
-            Mode_Count := Integer (Api.Get_Video_Modes (Raw_Modes (1) (1)'Address,
+            Mode_Count := Integer (API.Get_Video_Modes (Raw_Modes (1) (1)'Address,
               C.int (Max_Modes)));
 
             if (Mode_Count < Max_Modes) then
@@ -40,9 +40,9 @@ package body Glfw.Display.Modes is
 
 
    function Desktop_Mode return Mode is
-      Raw_Mode : aliased Api.Raw_Video_Mode;
+      Raw_Mode : aliased API.Raw_Video_Mode;
    begin
-      Api.Get_Desktop_Mode (Raw_Mode (1)'Access);
+      API.Get_Desktop_Mode (Raw_Mode (1)'Access);
       return Mode'(Width      => Natural (Raw_Mode (1)),
                    Height     => Natural (Raw_Mode (2)),
                    Red_Bits   => Natural (Raw_Mode (3)),

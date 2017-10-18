@@ -242,7 +242,7 @@ package body GL.Objects.Framebuffers is
          when Low_Level.Enums.Read => return (1 => Low_Level.Enums.Read);
          when Low_Level.Enums.Draw => return (1 => Low_Level.Enums.Draw);
          when Low_Level.Enums.Read_Draw =>
-            return (1 =>Low_Level.Enums.Draw, 2 => Low_Level.Enums.Read);
+            return (1 => Low_Level.Enums.Draw, 2 => Low_Level.Enums.Read);
       end case;
    end Backend_Framebuffer_Targets;
    pragma Inline (Backend_Framebuffer_Targets);

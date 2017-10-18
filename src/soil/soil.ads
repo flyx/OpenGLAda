@@ -105,7 +105,6 @@ private
    for Image_Save_Type'Size use Interfaces.C.int'Size;
 
    pragma Convention (C, Cubemap_Layout);
-   pragma Pack (Cubemap_Layout);
 
    type Bool is new Boolean;
    for Bool use (False => 0, True => 1);

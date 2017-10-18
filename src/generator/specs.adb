@@ -717,7 +717,7 @@ package body Specs is
                if Item.Kind = Dynamic then
                   Put_Line (Target, "   " & Spec_Name &
                     '.' & To_String (Item.D_Name) & " := Load_" &
-                    Indexed_Name ('T', Item.Sig_Id) & "(""" &
+                    Indexed_Name ('T', Item.Sig_Id) & " (""" &
                     To_String (Item.D_GL_Name) & """);");
                end if;
             end loop;

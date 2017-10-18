@@ -3,6 +3,8 @@ generic
    type Real is digits <>;
 
 package Quaternions is
+   pragma Elaborate_Body;
+
    type Quaternion is record
       A, B, C, D : Real;
    end record;

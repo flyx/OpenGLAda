@@ -311,12 +311,12 @@ private package Glfw.API is
                   External_Name => "glfwGetWindowAttrib");
 
    procedure Set_Window_User_Pointer (Window  : System.Address;
-                                      Pointer : not null access Windows.Window'Class);
+                                      Pointer : System.Address);
    pragma Import (Convention => C, Entity => Set_Window_User_Pointer,
                   External_Name => "glfwSetWindowUserPointer");
 
    function Get_Window_User_Pointer (Window  : System.Address)
-                                     return not null access Windows.Window'Class;
+                                     return System.Address;
    pragma Import (Convention => C, Entity => Get_Window_User_Pointer,
                   External_Name => "glfwGetWindowUserPointer");
 

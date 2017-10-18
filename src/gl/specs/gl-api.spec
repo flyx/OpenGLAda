@@ -111,7 +111,7 @@ spec GL.API is
    function Get_String (Name : Enums.Getter.String_Parameter)
                         return C.Strings.chars_ptr is Static ("glGetString");
    function Get_String_I (Name  : Enums.Getter.String_Parameter;
-                          Index : Uint) return C.Strings.chars_ptr is
+                          Index : UInt) return C.Strings.chars_ptr is
      Dynamic ("glGetStringi");
 
    -----------------------------------------------------------------------------
@@ -998,7 +998,7 @@ spec GL.API is
       Param : out Objects.Shaders.Shader_Type) with
      Dynamic => "glGetShaderiv", Wrapper => "GL.Objects.Shaders.Create_From_Id";
    function Create_Shader (Shader_Type : Objects.Shaders.Shader_Type)
-                          return Uint with
+                          return UInt with
      Dynamic => "glCreateShader", Wrapper => "GL.Objects.Shaders.Initialize_Id";
    procedure Delete_Shader (Shader : UInt) with Dynamic => "glDeleteShader";
    procedure Shader_Source

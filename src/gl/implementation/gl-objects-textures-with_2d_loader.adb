@@ -37,7 +37,7 @@ package body GL.Objects.Textures.With_2D_Loader is
    procedure Load_Sub_Image_From_Data
      (Object : Fillable_Target;
       Level  : Mipmap_Level;
-       X_Offset, Y_Offset :Int;
+       X_Offset, Y_Offset : Int;
        Width, Height : Size;
        Format        : Pixels.Data_Format;
        Data_Type     : Pixels.Data_Type;

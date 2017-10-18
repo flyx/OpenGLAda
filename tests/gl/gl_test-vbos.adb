@@ -30,7 +30,6 @@ procedure GL_Test.VBOs is
    end record;
    for Colored_Vertex'Size use Double'Size * 3 + Single'Size * 4;
    pragma Convention (C, Colored_Vertex);
-   pragma Pack (Colored_Vertex);
 
    type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
 
@@ -54,10 +53,10 @@ begin
       use GL.Buffers;
 
       Cube : constant Colored_Vertices :=
-        ((( 0.9,  0.9,  0.9), (0.0, 0.0, 0.0, 0.0)),
-         (( 0.9,  0.9, -0.9), (1.0, 0.0, 0.0, 0.0)),
-         (( 0.9, -0.9, -0.9), (1.0, 1.0, 0.0, 0.0)),
-         (( 0.9, -0.9,  0.9), (0.0, 1.0, 0.0, 0.0)),
+        (((0.9,  0.9,  0.9), (0.0, 0.0, 0.0, 0.0)),
+         ((0.9,  0.9, -0.9), (1.0, 0.0, 0.0, 0.0)),
+         ((0.9, -0.9, -0.9), (1.0, 1.0, 0.0, 0.0)),
+         ((0.9, -0.9,  0.9), (0.0, 1.0, 0.0, 0.0)),
          ((-0.9,  0.9,  0.9), (0.0, 1.0, 0.0, 0.0)),
          ((-0.9,  0.9, -0.9), (0.0, 1.0, 1.0, 0.0)),
          ((-0.9, -0.9, -0.9), (1.0, 1.0, 1.0, 0.0)),

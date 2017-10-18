@@ -31,7 +31,7 @@ package GL.Uniforms is
 
    procedure Set_Int (Location : Uniform; Value          : Int);
    procedure Set_Int (Location : Uniform; V1, V2         : Int);
-   procedure Set_Int(Location : Uniform; Value          : Ints.Vector2);
+   procedure Set_Int (Location : Uniform; Value          : Ints.Vector2);
    procedure Set_Int (Location : Uniform; V1, V2, V3     : Int);
    procedure Set_Int (Location : Uniform; Value          : Ints.Vector3);
    procedure Set_Int (Location : Uniform; V1, V2, V3, V4 : Int);

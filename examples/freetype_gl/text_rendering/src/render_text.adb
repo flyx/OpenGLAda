@@ -7,8 +7,6 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Pixels;
-
 with Glfw;
 with Glfw.Windows;
 
@@ -17,7 +15,7 @@ with Main_Loop;
 
 procedure Render_Text is
    Main_Window  : Glfw.Windows.Window;
-   Window_Title : String := "Render Text Example";
+   Window_Title : constant String := "Render Text Example";
 begin
    Glfw.Init;
    Initialize (Main_Window, Window_Title);

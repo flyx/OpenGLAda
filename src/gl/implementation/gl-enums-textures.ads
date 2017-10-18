@@ -76,7 +76,7 @@ private
    for Env_Parameter use (Alpha_Scale    => 16#0D1C#,
                           Env_Mode       => 16#2200#,
                           Env_Color      => 16#2201#,
-                          Lod_Bias       => 16#8501#,
+                          LoD_Bias       => 16#8501#,
                           Combine_RGB    => 16#8571#,
                           Combine_Alpha  => 16#8572#,
                           RGB_Scale      => 16#8573#,

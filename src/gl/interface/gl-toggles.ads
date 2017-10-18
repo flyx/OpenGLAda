@@ -110,11 +110,11 @@ private
                    Color_Table              => 16#80D0#,
                    Post_Convolution_Color_Table  => 16#80D1#,
                    Post_Color_Matrix_Color_Table => 16#80D2#,
-                   Color_Sum                => 16#8458#,
-                   Texture_Cube_Map         => 16#8513#,
-                   Vertex_Program_Point_Size=> 16#8642#,
-                   Vertex_Program_Two_Side  => 16#8643#,
-                   Point_Sprite             => 16#8861#);
+                   Color_Sum                 => 16#8458#,
+                   Texture_Cube_Map          => 16#8513#,
+                   Vertex_Program_Point_Size => 16#8642#,
+                   Vertex_Program_Two_Side   => 16#8643#,
+                   Point_Sprite              => 16#8861#);
    for Toggle'Size use Low_Level.Enum'Size;
 
 end GL.Toggles;

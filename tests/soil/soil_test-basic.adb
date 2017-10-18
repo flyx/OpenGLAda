@@ -45,9 +45,9 @@ begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 1.0));
          Token.Add_Vertex (Vector2'(-1.0,  1.0));
          GL.Immediate.Set_Texture_Coordinates (Vector2'(1.0, 1.0));
-         Token.Add_Vertex (Vector2'( 1.0,  1.0));
+         Token.Add_Vertex (Vector2'(1.0,  1.0));
          GL.Immediate.Set_Texture_Coordinates (Vector2'(1.0, 0.0));
-         Token.Add_Vertex (Vector2'( 1.0, -1.0));
+         Token.Add_Vertex (Vector2'(1.0, -1.0));
       end;
 
       GL_Test.Display_Backend.Swap_Buffers;

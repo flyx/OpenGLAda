@@ -11,7 +11,7 @@ with Glfw.Events.Joysticks;
 with Interfaces.C.Strings;
 with System;
 
-private package Glfw.Api is
+private package Glfw.API is
 
    type Raw_Video_Mode is array (1 .. 5) of aliased C.int;
    pragma Convention (C, Raw_Video_Mode);
@@ -235,4 +235,4 @@ private package Glfw.Api is
    pragma Import (Convention => C, Entity => Disable,
                   External_Name => "glfwDisable");
 
-end Glfw.Api;
+end Glfw.API;
