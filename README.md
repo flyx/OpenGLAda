@@ -1,4 +1,4 @@
-# OpenGLAda - Yet Another OpenGL binding for Ada
+# OpenGLAda – OpenGL binding for Ada
 
 ## Overview
 
@@ -270,7 +270,7 @@ changes.
 
 ## License
 
-OpenGLAda is distributed under the terms of the [ISC License][7]. The Ada 2012
+OpenGLAda is distributed under the terms of the [MIT License][7]. The Ada 2012
 logo that is used in the SOIL tests is distributed under the terms of the
 [CC BY-ND 3.0][8] license, the original author is [AdaCore][9].
 
@@ -280,7 +280,7 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [4]: http://flyx.github.io/OpenGLAda/
  [5]: http://gcc.gnu.org/wiki/GNAT
  [6]: http://www.glfw.org/docs/3.0/moving.html
- [7]: http://opensource.org/licenses/ISC
+ [7]: COPYING
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
  [10]: http://www.lonesock.net/soil.html
