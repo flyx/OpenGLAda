@@ -37,7 +37,7 @@ private package FT.API is
       return Errors.Error_Code;
    pragma Import (C, FT_Get_Kerning, "FT_Get_Kerning");
 
-   function FT_Init_FreeType (aLibrary : in out FT.Library_Ptr)
+   function FT_Init_FreeType (aLibrary : access FT.Library_Ptr)
                               return Errors.Error_Code;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
@@ -49,7 +49,7 @@ private package FT.API is
    function FT_New_Face (Library        : Library_Ptr;
                          File_Path_Name : Interfaces.C.Strings.chars_ptr;
                          Face_Index     : Faces.Face_Index_Type;
-                         aFace          : in out Face_Ptr)
+                         aFace          : access Face_Ptr)
                          return Errors.Error_Code;
    pragma Import (C, FT_New_Face, "FT_New_Face");
 

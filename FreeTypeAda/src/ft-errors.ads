@@ -14,8 +14,6 @@
 -- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 --------------------------------------------------------------------------------
 
-with GL.Types;
-
 package FT.Errors is
    pragma Preelaborate;
 
@@ -144,7 +142,7 @@ package FT.Errors is
       Bbx_Too_Big                   => 16#B8#,
       Corrupted_Font_Header         => 16#B9#,
       Corrupted_Font_Glyphs         => 16#BA#);
-   for Error_Code'Size use GL.Types.Int'Size;
+   for Error_Code'Size use Interfaces.C.int'Size;
 
    subtype Generic_Errors is Error_Code range Ok .. Missing_Property;
    subtype Glyph_Character_Errors is Error_Code range

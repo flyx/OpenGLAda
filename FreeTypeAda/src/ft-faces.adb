@@ -126,7 +126,8 @@ package body FT.Faces is
       Object.Finalize;
       declare
          Code : constant Errors.Error_Code :=
-           API.FT_New_Face (Library.Data, Path, Face_Index, Object.Data);
+           API.FT_New_Face (Library.Data, Path, Face_Index,
+                            Object.Data'Unchecked_Access);
       begin
          if Code /= Errors.Ok then
             if Code = Errors.Cannot_Open_Resource then

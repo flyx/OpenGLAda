@@ -1,12 +1,8 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Blending;
-with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
-with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
@@ -22,7 +18,6 @@ with Program_Loader;
 with Utilities;
 
 with Texture_Management;
-with FT.Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
@@ -34,7 +29,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
-   Font_File_1     : String := "../fonts/NotoSerif-Regular.ttf";
+   Font_File_1     : constant String := "../fonts/NotoSerif-Regular.ttf";
 
    --  ------------------------------------------------------------------------
 
@@ -47,10 +42,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
-      Pos_X           : GL.Types.Single := 5.0;
-      Pos_Y           : GL.Types.Single := 50.0;
-      Scale_1         : GL.Types.Single := 0.4;
-      Scale_2         : GL.Types.Single := 0.6;
+      Pos_X           : constant GL.Types.Single := 5.0;
+      Pos_Y           : constant GL.Types.Single := 50.0;
+      Scale_1         : constant GL.Types.Single := 0.4;
+      Scale_2         : constant GL.Types.Single := 0.6;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -89,7 +84,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Render_Program := Program_From
@@ -126,7 +120,7 @@ begin
 
    Render_Program.Delete_Id;
 exception
-   when anError :  others =>
+   when others =>
       Put_Line ("An exception occurred in Main_Loop.");
       raise;
 end Main_Loop;

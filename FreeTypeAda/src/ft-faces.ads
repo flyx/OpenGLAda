@@ -68,7 +68,7 @@ private
    procedure Check_Face_Ptr (Object : Face_Reference);
 
    type Face_Reference is new Ada.Finalization.Controlled with record
-      Data : Face_Ptr;
+      Data : aliased Face_Ptr;
       --  deallocation of the library will trigger deallocation of all Face_Ptr
       --  objects. therefore, we keep a reference to the library here to make
       --  sure the library outlives the Face_Reference.

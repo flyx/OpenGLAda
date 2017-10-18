@@ -120,8 +120,9 @@ package body Texture_Manager is
       Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
       Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_S
       Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge); --  Wrap_T
-      Texture_2D.Load_From_Data  (0, Red, Width, Height, Red, Unsigned_Byte,
-                                  Bitmap.Buffer);
+      Texture_2D.Load_From_Data
+        (0, Red, Width, Height, Red, Unsigned_Byte,
+         GL.Objects.Textures.Image_Source (Bitmap.Buffer));
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
