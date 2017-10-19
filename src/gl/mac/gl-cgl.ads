@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with System;
 with Interfaces.C.Extensions;
@@ -23,7 +10,7 @@ with GL.Types;
 
 package GL.CGL is
    pragma Preelaborate;
-   
+
    use GL.Types;
 
    --  CGL types and constants
@@ -34,190 +21,108 @@ package GL.CGL is
    subtype CGLPBufferObject      is System.Address;
    subtype CGLShareGroup         is System.Address;
 
-   type CGLPixelFormatAttribute is (Terminator               ,
-                                    kCGLPFAAllRenderers      ,
-                                    kCGLPFATripleBuffer      ,
-                                    kCGLPFADoubleBuffer      ,
-                                    kCGLPFAStereo            ,
-                                    kCGLPFAAuxBuffers        ,
-                                    kCGLPFAColorSize         ,
-                                    kCGLPFAAlphaSize         ,
-                                    kCGLPFADepthSize         ,
-                                    kCGLPFAStencilSize       ,
-                                    kCGLPFAAccumSize         ,
-                                    kCGLPFAMinimumPolicy     ,
-                                    kCGLPFAMaximumPolicy     ,
-                                    kCGLPFAOffScreen         ,
-                                    kCGLPFAFullScreen        ,
-                                    kCGLPFASampleBuffers     ,
-                                    kCGLPFASamples           ,
-                                    kCGLPFAAuxDepthStencil   ,
-                                    kCGLPFAColorFloat        ,
-                                    kCGLPFAMultisample       ,
-                                    kCGLPFASupersample       ,
-                                    kCGLPFASampleAlpha       ,
+   type CGLPixelFormatAttribute is
+     (Terminator, kCGLPFAAllRenderers, kCGLPFATripleBuffer, kCGLPFADoubleBuffer,
+      kCGLPFAStereo, kCGLPFAAuxBuffers, kCGLPFAColorSize, kCGLPFAAlphaSize,
+      kCGLPFADepthSize, kCGLPFAStencilSize, kCGLPFAAccumSize,
+      kCGLPFAMinimumPolicy, kCGLPFAMaximumPolicy, kCGLPFAOffScreen,
+      kCGLPFAFullScreen, kCGLPFASampleBuffers, kCGLPFASamples,
+      kCGLPFAAuxDepthStencil, kCGLPFAColorFloat, kCGLPFAMultisample,
+      kCGLPFASupersample, kCGLPFASampleAlpha, kCGLPFARendererID,
+      kCGLPFASingleRenderer, kCGLPFANoRecovery, kCGLPFAAccelerated,
+      kCGLPFAClosestPolicy, kCGLPFARobust, kCGLPFABackingStore, kCGLPFAMPSafe,
+      kCGLPFAWindow, kCGLPFAMultiScreen, kCGLPFACompliant, kCGLPFADisplayMask,
+      kCGLPFAPBuffer, kCGLPFARemotePBuffer, kCGLPFAAllowOfflineRenderers,
+      kCGLPFAAcceleratedCompute, kCGLPFAOpenGLProfile,
+      kCGLPFAVirtualScreenCount);
 
-                                    kCGLPFARendererID        ,
-                                    kCGLPFASingleRenderer    ,
-                                    kCGLPFANoRecovery        ,
-                                    kCGLPFAAccelerated       ,
-                                    kCGLPFAClosestPolicy     ,
-                                    kCGLPFARobust            ,
-                                    kCGLPFABackingStore      ,
-                                    kCGLPFAMPSafe            ,
-                                    kCGLPFAWindow            ,
-                                    kCGLPFAMultiScreen       ,
-                                    kCGLPFACompliant         ,
-                                    kCGLPFADisplayMask       ,
-                                    kCGLPFAPBuffer           ,
-                                    kCGLPFARemotePBuffer     ,
-                                    kCGLPFAAllowOfflineRenderers,
-                                    kCGLPFAAcceleratedCompute,
-                                    kCGLPFAOpenGLProfile     ,
-                                    kCGLPFAVirtualScreenCount
-                                   );
+   type CGLRendererProperty is
+     (kCGLRPOffScreen, kCGLRPFullScreen, kCGLRPRendererID, kCGLRPAccelerated,
+      kCGLRPRobust, kCGLRPBackingStore, kCGLRPMPSafe, kCGLRPWindow,
+      kCGLRPMultiScreen, kCGLRPCompliant, kCGLRPDisplayMask, kCGLRPBufferModes,
+      kCGLRPColorModes, kCGLRPAccumModes, kCGLRPDepthModes, kCGLRPStencilModes,
+      kCGLRPMaxAuxBuffers, kCGLRPMaxSampleBuffers, kCGLRPMaxSamples,
+      kCGLRPSampleModes, kCGLRPSampleAlpha, kCGLRPVideoMemory,
+      kCGLRPTextureMemory, kCGLRPGPUVertProcCapable, kCGLRPGPUFragProcCapable,
+      kCGLRPRendererCount, kCGLRPOnline, kCGLRPAcceleratedCompute,
+      kCGLRPVideoMemoryMegabytes, kCGLRPTextureMemoryMegabytes);
 
-   type CGLRendererProperty is (kCGLRPOffScreen             ,
-                                kCGLRPFullScreen            ,
-                                kCGLRPRendererID            ,
-                                kCGLRPAccelerated           ,
-                                kCGLRPRobust                ,
-                                kCGLRPBackingStore          ,
-                                kCGLRPMPSafe                ,
-                                kCGLRPWindow                ,
-                                kCGLRPMultiScreen           ,
-                                kCGLRPCompliant             ,
-                                kCGLRPDisplayMask           ,
-                                kCGLRPBufferModes           ,
-                                kCGLRPColorModes            ,
-                                kCGLRPAccumModes            ,
-                                kCGLRPDepthModes            ,
-                                kCGLRPStencilModes          ,
-                                kCGLRPMaxAuxBuffers         ,
-                                kCGLRPMaxSampleBuffers      ,
-                                kCGLRPMaxSamples            ,
-                                kCGLRPSampleModes           ,
-                                kCGLRPSampleAlpha           ,
-                                kCGLRPVideoMemory           ,
-                                kCGLRPTextureMemory         ,
-                                kCGLRPGPUVertProcCapable    ,
-                                kCGLRPGPUFragProcCapable    ,
-                                kCGLRPRendererCount         ,
-                                kCGLRPOnline                ,
-                                kCGLRPAcceleratedCompute    ,
-                                kCGLRPVideoMemoryMegabytes  ,
-                                kCGLRPTextureMemoryMegabytes
-                               );
+   type CGLContextEnable is
+     (kCGLCESwapRectangle, kCGLCESwapLimit, kCGLCERasterization,
+      kCGLCEStateValidation, kCGLCESurfaceBackingSize,
+      kCGLCEDisplayListOptimization, kCGLCEMPEngine,
+      kCGLCECrashOnRemovedFunctions);
 
-   type CGLContextEnable is (kCGLCESwapRectangle  ,
-                             kCGLCESwapLimit      ,
-                             kCGLCERasterization  ,
-                             kCGLCEStateValidation,
-                             kCGLCESurfaceBackingSize,
-                             kCGLCEDisplayListOptimization,
-                             kCGLCEMPEngine       ,
-                             kCGLCECrashOnRemovedFunctions
-                            );
+   type CGLContextParameter is
+     (kCGLCPSwapRectangle, kCGLCPSwapInterval, kCGLCPDispatchTableSize,
+      kCGLCPClientStorage, kCGLCPSurfaceTexture, kCGLCPSurfaceOrder,
+      kCGLCPSurfaceOpacity, kCGLCPSurfaceBackingSize,
+      kCGLCPSurfaceSurfaceVolatile, kCGLCPReclaimResources,
+      kCGLCPCurrentRendererID, kCGLCPGPUVertexProcessing,
+      kCGLCPGPUFragmentProcessing, kCGLCPHasDrawable, kCGLCPMPSwapsInFlight);
 
-   type CGLContextParameter is (kCGLCPSwapRectangle         ,
-                                kCGLCPSwapInterval          ,
-                                kCGLCPDispatchTableSize     ,
-                                kCGLCPClientStorage         ,
-                                kCGLCPSurfaceTexture        ,
-                                kCGLCPSurfaceOrder          ,
-                                kCGLCPSurfaceOpacity        ,
-                                kCGLCPSurfaceBackingSize    ,
-                                kCGLCPSurfaceSurfaceVolatile,
-                                kCGLCPReclaimResources      ,
-                                kCGLCPCurrentRendererID     ,
-                                kCGLCPGPUVertexProcessing   ,
-                                kCGLCPGPUFragmentProcessing ,
-                                kCGLCPHasDrawable           ,
-                                kCGLCPMPSwapsInFlight
-                               );
+   type CGLGlobalOption is
+     (kCGLGOFormatCacheSize, kCGLGOClearFormatCache, kCGLGORetainRenderers,
+      kCGLGOResetLibrary, kCGLGOUseErrorHandler, kCGLGOUseBuildCache);
 
-   type CGLGlobalOption is (kCGLGOFormatCacheSize ,
-                            kCGLGOClearFormatCache,
-                            kCGLGORetainRenderers ,
-                            kCGLGOResetLibrary    ,
-                            kCGLGOUseErrorHandler ,
-                            kCGLGOUseBuildCache
-                           );
+   type CGLOpenGLProfile is (kCGLOGLPVersion_Legacy, kCGLOGLPVersion_3_2_Core);
 
-   type CGLOpenGLProfile is (kCGLOGLPVersion_Legacy  ,
-                             kCGLOGLPVersion_3_2_Core
-                            );
+   type CGLError is
+     (kCGLNoError, kCGLBadAttribute, kCGLBadProperty, kCGLBadPixelFormat,
+      kCGLBadRendererInfo, kCGLBadContext, kCGLBadDrawable, kCGLBadDisplay,
+      kCGLBadState, kCGLBadValue, kCGLBadMatch, kCGLBadEnumeration,
+      kCGLBadOffScreen, kCGLBadFullScreen, kCGLBadWindow, kCGLBadAddress,
+      kCGLBadCodeModule, kCGLBadAlloc, kCGLBadConnection);
 
-   type CGLError is (kCGLNoError           ,
-                     kCGLBadAttribute      ,
-                     kCGLBadProperty       ,
-                     kCGLBadPixelFormat    ,
-                     kCGLBadRendererInfo   ,
-                     kCGLBadContext        ,
-                     kCGLBadDrawable       ,
-                     kCGLBadDisplay        ,
-                     kCGLBadState          ,
-                     kCGLBadValue          ,
-                     kCGLBadMatch          ,
-                     kCGLBadEnumeration    ,
-                     kCGLBadOffScreen      ,
-                     kCGLBadFullScreen     ,
-                     kCGLBadWindow         ,
-                     kCGLBadAddress        ,
-                     kCGLBadCodeModule     ,
-                     kCGLBadAlloc          ,
-                     kCGLBadConnection
-                    );
+   kCGLMonoscopicBit   : constant := 16#00000001#;
+   kCGLStereoscopicBit : constant := 16#00000002#;
+   kCGLSingleBufferBit : constant := 16#00000004#;
+   kCGLDoubleBufferBit : constant := 16#00000008#;
+   kCGLTripleBufferBit : constant := 16#00000010#;
+   kCGL0Bit            : constant := 16#00000001#;
+   kCGL1Bit            : constant := 16#00000002#;
+   kCGL2Bit            : constant := 16#00000004#;
+   kCGL3Bit            : constant := 16#00000008#;
+   kCGL4Bit            : constant := 16#00000010#;
+   kCGL5Bit            : constant := 16#00000020#;
+   kCGL6Bit            : constant := 16#00000040#;
+   kCGL8Bit            : constant := 16#00000080#;
+   kCGL10Bit           : constant := 16#00000100#;
+   kCGL12Bit           : constant := 16#00000200#;
+   kCGL16Bit           : constant := 16#00000400#;
+   kCGL24Bit           : constant := 16#00000800#;
+   kCGL32Bit           : constant := 16#00001000#;
+   kCGL48Bit           : constant := 16#00002000#;
+   kCGL64Bit           : constant := 16#00004000#;
+   kCGL96Bit           : constant := 16#00008000#;
+   kCGL128Bit          : constant := 16#00010000#;
+   kCGLRGB444Bit       : constant := 16#00000040#;
+   kCGLARGB4444Bit     : constant := 16#00000080#;
+   kCGLRGB444A8Bit     : constant := 16#00000100#;
+   kCGLRGB555Bit       : constant := 16#00000200#;
+   kCGLARGB1555Bit     : constant := 16#00000400#;
+   kCGLRGB555A8Bit     : constant := 16#00000800#;
+   kCGLRGB565Bit       : constant := 16#00001000#;
+   kCGLRGB565A8Bit     : constant := 16#00002000#;
+   kCGLRGB888Bit       : constant := 16#00004000#;
+   kCGLARGB8888Bit     : constant := 16#00008000#;
+   kCGLRGB888A8Bit     : constant := 16#00010000#;
+   kCGLRGB101010Bit    : constant := 16#00020000#;
+   kCGLARGB2101010Bit  : constant := 16#00040000#;
+   kCGLRGB101010_A8Bit : constant := 16#00080000#;
+   kCGLRGB121212Bit    : constant := 16#00100000#;
+   kCGLARGB12121212Bit : constant := 16#00200000#;
+   kCGLRGB161616Bit    : constant := 16#00400000#;
+   kCGLRGBA16161616Bit : constant := 16#00800000#;
+   kCGLRGBFloat64Bit   : constant := 16#01000000#;
+   kCGLRGBAFloat64Bit  : constant := 16#02000000#;
+   kCGLRGBFloat128Bit  : constant := 16#04000000#;
+   kCGLRGBAFloat128Bit : constant := 16#08000000#;
+   kCGLRGBFloat256Bit  : constant := 16#10000000#;
+   kCGLRGBAFloat256Bit : constant := 16#20000000#;
 
-   kCGLMonoscopicBit  : constant := 16#00000001#;
-   kCGLStereoscopicBit: constant := 16#00000002#;
-   kCGLSingleBufferBit: constant := 16#00000004#;
-   kCGLDoubleBufferBit: constant := 16#00000008#;
-   kCGLTripleBufferBit: constant := 16#00000010#;
-   kCGL0Bit           : constant := 16#00000001#;
-   kCGL1Bit           : constant := 16#00000002#;
-   kCGL2Bit           : constant := 16#00000004#;
-   kCGL3Bit           : constant := 16#00000008#;
-   kCGL4Bit           : constant := 16#00000010#;
-   kCGL5Bit           : constant := 16#00000020#;
-   kCGL6Bit           : constant := 16#00000040#;
-   kCGL8Bit           : constant := 16#00000080#;
-   kCGL10Bit          : constant := 16#00000100#;
-   kCGL12Bit          : constant := 16#00000200#;
-   kCGL16Bit          : constant := 16#00000400#;
-   kCGL24Bit          : constant := 16#00000800#;
-   kCGL32Bit          : constant := 16#00001000#;
-   kCGL48Bit          : constant := 16#00002000#;
-   kCGL64Bit          : constant := 16#00004000#;
-   kCGL96Bit          : constant := 16#00008000#;
-   kCGL128Bit         : constant := 16#00010000#;
-   kCGLRGB444Bit      : constant := 16#00000040#;
-   kCGLARGB4444Bit    : constant := 16#00000080#;
-   kCGLRGB444A8Bit    : constant := 16#00000100#;
-   kCGLRGB555Bit      : constant := 16#00000200#;
-   kCGLARGB1555Bit    : constant := 16#00000400#;
-   kCGLRGB555A8Bit    : constant := 16#00000800#;
-   kCGLRGB565Bit      : constant := 16#00001000#;
-   kCGLRGB565A8Bit    : constant := 16#00002000#;
-   kCGLRGB888Bit      : constant := 16#00004000#;
-   kCGLARGB8888Bit    : constant := 16#00008000#;
-   kCGLRGB888A8Bit    : constant := 16#00010000#;
-   kCGLRGB101010Bit   : constant := 16#00020000#;
-   kCGLARGB2101010Bit : constant := 16#00040000#;
-   kCGLRGB101010_A8Bit: constant := 16#00080000#;
-   kCGLRGB121212Bit   : constant := 16#00100000#;
-   kCGLARGB12121212Bit: constant := 16#00200000#;
-   kCGLRGB161616Bit   : constant := 16#00400000#;
-   kCGLRGBA16161616Bit: constant := 16#00800000#;
-   kCGLRGBFloat64Bit  : constant := 16#01000000#;
-   kCGLRGBAFloat64Bit : constant := 16#02000000#;
-   kCGLRGBFloat128Bit : constant := 16#04000000#;
-   kCGLRGBAFloat128Bit: constant := 16#08000000#;
-   kCGLRGBFloat256Bit : constant := 16#10000000#;
-   kCGLRGBAFloat256Bit: constant := 16#20000000#;
-
-   kCGLSupersampleBit : constant := 16#00000001#;
-   kCGLMultisampleBit : constant := 16#00000002#;
+   kCGLSupersampleBit  : constant := 16#00000001#;
+   kCGLMultisampleBit  : constant := 16#00000002#;
 
    type CGLPixelFormatAttribute_Array is array (Positive range <>) of
      aliased CGLPixelFormatAttribute;
@@ -378,7 +283,7 @@ package GL.CGL is
    function CGLSetCurrentContext (ctx : CGLContextObject) return CGLError;
 
    function CGLGetCurrentContext return CGLContextObject;
-   
+
    function CGLGetShareGroup (ctx : CGLContextObject) return CGLShareGroup;
 
 private
@@ -593,6 +498,6 @@ private
 
    pragma Import (C, CGLSetCurrentContext, "CGLSetCurrentContext");
    pragma Import (C, CGLGetCurrentContext, "CGLGetCurrentContext");
-   
+
    pragma Import (C, CGLGetShareGroup, "CGLGetShareGroup");
 end GL.CGL;

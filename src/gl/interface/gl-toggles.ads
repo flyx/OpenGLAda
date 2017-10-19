@@ -1,26 +1,13 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 private with GL.Low_Level;
 
 package GL.Toggles is
    pragma Preelaborate;
-   
+
    type Toggle_State is (Disabled, Enabled);
-   
+
    type Toggle is (Point_Smooth, Line_Smooth, Line_Stipple, Polygon_Smooth, Polygon_Stipple,
                    Cull_Face, Lighting, Color_Material,
                    Fog, Depth_Test, Stencil_Test, Normalize, Alpha_Test, Dither,
@@ -30,7 +17,7 @@ package GL.Toggles is
                    Map1_Color_4, Map1_Index,
                    Map1_Normal, Map1_Texture_Coord_1, Map1_Texture_Coord_2,
                    Map1_Texture_Coord_3, Map1_Texture_Coord_4,
-                   Map1_Vertex_3, Map1_Vertex_4, Map2_Color_4, Map2_Index, 
+                   Map1_Vertex_3, Map1_Vertex_4, Map2_Color_4, Map2_Index,
                    Map2_Normal, Map2_Texture_Coord_1, Map2_Texture_Coord_2,
                    Map2_Texture_Coord_3, Map2_Texture_Coord_4, Map2_Vertex_3,
                    Map2_Vertex_4, Texture_1D, Texture_2D, Polygon_Offset_Point, Polygon_Offset_Line,
@@ -43,7 +30,7 @@ package GL.Toggles is
                    Sample_Coverage, Color_Table, Post_Convolution_Color_Table,
                    Post_Color_Matrix_Color_Table, Color_Sum, Texture_Cube_Map,
                    Vertex_Program_Point_Size, Vertex_Program_Two_Side, Point_Sprite);
-   
+
    procedure Enable (Subject : Toggle);
    procedure Disable (Subject : Toggle);
    procedure Set (Subject : Toggle; Value : Toggle_State);
@@ -123,11 +110,11 @@ private
                    Color_Table              => 16#80D0#,
                    Post_Convolution_Color_Table  => 16#80D1#,
                    Post_Color_Matrix_Color_Table => 16#80D2#,
-                   Color_Sum                => 16#8458#,
-                   Texture_Cube_Map         => 16#8513#,
-                   Vertex_Program_Point_Size=> 16#8642#,
-                   Vertex_Program_Two_Side  => 16#8643#,
-                   Point_Sprite             => 16#8861#);
+                   Color_Sum                 => 16#8458#,
+                   Texture_Cube_Map          => 16#8513#,
+                   Vertex_Program_Point_Size => 16#8642#,
+                   Vertex_Program_Two_Side   => 16#8643#,
+                   Point_Sprite              => 16#8861#);
    for Toggle'Size use Low_Level.Enum'Size;
-   
+
 end GL.Toggles;

@@ -2,8 +2,6 @@
 
 with Interfaces.C;
 
-with Ada.Text_IO; use Ada.Text_IO;
-
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
@@ -109,10 +107,12 @@ package body Texture_Management is
          Texture_2D.Storage (Num_Levels, RGBA8, 1, 1);
       end if;
 
-      Bitmap_Image_Ptr :=  Bitmap.Buffer;
-      Texture_2D.Load_Sub_Image_From_Data
-        (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
-         Bitmap_Image_Ptr);
+      Bitmap_Image_Ptr := GL.Objects.Textures.Image_Source (Bitmap.Buffer);
+      if Width > 0 and Height > 0 then
+         Texture_2D.Load_Sub_Image_From_Data
+           (Mip_Level_0, X_Offset, Y_Offset, Width, Height, Red, Unsigned_Byte,
+            Bitmap_Image_Ptr);
+      end if;
       Char_Data.Texture := aTexture;
    end Load_Texture;
 
@@ -181,7 +181,7 @@ package body Texture_Management is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid.";
+            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -254,6 +254,7 @@ package body Texture_Management is
 
          Width := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Width);
          Height := GL.Types.Int (FT.Glyphs.Bitmap (Glyph_Slot).Rows);
+
          Set_Char_Data (Char_Data, Width, Height,
                         GL.Types.Int (FT.Glyphs.Bitmap_Left (Glyph_Slot)),
                         GL.Types.Int (FT.Glyphs.Bitmap_Top (Glyph_Slot)),

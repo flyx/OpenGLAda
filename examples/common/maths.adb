@@ -1,11 +1,8 @@
 with Ada.Numerics;
-with Ada.Numerics.Generic_Elementary_Functions;
 
 with Quaternions;
 
 package body Maths is
-
-    use GL.Types;
     use type GL.Types.Singles.Matrix4;
     use type GL.Types.Singles.Vector3;
 
@@ -32,7 +29,6 @@ package body Maths is
       (Position, Target, Up : Singles.Vector3;
        Look_At              : out GL.Types.Singles.Matrix4) is
         use GL;
-        use GL.Types;
         --  Reference co-ordinate frame (u, v, n)
         --  Forward (n): camera axis
         --  Side (u): axis through side of camera, perpendicular to Forward
@@ -109,7 +105,7 @@ package body Maths is
 
     function Normalized (V : Singles.Vector3) return Singles.Vector3 is
         use GL;
-        L : Single := Length (V);
+        L : constant Single := Length (V);
     begin
         return (V (X) / L, V (Y) / L, V (Z) / L);
     end Normalized;
@@ -174,8 +170,8 @@ package body Maths is
         aQuaternion : Single_Quaternion.Quaternion;
         theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
         NQ          : Single_Quaternion.Quaternion;
-        Half_Angle  : Single := 0.5 * Single (Angle);
-        Sine        : Single := Sin (Half_Angle);
+        Half_Angle  : constant Single := 0.5 * Single (Angle);
+        Sine        : constant Single := Sin (Half_Angle);
     begin
         aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
                           Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);

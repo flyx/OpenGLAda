@@ -1,5 +1,6 @@
 limited with "../../../opengl-glfw.gpr";
 limited with "../../../opengl-freetype.gpr";
+with "../../../opengl_shared.gpr";
 
 project Render_A_Character is
 
@@ -8,9 +9,6 @@ project Render_A_Character is
    for Main use ("hello_character.adb");
    for Exec_Dir use ".";
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnatyclux");
-   end Compiler;
-
+   package Compiler renames OpenGL_Shared.Compiler;
 end Render_A_Character;
 

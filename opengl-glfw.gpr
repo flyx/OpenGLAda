@@ -9,7 +9,7 @@ library project OpenGL.Glfw is
 
 
    type GLFW_Version_Type is ("2", "3");
-   GLFW_Version : GLFW_Version_Type := external ("GLFW_Version");
+   GLFW_Version : GLFW_Version_Type := external ("GLFW_Version", "3");
 
    GLFW_Sources := ("src/glfw");
 
