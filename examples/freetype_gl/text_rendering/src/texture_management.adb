@@ -5,12 +5,10 @@ with Interfaces.C;
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
-with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Toggles;
-with GL.Uniforms;
 
 with FT;
 with FT.Faces;
@@ -28,8 +26,6 @@ package body Texture_Management is
       Advance_X : GL.Types.Int := 0;
    end record;
 
-   Render_Program     : GL.Objects.Programs.Program;
-   Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
    OGL_Exception      : Exception;
 
     procedure Load_Vertex_Buffer is new
@@ -55,24 +51,11 @@ package body Texture_Management is
 
    --  ------------------------------------------------------------------------
 
-   procedure Initialize_Font_Data (Font_File : String;
-                                   Projection_Matrix : GL.Types.Singles.Matrix4) is
+   procedure Initialize_Font_Data (Font_File : String) is
       use GL.Types;
       theLibrary : FT.Library_Reference;
       Face_Ptr   : FT.Faces.Face_Reference;
    begin
-      Render_Program := Program_From
-          ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
-           Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
-      GL.Objects.Programs.Use_Program (Render_Program);
-
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "projection_matrix");
-      Texture_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "text_sampler");
-      Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "text_colour");
-
       theLibrary.Init;
       Setup_Font (theLibrary, Face_Ptr, Font_File);
       Setup_Character_Textures (Face_Ptr);
@@ -118,8 +101,11 @@ package body Texture_Management is
 
    -- --------------------------------------------------------------------------
 
-   procedure Render_Text (Text   : String; X, Y, Scale : GL.Types.Single;
+   procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
+                          Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
+                          Texture_ID, Projection_Matrix_ID,
+                          Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
