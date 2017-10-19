@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2013, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with Glfw.Enums;
 with Glfw.Display;
@@ -24,14 +11,14 @@ with Glfw.Events.Joysticks;
 with Interfaces.C.Strings;
 with System;
 
-private package Glfw.Api is
+private package Glfw.API is
 
    type Raw_Video_Mode is array (1 .. 5) of aliased C.int;
    pragma Convention (C, Raw_Video_Mode);
 
    type Video_Mode_List is array (Positive range <>) of Raw_Video_Mode;
    pragma Convention (C, Video_Mode_List);
-   
+
    type Window_Size_Callback is access procedure (Width, Height : C.int);
    type Window_Close_Callback is access function return Bool;
    type Window_Refresh_Callback is access procedure;
@@ -194,13 +181,13 @@ private package Glfw.Api is
    procedure Set_Mouse_Wheel_Callback (CbFun : Wheel_Callback);
    pragma Import (Convention => C, Entity => Set_Mouse_Wheel_Callback,
                   External_Name => "glfwSetMouseWheelCallback");
-   
+
    function Get_Joystick_Param (Joy   : Enums.Joystick_ID;
                                 Param : Enums.Joystick_Param)
                                return Interfaces.C.int;
    pragma Import (Convention => C, Entity => Get_Joystick_Param,
                   External_Name => "glfwGetJoystickParam");
-   
+
    -- Pos will be modified on the C side. It should be declared
    -- as 'in out' but Ada 2005 forbids that. Since is works fine this
    -- way, we don't bother using C pointers instead that wouldn't
@@ -211,7 +198,7 @@ private package Glfw.Api is
                              return Interfaces.C.int;
    pragma Import (Convention => C, Entity => Get_Joystick_Pos,
                   External_Name => "glfwGetJoystickPos");
-   
+
    -- See comment on Get_Joystick_Pos
    function Get_Joystick_Buttons (Joy : Enums.Joystick_ID;
                                   Pos : Events.Button_States;
@@ -248,4 +235,4 @@ private package Glfw.Api is
    pragma Import (Convention => C, Entity => Disable,
                   External_Name => "glfwDisable");
 
-end Glfw.Api;
+end Glfw.API;

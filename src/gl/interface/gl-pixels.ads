@@ -1,18 +1,5 @@
---------------------------------------------------------------------------------
--- Copyright (c) 2012, Felix Krause <contact@flyx.org>
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
--- ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
--- ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
--- OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
---------------------------------------------------------------------------------
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
 
 with GL.Types;
 
@@ -62,7 +49,7 @@ package GL.Pixels is
                             Compressed_RGB_BPTC_Unsigned_Float, R8_SNorm,
                             RG8_SNorm, RGB8_SNorm, RGBA8_SNorm, R16_SNorm,
                             RG16_SNorm, RGB16_SNorm, RGBA16_SNorm, RGB10_A2UI,
-                            Compressed_RGBA_ASTC_4x4,Compressed_RGBA_ASTC_5x4,
+                            Compressed_RGBA_ASTC_4x4, Compressed_RGBA_ASTC_5x4,
                             Compressed_RGBA_ASTC_5x5, Compressed_RGBA_ASTC_6x5,
                             Compressed_RGBA_ASTC_6x6, Compressed_RGBA_ASTC_8x5,
                             Compressed_RGBA_ASTC_8x6, Compressed_RGBA_ASTC_8x8,
