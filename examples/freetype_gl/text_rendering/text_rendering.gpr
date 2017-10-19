@@ -1,6 +1,6 @@
-limited with "../../../opengl-glfw.gpr";
-limited with "../../../opengl-freetype.gpr";
+with "../../../FreeTypeAda/freetype.gpr";
 with "../../../opengl_shared.gpr";
+limited with "../../../opengl-glfw.gpr";
 
 project Text_Rendering is
 
@@ -9,6 +9,7 @@ project Text_Rendering is
    for Exec_Dir use ".";
    for Main use ("render_text.adb");
 
-   package Compiler renames OpenGL_Shared.Compiler;
+   package Compiler renames Opengl_Shared.Compiler;
+
 end Text_Rendering;
 
