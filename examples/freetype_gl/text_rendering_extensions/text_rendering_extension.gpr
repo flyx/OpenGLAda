@@ -1,5 +1,5 @@
+limited with "../../../FreeTypeAda/freetype.gpr";
 limited with "../../../opengl-glfw.gpr";
-limited with "../../../opengl-freetype.gpr";
 
 project Text_Rendering_Extension is
 
