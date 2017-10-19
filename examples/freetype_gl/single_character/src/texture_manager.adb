@@ -1,20 +1,12 @@
 
-with System;
-
-with Ada.Directories;
-with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Text_IO; use  Ada.Text_IO;
-
 with GL.Attributes;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
-with GL.Types.Colors;
 
 with FT;
 with FT.Errors;
 with FT.Faces;
 with FT.Glyphs;
-with FT.Faces;
 with FT.Utilities;
 
 with Utilities;
@@ -39,12 +31,12 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Types;
-      X_Pos       : Single := X;
-      Y_Pos       : Single := Y ;
-      Width       : Single;
-      Height      : Single;
-      Num_Triangles : Int := 2;
-      Stride        : Int := 4;
+      Num_Triangles : constant Int := 2;
+      Stride        : constant Int := 4;
+      X_Pos         : constant Single := X;
+      Y_Pos         : constant Single := Y;
+      Width         : Single;
+      Height        : Single;
       Bitmap : constant FT.Bitmap_Record :=
         FT.Glyphs.Bitmap (Face_Ptr.Glyph_Slot);
    begin
@@ -71,7 +63,7 @@ package body Texture_Manager is
 
    procedure Setup_Font (My_Library : FT.Library_Reference) is
       use GL.Types;
-      Font_File  : String := "../fonts/NotoSerif-Regular.ttf";
+      Font_File  : constant String := "../fonts/NotoSerif-Regular.ttf";
    begin
       FT.Faces.New_Face (My_Library, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48
@@ -83,7 +75,7 @@ package body Texture_Manager is
 
    procedure Setup_Graphic (Vertex_Buffer : in out V_Buffer;
                             aTexture      : in out GL.Objects.Textures.Texture;
-                            X, Y: GL.Types.Single; Scale : GL.Types.Single;
+                            X, Y : GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
       use GL.Types;
 
@@ -125,8 +117,7 @@ package body Texture_Manager is
          GL.Objects.Textures.Image_Source (Bitmap.Buffer));
    exception
       when others =>
-         Put_Line ("An exception occurred in Texture_Manager.Setup_Texture.");
-         raise;
+         raise Image_Error with "An exception occurred in Texture_Manager.Setup_Texture.";
    end Setup_Texture;
 
    --  ------------------------------------------------------------------------
