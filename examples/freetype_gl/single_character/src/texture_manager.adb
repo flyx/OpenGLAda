@@ -1,4 +1,6 @@
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 with GL.Attributes;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
@@ -16,8 +18,6 @@ package body Texture_Manager is
 
    Face_Ptr      : FT.Faces.Face_Reference;
    Vertex_Data   : Vertex_Array;
-
-   Image_Error : exception;
 
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single);
@@ -117,7 +117,8 @@ package body Texture_Manager is
          GL.Objects.Textures.Image_Source (Bitmap.Buffer));
    exception
       when others =>
-         raise Image_Error with "An exception occurred in Texture_Manager.Setup_Texture.";
+         Put_Line  ("An exception occurred in Texture_Manager.Setup_Texture.");
+         raise;
    end Setup_Texture;
 
    --  ------------------------------------------------------------------------
