@@ -1,4 +1,4 @@
-with "../../../FreeTypeAda/freetype.gpr";
+limited with "../../../FreeTypeAda/freetype.gpr";
 with "../../../opengl_shared.gpr";
 limited with "../../../opengl-glfw.gpr";
 
