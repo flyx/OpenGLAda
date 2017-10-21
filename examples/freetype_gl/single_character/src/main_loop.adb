@@ -41,7 +41,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Projection_Matrix     : Singles.Matrix4;
 
    Back_Colour    : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
-   Main_Exception : Exception;
 
    --  ------------------------------------------------------------------------
 
@@ -80,7 +79,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup (Window : in out Glfw.Windows.Window;
+   procedure Setup (Window         : in out Glfw.Windows.Window;
                     Test_Character : Character) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -99,7 +98,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
+                                         Single (Window_Width), 0.1, -100.0, Projection_Matrix);
 
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
@@ -147,7 +146,8 @@ exception
    when Program_Loader.Shader_Loading_Error =>
       --  message has been written to stdout
       raise;
-   when  others =>
-      raise Main_Exception with "An exception occurred in Main_Loop.";
+   when others =>
+      Put_Line ("An exception occurred in Main_Loop.");
+      raise;
 
 end Main_Loop;
