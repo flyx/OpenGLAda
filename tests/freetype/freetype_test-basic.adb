@@ -33,8 +33,8 @@ procedure FreeType_Test.Basic is
 
       Square : constant Singles.Vector2_Array
         := ((0.0, 0.0),
-            (Single (Height), 0.0),
-            (0.0, Single (Width)),
+            (Single (Width), 0.0),
+            (0.0, Single (Height)),
             (Single (Width), Single (Height)));
    begin
       Array1.Bind;
@@ -56,9 +56,10 @@ procedure FreeType_Test.Basic is
 
       Vertex_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
         "layout(location = 0) in vec2 vertex;" & Character'Val (10) &
+        "uniform mat4 transformation;" & Character'Val (10) &
         "out vec2 uv;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
-        "  gl_Position = vec4(vertex, 0.0, 1.0);" & Character'Val (10) &
+        "  gl_Position = transformation * vec4(vertex, 0.0, 1.0);" & Character'Val (10) &
         "  uv = vertex;" & Character'Val (10) &
         "}");
 
@@ -106,11 +107,23 @@ procedure FreeType_Test.Basic is
    Rendering_Program : GL.FreeType.Font_Rendering_Program;
    Renderer : GL.FreeType.Renderer_Reference;
    Texture_ID : GL.Uniforms.Uniform;
+   Transformation : GL.Types.Singles.Matrix4;
+   Transformation_ID : GL.Uniforms.Uniform;
+
+   use type GL.Types.Singles.Matrix4;
 begin
    Display_Backend.Init;
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
    Display_Backend.Open_Window (Width => 500, Height => 500);
    GL.Window.Set_Viewport (0, 0, 500, 500);
+   Transformation := GL.Types.Singles.Matrix4'((1.0, 0.0, 0.0, 0.0),
+                                               (0.0, 1.0, 0.0, 0.0),
+                                               (0.0, 0.0, 1.0, 0.0),
+                                               (-1.0, -1.0, 0.0, 1.0)) *
+                     GL.Types.Singles.Matrix4'((1.0 / 250.0, 0.0, 0.0, 0.0),
+                                               (0.0, 1.0 / 250.0, 0.0, 0.0),
+                                               (0.0, 0.0, 1.0, 0.0),
+                                               (0.0, 0.0, 0.0, 1.0));
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
    Rendering_Program := GL.FreeType.Init_Program;
@@ -135,7 +148,9 @@ begin
    Load_Shaders (Program);
    Program.Use_Program;
    Texture_ID := Program.Uniform_Location ("texSampler");
+   Transformation_ID := Program.Uniform_Location ("transformation");
    GL.Uniforms.Set_Int (Texture_ID, 0);
+   GL.Uniforms.Set_Single (Transformation_ID, Transformation);
 
    Ada.Text_IO.Put_Line ("Loaded shaders");
 
