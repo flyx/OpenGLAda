@@ -19,7 +19,7 @@ package GL.FreeType is
    type Renderer_Reference is tagged private;
 
    subtype UTF_8_String is String;
-   type Pixel_Size is new Interfaces.C.unsigned;
+   type Pixel_Difference is new Interfaces.C.int;
 
    function Init_Program return Font_Rendering_Program;
 
@@ -36,14 +36,14 @@ package GL.FreeType is
 
    procedure Calculate_Dimensions (Object : Renderer_Reference;
                                    Content : UTF_8_String;
-                                   Width, Height : out Pixel_Size);
+                                   Width, Y_Min, Y_Max : out Pixel_Difference);
 
    function To_Texture (Object : Renderer_Reference; Content : UTF_8_String;
                         Text_Color : GL.Types.Colors.Color)
                          return GL.Objects.Textures.Texture;
 
    function To_Texture (Object : Renderer_Reference; Content : UTF_8_String;
-                        Target_Width, Target_Height : Pixel_Size;
+                        Width, Y_Min, Y_Max : Pixel_Difference;
                         Text_Color : GL.Types.Colors.Color)
                         return GL.Objects.Textures.Texture;
 private
@@ -55,7 +55,7 @@ private
    end record;
 
    type Loaded_Character is record
-      Width, Height : Pixel_Size;
+      Width, Y_Min, Y_Max, Advance, Left : Pixel_Difference;
       Image : GL.Objects.Textures.Texture;
    end record;
 
