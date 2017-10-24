@@ -1,6 +1,6 @@
-limited with "../../../opengl-glfw.gpr";
-limited with "../../../opengl-freetype.gpr";
+with "../../../FreeTypeAda/freetype.gpr";
 with "../../../opengl_shared.gpr";
+limited with "../../../opengl-glfw.gpr";
 
 project Render_A_Character is
 
@@ -9,6 +9,7 @@ project Render_A_Character is
    for Main use ("hello_character.adb");
    for Exec_Dir use ".";
 
-   package Compiler renames OpenGL_Shared.Compiler;
+   package Compiler renames Opengl_Shared.Compiler;
+
 end Render_A_Character;
 
