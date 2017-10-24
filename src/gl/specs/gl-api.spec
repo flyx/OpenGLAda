@@ -1144,5 +1144,5 @@ spec GL.API is
    procedure Depth_Range (Near, Far : Double) with
      Static => "glDepthRange", Wrapper => "GL.Window.Set_Depth_Range";
    procedure Viewport (X, Y : Int; Width, Height : Size) with
-     Static => "glViewport", Wrapper => "GL.Window.Get_Viewport";
+     Static => "glViewport", Wrapper => "GL.Window.Set_Viewport";
 end GL.API;
