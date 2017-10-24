@@ -169,7 +169,8 @@ package body Glfw.Windows is
          raise Creation_Error;
       end if;
       API.Set_Window_User_Pointer
-        (Object.Handle, Conv.To_Address (Conv.Object_Pointer (Object)));
+        (Object.Handle, Conv.To_Address
+          (Conv.Object_Pointer'(Object.all'Unchecked_Access)));
       Context.Make_Current (Object);
       GL.Init;
    end Init;
