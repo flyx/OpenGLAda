@@ -1,6 +1,7 @@
-with "opengl.gpr";
-with "opengl_shared.gpr";
-with "FreeTypeAda/freetype.gpr";
+with "opengl";
+with "opengl_shared";
+with "FreeTypeAda/freetype";
+with "strings_edit";
 
 library project OpenGL.FreeType is
    for Languages use ("ada");

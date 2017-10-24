@@ -88,7 +88,8 @@ package body FT.Faces is
       begin
          if Code /= Errors.Ok then
             raise FT.FreeType_Exception with "FT.Faces.Load_Character error: " &
-              Errors.Description (Code);
+              Errors.Description (Code) & Character'Val (10) &
+              "while loading character #" & Char_Code'Img;
          end if;
       end;
    end Load_Character;
