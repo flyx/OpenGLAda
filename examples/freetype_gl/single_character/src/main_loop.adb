@@ -1,9 +1,5 @@
 
-with System;
-with System.Address_Image;
-
 with Ada.Command_Line;
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -14,7 +10,6 @@ with GL.Objects.Vertex_Arrays;
 with GL.Objects.Shaders;
 with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
-with GL.Pixels;
 with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
@@ -43,21 +38,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Colour_Location       : GL.Uniforms.Uniform;
    Projection_Location   : GL.Uniforms.Uniform;
    Texture_Location      : GL.Uniforms.Uniform;
-   Position_Location     : GL.Attributes.Attribute;
    Projection_Matrix     : Singles.Matrix4;
 
-   Back_Colour   : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
+   Back_Colour    : constant GL.Types.Colors.Color := (0.3, 0.6, 0.6, 1.0);
 
    --  ------------------------------------------------------------------------
 
-   procedure Render (Window : in out Glfw.Windows.Window)  is
-      use GL.Types;
+   procedure Render  is
       use GL.Types.Colors;
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
-      use GL.Pixels;
-      Num_Vertices   : GL.Types.Int := 2 * 3; -- Two triangles
-      Num_Components : GL.Types.Int := 4;     -- Coords vector size;
+      Num_Vertices   : constant GL.Types.Int := 2 * 3; -- Two triangles
+      Num_Components : constant GL.Types.Int := 4;     -- Coords vector size;
       Text_Colour    : constant Basic_Color := (0.5, 0.2, 0.6);
    begin
       Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
@@ -87,7 +79,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup (Window : in out Glfw.Windows.Window;
+   procedure Setup (Window         : in out Glfw.Windows.Window;
                     Test_Character : Character) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -106,7 +98,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
-                        Single (Window_Width), 0.1, -100.0, Projection_Matrix);
+                                         Single (Window_Width), 0.1, -100.0, Projection_Matrix);
 
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
@@ -123,8 +115,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           GL.Objects.Programs.Uniform_Location (Rendering_Program, "bitmap_image");
       Colour_Location := GL.Objects.Programs.Uniform_Location
           (Rendering_Program, "text_colour");
-      Position_Location :=
-          GL.Objects.Programs.Attrib_Location (Rendering_Program, "vertices");
    exception
       when others =>
          Put_Line ("An exception occurred in Main_Loop.Setup.");
@@ -145,18 +135,19 @@ begin
 
    Setup (Main_Window, Test_Character);
    while Running loop
-      Render (Main_Window);
-      glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-      glfw.Input.Poll_Events;
+      Render;
+      Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+      Glfw.Input.Poll_Events;
       Running := Running and not
-          (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+          (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and not Main_Window.Should_Close;
    end loop;
 exception
    when Program_Loader.Shader_Loading_Error =>
       --  message has been written to stdout
       raise;
-   when anError :  others =>
+   when others =>
       Put_Line ("An exception occurred in Main_Loop.");
       raise;
+
 end Main_Loop;
