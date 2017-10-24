@@ -4,6 +4,7 @@
 with Ada.Text_IO;
 
 with GL.Attributes;
+with GL.Blending;
 with GL.Buffers;
 with GL.FreeType;
 with GL.Objects.Buffers;
@@ -11,6 +12,7 @@ with GL.Objects.Shaders;
 with GL.Objects.Programs;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
+with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
@@ -27,15 +29,14 @@ procedure FreeType_Test.Basic is
      (Singles.Vector2_Pointers);
 
    procedure Load_Data (Array1  : Vertex_Array_Object;
-                        Buffer1 : GL.Objects.Buffers.Buffer;
-                        Width, Height : GL.FreeType.Pixel_Size) is
+                        Buffer1 : GL.Objects.Buffers.Buffer) is
       use GL.Objects.Buffers;
 
       Square : constant Singles.Vector2_Array
         := ((0.0, 0.0),
-            (Single (Width), 0.0),
-            (0.0, Single (Height)),
-            (Single (Width), Single (Height)));
+            (1.0, 0.0),
+            (0.0, 1.0),
+            (1.0, 1.0));
    begin
       Array1.Bind;
       Array_Buffer.Bind (Buffer1);
@@ -57,9 +58,10 @@ procedure FreeType_Test.Basic is
       Vertex_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
         "layout(location = 0) in vec2 vertex;" & Character'Val (10) &
         "uniform mat4 transformation;" & Character'Val (10) &
+        "uniform vec2 dimensions;" & Character'Val (10) &
         "out vec2 uv;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
-        "  gl_Position = transformation * vec4(vertex, 0.0, 1.0);" & Character'Val (10) &
+        "  gl_Position = transformation * vec4(vertex.x * dimensions.x, vertex.y * dimensions.y, 0.0, 1.0);" & Character'Val (10) &
         "  uv = vertex;" & Character'Val (10) &
         "}");
 
@@ -69,7 +71,6 @@ procedure FreeType_Test.Basic is
         "uniform sampler2D texSampler;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
         "  color = texture(texSampler, uv).rgb;" & Character'Val (10) &
---        "  color = vec4(1.0, 0.0, 0.0, 1.0);" & Character'Val (10) &
         "}");
 
       Vertex_Shader.Compile;
@@ -101,7 +102,7 @@ procedure FreeType_Test.Basic is
    Vector_Buffer1 : GL.Objects.Buffers.Buffer;
    Array1 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
-   Width, Height : GL.FreeType.Pixel_Size;
+   Width, Y_Min, Y_Max : GL.FreeType.Pixel_Difference;
    Text : constant String := "The quick brown fox jumps over the lazy dog.";
    Text_Image : GL.Objects.Textures.Texture;
    Rendering_Program : GL.FreeType.Font_Rendering_Program;
@@ -109,34 +110,36 @@ procedure FreeType_Test.Basic is
    Texture_ID : GL.Uniforms.Uniform;
    Transformation : GL.Types.Singles.Matrix4;
    Transformation_ID : GL.Uniforms.Uniform;
+   Dimensions_ID : GL.Uniforms.Uniform;
 
    use type GL.Types.Singles.Matrix4;
+   use type GL.FreeType.Pixel_Difference;
 begin
    Display_Backend.Init;
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
    Display_Backend.Open_Window (Width => 500, Height => 500);
    GL.Window.Set_Viewport (0, 0, 500, 500);
-   Transformation := GL.Types.Singles.Matrix4'((1.0, 0.0, 0.0, 0.0),
-                                               (0.0, 1.0, 0.0, 0.0),
-                                               (0.0, 0.0, 1.0, 0.0),
-                                               (-1.0, -1.0, 0.0, 1.0)) *
-                     GL.Types.Singles.Matrix4'((1.0 / 250.0, 0.0, 0.0, 0.0),
-                                               (0.0, 1.0 / 250.0, 0.0, 0.0),
-                                               (0.0, 0.0, 1.0, 0.0),
-                                               (0.0, 0.0, 0.0, 1.0));
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
    Rendering_Program := GL.FreeType.Init_Program;
    Renderer.Create (Rendering_Program, "../tests/ftgl/SourceCodePro-Regular.ttf", 0);
-   Renderer.Calculate_Dimensions (Text, Width, Height);
+   Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
    Ada.Text_IO.Put_Line ("Rendered text will have the dimensions" & Width'Img &
-                           " x" & Height'Img & ".");
+                           " x" & GL.FreeType.Pixel_Difference'Image (Y_Max - Y_Min) & ".");
 
-   Text_Image := Renderer.To_Texture (Text, Width, Height,
-                                      GL.Types.Colors.Color'(1.0, 0.0, 0.0, 0.5));
+   Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max,
+                                      GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
    GL.Objects.Textures.Set_Active_Unit (0);
    GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
+   Transformation := GL.Types.Singles.Matrix4'((1.0, 0.0, 0.0, 0.0),
+                                               (0.0, 1.0, 0.0, 0.0),
+                                               (0.0, 0.0, 1.0, 0.0),
+                                               (-1.0, -1.0, 0.0, 1.0)) *
+                     GL.Types.Singles.Matrix4'((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
+                                               (0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0),
+                                               (0.0, 0.0, 1.0, 0.0),
+                                               (0.0, 0.0, 0.0, 1.0));
 
    Ada.Text_IO.Put_Line ("Rendered text to texture");
 
@@ -149,16 +152,22 @@ begin
    Program.Use_Program;
    Texture_ID := Program.Uniform_Location ("texSampler");
    Transformation_ID := Program.Uniform_Location ("transformation");
+   Dimensions_ID := Program.Uniform_Location ("dimensions");
    GL.Uniforms.Set_Int (Texture_ID, 0);
    GL.Uniforms.Set_Single (Transformation_ID, Transformation);
+   GL.Uniforms.Set_Single (Dimensions_ID, GL.Types.Single (Width),
+                           GL.Types.Single (Y_Max - Y_Min));
 
    Ada.Text_IO.Put_Line ("Loaded shaders");
 
-   Load_Data (Array1, Vector_Buffer1, Width, Height);
+   Load_Data (Array1, Vector_Buffer1);
 
    Ada.Text_IO.Put_Line ("Loaded data");
 
    GL.Buffers.Set_Color_Clear_Value (Colors.Color'(0.0, 0.2, 0.7, 1.0));
+   GL.Toggles.Enable (GL.Toggles.Blend);
+   GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
+                               GL.Blending.One_Minus_Src_Alpha);
    while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
 

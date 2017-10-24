@@ -34,14 +34,10 @@ package body GL.FreeType is
         "uniform mat4 transformation;" & Character'Val (10) &
         "out vec2 texture_coords;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
-        "  vec2 scaled = mat2(character_info.z, 0.0, 0.0, character_info.w) *" &
-        "      vertex;" & Character'Val (10) &
-        "  vec4 translated = mat4(character_info.z, 0.0, 0.0, 0.0," &
-                                 "0.0, character_info.w, 0.0, 0.0," &
-                                 "0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0) *" &
-        "      vec4 (scaled, 0.0, 1.0);" & Character'Val (10) &
-        "  gl_Position = transformation * translated;" &
-        "  texture_coords = scaled;" & Character'Val (10) &
+        "  vec2 translated = vec2(character_info.z * vertex.x + character_info.x," &
+        "    character_info.w * vertex.y + character_info.y);" & Character'Val (10) &
+        "  gl_Position = transformation * vec4(translated, 0.0, 1.0);" &
+        "  texture_coords = vec2(vertex.x, 1.0 - vertex.y);" & Character'Val (10) &
         "}");
       Vertex_Shader.Compile;
       if not Vertex_Shader.Compile_Status then
@@ -58,7 +54,8 @@ package body GL.FreeType is
         "uniform vec4 text_color;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
         "  float alpha = texture(text_sampler, texture_coords).r;" & Character'Val (10) &
-        "  color = mix(text_color, vec4(1.0, 1.0, 0.0, 1.0), alpha);" & Character'Val (10) &
+        "  color = vec4(1.0 - alpha, 1.0 - alpha, alpha, 1.0);" &
+--        "  color = vec4(text_color.xyz, text_color.w * alpha);" & Character'Val (10) &
         "}");
       Fragment_Shader.Compile;
       if not Fragment_Shader.Compile_Status then
@@ -116,12 +113,13 @@ package body GL.FreeType is
       Object.Data := new Renderer_Data;
       Object.Data.Program := Program;
       FT.Faces.New_Face (Lib, Font_Path, Face_Index, Object.Data.Face);
-      Object.Data.Face.Set_Pixel_Sizes (0, 24);
+      Object.Data.Face.Set_Pixel_Sizes (0, 48);
    end Create;
 
    function Character_Data (Object : Renderer_Reference;
                             Code_Point : Strings_Edit.UTF8.Code_Point)
                             return Loaded_Characters.Cursor is
+      use type FT.Position;
    begin
       return Ret : Loaded_Characters.Cursor :=
         Object.Data.Characters.Find (FT.ULong (Code_Point)) do
@@ -136,18 +134,26 @@ package body GL.FreeType is
                Bitmap : constant FT.Bitmap_Record :=
                  FT.Glyphs.Bitmap (Object.Data.Face.Glyph_Slot);
                Inserted : Boolean;
+               Top : constant Pixel_Difference :=
+                 Pixel_Difference (FT.Glyphs.Bitmap_Top (Object.Data.Face.Glyph_Slot));
+               Height : constant Pixel_Difference :=
+                 Pixel_Difference (Bitmap.Rows);
             begin
-               New_Data.Width := Pixel_Size (Bitmap.Width);
-               New_Data.Height := Pixel_Size (Bitmap.Rows);
+               New_Data.Width := Pixel_Difference (Bitmap.Width);
+               New_Data.Y_Min := Top - Height;
+               New_Data.Y_Max := Top;
+               New_Data.Advance := Pixel_Difference (FT.Glyphs.Advance (Object.Data.Face.Glyph_Slot).X / 64);
+               New_Data.Left := Pixel_Difference (FT.Glyphs.Bitmap_Left (Object.Data.Face.Glyph_Slot));
                New_Data.Image.Initialize_Id;
                Texture_2D.Bind (New_Data.Image);
                Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
                Texture_2D.Set_Magnifying_Filter (GL.Objects.Textures.Linear);
                Texture_2D.Set_X_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
                Texture_2D.Set_Y_Wrapping (GL.Objects.Textures.Clamp_To_Edge);
+               GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
                Texture_2D.Load_From_Data
-                 (0, GL.Pixels.Red, GL.Types.Size (New_Data.Width),
-                  GL.Types.Size (New_Data.Height), GL.Pixels.Red,
+                 (0, GL.Pixels.Red, GL.Types.Size (Bitmap.Width),
+                  GL.Types.Size (Bitmap.Rows), GL.Pixels.Red,
                   GL.Pixels.Unsigned_Byte,
                   GL.Objects.Textures.Image_Source (Bitmap.Buffer));
                Object.Data.Characters.Insert (FT.ULong (Code_Point),
@@ -159,33 +165,39 @@ package body GL.FreeType is
 
    procedure Calculate_Dimensions (Object : Renderer_Reference;
                                    Content : UTF_8_String;
-                                   Width, Height : out Pixel_Size) is
+                                   Width, Y_Min, Y_Max : out Pixel_Difference) is
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
       Code_Point : Strings_Edit.UTF8.Code_Point;
    begin
       Width := 0;
-      Height := 0;
+      Y_Min := 0;
+      Y_Max := 0;
       while Char_Position <= Content'Last loop
          Strings_Edit.UTF8.Get (Content, Char_Position, Code_Point);
          Map_Position := Character_Data (Object, Code_Point);
-         Height := Pixel_Size'Max
-           (Height, Loaded_Characters.Element (Map_Position).Height);
-         Width := Width + Loaded_Characters.Element (Map_Position).Width;
+         declare
+            Char_Data : constant Loaded_Character :=
+              Loaded_Characters.Element (Map_Position);
+         begin
+            Width := Width + Char_Data.Advance;
+            Y_Min := Pixel_Difference'Min (Y_Min, Char_Data.Y_Min);
+            Y_Max := Pixel_Difference'Max (Y_Max, Char_Data.Y_Max);
+         end;
       end loop;
    end Calculate_Dimensions;
 
    function To_Texture (Object : Renderer_Reference; Content : UTF_8_String;
                         Text_Color : GL.Types.Colors.Color)
                         return GL.Objects.Textures.Texture is
-      Width, Height : Pixel_Size;
+      Width, Y_Min, Y_Max : Pixel_Difference;
    begin
-      Object.Calculate_Dimensions (Content, Width, Height);
-      return Object.To_Texture (Content, Width, Height, Text_Color);
+      Object.Calculate_Dimensions (Content, Width, Y_Min, Y_Max);
+      return Object.To_Texture (Content, Width, Y_Min, Y_Max, Text_Color);
    end To_Texture;
 
    function To_Texture (Object : Renderer_Reference; Content : UTF_8_String;
-                        Target_Width, Target_Height : Pixel_Size;
+                        Width, Y_Min, Y_Max : Pixel_Difference;
                         Text_Color : GL.Types.Colors.Color)
                         return GL.Objects.Textures.Texture is
       use type GL.Types.Singles.Matrix4;
@@ -198,12 +210,13 @@ package body GL.FreeType is
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
       Code_Point : Strings_Edit.UTF8.Code_Point;
-      X_Offset : Pixel_Size := 0;
+      X_Offset : Pixel_Difference := 0;
+      Height : constant Pixel_Difference := Y_Max - Y_Min;
       Transformation : constant GL.Types.Singles.Matrix4 :=
         ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0),
          (-1.0, -1.0, 0.0, 1.0)) *
-          ((2.0 / GL.Types.Single (Target_Width), 0.0, 0.0, 0.0),
-           (0.0, 2.0 / GL.Types.Single (Target_Height), 0.0, 0.0),
+          ((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
+           (0.0, 2.0 / GL.Types.Single (Height), 0.0, 0.0),
            (0.0, 0.0, 1.0, 0.0), (0.0, 0.0, 0.0, 1.0));
    begin
       FrameBuf.Initialize_Id;
@@ -211,12 +224,11 @@ package body GL.FreeType is
       Target.Initialize_Id;
       Tx.Targets.Texture_2D.Bind (Target);
       Tx.Targets.Texture_2D.Load_Empty_Texture
-        (0, GL.Pixels.RGB, GL.Types.Int (Target_Width),
-         GL.Types.Int (Target_Height));
+        (0, GL.Pixels.RGBA, GL.Types.Int (Width), GL.Types.Int (Height));
       Tx.Targets.Texture_2D.Set_Minifying_Filter (Tx.Nearest);
       Tx.Targets.Texture_2D.Set_Magnifying_Filter (Tx.Nearest);
-      GL.Window.Set_Viewport (0, 0, GL.Types.Size (Target_Width),
-                              GL.Types.Size (Target_Height));
+      GL.Window.Set_Viewport (0, 0, GL.Types.Size (Width),
+                              GL.Types.Size (Y_Max - Y_Min));
       Fb.Draw_Target.Attach_Texture (Fb.Color_Attachment_0, Target, 0);
       GL.Buffers.Set_Active_Buffer (GL.Buffers.Color_Attachment0);
       Tx.Set_Active_Unit (0);
@@ -231,19 +243,30 @@ package body GL.FreeType is
       GL.Uniforms.Set_Single (Object.Data.Program.Transform_Id, Transformation);
       Object.Data.Program.Square_Array.Bind;
       GL.Objects.Buffers.Array_Buffer.Bind (Object.Data.Program.Square_Buffer);
+      GL.Buffers.Set_Color_Clear_Value ((0.0, 0.0, 0.0, 1.0));
+      GL.Buffers.Clear ((Color => True, others => False));
       while Char_Position <= Content'Last loop
          Strings_Edit.UTF8.Get (Content, Char_Position, Code_Point);
          Map_Position := Character_Data (Object, Code_Point);
-         GL.Uniforms.Set_Single
-           (Object.Data.Program.Info_Id, GL.Types.Single (X_Offset), 0.0,
-            GL.Types.Single (Loaded_Characters.Element (Map_Position).Width),
-           GL.Types.Single (Loaded_Characters.Element (Map_Position).Height));
-         Tx.Targets.Texture_2D.Bind
-           (Loaded_Characters.Element (Map_Position).Image);
-         Va.Draw_Arrays (GL.Types.Triangle_Strip, 0, 4);
-         X_Offset :=
-           X_Offset + Loaded_Characters.Element (Map_Position).Width;
+         declare
+            Char_Data : constant Loaded_Character :=
+              Loaded_Characters.Element (Map_Position);
+         begin
+            GL.Uniforms.Set_Single
+              (Object.Data.Program.Info_Id,
+               GL.Types.Single (X_Offset + Char_Data.Left),
+               GL.Types.Single (Char_Data.Y_Min - Y_Min),
+               GL.Types.Single (Char_Data.Width),
+               GL.Types.Single (Char_Data.Y_Max - Char_Data.Y_Min));
+            Tx.Targets.Texture_2D.Bind
+              (Loaded_Characters.Element (Map_Position).Image);
+            Va.Draw_Arrays (GL.Types.Triangle_Strip, 0, 4);
+            X_Offset :=
+              X_Offset + Loaded_Characters.Element (Map_Position).Advance;
+         end;
+
       end loop;
+      GL.Flush;
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       Fb.Draw_Target.Bind (Fb.Default_Framebuffer);
 
