@@ -31,16 +31,17 @@ package body GL.FreeType is
       Vertex_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
         "layout(location = 0) in vec2 vertex;" & Character'Val (10) &
         "uniform vec4 character_info;" & Character'Val (10) &
+        "uniform mat4 transformation;" & Character'Val (10) &
         "out vec2 texture_coords;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
-        "  mat4 scale_matrix = mat4(character_info.z, 0.0, 0.0, 0.0," &
-                                    "0.0, character_info.w, 0.0, 0.0," &
-                                    "0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);" &
-        "  gl_Position = (mat4(1.0, 0.0, 0.0, character_info.x, " &
-                              "0.0, 1.0, 0.0, character_info.y, " &
-                              "0.0, 0.0, 1.0, 0.0, " &
-                              "0.0, 0.0, 0.0, 1.0) * scale_matrix) * vec4(vertex.xy, 0.0, 1.0);" &
-        "  texture_coords = vec2(vertex.x * character_info.z, vertex.y * character_info.w);" & Character'Val (10) &
+        "  vec2 scaled = mat2(character_info.z, 0.0, 0.0, character_info.w) *" &
+        "      vertex;" & Character'Val (10) &
+        "  vec4 translated = mat4(character_info.z, 0.0, 0.0, 0.0," &
+                                 "0.0, character_info.w, 0.0, 0.0," &
+                                 "0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0) *" &
+        "      vec4 (scaled, 0.0, 1.0);" & Character'Val (10) &
+        "  gl_Position = transformation * translated;" &
+        "  texture_coords = scaled;" & Character'Val (10) &
         "}");
       Vertex_Shader.Compile;
       if not Vertex_Shader.Compile_Status then
@@ -52,12 +53,12 @@ package body GL.FreeType is
       Fragment_Shader.Initialize_Id;
       Fragment_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
         "in vec2 texture_coords;" & Character'Val (10) &
-        "out vec4 color;" & Character'Val (10) &
+        "layout(location = 0) out vec4 color;" & Character'Val (10) &
         "uniform sampler2D text_sampler;" & Character'Val (10) &
         "uniform vec4 text_color;" & Character'Val (10) &
         "void main() {" & Character'Val (10) &
-        "  vec4 sampled = vec4 (1.0, 1.0, 1.0, texture(text_sampler, texture_coords).r);" &
-        "  color = text_color * sampled;" & Character'Val (10) &
+        "  float alpha = texture(text_sampler, texture_coords).r;" & Character'Val (10) &
+        "  color = mix(text_color, vec4(1.0, 1.0, 0.0, 1.0), alpha);" & Character'Val (10) &
         "}");
       Fragment_Shader.Compile;
       if not Fragment_Shader.Compile_Status then
@@ -84,6 +85,7 @@ package body GL.FreeType is
       Ret.Info_Id := Ret.Id.Uniform_Location ("character_info");
       Ret.Texture_Id := Ret.Id.Uniform_Location ("text_sampler");
       Ret.Color_Id := Ret.Id.Uniform_Location ("text_colour");
+      Ret.Transform_Id := Ret.Id.Uniform_Location ("transformation");
 
       return Ret;
    end Init_Program;
@@ -186,6 +188,8 @@ package body GL.FreeType is
                         Target_Width, Target_Height : Pixel_Size;
                         Text_Color : GL.Types.Colors.Color)
                         return GL.Objects.Textures.Texture is
+      use type GL.Types.Singles.Matrix4;
+      use type GL.Types.Single;
       package Fb renames GL.Objects.Framebuffers;
       package Tx renames GL.Objects.Textures;
       package Va renames GL.Objects.Vertex_Arrays;
@@ -195,6 +199,12 @@ package body GL.FreeType is
       Map_Position : Loaded_Characters.Cursor;
       Code_Point : Strings_Edit.UTF8.Code_Point;
       X_Offset : Pixel_Size := 0;
+      Transformation : constant GL.Types.Singles.Matrix4 :=
+        ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0),
+         (-1.0, -1.0, 0.0, 1.0)) *
+          ((2.0 / GL.Types.Single (Target_Width), 0.0, 0.0, 0.0),
+           (0.0, 2.0 / GL.Types.Single (Target_Height), 0.0, 0.0),
+           (0.0, 0.0, 1.0, 0.0), (0.0, 0.0, 0.0, 1.0));
    begin
       FrameBuf.Initialize_Id;
       Fb.Draw_Target.Bind (FrameBuf);
@@ -218,6 +228,7 @@ package body GL.FreeType is
                               GL.Types.Single (Text_Color (GL.Types.Colors.G)),
                               GL.Types.Single (Text_Color (GL.Types.Colors.B)),
                               GL.Types.Single (Text_Color (GL.Types.Colors.A)));
+      GL.Uniforms.Set_Single (Object.Data.Program.Transform_Id, Transformation);
       Object.Data.Program.Square_Array.Bind;
       GL.Objects.Buffers.Array_Buffer.Bind (Object.Data.Program.Square_Buffer);
       while Char_Position <= Content'Last loop

@@ -49,7 +49,7 @@ package GL.FreeType is
 private
    type Font_Rendering_Program is record
       Id : GL.Objects.Programs.Program;
-      Info_Id, Texture_Id, Color_Id : GL.Uniforms.Uniform;
+      Info_Id, Texture_Id, Color_Id, Transform_Id : GL.Uniforms.Uniform;
       Square_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Square_Buffer : GL.Objects.Buffers.Buffer;
    end record;
