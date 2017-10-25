@@ -16,6 +16,8 @@ package body GL_Test.Display_Backend is
 
    procedure Poll_Events renames Glfw.Events.Poll_Events;
 
+   procedure Wait_For_Events renames Glfw.Events.Wait_For_Events;
+
    procedure Swap_Buffers renames Glfw.Display.Swap_Buffers;
 
    procedure Set_Window_Title (Value : String) renames Glfw.Display.Set_Title;
