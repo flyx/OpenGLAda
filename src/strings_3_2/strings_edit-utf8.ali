@@ -1,0 +1,156 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.utf8%b	strings_edit-utf8.adb	05a18cfa NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.utf8%s	strings_edit-utf8.ads	d5db5807 EB NE OO PK
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-utf8.ads	20090421190310 a85b43e2 strings_edit.utf8%s
+D strings_edit-utf8.adb	20160407204448 495ad07c strings_edit.utf8%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 12|28r6 28r32
+X 5 a-ioexce.ads
+18K13*IO_Exceptions 30e22 12|28w10 28r36
+26X4*End_Error 12|47r19 147r19
+27X4*Data_Error 12|64r22 68r22 77r22 81r22 88r22 92r22 99r22 103r22 107r19
+. 113r19 117r19 124r16 128r16 157r19 163r16 292r16
+28X4*Layout_Error 12|43r16 49r19 145r19 151r16 196r16 203r19 212r19 223r19
+. 249r16 282r16
+X 10 strings_edit.ads
+132K9*Strings_Edit 335e17 11|28r9 29r27 213r5 12|30r14 297r5
+145I12*NumberBase{integer} 11|38r27
+X 11 strings_edit-utf8.ads
+28K22*UTF8 10|132k9 11|29r40 202E14 213l18 213e22 12|30b27 297l18 297t22
+33M9*Code_Point 34r31
+34M12*UTF8_Code_Point{33M9} 65r31 88r31 99r28 119r31 169r44 174r14 175r14
+. 210r28 211r28 12|35r31 37r15 38r15 52r15 66r21 79r21 90r21 101r21 115r18
+. 126r15 137r31 141r16 169r28 179r15 192r31 267r21 286r44 288r17
+38I12*Script_Base{10|145I12}
+42I9*Script_Digit<short_short_integer>
+43E9*Sign 43e36
+43n18*Minus{43E9}
+43n25*None{43E9}
+43n31*Plus{43E9}
+62U14*Get 63>17 64=17 65<17 12|32b14 132l8 132t11 161s7 183s10 271s16 290s7
+63a17 Source{string} 12|33b17 42r18 45r18 46r21 52r47 63r25 66r53 76r25 79r53
+. 87r25 90r53 98r25 101r53 112r22 115r50 123r18 126r47
+64i17 Pointer{integer} 12|34b17 39r26 56m13 131m7
+65m17 Value{34M12} 12|35b17 55m13 130m7
+85U14*Get_Backwards 86>17 87=17 88<17 12|134b14 167l8 167t21
+86a17 Source{string} 12|135b17 143r19 144r21 150r18 155r35 156r21 161r12
+87i17 Pointer{integer} 12|136b17 139r27 162r18 165m7
+88m17 Value{34M12} 12|137b17 166m7
+99V13*Image{string} 99>20 12|169b13 175l8 175t13
+99m20 Value{34M12} 12|169b20 173r29
+116U14*Put 117=17 118=17 119>17 12|173s7 189b14 235l8 235t11
+117a17 Destination{string} 12|190b17 195r25 199m10 202r24 205m10 207m10 211r18
+. 214m10 216m10 218m10 222r18 225m10 227m10 229m10 231m10
+118i17 Pointer{integer} 12|191b17 195r10 199r23 200m10 200r21 202r13 205r23
+. 207r23 209m10 209r21 211r37 214r23 216r23 218r23 220m10 220r21 222r37 225r23
+. 227r23 229r23 231r23 233m10 233r21
+119m17 Value{34M12} 12|192b17 198r10 199r50 201r13 206r38 208r39 210r13 215r38
+. 217r39 219r39 226r38 228r39 230r39 232r39
+134V13*Length{natural} 134>21 12|177b13 187l8 187t14
+134a21 Source{string} 12|177b21 180r26 182r22 183r15
+151U14*Skip 152>17 153=17 154>17 12|259b14 284l8 284t12
+152a17 Source{string} 12|260b17 271r21 275r26 277r29 279r33
+153i17 Pointer{integer} 12|261b17 268r32 273m13 275r16 277r19 279r19
+154i17 Count{natural} 12|262b17 265r10 270r33
+169V13*Value{34M12} 169>20 12|286b13 295l8 295t13
+169a20 Source{string} 12|286b20 287r28 290r12 291r21
+173R9*Code_Points_Range 176e14 178r26 183r36 209r26
+174m7*Low{34M12} 210m20
+175m7*High{34M12} 211m20
+178r4*Full_Range{173R9} 209c4
+182A9*Code_Points_Ranges(173R9)<integer>
+202U14 Reverse_Put 203=17 204=17 205>17 206>17 12|237b14 257l8 257t19
+203a17 Destination{string} 12|238b17 244r28 246r23 251m7 254m10
+204i17 Pointer{integer} 12|239b17 244r13 246r13 251r20 252m7 252r18 254r23
+. 255m10 255r21
+205a17 Prefix{string} 12|240b17 246r43 253r28 254r35
+206i17 Position{natural} 12|241b17 251r47
+X 12 strings_edit-utf8.adb
+37m7 Accum{11|33M9} 59m13 70m13 73m13 83m13 85m13 94m13 94r22 96m13 105m13
+. 105r22 119m10 119r19 130r18
+38m7 Code{11|33M9} 52m7 53r12 55r24 59r23 66m13 67r16 70r23 73r23 79m13 80r16
+. 83r23 85r23 90m13 91r16 94r32 96r23 101m13 102r16 105r32 115m10 116r13
+. 119r29 126m7 127r10 130r28
+39i7 Index{integer} 42r10 45r10 46r13 52r55 56r24 62m13 62r22 63r16 66r61
+. 75m13 75r22 76r16 79r61 86m13 86r22 87r16 90r61 97m13 97r22 98r16 101r61
+. 111m10 111r19 112r13 115r58 122m7 122r16 123r10 126r55 131r18
+40b7 Last{boolean} 60m13 71m13 110r14
+139i7 First{integer} 143r10 144r13 150r10 154m10 154r19 155r43 156r13 160r15
+. 165r18
+140i7 Last{integer} 160m7 161m20 161r20 162r10
+141m7 Result{11|34M12} 161m26 166r18
+170a7 Result{string} 171r28 173m12 173r12 174r14
+171i7 Pointer{integer} 173m20 173r20 174r25
+178i7 Count{natural} 184m10 184r19 186r14
+179m7 Accum{11|34M12} 183m30
+180i7 Index{integer} 182r13 183m23 183r23
+253i11 Index{integer} 254r43
+267m13 Accum{11|34M12} 271m36
+268i13 Index{integer} 271m29 271r29 273r24
+270i17 Character{integer}
+287i7 Pointer{integer} 290m20 290r20 291r10
+288m7 Result{11|34M12} 290m29 294r14
+

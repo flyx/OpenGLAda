@@ -1,0 +1,133 @@
+project Strings_Edit is
+
+   type Development_Type is ("Debug", "Release");
+   Development : Development_Type := external ("Development", "Debug");
+   
+   type Legacy_Type is ("Ada95", "Ada2005", "Ada2012");
+   Legacy : Legacy_Type := external ("Legacy", "Ada2005");
+
+   for Source_Dirs use (".");
+   for Object_Dir use ".";
+
+   for Source_Files use
+       (  "strings_edit-base64.adb",
+          "strings_edit-base64.ads",
+          "strings_edit-fields.adb",
+          "strings_edit-fields.ads",
+          "strings_edit-floats.ads",
+          "strings_edit-float_edit.adb",
+          "strings_edit-float_edit.ads",
+          "strings_edit-generic_scale.adb", 
+          "strings_edit-generic_scale.ads",
+          "strings_edit-integers-subscript.ads",
+          "strings_edit-integers-superscript.ads",
+          "strings_edit-integers.ads",
+          "strings_edit-integer_edit.adb",
+          "strings_edit-integer_edit.ads",
+          "strings_edit-lexicographical_order.adb",
+          "strings_edit-lexicographical_order.ads",
+          "strings_edit-quoted.adb",
+          "strings_edit-quoted.ads",
+          "strings_edit-roman_edit.adb",
+          "strings_edit-roman_edit.ads",
+          "strings_edit-streams.adb",
+          "strings_edit-streams.ads",
+          "strings_edit-streams-generic_modular.adb",
+          "strings_edit-streams-generic_modular.ads",
+          "strings_edit-streams-generic_integer.adb",
+          "strings_edit-streams-generic_integer.ads",
+          "strings_edit-streams-generic_unsigned.adb",
+          "strings_edit-streams-generic_unsigned.ads",
+          "strings_edit-streams-integers.ads",
+          "strings_edit-streams-integers_32.ads",
+          "strings_edit-streams-integers_64.ads",
+          "strings_edit-streams-naturals.ads",
+          "strings_edit-streams-unsigneds_32.ads",
+          "strings_edit-streams-unsigneds_64.ads",
+          "strings_edit-text_edit.adb",
+          "strings_edit-utf8-handling.adb",
+          "strings_edit-utf8-handling.ads", 
+          "strings_edit-utf8-categorization.adb", 
+          "strings_edit-utf8-categorization.ads",
+          "strings_edit-utf8-blocks.ads", 
+          "strings_edit-utf8-maps.adb",
+          "strings_edit-utf8-maps.ads",
+          "strings_edit-utf8-maps-constants.ads",
+          "strings_edit-utf8-mapping.adb",
+          "strings_edit-utf8-mapping.ads", 
+          "strings_edit-utf8-integer_edit.adb",
+          "strings_edit-utf8-integer_edit.ads",
+          "strings_edit-utf8-subscript-integer_edit.ads",
+          "strings_edit-utf8-subscript.adb",
+          "strings_edit-utf8-subscript.ads", 
+          "strings_edit-utf8-superscript-integer_edit.ads",
+          "strings_edit-utf8-superscript.adb",
+          "strings_edit-utf8-superscript.ads",
+          "strings_edit-utf8-wildcards.adb",
+          "strings_edit-utf8-wildcards.ads",
+          "strings_edit-utf8-wildcards-case_insensitive.adb",
+          "strings_edit-utf8-wildcards-case_insensitive.ads",
+          "strings_edit-utf8.adb",
+          "strings_edit-utf8.ads",
+          "strings_edit.adb",
+          "strings_edit.ads"
+       );
+
+   package Binder is
+      case Development is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-E");
+         when "Release" =>
+            for Default_Switches ("ada") use ();
+      end case;
+   end Binder;
+
+   package Builder is
+      case Development is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-g");
+         when "Release" =>
+            for Default_Switches ("ada") use ("-s");
+      end case;
+   end Builder;
+
+   package Compiler is
+      case Development is
+         when "Debug" =>
+            case Legacy is
+               when "Ada2012" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvz.c.p.t.w.x", "-gnato", "-gnatVa", "-gnatf", "-g", "-fstack-check", "-gnat12");
+               when "Ada2005" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvZ.c.p.t.w.x", "-gnato", "-gnatVa", "-gnatf", "-g", "-fstack-check", "-gnat05");
+               when "Ada95" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvz.c.p.t.w.x", "-gnato", "-gnatVa", "-gnatf", "-g", "-fstack-check", "-gnat95");
+            end case;
+         when "Release" =>
+            case Legacy is
+               when "Ada2012" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvz.c.p.t.w.x", "-gnatp", "-gnatVa", "-gnatf", "-O2", "-gnatn", "-gnat12");
+               when "Ada2005" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvz.c.p.t.w.x", "-gnatp", "-gnatVa", "-gnatf", "-O2", "-gnatn", "-gnat05");
+               when "Ada95" =>
+                  for Default_Switches ("ada") use
+                     ("-gnatwcikmoprvz.c.p.t.w.x", "-gnatp", "-gnatVa", "-gnatf", "-O2", "-gnatn", "-gnat95");
+            end case;
+      end case;
+   end Compiler;
+
+   package Linker is
+      case Development is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-g");
+         when "Release" =>
+            for Default_Switches ("ada") use ("-O2", "-s");
+      end case;
+   end Linker;
+
+end Strings_Edit;
+

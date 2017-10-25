@@ -1,0 +1,126 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.quoted%b	strings_edit-quoted.adb	0598743c NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W strings_edit.fields%s	strings_edit-fields.adb	strings_edit-fields.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.quoted%s	strings_edit-quoted.ads	ce827f1f EE NE OO PK
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-fields.ads  20090421190310 761cddde strings_edit.fields%s
+D strings_edit-quoted.ads  20140530095019 b30264fa strings_edit.quoted%s
+D strings_edit-quoted.adb  20090421190310 2426d27c strings_edit.quoted%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 13|28r6 28r32
+X 5 a-ioexce.ads
+18K13*IO_Exceptions 30e22 13|28w10 28r36
+27X4*Data_Error 13|45r16 50r19
+28X4*Layout_Error 13|42r16 103r19 113r16
+X 10 strings_edit.ads
+132K9*Strings_Edit 335e17 12|28r9 96r5 13|29r6 29r32 31r14 158r5
+139E12*Alignment{6|29E9} 12|80r31 13|89r31
+142e4*Left=142:43{6|29E9} 12|80r44 13|89r44
+X 11 strings_edit-fields.ads
+60K22*Fields 106e24 13|29w19 29r45
+76V13*Get_Output_Field{natural} 13|93s21
+96U14*Adjust_Output_Field 13|117s7
+X 12 strings_edit-quoted.ads
+28K22*Quoted 10|132k9 12|96l18 96e24 13|31b27 158l18 158t24
+51V13*Get_Quoted{string} 52>16 53^16 54>16 13|64b13 81l8 81t18
+52a16 Source{string} 13|65b16 69r46 73r27
+53p16 Pointer(integer) 13|66b16 69r54 70r27
+54e16 Mark{character} 13|67b16 69r63 74r29
+74U14*Put_Quoted 75=17 76=17 77>17 78>17 79>17 80>17 81>17 13|83b14 126l8
+. 126t18
+75a17 Destination{string} 13|84b17 93r39 96m18 96r18 118m10
+76i17 Pointer{integer} 13|85b17 93r52 94r32 94r41 96r31 96r40 97r26 119m10
+77a17 Text{string} 13|86b17 101r19 105r28 107r13
+78e17 Mark{character} 13|87b17 99r25 107r27 108r31 115r25
+79i17 Field{natural} 13|88b17 93r61 122r10
+80e17 Justify{10|139E12} 13|89b17 123r10
+81e17 Fill{character} 13|90b17 124r10
+93V13*Quote{string} 93>20 93>35 13|128b13 156l8 156t13
+93a20 Text{string} 13|128b20 130r27 132r20 133r13 143r23 144r16 149r36
+93e35 Mark{character} 13|128b35 133r28 141r30 144r31 145r40 146r40 153r30
+X 13 strings_edit-quoted.adb
+33V13 Get_Quoted_Length{natural} 33b13 34>16 35^16 36>16 62l8 62t25 69s27
+34a16 Source{string} 41r18 41r47 44r18 44r38 49r21 52r13 55r24 55r44
+35p16 Pointer(integer) 38r27 60r7
+36e16 Mark{character} 44r56 52r30 55r62
+38i7 Index{integer} 41r10 41r39 44r10 44r46 47m7 47r16 49r13 52r21 53m13
+. 53r22 55r16 55r52 58m10 58r20 60r22
+39i7 Length{natural} 57m10 57r20 61r14
+69a7 Result{string} 72r27 73m10 74r13 80r14
+70i7 Index{integer} 73r35 75m13 75r22 77m13 77r22
+72i11 Item{integer} 73r18 74r21
+92i6 Out_Field{natural} 94r51 96r50 121r10
+94A14 Output{string}<integer> 95r15
+95a6 Result{string} 99r7 102r22 105r10 108r13 112r18 115r7
+97i6 Index{integer} 99r15 100m7 100r16 102r13 105r18 106m10 106r19 108r21
+. 109m13 109r22 112r10 115r15 116m7 116r16 120r10
+101i11 Item{integer} 105r34 107r19
+130i7 Length{natural} 134m13 134r23 138r31
+132i11 Index{integer} 133r19
+138a10 Result{string} 139r32 141m10 145m16 146m16 149m16 153m10 154r17
+139i10 Pointer{positive} 141r18 142m10 142r21 145r24 146r24 147m16 147r27
+. 149r24 150m16 150r27 153r18
+143i14 Index{integer} 144r22 149r42
+

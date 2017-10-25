@@ -1,0 +1,142 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTIONS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U strings_edit.streams%b  strings_edit-streams.adb  c8aa6a7c NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W system%s		system.ads		system.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.streams%s  strings_edit-streams.ads  4c2c30d0 BN EE OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.streams%s		a-stream.adb		a-stream.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W system%s		system.ads		system.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+W system.storage_elements%s  s-stoele.adb	s-stoele.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-streams.ads  20120211132356 0df4ee82 strings_edit.streams%s
+D strings_edit-streams.adb  20160407204448 21fe9b9a strings_edit.streams%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-soflin.ads		20151020124036 14e1eb6c system.soft_links%s
+D s-stache.ads		20140225151139 a37c21ec system.stack_checking%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20140801093848 ed88f8fb system.storage_elements%b
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 13|31r6 31r24 14|28r6 28r30
+X 5 a-ioexce.ads
+18K13*IO_Exceptions 30e22 14|28w10 28r34
+26X4*End_Error 14|62r16 102r16 111r19
+X 6 a-stream.ads
+36K13*Streams 87e16 13|31w10 31r28
+39H9*Root_Stream_Type 70e64 13|44r11
+42M9*Stream_Element 13|119r29 126r46
+44I9*Stream_Element_Offset<long_long_integer> 13|74r30 14|34r25 50r10 58r30
+51I12*Stream_Element_Count{44I9} 13|67r14 14|47r14
+54A9*Stream_Element_Array(42M9)<44I9> 13|73r30 109r26 14|57r30 65r27 98r26
+. 105r27
+X 12 strings_edit.ads
+132K9*Strings_Edit 335e17 13|35r9 130r5 14|30r14 118r5
+X 13 strings_edit-streams.ads
+35K22*Streams 12|132k9 13|119E4 130l18 130e25 14|30b27 118l18 118t25
+43R9*String_Stream<6|39R9> 43d24 48e14 60p13 60r27 66p13 66r32 71P14 72r33
+. 84p14 84r38 99p14 99r35 107P14 108r33 14|41r27 46r32 56r33 82r38 87r35
+. 97r33
+43i24*Length{natural} 47r29 14|61r35 89r34 92r33 93r44 101r35
+46i7*Position{positive} 14|43r37 50r59 61r17 68r51 73m31 73r31 77m20 84m14
+. 92m14 93r27 101r17 108r51 114m28 114r28
+47a7*Data{string} 14|43r21 50r40 68m38 77r39 93m14 108m38
+60V13*Get{string} 60>18 14|41b13 44l8 44t11
+60r18 Stream{43R9} 14|41b18 43r14 43r30
+66V13*Get_Size{6|51I12} 66>23 115r19 14|46b13 53l8 53t16 65s52 105s52
+66r23 Stream{43R9} 14|46b23 50r33 50r52
+71U14*Read<6|57p14> 72=17 73<17 74<17 14|55b14 80l8 80t12
+72r17 Stream{43R9} 14|56b17 61r10 61r28 65r62 68m31 68r31 68r44 73m24 73r24
+. 77m13 77r32
+73a17 Item{6|54A9} 14|57b17 70r29 71r21 72m13 72r30 73r41 75r21 76m13 76r19
+74i17 Last{6|44I9} 14|58b17 71m13 75m13 76r31
+84U14*Rewind 84=22 14|82b14 85l8 85t14
+84r22 Stream{43R9} 14|82b22 84m7
+99U14*Set 99=19 99>50 14|87b14 94l8 94t11
+99r19 Stream{43R9} 14|87b19 89r27 92m7 92r26 93m7 93r20 93r37
+99a50 Content{string} 14|87b50 89r10 92r42 93r55
+107U14*Write<6|63p14> 108=17 109>17 14|96b14 116l8 116t13
+108r17 Stream{43R9} 14|97b17 101r10 101r28 105r62 108m31 108r31 108r44 114m21
+. 114r21
+109a17 Item{6|54A9} 14|98b17 110r13 113r19 113r35 114r38
+119N4 Char_Count 126r16 14|38r40 51r10
+124B12 Confirmed{boolean} 125r22
+125b4 Assert{124E12}
+X 14 strings_edit-streams.adb
+32U14 Increment 32b14 33=17 34>17 36r22 39l8 39t17 73s13 114s10
+33i17 Left{integer} 38m7 38r15
+34i17 Right{6|44I9} 38r31
+65A18 Space{6|54A9}<6|44I9> 66r17 70r13
+66a10 Data{65A18} 67m30 67r30 68m14 68r14 72r21 75r34 76r40
+105A18 Space{6|54A9}<6|44I9> 106r17 110r27
+106a10 Data{105A18} 107m30 107r30 108m14 108r14 113m10
+X 15 system.ads
+37K9*System 13|33r6 113r8 15|174e11
+X 22 s-stoele.ads
+42K16*Storage_Elements 13|33w13 113r15 22|117e28
+64M9*Storage_Element 13|128r35
+

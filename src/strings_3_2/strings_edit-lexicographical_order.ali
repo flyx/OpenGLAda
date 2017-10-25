@@ -1,0 +1,110 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.lexicographical_order%b  strings_edit-lexicographical_order.adb  179cee00 NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+U strings_edit.lexicographical_order%s  strings_edit-lexicographical_order.ads  f0fff01a BN EB NE OO PK
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-lexicographical_order.ads  20120402123209 8d7febff strings_edit.lexicographical_order%s
+D strings_edit-lexicographical_order.adb  20160407204448 9ae305ff strings_edit.lexicographical_order%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 8 strings_edit.ads
+132K9*Strings_Edit 335e17 9|28r9 29r27 75r5 10|28r14 192r5
+X 9 strings_edit-lexicographical_order.ads
+28K22*Lexicographical_Order 8|132k9 9|29r40 31E9 75l18 75e39 10|28b27 192l18
+. 192t39
+31E9*Precedence 31e45 46r61 63r14 10|38r60 70r61 114r14
+31n24*Less{31E9} 10|51r20 59r23 78r20 91r20 94r23 103r23 122r20 139r24 140r29
+. 148r20 151r23 160r23 183r48 189r56
+31n30*Equal{31E9} 10|67r14 76r20 101r23 120r20 143r24 158r23 172r48 178r56
+31n37*Greater{31E9} 10|53r20 61r23 81r17 86r23 96r23 106r20 125r17 130r23
+. 141r24 142r29 153r23 163r20
+46V13*Compare_Textually{31E9} 46>32 46>38 10|70b13 111l8 111t25 172s14 183s14
+46a32 Left{string} 10|70b32 71r22 74r10 84r13 88r26 92r16 93r16 99r17
+46a38 Right{string} 10|70b38 72r22 75r13 80r13 85r16 89r26 90r16 92r28 93r27
+. 100r20 105r20
+47V13*Textually_Equal{boolean} 47>30 47>36 70r19 10|170b13 173l8 173t23
+47a30 Left{string} 10|170b30 172r33
+47a36 Right{string} 10|170b36 172r39
+48V13*Textually_Less{boolean} 48>29 48>35 71r19 10|181b13 184l8 184t22
+48a29 Left{string} 10|181b29 183r33
+48a35 Right{string} 10|181b35 183r39
+62V13*Compare_Lexicographically{31E9} 62>40 62>46 10|113b13 168l8 168t33
+. 178s14 189s14
+62a40 Left{string} 10|113b40 115r22 118r10 128r13 136r29 138r39 149r16 150r16
+. 156r17
+62a46 Right{string} 10|113b46 116r22 119r13 124r13 129r16 137r29 138r53 147r16
+. 149r28 150r27 157r20 162r20
+64V13*Lexicographically_Equal{boolean} 64>38 64>44 72r19 10|175b13 179l8
+. 179t31
+64a38 Left{string} 10|175b38 178r41
+64a44 Right{string} 10|175b44 178r47
+66V13*Lexicographically_Less{boolean} 66>37 66>43 73r19 10|186b13 190l8 190t30
+66a37 Left{string} 10|186b37 189r41
+66a43 Right{string} 10|186b43 189r47
+X 10 strings_edit-lexicographical_order.adb
+30U14 Get_Numeral 30b14 30>27 30=42 36l8 36t19 88s13 89s13 136s16 137s16
+30a27 Text{string} 32r23 33r20
+30i42 Pointer{integer} 32r13 33r26 34m10 34r21
+38V13 Compare_Numerals{9|31E9} 38b13 38>31 38>37 68l8 68t24 138s21
+38a31 Left{string} 41r12 42r18 42r37 49r10 50r13 56r18 57r13 58r16
+38a37 Right{string} 45r12 46r18 46r38 49r27 50r29 57r25 58r27
+39i7 I{integer} 41m7 42r13 42r43 43m10 43r15 49r22 50r25 56r13 57r19 58r22
+. 64m10 64r15
+39i10 J{integer} 45m7 46r13 46r45 47m10 47r15 49r40 50r42 57r32 58r34 65m10
+. 65r15
+71i7 I{integer} 84r19 88m32 88r32 92r22 93r22 99r13 108m10 108r15
+72i7 J{integer} 85r23 89m33 89r33 90r23 92r35 93r34 100r16 105r16 109m10
+. 109r15
+115i7 I{integer} 128r19 133r41 136m35 136r35 138r49 149r22 150r22 156r13
+. 165m10 165r15
+116i7 J{integer} 129r23 134r41 137m36 137r36 138r64 147r23 149r35 150r34
+. 157r16 162r16 166m10 166r15
+133i16 I0{integer} 138r45
+134i16 J0{integer} 138r60
+

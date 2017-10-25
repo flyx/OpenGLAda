@@ -1,0 +1,87 @@
+project _Auto is
+
+   for Library_Support use "full";
+   for Library_Auto_Init_Supported use "true";
+   for Target use "";
+   for Default_Language use "ada";
+
+   package Compiler is
+      for Driver ("ada") use "gcc";
+      for Language_Kind ("ada") use "unit_based";
+      for Dependency_Kind ("ada") use "ALI_File";
+      for Object_File_Suffix ("html") use "-";
+      for Object_File_Suffix ("xml") use "-";
+      for Object_File_Suffix ("matlab") use "-";
+      for Object_File_Suffix ("c#") use "-";
+      for Object_File_Suffix ("asm2") use "-";
+      for Object_File_Suffix ("asm_cpp") use "-";
+      for Object_File_Suffix ("asm") use "-";
+      for Object_File_Suffix ("gnat expanded code") use "-";
+      for Object_File_Suffix ("java") use "-";
+      for Object_File_Suffix ("javascript") use "-";
+      for Object_File_Suffix ("tcl") use "-";
+      for Object_File_Suffix ("shell") use "-";
+      for Object_File_Suffix ("makefile") use "-";
+      for Object_File_Suffix ("m4") use "-";
+      for Object_File_Suffix ("fortran 90") use "-";
+      for Object_File_Suffix ("pascal") use "-";
+      for Object_File_Suffix ("perl") use "-";
+      for Object_File_Suffix ("awk") use "-";
+      for Object_File_Suffix ("autoconf") use "-";
+      for Object_File_Suffix ("rest") use "-";
+      for Object_File_Suffix ("texinfo") use "-";
+      for Object_File_Suffix ("project file") use "-";
+      for Object_File_Suffix ("changelog") use "-";
+      for Object_File_Suffix ("simulink") use "-";
+      for Object_File_Suffix ("python") use ".pyc";
+      for Object_File_Suffix ("css") use "-";
+      for Object_File_Suffix ("wsdl") use "-";
+      for Object_File_Suffix ("c++") use ".o";
+      for Object_File_Suffix ("c") use ".o";
+      for Object_File_Suffix ("ada") use ".o";
+   end Compiler;
+
+   package Naming is
+      for Spec_Suffix ("ada") use ".ads";
+      for Body_Suffix ("ada") use ".adb";
+      for Dot_Replacement use "-";
+      for Casing use "lowercase";
+      for Spec_Suffix ("html") use ".html";
+      for Body_Suffix ("xml") use ".xml";
+      for Body_Suffix ("matlab") use ".m";
+      for Spec_Suffix ("c#") use ".cs";
+      for Body_Suffix ("asm2") use ".asm";
+      for Body_Suffix ("asm_cpp") use ".s";
+      for Body_Suffix ("asm") use ".s";
+      for Body_Suffix ("gnat expanded code") use ".dg";
+      for Body_Suffix ("java") use ".java";
+      for Body_Suffix ("javascript") use ".js";
+      for Body_Suffix ("tcl") use ".tcl";
+      for Body_Suffix ("shell") use ".sh";
+      for Body_Suffix ("m4") use ".m4";
+      for Body_Suffix ("fortran 90") use ".f";
+      for Body_Suffix ("pascal") use ".pas";
+      for Body_Suffix ("perl") use ".pl";
+      for Body_Suffix ("awk") use ".awk";
+      for Body_Suffix ("autoconf") use "configure.in";
+      for Body_Suffix ("rest") use ".rst";
+      for Body_Suffix ("texinfo") use ".texi";
+      for Body_Suffix ("project file") use ".gpr";
+      for Spec_Suffix ("changelog") use ".changelog";
+      for Spec_Suffix ("simulink") use ".slx";
+      for Body_Suffix ("simulink") use ".mdl";
+      for Body_Suffix ("python") use ".py";
+      for Body_Suffix ("css") use ".css";
+      for Spec_Suffix ("wsdl") use ".wsdl";
+      for Spec_Suffix ("c++") use ".hh";
+      for Body_Suffix ("c++") use ".cpp";
+      for Spec_Suffix ("c") use ".h";
+      for Body_Suffix ("c") use ".c";
+      for Spec_Suffix ("ada") use ".ads";
+      for Body_Suffix ("ada") use ".adb";
+   end Naming;
+
+   for Library_Support use "full";
+
+end _Auto;
+

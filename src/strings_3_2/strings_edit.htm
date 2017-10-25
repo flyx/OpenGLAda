@@ -1,0 +1,3206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML>
+<HEAD>
+<link REL="SHORTCUT ICON" href="http://www.dmitry-kazakov.de/favicon.ico">
+  <TITLE>String processing for Ada</TITLE>
+  <META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <META name="keywords" content="String, Edit, Parse, Format, Formatted, Ada, Ada 95, Ada 2005, Ada programming, Roman number, Roman numeral, subscript number, superscript number, UTF-8, Unicode, UTF8, wildcard, wildcard matching, wildcard pattern, upper case, lower case, uppercase, lowercase, code point, character map">
+  <META name="Author" content="Dmitry Kazakov">
+  <META name="Description" content="Strings edit">
+</HEAD>
+<BODY bgcolor="#FFFFFF" link="#0000FF" vlink="#800000">
+<P align="center">
+<BIG><BIG><BIG><B>STRINGS EDIT</B></BIG></BIG><BR>
+<EM>version 3.2</EM><BR>
+by Dmitry A. Kazakov</BIG><BR>
+(<A HREF="mailto:mailbox@dmitry-kazakov.de">mailbox@dmitry-kazakov.de</A>)<br>
+<a href="http://www.dmitry-kazakov.de"><img border="0" src="home.jpg" alt="[Home]" width="40" height="40"></a>
+</p>
+<P>
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version. This library is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+FITNESS FOR A PARTICULAR PURPOSE. See the
+<a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
+for more details. You should have received a copy of the GNU General Public 
+License along with this library; if not, write to the Free Software Foundation, 
+Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</P>
+<P>
+As a special exception, if other files instantiate generics from this unit, or 
+you link this unit with other files to produce an executable, this unit does not 
+by itself cause the resulting executable to be covered by the GNU General Public 
+License. This exception does not however invalidate any other reasons why the 
+executable file might be covered by the GNU Public License.</P>
+  <HR>
+<P>
+The package Strings_Edit provides I/O facilities. The following I/O items
+are supported by the package:
+<UL>
+  <LI>
+    Generic axis scales support;<LI>
+    Integer numbers (generic, package <A href="#Integer_Edit">Integer_Edit</A>);
+  <LI>
+    Integer sub- and superscript numbers;
+  <LI>
+    Floating-point numbers (generic, package
+    <A href="#Float_Edit">Float_Edit</A>);
+  <LI>
+    Roman numbers (the type Roman);
+  <LI>
+    Strings;
+  <LI>
+    Ada-style quoted strings;
+  <LI>
+    UTF-8 encoded strings;<LI>
+    Unicode maps and sets;<LI>
+    Wildcard pattern matching.
+</UL>
+<P>
+The major differences to the standard Image/Value attributes and Text_IO
+procedures are:
+<ul>
+	<LI>For numeric types, the base is neither written nor read. For instance, output
+    of 23 as hexadecimal gives 17, not 16#17#.
+  	<LI>Get procedures do not skip blank characters around input tokens, except the
+    cases when the blank characters are required by the syntax.
+  	<LI>Get procedures use the current string position pointer, so that they can
+    be consequently called advancing the pointer as the tokes are recognized.
+  	<LI>Numeric get procedures allow to specify the expected value range. When the
+    actual value is out of the range then depending on procedure parameters,
+    either Constraint_Error is propagated or the value is forced to the nearest
+    range boundary.
+	<LI>Put procedures also use the current string position pointer, which allows
+    to call them consequently.
+  	<LI>The format used for floating-number output is based on the number precision,
+    instead of rather typographic approach of Text_IO. The precision can be specified
+    either as the number of valid digits of the current base (i.e. relative)
+    or as the position of the last valid digit (i.e. absolute). For instance,
+    12.345678 with relative precision 3 gives 12.3. With absolute precision -3,
+    it gives 12.346.
+</ul>
+<p>Strings edit project is a part of the
+<a href="http://www.dmitry-kazakov.de/ada/components.htm">simple components for 
+Ada</a> project and can be obtained with it. Alternatively the latest version 
+can be here.</p>
+<table border="0" cellspacing="0" cellpadding="0" style="border-top-width: 0px">
+	<tr>
+		<td style="border-top-style: none; border-top-width: medium" colspan="4">&nbsp;</td>
+		<td style="border-top-style: none; border-top-width: medium" align="right">
+&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="center">
+		ARM</td>
+		<td align="center" colspan="2">
+		Intel</td>
+	</tr>
+	<tr>
+		<td style="border-top-style: none; border-top-width: medium" colspan="4"><b>Download Strings Edit</b></td>
+		<td style="border-top-style: none; border-top-width: medium" align="right">
+<b>Platform:</b></td>
+		<td>&nbsp;</td>
+		<td align="center">
+		v7</td>
+		<td align="center">
+		64-</td>
+		<td align="center">
+		32bit</td>
+	</tr>
+	<tr>
+		<td style="border-top-style: solid; border-top-width: 1px">
+		<a name="Fedora_packages"></a>Fedora packages	</td>
+		<td style="border-top-style: solid; border-top-width: 1px" align="center">
+		<img border="0" src="fedora-logo.jpg" width="16" height="16" alt="Fedora"></td>
+		<td style="border-top-style: solid; border-top-width: 1px">&nbsp;&nbsp;&nbsp; </td>
+		<td style="border-top-style: solid; border-top-width: 1px">precompiled and packaged using RPM</td>
+		<td style="border-top-style: solid; border-top-width: 1px">&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="right">
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_fedora_armv7hl.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td>
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_fedora_x86_64.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td>
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_fedora_i686.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+	</tr>
+	<tr>
+		<td style="border-top-style: solid; border-top-width: 1px">
+		<a name="CentOS_packages"></a>CentOS packages </td>
+		<td style="border-top-style: solid; border-top-width: 1px" align="center">
+		<img border="0" src="centos-logo.jpg" width="16" height="16" alt="CentOS"></td>
+		<td style="border-top-style: solid; border-top-width: 1px">&nbsp;</td>
+		<td style="border-top-style: solid; border-top-width: 1px">precompiled and packaged using RPM</td>
+		<td style="border-top-style: solid; border-top-width: 1px">&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="right">&nbsp;</td>
+		<td><a href="http://www.dmitry-kazakov.de/distributions/centos/strings_edit_centos_x86_64.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td><a href="http://www.dmitry-kazakov.de/distributions/centos/strings_edit_centos_i686.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+	</tr>
+	<tr>
+		<td style="border-top-style: solid; border-top-width: 1px; ">
+		<a name="Debian_packages"></a>Debian packages </td>
+		<td style="border-top-style: solid; border-top-width: 1px; " align="center">
+		<img border="0" src="debian-logo.jpg" width="16" height="16" alt="Debian"></td>
+		<td style="border-top-style: solid; border-top-width: 1px; ">&nbsp;</td>
+		<td style="border-top-style: solid; border-top-width: 1px; " colspan="2">precompiled and packaged for dpkg</td>
+		<td>&nbsp;</td>
+		<td align="right">
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_debian_armhf.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td>
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_debian_x86_64.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td>
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_debian_i686.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+	</tr>
+	<tr>
+		<td style="border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px">
+		<a name="Ubuntu_packages"></a>Ubuntu packages </td>
+		<td style="border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" align="center">
+		<img border="0" src="ubuntu-logo.jpg" width="16" height="16" alt="Ubuntu"></td>
+		<td style="border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px">&nbsp;</td>
+		<td style="border-top-style: solid; border-top-width: 1px; border-bottom-style: solid; border-bottom-width: 1px" colspan="2">precompiled and packaged for dpkg</td>
+		<td>&nbsp;</td>
+		<td align="right">
+		<a href="http://www.dmitry-kazakov.de/distributions/strings_edit_ubuntu_armhf.htm">
+		<img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td><a href="http://www.dmitry-kazakov.de/distributions/ubuntu/strings_edit_ubuntu_x86_64.htm"><img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+		<td><a href="http://www.dmitry-kazakov.de/distributions/ubuntu/strings_edit_ubuntu_i686.htm"><img src="in.jpg" align=middle alt="[Download page]" width="29" height="29"></a></td>
+	</tr>
+	<tr>
+		<td style="border-bottom-style: solid; border-bottom-width: 1px" colspan="2">Source distribution (any platform)</td>
+		<td style="border-bottom-style: solid; border-bottom-width: 1px">&nbsp;</td>
+		<td style="border-bottom-style: solid; border-bottom-width: 1px" colspan="2">
+<a href="http://www.dmitry-kazakov.de/ada/strings_3_2.tgz">strings_3_2.tgz</a> (<b>tar</b> + <b>gzip</b>, Windows users may use WinZip)</td>
+		<td>&nbsp;</td>
+		<td align="center">
+		&nbsp;</td>
+		<td align="center">
+		<a href="http://www.dmitry-kazakov.de/ada/strings_3_2.tgz">
+ <img src="download.jpg" align=middle alt="[Download]" width="29" height="29"></a></td>
+		<td align="center">
+		&nbsp;</td>
+	</tr>
+</table>
+<P>See also
+<a href="#changes_log">changes log</a>.</P>
+<hr>
+<P align="right">
+<A name="1"></A><A href="#16"><IMG
+    src="index.gif" alt="[TOC]" width="29" height="29"></A><A
+    href="#2"><IMG src="next.gif" alt="[Next]" width="29" height="29"></A><H2>1. Input from String</H2>
+<H3><A name="1.1"></A>1.1. Get procedures</H3>
+<P><A name="Gets"></A>Get procedures are used to scan strings. The first two
+parameters are always <b>Source</b> and <b>Pointer</b>.
+<b>Source</b> is the string to be scanned. <b>Pointer</b>
+indicates the current position. After successful completion it is advanced
+to the first string position following the recognized item. The value of
+<b>Pointer</b> shall be in the range
+<b>Source</b>'First..<b>Source</b>'Last+1. The Layout_Error
+exception is propagated when this check fails. The third parameter usually
+accepts the value. The following example shows how to use get procedures:</p>
+<BLOCKQUOTE>
+  <tt> <FONT color="#0000FF">package</FONT> Edit_Float <FONT color="#0000FF">is new</FONT> Float_Edit
+  (Float);<BR>
+  <FONT color="#0000FF">use</FONT> Edit_Float;<BR>
+  &nbsp; &nbsp;. . .<BR>
+  &nbsp;&nbsp; Line &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: String
+  (<FONT color="#800000">1</FONT>..<FONT color="#800000">512</FONT>);<FONT
+      color="#008000"> -- A line to parse</FONT><BR>
+  &nbsp; &nbsp;Pointer&nbsp; &nbsp;&nbsp; : Integer;<BR>
+  &nbsp; &nbsp;Value&nbsp;&nbsp; &nbsp; &nbsp; : Float;<BR>
+  &nbsp; &nbsp;TabAndSpace : Ada.Strings.Maps.Character_Set :=<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp; To_Set (" " &amp; Ada.Characters.Latin_1.HT);<BR>
+  <FONT color="#0000FF">begin</FONT><BR>
+  &nbsp; &nbsp;. . .<BR>
+  &nbsp; &nbsp;Pointer := Line'First;<BR>
+  &nbsp; &nbsp;Get (Line, Pointer, TabAndSpace); <FONT color="#008000">-- Skip
+  tabs and spaces</FONT><BR>
+  &nbsp; &nbsp;Get (Line, Pointer, Value);&nbsp; &nbsp; &nbsp;
+  &nbsp;<FONT color="#008000">-- Get number</FONT><BR>
+  &nbsp; &nbsp;Get (Line, Pointer, TabAndSpace); <FONT color="#008000">-- Skip
+  tabs and spaces</FONT><BR>
+  &nbsp; &nbsp;. . . </tt>
+</BLOCKQUOTE>
+<P>
+The numeric get procedures have additional parameters controlling the range
+of the input value. The parameters <b>First</b> and
+<b>Last</b> define the range of the expected value. The exception
+Constraint_Error is propagated when the value is not in the range. The exception
+can be suppressed using the parameters <b>ToFirst</b> and
+<b>ToLast</b>, which cause the input value to be substituted by
+the corresponding margin when the parameter is True.
+<P>
+The numeric get procedures may have the parameter <b>Base</b> of
+the subtype NumberBase. The parameter defines the base of the expected number
+(2..16). Note that the base specification may not appear in the input.
+<H3><A name="1.2"></A>1.2. Value functions</H3>
+<P>
+Each get procedure returning some value has a corresponding function Value
+. The function Value has the same parameter profile with the exception that
+the parameter <b>Pointer</b> is absent and the value is returned
+via result. Unlike Get the function Value tolerates spaces and tabs around
+the converted value. The whole string should be matched, otherwise, the exception
+Data_Error is propagated.
+<hr>
+<P align="right">
+<A name="2"></A><A href="#1"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#3"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>2. Output into String</H2>
+<H3><A name="2.1"></A>2.1. Put procedures</H3>
+<P>
+Put procedures place something into the output string
+<b>Destination</b>. The string is written starting from
+<b>Destination (Pointer)</b>. The parameter <b>Field</b>
+defines the output size. When it has the value zero, then the output size
+is defined by the output item. Otherwise the output is justified within the
+field and the parameter <b>Justify </b>specifies output alignment
+and the parameter <b>Fill</b> gives the pad character. When
+<b>Field</b> is greater than <b>Destination</b>'Last
+- <b>Pointer</b> + 1, the latter is used instead. After successful
+completion <b>Pointer</b> is advanced to the first character following
+the output or to <b>Destination</b>'Last + 1.
+<P>
+The numeric put procedures may have the parameter <b>Base</b> of
+the subtype NumberBase. The parameter defines the base of the output (2..16).
+Note that the base specification will not appear in the output.
+<H3><A name="2.2"></A>2.2. Image functions</H3>
+<P>
+Image functions convert a value into string. Unlike standard S'Image they
+do not place an extra space character.
+<hr>
+<P align="right">
+<A name="3"></A><A href="#2"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#4"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>3. String I/O</H2>
+<p><a name="Strings_Edit"></a>The package <a href="#Strings_Edit">Strings_Edit</a>
+provides basic tools for string I/O.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Get<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;( &nbsp;<B>Source</B>&nbsp;
+  : String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <B>Pointer</B> : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;<B>Blank</B>&nbsp; &nbsp;: Character := ' '<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure skips the character Blank starting from <b>Source
+(Pointer)</b>. <b>Pointer</b> is advanced to the first non-Blank
+character or to <b>Source</b>'Last + 1. The exception Layout_Error
+is propagated if the value of <b>Pointer</b> is not in the range
+<b>Source</b>'First..<b>Source</b>'Last + 1.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Get<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;(
+  &nbsp;<b>Source</b>&nbsp; : String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; <b>Pointer</b>
+  : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;<b>Blanks</b> &nbsp;: Character_Set<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure skips all the characters of the set <b>Blanks</b>
+starting from <b>Source (Pointer)</b>. <b>Pointer</b>
+is advanced to the first non-blank character or to
+<b>Source</b>'Last + 1. The exception Layout_Error is propagated
+if the value of <b>Pointer</b> is not in the range
+<b>Source</b>'First..<b>Source</b>'Last + 1. See also
+<a href="#Strings_Edit.UTF8.Maps.Get">Strings_Edit.UTF8.Maps.Get</a>, which is 
+an UTF-8 equivalent of this subprogram.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Pointer</b>
+  &nbsp; &nbsp; : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Value</b> &nbsp;
+  &nbsp; &nbsp; : Character;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Field</b> &nbsp;
+  &nbsp; &nbsp; : Natural&nbsp; &nbsp;:= <FONT color="#800000">0</FONT>;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Justify</b>
+  &nbsp; &nbsp; : Alignment := Left;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Fill</b> &nbsp;
+  &nbsp; &nbsp; &nbsp;: Character := ' '<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; );</tt></BLOCKQUOTE>
+<P>
+This procedure places the specified character (<b>Value</b> parameter)
+into the output string <b>Destination</b>. The string is written
+starting from the <b>Destination (Pointer)</b>. The exception
+Layout_Error is propagated if the value of <b>Pointer</b> is not
+in <b>Destination</b>'Range or there is no room for the output.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ( &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Pointer</b>
+  &nbsp; &nbsp; : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Value</b> &nbsp;
+  &nbsp; &nbsp; : String;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Field</b> &nbsp;
+  &nbsp; &nbsp; : Natural&nbsp; &nbsp;:= <FONT color="#800000">0</FONT>;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Justify</b>
+  &nbsp; &nbsp; : Alignment := Left;<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<b>Fill</b> &nbsp;
+  &nbsp; &nbsp; &nbsp;: Character := ' '<BR>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; );</tt></BLOCKQUOTE>
+<P>
+This procedure places the specified by the <b> Value</b> parameter string into the
+output string <b>Destination</b>. The string is written starting
+from the <b>Destination (Pointer)</b>. The exception Layout_Error
+is propagated if the value of <b>Pointer</b> is not in
+<b>Destination</b>'Range or there is no room for the output.<P>
+The package also provides the following string operations:<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix (<b>Prefix</b>, <b>Source</b> 
+	: String) <font color="#0000FF">return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b>. An empty string is a prefix of any string.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix (<b>Prefix</b>, <b>Source</b> 
+	: String; <b>Pointer</b> : Integer) <font color="#0000FF">return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b> (<b>Pointer</b>..<b>Source</b>'Last). An empty string is a prefix of any 
+substring. The result is <i><font color="#800000">false</font></i> if <b>Pointer</b> 
+is not in the range <b>Source</b>'First..<b>Source</b>'Last + 1.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Prefix</b>, <b>Source</b> 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Map</b> : 
+	Character_Mapping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) <font color="#0000FF">&nbsp;return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b> with respect to the mapping represented by <b>Map</b>. An empty string is a prefix of any string.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Prefix</b>, <b>Source</b> 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> : Integer;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Map</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Character_Mapping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) <font color="#0000FF">&nbsp;return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b> (<b>Pointer</b>..<b>Source</b>'Last)with respect to 
+the mapping represented by <b>Map</b>. An empty string is a prefix of any 
+substring. The result is <i><font color="#800000">false</font></i> if <b>Pointer</b> 
+is not in the range <b>Source</b>'First..<b>Source</b>'Last + 1.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Trim<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b> : String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Blank</b>&nbsp; 
+	: Character := ' '<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> String;</tt></BLOCKQUOTE>
+<P>
+This function returns the content of <b>Source</b> with the character <b>Blank</b> 
+removed from both ends of.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Trim<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b> : String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Blanks</b> 
+	: Character_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> String;</tt></BLOCKQUOTE>
+<P>
+This function returns the content of <b>Source</b> with the characters from the 
+set <b>Blanks</b> removed from both ends of. See also
+<a href="#Strings_Edit.UTF8.Maps.Trim">Strings_Edit.UTF8.Maps.Trim</a> which is 
+an UTF-8 equivalent of this procedure.<h3>
+<a name="3.1"></a>3.1. Quoted strings</h3>
+<P><a name="Strings_Edit.Quoted"></a>The child package <a href="#Strings_Edit.Quoted">Strings_Edit.Quoted</a>
+provides functions for handling quoted strings. A quoted string is put in
+quotation marks, while each quotation mark within the string is doubled. This
+allows unambiguously restore the original string from its quotation.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Get_Quoted<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp; : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> :
+  <font color="#0000FF"> access</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mark</b>&nbsp;&nbsp;&nbsp;
+  : Character := '<font color="#FF0000">&quot;</font>'<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">return</font> String;</tt></BLOCKQUOTE>
+<P>
+This function gets a quoted string. <b> String</b> (<b>Pointer</b>.<font color="#0000FF">all</font>) is the first character of the string.
+<b> Pointer</b> is advanced to the  the  first character following the input,
+note that it is an access to integer rather than pöain integer, because functions in Ada cannot
+have <font color="#0000FF">in out</font> parameters.  The  parameter <b>  Marks</b>  specifies  the quotation marks to use. Within the  body
+of a quoted text this  character  is doubled. The result is the original quoted
+text with quotation marks around it removed. The quotation marks within the text
+are halved. The exception Data_Error is propagated when the string at <b>Pointer</b>.<font color="#0000FF">all</font>
+does not contain a <b>Mark</b> character or else when no closing <b>Mark</b>
+character appears before the string end. The exception Layout_Error
+is propagated if the value of <b>Pointer</b>.<font color="#0000FF">all</font> is not in the range
+<b>Source</b>'First..<b>Source</b>'Last + 1.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</font> Put_Quoted<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Destination</b> :
+  <font color="#0000FF"> in out</font> String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b>&nbsp;&nbsp;&nbsp;&nbsp;
+  : <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Text</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mark</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : Character := '<font color="#FF0000">&quot;</font>';<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Field</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : Natural&nbsp;&nbsp; := <font color="#800000">0</font>;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Justify</b>&nbsp;&nbsp;&nbsp;&nbsp;
+  : Alignment := Left;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Fill</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : Character := ' '<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></BLOCKQUOTE>
+<P>
+This procedure puts <b> Text</b> in <b> Mark</b> quotes and places the result
+into <b>String</b> starting from the position indicated by <b>Pointer</b>. <b>  Pointer</b> is  advanced  to  the  the  first character following the output.
+<b> Mark</b> characters  are  doubled  within the string body. The exception Layout_Error
+is propagated if there is no   room   for   output   or <b>  Pointer</b>  is  not  in
+<b>Source</b>'First..<b>Source</b>'Last + 1.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Quote<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Text</b> : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Mark</b> : Character :=
+  '<font color="#FF0000">&quot;</font>'<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">return</font> String;</tt></BLOCKQUOTE>
+<P>
+ This function returns <b> Text</b> quoted using the <b> Mark</b> character.</p>
+<hr>
+<P align="right">
+<A name="4"></A><A href="#3"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#5"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>4. Roman I/O</H2>
+<P>
+<A name="Roman_Edit"></A>The child package Roman_Edit provides I/O routines for roman numbers.
+The type Roman is defined there as follows:</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">type
+  </FONT>Roman<FONT
+      color="#0000FF"> is range
+  </FONT><FONT color="#800000">1</FONT>..<FONT color="#800000">3999</FONT>;</tt>
+</BLOCKQUOTE>
+<P>The following subroutines are declared for the type:</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Get<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;( &nbsp;<b>Source</b> &nbsp;: <font color="#0000FF">in</FONT> String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<b>Pointer</b> : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<b>Value</b>&nbsp; &nbsp;: <font color="#0000FF">out</FONT> Roman;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<b>First</b>&nbsp; &nbsp;: Roman &nbsp; := Roman'First;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<b>Last</b>&nbsp; &nbsp;
+  : Roman &nbsp; := Roman'Last;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<b>ToFirst</b> : Boolean := False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;<b>ToLast</b>&nbsp; : Boolean := False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure gets a roman number from the string <b>Source</b>.
+The process starts from <b>Source (Pointer)</b>. The exception
+Constraint_Error is propagated if the number is not in the range
+<b>First</b>..<b>Last</b>. Data_Error indicates a syntax
+error in the number. End_Error is raised when no number was detected.
+Layout_Error is propagated when <b>Pointer</b> is not in the range
+<b>Source</b>'First .. <b>Source</b>'Last + 1. See also
+description of <A href="#Gets">get procedures</A>.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Value<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  (&nbsp;&nbsp;<b>Source</b>&nbsp;&nbsp;: String;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  <b>First</b>&nbsp;&nbsp; : Roman &nbsp; := Roman'First;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  <b>Last</b>&nbsp;&nbsp; &nbsp;: Roman &nbsp; := Roman'Last;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <b>ToFirst</b>
+  : Boolean := False;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  <b>ToLast</b>&nbsp;&nbsp;: Boolean := False<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  )&nbsp;&nbsp;<font color="#0000FF">return</FONT> Roman;</tt></BLOCKQUOTE>
+<P>
+This function gets the roman number from the string <b>Source</b>.
+The number can be surrounded by spaces and tabs. The whole string
+<b>Source</b> should be matched. Otherwise the exception Data_Error
+is propagated. Also Data_Error indicates a syntax error in the number. The
+exception Constraint_Error is propagated if the number is not in the range
+<b>First</b>..<b>Last</b>. End_Error is raised when no number was detected.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; (
+  &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;
+  &nbsp;<b>Pointer</b>&nbsp; &nbsp; &nbsp;: <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Value</b>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;: Roman;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;<b>LowerCase</b>&nbsp; &nbsp;: Boolean &nbsp; := False;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;<b>Field</b>&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;: Natural &nbsp; := 
+  <FONT color="#800000">0</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;<b>Justify</b>&nbsp;&nbsp; &nbsp;&nbsp;: Alignment := Left;<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;<b>Fill</b> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;: Character := ' '<BR>
+  &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; );</tt></BLOCKQUOTE>
+<P>
+This procedure places the number specified by the parameter <b>Value
+</b>into the output string <b>Destination</b>. The string
+is written starting from <b>Destination (Pointer)</b>. The parameter
+<b>LowerCase</b> determines whether upper or lower case letters
+should be used. The exception Layout_Error is propagated when
+<b>Pointer</b> is not in <b>Destination</b>'Range or
+there is no room for the output.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Image<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  (&nbsp;&nbsp;<b>Value</b>&nbsp;&nbsp; &nbsp;&nbsp;: Roman;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  <b>LowerCase</b> : Boolean := False<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; )
+  &nbsp;<font color="#0000FF">return</FONT> String;</tt></BLOCKQUOTE>
+<P>
+This function converts <b>Value</b> to string. The parameter
+<b>LowerCase</b> indicates whether upper or lower case letters
+shall be used.
+<hr>
+<P align="right">
+<A name="5"></A><A href="#4"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#6"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>5. Integer I/O</H2>
+<P>
+<A name="Integer_Edit"></A>The package Strings_Edit has a generic child package Integer_Edit:<blockquote>
+  <P><tt><font color="#0000FF">generic</font><br>
+  <font color="#0000FF">&nbsp;&nbsp; type</font> Number <font color="#0000FF">is 
+  range</font> &lt;&gt;;<br>
+  <font color="#0000FF">package</font> Strings_Edit.Integer_Edit
+  <font color="#0000FF">is</font> ...</tt></blockquote>
+<P>
+It is parameterized by an integer type.
+There is also package Strings_Edit.Integers which is an instantiation of Integer_Edit
+with the type Integer as the parameter.
+The generic package has the following subprograms:</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Get<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Source</b>
+  &nbsp;: <font color="#0000FF">in</FONT> String;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Pointer</b> : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Value</b> &nbsp;&nbsp;: <font color="#0000FF">out</FONT> Number'Base;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Base</b> &nbsp;&nbsp; : NumberBase&nbsp; := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>First</b>&nbsp;&nbsp; : Number'Base := Number'First;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Last</b>&nbsp;&nbsp; &nbsp;: Number'Base := Number'Last;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>ToFirst</b> : Boolean &nbsp; &nbsp; := False;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>ToLast</b> &nbsp;: Boolean&nbsp; &nbsp; &nbsp;:= False<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure gets an integer number from the string
+<b>Source</b>. The process starts from <b>Source
+(Pointer)</b>. The parameter <b>Base</b> indicates the base
+of the expected number. The exception Constraint_Error is propagated if the
+number is not in the range <b>First</b>..<b>Last</b>.
+Data_Error indicates a syntax error in the number. End_Error is raised when
+no number was detected. Layout_Error is propagated when
+<b>Pointer</b> is not in the range <b>Source</b>'First
+.. <b>Source</b>'Last + 1. See also description of
+<A href="#Gets">get procedures</A>.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Value<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Source</b> &nbsp;: String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Base</b>
+  &nbsp; &nbsp;: NumberBase &nbsp;:= <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>First</b>
+  &nbsp; : Number'Base := Number'First;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Last</b>
+  &nbsp; &nbsp;: Number'Base := Number'Last;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToFirst</b>
+  : Boolean &nbsp; &nbsp; := False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToLast</b>
+  &nbsp;: Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;)&nbsp; <font color="#0000FF">return</FONT>  Number'Base;</tt></BLOCKQUOTE>
+<P>
+This function gets an integer number from the string <b>Source</b>.
+The number can be surrounded by spaces and tabs. The whole string
+<b>Source</b> should be matched. Otherwise the exception Data_Error
+is propagated. Also Data_Error indicates a syntax error in the number. The
+exception Constraint_Error is propagated if the number is not in the range
+<b>First</b>..<b>Last</b>. End_Error is raised when no
+number was detected.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;(
+  &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Pointer</b>&nbsp; &nbsp;&nbsp; : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Value</b>&nbsp; &nbsp;&nbsp; &nbsp; : Number'Base;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Base</b>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : NumberBase := 
+  <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b>&nbsp; &nbsp; &nbsp;: Boolean &nbsp; &nbsp;:= False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Field</b>&nbsp; &nbsp;&nbsp; &nbsp; : Natural &nbsp; &nbsp;:= 
+  <FONT color="#800000">0</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Justify</b> &nbsp; &nbsp;&nbsp;: Alignment &nbsp;:= Left;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Fill</b> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;: Character &nbsp;:= ' '<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure places the number specified by the parameter
+<b>Value</b> into the output string <b>Destination</b>.
+The string is written starting from <b>Destination (Pointer)</b>.
+The parameter <b>Base</b> indicates the number base used for the
+output. The base itself does not appear in the output. The parameter
+<b>PutPlus</b> indicates whether the plus sign should be placed
+if the number is positive. The exception Layout_Error is propagated when
+<b>Pointer</b> is not in <b>Destination</b>'Range or
+there is no room for the output. For example the code:</p>
+<BLOCKQUOTE>
+  <tt>Text &nbsp;&nbsp; : String
+  (<FONT color="#800000">1</FONT>..<FONT color="#800000">20</FONT>) :=
+  (<font color="#0000FF">others</FONT>
+  =&gt;'<FONT color="#FF0000">#</FONT>');<BR>
+  Pointer : Positive := Text'First;<BR>
+  . . .<BR>
+  Put (Text, Pointer, <FONT color="#800000">5</FONT>, <FONT color="#800000">2</FONT>, <FONT color="#800000">True</FONT>, <FONT color="#800000">10</FONT>, Center,
+  '<FONT color="#FF0000">@</FONT>');</tt></BLOCKQUOTE>
+<P>
+will set Pointer to 11 and overwrite the first 10 characters of the string
+Text:</p>
+<BLOCKQUOTE>
+  <TABLE border="1" cellpadding="3" cellspacing="0">
+    <TR>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">+</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">1</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">0</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">1</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt><FONT color="#FF0000">@</FONT></tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+      <TD><tt>#</tt></TD>
+    </TR>
+  </TABLE>
+</BLOCKQUOTE>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Image<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Value</b>
+  &nbsp;&nbsp;: Number'Base;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;<b>Base</b>
+  &nbsp;&nbsp; : NumberBase := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b> : Boolean &nbsp; &nbsp;:= False<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;)
+  &nbsp;<font color="#0000FF">return</FONT> String;</tt></BLOCKQUOTE>
+<P>
+This function converts <b>Value</b> to string. The parameter
+<b>Base</b> indicates the number base used for the output. The
+base itself does not appear in the output. The parameter
+<b>PutPlus</b> indicates whether the plus sign should be placed
+if the number is positive.
+<P>
+<a name="Strings_Edit.Integers"></a>The package <a href="#Strings_Edit.Integers"> Strings_Edit.Integers</a> is an instance of
+<A href="#Integer_Edit">Strings_Edit.Integer_Edit</A> with
+the type Integer as the parameter.
+<hr>
+<P align="right">
+<A name="6"></A><A href="#5"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#7"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>6. Floating-point I/O</H2>
+<P>
+<A name="Float_Edit"></A>The package Strings_Edit has a generic child package Float_Edit:<blockquote>
+  <P><tt><font color="#0000FF">generic</font><br>
+  <font color="#0000FF">&nbsp;&nbsp; type</font> Number <font color="#0000FF">is 
+  digits</font> &lt;&gt;; <br>
+  <font color="#0000FF">package</font> Strings_Edit.Float_Edit
+  <font color="#0000FF">is</font> ...</tt></blockquote>
+<P>
+The package is parametrized by a floating-point type.
+There is also package Strings_Edit.Floats which is an instantiation of Float_Edit
+with the type Float as the parameter.
+The package defines the following subprograms:</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">procedure</FONT> Get<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Source</b>
+  &nbsp;: <font color="#0000FF">in</FONT> String;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Pointer</b> : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Value</b> &nbsp;&nbsp;: <font color="#0000FF">out</FONT> Number'Base;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Base</b> &nbsp;&nbsp; : NumberBase &nbsp;:= <FONT color="#800000">10</FONT>;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>First</b>&nbsp;&nbsp; : Number'Base := Number'First;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>Last</b>&nbsp;&nbsp; &nbsp;: Number'Base := Number'Last;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>ToFirst</b> : Boolean &nbsp; &nbsp; := False;<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;<b>ToLast</b> &nbsp;: Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure gets a number from the string <b>Source</b>. The
+process starts from <b>Source (Pointer)</b>. The number in the
+string may be in either floating-point or fixed-point format. The point may
+be absent. The mantissa can have base 2..16 (defined by the parameter
+<b>Base</b>). The exponent part (if appears) is introduced by 'e'
+or 'E'. It is always decimal of <b>Base</b> radix. Space characters
+are allowed between the mantissa and the exponent part as well as in the
+exponent part around the exponent sign. If <b>Base</b> has the
+value 15 or 16 the exponent part shall be separated by at least one space
+character from the mantissa. The exception Constraint_Error is propagated
+if the number is not in the range
+<b>First</b>..<b>Last</b>. Data_Error indicates a syntax
+error in the number. End_Error is raised when no number was detected.
+Layout_Error is propagated when <b>Pointer</b> is not in the range
+<b>Source</b>'First .. <b>Source</b>'Last + 1. See also
+description of <A href="#Gets">get procedures</A>.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Value<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Source</b> &nbsp;: String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Base</b>
+  &nbsp; &nbsp;: NumberBase &nbsp;:= <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>First</b>
+  &nbsp; : Number'Base := Number'First;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Last</b>
+  &nbsp; &nbsp;: Number'Base := Number'Last;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToFirst</b>
+  : Boolean &nbsp; &nbsp; := False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToLast</b>
+  &nbsp;: Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;)&nbsp; <font color="#0000FF">return</FONT> Number'Base;</tt></BLOCKQUOTE>
+<P>
+This function gets a floating-point number from the string
+<b>Source</b>. The number can be surrounded by spaces and tabs.
+The whole string <b>Source</b> should be matched. Otherwise the
+exception Data_Error is propagated. Also Data_Error indicates a syntax error
+in the number. The exception Constraint_Error is propagated if the number
+is not in the range <b>First</b>..<b>Last</b>. End_Error
+is raised when no number was detected.</p>
+<BLOCKQUOTE>
+  <A name="Float-Put"></A><tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;(
+  &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Pointer</b>&nbsp; &nbsp;&nbsp; : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Value</b>&nbsp; &nbsp;&nbsp; &nbsp; : Number'Base;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Base</b>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : NumberBase := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b>&nbsp; &nbsp; &nbsp;: Boolean &nbsp; &nbsp;:= False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>RelSmall</b> &nbsp; &nbsp;: Positive &nbsp; := MaxSmall;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>AbsSmall</b> &nbsp; &nbsp;: Integer &nbsp;&nbsp; := -MaxSmall;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Field</b>&nbsp; &nbsp;&nbsp; &nbsp; : Natural &nbsp; &nbsp;:= <FONT color="#800000">0</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Justify</b> &nbsp; &nbsp;&nbsp;: Alignment&nbsp; := Left;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Fill</b> &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;: Character &nbsp;:= ' '<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;);</tt></BLOCKQUOTE>
+<P>
+This procedure places the number specified by the parameter
+<b>Value</b> into the output string <b>Destination</b>.
+The string is written starting from <b>Destination (Pointer)</b>.
+The parameter <b>Base</b> indicates the number base used for the
+output. <b>Base</b> itself does not appear in the output. The exponent
+part (if used) is always decimal. <b>PutPlus</b> indicates whether
+the plus sign should be placed if the number is positive. There are two ways
+to specify the output precision:
+<UL>
+  <LI>
+    The parameter <b>RelSmall</b> determines the number of the right
+    <b>Base</b> places of the mantissa. For instance, with
+    <b>RelSmall</b>=3 and <b>Base</b>=10, the number 1.234567e+01
+    is represented as 12.3.
+  <LI>
+    The parameter <b>AbsSmall</b> determines the rightmost correct
+    digit of the mantissa. For example, with <b>AbsSmall</b>=0,
+    <b>Base</b>=10, the number 1.234567e+01 is represented as 12 (i.e.
+    12.34567 rounded to 10<SUP>0</SUP>).
+</UL>
+<P>
+From two parameters <b>RelSmall</b> and <b>AbsSmall</b>,
+the procedure chooses one, that specifies the minimal number of mantissa
+digits, but no more than the machine representation of the number allows.
+If the point would appear in the rightmost position it is omitted. The pure
+zero is always represented as 0. If the desired number of digits may be provided
+in the fixed-point format then the exponent part is not used. For example,
+1.234567e-04 gives 0.0001234567 because fixed- and floating-point formats
+have the same length. But 1.234567e-05 will be shown in the floating-point
+format. For bases 15 and 16 the exponent part is separated from the mantissa
+by space (to avoid ambiguity: F.Ee+2 is F.EE + 2 or F.E * 16**2?). The exception
+Layout_Error is propagated when <b>Pointer</b> is not in
+<b>Destination</b>'Range or there is no room for the output.</p>
+<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</FONT> Image<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Value</b> &nbsp;
+  &nbsp;: Number'Base;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;<b>Base</b>
+  &nbsp;&nbsp; &nbsp;: NumberBase := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b> &nbsp;: Boolean &nbsp; &nbsp;:= False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+  &nbsp;&nbsp;<b>RelSmall</b> : Positive &nbsp; := MaxSmall;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+  &nbsp;&nbsp;<b>AbsSmall</b> : Integer &nbsp; &nbsp;:= -MaxSmall;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;)
+  &nbsp;<font color="#0000FF">return</FONT> String;</tt></BLOCKQUOTE>
+<P>
+This procedure converts the parameter <b>Value</b> to String. The
+parameter <b>Base</b> indicates the number base used for the output.
+<b>Base</b> itself does not appear in the output. The exponent
+part (if used) is always decimal. <b>PutPlus</b> indicates whether
+the plus sign should be placed if the number is positive. For precision
+parameters see <A href="#Float-Put">Put</A>.
+<P>
+<a name="Strings_Edit.Floats"></a>
+The package <a href="#Strings_Edit.Floats"> Strings_Edit.Floats</a> is an instance of
+<A href="#Float_Edit">Strings_Edit.Float_Edit</A> with Float as
+the parameter.
+<hr>
+
+<P align="right">
+<A name="7"></A><A href="#6"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></A><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><A href="#8"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></A><H2>7. UTF-8</H2>
+<P><a name="Strings_Edit.UTF8"></a>The package <a href="#Strings_Edit.UTF8">Strings_Edit.UTF8</a>
+is the parent package for dealing with <a href="http://www.unicode.org/">Unicode
+Transformation Format</a>  UTF-8 encoded strings. Ada 95 supports Latin-1 (type
+Character) and UCS-2 (Wide_Character) of <a href="http://www.iso.org">ISO 10646</a>
+BMP. Ada 2005 introduces UCS-4 encoding (Wide_Wide_Character). This variety of 
+encodings when used in one program imposes certain difficulties. Further many applications and libraries use 
+rather UTF-8, which has sufficient advantages over UCS. For these reasons UTF-8 
+support is provided here.<P>Since UTF-8 was designed for backward compatibility with 7-bit
+ASCII applications and is a multi-byte encoding format, I chose not to introduce
+a separate string type for UTF-8. Conventional Ada strings are used instead. It
+is important to note:
+<ul>
+  <li>The set of Latin-1 code points (Ada Character) 0..FF<sub>16</sub> is a subset
+    of UCS-2 code points (Wide_Character) 0..FFFF<sub>16</sub>, which in turn is a subset of
+    UTF-8 code points 0..10FFFF<sub>16</sub>;</li>
+  <li>Not every sequence of bytes represents a valid UTF-8 encoded string;</li>
+  <li>Latin-1 characters with the code points 80<sub>16</sub>..FF<sub>16</sub> have two bytes
+    representation in UTF-8;</li>
+  <li>UCS-2 characters may require up to 3 bytes in UTF-8.</li>
+</ul>
+<P>The package defines the type UTF8_Code_Point that represents the Unicode
+code space:
+<blockquote>
+<P><tt><font color="#0000FF">   type</font> Code_Point <font color="#0000FF"> is mod</font>
+<font color="#800000">2</font>**<font color="#800000">32</font>;<br>
+<font color="#0000FF">   subtype</font> UTF8_Code_Point <font color="#0000FF"> is</font> Code_Point
+<font color="#0000FF"> range</font> <font color="#800000">0</font>..<font color="#800000">16#10FFFF#</font>;</tt>
+</blockquote>
+<P>The
+following subroutines are provided by the package:
+<blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Get"></a>procedure</font> Get<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> :
+  <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Value</b>&nbsp;&nbsp;
+  : <font color="#0000FF"> out</font> UTF8_Code_Point<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt>
+</blockquote>
+<P>This  procedure  decodes one UTF-8 code point from the string <b>Source</b>. It starts at
+<b> Source</b> (<b>Pointer</b>). After successful completion <b> Pointer</b> is advanced to the first character following the input.  The  result  is returned through the parameter
+<b>Value</b>.</p>
+
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <CAPTION align="top">
+    <I>Exceptions</I>
+  </CAPTION>
+  <TR>
+    <TD>  Data_Error</TD>
+    <TD>Illegal UTF-8 string <b>Source</b></TD>
+  </TR>
+  <TR>
+    <TD>  End_Error</TD>
+    <TD>Nothing found. <b>Pointer</b> = <b>Source</b>'Last + 1</TD>
+  </TR>
+  <tr>
+    <TD>Layout_Error</TD>
+    <TD> <b>Pointer</b> is not in <b>Source</b>'First..<b>Source</b>'Last + 1</TD>
+  </tr>
+</TABLE>
+
+<blockquote>
+  <P><tt><font color="#0000FF">procedure</font> Get_Backwards<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> :
+  <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Value</b>&nbsp;&nbsp;
+  : <font color="#0000FF"> out</font> UTF8_Code_Point<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt>
+</blockquote>
+<P>This  procedure  decodes one UTF-8 code point from the string <b>Source</b> 
+in reverse. It starts at
+<b> Source</b> (<b>Pointer</b> - 1) assuming that it is the last octet of an 
+UTF-8 encoded character. After successful completion <b> Pointer</b> is moved to the first character 
+of&nbsp; the input.  The  result  is returned through the parameter
+<b>Value</b>.</p>
+
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <CAPTION align="top">
+    <I>Exceptions</I>
+  </CAPTION>
+  <TR>
+    <TD>  Data_Error</TD>
+    <TD>Illegal UTF-8 string <b>Source</b></TD>
+  </TR>
+  <TR>
+    <TD>  End_Error</TD>
+    <TD>Nothing found. <b>Pointer</b> = <b>Source</b>'First</TD>
+  </TR>
+  <tr>
+    <TD>Layout_Error</TD>
+    <TD> <b>Pointer</b> is not in <b>Source</b>'First..<b>Source</b>'Last + 1</TD>
+  </tr>
+</TABLE>
+
+<BLOCKQUOTE>
+  <p>
+  <tt><font color="#0000FF">function</FONT> Image (<b>Value</b>
+  : UTF8_Code_Point)&nbsp;<font color="#0000FF">return</FONT> String;</tt></p>
+</BLOCKQUOTE>
+<P>
+This function is a simplified version of the procedure <a href="#Strings_Edit.UTF8.Put">Put</a>.
+It returns UTF-8 encoded <b>Value</b>.</p>
+
+<blockquote>
+  <P><tt><font color="#0000FF">function</FONT>  Length (<b>Source</b> : String) <font color="#0000FF"> return</font>
+  Natural;</tt>
+</blockquote>
+<P>This procedure evaluates the length of a UTF-8 encoded string in code points. Data_Error is
+propagated when <b>Source</b> is not a valid UTF-8 string.
+<blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Put"></a>procedure</font> Put<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Destination</b> :
+  <font color="#0000FF"> in out</font> String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b>&nbsp;&nbsp;&nbsp;&nbsp;
+  : <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Value</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : UTF8_Code_Point<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt>
+</blockquote>
+<P>This  procedure  puts  one  UTF-8  code  point into the string <b> Source</b> starting from the position
+<b> Source</b> (<b>Pointer</b>). <b> Pointer</b> is then advanced to the first character following the output.
+Layout_Error is propagated when <b>Pointer</b> is not in <b>Destination</b>'Range
+or there is no room for output. Note that parameters <b>Field</b>, <b>Justify</b>
+and <b>Fill</b> usual for other Put-procedures would have no meaning here.</p>
+
+<blockquote>
+  <P><tt><font color="#0000FF">procedure</font> Skip<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> :
+  <font color="#0000FF"> in out </font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Count</b>&nbsp;&nbsp;
+  : Natural := <font color="#800000"> 1</font><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt>
+</blockquote>
+<P>This procedure skips <b>Count</b> UTF-8 encoded code points in the string <b>Source</b>
+starting from <b>Source</b> (<b>Pointer</b>). After successful completion <b>
+Pointer</b> indicates is the first character following the skipped UTF-8 encoded
+sequence.</p>
+
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <CAPTION align="top">
+    <I>Exceptions</I>
+  </CAPTION>
+  <TR>
+    <TD>  Data_Error</TD>
+    <TD>Illegal UTF-8 string <b>Source</b></TD>
+  </TR>
+  <tr>
+    <TD>  End_Error</TD>
+    <TD>Less than <b>Count</b> characters detected before the string end</TD>
+  </tr>
+  <tr>
+    <TD>Layout_Error</TD>
+    <TD> <b>Pointer</b> is not in <b>Source</b>'First..<b>Source</b>'Last + 1</TD>
+  </tr>
+</TABLE>
+
+<BLOCKQUOTE>
+  <p><tt><font color="#0000FF">function</FONT> Value (<b>Source</b> :
+  String) <font color="#0000FF">return</FONT> UTF8_Code_Point;</tt></p>
+</BLOCKQUOTE>
+<P>
+This function decodes one UFT-8 code point stored in <b>Source</b>.
+The whole string <b>Source</b> should be matched. Otherwise the
+exception Data_Error is propagated. It is also propagated when Source is not a
+legal UTF-8 string.</p>
+<blockquote>
+<P><tt><font color="#0000FF">   type</font> Code_Points_Range
+<font color="#0000FF">is record</font><br>
+&nbsp;&nbsp; Low&nbsp; : UTF8_Code_Point;<br>
+&nbsp;&nbsp; High : UTF8_Code_Point;<br>
+<font color="#0000FF">end record</font>;</tt></blockquote>
+<P>This type represents a range of code points Low..High:<blockquote>
+<P><tt>Full_Range : <font color="#0000FF">constant</font> Code_Points_Range;</tt></blockquote>
+<P>A range that contains all code points.<blockquote>
+<P><tt><font color="#0000FF">   type</font> Code_Points_Ranges
+<font color="#0000FF">is<br>
+&nbsp;&nbsp; array</font> (Positive range &lt;&gt;) <font color="#0000FF">of</font> 
+Code_Points_Range;</tt></blockquote>
+<P>An array of code points ranges.<h3><a name="7.1"></a>7.1. Handling UTF-8 strings</h3>
+<P><a name="Strings_Edit.UTF8.Handling"></a>The package <a href="#Strings_Edit.UTF8.Handling">Strings_Edit.UTF8.Handling</a>
+provides the following conversion functions between UTF-8 encoded strings and
+Ada strings:
+<blockquote>
+  <P><tt><font color="#0000FF">   function</font> To_String (<b>Value</b> : String)
+  <font color="#0000FF"> return</font> String;<br>
+  <font color="#0000FF">   function</font> To_String<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Value</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Substitute</b> : Character<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">return</font> String;</tt>
+</blockquote>
+<P>These functions convert a UTF-8 encoded string to  Latin-1  character string (standard Ada string). The parameter
+<b> Substitute</b> specifies  the character  that  substitutes  non-Latin-1 code
+points in
+<b>Value</b>.  If omitted Constraint_Error is propagated  when a non-Latin-1
+code point appears in
+<b>Value</b>.</p>
+
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <CAPTION align="top">
+    <I>Exceptions</I>
+  </CAPTION>
+  <tr>
+    <TD>Constraint_Error</TD>
+    <TD> Non-Latin-1 code point detected</TD>
+  </tr>
+  <TR>
+    <TD>  Data_Error</TD>
+    <TD>Illegal UTF-8 string <b>Value</b></TD>
+  </TR>
+</TABLE>
+
+<blockquote>
+  <P><tt><font color="#0000FF">   function</font> To_UTF8 (<b>Value</b> : Character&nbsp;&nbsp;&nbsp;&nbsp;
+  ) <font color="#0000FF"> return</font> String;<br>
+  <font color="#0000FF">   function</font> To_UTF8 (<b>Value</b> : String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  ) <font color="#0000FF"> return</font> String;<br>
+  <font color="#0000FF">   function</font> To_UTF8 (<b>Value</b> : Wide_Character)
+  <font color="#0000FF"> return</font> String;<br>
+  <font color="#0000FF">   function</font> To_UTF8 (<b>Value</b> : Wide_String&nbsp;&nbsp;
+  ) <font color="#0000FF"> return</font> String;</tt>
+</blockquote>
+<P>These  functions  convert  the  parameter <b>  Value</b>  to  a UTF-8 encoded string.  The  parameter  can  be Character, String, Wide_Character or
+Wide_String. The result of a character conversion can be from 1 to  3  bytes  long.  Note  that Ada's Character  has  Latin-1  encoding  which  differs  from  UTF-8 in the
+code positions greater than 127.</p>
+
+<blockquote>
+  <P><tt><font color="#0000FF">   function</font> To_Wide_String (<b>Value</b> : String)
+  <font color="#0000FF"> return</font> Wide_String;<br>
+  <font color="#0000FF">   function</font> To_Wide_String<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Value</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Substitute</b> : Wide_Character<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">return</font>
+  Wide_String;</tt>
+</blockquote>
+<p>These functions convert a UTF-8 encoded  string  to  UCS-2  character string  (Ada's  Wide_String).  The parameter
+<b> Substitute</b> specifies the character that substitutes non-UCS-2 code
+positions in
+<b>Value</b>. If  omitted Constraint_Error  is  propagated  when a non-UCS-2
+code point appears in
+<b>Value</b>.</p>
+
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <CAPTION align="top">
+    <I>Exceptions</I>
+  </CAPTION>
+  <tr>
+    <TD>Constraint_Error</TD>
+    <TD> Non-UCS-2 code point detected</TD>
+  </tr>
+  <TR>
+    <TD>  Data_Error</TD>
+    <TD>Illegal UTF-8 string <b>Value</b></TD>
+  </TR>
+</TABLE>
+
+<h3><a name="7.2"></a>7.2. Generic integer I/O of UTF-8 strings</h3>
+<P><a name="Strings_Edit.UTF8.Integer_Edit"></a>The package <a href="#Strings_Edit.UTF8.Integer_Edit">Strings_Edit.UTF8.Integer_Edit</a>
+provides integer I/O for special encodings of digits, such as subscript and
+superscript.
+<blockquote>
+  <P><tt><font color="#0000FF">generic</font><br>
+  &nbsp;&nbsp; <font color="#0000FF">type</font> Number <font color="#0000FF"> is range</font> &lt;&gt;;<br>
+  &nbsp;&nbsp; <font color="#0000FF">with procedure</font> Get_Digit<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  (&nbsp; Source&nbsp; : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Pointer : <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Digit&nbsp;&nbsp; : <font color="#0000FF"> out</font> Natural<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  )&nbsp; <font color="#0000FF">is</font> &lt;&gt;;<br>
+  &nbsp;&nbsp; <font color="#0000FF">with procedure</font> Get_Sign<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  (&nbsp; Source&nbsp; : String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Pointer : <font color="#0000FF"> in out </font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Sign_Of : <font color="#0000FF"> out</font> Sign<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  )&nbsp; is &lt;&gt;;<br>
+  &nbsp;&nbsp; <font color="#0000FF">with procedure </font> Put_Digit<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  (&nbsp; Destination : <font color="#0000FF"> in out </font> String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Pointer&nbsp;&nbsp;&nbsp;&nbsp; : <font color="#0000FF"> in out </font>Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Digit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : Script_Digit<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  )&nbsp; <font color="#0000FF">is</font> &lt;&gt;;<br>
+  &nbsp;&nbsp; <font color="#0000FF">with procedure </font> Put_Sign<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  (&nbsp; Destination : <font color="#0000FF"> in out</font> String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Pointer&nbsp;&nbsp;&nbsp;&nbsp; : <font color="#0000FF"> in out </font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Sign_Of&nbsp;&nbsp;&nbsp;&nbsp; : Sign<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  )&nbsp; <font color="#0000FF">is</font> &lt;&gt;;<br>
+  <font color="#0000FF">package</font> Strings_Edit.UTF8.Integer_Edit <font color="#0000FF"> is</font><br>
+  &nbsp;&nbsp; ...</tt>
+</blockquote>
+<P>The generic parameters of the package are:</p>
+
+<ul>
+  <li>Number is the integer type to use;</li>
+  <li>Get_Digit is the procedure to get one UTF-8 encoded digit from the string <b>Source</b>.
+    The result is greater than 9 if the no digit was detected. Otherwise <b>Pointer</b>
+    is advanced to the first character following the input in <b>Source</b>.
+    Get_Digit can but is not obliged to check whether <b>Pointer</b> is in <b>Source</b>'Range.</li>
+  <li>Get_Sign gets UTF-8 encoded sign from the string <b>Source</b>. <b>Pointer</b>
+    is advanced to the first character following the input in <b>Source</b>.
+    Same as Get_Digit it is not obliged to check whether <b>Pointer</b> is in <b>Source</b>'Range.</li>
+  <li>Put_Digit places one UTF-8 encoded digit into the string <b>Destination</b>.
+    The character <b>Destination</b> (<b>Pointer</b>) is the last character of
+    the output. <b>Pointer</b> is moved back to the character preceding the
+    first character of the output. Layout_Error is propagated when <b>Destination</b>
+    has no room for output.</li>
+  <li>Get_Sign places UTF-8 encoded sign into <b>Destination</b>. It works
+    similar to Put_Digit.</li>
+</ul>
+<P>The package provides the following procedures and functions:</p>
+
+<blockquote>
+  <P><tt><font color="#0000FF">procedure</font> Get<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp;
+  : <font color="#0000FF"> in</font> String;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pointer</b> :
+  <font color="#0000FF"> in out</font> Integer;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Value</b>&nbsp;&nbsp;
+  : <font color="#0000FF"> out</font> Number'Base;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Base</b>&nbsp;&nbsp;&nbsp;
+  : Script_Base := <font color="#800000">10</font>;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>First</b>&nbsp;&nbsp;
+  : Number'Base := Number'First;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Last</b>&nbsp;&nbsp;&nbsp;
+  : Number'Base := Number'Last;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>ToFirst</b> : Boolean&nbsp;&nbsp;&nbsp;&nbsp;
+  := False;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>ToLast</b>&nbsp;
+  : Boolean&nbsp;&nbsp;&nbsp;&nbsp; := False<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt>
+  <p>
+  <tt><font color="#0000FF">function</FONT> Value<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Source</b> &nbsp;: String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Base</b>
+  &nbsp; &nbsp;: Script_Base := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>First</b>
+  &nbsp; : Number'Base := Number'First;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>Last</b>
+  &nbsp; &nbsp;: Number'Base := Number'Last;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToFirst</b>
+  : Boolean &nbsp; &nbsp; := False;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<b>ToLast</b>
+  &nbsp;: Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;)&nbsp; <font color="#0000FF">return</FONT>  
+  Number'Base;</tt>
+  <p>
+  <tt><font color="#0000FF">procedure</FONT> Put<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;(
+  &nbsp;<b>Destination</b> : <font color="#0000FF">in
+  out</FONT> String;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Pointer</b>&nbsp; &nbsp;&nbsp; : <font color="#0000FF">in
+  out</FONT> Integer;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Value</b>&nbsp; &nbsp;&nbsp; &nbsp; : Number'Base;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>Base</b>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; : Script_Base := 
+  <FONT color="#800000">10</FONT>;<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b>&nbsp; &nbsp; &nbsp;: Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;);</tt>
+  <p>
+  <tt><font color="#0000FF">function</FONT> Image<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;( &nbsp;<b>Value</b>
+  &nbsp;&nbsp;: Number'Base;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;<b>Base</b>
+  &nbsp;&nbsp; : Script_Base := <FONT color="#800000">10</FONT>;<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;
+  &nbsp;&nbsp;<b>PutPlus</b> : Boolean &nbsp; &nbsp; := False<BR>
+  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;)
+  &nbsp;<font color="#0000FF">return</FONT> String;</tt></p>
+</blockquote>
+<p> These subroutines work exactly as ones of <a href="#Integer_Edit">String_Edit.Integer_Edit</a>
+with the difference that the number base is specified by the parameter of
+Script_Base type defined in <a href="#Strings_Edit.UTF8">Strings_Edit.UTF8</a>
+ as an integer type with the range 2..10.</p>
+<h3><a name="7.3"></a>7.3. Subscript UTF-8 integer I/O</h3>
+<P><a name="Strings_Edit.UTF8.Subscript.Integer_Edit"></a>The generic package <a href="#Strings_Edit.UTF8.Subscript.Integer_Edit">Strings_Edit.UTF8.Subscript.Integer_Edit</a>
+is a specialization of <a href="#Strings_Edit.UTF8.Integer_Edit">Strings_Edit.UTF8.Integer_Edit</a>
+for integer I/O of subscript numbers.
+<blockquote>
+  <P><tt><font color="#0000FF">generic</font><br>
+  &nbsp;&nbsp; <font color="#0000FF">type</font> Number <font color="#0000FF"> is range</font> &lt;&gt;;<br>
+  <font color="#0000FF">package</font> Strings_Edit.UTF8.Subscript.Integer_Edit <font color="#0000FF"> is</font><br>
+  &nbsp;&nbsp; ...</tt>
+</blockquote>
+<P>The package provides the subroutines described in <a href="#Strings_Edit.UTF8.Integer_Edit">Strings_Edit.UTF8.Integer_Edit</a>.</p>
+  <TABLE border="1" cellpadding="3" cellspacing="0">
+    <TR>
+      <TD><i>A necessary note</i>. If you plan to use sub- and superscripts under 
+Microsoft Windows XP, you probably will have a problem with displaying the 
+corresponding glyphs. The reason for this is that the standard Windows font <i>
+Tahoma</i> does not contain glyphs for Unicode sub- and superscripts. You can 
+solve this problem by choosing a font which has them. A good candidate, very 
+close to <i>Tahoma</i> is <i>Arial Unicode MS</i>. Go to the <i>Control Panel &#8594; Display &#8594; Appearance &#8594; Advanced</i> and there 
+change the font by clicking on the corresponding sample texts.</TD>
+    </TR>
+  </TABLE>
+
+<P><a name="Strings_Edit.Integers.Subscript"></a>This package has a non-generic
+instantiation with the type Integer: <a href="#Strings_Edit.Integers.Subscript">Strings_Edit.Integers.Subscript</a>.</p>
+
+<h3><a name="7.4"></a>7.4. Superscript UTF-8 integer I/O</h3>
+<P><a name="Strings_Edit.UTF8.Superscript.Integer_Edit"></a>The generic package <a href="#Strings_Edit.UTF8.Superscript.Integer_Edit">Strings_Edit.UTF8.Superscript.Integer_Edit</a>
+is a specialization of <a href="#Strings_Edit.UTF8.Integer_Edit">Strings_Edit.UTF8.Integer_Edit</a>
+for integer I/O of superscript numbers.
+<blockquote>
+  <P><tt><font color="#0000FF">generic</font><br>
+  &nbsp;&nbsp; <font color="#0000FF">   type</font> Number <font color="#0000FF"> is range</font> &lt;&gt;;<br>
+  <font color="#0000FF">package</font> Strings_Edit.UTF8.Superscript.Integer_Edit <font color="#0000FF"> is</font><br>
+  &nbsp;&nbsp; ...</tt>
+</blockquote>
+<P>The package provides the subroutines described in <a href="#Strings_Edit.UTF8.Integer_Edit">Strings_Edit.UTF8.Integer_Edit</a>.</p>
+  <TABLE border="1" cellpadding="3" cellspacing="0">
+    <TR>
+      <TD><i>A necessary note</i>. If you plan to use sub- and superscripts under 
+Microsoft Windows XP, you probably will have a problem with displaying the 
+corresponding glyphs. The reason for this is that the standard Windows font <i>
+Tahoma</i> does not contain glyphs for Unicode sub- and superscripts. You can 
+solve this problem by choosing a font which has them. A good candidate, very 
+close to <i>Tahoma</i> is <i>Arial Unicode MS</i>. Go to the <i>Control Panel &#8594; Display &#8594; Appearance &#8594; Advanced</i> and there 
+change the font by clicking on the corresponding sample texts.</TD>
+    </TR>
+  </TABLE>
+
+<P><a name="Strings_Edit.Integers.Superscript"></a>This package has a non-generic
+instantiation with the type Integer: <a href="#Strings_Edit.Integers.Superscript">Strings_Edit.Integers.Superscript</a>.</p>
+
+<h3><a name="7.5"></a>7.5. Wildcard-matching of UTF-8 strings</h3>
+<P><a name="Strings_Edit.UTF8.Wildcards"></a>The package
+<a href="#Strings_Edit.UTF8.Wildcards">Strings_Edit.UTF8.Wildcards</a>
+is provides the following subprograms:<blockquote>
+  <P><tt><font color="#0000FF">function </font>Match<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Text</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pattern</b>&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Wide_Space</b> 
+	: Boolean := False;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Blanks</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Character_Set := SpaceAndTab<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;</tt></blockquote>
+<P>The function matches the string <b>Text</b> against the wildcard pattern <b>Pattern</b>. Both
+<b>Text</b> and <b>Pattern</b> are UTF-8 encoded strings. <b>Pattern</b> may 
+contain asterisk characters (*) treated as wildcards to match any (possibly 
+empty) sequence of UTF-8 characters. The number of wildcards in <b>Pattern</b> 
+is not limited. Additionally if the parameter <b>Wide_Space</b> is <font color="#800000">
+<i>true</i></font>, space characters in <b>Pattern</b> match any non-empty 
+sequence of characters from the set <b>Blanks</b>. Note that when <b>Blanks</b> contain non-ASCII characters (with the 
+code points 128..255), those will match any UTF-8 characters starting with this 
+octet. When <b>Wide_Space</b> is <font color="#800000"><i>false</i></font> <b>Blanks</b> is 
+ignored and space matches as an ordinal character. The result of the function is true when <b>Pattern</b> matches all <b>
+Text</b>. A typical use of this function is to filter file names using patterns 
+like *.txt. The result is undefined (either <i><font color="#800000">true</font></i> 
+or <font color="#800000"><i>false</i></font>) when <b>Text</b> and/or <b>Pattern</b> 
+are illegal UTF-8 strings. </p>
+
+<blockquote>
+  <P><tt><font color="#0000FF">function </font>Match<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Text</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pattern</b>&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Map</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Mapping;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Wide_Space</b> 
+	: Boolean := False;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Blanks</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Character_Set := SpaceAndTab<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;</tt></blockquote>
+<P>This function has one additional parameter <b>Map</b> which is the mapping used 
+to convert two non-blank code points before they are compared. Blank code points 
+when <b>Wide_Space</b> is <i><font color="#800000">true</font></i> are compared 
+as-is. The following example to match ignoring case the function can be used as 
+follows:</p>
+<tt>&nbsp;&nbsp; Match (Text, Pattern, <a href="#Strings_Edit.UTF8.Maps.Constants">Strings_Edit.UTF8.Maps.Constants</a>.Lower_Case_Map);</tt>
+<P><a name="Strings_Edit.UTF8.Wildcards.Case_Insensitive"></a>The package
+<a href="#Strings_Edit.UTF8.Wildcards.Case_Insensitive">Strings_Edit.UTF8.Wildcards.Case_Insensitive</a>
+is provides the function<blockquote>
+  <P><tt><font color="#0000FF">function </font>Match_Insensitive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Text</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Pattern</b>&nbsp;&nbsp;&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Wide_Space</b> 
+	: Boolean := False;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Blanks</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Character_Set := SpaceAndTab<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;</tt></blockquote>
+<P>implemented the described above way.</p>
+
+<h3><a name="7.6"></a>7.6. Case mapping</h3>
+<P><a name="Strings_Edit.UTF8.Mapping"></a>The package
+<a href="#Strings_Edit.UTF8.Mapping">Strings_Edit.UTF8.Mapping</a> provides 
+<a href="http://www.unicode.org">
+		Unicode</a> mapping of code points and UTF-8 encoded strings. It provides the following subprograms:<blockquote>
+  <P><tt><font color="#0000FF">function </font>Has_Case (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if the code 
+point <b>Value</b> has upper or lower case equivalents different from <b>
+Value</b>. For all <i>x</i>, Has_Case (<i>x</i>) = 
+<a href="#Strings_Edit.UTF8.Mapping.Is_Lowercase">Is_Lowercase</a> (<i>x</i>) <font color="#0000FF">or</font> 
+<a href="#Strings_Edit.UTF8.Mapping.Is_Uppercase">Is_Uppercase</a> (<i>x</i>). Note that not all <a href="http://www.unicode.org">
+		Unicode</a> code points have equivalents (simple case mapping). Also there exist 
+points different from either of the equivalents. I.e. <i>x</i> /= To_Lower (<i>x</i>)
+<font color="#0000FF">and</font> <i>x</i> /= To_Upper (<i>x</i>). Refer to <a href="http://www.unicode.org">
+		Unicode</a> standard for further information.</p>
+
+<blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Mapping.Is_Lowercase">
+	</a>function </font>Is_Lowercase (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if the code 
+point <b>Value</b> is lower case.</p><blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Mapping.Is_Uppercase">
+	</a>function </font>Is_Uppercase (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if the code 
+point <b>Value</b> is upper case.</p><blockquote>
+  <P><tt><font color="#0000FF">function </font>To_Lowercase (<b>Value</b> : 
+	UTF8_Code_Point)<font color="#0000FF"><br>
+&nbsp;&nbsp; return </font>UTF8_Code_Point;</tt></blockquote>
+<P>The function returns a lowercase equivalent of <b>Value</b>. The result is <b>
+Value</b> if no equivalent exists.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function </font>To_Lowercase (<b>Value</b> : 
+	String) <font color="#0000FF">return</font> String;</tt></blockquote>
+<P>The function converts its argument to lower case. Constraint_Error is 
+propagated when <b>Value</b> is an illegal UTF-8 string.</p><blockquote>
+  <P><tt><font color="#0000FF">function </font>To_Uppercase (<b>Value</b> : 
+	UTF8_Code_Point)<font color="#0000FF"><br>
+&nbsp;&nbsp; return </font>UTF8_Code_Point;</tt></blockquote>
+<P>The function returns an uppercase equivalent of <b>Value</b>. The result is 
+<b>Value</b> if no equivalent exists.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function </font>To_Uppercase (<b>Value</b> : 
+	String) <font color="#0000FF">return</font> String;</tt></blockquote>
+<P>The function converts its argument to upper case. Constraint_Error is 
+propagated when <b>Value</b> is an illegal UTF-8 string.</p>
+  <TABLE border="1" cellpadding="3" cellspacing="0">
+    <TR>
+      <TD><i>Implementation nodes</i>. The implementation is based on the upper 
+		and lower case mappings as defined by the <a href="http://www.unicode.org">
+		Unicode</a> standard. Presently these mappings are specified in the
+		<a href="ftp://ftp.unicode.org/Public/UNIDATA/UnicodeData.txt">
+		UnicodeData.txt</a> file which can be downloaded at the link. It 
+		contains about three thousand of <a href="http://www.unicode.org">
+		Unicode</a> code points which have upper or lower case equivalents. The 
+		implementation has an internal sorted array of mappings searched 
+		binary. I.e. the efficiency is O(log<sub>2</sub>3<font face="Times New Roman">·</font>10<sup>3</sup>). In case of future changes 
+		and extensions of this file, the subdirectory <i>
+		test_strings_edit</i> contains a an utility program <i>
+		strings_edit-utf8-mapping_generator.adb</i> which can be used to adjust 
+		the implementation of the package. In order to do this, the utility must 
+		be built. Using GNAT Ada compiler for instance:<blockquote>
+		<p><tt>&gt;gnatmake -I 
+		../ strings_edit-utf8-mapping_generator.adb</tt></p>
+		</blockquote>
+		<p>Then it is called as follows:</p>
+		<blockquote>
+		<p><tt>&gt;strings_edit-utf8-mapping_generator 
+		../strings_edit-utf8-mapping.adb UnicodeData.txt</tt></p>
+		</blockquote>
+		<p>This will replace the internal representation of <a href="http://www.unicode.org">
+		Unicode</a> case mappings in the source code of the package
+<a href="#Strings_Edit.UTF8.Wildcards">Strings_Edit.UTF8.Categorization</a>.</TD>
+    </TR>
+  </TABLE>
+
+<h3><a name="7.7"></a>7.7. Unicode categorization</h3>
+<P><a name="Strings_Edit.UTF8.Categorization"></a>The package
+<a href="#Strings_Edit.UTF8.Categorization">Strings_Edit.UTF8.Categorization</a> provides 
+code points categorization as defined by the 
+<a href="http://www.unicode.org">
+		Unicode</a> standard. The enumeration type General_Category represents 
+the categories:<blockquote>
+  <P><tt><font color="#0000FF">type </font>General_Category<font color="#0000FF"> 
+	is</font> (Lu, ...);</tt></blockquote>
+<P>The type has the following values:</p>
+<TABLE border="5" cellpadding="3" cellspacing="0" style="border-left-width: 0px">
+  <TR>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Value</b></font></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Description</b></font></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Value</b></font></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Description</b></font></TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Lu</tt></TD>
+    <TD bgcolor="#FFFFCC">Uppercase letter</TD>
+    <TD bgcolor="#FFFFCC"><tt>Sm</tt></TD>
+    <TD bgcolor="#FFFFCC">Math symbol</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Ll</tt></TD>
+    <TD bgcolor="#FFFFCC">Lowercase letter</TD>
+    <TD bgcolor="#FFFFCC"><tt>Sc</tt></TD>
+    <TD bgcolor="#FFFFCC">Currency symbol</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Lt</tt></TD>
+    <TD bgcolor="#FFFFCC">Titlecase letter</TD>
+    <TD bgcolor="#FFFFCC"><tt>Sk</tt></TD>
+    <TD bgcolor="#FFFFCC">Modifier symbol</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Lm</tt></TD>
+    <TD bgcolor="#FFFFCC">Modifier letter</TD>
+    <TD bgcolor="#FFFFCC"><tt>So</tt></TD>
+    <TD bgcolor="#FFFFCC">Other symbol</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Lo</tt></TD>
+    <TD bgcolor="#FFFFCC">Other letter</TD>
+    <TD><tt>Zs</tt></TD>
+    <TD>Space separator</TD>
+  </TR>
+  <TR>
+    <TD><tt>Mn</tt></TD>
+    <TD>Non-spacing mark</TD>
+    <TD><tt>Zl</tt></TD>
+    <TD>Line separator</TD>
+  </TR>
+  <TR>
+    <TD><tt>Mc</tt></TD>
+    <TD>Spacing combining mark</TD>
+    <TD><tt>Zp</tt></TD>
+    <TD>Page separator</TD>
+  </TR>
+  <TR>
+    <TD><tt>Me</tt></TD>
+    <TD>Enclosing mark</TD>
+    <TD bgcolor="#FFFFCC"><tt>Cc</tt></TD>
+    <TD bgcolor="#FFFFCC">Control</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Nd</tt></TD>
+    <TD bgcolor="#FFFFCC">Decimal digit (number)</TD>
+    <TD bgcolor="#FFFFCC"><tt>Cf</tt></TD>
+    <TD bgcolor="#FFFFCC">Format</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>Nl</tt></TD>
+    <TD bgcolor="#FFFFCC">Letter (number)</TD>
+    <TD bgcolor="#FFFFCC"><tt>Cs</tt></TD>
+    <TD bgcolor="#FFFFCC">Surrogate</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#FFFFCC"><tt>No</tt></TD>
+    <TD bgcolor="#FFFFCC">Other number</TD>
+    <TD bgcolor="#FFFFCC"><tt>Co</tt></TD>
+    <TD bgcolor="#FFFFCC">Private use</TD>
+  </TR>
+  <TR>
+    <TD><tt>Pc</tt></TD>
+    <TD>Connector punctuation</TD>
+    <TD bgcolor="#FFFFCC"><tt>Cn</tt></TD>
+    <TD bgcolor="#FFFFCC">Not assigned</TD>
+  </TR>
+  <TR>
+    <TD><tt>Pd</tt></TD>
+    <TD>Dash punctuation</TD>
+    <TD colspan="2" rowspan="6" bgcolor="#C0C0C0">&nbsp;</TD>
+  </TR>
+  <TR>
+    <TD><tt>Ps</tt></TD>
+    <TD>Open punctuation</TD>
+  </TR>
+  <TR>
+    <TD><tt>Pe</tt></TD>
+    <TD>Close punctuation</TD>
+  </TR>
+  <TR>
+    <TD><tt>Pi</tt></TD>
+    <TD>Initial quote punctuation</TD>
+  </TR>
+  <TR>
+    <TD><tt>Pf</tt></TD>
+    <TD>Final quote punctuation</TD>
+  </TR>
+  <TR>
+    <TD><tt>Po</tt></TD>
+    <TD>Other punctuation</TD>
+  </TR>
+  </TABLE>
+<blockquote>
+  <P><tt><font color="#0000FF">subtype</font> Letter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Lu..Lo;<br>
+	<font color="#0000FF">subtype</font> Mark&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Mn..Me;<br>
+	<font color="#0000FF">subtype</font> Mumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Nd..No;<br>
+	<font color="#0000FF">subtype</font> Punctuation <font color="#0000FF">is</font> 
+	General_Category <font color="#0000FF">range</font> Pc..Po;<br>
+	<font color="#0000FF">subtype</font> Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Sm..So;<br>
+	<font color="#0000FF">subtype</font> Separator&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Zs..Zp;<br>
+	<font color="#0000FF">subtype</font> Other&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<font color="#0000FF">is</font> General_Category <font color="#0000FF">range</font> 
+	Cc..Cn;</tt></blockquote>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Category (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> General_Category;</tt></blockquote>
+<P>The function returns the category of <b>Value</b>.</p>
+<P>Additionally the package defines the following indicator functions for 
+commonly used sets of code points:</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Alphanumeric (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a letter (Lu...Lo) or else a decimal digit (Nd) code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Control (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a control code (Cc) point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Digit (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a decimal digit (Nd) code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Identifier_Extend (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is represents a character valid in the body of an Ada 2005 identifier 
+additionally to 
+the characters valid at the identifier beginning (<a href="http://www.adaic.com/standards/05rm/html/RM-2-3.html#S0005">ARM 
+2.3(3.1/2)</a>).</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Identifier_Start (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is represents a character valid at the beginning of an Ada 2005 identifier (<a href="http://www.adaic.com/standards/05rm/html/RM-2-3.html#S0003">ARM 
+2.3(3/2)</a>).</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_ISO_646 (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is represents an ASCII character (ISO 646, 7-bit).</p>
+<blockquote>
+  <P><tt><font color="#0000FF">
+	<a name="Strings_Edit.UTF8.Categorization.Is_Letter"></a>function</font> Is_Letter (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a letter (Lu..Lo) code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Lower (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a lowercase letter (Ll) code point. This function is equivalent to
+<a href="#Strings_Edit.UTF8.Mapping.Is_Lowercase">Is_Lowercase</a>.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Other_Format (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a format (Cf) code point. Such code points are usually ignored when strings 
+are compared as words. For example, soft hyphen (AD<sub>16</sub>) has this 
+category.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Space (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a space (Zs) code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Subscript_Digit (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a subscript decimal digit code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Superscript_Digit (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a superscript decimal digit code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Title (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is a title case letter (Lt) code point.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Upper (<b>Value</b> : 
+	UTF8_Code_Point) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>The function returns <i><font color="#800000">true</font></i> if <b>Value</b> 
+is an uppercase letter (Lu) code point. This function is equivalent to
+<a href="#Strings_Edit.UTF8.Mapping.Is_Uppercase">Is_Uppercase</a>.</p>
+  <TABLE border="1" cellpadding="3" cellspacing="0">
+    <TR>
+      <TD><i>Implementation nodes</i>. The implementation is based on the 
+		general category values defined by the <a href="http://www.unicode.org">
+		Unicode</a> standard. Presently these mappings are specified in the
+		<a href="ftp://ftp.unicode.org/Public/UNIDATA/UnicodeData.txt">
+		UnicodeData.txt</a> file which can be downloaded at the link. In case of future changes 
+		and extensions of this file, the subdirectory <i>
+		test_strings_edit</i> contains a an utility program <i>
+		strings_edit-utf8-categorization_generator.adb</i> which can be used to adjust 
+		the implementation of the package. In order to do this, the utility must 
+		be built. Using GNAT Ada compiler for instance:<blockquote>
+		<p><tt>&gt;gnatmake -I 
+		../ strings_edit-utf8-categorization_generator.adb</tt></p>
+		</blockquote>
+		<p>Then it is called as follows:</p>
+		<blockquote>
+		<p><tt>&gt;strings_edit-utf8-categorization_generator 
+		../strings_edit-utf8-categorization.adb UnicodeData.txt</tt></p>
+		</blockquote>
+		<p>This will replace the internal representation of <a href="http://www.unicode.org">
+		Unicode</a> case mappings in the source code of the package
+		<a href="#Strings_Edit.UTF8.Categorization">Strings_Edit.UTF8.Categorization</a>.</TD>
+    </TR>
+  </TABLE>
+
+<h3><a name="7.8"></a>7.8. Blocks</h3>
+<P><a name="Strings_Edit.UTF8.Blocks"></a>The package
+<a href="#Strings_Edit.UTF8.Blocks">Strings_Edit.UTF8.Blocks</a> provides 
+ranges of code points for the 
+<a href="http://www.unicode.org">
+		Unicode</a> blocks. See
+<a href="http://www.unicode.org/Public/UNIDATA/Blocks.txt">Blocks.txt</a> file. 
+The names of the ranges used in the package match the names used
+<a href="http://www.unicode.org/Public/UNIDATA/Blocks.txt">Blocks.txt</a> after 
+substitution spaces and hyphens to underline. For example, &quot;<i>Basic Latin</i>&quot; 
+of <a href="http://www.unicode.org/Public/UNIDATA/Blocks.txt">Blocks.txt</a> is 
+named <i>Basic_Latin</i> in the package. The ranges of code points can be used 
+for construction of code points sets (see
+<a href="#Strings_Edit.UTF8.Maps.To_Set_range">To_Set</a> and set-theoretic 
+operations declared in
+<a href="#Strings_Edit.UTF8.Maps">Strings_Edit.UTF8.Maps</a>).<h3><a name="7.9"></a>7.9. Sets and maps</h3>
+<P><a name="Strings_Edit.UTF8.Maps"></a>The package
+<a href="#Strings_Edit.UTF8.Maps">Strings_Edit.UTF8.Maps</a> provides 
+sets and maps of code points. The package mimics the standard library package Ada.Strings.Maps 
+(<a href="http://www.adaic.com/standards/05rm/html/RM-A-4-2.html#I5156">ARM 
+A.4.2</a>) augmented for dealing with <a href="http://www.unicode.org">
+		Unicode</a> in UTF-8 encoding. The operations of Ada.Strings.Maps are 
+extended onto the cases when sets and ranges are intermixed. Because <a href="http://www.unicode.org">
+		Unicode</a> sets can be potentially very large the implementation 
+supports composition of an indicator function with a set of sorted ranges in 
+order to reduce required space by conjunction (<font color="#0000FF">and</font>). Similarly for maps two representations are 
+supported. One by a sorted array and another by a function. Reference counting 
+is used to provide efficient assignments of sets and maps.<h4><a name="7.9.1"></a>7.9.1. Sets</h4>
+<P>The type Unicode_Set represents sets of code points.<blockquote>
+  <P><tt><font color="#0000FF">type</font> Unicode_Set <font color="#0000FF">is 
+	private</font>;</tt></blockquote>
+<P>The following type defines an access to indicator function of a code points 
+set.:</p>
+<blockquote>
+  <P><tt><font color="#0000FF">type</font> Unicode_Indicator_Function
+	<font color="#0000FF">is<br>
+&nbsp;&nbsp; access function </font>(<b>Value</b> : UTF8_Code_Point)
+	<font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<p>The type Unicode_Set has the following operations defined:</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> &quot;<font color="#FF0000">not</font>&quot; 
+	(<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<font color="#0000FF"><br>
+&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">not</font>&quot; 
+	(<b>Right</b> : String) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">not</font>&quot; 
+	(<b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> 
+	Unicode_Set;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">and</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">and</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">and</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">and</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">and</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">or</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">or</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">or</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">or</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">or</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">xor</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">xor</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">xor</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">xor</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">xor</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">-</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">-</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">-</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">-</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String) <font color="#0000FF">return</font> Unicode_Set;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">-</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;</tt></blockquote>
+<p>These functions provide set-theoretic operations on two sets or a set and a 
+range of points or else an UTF-8 encoded string. When one of the arguments is a 
+string then it is treated as a set consisting of the code points found in the 
+string. Data_Error is propagated when a string parameter is not a valid UTF-8 
+string. A - B is defined as A <font color="#0000FF">and not</font> B. A 
+range of points is considered empty if its lower bound is higher than the upper 
+bound.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> &quot;<font color="#FF0000">=</font>&quot; 
+	(<b>Left</b>, <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> 
+	Boolean;<br>
+	<font color="#0000FF">&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">=</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">=</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">&lt;</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;=</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;=</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">&lt;=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&lt;=</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">&gt;</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;=</font>&quot; (<b>Left</b>,
+	<b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : Code_Points_Range) <font color="#0000FF">return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;=</font>&quot; 
+	(<b>Left</b> : Code_Points_Range; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;<font color="#0000FF"><br>
+	&nbsp;&nbsp; function</font> &quot;<font color="#FF0000">&gt;=</font>&quot; 
+	(<b>Left</b> : Unicode_Set; <b>Right</b> : String)<font color="#0000FF"> return</font> Boolean;<br>
+&nbsp;&nbsp; <font color="#0000FF">function</font> &quot;<font color="#FF0000">&gt;=</font>&quot; 
+	(<b>Left</b> : String; <b>Right</b> : Unicode_Set) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<p>These functions provide relational operations on two sets or a set and a 
+range of points or else an UTF-8 encoded string. When one of the arguments is a 
+string then it is treated as a set consisting of the code points found in the 
+string. Data_Error is propagated when a string parameter is not a valid UTF-8 
+string. The operations &lt; and &lt;= are defined in the sense &sub; and &sube; 
+correspondingly.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Cardinality (<b>Set</b> 
+	: Unicode_Set) <font color="#0000FF">
+	return</font> Natural;</tt></blockquote>
+<p>This function returns the number of elements in <b>Set</b>.</p><blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Maps.Choose"></a>function</font> Choose<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Indicator</b> 
+	: Unicode_Indicator_Function<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Unicode_Set;</tt></blockquote>
+<P>This function returns a set consisting of the elements of <b>Set</b> chosen 
+by the function <b>Indicator</b>. When <b>Indicator</b> is <font color="#0000FF">
+null</font> the result is <b>Set</b>. When this function creates a new set, its 
+representation is based on a ranges list and does not refer to <b>Indicator</b>. 
+This should be only be used for compact sets.</p><blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Maps.Get"></a>procedure</font> Get<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Source</b>&nbsp; 
+	: String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+	Pointer</b> : <font color="#0000FF">in out</font> Integer;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+	Blanks</b>&nbsp; : Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></blockquote>
+<P>This procedure skips all code points from the set <b>Blank</b> starting from
+<b>Source</b> (<b>Pointer</b>). After completion <b>Pointer</b> is either <b>
+Source</b>'Last + 1, or the first character of the first code point outside <b>
+Blanks</b>, or else to the first improperly encoded character. Layout_Error is 
+propagated when Pointer is not in the range <b>Source</b>'First..<b>Source</b>'Last 
++ 1.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Empty (<b>Set</b> : 
+	Unicode_Set) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_Range (<b>Set</b> : Unicode_Set)
+	<font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_Singleton (<b>Set</b> : Unicode_Set)
+	<font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_Universal (<b>Set</b> : Unicode_Set)
+	<font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<p>These functions test a set for being empty, a range, a singleton or a full 
+set of code points.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_In<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Element</b> : 
+	Character;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_In<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Element</b> : 
+	Wide_Character;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_In<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Element</b> : 
+	UTF8_Code_Point;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;</tt></blockquote>
+<p>These functions provide membership tests. The first parameter can be a code 
+point, a Latin-1 character or a wide character.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> Is_Subset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Elements</b> : 
+	Code_Points_Range;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean <font color="#0000FF">renames</font> &quot;<font color="#FF0000">&lt;=</font>&quot;;<br>
+	<font color="#0000FF">function</font> Is_Subset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Elements</b> : 
+	Code_Points_Ranges;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Is_Subset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Elements</b> : 
+	String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean <font color="#0000FF">renames</font> &quot;<font color="#FF0000">&lt;=</font>&quot;;<br>
+	<font color="#0000FF">function</font> Is_Subset<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Elements</b> : 
+	Unicode_Set;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Set</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Set<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> Boolean <font color="#0000FF">renames</font> &quot;<font color="#FF0000">&lt;=</font>&quot;;</tt></blockquote>
+<p>These functions provide subset tests. The first parameter can be a code 
+points range, a set, an UTF-8 encoded string. When the 
+parameter is a string then the result <i><font color="#800000">true</font></i> 
+if all code points of the string belong to the set. Data_Error is propagated 
+when it is not a valid UTF-8 string.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Ranges (<b>Set</b> : 
+	Unicode_Set) <font color="#0000FF">return</font> Code_Points_Ranges;</tt></blockquote>
+<p>This function returns an array of disjoint ascending ranges representing the 
+set. The result is an empty array if the parameter is an empty set.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Set (<b>Singleton</b> : 
+	UTF8_Code_Point) <font color="#0000FF">&nbsp;&nbsp; return</font> 
+	Unicode_Set;<br>
+	<font color="#0000FF">function</font> To_Set (<b>Singleton</b> : Character)
+	<font color="#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> To_Set (<b>Singleton</b> : 
+	Wide_Character) <font color="#0000FF">&nbsp;&nbsp;&nbsp; return</font> 
+	Unicode_Set;<br>
+	<font color="#0000FF"><a name="Strings_Edit.UTF8.Maps.To_Set_range"></a>function</font> To_Set (<b>Span</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Code_Points_Range) <font color="#0000FF">&nbsp;return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> To_Set (<b>Ranges</b>&nbsp;&nbsp;&nbsp; 
+	: Code_Points_Ranges) <font color="#0000FF">return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> To_Set (<b>Low, High</b> 
+	: UTF8_Code_Point) <font color="#0000FF">&nbsp;&nbsp; return</font> Unicode_Set;<br>
+	<font color="#0000FF">function</font> To_Set (<b>Sequence</b>&nbsp; : 
+	String) <font color="#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	return</font> Unicode_Set;<font color="#0000FF"><br>
+	function</font> To_Set (<b>Indicator</b> : Unicode_Indicator_Function)<br>
+	<font color="#0000FF">&nbsp;&nbsp;&nbsp;return</font> Unicode_Set;</tt></blockquote>
+<p>These functions convert</p>
+<ul>
+	<li>a code point;</li>
+	<li>a Latin-1 character;</li>
+	<li>a wide character,</li>
+	<li>a 
+range of code points,</li>
+	<li>an array of code points;</li>
+	<li>an UTF-8 string;</li>
+	<li>an indicator function (an access to)</li>
+</ul>
+<p>to the corresponding set. When the parameter is a string then the set will 
+contain all and nothing but all characters from the string. Data_Error exception 
+is propagated when the argument is not a properly encoded UTF-8 string. When the parameter 
+is an array of ranges, the result is the union of them. When the parameter 
+specifies an indicator function the result is a set corresponding to the 
+function. It is the universal set when <b>Indicator</b> is <font color="#0000FF">null</font>. 
+Differently to <a href="#Strings_Edit.UTF8.Maps.Choose">Choose</a> the result 
+refers to <b>Indicator</b>.</p>
+<blockquote>
+  <P><tt>
+	<font color="#0000FF">function</font> To_Sequence (<b>Set</b> : Unicode_Set)
+	<font color="#0000FF">return</font> String;</tt></blockquote>
+<p>This function returns an UTF-8 encoded string corresponding to the code 
+points of the set. Each code point of <b>Set</b> is represented in the string. 
+They are ordered in ascending order. The following relation holds To_Set (To_Sequence 
+(<i>x</i>)) = <i>x</i>. Constraint_Error is propagated when the result is too 
+large to be represented as a string.</p><BLOCKQUOTE>
+  <tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Maps.Trim"></a>function</font> Trim 
+	(<b>Source</b> : String; <b>Blanks</b> 
+	: Unicode_Set) <font color="#0000FF">
+	return</font> String;</tt></BLOCKQUOTE>
+<P>
+This function returns the content of <b>Source</b> with the characters 
+representing UTF-8 code points from the 
+set <b>Blanks</b> removed from both ends of it. Data_Error is propagated when 
+Source is not a valid UTF-8 string.<blockquote>
+  <P><tt><font color="#0000FF">generic<br>
+&nbsp;&nbsp; with function </font>Indicator (Value : UTF8_Code_Point)
+	<font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Generic_Choose (<b>Set</b> : 
+	Unicode_Set) <font color="#0000FF">return</font> Unicode_Set;</tt></blockquote>
+<P>This is a generic variant of the function
+<a href="#Strings_Edit.UTF8.Maps.Choose">Choose</a>.</p>
+<blockquote>
+  <P><tt>Null_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : <font color="#0000FF">constant</font> 
+	Unicode_Set;<br>
+	Universal_Set : <font color="#0000FF">constant</font> Unicode_Set;</tt></blockquote>
+<p>The empty and the universal set constants.</p>
+<p>To use Unicode_Set effectively one should consider its implementation. A set 
+code points is represented by a conjunction of a sorted array of ranges and an 
+indicator function. A code point belongs to the set when both the indicator 
+function returns <font color="#800000"><i>true</i></font> and it is in the 
+array. Such set can be constructed for example like:</p>
+<blockquote>
+  <P><tt>Cyrillic_Letters : <font color="#0000FF">constant</font> 
+	Unicode_Set :=<br>
+&nbsp;&nbsp; To_Set (Is_Letter'Access) <font color="#0000FF">and</font> Cyrillic;</tt></blockquote>
+<p>Here <a href="#Strings_Edit.UTF8.Categorization.Is_Letter">Is_Letter</a> is 
+an indicator function, which selects only letters. Cyrillic is a range of code 
+points defined in
+<a href="#Strings_Edit.UTF8.Blocks">Strings_Edit.UTF8.Blocks</a>. When this set 
+is combined with other sets of ranges using only intersection the implementation 
+will keep this representation. When other operations like complement and 
+disjunction get involved, the representation can be <i>flattened</i> by removing 
+the indicator function from it. For large disjoint sets it might be very 
+inefficient. The set is also flattened when the operation <a href="#Strings_Edit.UTF8.Maps.Choose">Choose</a> 
+is applied, which might be necessary to do if the indicator function is not 
+declared at the library level, for example. For the example above set of 
+Cyrillic letters could be obtained represented by an array of ranges:</p>
+<blockquote>
+  <P><tt>Cyrillic_Letters : <font color="#0000FF">constant</font> 
+	Unicode_Set :=<br>
+&nbsp;&nbsp; Choose (To_Set (Cyrillic), Is_Letter'Access);</tt></blockquote>
+<h4><a name="7.9.2"></a>7.9.2. 
+Maps</h4>
+<P>The type Unicode_Mapping represents a mapping of the set of 
+<a href="http://www.unicode.org">
+		Unicode</a> code points to itself.<blockquote>
+  <P><tt><font color="#0000FF">type</font> Unicode_Mapping <font color="#0000FF">is 
+	private</font>;</tt></blockquote>
+<p>The following the type defines access to a mapping function.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">type</font> Unicode_Mapping_Function
+	<font color="#0000FF">is<br>
+&nbsp;&nbsp; access function </font>(Value : UTF8_Code_Point)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000FF">return</font> 
+	UTF8_Code_Point;</tt></blockquote>
+<P>It has the following operations defined on Unicode_Mapping:</p><BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Prefix</b> : String;<b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Source</b> : 
+	String;<b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Map</b>&nbsp;&nbsp;&nbsp; : 
+	Unicode_Mapping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) <font color="#0000FF">&nbsp;return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b> with respect to the mapping represented by <b>Map</b>. An empty string is a prefix of any string. 
+Data_Error is propagated when <b>Prefix</b> or <b>Source</b> are not properly 
+encoded UTF-8 strings.<BLOCKQUOTE>
+  <tt><font color="#0000FF">function</font> Is_Prefix<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (<b>&nbsp; Prefix</b>&nbsp; : 
+	String;<b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Source</b>&nbsp; 
+	: String;<b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pointer</b> : Integer;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Map</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Mapping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ) <font color="#0000FF">&nbsp;return</font> Boolean;</tt></BLOCKQUOTE>
+<P>
+This function returns <i><font color="#800000">true</font></i> if <b>Prefix</b> 
+is a prefix of <b>Source</b> (<b>Pointer</b>..<b>Source</b>'Last)with respect to 
+the mapping represented by <b>Map</b>. An empty string is a prefix of any 
+substring. The result is <i><font color="#800000">false</font></i> if <b>Pointer</b> 
+is not in the range <b>Source</b>'First..<b>Source</b>'Last + 1. Data_Error is 
+propagated when <b>Prefix</b> or <b>Source</b> are not properly encoded UTF-8 
+strings.<blockquote>
+  <P><tt><font color="#0000FF"><a name="Strings_Edit.UTF8.Maps.Value"></a>function</font> 
+	Value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Map&nbsp;&nbsp;&nbsp;&nbsp; 
+	: </b>Unicode_Mapping<b>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Element</b> : 
+	Character<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> UTF8_Code_Point;<br>
+	<font color="#0000FF">function</font> Value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Map</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Mapping;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Element</b> 
+	: Wide_Character<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> UTF8_Code_Point;<br>
+	<font color="#0000FF">function</font> Value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Map</b>&nbsp;&nbsp;&nbsp;&nbsp; 
+	: Unicode_Mapping;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Element</b> 
+	: UTF8_Code_Point<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+	return</font> UTF8_Code_Point;</tt></blockquote>
+<p>These functions return the code point corresponding to the parameter <b>
+Element</b> in the mapping <b>Map</b>. The parameter can be a code point, 
+Latin-1 or wide character.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Domain (<b>Map</b> : 
+	Unicode_Mapping) <font color="#0000FF">return</font> String;</tt></blockquote>
+<p>This function returns an UTF-8 string of ascending code points <i>x</i> such 
+that <a href="#Strings_Edit.UTF8.Maps.Value">Value</a> (<b>Map</b>, <i>x</i>) /=
+<i>x</i>. Constraint_Error is propagated when the result is too large to be 
+represented as a string.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Mapping (<b>From</b>, <b>To</b> 
+	: String) <font color="#0000FF">return</font> Unicode_Mapping;</tt></blockquote>
+<p>This function creates a new mapping. The parameters are UTF-8 encoded 
+strings. For <i>n</i><sup>th</sup> code point of <b>From</b> the resulting 
+mapping yields the <i>n</i><sup>th</sup> code point of <b>To</b>. For all other 
+code points the mapping acts as an identity mapping. When <b>From</b> contains 
+repeating code points or else the numbers of code points in <b>From</b> and <b>
+To</b> differ Translation_Error is propagated. Data_Error is propagated when <b>
+From</b> or <b>To</b> is an invalid UTF-8 string.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Mapping (<b>Map</b> : 
+	Unicode_Mapping_Function)<br>
+&nbsp;&nbsp; <font color="#0000FF">return</font> Unicode_Mapping;</tt></blockquote>
+<p>This function creates a new mapping from a function <b>Map</b>. The result is 
+identity mapping when <b>Map</b> is <font color="#0000FF">null</font>.</p>
+<blockquote>
+  <P><tt><font color="#0000FF">function</font> To_Range (<b>Map</b> : 
+	Unicode_Mapping) <font color="#0000FF">return</font> String;</tt></blockquote>
+<p>The result is an UTF-8 string of code points <i>x</i> such that the original 
+of <i>x</i> is not <i>x</i>. I.e. <i>x</i> such that
+<a href="#Strings_Edit.UTF8.Maps.Value">Value</a> (Map, <i>y</i>) = <i>x</i> and
+<i>y</i> /= <i>x</i>. The points in the result are ordered by <i>y</i>. I.e. <i>
+x</i><sub>1</sub> precedes <i>x</i><sub>2</sub> iff <i>y</i><sub>1</sub> &lt; <i>y</i><sub>2</sub> 
+and <a href="#Strings_Edit.UTF8.Maps.Value">Value</a> (Map, <i>y</i><sub>1</sub>) 
+= <i>x</i><sub>1</sub>, <a href="#Strings_Edit.UTF8.Maps.Value">Value</a> (Map,
+<i>y</i><sub>2</sub>) = <i>x</i><sub>2</sub>. Constraint_Error is propagated 
+when the result is too large to be represented as a string.</p>
+<blockquote>
+  <P><tt>Identity : <font color="#0000FF">constant</font> Unicode_Mapping;</tt></blockquote>
+<p>This mapping maps each code point to itself.</p>
+<h4><a name="7.9.3"></a>7.9.3. 
+Constants</h4>
+<P><a name="Strings_Edit.UTF8.Maps.Constants"></a>The package
+<a href="#Strings_Edit.UTF8.Maps.Constants">Strings_Edit.UTF8.Maps.Constants</a> 
+defines some commonly used sets:<blockquote>
+	<P><tt>Alphanumeric_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+	<font color="#0000FF">constant</font> Unicode_Set;<br>
+	Control_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+	<font color="#0000FF">constant</font> Unicode_Set;<br>
+	Digit_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Identifier_Extend_Set : <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Identifier_Start_Set&nbsp; : <font color="#0000FF">constant</font> 
+	Unicode_Set;<br>
+	ISO_646_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :
+	<font color="#0000FF">constant</font> Unicode_Set;<br>
+	Letter_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Lower_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Other_Format_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Space_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : <font color="#0000FF">constant</font> 
+	Unicode_Set;<br>
+	Subscript_Digit_Set&nbsp;&nbsp; : <font color="#0000FF">constant</font> 
+	Unicode_Set;<br>
+	Superscript_Digit_Set : <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Title_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: <font color="#0000FF">constant</font> Unicode_Set;<br>
+	Upper_Set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	: <font color="#0000FF">constant</font> Unicode_Set;</tt></blockquote>
+<P>See
+<a href="#Strings_Edit.UTF8.Categorization">Strings_Edit.UTF8.Categorization</a> 
+for information about the code points contained by the sets. The package defines 
+the following maps:<blockquote>
+	<P><tt>Lower_Case_Map : <font color="#0000FF">constant</font> 
+	Unicode_Mapping;<br>
+	Upper_Case_Map : <font color="#0000FF">constant</font> Unicode_Mapping;</tt></blockquote>
+<hr>
+
+<P align="right">
+<A name="8"></A><a href="#7"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></a><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><a href="#9"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></a><H2>8. Fields</H2>
+<P><a name="Strings_Edit.Fields"></a>The
+package <a href="#Strings_Edit.Fields"> Strings_Edit.Fields</a> can be used to write new Put-procedures, when the
+output size cannot be easily estimated. It contains two subprograms
+Get_Output_Field and Adjust_Output_Field. Get_Output_Field is used to calculate
+the available space in the output string. It raises Layout_Error exception as
+necessary. The program can then output into that space and call
+Adjust_Output_Field to move the output within the output field, fill and advance
+the string pointer. The following code fragment shows how it could be made:
+<blockquote>
+<P><tt><font color="#0000FF">procedure</font> Put<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;<b>Destination</b>&nbsp;:&nbsp;<font color="#0000FF">in out</font>&nbsp;String;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Pointer</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<font color="#0000FF">in out</font>&nbsp;Integer;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Value</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<i>Something</i>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Field</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Natural&nbsp;&nbsp;&nbsp;:=&nbsp;<FONT color="#800000">0</FONT>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Justify</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Alignment&nbsp;:=&nbsp;Left;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fill</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;Character&nbsp;:=&nbsp;' '<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;&nbsp;<font color="#0000FF">is</font><br>
+&nbsp;&nbsp;&nbsp;Out_Field&nbsp;:&nbsp;<font color="#0000FF">constant</font>&nbsp;Natural&nbsp;:=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get_Output_Field  (<b>Destination</b>, <b>Pointer</b>, <b>Field</b>);<br>
+&nbsp;&nbsp;&nbsp;<font color="#0000FF">subtype</font> Output  <font color="#0000FF"> is</font> String (<b>Pointer</b>..<b>Pointer</b> + Out_Field - <FONT color="#800000">1</FONT>);<br>
+&nbsp;&nbsp;&nbsp;Text  : Output  <font color="#0000FF">renames</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Destination (<b>Pointer</b>..<b>Pointer</b> + Out_Field - 1);<br>
+&nbsp;&nbsp;&nbsp;Index : Integer := Pointer;<br>
+<font color="#0000FF">begin</font><br>
+&nbsp;&nbsp;
+<font color="#008000">--<br>
+&nbsp;&nbsp; -- The output for </font>Value<font color="#008000"> is done in </font> Text <font color="#008000">using</font> Index<font color="#008000"> as the pointer<br>
+&nbsp;&nbsp; --</font><br>
+&nbsp;&nbsp;&nbsp;Adjust_Output_Field<br>
+&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;Destination,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pointer,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Index,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Out_Field,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Field,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Justify,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fill<br>
+&nbsp;&nbsp;&nbsp;);<br>
+<font color="#0000FF">end</font> Put;</tt></blockquote>
+
+<hr>
+
+<P align="right">
+<A name="9"></A><a href="#8"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></a><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><a href="#10"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></a><H2>9. Generic axis scales</H2>
+<P><a name="Strings_Edit.Generic_Scale"></a>When an axis of the plotted curve need 
+to be annotated with the values, it is desirable that the ticks supplied with 
+values have &quot;good&quot; figures, like 0.5 or 0.1 etc. The
+generic package <a href="#Strings_Edit.Generic_Scale">Strings_Edit.Generic_Scale</a> can 
+be used to ease implementation of such plotters:</p>
+<blockquote>
+	<P><tt><font color="#0000FF">generic<br>
+&nbsp;&nbsp; type </font>Value <font color="#0000FF">is digits </font>&lt;&gt;;<br>
+	<font color="#0000FF">package</font> Strings_Edit.Generic_Scale
+	<font color="#0000FF">is</font> ...</tt></blockquote>
+<P>Its formal parameter is the type of the axis values. The package provides the type 
+Scale:<blockquote>
+	<P><tt><font color="#0000FF">type</font> Scale <font color="#0000FF">is 
+	record</font><br>
+&nbsp;&nbsp; Minor&nbsp;&nbsp;&nbsp;&nbsp; : Value'Base;<br>
+&nbsp;&nbsp; Low_Value : Value;<br>
+&nbsp;&nbsp; Low_Tick&nbsp; : Natural;<br>
+&nbsp;&nbsp; Ticks&nbsp;&nbsp;&nbsp;&nbsp; : Natural;<br>
+&nbsp;&nbsp; Small&nbsp;&nbsp;&nbsp;&nbsp; : Integer;<br>
+	<font color="#0000FF">end record</font>;</tt></blockquote>
+<P>which describes the axis appearance:<blockquote>
+	<P><img border="0" src="strings_edit_scale.gif" width="358" height="142" alt="scale"></blockquote>
+<P>here the fields of Scale are:<ul>
+	<li><i>Low_Value</i> is the value of the first tick within the specified 
+	range [Low, High];</li>
+	<li><i>Low_Tick</i> is the number of the first tick. It is in 0..Ticks. For 
+	the figure above <i>Low_Tick</i> is 4, the fourth and the last minor tick;</li>
+	<li><i>Minor</i> is the length of the minor tick;</li>
+	<li><i>Ticks</i> is the number of minor ticks between two major ones. On the 
+	figure above it is 4;</li>
+	<li><i>Small</i> is the absolute precision of the major tick. This value can 
+	be passed to as the AbsSmall parameter of <a href="#Float-Put">Put</a> 
+	procedure to output a&nbsp; major tick value. Note that when Small &gt; 0 it is 
+	better to use 0 instead, otherwise an exponential notation will appear. Advanced plotting 
+	would use <i>Small</i> to extract the multiplier. For 
+	instance when <i>Small</i> is 3, i.e. thousands, then the values of the 
+	ticks can be multiplied by 10<sup>3</sup> before output and AbsSmall=0 used 
+	instead of 3. The axis label could then contain 10<sup>3</sup> factor.</li>
+	</ul>
+	<P>The function Create evaluates Scale for the given range of values:<blockquote>
+		<P><tt><font color="#0000FF">function</font> Create (<b>Low</b>, <b>High</b> 
+		: Value; <b>Count</b> : Natural) <font color="#0000FF">return</font> 
+		Scale;</tt></blockquote>
+	<P>The parameters <b>Low</b> and <b>High</b> determine the interval of 
+	values. When <b>Low</b> &ge; <b>High</b>, Constraint_Error is propagated. 
+	The parameter <b>Count</b> is the desired number of major ticks on the 
+	scale. Typically it is determined from the scale length in the plot units 
+	divided to the optimal major tick length in the same units. (Note that the 
+	function outcome is independent on whatever plot units are used.) The result number 
+	of major ticks is greater or equal to <b>Count</b>. When <b>Count</b> is 0, 
+	it is treated as if it were 1. The major tick length is selected to be <i>n</i><font face="Times New Roman">·10<sup><i>k</i></sup> 
+	where</font> <i>n</i>=1, 2, 5. Here <i>k</i> determines the field <i>Small</i> 
+	of the result. Thus when, for example, <i>n</i> is 2 and <i>k</i> is -3 the 
+	values corresponding to the major ticks would be like 0.102, 0.104, 0.106 
+	etc. I.e. the major tick step is 2<font face="Times New Roman">·10<sup>-3</sup></font>. The number <i>m</i> of minor ticks depends on <i>n</i> It is <i>m</i>=1 
+	when <i>n</i>=1 or <i>n</i>=2 and <i>m</i>=4, when <i>n</i>=5. The field <i>
+	Ticks</i> of the result is <i>m</i>. The field <i>Minor</i> of the result is
+	<i>n</i><font face="Times New Roman">·10<sup><i>k</i></sup></font>/<i>m</i>.<P>
+A typical axis plot using Scale might look as follows:<blockquote>
+	<P><tt>&nbsp;&nbsp; Ticks : Scale&nbsp;&nbsp; := Create (Low, High, Size / Major_Tick_Size);<br>
+&nbsp;&nbsp; Minor : Natural := Ticks.Low_Tick;<br>
+&nbsp;&nbsp; Value : Number&nbsp; := Ticks.Low_Value;<br>
+	<font color="#0000FF">begin</font><br>
+&nbsp;&nbsp; <font color="#0000FF">while</font> <i>position of Value
+	</i><font color="#0000FF">in</font><i> the plot range [in plot units]</i>
+	<font color="#0000FF">loop</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000FF">if</font> Minor =
+	<font color="#800000">0</font> <font color="#0000FF">or else</font> Minor &gt; 
+	Ticks.Ticks <font color="#0000FF">then</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008000">-- Major 
+	tick</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>draw major tick at the position of Value 
+	[in plot units]</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>draw its value</i> Image 
+	(Value, AbsSmall =&gt; Scale.Small);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Minor := <font color="#800000">
+	1</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000FF">else</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008000">-- Minor 
+	tick</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>draw minor tick at the position of Value 
+	[in plot units]</i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Minor := Minor +
+	<font color="#800000">1</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#0000FF">end if</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Value := Value + Ticks.Minor;<br>
+	<font color="#0000FF">&nbsp;&nbsp; end loop</font>;</tt></blockquote>
+<p>Note that the field <i>Small</i> specifies the absolute precision. Therefore, 
+very narrow ranges of large absolute values would probably require a shift to 
+avoid ticks values like 956.611, 956.612, 956.613,... (with <i>Small</i>=-3). 
+Such cases can be detected as log<sub>10</sub>(<b>Low</b>) &gt;&gt; <i>Small</i>. The difference 
+between these two values indicates how many decimal places would appear before 
+the last one, corresponding to the major tick &quot;heartbeat.&quot;</p>
+
+<hr>
+
+<P align="right">
+<A name="10"></A><a href="#9"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></a><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><a href="#11"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></a><H2>10. String 
+streams</H2>
+<P><a name="Strings_Edit.Streams"></a>The package
+<a href="#Strings_Edit.Streams">Strings_Edit.Streams</a> provides an 
+implementation of streams to read from and write to strings. The package 
+declares the type String_Stream:</p><blockquote>
+	<P><tt><font color="#0000FF">type</font> String_Stream (Length : Natural)<font color="#0000FF"> 
+	is<br>
+&nbsp;&nbsp; new</font> Root_Stream_Type <font color="#0000FF">with<br>
+	record</font><br>
+&nbsp;&nbsp; Position : Positive := 1;<br>
+&nbsp;&nbsp; Data&nbsp;&nbsp;&nbsp;&nbsp; : String (1..Length);<br>
+	<font color="#0000FF">end record</font>;</tt></blockquote>
+<P>The field <i>Position</i> is the position at which the string is to read or 
+to write. The 
+field <i>Data</i> is the string backing the stream. When written stream elements 
+are placed into <i>Data</i> starting from <i>Position</i>. Where read they are 
+taken from <i>Data</i> at <i>Position</i>. In both cases <i>Position</i> is 
+advanced. The implementation of Write propagates End_Error exception when there 
+is no room for output. Note that initially the position is set to 1, which means 
+that the stream is ready to be written, but also is filled with garbage. The 
+stream is used as follows:<ul>
+	<li><i>Input stream scenario</i>: First, the procedure
+	<a href="#Strings_Edit.Streams.Set">Set</a> is called to set the contents of 
+	the stream. Then <i>T</i>'Read and/or <i>T</i>'Input attributes are used to 
+	input from the stream. End_Error is propagated when reading is attempted 
+	beyond the end of the contents set using <a href="#Strings_Edit.Streams.Set">
+	Set</a>.</li>
+	<li><i>Output stream scenario</i>. The stream is created or else
+	<a href="#Strings_Edit.Streams.Rewind">Rewind</a> is called on an existing 
+	object. Then <i>T</i>'Write.and/or <i>T</i>'Output attributes are used to 
+	output into the stream. Once the contents is set,
+	<a href="#Strings_Edit.Streams.Get">Get</a> is called to extract it from the 
+	stream as a string. End_Error is propagated upon writing outside the stream 
+	buffer.</li>
+	</ul>
+	<blockquote>
+		<P><tt><font color="#0000FF"><a name="Strings_Edit.Streams.Get"></a>function</font> Get (<b>Stream</b> : 
+		String_Stream) <font color="#0000FF">return</font> String;</tt></blockquote>
+	<P>This function returns written contents of <b>Stream</b>. It is used together 
+	with the attributes <i>T</i>'Write.and <i>T</i>'Output. First the stream is 
+	written, then <a href="#Strings_Edit.Streams.Get">Get</a> is called to 
+	obtain its contents.</p><blockquote>
+		<P><tt><font color="#0000FF">function</font> Get_Size (<b>Stream</b> : 
+		String_Stream)<br>
+&nbsp;&nbsp; <font color="#0000FF">return</font> Stream_Element_Count;</tt></blockquote>
+	<P>This function returns number of stream elements available to write or to read.</p>
+<blockquote>
+		<P><tt><font color="#0000FF"><a name="Strings_Edit.Streams.Rewind"></a>procedure</font> Rewind (<b>Stream</b> :
+		<font color="#0000FF">in out</font> String_Stream);</tt></blockquote>
+	<P>This procedure sets <b>Stream</b> Position to 1. This operation undoes 
+	read and write operations done before.</p>
+<blockquote>
+		<P><tt><font color="#0000FF"><a name="Strings_Edit.Streams.Set"></a>procedure</font> Set (<b>Stream</b> :
+		<font color="#0000FF">in out</font> String_Stream; <b>Content</b> : 
+		String);</tt></blockquote>
+	<P>This procedure sets <b>Stream</b> to contain <b>Content</b>. The next 
+	read operation will yield the first character of <b>Content</b>. 
+	<a href="#Strings_Edit.Streams.Set">Set</a> is an 
+	operation inverse to the attributes <i>T</i>'Read and <i>T</i>'Input, which 
+	it should be used with. First the buffer contents is set using this 
+	procedure. Then the stream is read out. Constraint_Error is propagates when <b>Stream</b>'Length 
+	&lt; <b>Content</b>'Length.</p>
+<table border="1" cellspacing="0" cellpadding="5">
+<tr>
+	<td><i>Note, this implementation requires that Stream_Element'Size be a 
+	multiple of Character'Size and the latter be a multiple of Storage_Element'Size. </i></td>
+</tr>
+</table>
+
+<h3><a name="10.1"></a>10.1. Signed integers stream I/O</h3>
+<P><a name="Strings_Edit.Streams.Generic_Integer"></a>The package
+<a href="#Strings_Edit.Streams.Generic_Integer">Strings_Edit.Streams.Generic_Integer</a> provides 
+a portable stream I/O for signed integers using chain codes. A chain code is 
+variable length. Lesser absolute values require shorter sequences of stream 
+elements to encode.<blockquote>
+<p><tt><font color="#0000FF">generic<br>
+&nbsp;&nbsp; type </font>Number<font color="#0000FF"> is range</font> &lt;&gt;;<font color="#0000FF"><br>
+package </font>Strings_Edit.Streams.Generic_Integer<font color="#0000FF"> 
+is</font> ...</tt></p>
+</blockquote>
+<p>The integer number is encoded as follows. The value is first converted to a 
+sequence of bits. The first bit of the sequence is 0 when the value is positive 
+or 1 when negative. The following bits is the little-endian sequence of the 
+absolute value. The sequence ends with the last non-zero bit. Each seven bits of 
+the sequence are packet into an octet. The most significant bit of the octet is 
+0 for the last octet and 1 otherwise. The following example illustrates encoding 
+principle:</p>
+
+<blockquote>
+<p><tt>-7512<sub>10<br>
+</sub>&nbsp;7512<sub>10 </sub>= 1_1101_0101_1000<sub>2<br>
+</sub>-7512<sub>10 </sub>-&gt; <font color="#0000FF">1</font>011_000<font color="#FF0000">1</font><sub>2</sub>,
+<font color="#0000FF">0</font>001_1101<sub>2</sub></tt></p>
+</blockquote>
+<p>Bits colored blue indicate whether the octet end the sequence. The package 
+provides the following subprograms:</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Get<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : <font color="#0000FF">out</font> Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure gets a value from <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. 
+End_Error is propagated when there is not enough data. Data_Error is propagated 
+when the encoded value is too large.</p>
+<blockquote>
+<p><tt><font color="#0000FF">function</font> Input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+return</font> Number;</tt></p>
+</blockquote>
+<p>This function can be used as an implementation of the Number'Input stream 
+attribute.</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure can be used as an implementation of the Number'Output stream 
+attribute.</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Put<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: <font color="#0000FF">in out</font> Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedures puts a value into <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. End_Error is propagated when there is no 
+room for output.</p>
+The following instances of the package are provided:<br>
+<TABLE border="5" cellpadding="3" cellspacing="0" style="border-left-width: 0px">
+  <TR>
+    <TD bgcolor="#008080"><FONT color="#FFFFFF"><B>Package</B></FONT></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Number</b></font></TD>
+  </TR>
+  <tr>
+    <TD><a name="Strings_Edit.Streams.Integers"></a>
+	<a href="#Strings_Edit.Streams.Integers">Strings_Edit.Streams.Integers</a></TD>
+    <TD>Integer</TD>
+  </tr>
+	<tr>
+    <TD><a name="Strings_Edit.Streams.Integers_32"></a>
+	<a href="#Strings_Edit.Streams.Integers_32">Strings_Edit.Streams.Integers_32</a></TD>
+    <TD>Interfaces.Integer_32</TD>
+  </tr>
+	<tr>
+    <TD><a name="Strings_Edit.Streams.Integers_64"></a>
+	<a href="#Strings_Edit.Streams.Integers_64">Strings_Edit.Streams.Integers_64</a></TD>
+    <TD>Interfaces.Integer_64</TD>
+  </tr>
+</TABLE>
+<h3><a name="10.2"></a>10.2. Unsigned integers stream I/O</h3>
+<P><a name="Strings_Edit.Streams.Generic_Unsigned"></a>The package
+<a href="#Strings_Edit.Streams.Generic_Unsigned">Strings_Edit.Streams.Generic_Unsigned</a> provides 
+a portable stream I/O for non-negative integers using chain codes. A chain code 
+is variable length. Lesser absolute values require shorter sequences of stream 
+elements to encode:<blockquote>
+<p><tt><font color="#0000FF">generic<br>
+&nbsp;&nbsp; type </font>Number<font color="#0000FF"> is range</font> &lt;&gt;;<font color="#0000FF"><br>
+package </font>Strings_Edit.Streams.Generic_Unsigned<font color="#0000FF"> 
+is</font> ...</tt></p>
+</blockquote>
+<p>The unsigned integer number is encoded as follows. The value is first 
+converted to a sequence of bits. The following bits is the little-endian 
+sequence of the absolute value. The sequence ends with the last non-zero bit. 
+Each seven bits of the sequence are packet into an octet. The most significant 
+bit of the octet is 0 for the last octet and 1 otherwise. The following example 
+illustrates encoding principle:</p>
+
+<blockquote>
+<p><tt>7512<sub>10 </sub>= 1_1101_0101_1000<sub>2<br>
+</sub>7512<sub>10 </sub>-&gt; <font color="#0000FF">1</font>111_1000<sub>2</sub>,
+<font color="#0000FF">0</font>011_1010<sub>2</sub></tt></p>
+</blockquote>
+<p>The package provides the following subprograms:</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Get<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : <font color="#0000FF">out</font> Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure gets a value from <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. 
+End_Error is propagated when there is not enough data. Data_Error is propagated 
+when the encoded value is too large.</p>
+<blockquote>
+<p><tt><font color="#0000FF">function</font> Input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+return</font> Number;</tt></p>
+</blockquote>
+<p>This function can be used as an implementation of the Number'Input stream 
+attribute.</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure can be used as an implementation of the Number'Output stream 
+attribute. Constraint_Error is propagated when <b>Value</b> is negative. </p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Put<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: <font color="#0000FF">in out</font> Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure puts a value into <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Constraint_Error is 
+propagated when <b>Value</b> is negative. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. End_Error is propagated when there is no 
+room for output.</p>
+The following instances of the package are provided:<br>
+<TABLE border="5" cellpadding="3" cellspacing="0" style="border-left-width: 0px">
+  <TR>
+    <TD bgcolor="#008080"><FONT color="#FFFFFF"><B>Package</B></FONT></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Number</b></font></TD>
+  </TR>
+  <tr>
+    <TD><a name="Strings_Edit.Streams.Naturals"></a>
+	<a href="#Strings_Edit.Streams.Naturals">Strings_Edit.Streams.Naturals</a></TD>
+    <TD>Natural</TD>
+  </tr>
+	</TABLE>
+<h3><a name="10.3"></a>10.3. Modular number stream I/O</h3>
+<P><a name="Strings_Edit.Streams.Generic_Modular"></a>The package
+<a href="#Strings_Edit.Streams.Generic_Modular">Strings_Edit.Streams.Generic_Modular</a> provides 
+a portable stream I/O for modular numbers using chain codes. The format is same 
+as described for
+<a href="#Strings_Edit.Streams.Generic_Unsigned">Strings_Edit.Streams.Generic_Unsigned</a>. 
+The package specification is:<blockquote>
+<p><tt><font color="#0000FF">generic<br>
+&nbsp;&nbsp; type </font>Number<font color="#0000FF"> is mod</font> &lt;&gt;;<font color="#0000FF"><br>
+package </font>Strings_Edit.Streams.Generic_Unsigned<font color="#0000FF"> 
+is</font> ...</tt></p>
+</blockquote>
+<p>&nbsp;The package provides the following subprograms:</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Get<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : <font color="#0000FF">out</font> Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure gets a value from <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. 
+End_Error is propagated when there is not enough data. Data_Error is propagated 
+when the encoded value is too large.</p>
+<blockquote>
+<p><tt><font color="#0000FF">function</font> Input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )&nbsp; <font color="#0000FF">
+return</font> Number;</tt></p>
+</blockquote>
+<p>This function can be used as an implementation of the Number'Input stream 
+attribute.</p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Stream</b> :
+<font color="#0000FF">access</font> Root_Stream_Type'Class;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure can be used as an implementation of the Number'Output stream 
+attribute. Constraint_Error is propagated when <b>Value</b> is negative. </p>
+<blockquote>
+<p><tt><font color="#0000FF">procedure</font> Put<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (&nbsp; <b>Data</b>&nbsp;&nbsp;&nbsp; 
+: <font color="#0000FF">in out</font> Stream_Element_Array;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Pointer</b> : <font color="#0000FF">in out</font> Stream_Element_Offset;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>
+Value</b>&nbsp;&nbsp; : Number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</tt></p>
+</blockquote>
+<p>This procedure puts a value into <b>Data</b> starting at <b>Data</b> (<b>Pointer</b>).
+<b>Pointer</b> is advanced beyond the input value. Constraint_Error is 
+propagated when <b>Value</b> is negative. Layout_Error is propagated 
+when <b>Pointer</b> is out of the range <b>Data</b>'First..<b>Data</b>'Last+1. End_Error is propagated when there is no 
+room for output.</p>
+The following instances of the package are provided:<br>
+<TABLE border="5" cellpadding="3" cellspacing="0" style="border-left-width: 0px">
+  <TR>
+    <TD bgcolor="#008080"><FONT color="#FFFFFF"><B>Package</B></FONT></TD>
+    <TD bgcolor="#008080"><font color="#FFFFFF"><b>Number</b></font></TD>
+  </TR>
+	<tr>
+    <TD><a name="Strings_Edit.Streams.Unsigneds_32"></a>
+	<a href="#Strings_Edit.Streams.Unsigneds_32">Strings_Edit.Streams.Unsigneds_32</a></TD>
+    <TD>Interfaces.Unsigned_32</TD>
+  </tr>
+	<tr>
+    <TD><a name="Strings_Edit.Streams.Unsigneds_64"></a>
+	<a href="#Strings_Edit.Streams.Unsigneds_64">Strings_Edit.Streams.Unsigneds_64</a></TD>
+    <TD>Interfaces.Unsigned_64</TD>
+  </tr>
+</TABLE>
+
+<hr>
+
+<P align="right">
+<A name="11"></A><a href="#10"><IMG src="prev.gif"
+    alt="[Back]" width="29" height="29"></a><A
+    href="#16"><IMG src="index.gif" alt="[TOC]" width="29"
+    height="29"></A><a href="#12"><IMG
+    src="next.gif" alt="[Next]" width="29" height="29"></a><H2>11. 
+Lexicographical comparisons</H2>
+<P><a name="Strings_Edit.Lexicographical_Order"></a>The package
+<a href="#Strings_Edit.Lexicographical_Order">Strings_Edit.Lexicographical_Order</a> provides 
+comparisons of strings using lexicographical order. The package provides the 
+following types:</p><blockquote>
+	<P><tt><font color="#0000FF">type</font> Precedence <font color="#0000FF">is</font> 
+	(Less, Equal, Greater);</tt></blockquote>
+<P>and the following operations:</p><blockquote>
+	<P><tt><font color="#0000FF">function</font> Compare_Textually (<b>Left</b>,
+	<b>Right</b> : String) <font color="#0000FF">return</font> Precedence;</tt></blockquote>
+<P>This function compares two strings as texts. If strings contain chains of 
+digits. These are logically replaced by single symbol considered 
+lexicographically greater than a non-numeric character. Thus strings <i>ab123</i> 
+and <i>ab44</i> are considered same. The string <i>abc</i> precedes <i>ab1</i>. 
+On the basis of this function Boolean-valued comparisons are defined:</p><blockquote>
+	<P><tt><font color="#0000FF">function</font> Textually_Equal (<b>Left</b>, <b>
+	Right</b> : String) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Textually_Less&nbsp; (<b>Left</b>, <b>
+	Right</b> : String) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<P>Another operation:<blockquote>
+	<P><tt><font color="#0000FF">function</font> Compare_Lexicographically (<b>Left</b>,
+	<b>Right</b> : String) <font color="#0000FF">return</font> Precedence;</tt></blockquote>
+<P>This function compares two strings lexicographically. Chains of digits are 
+compared numerically, as decimal numbers. This the string <i>ab44</i> precedes <i>ab0123</i>. 
+On the basis of this function Boolean-valued comparisons are defined:</p><blockquote>
+	<P><tt><font color="#0000FF">function</font> Lexicographically_Equal (<b>Left</b>,
+	<b>Right</b> : String) <font color="#0000FF">return</font> Boolean;<br>
+	<font color="#0000FF">function</font> Lexicographically_Less&nbsp; (<b>Left</b>,
+	<b>Right</b> : String) <font color="#0000FF">return</font> Boolean;</tt></blockquote>
+<hr>
+<p align="right">
+<a name="12"></a><a href="#11"><IMG src="prev.gif" alt="[Back]" width="29" height="29"></a><A href="#16"><IMG src="index.gif"
+ alt="[TOC]" width="29" height="29"></A><a href="#14"><IMG src="next.gif" alt="[Next]" width="29" height="29"></a></p>
+<H2>12. Base64 encoding</H2>
+<P><a name="Strings_Edit.Base64"></a>The package
+<a href="#Strings_Edit.Base64">Strings_Edit.Base64</a> provides 
+an implementation of <a href="http://tools.ietf.org/html/rfc4648">RFC 4648</a> 
+Base64 encoding. The package provides the 
+declares the following operations:</p><blockquote>
+	<P><tt><font color="#0000FF">function</font> From_Base64 (<b>Text</b> : 
+	String) <font color="#0000FF">return</font> String;</tt></blockquote>
+<P>This function returns decoded string corresponding to the <b>Text</b> encoded 
+in Base64. The text can be padded using = and ==. Data_Error is propagated on 
+decoding errors.</p><blockquote>
+	<P><tt><font color="#0000FF">function</font> To_Base64 (<b>Text</b> : 
+	String) <font color="#0000FF">return</font> String;</tt></blockquote>
+<P>This function encodes <b>Text</b> in Base64.</p><hr>
+<p align="right">
+<a name="13"></a><a href="#12"><IMG src="prev.gif" alt="[Back]" width="29" height="29"></a><A href="#16"><IMG src="index.gif"
+ alt="[TOC]" width="29" height="29"></A><a href="#14"><IMG src="next.gif" alt="[Next]" width="29" height="29"></a></p>
+<H2>13. Packages</H2>
+<TABLE border="5" cellpadding="3" cellspacing="0" style="border-left-width: 0px">
+  <TR>
+    <TD bgcolor="#008080" colspan="6"><FONT color="#FFFFFF"><B>Package</B></FONT></TD>
+    <TD bgcolor="#008080"><FONT color="#FFFFFF"><B>Provides</B></FONT></TD>
+  </TR>
+  <tr>
+    <TD colspan="6"><a href="#Strings_Edit">Strings_Edit</a></TD>
+    <TD>The basic string I/O</TD>
+  </tr>
+	<tr>
+    <TD rowspan="36" bgcolor="#C0C0C0">&nbsp;&nbsp;&nbsp;&nbsp;<p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+	&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+    <TD colspan="5"><a href="#Strings_Edit.Base64">Base64</a></TD>
+    <TD>RFC 4648 implementation</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Fields">Fields</a></TD>
+    <TD>Tools for writing new Put-procedures</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Float_Edit">Float_Edit</a></TD>
+    <TD>Generic I/O of floating-point numbers</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Floats">Floats</a></TD>
+    <TD>I/O of standard Float (instantiation of <a href="#Float_Edit">Float_Edit</a>)</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Generic_Scale">Generic_Scale</a></TD>
+    <TD>Generic scales for I/O of plot axes</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Integer_Edit">Integer_Edit</a></TD>
+    <TD>Generic I/O of integer numbers</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Integers">Integers</a></TD>
+    <TD>I/O of standard Integer (instantiation of <a href="#Integer_Edit">Integer_Edit</a>)</TD>
+  </tr>
+	<tr>
+    <TD rowspan="2" bgcolor="#C0C0C0" style="border-left-style: none; border-left-width: medium">&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+    <TD colspan="4"><a href="#Strings_Edit.Integers.Subscript">Subscript</a></TD>
+    <TD>I/O of standard Integer using UTF-8 subscript characters</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Integers.Superscript">Superscript</a></TD>
+    <TD>I/O of standard Integer using UTF-8 superscript characters</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Lexicographical_Order">Lexicographical_Order</a></TD>
+    <TD>Lexicographical comparisons of strings</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Quoted">Quoted</a></TD>
+    <TD>I/O of strings put in Ada-style quotes</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Roman_Edit">Roman_Edit</a></TD>
+    <TD>I/O of roman numbers</TD>
+  </tr>
+	<tr>
+    <TD colspan="5"><a href="#Strings_Edit.Streams">Streams</a></TD>
+    <TD>Stream I/O to and from strings</TD>
+  </tr>
+	<tr>
+    <TD rowspan="9" bgcolor="#C0C0C0" style="border-left-style: none; border-left-width: medium">&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Generic_Integer">Generic_Integer</a></TD>
+    <TD>Stream I/O of signed integers using chained codes</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Generic_Modular">Generic_Modular</a></TD>
+    <TD>Stream I/O of modular numbers using chained codes</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Generic_Unsigned">Generic_Unsigned</a></TD>
+    <TD>Stream I/O of unsigned integers using chained codes</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Integers">Integers</a></TD>
+    <TD>Integer stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Integer">Generic_Integer</a> with 
+	Integer)</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Integers_32">Integers_32</a></TD>
+    <TD>Integer stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Integer">Generic_Integer</a> with 
+	Integer_32)</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Integers_64">Integers_64</a></TD>
+    <TD>Integer stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Integer">Generic_Integer</a> with 
+	Integer_64)</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Naturals">Naturals</a></TD>
+    <TD>Natural stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Unsigned">Generic_Unsigned</a> with 
+	Natural)</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Unsigneds_32">Unsigneds_32</a></TD>
+    <TD>Modular stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Modular">Generic_Modular</a> with 
+	Unsigned_32)</TD>
+  </tr>
+	<tr>
+    <TD colspan="4"><a href="#Strings_Edit.Streams.Unsigneds_64">Unsigneds_64</a></TD>
+    <TD>Modular stream I/O (instantiation of
+	<a href="#Strings_Edit.Streams.Generic_Modular">Generic_Modular</a> with 
+	Unsigned_64)</TD>
+  </tr>
+  <TR>
+    <TD colspan="5"><a href="#Strings_Edit.UTF8">UTF8</a></TD>
+    <TD>The base UTF-8 package. UTF-8 string length, skipping UTF-8 encoded
+      characters</TD>
+  </TR>
+  <TR>
+    <TD rowspan="13" bgcolor="#C0C0C0" style="border-left-style: none; border-left-width: medium">&nbsp;</TD>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Blocks">Blocks</a></TD>
+    <TD>Ranges of code points defined by the Unicode standard</TD>
+  </TR>
+  <TR>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Categorization">Categorization</a></TD>
+    <TD>Unicode categorization</TD>
+  </TR>
+  <TR>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Handling">Handling</a></TD>
+    <TD>Conversions of UTF-8 encoded strings to and from standard Ada strings</TD>
+  </TR>
+  <TR>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Integer_Edit">Integer_Edit</a></TD>
+    <TD>Generic I/O of integer numbers using UTF-8 characters different from
+      standard ASCII digits</TD>
+  </TR>
+  <TR>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Maps">Maps</a></TD>
+    <TD>Maps and Sets of Unicode code points</TD>
+  </TR>
+  <TR>
+    <TD colspan="3" style="border-left-style: none; border-left-width: medium" bgcolor="#C0C0C0">&nbsp;&nbsp;&nbsp; </TD>
+    <TD><a href="#Strings_Edit.UTF8.Maps.Constants">Constants</a></TD>
+    <TD>Set constants for some commonly used sets</TD>
+  </TR>
+  <TR>
+    <TD colspan="4"><a href="#Strings_Edit.UTF8.Mapping">Mapping</a></TD>
+    <TD>Unicode case mapping</TD>
+  </TR>
+  <TR>
+    <TD colspan="4">Subscript</TD>
+    <TD>Dealing with UTF-8 subscript characters</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#C0C0C0" style="border-left-style: none; border-left-width: medium">&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+    <TD colspan="3"><a href="#Strings_Edit.UTF8.Subscript.Integer_Edit">Integer_Edit</a></TD>
+    <TD>Generic I/O of integer numbers using UTF-8 subscript characters</TD>
+  </TR>
+  <TR>
+    <TD colspan="4">Superscript</TD>
+    <TD>Dealing with UTF-8 superscript characters</TD>
+  </TR>
+  <TR>
+    <TD bgcolor="#C0C0C0" style="border-left-style: none; border-left-width: medium">&nbsp;</TD>
+    <TD colspan="3"><a href="#Strings_Edit.UTF8.Superscript.Integer_Edit">Integer_Edit</a></TD>
+    <TD>Generic I/O of integer numbers using UTF-8 superscript characters</TD>
+  </TR>
+  <TR>
+    <TD style="border-left-style: none; border-left-width: medium" colspan="4">
+	<a href="#Strings_Edit.UTF8.Wildcards">Wildcards</a></TD>
+    <TD>Wildcard matching of UTF-8 encoded strings</TD>
+  </TR>
+  <TR>
+    <TD style="border-left-style: none; border-left-width: medium" colspan="2" bgcolor="#C0C0C0">
+	&nbsp;</TD>
+    <TD style="border-left-style: none; border-left-width: medium" colspan="2">
+	<a href="#Strings_Edit.UTF8.Wildcards.Case_Insensitive">Case_Insensitive</a></TD>
+    <TD>Case-insensitive wildcard matching</TD>
+  </TR>
+</TABLE>
+<hr>
+<p align="right">
+<a name="14"></a><a href="#13"><IMG src="prev.gif" alt="[Back]" width="29" height="29"></a><a href="#16"><IMG src="index.gif"
+ alt="[TOC]" width="29" height="29"></a><A href="#15"><IMG src="next.gif" alt="[Next]" width="29" height="29"></A></p>
+<H2>14. Installation</H2><P>
+<p>The software does not require special installation. The archive's content can be 
+put in a directory and used as-is. For users of <a href="http://libre.adacore.com/libre/">GNAT compiler</a> 
+the software provides gpr project files, which can be used in the
+<a href="https://libre.adacore.com/gps/main.html">Gnat Programming Studio</a> 
+(GPS). </p>
+<p>To ease use of the software with GPS, it can be integrated into the GPS 
+using the <a href="http://www.dmitry-kazakov.de/ada/gps_installer.htm">GPS 
+Library Installer</a> (gps_installer). Start the gps_installer as root (or with 
+the corresponding administrative rights to the GNAT installation directory) 
+specifying the source directory as the argument. Follow the instructions.</p>
+<TABLE border="5" cellpadding="3" cellspacing="0">
+  <TR>
+    <TD valign="top" bgcolor="#008080"><FONT color="#FFFFFF"><B>Project files</B></FONT></TD>
+    <TD valign="top" bgcolor="#008080"><FONT color="#FFFFFF"><B>Provides</B></FONT></TD>
+    <TD valign="top" bgcolor="#008080"><FONT color="#FFFFFF"><B>Use in custom 
+	project</B></FONT></TD>
+  </TR>
+  <TR>
+    <TD valign="top">strings_edit</TD>
+    <TD valign="top">Strings edit for Ada</TD>
+    <TD valign="top"><tt>
+	<font color="#0000FF">with</font> 
+	&quot;strings_edit.gpr&quot;;</tt> </TD>
+  </TR>
+  </TABLE>
+<p>For Fedora and Debian Linux and their derivates packages are provided: see
+<a href="#Debian_packages">Debian</a> and
+<a href="#Fedora_packages">Fedora</a> packages for the corresponding 
+architectures.</p>
+<h3><a name="14.1"></a>14.1. Fedora packages repository</h3>
+<p>The Fedora packages of this library are located in a <i>yum</i> software 
+package manager repository. They can be searched, installed and updated 
+automatically using <i>yum</i>. In order to do so, the file
+<a href="http://dmitry-kazakov.de/dmitry-kazakov.repo">dmitry-kazakov.repo</a> 
+can be put into the directory <i>/etc/yum.repos.d</i>.</p>
+<h3><a name="14.2"></a>13.2. Debian packages repository</h3>
+<p>In order to use <i>apt</i> Debian repository for automatic install and update 
+these packages add the following line to <i>/etc/apt/sources.list</i>:</p>
+<blockquote>
+	<tt>deb http://dmitry-kazakov.de/distributions sid main</tt></blockquote>
+<hr>
+<P align="right">
+<A name="15"></A><a href="#14"><IMG src="prev.gif" alt="[Back]" width="29" height="29"></a><A href="#16"><IMG src="index.gif" alt="[TOC]" width="29" height="29"><IMG src="next.gif" alt="[Next]" width="29" height="29"></A><H2>15.
+<a name="changes_log"></a>Changes log</H2>
+<P>
+<i>
+The following versions were tested with the compilers:</i><ul>
+  <li>
+<i>GNAT GPL 2015 (20150428-49)</i></li>
+	<li><i>GNAT 5.3</i></li>
+  </ul>
+<p>Changes (2 April 2015) to the version 3.1:</p>
+<ul>
+  <li>ARMv7 (AKA armhf) support.</li>
+</ul>
+<p>Changes (22 November 2014) to the version 3.0:</p>
+<ul>
+	<li>String_Edit.Streams.Generic_Integer package was added for chain-encoded 
+	signed numbers;</li>
+	<li>Instances of String_Edit.Streams.Generic_Integer with Integer, 
+	Integer_32, Integer_64 were added;</li>
+	<li>String_Edit.Streams.Generic_Unsigned package added for chain-encoded 
+	unsigned numbers;</li>
+	<li>Instance of String_Edit.Streams.Generic_Unsigned with Natural was added;</li>
+	<li>String_Edit.Streams.Generic_Modular package added for chain-encoded 
+	modular numbers;</li>
+	<li>Instances of String_Edit.Streams.Generic_Modular with Unsigned_32, 
+	Unsigned_64 were added;</li>
+	<li>The package Strings_Edit.Base64 was added.</li>
+</ul>
+<p>Changes (5 June 2014) to the version 2.9:</p>
+<ul>
+	<li>Minor bug fixes in generic declarations.</li>
+</ul>
+<p>Changes (1 June 2014) to the version 2.8:</p>
+<ul>
+	<li>Added wildcard matching with character mapping equivalence;</li>
+	<li>The package Strings_Edit.UTF8.Wildcards.Case_Insensitive provides 
+	case-insensitive wildcard matching;</li>
+	<li>Compiled with GNAT 4.9.</li>
+</ul>
+<p>Changes to the version 2.7:</p>
+<ul>
+  <li>Lexicographical comparisons of strings.</li>
+</ul>
+<p>Changes to the version 2.6:</p>
+<ul>
+  <li>Bug fix in Strings_Edit.Streams.</li>
+</ul>
+<p>Changes to the version 2.5:</p>
+<ul>
+  <li>Fedora and Debian packages are provided for both 32- and 64-bit 
+	architectures.</li>
+</ul>
+<P>
+Changes to the version 2.4:<ul>
+	<li>The library is packaged for Fedora and Debian.</li>
+  </ul>
+<P>
+Changes to the version 2.3:<ul>
+	<li>Bug fix in Is_Prefix, which uses character maps.</li>
+  </ul>
+<P>
+Changes to the version 2.2:<ul>
+	<li>String streams implementation was added.</li>
+  </ul>
+<P>
+Changes to the version 2.1:<ul>
+	<li>Is_Prefix versions added that use mappings to compare characters in 
+	Latin-1 and UTF-8 modes;</li>
+	<li>Installation instructions added.</li>
+  </ul>
+<P>
+Changes to the version 2.0:<ul>
+	<li>Strings_Edit.UTF8.Blocks defines the Unicode blocks of code points;</li>
+	<li>Strings_Edit.UTF8.Categorization was added to provide categorization of 
+	Unicode code points;</li>
+	<li>Strings_Edit.UTF8.Maps provides sets and maps of Unicode code points;</li>
+	<li>Strings_Edit.UTF8.Maps.Constants provides some commonly used sets and 
+	maps.</li>
+  </ul>
+<P>
+Changes to the version 1.9:<ul>
+	<li>Strings_Edit.UTF8.Wildcards package added to match UTF-8 encoded strings 
+	with wildcards;</li>
+	<li>Strings_Edit.UTF8.Mapping package provides case conversions of UTF-8 
+	encoded strings;</li>
+	<li>Get_Backwards was added to Strings_Edit.UTF8:</li>
+	<li>Is_Prefix were added to the Strings_Edit package.</li>
+  </ul>
+<P>
+Changes to the version 1.8:<ul>
+  <li>For GNAT users GPS project files were added;</li>
+	<li>Strings_Edit.Generic_Scale bugfix.</li>
+  </ul>
+<P>
+Changes to the version 1.7:<ul>
+  <li>Strings_Edit.Generic_Scale was added to support plotting of graph axis;</li>
+  </ul>
+<P>
+Changes to the version 1.6:<ul>
+  <li>Handling of Ada-style quoted strings was added;</li>
+  <li>Bug fix in Trim (Trim raised Constraint_Error with an empty string).</li>
+  </ul>
+<P>
+Changes to the version 1.5:<ul>
+  <li>UTF-8 support</li>
+  <li>Conversions between Ada and UTF-8 strings</li>
+  <li>Sub- and superscript integer I/O in UTF-8</li>
+  </ul>
+<P>
+Changes to the version 1.4:<ul>
+  <li>Licensing wording was corrected to comply with GMGPL</li>
+  </ul>
+  <P>
+Changes to the version 1.3:
+<ul>
+  <li>Bug fix in Strings_Edit.Integer_Edit. Get hung while processing of very
+  large numbers.</li>
+  <li>Bug fix in Strings_Edit.Float_Edit. Get should correctly deal with big 
+  numbers on machines where Float'Machine_Overflows = false.</li>
+</ul>
+<P>
+Changes to the version 1.2:
+<ul>
+  <li>The child package Strings_Edit.Fields can be used to write Put
+    subroutines.</li>
+</ul>
+<P>
+Changes to the version 1.1:
+<ul>
+  <li>When fraction is empty, dot is not matched. Thus Get of Float_Edit will
+    match only &quot;2&quot; in &quot;2.&quot;.</li>
+</ul>
+<P>
+Changes to the version 1.0:
+<UL>
+<LI>Non-generic versions of the packages Integer_Edit and Float_Edit were added.</li>
+<li>The generic packages Integer_Edit and Float_Edit are made children of Strings_Edit.
+In the previous version they were nested.
+The reason was to reuse a preinstantiated version of Integer_Edit within Float_Edit.</li>
+<li>I/O routines for roman numbers was moved into a separate child package Roman_Edit.</li>
+</UL>
+  <hr>
+<H2 align="right">
+  <A name="16"></A><a href="#15"><IMG src="prev.gif" alt="[Back]" width="29" height="29"></a><A href="#16"><IMG src="index.gif" alt="[TOC]" width="29" height="29"></A></H2>
+<H2>16. Table of Contents</H2>
+<table border="0" cellpadding="0" cellspacing="20">
+	<tr>
+		<td valign="top">
+<b><big><big>1</big></big></b>&nbsp;<A href="#1"><big>Input from String</big></A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#1.1">1.1. Get procedures</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#1.2">1.2. Value functions</A><hr>
+<b><big><big>2</big></big></b>&nbsp;<A href="#2"><big>Output into String</big></A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#2.1">2.1. Put procedures</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#2.2">2.2. Image functions</A><hr>
+<b><big><big>3</big></big></b> <A href="#3"><big>String I/O</big></A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#3.1">3.1. Quoted strings</A><hr>
+<b><big><big>4</big></big></b> <A href="#4"><big>Roman I/O</big></A><HR>
+<b><big><big>5</big></big></b> <A href="#5"><big>Integer I/O</big></A><hr>
+<b><big><big>6</big></big></b> <A href="#6"><big>Floating-point I/O</big></A><HR>
+<b><big><big>7</big></big></b> <A href="#7"><big>UTF-8</big></A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.1">7.1. Handling UTF-8 strings</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.2">7.2. Generic integer I/O of UTF-8 strings</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.3">7.3. Subscript UTF-8 integer I/O</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.4">7.4. Superscript UTF-8 integer I/O</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.5">7.5. Wildcard-matching of UTF-8 strings</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.6">7.6. Case mapping</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.7">7.7. Unicode categorization</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.8">7.8. Blocks</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#7.9">7.9. Sets and maps</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A href="#7.9.1">7.9.1. Sets</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A href="#7.9.2">7.9.2. Maps</A><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A href="#7.9.3">7.9.3. Constants</A></td>
+<td valign="top">
+<b><big><big>8</big></big></b>&nbsp;<A href="#8"><big>Fields</big></A><hr>
+<b><big><big>9</big></big></b>&nbsp;<A href="#9"><big>Generic axis scales</big></A><hr>
+<b><big><big>10</big></big></b>&nbsp;<A href="#10"><big>String streams</big></A><br>
+&nbsp;&nbsp;&nbsp; <A href="#10.1">10.1. Signed integers stream I/O</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#10.2">10.2. Unsigned integers stream I/O</A><br>
+&nbsp;&nbsp;&nbsp; <A href="#10.3">10.3. Modular numbers stream I/O</A><HR>
+<b><big><big>11</big></big></b> <A href="#11"><big>Lexicographical comparisons</big></A><hr>
+<b><big><big>12</big></big></b> <A href="#12"><big>Base64 encoding</big></A><hr>
+<b><big><big>13</big></big></b> <A href="#13"><big>Packages</big></A><hr>
+<b><big><big>14</big></big></b> <A href="#14"><big>Installation</big></A><br>
+&nbsp;&nbsp;&nbsp; <A href="#14."1">14.1. Fedora packages repository</A><BR>
+&nbsp;&nbsp;&nbsp; <A href="#14."2">14.2. Debian packages repository</A><HR>
+<b><big><big>15</big></big></b> <A href="#15"><big>Changes log</big></A><hr>
+<b><big><big>16</big></big></b> <A href="#16"><big>Table of contents</big></A></td>
+	</tr>
+</table>
+</BODY></HTML>

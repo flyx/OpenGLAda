@@ -1,0 +1,118 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_SECONDARY_STACK
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.utf8.handling%b  strings_edit-utf8-handling.adb  2e0783cd NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit.utf8%s	strings_edit-utf8.adb	strings_edit-utf8.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.utf8.handling%s  strings_edit-utf8-handling.ads  6e5c7481 EE NE OO PK
+W strings_edit.utf8%s	strings_edit-utf8.adb	strings_edit-utf8.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-utf8.ads	20090421190310 a85b43e2 strings_edit.utf8%s
+D strings_edit-utf8-handling.ads  20090421190310 c6073763 strings_edit.utf8.handling%s
+D strings_edit-utf8-handling.adb  20090421190310 e800b4ae strings_edit.utf8.handling%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 8 strings_edit.ads
+132K9*Strings_Edit 335e17 10|31r9 104r5 11|28r14 154r5
+X 9 strings_edit-utf8.ads
+28K22*UTF8 8|132k9 9|213e22 10|31r22 104r18 11|28r27 154r18
+33M9*Code_Point
+34M12*UTF8_Code_Point{33M9} 11|34r29 46r13 59r10 72r13 82r17 102r17 120r17
+. 140r17
+62U14*Get 11|85s10 105s10 123s10 143s10
+116U14*Put 11|34s7 43s10 56s7 69s10
+X 10 strings_edit-utf8-handling.ads
+31K27*Handling 9|28k22 10|104l23 104e31 11|28b32 154l23 154t31
+53V13*To_String{string} 53>24 11|78b13 93l8 93t17
+53a24 Value{string} 11|78b24 79r28 80r28 84r24 85r15
+54V13*To_String{string} 55>16 56>16 11|95b13 114l8 114t17
+55a16 Value{string} 11|96b16 99r28 100r28 104r24 105r15
+56e16 Substitute{character} 11|97b16 107r31
+73V13*To_UTF8{string} 73>22 11|30b13 36l8 36t15
+73e22 Value{character} 11|30b22 34r61
+74V13*To_UTF8{string} 74>22 11|38b13 50l8 50t15
+74a22 Value{string} 11|38b22 39r28 42r19 46r45
+75V13*To_UTF8{string} 75>22 11|52b13 62l8 62t15
+75e22 Value{wide_character} 11|52b22 59r47
+76V13*To_UTF8{string} 76>22 11|64b13 76l8 76t15
+76a22 Value{wide_string} 11|64b22 65r28 68r19 72r50
+98V13*To_Wide_String{wide_string} 98>29 11|116b13 131l8 131t22
+98a29 Value{string} 11|116b29 117r33 118r28 122r24 123r15
+99V13*To_Wide_String{wide_string} 100>16 101>16 11|133b13 152l8 152t22
+100a16 Value{string} 11|134b16 137r33 138r28 142r24 143r15
+101e16 Substitute{wide_character} 11|135b16 145r31
+X 11 strings_edit-utf8-handling.adb
+31a7 Result{string} 32r28 34m12 34r12 35r14
+32i7 Pointer{integer} 34m20 34r20 35r25
+39a7 Result{string} 40r28 44m13 44r13 49r14 49r22
+40i7 Pointer{integer} 45m13 45r13 49r36
+42i11 Item{integer} 46r52
+53a7 Result{string} 54r28 57m10 57r10 61r14
+54i7 Pointer{integer} 58m10 58r10 61r25
+65a7 Result{string} 66r28 70m13 70r13 75r14 75r22
+66i7 Pointer{integer} 71m13 71r13 75r36
+68i11 Item{integer} 72r57
+79a7 Result{string} 81r28 89m10 92r14 92r22
+80i7 Pointer{integer} 84r13 85m22 85r22
+81i7 Index{integer} 89r18 90m10 90r19 92r36
+82m7 Item{9|34M12} 85m31 86r13 89r43
+99a7 Result{string} 101r28 107m13 109m13 113r14 113r22
+100i7 Pointer{integer} 104r13 105m22 105r22
+101i7 Index{integer} 107r21 109r21 111m10 111r19 113r36
+102m7 Item{9|34M12} 105m31 106r13 109r46
+117a7 Result{wide_string} 119r28 127m10 130r14 130r22
+118i7 Pointer{integer} 122r13 123m22 123r22
+119i7 Index{integer} 127r18 128m10 128r19 130r36
+120m7 Item{9|34M12} 123m31 124r13 127r48
+137a7 Result{wide_string} 139r28 145m13 147m13 151r14 151r22
+138i7 Pointer{integer} 142r13 143m22 143r22
+139i7 Index{integer} 145r21 147r21 149m10 149r19 151r36
+140m7 Item{9|34M12} 143m31 144r13 147r51
+

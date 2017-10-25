@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project>
+    <vfs_file />
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 4" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/opengl-freetype.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/open-freetype-test.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 2" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/open-freetype-test.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 15" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/open-freetype-test.gpr</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 30" line=" 5" >
+      <vfs_project />
+      <vfs_file>/Ada_Source/OpenGLAda/open-freetype-test.gpr</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

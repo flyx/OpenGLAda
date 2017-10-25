@@ -1,0 +1,79 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.integers%b  strings_edit-integers.ads  f7832339 NE OO PK
+Z ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W strings_edit.integer_edit%s  strings_edit-integer_edit.adb  strings_edit-integer_edit.ali  AD
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.integers%s  strings_edit-integers.ads  377b453f EB NE OO PK
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W strings_edit.integer_edit%s  strings_edit-integer_edit.adb  strings_edit-integer_edit.ali  AD
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-integer_edit.ads  20140606171027 bd787de3 strings_edit.integer_edit%s
+D strings_edit-integer_edit.adb  20160407204448 d1707b9c strings_edit.integer_edit%b
+D strings_edit-integers.ads  20090421190310 f7832339 strings_edit.integers%s
+D strings_edit-integers.ads  20090421190310 f7832339 strings_edit.integers%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 10 strings_edit.ads
+132K9*Strings_Edit 335e17 14|28r6 30r9 31r8
+X 11 strings_edit-integer_edit.ads
+34k22*Integer_Edit 166e30 14|28w19 31r21
+X 14 strings_edit-integers.ads
+30K22*Integers[11|34] 10|132k9
+

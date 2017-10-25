@@ -1,0 +1,79 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.generic_scale%b  strings_edit-generic_scale.adb  28029f51 NE OO PK GE
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+U strings_edit.generic_scale%s  strings_edit-generic_scale.ads  c477f85c BN EE NE OO PK GE
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-generic_scale.ads  20090421190310 b9f7e3b9 strings_edit.generic_scale%s
+D strings_edit-generic_scale.adb  20090421190310 91f57ce8 strings_edit.generic_scale%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 7 strings_edit.ads
+132K9*Strings_Edit 335e17 8|43r9 82r5 9|28r14 95r5
+X 8 strings_edit-generic_scale.ads
+42F9 Value 48r19 49r19 80r33 9|30r33 32r16 33r16 40r27 52r16 70r16 75r21
+. 76r24 78r27 87r31
+43k22*Generic_Scale 7|132k9 8|42z9 82l18 82e31 9|28b27 95l18 95t31
+47R9*Scale 53e14 80r64 9|30r64 31r16
+48*7 Minor 9|56m23 59m23 63m20 67m17 70r44 71r42 87r23
+49*7 Low_Value{42F9} 9|71m14
+50i7 Low_Tick{natural} 9|82m20 84m20
+51i7 Ticks{natural} 9|57m23 60m23 64m20 68m17 78r46 82r39 87r50
+52i7 Small{integer} 9|38m14 45m17 45r33 50m17 50r33 89m17 89r33
+80V13*Create{47R9} 80>21 80>26 80>40 9|30b13 93l8 93t14
+80*21 Low{42F9} 9|30b21 33r37 35r10 70r31
+80*26 High{42F9} 9|30b26 33r30 35r17
+80i40 Count{natural} 9|30b40 39r10 40r34
+X 9 strings_edit-generic_scale.adb
+31r7 Result{8|47R9} 38m7 45m10 45r26 50m10 50r26 56m16 57m16 59m16 60m16
+. 63m13 64m13 67m10 68m10 70r37 71m7 71r35 78r39 82m13 82r32 84m13 87r16
+. 87r43 89m10 89r26 92r14
+32*7 Power 44m10 44r19 49m10 49r19 56r32 59r32 63r29 67r26 87r63
+33*7 Major 40m10 40r19 42r13 43m10 43r19 47r13 48m10 48r19 52m7 52r34 53r10
+. 54r13 55r16 70m7 71r27 77r27 87m7 88r13 90m10 90r19
+73i10 No{integer} 81r13 82r51 84r32
+

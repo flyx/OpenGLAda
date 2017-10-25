@@ -1,0 +1,109 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.base64%b	strings_edit-base64.adb	188831ca NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W interfaces%s		interfac.ads		interfac.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W system.concat_3%s	s-conca3.adb		s-conca3.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U strings_edit.base64%s	strings_edit-base64.ads	3f0fc4fb EE NE OO PK
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D interfac.ads		20151118101227 4be8ce1b interfaces%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-base64.ads  20141122090338 428fdf1e strings_edit.base64%s
+D strings_edit-base64.adb  20141122090339 dc562d7e strings_edit.base64%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-conca3.ads		20140225151544 0b705ca5 system.concat_3%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 12|28r6 28r30 29r6 29r30
+X 4 a-except.ads
+54K13*Exceptions 349e19 12|28w10 28r34
+90U14*Raise_Exception 12|60s16 65s16
+X 5 a-ioexce.ads
+18K13*IO_Exceptions 30e22 12|29w10 29r34
+27X4*Data_Error 12|61r19 66r19
+X 9 interfac.ads
+38K9*Interfaces 183e15 12|30w6 30r30
+65M9*Unsigned_16 12|36r17 37r17 84r14 93r17
+X 10 strings_edit.ads
+132K9*Strings_Edit 335e17 11|31r9 57r5 12|32r14 132r5
+X 11 strings_edit-base64.ads
+31K22*Base64 10|132k9 11|57l18 57e24 12|32b27 132l18 132t24
+45V13*From_Base64{string} 45>26 12|34b13 81l8 81t19
+45a26 Text{string} 12|34b26 35r29 41r20 42r33 55r27 57r34 58r29 67r46
+55V13*To_Base64{string} 55>24 12|89b13 130l8 130t17
+55a24 Text{string} 12|89b24 90r29 95r20 96r48
+X 12 strings_edit-base64.adb
+35a7 Result{string} 74m13 80r14
+36m7 This{9|65M9} 42m10 43r15 45r38 47r38 49r38 73m13
+37m7 Accum{9|65M9} 45m16 45r25 47m16 47r25 49m16 49r25 51m16 51r25 53m16
+. 53r25 73r21 75r32 77m13 77r24
+38i7 Bits{natural} 56r29 58r61 70m10 70r18 71r13 72m13 72r21 73r32 75r43
+. 77r37
+39i7 Pointer{integer} 74r21 76m13 76r24 80r25
+41i11 Index{integer} 42r39 55r19 57r22 58r35 67r52
+83A9 Base64_Encoding(character)<9|65M9> 85r22
+85a4 Base64{83A9} 101r16 108r16 115r33 122r33
+90a7 Result{string} 100m13 107m13 115m13 117m13 119m13 122m13 124m13 129r14
+91i7 Pointer{integer} 100r21 103m13 103r24 107r21 110m13 110r24 115r21 116m13
+. 116r24 117r21 118m13 118r24 119r21 120m13 120r24 122r21 123m13 123r24 124r21
+. 125m13 125r24 129r25
+92i7 Bits{natural} 97m10 97r19 98r13 99m13 99r21 101r36 102r37 105r13 106m13
+. 106r21 108r36 109r37 113r12
+93m7 Accum{9|65M9} 96m10 96r19 101r25 102m13 102r24 108r25 109m13 109r24
+. 115r41 122r41
+95i11 Index{integer} 96r54
+

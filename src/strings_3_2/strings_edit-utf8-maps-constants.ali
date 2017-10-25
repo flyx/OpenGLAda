@@ -1,0 +1,136 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P SS ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FINALIZATION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U strings_edit.utf8.maps.constants%s  strings_edit-utf8-maps-constants.ads  39f74bdb EE OO PF PK
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W strings_edit.utf8%s	strings_edit-utf8.adb	strings_edit-utf8.ali
+W strings_edit.utf8.categorization%s  strings_edit-utf8-categorization.adb  strings_edit-utf8-categorization.ali  AD
+W strings_edit.utf8.mapping%s  strings_edit-utf8-mapping.adb  strings_edit-utf8-mapping.ali  AD
+W strings_edit.utf8.maps%s  strings_edit-utf8-maps.adb  strings_edit-utf8-maps.ali  AD
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W system.soft_links%s	s-soflin.adb		s-soflin.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-finali.ads		20151020095656 bf4f806b ada.finalization%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-utf8.ads	20090421190310 a85b43e2 strings_edit.utf8%s
+D strings_edit-utf8-categorization.ads  20090421190310 2f48b3d6 strings_edit.utf8.categorization%s
+D strings_edit-utf8-mapping.ads  20090421190310 28f980c5 strings_edit.utf8.mapping%s
+D strings_edit-utf8-maps.ads  20160407204447 489b46fb strings_edit.utf8.maps%s
+D strings_edit-utf8-maps-constants.ads  20090421190310 76dd3e33 strings_edit.utf8.maps.constants%s
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-finmas.ads		20151016130316 7811a767 system.finalization_masters%s
+D s-finroo.ads		20120426095924 4ff27390 system.finalization_root%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-pooglo.ads		20151118103153 ede33ef8 system.pool_global%s
+D s-secsta.ads		20140225151139 86a2856d system.secondary_stack%s
+D s-soflin.ads		20151020124036 14e1eb6c system.soft_links%s
+D s-stache.ads		20140225151139 a37c21ec system.stack_checking%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20131010103753 b16154c2 system.storage_pools%s
+D s-stposu.ads		20151020120548 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20131014135145 aedef97e system.stream_attributes%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 11 strings_edit.ads
+132K9*Strings_Edit 335e17 16|28r6 28r38 30r6 31r6 33r9 81r5
+X 12 strings_edit-utf8.ads
+28K22*UTF8 11|132k9 12|213e22 16|28r19 28r51 30r19 31r19 33r22 81r18
+33M9*Code_Point
+34M12*UTF8_Code_Point{33M9}
+X 13 strings_edit-utf8-categorization.ads
+31K27*Categorization 135e37 16|30w24 31r24
+99V13*Is_Alphanumeric{boolean} 16|64r39
+100V13*Is_Digit{boolean} 16|55r50
+101V13*Is_Control{boolean} 16|54r50
+102V13*Is_ISO_646{boolean} 16|61r50
+103V13*Is_Letter{boolean} 16|56r50
+104V13*Is_Lower{boolean} 16|57r50
+105V13*Is_Other_Format{boolean} 16|70r39
+106V13*Is_Space{boolean} 16|59r50
+107V13*Is_Title{boolean} 16|60r50
+108V13*Is_Upper{boolean} 16|58r50
+112V13*Is_Subscript_Digit{boolean} 16|72r39
+114V13*Is_Superscript_Digit{boolean} 16|74r39
+122V13*Is_Identifier_Start{boolean} 16|68r39
+124V13*Is_Identifier_Extend{boolean} 16|66r39
+X 14 strings_edit-utf8-mapping.ads
+31K27*Mapping 89e30 16|28w24 28r56
+73V13*To_Lowercase{12|34M12} 16|77r36
+85V13*To_Uppercase{12|34M12} 16|79r36
+X 15 strings_edit-utf8-maps.ads
+33K27*Maps 12|28k22 15|673e27 16|33r27 81r23
+38R9*Unicode_Set<5|43R9> 574e14 16|35r37 36r37 37r37 38r37 39r37 40r37 41r37
+. 42r37 43r37 44r37 45r37 46r37 47r37 48r37 54r27 55r27 56r27 57r27 58r27
+. 59r27 60r27 61r27 63r37 65r37 67r37 69r37 71r37 73r37
+281V13*To_Set{38R9} 16|54s42 55s42 56s42 57s42 58s42 59s42 60s42 61s42 64s31
+. 66s31 68s31 70s31 72s31 74s31
+327R9*Unicode_Mapping<5|43R9> 666e14 16|50r30 51r30 76r30 78r30
+426V13*To_Mapping{327R9} 16|77s24 79s24
+X 16 strings_edit-utf8-maps-constants.ads
+33K32*Constants 15|33k27 16|54E4 81l28 81e37
+35r4*Alphanumeric_Set{15|38R9} 63c4
+36r4*Control_Set{15|38R9} 54c4
+37r4*Digit_Set{15|38R9} 55c4
+38r4*Identifier_Extend_Set{15|38R9} 65c4
+39r4*Identifier_Start_Set{15|38R9} 67c4
+40r4*ISO_646_Set{15|38R9} 61c4
+41r4*Letter_Set{15|38R9} 56c4
+42r4*Lower_Set{15|38R9} 57c4
+43r4*Other_Format_Set{15|38R9} 69c4
+44r4*Space_Set{15|38R9} 59c4
+45r4*Subscript_Digit_Set{15|38R9} 71c4
+46r4*Superscript_Digit_Set{15|38R9} 73c4
+47r4*Title_Set{15|38R9} 60c4
+48r4*Upper_Set{15|38R9} 58c4
+50r4*Lower_Case_Map{15|327R9} 76c4
+51r4*Upper_Case_Map{15|327R9} 78c4
+

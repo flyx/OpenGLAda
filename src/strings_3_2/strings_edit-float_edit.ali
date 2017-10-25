@@ -1,0 +1,213 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+
+U strings_edit.float_edit%b  strings_edit-float_edit.adb  388ba55f NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.elementary_functions%s  a-nuelfu.ads  a-nuelfu.ali
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+W strings_edit.integers%s  strings_edit-integers.ads  strings_edit-integers.ali  EA
+
+U strings_edit.float_edit%s  strings_edit-float_edit.ads  cfe341b5 BN EE NE OO PK GE
+W strings_edit%s	strings_edit.adb	strings_edit.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-numeri.ads		20080324174807 bb51c45a ada.numerics%s
+D a-nuelfu.ads		20070406091342 03e83d1c ada.numerics.elementary_functions%s
+D a-ngelfu.ads		20151016131424 b8fdcb46 ada.numerics.generic_elementary_functions%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-float_edit.ads  20140606171027 b2635a50 strings_edit.float_edit%s
+D strings_edit-float_edit.adb  20160407204448 9a23fe4e strings_edit.float_edit%b
+D strings_edit-integer_edit.ads  20140606171027 bd787de3 strings_edit.integer_edit%s
+D strings_edit-integers.ads  20090421190310 f7832339 strings_edit.integers%s
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 13|28r6 29r6 33r5 34r5
+X 4 a-ioexce.ads
+18K13*IO_Exceptions 30e22 13|28w10 33r9
+26X4*End_Error 13|137r12 212r19
+27X4*Data_Error 13|137r24 217r19 225r16 309r16
+28X4*Layout_Error 13|137r37 167r16
+X 5 a-numeri.ads
+16K13*Numerics 32e17 13|29r10 34r9
+X 6 a-nuelfu.ads
+18K22*Elementary_Functions[7|39] 13|29w19 34r18
+X 7 a-ngelfu.ads
+67V13*Log{float} 13|44s21[6|18] 45s21[6|18] 46s21[6|18] 47s21[6|18] 48s21[6|18]
+. 49s21[6|18] 50s21[6|18] 51s21[6|18] 52s21[6|18] 53s21[6|18] 54s21[6|18]
+. 55s21[6|18] 56s21[6|18] 57s21[6|18] 58s21[6|18] 77s16[6|18] 83s16[6|18]
+X 9 a-strmap.ads
+46A9*Character_Set<137A9>
+137A9 Character_Set_Internal(boolean)<character>
+X 11 strings_edit.ads
+132K9*Strings_Edit 335e17 12|34r9 204r5 13|30r6 35r5 37r14 550r5
+134N4*MaxSmall 12|171r48 172r49 200r42 201r42 13|320r46 321r46 540r44 541r45
+135a4*Figures{string} 13|452r40 452r57
+137a4*SpaceAndTab{9|46A9} 13|305r29 307r29
+139E12*Alignment{8|29E9} 12|174r34 13|323r34
+142e4*Left=142:43{8|29E9} 12|174r48 13|323r47
+143e4*Right=143:43{8|29E9} 13|383r24
+145I12*NumberBase{integer} 12|70r31 103r29 169r34 198r30 13|43r27 72r38 91r36
+. 145r31 296r29 318r34 366r27 538r30
+163U14*Get 13|121s7 132s10 174s16 178s16
+183U14*Get 13|305s7 307s7
+234U14*Put 13|404s10 461s18 481s16 493s16 514s16 532s10
+332V13 GetDigit{natural} 13|186s19 195s19 203s25
+X 12 strings_edit-float_edit.ads
+33F9 Number 35r25 69r32 71r31 71r46 72r31 72r46 104r29 104r44 105r29 105r44
+. 108r23 168r34 197r30 13|44r33 45r33 46r33 47r33 48r33 49r33 50r33 51r33
+. 52r33 53r33 54r33 55r33 56r33 57r33 58r33 74r10 74r33 77r28 83r29 144r32
+. 146r31 146r46 147r31 147r46 151r31 151r46 155r22 156r22 188r33 199r30 230r25
+. 233r32 297r29 297r44 298r29 298r44 301r23 302r17 317r34 337r29 395r32 398r19
+. 401r28 401r43 448r19 451r39 537r30
+34k22*Float_Edit 11|132k9 12|33z9 204l18 204e28 13|37b27 550l18 550t28
+35F12*Number_Of{33F9}
+66U14*Get 67>17 68=17 69<17 70>17 71>17 72>17 73>17 74>17 13|141b14 292l8
+. 292t11 306s7
+67a17 Source{string} 13|142b17 160r23 162r26 164r30 169r21 170r15 174r21
+. 178r21 185r22 186r29 193r23 193r44 195r29 202r34 203r35 222r13 227r20
+68i17 Pointer{integer} 13|143b17 158r33 160r13 162r16 164r16 169r10 211r13
+. 216r13 254m19 258m19 267m19 271m19 291m7
+69*17 Value 13|144b17 253m19 257m19 266m19 270m19 290m7
+70i17 Base{11|145I12} 13|145b17 151r59 187r29 196r21 204r35 233r61
+71*17 First 13|146b17 257r30 270r30 277r21 279r25
+72*17 Last 13|147b17 253r30 266r30 283r24 285r25
+73b17 ToFirst{boolean} 13|148b17 256r35 269r35 278r13
+74b17 ToLast{boolean} 13|149b17 252r32 265r32 284r13
+101V13*Value 102>16 103>16 104>16 105>16 106>16 107>16 13|294b13 312l8 312t13
+102a16 Source{string} 13|295b16 303r28 305r12 306r12 307r12 308r21
+103i16 Base{11|145I12} 13|296b16 306r37
+104*16 First 13|297b16 306r43
+105*16 Last 13|298b16 306r50
+106b16 ToFirst{boolean} 13|299b16 306r56
+107b16 ToLast{boolean} 13|300b16 306r65
+165U14*Put 166=17 167=17 168>17 169>17 170>17 171>17 172>17 173>17 174>17
+. 175>17 13|314b14 534l8 534t11 546s7
+166a17 Destination{string} 13|315b17 404m15 462m19 482m19 494m19 515m19 532m15
+167i17 Pointer{integer} 13|316b17 404m28 463m21 483m19 495m19 516m19 532m28
+168*17 Value 13|317b17 398r38 464r28 484r25 496r28 517r28
+169i17 Base{11|145I12} 13|318b17 396r31 401r56 438r55
+170b17 PutPlus{boolean} 13|319b17 464r35 484r32 496r35 517r35
+171i17 RelSmall{positive} 13|320b17 407r10 408r23
+172i17 AbsSmall{integer} 13|321b17 422r21 423r34
+173i17 Field{natural} 13|322b17 404r42 473r19 485r19 506r19 522r19 532r42
+174e17 Justify{11|139E12} 13|323b17 404r49 474r19 486r19 507r19 523r19 532r49
+175e17 Fill{character} 13|324b17 404r58 475r19 487r19 508r19 524r19 532r58
+196V13*Image{string} 197>16 198>16 199>16 200>16 201>16 13|536b13 548l8 548t13
+197*16 Value 13|537b16 546r27
+198i16 Base{11|145I12} 13|538b16 546r34
+199b16 PutPlus{boolean} 13|539b16 546r40
+200i16 RelSmall{positive} 13|540b16 546r49
+201i16 AbsSmall{integer} 13|541b16 546r59
+X 13 strings_edit-float_edit.adb
+43a4 Logs(float) 77r51 83r52 233r55 396r25
+72V13 GetExponentField{natural} 72b13 72>31 87l8 87t24 92s26 92s49 93s26
+. 93s49 94s26 94s49 95s26 95s49 96s26 96s49 97s26 97s49 98s26 98s49 99s26
+72i31 Base{11|145I12} 77r57 83r58
+91a4 ExponentField(natural) 381r24
+114U14 GetExponent 114b14 115>17 116=17 117<17 139l8 139t19 227s7
+115a17 Source{string} 121r12 122r21 124r16 126r16 132r15 133r15
+116i17 Pointer{integer} 119r26 134m10
+117i17 Value{integer} 129m10 133m30 138m10
+119i7 Index{integer} 121m20 121r20 122r13 124r24 126r24 131m10 131r19 132m23
+. 132r23 133m23 133r23 134r21
+151*7 Radix 189r41 200r47 235r32 243r32 250r36
+152i7 Digit{natural} 186m10 187r20 188r46 195m10 196r13 199r43 203m16 204r26
+153i7 Exponent{integer} 184m7 192m7 192r27 231m13 231r40 234r16 238m19 238r31
+. 239r29 241r19 246m19 246r31 247r29 250r45
+154i7 ExponentPart{integer} 183m7 220r13 222r21 227m35 231r25 232m13 234r28
+. 235r41 238r42 239r40 241r32 242m16 242r33 243r41 246r42 247r40
+155*7 Mantissa 188m10 188r22 198m16 199r19 228r10 230m13 230r46 237m19 237r31
+. 245m19 245r31 250m13 250r25 251r20 277r10 279m13 283r13 285m13 290r16
+156*7 Multiplicand 188r55 189m10 189r26 199r52 200m16 200r32 235m16 237r42
+. 243m16 245r42
+157i7 Sign{integer} 173m16 177m16 210r14 214m10 230r38 252r19 256r22 265r19
+. 269r22
+158i7 Index{integer} 170r23 172m16 172r25 174m29 174r29 176m16 176r25 178m29
+. 178r29 183r23 184r19 185r13 186r37 190m10 190r19 192r19 193r10 193r52 194m10
+. 194r19 195r37 201m16 201r25 202r26 203r43 207m13 207r22 211r23 216r23 220r28
+. 227m28 227r28 254r30 258r30 267r30 271r30 291r18
+302*7 Result 306m29 311r14
+303i7 Pointer{integer} 305m20 305r20 306m20 306r20 307m20 307r20 308r10
+336V16 Sign{string} 336b16 337>19 338>19 348l11 348t15 464s22 484s19 496s22
+. 517s22
+337*19 Value 341r13
+338b19 PutPlus{boolean} 343r16
+364V16 PutExponent{string} 364b16 365>19 366>19 391l11 391t22 438s28
+365i19 Value{integer} 369r32 375r26
+366i19 Base{11|145I12} 381r39 386r13
+368a10 Result{string} 370r32 378m13 378r13 387r34 387r42 389r33 389r41
+369i10 Exponent{integer} 373r13 375m13 380r13
+370i10 Pointer{integer} 379m13 379r13 387r56 389r55
+371e10 Sign{character} 374m13 387r27 389r26
+393i7 Precision{integer} 407r21 408m10 422r32 423m10 429r45 433m10 433r23
+. 435r10 439r39 455r30 477r30
+398*7 Mantissa 403r10 414r13 415m10 415r22 418r13 419m10 419r22 429m7 429r19
+. 430r10 431m10 431r23 446m16 446r28 447r34 448r41 451m16 451r28
+399i7 Exponent{integer} 416m10 416r22 420m10 420r22 422r10 423r23 432m10
+. 432r23 438r41 454r19 455r19 477r19 489r19 499r46 503r46 519r34
+400i7 Increment{integer} 424m10 433r35
+401*7 Radix 414r30 415r33 419r33 429r36 431r34 446r39
+437a13 ExponentPart{string} 454r32 471r22
+439a13 MantissaPart{string} 445r26 452m16 465r22 465r36 467r22 468r25 469r25
+. 484r43 497r22 498r25 499r25 502r22 503r25 504r25 520r22
+440i13 Digit{natural} 447m16 448r32 449m19 449r28 451r52 452r49
+445i17 Index{integer} 452r30
+543a7 Text{string} 544r28 546m12 546r12 547r14 547r20
+544i7 Pointer{integer} 546m18 546r18 547r32
+X 14 strings_edit-integer_edit.ads
+59U14*Get 13|133s10[15|30]
+134U14*Put 13|377s10[15|30]
+139b17 PutPlus{boolean} 13|382r13[15|30]
+140i17 Field{natural} 13|381r13[15|30]
+141e17 Justify{11|139E12} 13|383r13[15|30]
+142e17 Fill{character} 13|384r13[15|30]
+X 15 strings_edit-integers.ads
+30K22*Integers[14|34] 13|30w19 31r36 35r18
+

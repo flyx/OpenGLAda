@@ -1,0 +1,127 @@
+V "GNAT Lib v6"
+A -gnatA
+A -g
+A -gnatwc
+A -gnatwi
+A -gnatwk
+A -gnatwm
+A -gnatwo
+A -gnatwp
+A -gnatwr
+A -gnatwv
+A -gnatwZ
+A -gnatw.c
+A -gnatw.p
+A -gnatw.t
+A -gnatw.w
+A -gnatw.x
+A -gnato
+A -gnatVa
+A -gnatf
+A -g
+A -fstack-check=specific
+A -gnat05
+A -mmacosx-version-min=10.13.0
+A -mtune=core2
+A -fPIC
+A -feliminate-unused-debug-symbols
+P ZX
+
+RN
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U strings_edit.streams.generic_unsigned%b  strings_edit-streams-generic_unsigned.adb  61b57b1c NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.io_exceptions%s	a-ioexce.ads		a-ioexce.ali
+W strings_edit.streams%s  strings_edit-streams.adb  strings_edit-streams.ali
+
+U strings_edit.streams.generic_unsigned%s  strings_edit-streams-generic_unsigned.ads  ffe740a3 BN EE NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.streams%s		a-stream.adb		a-stream.ali
+W strings_edit.streams%s  strings_edit-streams.adb  strings_edit-streams.ali
+
+D ada.ads		20070406091342 3ffc8e18 ada%s
+D a-charac.ads		20070912115821 2d3ec45b ada.characters%s
+D a-chlat1.ads		20140225151544 66457d31 ada.characters.latin_1%s
+D a-except.ads		20151016123252 291912d5 ada.exceptions%s
+D a-ioexce.ads		20140225151544 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20141120112812 119b8fb3 ada.streams%s
+D a-string.ads		20070406091342 90ac6797 ada.strings%s
+D a-strmap.ads		20140611123156 e8bb714a ada.strings.maps%s
+D a-tags.ads		20151016130316 01f5e3ef ada.tags%s
+D a-unccon.ads		20070406091342 f9eb8f06 ada.unchecked_conversion%s
+D strings_edit.ads	20090508201456 7d801be5 strings_edit%s
+D strings_edit-streams.ads  20120211132356 0df4ee82 strings_edit.streams%s
+D strings_edit-streams-generic_unsigned.ads  20160407204447 e3882192 strings_edit.streams.generic_unsigned%s
+D strings_edit-streams-generic_unsigned.adb  20161118153301 4f84573f strings_edit.streams.generic_unsigned%b
+D system.ads		20151123113124 c3282aa7 system%s
+D s-exctab.ads		20140225151139 54135002 system.exception_table%s
+D s-parame.ads		20140801093848 7e2a0d7f system.parameters%s
+D s-soflin.ads		20151020124036 14e1eb6c system.soft_links%s
+D s-stache.ads		20140225151139 a37c21ec system.stack_checking%s
+D s-stalib.ads		20151112104907 09bd3940 system.standard_library%s
+D s-stoele.ads		20140225151139 2dc34a04 system.storage_elements%s
+D s-traent.ads		20140730135025 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20140731130224 9d58a4c0 system.unsigned_types%s
+X 1 ada.ads
+16K9*Ada 19e8 13|28r6 28r24 14|29r6 29r30 30r6 30r30
+X 4 a-except.ads
+54K13*Exceptions 349e19 14|29w10 29r34
+90U14*Raise_Exception 14|49s10 60s16 73s7 96s16 106s7 131s10 136s10 150s7
+X 5 a-ioexce.ads
+18K13*IO_Exceptions 30e22 14|30w10 30r34
+26X4*End_Error 14|74r10 107r10
+27X4*Data_Error 14|61r19 97r19
+28X4*Layout_Error 14|50r13 132r13 150r24
+X 6 a-stream.ads
+36K13*Streams 87e16 13|28w10 28r28
+39H9*Root_Stream_Type 70e64 13|63r32 76r33 14|80r32 113r33
+42M9*Stream_Element 14|85r16 142r28
+44I9*Stream_Element_Offset<long_long_integer> 13|50r34 96r34 14|36r34 86r16
+. 117r17 125r34
+54A9*Stream_Element_Array(42M9)<44I9> 13|49r27 95r34 14|35r27 84r16 116r17
+. 124r34
+57x14*Read 14|89R10
+63x14*Write 14|120R7
+X 11 strings_edit.ads
+132K9*Strings_Edit 335e17 13|32r9 99r5 14|32r14 153r5
+X 12 strings_edit-streams.ads
+35K22*Streams 11|132k9 12|130e25 13|32r22 99r18 14|32r27 153r18
+X 13 strings_edit-streams-generic_unsigned.ads
+31I9 Number 51r31 64r23 77r26 97r27 14|37r31 39r16 57r36 81r23 82r16 93r38
+. 114r26 116r42 126r27 128r14
+32k30*Generic_Unsigned 12|35k22 13|31z9 99l26 99e42 14|32b35 153l26 153t42
+48U14*Get 49>17 50=17 51<17 14|34b14 77l8 77t11
+49a17 Data{6|54A9} 14|35b17 42r23 44r26 46r30 54r24 57r44 65r18
+50i17 Pointer{6|44I9} 14|36b17 42r13 44r16 46r16 54r13 57r50 65r24 66m13
+. 66r24 71m10 71r21
+51*17 Value{31I9} 14|37b17 67m13
+62V13*Input{31I9} 63^16 14|79b13 110l8 110t13
+63p16 Stream(6|39R9) 14|80b16 89r16
+75U14*Output 76^17 77>17 14|112b14 121l8 121t14
+76p17 Stream(6|39R9) 14|113b17 120r14
+77*17 Value{31I9} 14|114b17 119r29
+94U14*Put 95=17 96=17 97>17 14|119s7 123b14 151l8 151t11
+95a17 Data{6|54A9} 14|124b17 130r25 141r24 142m10 146m13 146r35
+96i17 Pointer{6|44I9} 14|125b17 130r10 141r13 142r16 143m10 143r21 146r19
+. 146r41
+97*17 Value{31I9} 14|126b17 128r24
+X 14 strings_edit-streams-generic_unsigned.adb
+39*7 Result{13|31I9} 56m13 57r16 67r24
+40i7 Power{natural} 57r28 70m10 70r21
+82*7 Result{13|31I9} 92m13 93r16 102r20
+83i7 Power{natural} 93r30 104m10 104r19
+84a7 Buffer{6|54A9} 85r39 89m28
+85m7 This=85:39{6|42M9} 93r46 101r18
+86i7 Last{6|44I9} 89m36 90r20
+116a7 Buffer{6|54A9} 119m12 119r12 120r26
+117i7 Pointer{6|44I9} 119m20 119r20 120r37
+128*7 Item{13|31I9} 135r13 142r44 144m10 144r18 145r13
+
