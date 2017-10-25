@@ -6,6 +6,7 @@ with Ada.Text_IO;
 with GL.Attributes;
 with GL.Blending;
 with GL.Buffers;
+with GL.Files;
 with GL.FreeType;
 with GL.Objects.Buffers;
 with GL.Objects.Shaders;
@@ -15,7 +16,6 @@ with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
-with GL.Window;
 
 with GL_Test.Display_Backend;
 
@@ -55,23 +55,10 @@ procedure FreeType_Test.Basic is
       Fragment_Shader.Initialize_Id;
       Program.Initialize_Id;
 
-      Vertex_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
-        "layout(location = 0) in vec2 vertex;" & Character'Val (10) &
-        "uniform mat4 transformation;" & Character'Val (10) &
-        "uniform vec2 dimensions;" & Character'Val (10) &
-        "out vec2 uv;" & Character'Val (10) &
-        "void main() {" & Character'Val (10) &
-        "  gl_Position = transformation * vec4(vertex.x * dimensions.x, vertex.y * dimensions.y, 0.0, 1.0);" & Character'Val (10) &
-        "  uv = vertex;" & Character'Val (10) &
-        "}");
-
-      Fragment_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
-        "in vec2 uv;" & Character'Val (10) &
-        "out vec3 color;" & Character'Val (10) &
-        "uniform sampler2D texSampler;" & Character'Val (10) &
-        "void main() {" & Character'Val (10) &
-        "  color = texture(texSampler, uv).rgb;" & Character'Val (10) &
-        "}");
+      GL.Files.Load_Shader_Source_From_File
+        (Vertex_Shader, "../tests/freetype/freetype_test-basic-vertex.glsl");
+      GL.Files.Load_Shader_Source_From_File
+        (Fragment_Shader, "../tests/freetype/freetype_test-basic-fragment.glsl");
 
       Vertex_Shader.Compile;
       Fragment_Shader.Compile;
@@ -112,34 +99,34 @@ procedure FreeType_Test.Basic is
    Transformation_ID : GL.Uniforms.Uniform;
    Dimensions_ID : GL.Uniforms.Uniform;
 
-   use type GL.Types.Singles.Matrix4;
+   use GL.Types.Singles;
    use type GL.FreeType.Pixel_Difference;
 begin
    Display_Backend.Init;
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
    Display_Backend.Open_Window (Width => 500, Height => 500);
-   GL.Window.Set_Viewport (0, 0, 500, 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
    Rendering_Program := GL.FreeType.Init_Program;
-   Renderer.Create (Rendering_Program, "../tests/ftgl/SourceCodePro-Regular.ttf", 0);
+   Renderer.Create (Rendering_Program,
+                    "../tests/ftgl/SourceCodePro-Regular.ttf", 0);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
    Ada.Text_IO.Put_Line ("Rendered text will have the dimensions" & Width'Img &
-                           " x" & GL.FreeType.Pixel_Difference'Image (Y_Max - Y_Min) & ".");
+     " x" & GL.FreeType.Pixel_Difference'Image (Y_Max - Y_Min) & ".");
 
-   Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max,
-                                      GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
+   Text_Image := Renderer.To_Texture
+     (Text, Width, Y_Min, Y_Max, GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
    GL.Objects.Textures.Set_Active_Unit (0);
    GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
-   Transformation := GL.Types.Singles.Matrix4'((1.0, 0.0, 0.0, 0.0),
-                                               (0.0, 1.0, 0.0, 0.0),
-                                               (0.0, 0.0, 1.0, 0.0),
-                                               (-1.0, -1.0, 0.0, 1.0)) *
-                     GL.Types.Singles.Matrix4'((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
-                                               (0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0),
-                                               (0.0, 0.0, 1.0, 0.0),
-                                               (0.0, 0.0, 0.0, 1.0));
+   Transformation := Matrix4'((1.0, 0.0, 0.0, 0.0),
+                              (0.0, 1.0, 0.0, 0.0),
+                              (0.0, 0.0, 1.0, 0.0),
+                              (-1.0, 0.0, 0.0, 1.0)) *
+                     Matrix4'((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
+                              (0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0),
+                              (0.0, 0.0, 1.0, 0.0),
+                              (0.0, 0.0, 0.0, 1.0));
 
    Ada.Text_IO.Put_Line ("Rendered text to texture");
 
@@ -169,7 +156,7 @@ begin
    GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                GL.Blending.One_Minus_Src_Alpha);
    while Display_Backend.Window_Opened loop
-      Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
+      Clear (Buffer_Bits'(Color => True, others => False));
 
       Array1.Bind;
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
@@ -179,7 +166,7 @@ begin
       GL.Flush;
       Display_Backend.Swap_Buffers;
 
-      Display_Backend.Poll_Events;
+      Display_Backend.Wait_For_Events;
    end loop;
 
    Display_Backend.Shutdown;
