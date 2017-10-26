@@ -14,6 +14,8 @@ package GL_Test.Display_Backend is
 
    procedure Poll_Events;
 
+   procedure Wait_For_Events;
+
    procedure Set_Window_Title (Value : String);
 
    function Escape_Pressed return Boolean;

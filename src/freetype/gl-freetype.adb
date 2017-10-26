@@ -24,20 +24,24 @@ package body GL.FreeType is
         GL.Objects.Shaders.Shader (GL.Objects.Shaders.Fragment_Shader);
       Square : constant GL.Types.Singles.Vector2_Array :=
         ((0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0));
+      LF : constant Character := Character'Val (10);
    begin
       Ret.Id.Initialize_Id;
 
+      --  shader sources are included here so that the user does not need to
+      --  handle additional resource files bundled with this library.
       Vertex_Shader.Initialize_Id;
-      Vertex_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
-        "layout(location = 0) in vec2 vertex;" & Character'Val (10) &
-        "uniform vec4 character_info;" & Character'Val (10) &
-        "uniform mat4 transformation;" & Character'Val (10) &
-        "out vec2 texture_coords;" & Character'Val (10) &
-        "void main() {" & Character'Val (10) &
-        "  vec2 translated = vec2(character_info.z * vertex.x + character_info.x," &
-        "    character_info.w * vertex.y + character_info.y);" & Character'Val (10) &
-        "  gl_Position = transformation * vec4(translated, 0.0, 1.0);" &
-        "  texture_coords = vec2(vertex.x, 1.0 - vertex.y);" & Character'Val (10) &
+      Vertex_Shader.Set_Source ("#version 410 core"                    & LF &
+        "layout(location = 0) in vec2 vertex;"                         & LF &
+        "uniform vec4 character_info;"                                 & LF &
+        "uniform mat4 transformation;"                                 & LF &
+        "out vec2 texture_coords;"                                     & LF &
+        "void main() {"                                                & LF &
+        "  vec2 translated = vec2("                                    &
+              "character_info.z * vertex.x + character_info.x,"        &
+              "character_info.w * vertex.y + character_info.y);"       & LF &
+        "  gl_Position = transformation * vec4(translated, 0.0, 1.0);" & LF &
+        "  texture_coords = vec2(vertex.x, 1.0 - vertex.y);"           & LF &
         "}");
       Vertex_Shader.Compile;
       if not Vertex_Shader.Compile_Status then
@@ -47,15 +51,14 @@ package body GL.FreeType is
       Ret.Id.Attach (Vertex_Shader);
 
       Fragment_Shader.Initialize_Id;
-      Fragment_Shader.Set_Source ("#version 410 core" & Character'Val (10) &
-        "in vec2 texture_coords;" & Character'Val (10) &
-        "layout(location = 0) out vec4 color;" & Character'Val (10) &
-        "uniform sampler2D text_sampler;" & Character'Val (10) &
-        "uniform vec4 text_color;" & Character'Val (10) &
-        "void main() {" & Character'Val (10) &
-        "  float alpha = texture(text_sampler, texture_coords).r;" & Character'Val (10) &
-        "  color = vec4(1.0 - alpha, 1.0 - alpha, alpha, 1.0);" &
---        "  color = vec4(text_color.xyz, text_color.w * alpha);" & Character'Val (10) &
+      Fragment_Shader.Set_Source ("#version 410 core"              & LF &
+        "in vec2 texture_coords;"                                  & LF &
+        "layout(location = 0) out float color;"                    & LF &
+        "uniform sampler2D text_sampler;"                          & LF &
+        "uniform vec4 text_color;"                                 & LF &
+        "void main() {"                                            & LF &
+        "  float alpha = texture(text_sampler, texture_coords).r;" & LF &
+        "  color = alpha;"                                         & LF &
         "}");
       Fragment_Shader.Compile;
       if not Fragment_Shader.Compile_Status then
@@ -77,7 +80,8 @@ package body GL.FreeType is
       GL.Objects.Buffers.Array_Buffer.Bind (Ret.Square_Buffer);
       Load_Vectors (GL.Objects.Buffers.Array_Buffer, Square,
                     GL.Objects.Buffers.Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (0, 2, GL.Types.Single_Type, 0, 0);
 
       Ret.Info_Id := Ret.Id.Uniform_Location ("character_info");
       Ret.Texture_Id := Ret.Id.Uniform_Location ("text_sampler");
@@ -113,7 +117,7 @@ package body GL.FreeType is
       Object.Data := new Renderer_Data;
       Object.Data.Program := Program;
       FT.Faces.New_Face (Lib, Font_Path, Face_Index, Object.Data.Face);
-      Object.Data.Face.Set_Pixel_Sizes (0, 48);
+      Object.Data.Face.Set_Pixel_Sizes (0, 96);
    end Create;
 
    function Character_Data (Object : Renderer_Reference;
@@ -134,16 +138,20 @@ package body GL.FreeType is
                Bitmap : constant FT.Bitmap_Record :=
                  FT.Glyphs.Bitmap (Object.Data.Face.Glyph_Slot);
                Inserted : Boolean;
-               Top : constant Pixel_Difference :=
-                 Pixel_Difference (FT.Glyphs.Bitmap_Top (Object.Data.Face.Glyph_Slot));
+               Top : constant Pixel_Difference := Pixel_Difference
+                 (FT.Glyphs.Bitmap_Top (Object.Data.Face.Glyph_Slot));
                Height : constant Pixel_Difference :=
                  Pixel_Difference (Bitmap.Rows);
+               Old_Alignment : constant GL.Pixels.Alignment :=
+                 GL.Pixels.Unpack_Alignment;
             begin
                New_Data.Width := Pixel_Difference (Bitmap.Width);
                New_Data.Y_Min := Top - Height;
                New_Data.Y_Max := Top;
-               New_Data.Advance := Pixel_Difference (FT.Glyphs.Advance (Object.Data.Face.Glyph_Slot).X / 64);
-               New_Data.Left := Pixel_Difference (FT.Glyphs.Bitmap_Left (Object.Data.Face.Glyph_Slot));
+               New_Data.Advance := Pixel_Difference
+                 (FT.Glyphs.Advance (Object.Data.Face.Glyph_Slot).X / 64);
+               New_Data.Left := Pixel_Difference
+                 (FT.Glyphs.Bitmap_Left (Object.Data.Face.Glyph_Slot));
                New_Data.Image.Initialize_Id;
                Texture_2D.Bind (New_Data.Image);
                Texture_2D.Set_Minifying_Filter (GL.Objects.Textures.Linear);
@@ -156,6 +164,7 @@ package body GL.FreeType is
                   GL.Types.Size (Bitmap.Rows), GL.Pixels.Red,
                   GL.Pixels.Unsigned_Byte,
                   GL.Objects.Textures.Image_Source (Bitmap.Buffer));
+               GL.Pixels.Set_Unpack_Alignment (Old_Alignment);
                Object.Data.Characters.Insert (FT.ULong (Code_Point),
                                               New_Data, Ret, Inserted);
             end;
@@ -165,7 +174,8 @@ package body GL.FreeType is
 
    procedure Calculate_Dimensions (Object : Renderer_Reference;
                                    Content : UTF_8_String;
-                                   Width, Y_Min, Y_Max : out Pixel_Difference) is
+                                   Width, Y_Min, Y_Max : out Pixel_Difference)
+   is
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
       Code_Point : Strings_Edit.UTF8.Code_Point;
@@ -218,15 +228,18 @@ package body GL.FreeType is
           ((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
            (0.0, 2.0 / GL.Types.Single (Height), 0.0, 0.0),
            (0.0, 0.0, 1.0, 0.0), (0.0, 0.0, 0.0, 1.0));
+      Old_X, Old_Y : GL.Types.Int;
+      Old_Width, Old_Height : GL.Types.Size;
    begin
       FrameBuf.Initialize_Id;
       Fb.Draw_Target.Bind (FrameBuf);
       Target.Initialize_Id;
       Tx.Targets.Texture_2D.Bind (Target);
       Tx.Targets.Texture_2D.Load_Empty_Texture
-        (0, GL.Pixels.RGBA, GL.Types.Int (Width), GL.Types.Int (Height));
+        (0, GL.Pixels.Red, GL.Types.Int (Width), GL.Types.Int (Height));
       Tx.Targets.Texture_2D.Set_Minifying_Filter (Tx.Nearest);
       Tx.Targets.Texture_2D.Set_Magnifying_Filter (Tx.Nearest);
+      GL.Window.Get_Viewport (Old_X, Old_Y, Old_Width, Old_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Size (Width),
                               GL.Types.Size (Y_Max - Y_Min));
       Fb.Draw_Target.Attach_Texture (Fb.Color_Attachment_0, Target, 0);
@@ -264,10 +277,10 @@ package body GL.FreeType is
             X_Offset :=
               X_Offset + Loaded_Characters.Element (Map_Position).Advance;
          end;
-
       end loop;
       GL.Flush;
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      GL.Window.Set_Viewport (Old_X, Old_Y, Old_Width, Old_Height);
       Fb.Draw_Target.Bind (Fb.Default_Framebuffer);
 
       return Target;
