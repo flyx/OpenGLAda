@@ -57,6 +57,11 @@ package body GL_Test.Display_Backend is
       Glfw.Input.Poll_Events;
    end Poll_Events;
 
+   procedure Wait_For_Events is
+   begin
+      Glfw.Input.Wait_For_Events;
+   end Wait_For_Events;
+
    procedure Set_Window_Title (Value : String) is
    begin
       Main_Window.Set_Title (Value);
