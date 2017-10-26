@@ -11,7 +11,7 @@ private with GL.Objects.Programs;
 with GL.Types.Colors;
 private with GL.Uniforms;
 
-package GL.FreeType is
+package GL.Text is
    Rendering_Error : exception;
 
    type Font_Rendering_Program is private;
@@ -79,4 +79,4 @@ private
 
    overriding procedure Adjust (Object : in out Renderer_Reference);
    overriding procedure Finalize (Object : in out Renderer_Reference);
-end GL.FreeType;
+end GL.Text;

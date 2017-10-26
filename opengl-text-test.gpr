@@ -1,15 +1,15 @@
 with "opengl_shared";
 with "opengl-glfw";
-with "opengl-freetype";
+with "opengl-text";
 
-project OpenGL.FreeType.Test is
+project OpenGL.Text.Test is
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
 
-   for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/freetype";
-   for Main use ("freetype_test-basic");
+   for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/text";
+   for Main use ("text_test-basic");
 
    package Ide renames OpenGL_Shared.Ide;
    package Builder renames OpenGL_Shared.Builder;
    package Compiler renames OpenGL_Shared.Compiler;
-end OpenGL.FreeType.Test;
+end OpenGL.Text.Test;

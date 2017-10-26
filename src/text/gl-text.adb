@@ -12,7 +12,7 @@ with GL.Pixels;
 with GL.Window;
 with Strings_Edit.UTF8;
 
-package body GL.FreeType is
+package body GL.Text is
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
      (GL.Types.Singles.Vector2_Pointers);
 
@@ -309,4 +309,4 @@ package body GL.FreeType is
    begin
       return Ada.Containers.Hash_Type'Mod (Value);
    end Hash;
-end GL.FreeType;
+end GL.Text;
