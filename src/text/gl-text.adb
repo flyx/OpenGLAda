@@ -12,12 +12,11 @@ with GL.Pixels;
 with GL.Window;
 with Strings_Edit.UTF8;
 
-package body GL.FreeType is
+package body GL.Text is
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
      (GL.Types.Singles.Vector2_Pointers);
 
-   function Init_Program return Font_Rendering_Program is
-      Ret : Font_Rendering_Program;
+   procedure Create (Object : in out Shader_Program_Reference) is
       Vertex_Shader :
         GL.Objects.Shaders.Shader (GL.Objects.Shaders.Vertex_Shader);
       Fragment_Shader :
@@ -26,7 +25,7 @@ package body GL.FreeType is
         ((0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0));
       LF : constant Character := Character'Val (10);
    begin
-      Ret.Id.Initialize_Id;
+      Object.Id.Initialize_Id;
 
       --  shader sources are included here so that the user does not need to
       --  handle additional resource files bundled with this library.
@@ -48,7 +47,7 @@ package body GL.FreeType is
          raise Rendering_Error with "could not compile vertex shader:" &
            Character'Val (10) & Vertex_Shader.Info_Log;
       end if;
-      Ret.Id.Attach (Vertex_Shader);
+      Object.Id.Attach (Vertex_Shader);
 
       Fragment_Shader.Initialize_Id;
       Fragment_Shader.Set_Source ("#version 410 core"              & LF &
@@ -65,39 +64,37 @@ package body GL.FreeType is
          raise Rendering_Error with "could not compile fragment shader: " &
            Character'Val (10) & Fragment_Shader.Info_Log;
       end if;
-      Ret.Id.Attach (Fragment_Shader);
+      Object.Id.Attach (Fragment_Shader);
 
-      Ret.Id.Link;
-      if not Ret.Id.Link_Status then
+      Object.Id.Link;
+      if not Object.Id.Link_Status then
          raise Rendering_Error with "could not link program:" &
-           Character'Val (10) & Ret.Id.Info_Log;
+           Character'Val (10) & Object.Id.Info_Log;
       end if;
       GL.Objects.Shaders.Release_Shader_Compiler;
 
-      Ret.Square_Buffer.Initialize_Id;
-      Ret.Square_Array.Initialize_Id;
-      Ret.Square_Array.Bind;
-      GL.Objects.Buffers.Array_Buffer.Bind (Ret.Square_Buffer);
+      Object.Square_Buffer.Initialize_Id;
+      Object.Square_Array.Initialize_Id;
+      Object.Square_Array.Bind;
+      GL.Objects.Buffers.Array_Buffer.Bind (Object.Square_Buffer);
       Load_Vectors (GL.Objects.Buffers.Array_Buffer, Square,
                     GL.Objects.Buffers.Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer
         (0, 2, GL.Types.Single_Type, 0, 0);
 
-      Ret.Info_Id := Ret.Id.Uniform_Location ("character_info");
-      Ret.Texture_Id := Ret.Id.Uniform_Location ("text_sampler");
-      Ret.Color_Id := Ret.Id.Uniform_Location ("text_colour");
-      Ret.Transform_Id := Ret.Id.Uniform_Location ("transformation");
+      Object.Info_Id := Object.Id.Uniform_Location ("character_info");
+      Object.Texture_Id := Object.Id.Uniform_Location ("text_sampler");
+      Object.Color_Id := Object.Id.Uniform_Location ("text_colour");
+      Object.Transform_Id := Object.Id.Uniform_Location ("transformation");
+   end Create;
 
-      return Ret;
-   end Init_Program;
-
-   function Exists (Object : Renderer_Reference) return Boolean is
+   function Created (Object : Shader_Program_Reference) return Boolean is
    begin
-      return Object.Data /= null;
-   end Exists;
+      return Object.Id.Initialized;
+   end Created;
 
    procedure Create (Object : in out Renderer_Reference;
-                     Program : Font_Rendering_Program;
+                     Program : Shader_Program_Reference;
                      Face : FT.Faces.Face_Reference) is
    begin
       Finalize (Object);
@@ -107,9 +104,10 @@ package body GL.FreeType is
    end Create;
 
    procedure Create (Object : in out Renderer_Reference;
-                     Program : Font_Rendering_Program;
+                     Program : Shader_Program_Reference;
                      Font_Path  : UTF_8_String;
-                     Face_Index : FT.Faces.Face_Index_Type) is
+                     Face_Index : FT.Faces.Face_Index_Type;
+                     Size : Pixel_Size) is
       Lib : FT.Library_Reference;
    begin
       Finalize (Object);
@@ -117,8 +115,14 @@ package body GL.FreeType is
       Object.Data := new Renderer_Data;
       Object.Data.Program := Program;
       FT.Faces.New_Face (Lib, Font_Path, Face_Index, Object.Data.Face);
-      Object.Data.Face.Set_Pixel_Sizes (0, 96);
+      Object.Data.Face.Set_Pixel_Sizes (0, FT.UInt (Size));
    end Create;
+
+   function Created (Object : Renderer_Reference) return Boolean is
+   begin
+      return Object.Data /= null;
+   end Created;
+
 
    function Character_Data (Object : Renderer_Reference;
                             Code_Point : Strings_Edit.UTF8.Code_Point)
@@ -174,7 +178,9 @@ package body GL.FreeType is
 
    procedure Calculate_Dimensions (Object : Renderer_Reference;
                                    Content : UTF_8_String;
-                                   Width, Y_Min, Y_Max : out Pixel_Difference)
+                                   Width : out Pixel_Size;
+                                   Y_Min : out Pixel_Difference;
+                                   Y_Max : out Pixel_Size)
    is
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
@@ -309,4 +315,4 @@ package body GL.FreeType is
    begin
       return Ada.Containers.Hash_Type'Mod (Value);
    end Hash;
-end GL.FreeType;
+end GL.Text;
