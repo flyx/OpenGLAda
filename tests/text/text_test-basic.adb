@@ -92,7 +92,7 @@ procedure Text_Test.Basic is
    Width, Y_Min, Y_Max : GL.Text.Pixel_Difference;
    Text : constant String := "The quick brown fox jumps over the lazy dog.";
    Text_Image : GL.Objects.Textures.Texture;
-   Rendering_Program : GL.Text.Font_Rendering_Program;
+   Rendering_Program : GL.Text.Shader_Program_Reference;
    Renderer : GL.Text.Renderer_Reference;
    Texture_ID : GL.Uniforms.Uniform;
    Transformation : GL.Types.Singles.Matrix4;
@@ -107,9 +107,9 @@ begin
    Display_Backend.Open_Window (Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
-   Rendering_Program := GL.Text.Init_Program;
+   GL.Text.Create (Rendering_Program);
    Renderer.Create (Rendering_Program,
-                    "../tests/ftgl/SourceCodePro-Regular.ttf", 0);
+                    "../tests/ftgl/SourceCodePro-Regular.ttf", 0, 96);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
    Ada.Text_IO.Put_Line ("Rendered text will have the dimensions" & Width'Img &
