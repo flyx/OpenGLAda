@@ -128,14 +128,31 @@ package body GL.Text is
                             Code_Point : Strings_Edit.UTF8.Code_Point)
                             return Loaded_Characters.Cursor is
       use type FT.Position;
+      use type FT.Faces.Char_Index_Type;
+      use type Strings_Edit.UTF8.Code_Point;
    begin
       return Ret : Loaded_Characters.Cursor :=
         Object.Data.Characters.Find (FT.ULong (Code_Point)) do
          if not Loaded_Characters.Has_Element (Ret) then
-            Object.Data.Face.Load_Character (FT.ULong (Code_Point),
-                                             FT.Faces.Load_Render);
-            FT.Glyphs.Render_Glyph (Object.Data.Face.Glyph_Slot,
-                                    FT.Faces.Render_Mode_Mono);
+            declare
+               Index : constant FT.Faces.Char_Index_Type :=
+                 Object.Data.Face.Character_Index (FT.ULong (Code_Point));
+            begin
+               if Index = FT.Faces.Undefined_Character_Code then
+                  if Code_Point = Character'Pos ('?') then
+                     raise FT.FreeType_Exception with
+                       "Font is missing character '?'";
+                  else
+                     Ret := Character_Data (Object, Character'Pos ('?'));
+                     return;
+                  end if;
+               else
+                  Object.Data.Face.Load_Glyph (Index, FT.Faces.Load_Render);
+                  FT.Glyphs.Render_Glyph (Object.Data.Face.Glyph_Slot,
+                                          FT.Faces.Render_Mode_Mono);
+               end if;
+            end;
+
             declare
                use GL.Objects.Textures.Targets;
                New_Data : Loaded_Character;
