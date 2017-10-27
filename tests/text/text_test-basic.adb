@@ -90,7 +90,7 @@ procedure Text_Test.Basic is
    Array1 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
    Width, Y_Min, Y_Max : GL.Text.Pixel_Difference;
-   Text : constant String := "The quick brown fox jumps over the lazy dog.";
+   Text : constant String := "The quick bröwn füx jumpß over the lazy 💩dog.";
    Text_Image : GL.Objects.Textures.Texture;
    Rendering_Program : GL.Text.Shader_Program_Reference;
    Renderer : GL.Text.Renderer_Reference;
@@ -107,13 +107,12 @@ begin
    Display_Backend.Open_Window (Width => 500, Height => 500);
    Ada.Text_IO.Put_Line ("Initialized GLFW window");
 
+   Ada.Text_IO.Put_Line ("Text: """ & Text & """");
+
    GL.Text.Create (Rendering_Program);
    Renderer.Create (Rendering_Program,
                     "../tests/ftgl/SourceCodePro-Regular.ttf", 0, 96);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-
-   Ada.Text_IO.Put_Line ("Rendered text will have the dimensions" & Width'Img &
-     " x" & GL.Text.Pixel_Difference'Image (Y_Max - Y_Min) & ".");
 
    Text_Image := Renderer.To_Texture
      (Text, Width, Y_Min, Y_Max, GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));

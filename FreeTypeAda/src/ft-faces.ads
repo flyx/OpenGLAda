@@ -9,6 +9,8 @@ package FT.Faces is
 
    type Face_Index_Type is new Interfaces.C.long;
 
+   type Char_Index_Type is new UInt;
+
    type Encoding is (None, Adobe_Custom, Adobe_Expert, Adobe_Standard,
                      Apple_Roman, Big5, GB2312, Johab, Adobe_Latin_1,
                      Old_Latin_2, SJIS, MS_Symbol, Unicode, Wansung);
@@ -41,6 +43,10 @@ package FT.Faces is
    procedure Kerning (Object      : Face_Reference; Left_Glyph : UInt;
                       Right_Glyph : UInt; Kern_Mode : UInt;
                       aKerning    : access Vector);
+   function Character_Index (Object : Face_Reference; Char_Code : ULong)
+                             return Char_Index_Type;
+   procedure Load_Glyph (Object : Face_Reference; Glyph_Index : Char_Index_Type;
+                         Flags : Load_Flag);
    procedure Load_Character (Object : Face_Reference; Char_Code : ULong;
                              Flags  : Load_Flag);
    function Metrics (Object : Face_Reference) return Size_Metrics;
@@ -51,7 +57,12 @@ package FT.Faces is
    function Glyph_Slot (Object : Face_Reference) return Glyph_Slot_Reference;
 
    Image_Error : exception;
+
+   Undefined_Character_Code : constant Char_Index_Type;
 private
+   for Face_Index_Type'Size use Interfaces.C.long'Size;
+   for Char_Index_Type'Size use UInt'Size;
+
    procedure Check_Face_Ptr (Object : Face_Reference);
 
    type Face_Reference is new Ada.Finalization.Controlled with record
@@ -154,4 +165,5 @@ private
       Load_Bitmap_Metrics_Only         => 16#400000#);
    for Load_Flag'Size use 32;
 
+   Undefined_Character_Code : constant Char_Index_Type := 0;
 end FT.Faces;
