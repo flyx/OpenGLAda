@@ -1,3 +1,4 @@
+with "../../common/common.gpr";
 limited with "../../../opengl-text.gpr";
 with "../../../opengl_shared.gpr";
 limited with "../../../opengl-glfw.gpr";
