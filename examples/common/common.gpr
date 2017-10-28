@@ -1,3 +1,4 @@
+with "../../opengl-glfw.gpr";
 with "../../opengl-text.gpr";
 with "../../opengl.gpr";
 with "../../opengl_shared.gpr";
