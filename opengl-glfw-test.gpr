@@ -1,7 +1,7 @@
-with "opengl_shared";
+with "opengl";
 with "opengl-glfw";
 
-project Glfw_Test is
+project OpenGL.Glfw.Test is
 
    case OpenGL.Glfw.GLFW_Version is
       when "2" =>
@@ -17,9 +17,8 @@ project Glfw_Test is
    for Library_Dir use "lib";
    for Exec_Dir use "bin";
 
-   package Ide renames OpenGL_Shared.Ide;
-   package Builder renames OpenGL_Shared.Builder;
-   package Compiler renames OpenGL_Shared.Compiler;
-
-end Glfw_Test;
+   package Ide renames OpenGL.Ide;
+   package Builder renames OpenGL.Builder;
+   package Compiler renames OpenGL.Compiler;
+end OpenGL.Glfw.Test;
 

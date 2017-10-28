@@ -88,7 +88,7 @@ package body Tokenization is
 
       function Next_Char return Character is
       begin
-         return Ret : Character := Object.Input (I) do
+         return Ret : constant Character := Object.Input (I) do
             I := I + 1;
             if Ret = Character'Val (10) then -- Linefeed
                New_Line := New_Line + 1;
@@ -132,14 +132,14 @@ package body Tokenization is
                if Cur = '-' and Next = '-' then
                   Cur := Next_Char; -- properly advance I/line/column
                   Skip (not Newlines);
-                  return Ret : Token :=
+                  return Ret : constant Token :=
                      Token'(Kind => Comment, Length => I - Object.Pos - 2,
                            Content => Object.Input (Object.Pos + 2 .. I - 1)) do
                      Update_Pos;
                   end return;
                else
                   declare
-                     Possible_Compound : String := Cur & Next;
+                     Possible_Compound : constant String := Cur & Next;
                   begin
                      for J in 1 .. 10 loop
                         if Compound_Delimiters (J) = Possible_Compound then
@@ -178,7 +178,7 @@ package body Tokenization is
                      goto continue;
                   end if;
                end if;
-               return Ret : Token := Token'(Kind => String_Literal,
+               return Ret : constant Token := Token'(Kind => String_Literal,
                  Length => I - Object.Pos - 2,
                  Content => Object.Input (Object.Pos + 1 .. I - 2)) do
                   Update_Pos;

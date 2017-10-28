@@ -1,4 +1,3 @@
-with "opengl_shared";
 with "opengl";
 
 library project OpenGL.Soil is
@@ -10,12 +9,12 @@ library project OpenGL.Soil is
    for Object_Dir use "obj";
    for Library_Dir use "lib";
 
-   package Ide renames OpenGL_Shared.Ide;
-   package Builder renames OpenGL_Shared.Builder;
+   package Ide renames OpenGL.Ide;
+   package Builder renames OpenGL.Builder;
    package Compiler is
       -- disable preprocessor warning for C (this is 3rd party code, we just
       -- want to compile it and hope it doesn't contain any actual bugs)
       for Default_Switches ("c") use ("-O2", "-s", "-Wp,-w");
-      for Default_Switches ("ada") use OpenGL_Shared.Compiler'Default_Switches ("ada");
+      for Default_Switches ("ada") use OpenGL.Compiler'Default_Switches ("ada");
    end Compiler;
 end OpenGL.Soil;
