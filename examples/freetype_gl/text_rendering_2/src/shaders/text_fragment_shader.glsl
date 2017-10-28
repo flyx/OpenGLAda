@@ -1,10 +1,11 @@
 #version 410 core
 
 in vec2 texture_coords;
-out vec4 colour;
 
 uniform sampler2D text_sampler;  //   Mono-colored bitmap image
 uniform vec3 text_colour;
+
+out vec4 colour;
 
 void main()
 {
