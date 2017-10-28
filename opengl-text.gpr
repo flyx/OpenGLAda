@@ -1,5 +1,4 @@
 with "opengl";
-with "opengl_shared";
 with "FreeTypeAda/freetype";
 with "strings_edit";
 
@@ -10,5 +9,6 @@ library project OpenGL.Text is
    for Object_Dir use "obj";
    for Library_Dir use "lib";
 
-   package Compiler renames OpenGL_Shared.Compiler;
+   package Builder  renames OpenGL.Builder;
+   package Compiler renames OpenGL.Compiler;
 end OpenGL.Text;

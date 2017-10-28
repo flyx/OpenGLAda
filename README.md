@@ -10,23 +10,28 @@ Ada, like object orientation, type safety and generics.
 Besides standard OpenGL functionality, OpenGLAda optionally provides
 bindings to the following OpenGL-related libraries:
 
- * [GLFW][3]: This is a library for creating windows with an OpenGL context
-   on them. It also provides functionality for capturing user input on
-   keyboard, mouse and joystick. Having a window with an OpenGL context
+ * [GLFW][3] (`opengl-glfw.gpr`): This is a library for creating windows with an
+   OpenGL context on them. It also provides functionality for capturing user
+   input on keyboard, mouse and joystick. Having a window with an OpenGL context
    is the prerequisite for using any OpenGL functionality. The GLFW binding
    comes in two flavors: One for GLFW 2.x and one for GLFW 3+. There are
    significant differences between these two, the most prominent being that
    GLFW 3 can handle multiple windows. You can set the desired GLFW version
    for the binding at compile time.
- * [SOIL][10]: The *Simple OpenGL Image Library*. This is a very tiny library
-   for loading image files into OpenGL textures. It is public domain. Because
-   it's so tiny, it is linked directly into OpenGLAda. Its source is included
-   in the OpenGLAda sources.
- * [FTGL][11]: A library built on top of FreeType that provides an API to
-   load TrueType fonts and render text with OpenGL. The Ada wrapper only
-   provides basic functionality to load fonts and render text. As it does not
-   include a wrapper to FreeType, the more low-level functionality has been
-   excluded.
+ * [SOIL][10] (`opengl-soil.gpr`): The *Simple OpenGL Image Library*. This is a
+   very tiny library for loading image files into OpenGL textures. It is public
+   domain. Because it's so tiny, it is linked directly into OpenGLAda. Its
+   source is included in the OpenGLAda sources.
+ * [FTGL][11] (`opengl-ftgl.gpr`, **deprecated**): A library built on top of
+   FreeType that provides an API to load TrueType fonts and render text with
+   OpenGL. The Ada wrapper only provides basic functionality to load fonts and
+   render text. As it does not include a wrapper to FreeType, the more low-level
+   functionality has been excluded. **This wrapper is not maintained anymore in
+   favor of the new FreeType wrapper.**
+ * [FreeType][19] (`FreeTypeAda/freetype.gpr`): A library for loading TrueType
+   and OpenType fonts. OpenGLAda includes [FreeTypeAda][20], a wrapper for the
+   FreeType library. The project `opengl-text.gpr` provides an original
+   higher-level API for rendering text based on FreeTypeAda.
 
 OpenGLAda supports MacOSX, Windows and X11-based systems. API documentation can
 be found on the [project's homepage][4].
@@ -47,7 +52,8 @@ In order to build OpenGLAda, you need to have:
  * An OpenGL implementation (usually comes bundled with your graphics driver)
  * Optionally [GLFW][3] (OpenGLAda is pretty useless without the ability to
    create an OpenGL context.)
- * Optionally [FTGL][11]
+ * Optionally [FTGL][11] (**deprecated**)
+ * Optionally [FreeType][19]
 
 ¹: You may also be able to build OpenGLAda with another Ada compiler and/or
 without using the `*.gpr` files. You just have to import the sources to your
@@ -64,15 +70,15 @@ A Makefile is provided mainly for building the tests:
 If you're on Windows and do not have the `make` utility available, you can build
 the test by executing
 
-    $ gprbuild -P glfw_test.gpr   -XWindowing_System=windows
-    $ gprbuild -P opengl_test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows
 
 The tests require GLFW, because they need to create windows. By default, they
 try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
 by executing:
 
-    $ gprbuild -P opengl_test.gpr -XWindowing_System=windows -XGLFW_Version=2
-    $ gprbuild -P glfw_test.gpr   -XWindowing_System=windows -XGLFW_Version=2
+    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows -XGLFW_Version=2
+    $ gprbuild -P opengl-glfw-test.gpr   -XWindowing_System=windows -XGLFW_Version=2
 
 (Substitute `windows` with `x11` or `quartz` if needed.)
 
@@ -93,7 +99,7 @@ versions (e.g. on Windows 7 instead of Windows 10).
    folder into `C:\GNAT\2017\lib`.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gprbuild -p -P opengl_test.gpr -XWindowing_System=windows -XGLFW_Version=3
+        gprbuild -p -P opengl-test.gpr -XWindowing_System=windows
 
    This should produce executables in the `bin` folder inside OpenGLAda.
  * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
@@ -103,6 +109,13 @@ versions (e.g. on Windows 7 instead of Windows 10).
    working directory because they are loading shader files from hardcoded paths.
  * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
    for them to work.
+ * If you want to use FreeType, download the official 32-bit Windows binary from
+   the [FreeType website][19] and copy the file `freetype6.dll` from the `bin`
+   folder into `C:\GNAT\2017\lib`, then execute:
+
+       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=windows -XFREETYPE_LIBRARY_NAME=freetype6
+
+   The same things stated for the `glfw3.dll` are valid for the `freetype6.dll`.
 
 ### Windows 10 / TDM-GCC 64bit / GLFW 3
 
@@ -125,7 +138,7 @@ These instructions are for building 64bit binaries on Windows.
    folder into `C:\TDM-GCC-64\lib`.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gnatmake -p -P opengl_test.gpr -XWindowing_System=windows =XGLFW_Version=3
+        gnatmake -p -P opengl-test.gpr -XWindowing_System=windows
 
    This should produce executables in the `bin` folder inside OpenGLAda.
  * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
@@ -145,13 +158,20 @@ These instructions are for building 64bit binaries on Windows.
    using [Homebrew][18] and executing `brew install glfw`.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gprbuild -p -P opengl_test.gpr -XWindowing_System=quartz -XGLFW_Version=3
+        gprbuild -p -P opengl-test.gpr -XWindowing_System=quartz
 
    This should produce executables in the `bin` folder inside OpenGLAda.
  * Some of the test binaries require to be launched from the `bin` folder as
    working directory because they are loading shader files from hardcoded paths.
- * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
+ * Keep in mind that you need to spread the `glfw.dylib` alongside your binaries
    for them to work.
+ * If you want to use FreeType, you can install it with `brew install freetype`.
+   You can build the tests with:
+
+       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=quartz
+
+   The same things stated for the `glfw.dylib` are valid for the
+   `freetype.dylib`.
 
 ### Linux
 
@@ -215,14 +235,20 @@ scenario parameters:
                                of the two API versions.
 
     - `2`: GLFW 2.x. Only one window.
-    - `3`: GLFW 3+. Multiple windows, multiple monitor support, etc.
+    - `3` (default): GLFW 3+. Multiple windows, multiple monitor support, etc.
 
  * `Auto_Exceptions`: Configures exception handling:
 
     - `enabled` (default): After each call to OpenGL, OpenGLAda checks whether
       OpenGL has set an error flag and if it had, raises the corresponding
       exception.
-    - `disabled`: The user has to query the error flag on his own.
+    - `disabled`: The user has to query the error flag on their own.
+
+ * `GLFW_LIBRARY_NAME`: Sets the name of the GLFW library for linking. Default
+   is `glfw` everywhere but on Windows with GLFW 3, in which case it is `glfw3`.
+
+ * `FREETYPE_LIBRARY_NAME`: Sets the name of the FreeType library for linking.
+   Default is `freetype`.
 
 ### With other build systems
 
@@ -292,3 +318,5 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [16]: http://getadanow.com/#get_windows
  [17]: http://tdm-gcc.tdragon.net/
  [18]: https://brew.sh
+ [19]: https://www.freetype.org
+ [20]: https://github.com/flyx/FreeTypeAda
