@@ -1,8 +1,7 @@
 --  Program Render Text Example
 --  Author: Roger Mc Murtrie
---  8 October 2017
---  This example is based on Learn OpenGL>In Practice>Text Rendering at
---  https://learnopengl.com/#!In-Practice/Text-Rendering
+--  28 October 2017
+--  This example demonstrates use of the OpenGL.Text API
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
