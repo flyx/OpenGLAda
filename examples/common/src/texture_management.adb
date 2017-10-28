@@ -1,4 +1,6 @@
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 with GL.Attributes;
 with GL.Blending;
 with GL.Objects.Buffers;
@@ -12,29 +14,17 @@ package body Texture_Management is
    procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
-   Vertex_Array    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffer   : GL.Objects.Buffers.Buffer;
-
    Rendering_Program : GL.Text.Shader_Program_Reference;
-   Renderer        : GL.Text.Renderer_Reference;
-   --
-   --     procedure Setup_Character_Textures;
-   procedure Setup_Font (Font_File  : String);
+   Renderer          : GL.Text.Renderer_Reference;
+   Vertex_Array      : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Vertex_Buffer     : GL.Objects.Buffers.Buffer;
+
 
    --  ------------------------------------------------------------------------
-
-   procedure Initialize_Font_Data (Font_File : String) is
-   begin
-      Setup_Font (Font_File);
-      --        Setup_Character_Textures (Face_Ptr);
-   end Initialize_Font_Data;
-
-   --  ------------------------------------------------------------------------
-
 
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
-                          Colour : GL.Types.Colors.Basic_Color;
+                          Colour : GL.Types.Colors.Color;
                           Texture_ID, Projection_Matrix_ID, Dimensions_ID,
                           Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
@@ -55,16 +45,12 @@ package body Texture_Management is
       One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
         GL.Blending.One_Minus_Src_Alpha;
       Char_Texture   : GL.Objects.Textures.Texture;
-      --        X_Orig         : Single := X;
-      --        Y_Orig         : constant Single := Y;
-      --        X_Pos          : Single;
-      --        Y_Pos          : Single;
-      --        Char_Width     : Single;
-      Height         : Single;
+      Height         : Single := X + Y + Scale;
       Width          : Pixel_Difference;
       Y_Min, Y_Max   : Pixel_Difference;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
+      Text_Image     : GL.Objects.Textures.Texture;
    begin
       --  Blending allows a fragment colour's alpha value to control the resulting
       --  colour which will be transparent for all the glyph's background colours and
@@ -74,24 +60,33 @@ package body Texture_Management is
                                   GL.Blending.One_Minus_Src_Alpha);
       GL.Objects.Programs.Use_Program (Render_Program);
       Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-      Height := Single (Y_Max - Y_Min) * Scale;
-      Width  := Width * Pixel_Difference (Scale);
+      Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
+      GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
+      Height := Single (Y_Max - Y_Min); -- * Scale;
+--        Width  := Width * Pixel_Difference (Scale);
       GL.Uniforms.Set_Single (Dimensions_ID, GL.Types.Single (Width),
-                              Single (Y_Max - Y_Min));
+                              Height);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Vertex_Data := ((X, Y + Height,             0.0, 0.0),
-                      (X, Y + Single (Y_Min),           0.0, 1.0),
-                      (X + Single (Width), Y + Single (Y_Min),   1.0, 1.0),
+--        Vertex_Data := ((X, Y + Height,                   0.0, 0.0),
+--                        (X, Y + Single (Y_Min),           0.0, 1.0),
+--                        (X + Single (Width), Y + Single (Y_Min),   1.0, 1.0),
+--
+--                        (X, Y + Height,          0.0, 0.0),
+--                        (X + Single (Width), Y + Single (Y_Min),  1.0, 1.0),
+--                        (X + Single (Width), Y + Height,          1.0, 0.0));
 
-                      (X, Y + Height,          0.0, 0.0),
-                      (X + Single (Width), Y + Single (Y_Min),  1.0, 1.0),
-                      (X + Single (Width), Y + Height,          1.0, 0.0));
+      Vertex_Data := ((0.0, 0.0,                   0.0, 0.0),
+                      (0.0, 1.0,           0.0, 1.0),
+                      (1.0, 1.0,   1.0, 1.0),
+
+                      (0.0, 0.0,          0.0, 0.0),
+                      (1.0, 1.0,  1.0, 1.0),
+                      (1.0, 0.0,          1.0, 0.0));
 
       Vertex_Array.Bind;
       Array_Buffer.Bind (Vertex_Buffer);
       Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
-
       GL.Objects.Textures.Set_Active_Unit (0);
       Texture_2D.Bind (Char_Texture);
       GL.Uniforms.Set_Int (Texture_ID, 0);
@@ -109,15 +104,21 @@ package body Texture_Management is
 
       GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
       GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
+exception
+   when others =>
+      Put_Line ("An exception occurred in Texture_Management.Render_Text.");
+      raise;
    end Render_Text;
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (Font_File : String) is
+   procedure Setup (Font_File : String) is
    begin
+      Vertex_Array.Initialize_Id;
+      Vertex_Buffer.Initialize_Id;
       GL.Text.Create (Rendering_Program);
       Renderer.Create (Rendering_Program, Font_File, 0, 96);
-   end Setup_Font;
+   end Setup;
 
    --  ------------------------------------------------------------------------
 

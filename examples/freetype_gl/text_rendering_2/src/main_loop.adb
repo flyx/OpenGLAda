@@ -29,13 +29,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Projection_Matrix     : GL.Types.Singles.Matrix4;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
-   Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
+   Text_Colour     : constant GL.Types.Colors.Color := (0.5, 0.2, 0.6, 1.0);
    Font_File_1     : constant String := "../fonts/NotoSerif-Regular.ttf";
 
    --  ------------------------------------------------------------------------
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-                              Colour : GL.Types.Colors.Basic_Color);
+                              Colour : GL.Types.Colors.Color);
 
    --  ------------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-                              Colour : GL.Types.Colors.Basic_Color) is
+                              Colour : GL.Types.Colors.Color) is
    begin
      Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
                          Texture_ID, Projection_Matrix_ID, Dimensions_ID,
@@ -103,7 +103,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Texture_Management.Initialize_Font_Data (Font_File_1);
+      Texture_Management.Setup (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
@@ -120,8 +120,8 @@ begin
           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
-
    Render_Program.Delete_Id;
+
 exception
    when others =>
       Put_Line ("An exception occurred in Main_Loop.");
