@@ -22,6 +22,7 @@ with Texture_Management;
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Render_Program        : GL.Objects.Programs.Program;
+   Dimensions_ID         : GL.Uniforms.Uniform;
    Texture_ID            : GL.Uniforms.Uniform;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
@@ -66,8 +67,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               Colour : GL.Types.Colors.Basic_Color) is
    begin
      Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
-                         Texture_ID, Projection_Matrix_ID, Colour_ID,
-                         Projection_Matrix);
+                         Texture_ID, Projection_Matrix_ID, Dimensions_ID,
+                         Colour_ID, Projection_Matrix);
    end Render_The_Text;
 
    --  ------------------------------------------------------------------------
@@ -96,7 +97,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "text_sampler");
       Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "text_colour");
+        (Render_Program, "text_colour");
+      Dimensions_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "dimensions");
 
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
