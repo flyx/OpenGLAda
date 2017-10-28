@@ -1,12 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with  GL.Blending;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
-with GL.Objects.Textures;
-with GL.Objects.Textures.Targets;
-with GL.Text;
 with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
@@ -21,27 +17,24 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
+with Texture_Management;
+
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Render_Program        : GL.Objects.Programs.Program;
---     Render_Program        : GL.Text.Shader_Program_Reference;
    Texture_ID            : GL.Uniforms.Uniform;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
    Projection_Matrix     : GL.Types.Singles.Matrix4;
 
-   Text_Image        : GL.Objects.Textures.Texture;
-   Rendering_Program : GL.Text.Shader_Program_Reference;
-   Renderer          : GL.Text.Renderer_Reference;
-
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
-   Text_Colour     : constant GL.Types.Colors.Color := (0.5, 0.2, 0.6, 1.0);
+   Text_Colour     : constant GL.Types.Colors.Basic_Color := (0.5, 0.2, 0.6);
    Font_File_1     : constant String := "../fonts/NotoSerif-Regular.ttf";
 
    --  ------------------------------------------------------------------------
 
---     procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-   procedure Render_The_Text (Text   : String; Colour : GL.Types.Colors.Color);
+   procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
+                              Colour : GL.Types.Colors.Basic_Color);
 
    --  ------------------------------------------------------------------------
 
@@ -49,10 +42,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
---        Pos_X           : constant GL.Types.Single := 5.0;
---        Pos_Y           : constant GL.Types.Single := 50.0;
---        Scale_1         : constant GL.Types.Single := 0.4;
---        Scale_2         : constant GL.Types.Single := 0.6;
+      Pos_X           : constant GL.Types.Single := 5.0;
+      Pos_Y           : constant GL.Types.Single := 50.0;
+      Scale_1         : constant GL.Types.Single := 0.4;
+      Scale_2         : constant GL.Types.Single := 0.6;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -62,32 +55,24 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                          Single (Window_Width), 0.1, -100.0,
                                          Projection_Matrix);
       Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.",
-                       Text_Colour);
---                         Pos_X, Pos_Y, Scale_1, Text_Colour);
---        Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
---                         Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
+                       Pos_X, Pos_Y, Scale_1, Text_Colour);
+      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
+                       Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
    end Render;
 
    --  ------------------------------------------------------------------------
 
---     procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
---                                Colour : GL.Types.Colors.Color) is
-   procedure Render_The_Text (Text   : String; Colour : GL.Types.Colors.Color) is
-      Width, Y_Min, Y_Max : GL.Text.Pixel_Difference;
+   procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
+                              Colour : GL.Types.Colors.Basic_Color) is
    begin
-      Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-      Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
-      GL.Objects.Textures.Set_Active_Unit (0);
-      GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
---       Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
---                           Texture_ID, Projection_Matrix_ID, Colour_ID,
---                           Projection_Matrix);
+     Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
+                         Texture_ID, Projection_Matrix_ID, Colour_ID,
+                         Projection_Matrix);
    end Render_The_Text;
 
    --  ------------------------------------------------------------------------
 
    procedure Setup  (Window  : in out Glfw.Windows.Window) is
-      use GL.Types.Colors;
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
       use GL.Types;
@@ -99,9 +84,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      GL.Toggles.Enable (GL.Toggles.Blend);
-      GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
-                                  GL.Blending.One_Minus_Src_Alpha);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Render_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
@@ -114,13 +97,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Render_Program, "text_sampler");
       Colour_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "text_colour");
-      GL.Uniforms.Set_Int (Texture_ID, 0);
-      GL.Uniforms.Set_Single (Colour_ID,
-                              Text_Colour (R), Text_Colour (G), Text_Colour (B));
 
-      GL.Text.Create (Rendering_Program);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Renderer.Create (Rendering_Program, Font_File_1, 0, 96);
+
+      Texture_Management.Initialize_Font_Data (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
@@ -138,6 +118,7 @@ begin
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 
+   Render_Program.Delete_Id;
 exception
    when others =>
       Put_Line ("An exception occurred in Main_Loop.");
