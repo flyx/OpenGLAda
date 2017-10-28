@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Toggles;
+
 with Glfw;
 with Glfw.Input.Mouse;
 with Glfw.Windows;
@@ -10,7 +12,7 @@ with Glfw.Windows.Hints;
 with Utilities;
 
 procedure Initialize (Main_Window  : in out Glfw.Windows.Window;
-                      Window_Title : String) is
+                      Window_Title : String; Show_Data : Boolean := True) is
 
    procedure Enable_Callbacks is
    begin
@@ -45,7 +47,10 @@ begin
    Glfw.Windows.Context.Make_Current (Main_Window'Access);
    Enable_Callbacks;
    Main_Window.Set_Cursor_Mode (Cursor);
-   Utilities.Show_GL_Data;
+   GL.Toggles.Disable (GL.Toggles.Blend);
+   if Show_Data then
+      Utilities.Show_GL_Data;
+   end if;
 
 exception
    when others =>
