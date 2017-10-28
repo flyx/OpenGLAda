@@ -98,11 +98,12 @@ package body Texture_Management is
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
-                          Texture_ID, Projection_Matrix_ID,
+                          Texture_ID, Projection_Matrix_ID, Dimensions_ID,
                           Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
+      use GL.Text;
       use GL.Types.Colors;
       use GL.Types;
       use FT.Faces;
@@ -126,6 +127,8 @@ package body Texture_Management is
       Y_Pos          : Single;
       Char_Width     : Single;
       Height         : Single;
+      Width          : Pixel_Difference;
+      Y_Min, Y_Max   : Pixel_Difference;
       --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
       Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
    begin
@@ -136,7 +139,9 @@ package body Texture_Management is
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
       GL.Objects.Programs.Use_Program (Render_Program);
-
+      Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
+      GL.Uniforms.Set_Single (Dimensions_ID, GL.Types.Single (Width),
+                              Single (Y_Max - Y_Min));
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       for index in Text'Range loop
@@ -160,7 +165,8 @@ package body Texture_Management is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            raise GL.Text.Rendering_Error with "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
+            raise GL.Text.Rendering_Error with
+              "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
