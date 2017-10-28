@@ -76,6 +76,28 @@ package body FT.Faces is
       end;
    end Kerning;
 
+   function Character_Index (Object : Face_Reference; Char_Code : ULong)
+                             return Char_Index_Type is
+   begin
+      Check_Face_Ptr (Object);
+      return API.FT_Get_Char_Index (Object.Data, Char_Code);
+   end Character_Index;
+
+   procedure Load_Glyph (Object : Face_Reference; Glyph_Index : Char_Index_Type;
+                         Flags : Load_Flag) is
+   begin
+      Check_Face_Ptr (Object);
+      declare
+         Code : constant Errors.Error_Code :=
+           API.FT_Load_Glyph (Object.Data, Glyph_Index, Flags);
+      begin
+         if Code /= Errors.Ok then
+            raise FT.FreeType_Exception with "FT.Faces.Load_Glyph error: " &
+              Errors.Description (Code) & Character'Val (10);
+         end if;
+      end;
+   end Load_Glyph;
+
    --  ------------------------------------------------------------------------
 
    procedure Load_Character (Object : Face_Reference; Char_Code : ULong;
