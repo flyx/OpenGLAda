@@ -8,6 +8,7 @@ with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
+with GL.Text;
 with GL.Toggles;
 
 with FT;
@@ -26,21 +27,18 @@ package body Texture_Management is
       Advance_X : GL.Types.Int := 0;
    end record;
 
-   OGL_Exception      : Exception;
-
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
 
-   type Character_Data_Vector is array (Natural range <>) of Character_Record;
+   Vertex_Array    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Vertex_Buffer   : GL.Objects.Buffers.Buffer;
 
-   Vertex_Array         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffer        : GL.Objects.Buffers.Buffer;
-   Extended_Ascii_Data  : Character_Data_Vector (0 .. 255);
+   Rendering_Program : GL.Text.Shader_Program_Reference;
+   Renderer        : GL.Text.Renderer_Reference;
+   Text_Image      : GL.Objects.Textures.Texture;
 
    procedure Setup_Character_Textures (Face_Ptr : FT.Faces.Face_Reference);
-   procedure Setup_Font (theLibrary : FT.Library_Reference;
-                         Face_Ptr   : out FT.Faces.Face_Reference;
-                         Font_File  : String);
+   procedure Setup_Font (Font_File  : String);
 
    --  ------------------------------------------------------------------------
 
@@ -52,13 +50,9 @@ package body Texture_Management is
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
-      use GL.Types;
-      theLibrary : FT.Library_Reference;
-      Face_Ptr   : FT.Faces.Face_Reference;
    begin
-      theLibrary.Init;
-      Setup_Font (theLibrary, Face_Ptr, Font_File);
-      Setup_Character_Textures (Face_Ptr);
+      Setup_Font (Font_File);
+--        Setup_Character_Textures (Face_Ptr);
    end Initialize_Font_Data;
 
    --  ------------------------------------------------------------------------
@@ -147,7 +141,6 @@ package body Texture_Management is
 
       for index in Text'Range loop
          Char := Text (index);
-         Char_Data := Extended_Ascii_Data (Character'Pos (Char));
          X_Pos := X_Orig + Single (Char_Data.Left) * Scale;
          Y_Pos := Y_Orig - Single (Char_Data.Rows - Char_Data.Top) * Scale;
          Char_Width := Single (Char_Data.Width) * Scale;
@@ -167,7 +160,7 @@ package body Texture_Management is
 
          Char_Texture :=  Char_Data.Texture;
          if not GL.Objects.Textures.Is_Texture  (Char_Texture.Raw_Id) then
-            raise OGL_Exception with "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
+            raise GL.Text.Rendering_Error with "FT.OGL.Render_Text, aTexture is invalid for character " & Char'Img & ".";
          end if;
 
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -253,15 +246,10 @@ package body Texture_Management is
 
       --  ------------------------------------------------------------------------
 
-   procedure Setup_Font (theLibrary : FT.Library_Reference;
-                         Face_Ptr   : out FT.Faces.Face_Reference; Font_File : String) is
-      use GL.Types;
+   procedure Setup_Font (Font_File : String) is
    begin
-      FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
-      --  Set pixel size to 48 x 48
-      FT.Faces.Set_Pixel_Sizes (Face_Ptr, 0, 48);
-      --  Disable byte-alignment restriction
-      GL.Pixels.Set_Unpack_Alignment (GL.Pixels.Bytes);
+   GL.Text.Create (Rendering_Program);
+   Renderer.Create (Rendering_Program, Font_File, 0, 96);
    end Setup_Font;
 
    --  ------------------------------------------------------------------------
