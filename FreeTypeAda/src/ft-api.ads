@@ -28,6 +28,14 @@ private package FT.API is
                               return Errors.Error_Code;
    pragma Import (C, FT_Init_FreeType, "FT_Init_FreeType");
 
+   function FT_Get_Char_Index (Face : Face_Ptr; Char_Code : ULong)
+                               return Faces.Char_Index_Type;
+   pragma Import (C, FT_Get_Char_Index, "FT_Get_Char_Index");
+
+   function FT_Load_Glyph (Face : Face_Ptr; Glyph_Index : Faces.Char_Index_Type;
+                           Flags : Faces.Load_Flag) return Errors.Error_Code;
+   pragma Import (C, FT_Load_Glyph, "FT_Load_Glyph");
+
    function FT_Load_Char (aFace : Face_Ptr; Char_Code : ULong;
                           Load_Flags : Faces.Load_Flag)
                           return Errors.Error_Code;
