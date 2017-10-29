@@ -12,7 +12,7 @@ with GL.Toggles;
 package body Text_Management is
 
    procedure Load_Vertex_Buffer is new
-     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
+     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
 
    Rendering_Program : GL.Text.Shader_Program_Reference;
    Renderer          : GL.Text.Renderer_Reference;
@@ -21,31 +21,21 @@ package body Text_Management is
 
    --  ------------------------------------------------------------------------
 
-procedure Load_Data (VAO  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+procedure Load_Data (Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
                      Data_Buffer : GL.Objects.Buffers.Buffer) is
       use GL.Objects.Buffers;
 
-      Square : constant GL.Types.Singles.Vector4_Array
-        := ((0.0, 0.0, 0.0, 0.0),
-            (1.0, 0.0, 1.0, 0.0),
-            (0.0, 1.0, 0.0, 1.0),
-            (1.0, 1.0, 1.0, 1.0));
-      T_Square : constant GL.Types.Singles.Vector4_Array
-        := ((0.0, 0.0, 0.0, 0.0),
-            (1.0, 0.0, 1.0, 0.0),
-            (1.0, 1.0, 1.0, 1.0),
-
-            (1.0, 1.0, 1.0, 1.0),
-            (0.0, 1.0, 0.0, 1.0),
-            (0.0, 0.0, 0.0, 0.0));
+      Square : constant GL.Types.Singles.Vector2_Array
+        := ((0.0, 0.0),
+            (1.0, 0.0),
+            (0.0, 1.0),
+            (1.0, 1.0));
    begin
-      VAO.Bind;
+      Vertex_Array.Bind;
       Array_Buffer.Bind (Data_Buffer);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Vertex_Buffer (Array_Buffer, Square, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type, 4, 0);
---        GL.Attributes.Set_Vertex_Attrib_Pointer (Index => 0, Count => 2,
---                 Kind => GL.Types.Single_Type, Stride => 4, Offset => 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type, 0, 0);
 exception
    when others =>
       Put_Line ("An exception occurred in Texture_Management.Load_Data.");
@@ -66,21 +56,16 @@ exception
       use GL.Types.Colors;
       use GL.Types;
 
-      Num_Triangles  : constant GL.Types.Int := 2;
-      Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
-      Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
-      Stride         : constant GL.Types.Int := 0;
       Blend_State    : constant GL.Toggles.Toggle_State :=
         GL.Toggles.State (GL.Toggles.Blend);
       Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
         GL.Blending.Blend_Func_Src_Alpha;
       One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
         GL.Blending.One_Minus_Src_Alpha;
+
       Height         : Single;
       Width          : Pixel_Difference;
       Y_Min, Y_Max   : Pixel_Difference;
-      --  2D quad as two triangles requires 2 * 3 vertices of 4 floats
---        Vertex_Data    : Singles.Vector4_Array (1 .. Num_Vertices);
       Text_Image     : GL.Objects.Textures.Texture;
    begin
       --  Blending allows a fragment colour's alpha value to control the resulting
@@ -89,35 +74,25 @@ exception
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
-      GL.Objects.Programs.Use_Program (Render_Program);
-
       Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-      Height := Single (Y_Max - Y_Min) * Scale;
+--        Width  := Width * Pixel_Difference (Scale);
+      Height := Single (Y_Max - Y_Min); --  * Scale;
 
-      GL.Uniforms.Set_Int (Texture_ID, 0);
-      GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
-
-      Load_Data (Vertex_Array, Vertex_Buffer);
       Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
       GL.Objects.Textures.Set_Active_Unit (0);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
---        Width  := Width * Pixel_Difference (Scale);
 
---        Vertex_Data := ((X, Y + Height,                   0.0, 0.0),
---                        (X, Y + Single (Y_Min),           0.0, 1.0),
---                        (X + Single (Width), Y + Single (Y_Min),   1.0, 1.0),
---
---                        (X, Y + Height,          0.0, 0.0),
---                        (X + Single (Width), Y + Single (Y_Min),  1.0, 1.0),
---                        (X + Single (Width), Y + Height,          1.0, 0.0));
+      GL.Objects.Programs.Use_Program (Render_Program);
+      GL.Uniforms.Set_Int (Texture_ID, 0);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
+      GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+
+      Load_Data (Vertex_Array, Vertex_Buffer);
 
       Vertex_Array.Bind;
-      Array_Buffer.Bind (Vertex_Buffer);
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
---        GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
-    GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
       GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
       GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
