@@ -4,7 +4,7 @@ with GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
 
-package Texture_Management is
+package Text_Management is
    procedure Setup (Font_File : String);
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
@@ -12,4 +12,4 @@ package Texture_Management is
                           Texture_ID, Projection_Matrix_ID, Dimensions_ID,
                           Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4);
-end Texture_Management;
+end Text_Management;

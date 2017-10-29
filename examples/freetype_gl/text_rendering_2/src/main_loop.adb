@@ -17,7 +17,7 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with Texture_Management;
+with Text_Management;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
@@ -46,7 +46,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Pos_X           : constant GL.Types.Single := 5.0;
       Pos_Y           : constant GL.Types.Single := 50.0;
       Scale_1         : constant GL.Types.Single := 0.4;
-      Scale_2         : constant GL.Types.Single := 0.6;
+      Scale_2         : constant GL.Types.Single := 0.1;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -66,7 +66,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Color) is
    begin
-     Texture_Management.Render_Text (Render_Text_Program, Text, X, Y, Scale,
+     Text_Management.Render_Text (Render_Text_Program, Text, X, Y, Scale,
                                       Colour, Texture_ID, Projection_Matrix_ID,
                                      Dimensions_ID, Colour_ID, Projection_Matrix);
    end Render_The_Text;
@@ -101,7 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Dimensions_ID := GL.Objects.Programs.Uniform_Location
         (Render_Text_Program, "dimensions");
 
-      Texture_Management.Setup (Font_File_1);
+      Text_Management.Setup (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
@@ -112,6 +112,7 @@ begin
    Setup (Main_Window);
    while Running loop
       Render (Main_Window);
+      GL.Flush;
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then not
