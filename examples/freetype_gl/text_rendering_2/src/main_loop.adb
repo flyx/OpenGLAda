@@ -17,11 +17,11 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with Texture_Management;
+with Text_Management;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   Render_Program        : GL.Objects.Programs.Program;
+   Render_Text_Program   : GL.Objects.Programs.Program;
    Dimensions_ID         : GL.Uniforms.Uniform;
    Texture_ID            : GL.Uniforms.Uniform;
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
@@ -46,7 +46,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Pos_X           : constant GL.Types.Single := 5.0;
       Pos_Y           : constant GL.Types.Single := 50.0;
       Scale_1         : constant GL.Types.Single := 0.4;
-      Scale_2         : constant GL.Types.Single := 0.6;
+      Scale_2         : constant GL.Types.Single := 0.1;
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -66,9 +66,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Color) is
    begin
-     Texture_Management.Render_Text (Render_Program, Text, X, Y, Scale, Colour,
-                         Texture_ID, Projection_Matrix_ID, Dimensions_ID,
-                         Colour_ID, Projection_Matrix);
+     Text_Management.Render_Text (Render_Text_Program, Text, X, Y, Scale,
+                                      Colour, Texture_ID, Projection_Matrix_ID,
+                                     Dimensions_ID, Colour_ID, Projection_Matrix);
    end Render_The_Text;
 
    --  ------------------------------------------------------------------------
@@ -87,23 +87,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
-      Render_Program := Program_From
+      Render_Text_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
-      Use_Program (Render_Program);
+      Use_Program (Render_Text_Program);
 
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "projection_matrix");
+          (Render_Text_Program, "projection_matrix");
       Texture_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "text_sampler");
+          (Render_Text_Program, "text_sampler");
       Colour_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "text_colour");
+        (Render_Text_Program, "text_colour");
       Dimensions_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "dimensions");
+        (Render_Text_Program, "dimensions");
 
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-
-      Texture_Management.Setup (Font_File_1);
+      Text_Management.Setup (Font_File_1);
    end Setup;
 
    --  ------------------------------------------------------------------------
@@ -114,13 +112,14 @@ begin
    Setup (Main_Window);
    while Running loop
       Render (Main_Window);
+      GL.Flush;
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then not
           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
-   Render_Program.Delete_Id;
+   Render_Text_Program.Delete_Id;
 
 exception
    when others =>
