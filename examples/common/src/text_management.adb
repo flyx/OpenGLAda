@@ -9,7 +9,7 @@ with GL.Objects.Textures.Targets;
 with GL.Text;
 with GL.Toggles;
 
-package body Texture_Management is
+package body Text_Management is
 
    procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
@@ -122,4 +122,4 @@ exception
 
    --  ------------------------------------------------------------------------
 
-end Texture_Management;
+end Text_Management;
