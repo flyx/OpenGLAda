@@ -32,9 +32,9 @@ standard.
    this feature completely at compile-time.)
  * Batteries included: Besides raw OpenGL, OpenGLAda also wraps [GLFW][4]
    (with separate bindings for version 2 and 3) for window creation and user
-   input, [SOIL][6] for loading images into textures, and [FTGL][7] for using
-   TrueType fonts with OpenGL. These additional bindings are optional; you do
-   not have to use them.
+   input, [SOIL][6] for loading images into textures, and [FreeType][7] for
+   using TrueType fonts with OpenGL. These additional bindings are optional; you
+   do not have to use them.
 
 ## Getting the Code
 
@@ -43,7 +43,7 @@ available as [tags][2] of the git repository.
 
 ## License
 
-OpenGLAda is distributed under the terms of the [ISC License][3].
+OpenGLAda is distributed under the terms of the [MIT License][3].
 
 ## Related Projects
 
@@ -59,8 +59,8 @@ bindings are:
 
  [1]: https://github.com/flyx/OpenGLAda
  [2]: https://github.com/flyx/OpenGLAda/tags
- [3]: http://www.opensource.org/licenses/ISC
+ [3]: http://www.opensource.org/licenses/MIT
  [4]: http://www.glfw.org
  [5]: http://www.opengl.org/
  [6]: http://www.lonesock.net/soil.html
- [7]: http://ftgl.sourceforge.net/docs/html/
+ [7]: https://www.freetype.org/

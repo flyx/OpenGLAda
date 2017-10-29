@@ -26,7 +26,7 @@
 				<div id="main-nav">
 					<h3>Navigation</h3>
 					<ul>
-						{% assign sorted_pages = site.pages | sort:"name" %}
+						{% assign sorted_pages = site.pages | sort:"name" | where_exp: "page", "page.ext != 'css'" %}
 						{% for p in sorted_pages %}
 							{% assign api = p.api %}
 							<li {% if api %}class="api"{% endif %}>
@@ -62,7 +62,7 @@
 
 		</div>
 		<footer>
-			<p>Copyright © 2012 by <a href="http://flyx.org">Felix Krause</a>. Powered by <a href="http://pages.github.com/">GitHub Pages</a></p>
+			<p>Copyright © 2012-2017 by <a href="http://flyx.org">Felix Krause</a>. Powered by <a href="http://pages.github.com/">GitHub Pages</a></p>
 		</footer>
 	</body>
 </html>

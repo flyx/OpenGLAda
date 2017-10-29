@@ -56,10 +56,11 @@ OpenGL sets an error flag. You can disable this behavior by setting the scenario
 
 ## Runtime Binding
 
-All features that were introduced in OpenGL 1.2 or later will not be expected to be
-available. OpenGLAda queries the neccessary function pointers at runtime and raises a
-`Feature_Not_Supported_Exception` when a function is not available from the system's
-OpenGL implementation. The querying will be done once by calling `GL.Init`.
+All features that were introduced in OpenGL 1.2 or later will not be expected to
+be available. OpenGLAda queries the neccessary function pointers at runtime for
+all wrapped OpenGL functions. You should make sure the functionality you want to
+use is available before calling it, because if it is not, you will get a
+`Constraint_Error`. The querying will be done once by calling `GL.Init`.
 
 The call to `GL.Init` should be made after an OpenGL context has been created
 and has been made current. Note that the `Glfw` package does this automatically
