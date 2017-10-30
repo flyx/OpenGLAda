@@ -10,7 +10,7 @@ project Text_Rendering_2 is
    for Exec_Dir use ".";
    for Main use ("render_text.adb");
 
-   --   package Compiler renames Opengl_Shared.Compiler;
+   package Compiler renames Opengl_Shared.Compiler;
 
 end Text_Rendering_2;
 
