@@ -46,6 +46,8 @@ begin
    Main_Window.Init (Window_Width, Window_Height, Window_Title);
    Glfw.Windows.Context.Make_Current (Main_Window'Access);
    Enable_Callbacks;
+   --  The following default settings can be overriden by th user's
+   --  setup code if necessary
    Main_Window.Set_Cursor_Mode (Cursor);
    GL.Toggles.Disable (GL.Toggles.Blend);
    if Show_Data then
