@@ -24,8 +24,8 @@ package body Text_Management is
 
    --  ------------------------------------------------------------------------
 
-procedure Load_Data (Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-                     Data_Buffer : GL.Objects.Buffers.Buffer) is
+   procedure Load_Data (Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+                        Data_Buffer : GL.Objects.Buffers.Buffer) is
       use GL.Objects.Buffers;
 
       Square : constant GL.Types.Singles.Vector2_Array
@@ -39,10 +39,10 @@ procedure Load_Data (Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Vertex_Buffer (Array_Buffer, Square, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type, 0, 0);
-exception
-   when others =>
-      Put_Line ("An exception occurred in Texture_Management.Load_Data.");
-      raise;
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Texture_Management.Load_Data.");
+         raise;
    end Load_Data;
 
    --  ------------------------------------------------------------------------
@@ -63,9 +63,9 @@ exception
       Blend_State    : constant GL.Toggles.Toggle_State :=
         GL.Toggles.State (GL.Toggles.Blend);
       Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-                                  GL.Blending.Blend_Func_Src_Alpha;
+        GL.Blending.Blend_Func_Src_Alpha;
       One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-                                  GL.Blending.One_Minus_Src_Alpha;
+        GL.Blending.One_Minus_Src_Alpha;
 
       Height         : Single;
       Width          : Pixel_Difference;
@@ -74,17 +74,17 @@ exception
       MVP            : Matrix4;
    begin
       Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
---        Width  := Width * Pixel_Difference (Scale);
+      --        Width  := Width * Pixel_Difference (Scale);
       Height := Single (Y_Max - Y_Min); --  * Scale;
 
       Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
       GL.Objects.Textures.Set_Active_Unit (0);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
 
---        MVP_Matrix := (MVP_Matrix * Maths.Scaling_Matrix
---          ((2.0 / Single (Width), 2.0 / Single (Width), 1.0)));
+      --        MVP_Matrix := (MVP_Matrix * Maths.Scaling_Matrix
+      --          ((2.0 / Single (Width), 2.0 / Single (Width), 1.0)));
       MVP := (MVP_Matrix * Maths.Translation_Matrix ((X, Y, 0.0)) *
-              Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
+                Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
 
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Int (Texture_ID, 0);
@@ -107,9 +107,81 @@ exception
       GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
 
    exception
-   when others =>
-      Put_Line ("An exception occurred in Texture_Management.Render_Text.");
-      raise;
+      when others =>
+         Put_Line ("An exception occurred in Texture_Management.Render_Text.");
+         raise;
+   end Render_Text;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
+                          Text_Data   : Text_Array;
+                          Texture_ID, MVP_Matrix_ID, Dimensions_ID,
+                          Colour_ID : GL.Uniforms.Uniform;
+                          MVP_Matrix : GL.Types.Singles.Matrix4) is
+      use GL.Objects.Buffers;
+      use GL.Objects.Textures.Targets;
+      use GL.Text;
+      use GL.Types.Colors;
+      use GL.Types;
+      use GL.Types.Singles;
+
+      Blend_State     : constant GL.Toggles.Toggle_State :=
+        GL.Toggles.State (GL.Toggles.Blend);
+      Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+        GL.Blending.Blend_Func_Src_Alpha;
+      One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
+        GL.Blending.One_Minus_Src_Alpha;
+
+      Height         : Single;
+      Width          : Pixel_Difference;
+      Y_Min, Y_Max   : Pixel_Difference;
+      Text_Image     : GL.Objects.Textures.Texture;
+      MVP            : Matrix4;
+   begin
+      --  Blending allows a fragment colour's alpha value to control the resulting
+      --  colour which will be transparent for all the glyph's background colours and
+      --  non-transparent for the actual character pixels.
+      GL.Toggles.Enable (GL.Toggles.Blend);
+      GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
+                                  Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
+
+      for Index in Text_Data'Range loop
+         Renderer.Calculate_Dimensions (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text), Width, Y_Min, Y_Max);
+         --        Width  := Width * Pixel_Difference (Scale);
+         Height := Single (Y_Max - Y_Min); --  * Scale;
+
+         Text_Image := Renderer.To_Texture (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
+                                            Width, Y_Min, Y_Max, Text_Data (Index).Colour);
+         GL.Objects.Textures.Set_Active_Unit (0);
+         GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
+
+         --        MVP_Matrix := (MVP_Matrix * Maths.Scaling_Matrix
+         --          ((2.0 / Single (Width), 2.0 / Single (Width), 1.0)));
+         MVP := (MVP_Matrix * Maths.Translation_Matrix
+                 ((Text_Data (Index).Pos_X, Text_Data (Index).Pos_Y, 0.0)) *
+                   Maths.Scaling_Matrix ((Text_Data (Index).Scale, Text_Data (Index).Scale, 1.0)));
+
+         GL.Objects.Programs.Use_Program (Render_Program);
+         GL.Uniforms.Set_Int (Texture_ID, 0);
+         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP);
+         GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
+         GL.Uniforms.Set_Single (Colour_ID, Text_Data (Index).Colour (R),
+                                 Text_Data (Index).Colour (G), Text_Data (Index).Colour (B));
+
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+        Load_Data (Vertex_Array, Vertex_Buffer);
+
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      end loop;
+
+      GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
+      GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Texture_Management.Render_Text.");
+         raise;
    end Render_Text;
 
    --  ------------------------------------------------------------------------

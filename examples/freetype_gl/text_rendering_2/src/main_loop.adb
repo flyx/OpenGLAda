@@ -1,5 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Strings.Unbounded;
 
 with GL.Blending;
 with GL.Objects.Programs;
@@ -35,12 +36,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-                              Colour : GL.Types.Colors.Color);
-
-   --  ------------------------------------------------------------------------
-
    procedure Render (Window  : in out Glfw.Windows.Window) is
+      use Ada.Strings.Unbounded;
       use GL.Types;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
@@ -48,6 +45,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Pos_Y           : constant GL.Types.Single := 50.0;
       Scale_1         : constant GL.Types.Single := 0.4;
       Scale_2         : constant GL.Types.Single := 0.1;
+      Text_List       : Text_Management.Text_Array (1 .. 2);
    begin
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
@@ -55,23 +53,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          MVP_Matrix);
-
-      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
+      Text_List (1) :=
+         (To_Unbounded_String ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`"),
                        Pos_X + 20.0, Pos_Y + 150.0, Scale_1, Text_Colour);
-      Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.",
-                       Pos_X, Pos_Y, Scale_1, Text_Colour);
+      Text_List (2) :=
+        (To_Unbounded_String ("The Quick Brown Fox jumps over the zoo's Lazy Dog."),
+         Pos_X, Pos_Y, Scale_1, Text_Colour);
+      Text_Management.Render_Text (Render_Text_Program, Text_List, Texture_ID,
+                                   MVP_Matrix_ID, Dimensions_ID, Colour_ID, MVP_Matrix);
    end Render;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
-                              Colour : GL.Types.Colors.Color) is
-   begin
-
-     Text_Management.Render_Text (Render_Text_Program, Text, X, Y, Scale,
-                                  Colour, Texture_ID, MVP_Matrix_ID,
-                                  Dimensions_ID, Colour_ID, MVP_Matrix);
-   end Render_The_Text;
 
    --  ------------------------------------------------------------------------
 
