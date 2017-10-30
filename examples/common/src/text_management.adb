@@ -130,49 +130,14 @@ package body Text_Management is
       One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
         GL.Blending.One_Minus_Src_Alpha;
 
-      Height         : Single;
-      Width          : Pixel_Difference;
-      Y_Min, Y_Max   : Pixel_Difference;
-      Text_Image     : GL.Objects.Textures.Texture;
-      MVP            : Matrix4;
    begin
-      --  Blending allows a fragment colour's alpha value to control the resulting
-      --  colour which will be transparent for all the glyph's background colours and
-      --  non-transparent for the actual character pixels.
-      GL.Toggles.Enable (GL.Toggles.Blend);
-      GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
-                                  Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
-
-      for Index in Text_Data'Range loop
-         Renderer.Calculate_Dimensions (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
-                                        Width, Y_Min, Y_Max);
-         Height := Single (Y_Max - Y_Min);
-
-         Text_Image := Renderer.To_Texture (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
-                                            Width, Y_Min, Y_Max, Text_Data (Index).Colour);
-         GL.Objects.Textures.Set_Active_Unit (0);
-         GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
-
-         MVP := (MVP_Matrix * Maths.Translation_Matrix
-                 ((Text_Data (Index).Pos_X, Text_Data (Index).Pos_Y, 0.0)) *
-                   Maths.Scaling_Matrix ((Text_Data (Index).Scale, Text_Data (Index).Scale, 1.0)));
-
-         GL.Objects.Programs.Use_Program (Render_Program);
-         GL.Uniforms.Set_Int (Texture_ID, 0);
-         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP);
-         GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
-         GL.Uniforms.Set_Single (Colour_ID, Text_Data (Index).Colour (R),
-                                 Text_Data (Index).Colour (G), Text_Data (Index).Colour (B));
-
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-        Load_Data (Vertex_Array, Vertex_Buffer);
-
-         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
-         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+     for Index in Text_Data'Range loop
+         Render_Text (Render_Program,
+                      Ada.Strings.Unbounded.To_String (Text_Data (index).Text),
+                      Text_Data (index).Pos_X, Text_Data (index).Pos_Y, Text_Data (index).Scale,
+                      Text_Data (index).Colour , Texture_ID, MVP_Matrix_ID, Dimensions_ID,
+                      Colour_ID, MVP_Matrix);
       end loop;
-
-      GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
-      GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Management.Render_Text.");
