@@ -113,7 +113,6 @@ begin
    Setup (Main_Window);
    Utilities.Clear_Background_Colour_And_Depth (Background);
    while Running loop
-      Delay (2.0);
       Render (Main_Window);
       GL.Flush;
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
