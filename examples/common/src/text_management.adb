@@ -144,7 +144,8 @@ package body Text_Management is
                                   Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
 
       for Index in Text_Data'Range loop
-         Renderer.Calculate_Dimensions (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text), Width, Y_Min, Y_Max);
+         Renderer.Calculate_Dimensions (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
+                                        Width, Y_Min, Y_Max);
          Height := Single (Y_Max - Y_Min);
 
          Text_Image := Renderer.To_Texture (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
