@@ -74,15 +74,11 @@ package body Text_Management is
       MVP            : Matrix4;
    begin
       Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-      --        Width  := Width * Pixel_Difference (Scale);
-      Height := Single (Y_Max - Y_Min); --  * Scale;
-
+      Height := Single (Y_Max - Y_Min);
       Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
       GL.Objects.Textures.Set_Active_Unit (0);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
 
-      --        MVP_Matrix := (MVP_Matrix * Maths.Scaling_Matrix
-      --          ((2.0 / Single (Width), 2.0 / Single (Width), 1.0)));
       MVP := (MVP_Matrix * Maths.Translation_Matrix ((X, Y, 0.0)) *
                 Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
 
@@ -149,16 +145,13 @@ package body Text_Management is
 
       for Index in Text_Data'Range loop
          Renderer.Calculate_Dimensions (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text), Width, Y_Min, Y_Max);
-         --        Width  := Width * Pixel_Difference (Scale);
-         Height := Single (Y_Max - Y_Min); --  * Scale;
+         Height := Single (Y_Max - Y_Min);
 
          Text_Image := Renderer.To_Texture (Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
                                             Width, Y_Min, Y_Max, Text_Data (Index).Colour);
          GL.Objects.Textures.Set_Active_Unit (0);
          GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
 
-         --        MVP_Matrix := (MVP_Matrix * Maths.Scaling_Matrix
-         --          ((2.0 / Single (Width), 2.0 / Single (Width), 1.0)));
          MVP := (MVP_Matrix * Maths.Translation_Matrix
                  ((Text_Data (Index).Pos_X, Text_Data (Index).Pos_Y, 0.0)) *
                    Maths.Scaling_Matrix ((Text_Data (Index).Scale, Text_Data (Index).Scale, 1.0)));

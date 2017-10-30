@@ -44,7 +44,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Pos_X           : constant GL.Types.Single := 10.0;
       Pos_Y           : constant GL.Types.Single := 150.0;
       Scale_1         : constant GL.Types.Single := 0.4;
-      Scale_2         : constant GL.Types.Single := 0.1;
+      Scale_2         : constant GL.Types.Single := 0.2;
+      Scale_3         : constant GL.Types.Single := 0.3;
       Text_List       : Text_Management.Text_Array (1 .. 2);
    begin
       Window.Get_Size (Window_Width, Window_Height);
@@ -53,7 +54,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          MVP_Matrix);
-      Text_Management.Render_Text (Render_Text_Program, "Hello", 100.0, Pos_Y + 250.0,
+      Text_Management.Render_Text (Render_Text_Program, "Hello", 300.0, Pos_Y + 250.0,
                                    Scale_1, Text_Colour, Texture_ID, MVP_Matrix_ID,
                                    Dimensions_ID, Colour_ID, MVP_Matrix);
       Text_List (1) :=
@@ -61,11 +62,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                        Pos_X + 20.0, Pos_Y + 150.0, Scale_1, Text_Colour);
       Text_List (2) :=
         (To_Unbounded_String ("The Quick Brown Fox jumps over the zoo's Lazy Dog."),
-         Pos_X, Pos_Y, Scale_1, Text_Colour);
+         Pos_X, Pos_Y, Scale_3, Text_Colour);
       Text_Management.Render_Text (Render_Text_Program, Text_List, Texture_ID,
                                    MVP_Matrix_ID, Dimensions_ID, Colour_ID, MVP_Matrix);
-      Text_Management.Render_Text (Render_Text_Program, "Hello again!", 150.0, 10.0,
-                                   Scale_1, Text_Colour, Texture_ID, MVP_Matrix_ID,
+      Text_Management.Render_Text (Render_Text_Program, "Hello again!", 300.0, 50.0,
+                                   Scale_2, Text_Colour, Texture_ID, MVP_Matrix_ID,
                                    Dimensions_ID, Colour_ID, MVP_Matrix);
    end Render;
 
