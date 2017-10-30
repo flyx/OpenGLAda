@@ -98,6 +98,7 @@ package body Text_Management is
       GL.Toggles.Enable (GL.Toggles.Blend);
       GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
                                   Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Data (Vertex_Array, Vertex_Buffer);
 
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);

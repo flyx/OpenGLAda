@@ -42,7 +42,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
       Pos_X           : constant GL.Types.Single := 10.0;
-      Pos_Y           : constant GL.Types.Single := 50.0;
+      Pos_Y           : constant GL.Types.Single := 150.0;
       Scale_1         : constant GL.Types.Single := 0.4;
       Scale_2         : constant GL.Types.Single := 0.1;
       Text_List       : Text_Management.Text_Array (1 .. 2);
@@ -53,6 +53,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
                                          MVP_Matrix);
+      Text_Management.Render_Text (Render_Text_Program, "Hello", 100.0, Pos_Y + 250.0,
+                                   Scale_1, Text_Colour, Texture_ID, MVP_Matrix_ID,
+                                   Dimensions_ID, Colour_ID, MVP_Matrix);
       Text_List (1) :=
          (To_Unbounded_String ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`"),
                        Pos_X + 20.0, Pos_Y + 150.0, Scale_1, Text_Colour);
@@ -61,6 +64,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Pos_X, Pos_Y, Scale_1, Text_Colour);
       Text_Management.Render_Text (Render_Text_Program, Text_List, Texture_ID,
                                    MVP_Matrix_ID, Dimensions_ID, Colour_ID, MVP_Matrix);
+      Text_Management.Render_Text (Render_Text_Program, "Hello again!", 150.0, 10.0,
+                                   Scale_1, Text_Colour, Texture_ID, MVP_Matrix_ID,
+                                   Dimensions_ID, Colour_ID, MVP_Matrix);
    end Render;
 
    --  ------------------------------------------------------------------------
