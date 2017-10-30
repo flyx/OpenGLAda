@@ -9,7 +9,7 @@ package Text_Management is
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Color;
-                          Texture_ID, Projection_Matrix_ID, Dimensions_ID,
+                          Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                           Colour_ID : GL.Uniforms.Uniform;
-                          Projection_Matrix : GL.Types.Singles.Matrix4);
+                          MVP_Matrix : GL.Types.Singles.Matrix4);
 end Text_Management;

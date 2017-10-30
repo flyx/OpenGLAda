@@ -1,6 +1,7 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Blending;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Toggles;
@@ -24,9 +25,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Text_Program   : GL.Objects.Programs.Program;
    Dimensions_ID         : GL.Uniforms.Uniform;
    Texture_ID            : GL.Uniforms.Uniform;
-   Projection_Matrix_ID  : GL.Uniforms.Uniform;
+   MVP_Matrix_ID         : GL.Uniforms.Uniform;
    Colour_ID             : GL.Uniforms.Uniform;
-   Projection_Matrix     : GL.Types.Singles.Matrix4;
+   MVP_Matrix            : GL.Types.Singles.Matrix4;
 
    Background      : constant GL.Types.Colors.Color := (0.4, 0.6, 0.6, 1.0);
    Text_Colour     : constant GL.Types.Colors.Color := (0.5, 0.2, 0.6, 1.0);
@@ -43,7 +44,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
-      Pos_X           : constant GL.Types.Single := 5.0;
+      Pos_X           : constant GL.Types.Single := 10.0;
       Pos_Y           : constant GL.Types.Single := 50.0;
       Scale_1         : constant GL.Types.Single := 0.4;
       Scale_2         : constant GL.Types.Single := 0.1;
@@ -51,14 +52,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Get_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
-      Utilities.Clear_Background_Colour_And_Depth (Background);
       Maths.Init_Orthographic_Transform (Single (Window_Height), 0.0, 0.0,
                                          Single (Window_Width), 0.1, -100.0,
-                                         Projection_Matrix);
+                                         MVP_Matrix);
+
+      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
+                       Pos_X + 20.0, Pos_Y + 150.0, Scale_1, Text_Colour);
       Render_The_Text ("The Quick Brown Fox jumps over the zoo's Lazy Dog.",
                        Pos_X, Pos_Y, Scale_1, Text_Colour);
-      Render_The_Text ("1234567890 !@#$%^&*()_+=,./?;':""{}[]\|~`",
-                       Pos_X + 20.0, Pos_Y + 150.0, Scale_2, Text_Colour);
    end Render;
 
    --  ------------------------------------------------------------------------
@@ -66,9 +67,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render_The_Text (Text   : String; X, Y, Scale : GL.Types.Single;
                               Colour : GL.Types.Colors.Color) is
    begin
+
      Text_Management.Render_Text (Render_Text_Program, Text, X, Y, Scale,
-                                      Colour, Texture_ID, Projection_Matrix_ID,
-                                     Dimensions_ID, Colour_ID, Projection_Matrix);
+                                  Colour, Texture_ID, MVP_Matrix_ID,
+                                  Dimensions_ID, Colour_ID, MVP_Matrix);
    end Render_The_Text;
 
    --  ------------------------------------------------------------------------
@@ -87,13 +89,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height));
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
+      GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
+                                  Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
+
       Render_Text_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/text_fragment_shader.glsl", Fragment_Shader)));
       Use_Program (Render_Text_Program);
 
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Text_Program, "projection_matrix");
+      MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Text_Program, "mvp_matrix");
       Texture_ID := GL.Objects.Programs.Uniform_Location
           (Render_Text_Program, "text_sampler");
       Colour_ID := GL.Objects.Programs.Uniform_Location
@@ -110,7 +115,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Running : Boolean := True;
 begin
    Setup (Main_Window);
+   Utilities.Clear_Background_Colour_And_Depth (Background);
    while Running loop
+      Delay (2.0);
       Render (Main_Window);
       GL.Flush;
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
