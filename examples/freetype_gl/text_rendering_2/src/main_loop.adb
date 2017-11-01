@@ -2,7 +2,6 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Strings.Unbounded;
 
-with GL.Blending;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Toggles;
@@ -85,9 +84,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
-
-      GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
-                                  Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
 
       Render_Text_Program := Program_From
           ((Src ("src/shaders/text_vertex_shader.glsl", Vertex_Shader),
