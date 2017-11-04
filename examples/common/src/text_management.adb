@@ -14,7 +14,7 @@ with Maths;
 package body Text_Management is
 
    procedure Load_Vertex_Buffer is new
-     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
+       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
 
    Rendering_Program : GL.Text.Shader_Program_Reference;
    Renderer          : GL.Text.Renderer_Reference;
@@ -24,14 +24,14 @@ package body Text_Management is
    --  ------------------------------------------------------------------------
 
    procedure Load_Data (Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-                        Data_Buffer : GL.Objects.Buffers.Buffer) is
+                        Data_Buffer  : GL.Objects.Buffers.Buffer) is
       use GL.Objects.Buffers;
 
       Square : constant GL.Types.Singles.Vector2_Array
-        := ((0.0, 0.0),
-            (1.0, 0.0),
-            (0.0, 1.0),
-            (1.0, 1.0));
+          := ((0.0, 0.0),
+              (1.0, 0.0),
+              (0.0, 1.0),
+              (1.0, 1.0));
    begin
       Vertex_Array.Bind;
       Array_Buffer.Bind (Data_Buffer);
@@ -47,11 +47,11 @@ package body Text_Management is
    --  ------------------------------------------------------------------------
 
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
-                          Text   : String; X, Y, Scale : GL.Types.Single;
-                          Colour : GL.Types.Colors.Color;
+                          Text           : String; X, Y, Scale : GL.Types.Single;
+                          Colour         : GL.Types.Colors.Color;
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
-                          Colour_ID : GL.Uniforms.Uniform;
-                          MVP_Matrix : GL.Types.Singles.Matrix4) is
+                          Colour_ID      : GL.Uniforms.Uniform;
+                          MVP_Matrix     : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Text;
@@ -59,12 +59,12 @@ package body Text_Management is
       use GL.Types;
       use GL.Types.Singles;
 
-      Blend_State    : constant GL.Toggles.Toggle_State :=
-        GL.Toggles.State (GL.Toggles.Blend);
-      Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-        GL.Blending.Blend_Func_Src_Alpha;
+      Blend_State               : constant GL.Toggles.Toggle_State :=
+                                    GL.Toggles.State (GL.Toggles.Blend);
+      Src_Alpha_Blend           : constant  GL.Blending.Blend_Factor :=
+                                    GL.Blending.Blend_Func_Src_Alpha;
       One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-        GL.Blending.One_Minus_Src_Alpha;
+                                    GL.Blending.One_Minus_Src_Alpha;
 
       Height         : Single;
       Width          : Pixel_Difference;
@@ -79,7 +79,7 @@ package body Text_Management is
       GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
 
       MVP := (MVP_Matrix * Maths.Translation_Matrix ((X, Y, 0.0)) *
-                Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
+                  Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
 
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Int (Texture_ID, 0);
@@ -111,36 +111,25 @@ package body Text_Management is
    --  ------------------------------------------------------------------------
 
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
-                          Text_Data   : Text_Array;
+                          Text_Data      : Text_Array;
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
-                          Colour_ID : GL.Uniforms.Uniform;
-                          MVP_Matrix : GL.Types.Singles.Matrix4) is
+                          Colour_ID      : GL.Uniforms.Uniform;
+                          MVP_Matrix     : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Text;
       use GL.Types.Colors;
       use GL.Types;
       use GL.Types.Singles;
-
-      Blend_State     : constant GL.Toggles.Toggle_State :=
-        GL.Toggles.State (GL.Toggles.Blend);
-      Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-        GL.Blending.Blend_Func_Src_Alpha;
-      One_Minus_Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
-        GL.Blending.One_Minus_Src_Alpha;
-
    begin
-     for Index in Text_Data'Range loop
+      for Index in Text_Data'Range loop
          Render_Text (Render_Program,
-                      Ada.Strings.Unbounded.To_String (Text_Data (index).Text),
-                      Text_Data (index).Pos_X, Text_Data (index).Pos_Y, Text_Data (index).Scale,
-                      Text_Data (index).Colour , Texture_ID, MVP_Matrix_ID, Dimensions_ID,
+                      Ada.Strings.Unbounded.To_String (Text_Data (Index).Text),
+                      Text_Data (Index).Pos_X, Text_Data (Index).Pos_Y,
+                      Text_Data (Index).Scale, Text_Data (Index).Colour,
+                      Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                       Colour_ID, MVP_Matrix);
       end loop;
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Texture_Management.Render_Text.");
-         raise;
    end Render_Text;
 
    --  ------------------------------------------------------------------------
