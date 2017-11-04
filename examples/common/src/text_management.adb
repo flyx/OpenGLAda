@@ -10,7 +10,6 @@ with GL.Text;
 with GL.Toggles;
 
 with Maths;
-with Utilities;
 
 package body Text_Management is
 
