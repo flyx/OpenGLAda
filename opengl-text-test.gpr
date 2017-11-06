@@ -1,4 +1,4 @@
-with "opengl_shared";
+with "opengl";
 with "opengl-glfw";
 with "opengl-text";
 
@@ -9,7 +9,7 @@ project OpenGL.Text.Test is
    for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/text";
    for Main use ("text_test-basic");
 
-   package Ide renames OpenGL_Shared.Ide;
-   package Builder renames OpenGL_Shared.Builder;
-   package Compiler renames OpenGL_Shared.Compiler;
+   package Ide renames OpenGL.Ide;
+   package Builder renames OpenGL.Builder;
+   package Compiler renames OpenGL.Compiler;
 end OpenGL.Text.Test;

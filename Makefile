@@ -35,7 +35,7 @@ clean:
 
 tests:
 	mkdir -p bin
-	${GPRBUILD} -P glfw_test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
-	${GPRBUILD} -P opengl_test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
+	${GPRBUILD} -P opengl-glfw-test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
+	${GPRBUILD} -P opengl-test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 
 .PHONY: generate compile clean tests
