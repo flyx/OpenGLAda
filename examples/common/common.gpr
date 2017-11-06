@@ -1,0 +1,17 @@
+with "../../opengl-glfw.gpr";
+with "../../opengl-text.gpr";
+with "../../opengl.gpr";
+with "../../opengl_shared.gpr";
+
+project Common is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
+   for Library_Name use "common";
+   for Library_Dir use ".";
+   for Library_Ali_Dir use "lib";
+
+   package Compiler renames Opengl_Shared.Compiler;
+
+end Common;
+
