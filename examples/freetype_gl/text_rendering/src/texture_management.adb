@@ -26,7 +26,7 @@ package body Texture_Management is
       Advance_X : GL.Types.Int := 0;
    end record;
 
-   OGL_Exception : Exception;
+   OGL_Exception      : Exception;
 
     procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
@@ -104,7 +104,8 @@ package body Texture_Management is
    procedure Render_Text (Render_Program : GL.Objects.Programs.Program;
                           Text   : String; X, Y, Scale : GL.Types.Single;
                           Colour : GL.Types.Colors.Basic_Color;
-                          Texture_ID, Projection_Matrix_ID, Colour_ID : GL.Uniforms.Uniform;
+                          Texture_ID, Projection_Matrix_ID,
+                          Colour_ID : GL.Uniforms.Uniform;
                           Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
@@ -141,6 +142,8 @@ package body Texture_Management is
       GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
                                   GL.Blending.One_Minus_Src_Alpha);
       GL.Objects.Programs.Use_Program (Render_Program);
+
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
       for index in Text'Range loop
          Char := Text (index);

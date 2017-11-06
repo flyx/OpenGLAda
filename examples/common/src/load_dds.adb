@@ -2,7 +2,6 @@
 --  This version of DDS loading procedure only supports compressed
 --  DDS files.
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
@@ -72,7 +71,7 @@ procedure Load_DDS (File_Name  : String;
         end if;
 
         theTexture.Initialize_Id;
-        Targets.Texture_2d.Bind (theTexture);
+        Targets.Texture_2D.Bind (theTexture);
         GL.Pixels.Set_Pack_Alignment (GL.Pixels.Bytes);
 
         if Format = GL.Pixels.Compressed_RGBA_S3TC_DXT1 then
@@ -96,7 +95,7 @@ procedure Load_DDS (File_Name  : String;
         use Ada.Streams.Stream_IO;
         use GL.Types;
 
-        Header_Stream   : Stream_Access := Stream (File_ID);
+        Header_Stream   : constant Stream_Access := Stream (File_ID);
     begin
         String'Read (Header_Stream, Header.Magic);
         Set_Index (File_ID, Index (File_ID) + 8);
@@ -129,7 +128,7 @@ procedure Load_DDS (File_Name  : String;
     procedure Load_Mipmaps (Data_Stream   : Ada.Streams.Stream_IO.Stream_Access;
                             Header        : DDS_Header;
                             Block_Size    : GL.Types.UInt;
-                            Format        : Gl.Pixels.Internal_Format) is
+                            Format        : GL.Pixels.Internal_Format) is
         use Ada.Streams.Stream_IO;
         use GL.Objects.Textures;
         use GL.Types;
@@ -202,7 +201,7 @@ begin
     end if;
 
 exception
-    when anError : Ada.IO_Exceptions.Name_Error  =>
+    when Ada.IO_Exceptions.Name_Error  =>
         --  File not found
         Put_Line ("Load_DDS can't find the file " & File_Name & "!");
         raise;

@@ -10,26 +10,25 @@ with Maths;
 
 package body Controls is
     Half_Pi            : constant Single := 0.5 * Ada.Numerics.Pi;
-    -- Position, position of camera.
+    --  Position, position of camera.
     Position           : GL.Types.Singles.Vector3 := (0.0, 0.0, 5.0);
     Horizontal_Angle   : Single := Ada.Numerics.Pi;
     Vertical_Angle     : Single := 0.0;
-    Initial_View_Angle : Maths.Degree := 45.0;
-    Speed              : Single := 3.0;  -- units per second
-    Mouse_Speed        : Single := 0.5;  -- orig: 0.005
+    Initial_View_Angle : constant Maths.Degree := 45.0;
+    Speed              : constant Single := 3.0;  -- units per second
+    Mouse_Speed        : constant Single := 0.5;  -- orig: 0.005
     Last_Time          : Double := Double (Glfw.Time);
 
     --  ------------------------------------------------------------------------
 
     Procedure Compute_Matrices_From_Inputs (Window : in out Glfw.Windows.Window;
            Projection_Matrix, View_Matrix : in out GL.Types.Singles.Matrix4) is
-        use GL.Types;
         use GL.Types.Singles;
         use Glfw.Input;
         use Maths.Single_Math_Functions;
 
-        Current_Time       : GL.Types.Double := GL.Types.Double (Glfw.Time);
-        Delta_Time         : Single := Single (Current_Time - Last_Time);
+        Current_Time       : constant GL.Types.Double := GL.Types.Double (Glfw.Time);
+        Delta_Time         : constant Single := Single (Current_Time - Last_Time);
         Window_Width       : Glfw.Size;
         Window_Height      : Glfw.Size;
         Half_Window_Width  : Single;
@@ -38,10 +37,10 @@ package body Controls is
         --  View_Angle to Initial_View_Angle - 5.0 * glfwGetMouseWheel();
         --  But this is a bit too complicated for a beginner's tutorial,
         --  so it's not implemented in this Tutorial 14.
-        View_Angle         : Maths.Degree := Initial_View_Angle;
+        View_Angle         : constant Maths.Degree := Initial_View_Angle;
         X_Position         : Mouse.Coordinate := 0.00001;
         Y_Position         : Mouse.Coordinate := 0.00002;
-        -- Direction, the position of the target with respect to camera.
+        --  Direction, the position of the target with respect to camera.
         Direction          : Vector3;
         Right              : Vector3;
         Up                 : Vector3;
