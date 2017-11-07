@@ -1,8 +1,7 @@
-with "opengl_shared";
+with "opengl";
 with "opengl-glfw";
 
-project OpenGL_Test is
-
+project OpenGL.Test is
    for Languages use ("ada");
 
    for Object_Dir use "obj";
@@ -13,9 +12,7 @@ project OpenGL_Test is
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
                  "gl_test-opengl3", "gl_test-context", "gl_test-framebuffers");
 
-   package Ide renames OpenGL_Shared.Ide;
-   package Builder renames OpenGL_Shared.Builder;
-   package Compiler renames OpenGL_Shared.Compiler;
-
-end OpenGL_Test;
-
+   package Ide renames OpenGL.Ide;
+   package Builder renames OpenGL.Builder;
+   package Compiler renames OpenGL.Compiler;
+end OpenGL.Test;

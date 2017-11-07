@@ -1,15 +1,16 @@
+with  "../../common/common.gpr";
 with "../../../FreeTypeAda/freetype.gpr";
-with "../../../opengl_shared.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Render_A_Character is
 
-   for Source_Dirs use ("src", "../../common");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj/";
    for Main use ("hello_character.adb");
    for Exec_Dir use ".";
 
-   package Compiler renames Opengl_Shared.Compiler;
+   package Compiler renames OpenGL.Compiler;
 
 end Render_A_Character;
 

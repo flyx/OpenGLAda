@@ -1,3 +1,10 @@
+v0.6:
+ * Changed license to MIT which is more well-known than ISC
+ * Added missing functionality in:
+   - GL.Objects.Buffers (offset for Draw_Elements, #93)
+ * Enforce no compiler warnings
+ * Added FreeType binding and GL.Text
+ * Deprecated FTGL binding in favor of the new FreeType binding and GL.Text
 v0.5:
  * Added missing functionality in:
    - GL.Programs (tessellation, glBindFragDataLocation)
