@@ -11,9 +11,6 @@ project Text_Rendering_2 is
    for Main use ("render_text.adb");
 
    package Compiler renames OpenGL.Compiler;
---  package Compiler is
---     for Default_Switches ("ada") use ("-gnatyctux");
---  end Compiler;
 
 end Text_Rendering_2;
 
