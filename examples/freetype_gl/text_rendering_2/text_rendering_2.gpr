@@ -1,5 +1,4 @@
 with "../../common/common.gpr";
-with "../../../opengl_shared.gpr";
 limited with "../../../opengl-text.gpr";
 limited with "../../../opengl-glfw.gpr";
 
@@ -10,7 +9,9 @@ project Text_Rendering_2 is
    for Exec_Dir use ".";
    for Main use ("render_text.adb");
 
-   package Compiler renames Opengl_Shared.Compiler;
+package Compiler is
+   for Default_Switches ("ada") use ("-gnatyctux");
+end Compiler;
 
 end Text_Rendering_2;
 
