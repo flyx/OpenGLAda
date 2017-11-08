@@ -1,4 +1,5 @@
 with  "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Element_Buffers is
@@ -8,9 +9,7 @@ project Element_Buffers is
    for Exec_Dir use ".";
    for Main use ("element_buffers.adb");
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnatyctux");
-   end Compiler;
+   package Compiler renames OpenGL.Compiler;
 
 end Element_Buffers;
 
