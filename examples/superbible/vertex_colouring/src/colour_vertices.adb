@@ -5,7 +5,7 @@
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
-with glfw;
+with Glfw;
 with Glfw.Windows;
 
 with Initialize;
