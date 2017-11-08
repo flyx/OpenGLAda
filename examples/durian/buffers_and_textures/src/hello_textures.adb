@@ -13,7 +13,7 @@ with Initialize;
 with Main_Loop;
 
 procedure Hello_Textures is
-    Main_Window : Glfw.Windows.Window;
+    Main_Window  : Glfw.Windows.Window;
     Window_Title : constant String := "Durian - Buffers And Textures Example";
 begin
     Glfw.Init;
@@ -27,6 +27,6 @@ exception
         Put_Line (Exception_Information (anError));
 
     when anError :  others =>
-        Put_Line ("An exceptiom occurred in Hello_Textures.");
+        Put_Line ("An exception occurred in Hello_Textures.");
         Put_Line (Exception_Information (anError));
 end Hello_Textures;
