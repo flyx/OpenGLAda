@@ -1,11 +1,14 @@
 with  "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Coloured_Square is
 
-    for Source_Dirs use ("src");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
    for Main use ("coloured_square.adb");
+
+   package Compiler renames OpenGL.Compiler;
 
 end Coloured_Square;

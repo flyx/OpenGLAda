@@ -4,7 +4,7 @@ with GL.Types; use GL.Types;
 package Vertex_Data is
 
     --  Vertex positions
-    Vertices : Singles.Vector3_Array (1 .. 36)  :=
+    Vertices : constant Singles.Vector3_Array (1 .. 36)  :=
            ((-0.25, -0.25,  0.25),
             (-0.25, -0.25, -0.25),
              (0.25, -0.25, -0.25),

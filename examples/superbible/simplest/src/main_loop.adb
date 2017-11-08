@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Buffers;
@@ -7,8 +6,6 @@ with GL.Toggles;
 with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Objects.Shaders;
-with GL.Rasterization;
-with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
 
@@ -31,7 +28,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Types;
         use Maths.Single_Math_Functions;
 
-        Back_Colour : GL.Types.Colors.Color :=
+        Back_Colour : constant GL.Types.Colors.Color :=
           (0.5 * (1.0 + Sin (Single (Current_Time))),
            0.5 * (1.0 + Cos (Single (Current_Time))), 0.0, 1.0);
     begin
@@ -41,7 +38,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Objects.Vertex_Arrays.Draw_Arrays (Points, 0, 1);
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exceptiom occurred in Render_Dot.");
             raise;
     end Render_Dot;
@@ -56,12 +53,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
            Src ("src/shaders/fragment_shader.glsl", Fragment_Shader))
         );
-        GL.Toggles.Enable (gl.Toggles.Depth_Test);
-        GL.Buffers.Set_Depth_Function (gl.Types.Less);
+        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+        GL.Buffers.Set_Depth_Function (GL.Types.Less);
         Vertex_Array.Initialize_Id;
         Vertex_Array.Bind;
         -- Point size is set in the vertex shader
-        gl.Toggles.Enable (gl.Toggles.Vertex_Program_Point_Size);
+        GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
         Utilities.Show_Shader_Program_Data (Rendering_Program);
     end Setup_Graphic;
 
@@ -73,10 +70,10 @@ begin
     Setup_Graphic;
     while Running loop
         Render_Dot (Glfw.Time);
-        glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-        glfw.Input.Poll_Events;
+        Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+        Glfw.Input.Poll_Events;
         Running := Running and not
-            (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
 exception

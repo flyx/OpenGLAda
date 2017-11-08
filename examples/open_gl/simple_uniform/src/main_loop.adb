@@ -1,15 +1,12 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
 with GL.Types;
-with GL.Types.Colors;
 with GL.Uniforms;
 
 with Glfw;
@@ -35,7 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render is
         use GL.Types;
         use Maths.Single_Math_Functions;
-        Now  : Glfw.Seconds := Glfw.Time;
+        Now  : constant Glfw.Seconds := Glfw.Time;
     begin
         Rendering_Program.Use_Program;
         GL.Uniforms.Set_Single (Colour_Location,
@@ -60,7 +57,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Vertex_Buffer.Initialize_Id;
         Array_Buffer.Bind (Vertex_Buffer);
-        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_data.Vertices, Static_Draw);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
 
         Rendering_Program := Program_From
           ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
@@ -92,10 +89,10 @@ begin
     Setup_Graphic;
     while Running loop
         Render;
-        glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-        glfw.Input.Poll_Events;
+        Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+        Glfw.Input.Poll_Events;
         Running := Running and not
-          (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+          (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
 exception

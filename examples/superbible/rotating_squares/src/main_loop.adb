@@ -1,9 +1,7 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -25,11 +23,11 @@ with Vertex_Data;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Grey                  : GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
-    Window_Width          : Glfw.Size := 520;
-    Window_Height         : Glfw.Size := 520;
-    Viewport_Width        : GL.Types.Size := 500;
-    Viewport_Height       : GL.Types.Size := 500;
+    Grey                  : constant GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
+    Window_Width          : constant Glfw.Size := 520;
+    Window_Height         : constant Glfw.Size := 520;
+    Viewport_Width        : constant GL.Types.Size := 500;
+    Viewport_Height       : constant GL.Types.Size := 500;
     Position_Buffer       : GL.Objects.Buffers.Buffer;
     Rendering_Program     : GL.Objects.Programs.Program;
     Vertex_Array          : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -57,7 +55,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         for count in 1 .. 10 loop
             Current_Time := Single (Glfw.Time);
-            Time_Factor := Single (count) + 0.3 * Single (Current_Time);
+            Time_Factor := Single (count) + 0.3 * Current_Time;
             Model_View_Matrix :=
               Maths.Rotation_Matrix (Maths.Degree (30.0 * Current_Time),
                                      (0.0, 0.0, 1.0));
@@ -108,8 +106,8 @@ exception
         Vertex_Array.Bind;
 
         Position_Buffer.Initialize_Id;
-        ARRAY_BUFFER.Bind (Position_Buffer);
-        Utilities.Load_Vertex_Buffer (ARRAY_BUFFER, Vertex_Data.Vert_Plane, Static_Draw);
+        Array_Buffer.Bind (Position_Buffer);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vert_Plane, Static_Draw);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
                                                  Kind   => GL.Types.Single_Type,

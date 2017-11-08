@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
