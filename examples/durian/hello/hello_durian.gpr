@@ -1,5 +1,6 @@
 with "../../common/common.gpr";
 limited with "../../../opengl-glfw.gpr";
+with "../../../opengl.gpr";
 
 project Hello_Durian is
 
@@ -8,9 +9,7 @@ project Hello_Durian is
    for Exec_Dir use ".";
    for Main use ("trivial.adb");
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnat12", "-gnatyclutx");
-   end Compiler;
+   package Compiler renames OpenGL.Compiler;
 
 end Hello_Durian;
 
