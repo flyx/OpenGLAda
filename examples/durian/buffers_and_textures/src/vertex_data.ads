@@ -16,10 +16,10 @@ package Vertex_Data is
       GL.Objects.Buffers.Load_To_Buffer (Element_Pointers);
 
     Vertex_Array_Size : GL.Types.Int := 4 * 2;
-    Vertices : Singles.Vector2_Array (1 .. 4) :=
-                 ((-1.0, -1.0),
+    Vertices : constant Singles.Vector2_Array (1 .. 4) :=
+                  ((-1.0, -1.0),
                    (1.0, -1.0),
-                  (-1.0,  1.0),
+                   (-1.0,  1.0),
                    (1.0,  1.0));
 
     Elements : Elements_Array (1 .. 4) := (0, 1, 2, 3);
