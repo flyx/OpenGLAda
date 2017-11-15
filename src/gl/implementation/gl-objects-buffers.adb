@@ -160,22 +160,21 @@ package body GL.Objects.Buffers is
       return Ret;
    end Usage;
 
-   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   overriding
+   procedure Internal_Create_Id (Object : Buffer; Id : out UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Delete_Buffers (1, (1 => Reference.GL_Id));
+      API.Gen_Buffers (1, Id);
       Raise_Exception_On_OpenGL_Error;
-      Reference.Initialized := Uninitialized;
-   end Destructor;
+   end Internal_Create_Id;
 
-   overriding procedure Initialize_Id (Object : in out Buffer) is
-      New_Id : UInt := 0;
+   overriding
+   procedure Internal_Release_Id (Object : Buffer; Id : UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Gen_Buffers (1, New_Id);
+      API.Delete_Buffers (1, (1 => Id));
       Raise_Exception_On_OpenGL_Error;
-      Object.Reference.GL_Id := New_Id;
-      Object.Reference.Initialized := Allocated;
-      Object.Reference.Destructor := Destructor'Access;
-   end Initialize_Id;
+   end Internal_Release_Id;
 
    procedure Invalidate_Data (Object : in out Buffer) is
    begin

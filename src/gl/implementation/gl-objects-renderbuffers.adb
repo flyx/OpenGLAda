@@ -148,23 +148,19 @@ package body GL.Objects.Renderbuffers is
       end if;
    end Current;
 
-   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
-      Arr : constant Low_Level.UInt_Array := (1 => Reference.GL_Id);
+   overriding
+   procedure Internal_Create_Id (Object : Renderbuffer; Id : out UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Delete_Renderbuffers (1, Arr);
+      API.Gen_Renderbuffers (1, Id);
       Raise_Exception_On_OpenGL_Error;
-      Reference.GL_Id := 0;
-      Reference.Initialized := Uninitialized;
-   end Destructor;
+   end Internal_Create_Id;
 
-   procedure Initialize_Id (Object : in out Renderbuffer) is
-      New_Id : UInt := 0;
+   overriding
+   procedure Internal_Release_Id (Object : Renderbuffer; Id : UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Gen_Renderbuffers (1, New_Id);
+      API.Delete_Renderbuffers (1, (1 => Id));
       Raise_Exception_On_OpenGL_Error;
-      Object.Reference.GL_Id := New_Id;
-      Object.Reference.Initialized := Allocated;
-      Object.Reference.Destructor := Destructor'Access;
-   end Initialize_Id;
-
+   end Internal_Release_Id;
 end GL.Objects.Renderbuffers;

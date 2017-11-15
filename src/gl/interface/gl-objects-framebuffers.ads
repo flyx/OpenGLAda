@@ -90,9 +90,6 @@ package GL.Objects.Framebuffers is
 
    type Framebuffer is new GL_Object with private;
 
-   overriding
-   procedure Initialize_Id (Object : in out Framebuffer);
-
    procedure Bind (Target : Framebuffer_Target;
                    Object : Framebuffer'Class);
 
@@ -139,6 +136,12 @@ private
    pragma Convention (C, Attachment_List);
 
    type Framebuffer is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Framebuffer; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Framebuffer; Id : UInt);
 
    type Framebuffer_Target (Kind : Low_Level.Enums.Framebuffer_Kind) is
      tagged limited null record;
