@@ -58,9 +58,6 @@ package GL.Objects.Buffers is
                             Index_Type : Unsigned_Numeric_Type;
                             Element_Offset : Natural := 0);
 
-   overriding
-   procedure Initialize_Id (Object : in out Buffer);
-
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
                                   Offset, Length : Long_Size);
@@ -93,6 +90,12 @@ private
      tagged limited null record;
 
    type Buffer is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Buffer; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Buffer; Id : UInt);
 
    Array_Buffer              : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Array_Buffer);
