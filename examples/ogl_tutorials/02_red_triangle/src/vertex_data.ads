@@ -1,5 +1,4 @@
 
-with  Interfaces.C.Pointers;
 with GL.Types;
 
 package Vertex_Data is

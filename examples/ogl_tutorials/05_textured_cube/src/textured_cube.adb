@@ -9,8 +9,8 @@ with Initialize;
 with Main_Loop;
 
 procedure Textured_Cube is
-    Main_Window : Glfw.Windows.Window;
-    Window_Title : String := "Tutorial 5 - Textured Cube";
+    Main_Window  : Glfw.Windows.Window;
+    Window_Title : constant String := "Tutorial 5 - Textured Cube";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

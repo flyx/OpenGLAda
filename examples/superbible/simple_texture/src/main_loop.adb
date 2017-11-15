@@ -1,7 +1,6 @@
 
 with Interfaces;
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Objects.Programs;
@@ -28,7 +27,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Rendering_Program  : GL.Objects.Programs.Program;
    Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    theTexture         : GL.Objects.Textures.Texture;
-   Load_Image_Error   : Exception;
 
    --  ------------------------------------------------------------------------
 
@@ -37,8 +35,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Interfaces;
       Col_32     : Unsigned_32;
       Row_32     : Unsigned_32;
-      Width_32   : constant Unsigned_32 := Unsigned_32 (Width);
-      Height_32  : constant Unsigned_32 := Unsigned_32 (Height);
    begin
       for Col in 0 .. Height - 1 loop
          Col_32 := Unsigned_32 (Col);
@@ -54,7 +50,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          end loop;
       end loop;
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exceptiom occurred in Generate_Texture.");
          raise;
    end Generate_Texture;
@@ -64,7 +60,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render is
       use GL.Types;
 
-      Back_Colour : GL.Types.Colors.Color := (0.0, 0.25, 0.0, 1.0);
+      Back_Colour : constant GL.Types.Colors.Color := (0.0, 0.25, 0.0, 1.0);
    begin
       Utilities.Clear_Background_Colour (Back_Colour);
 
@@ -72,7 +68,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exceptiom occurred in Render.");
          raise;
    end Render;
@@ -90,7 +86,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       X_Offset     : constant Int := 0;
       Y_Offset     : constant Int := 0;
       Texture_Data : aliased Data (1 .. Width * Height * 4);
-      Image_Data   : GL.Objects.Textures.Image_Source :=
+      Image_Data   : constant GL.Objects.Textures.Image_Source :=
         GL.Objects.Textures.Image_Source (Texture_Data'Address);
    begin
       theTexture.Initialize_Id;
@@ -110,7 +106,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Array.Bind;
       Utilities.Show_Shader_Program_Data (Rendering_Program);
    exception
-      when anError :  others =>
+      when others =>
          Put_Line ("An exceptiom occurred in Setup.");
          raise;
    end Setup;
@@ -123,10 +119,10 @@ begin
    Setup;
    while Running loop
       Render;
-      glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-      glfw.Input.Poll_Events;
+      Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+      Glfw.Input.Poll_Events;
       Running := Running and not
-        (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+        (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and not Main_Window.Should_Close;
    end loop;
 exception

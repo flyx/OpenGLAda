@@ -73,32 +73,33 @@ package body Text_Management is
       MVP            : Matrix4;
    begin
       Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
-      Height := Single (Y_Max - Y_Min);
-      Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
-      GL.Objects.Textures.Set_Active_Unit (0);
-      GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
+      if Width > 0 then
+         Height := Single (Y_Max - Y_Min);
+         Text_Image := Renderer.To_Texture (Text, Width, Y_Min, Y_Max, Colour);
+         GL.Objects.Textures.Set_Active_Unit (0);
+         GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
 
-      MVP := (MVP_Matrix * Maths.Translation_Matrix ((X, Y, 0.0)) *
-                  Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
+         MVP := (MVP_Matrix * Maths.Translation_Matrix ((X, Y, 0.0)) *
+                   Maths.Scaling_Matrix ((Scale, Scale, 1.0)));
 
-      GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Uniforms.Set_Int (Texture_ID, 0);
-      GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP);
-      GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
-      GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
+         GL.Objects.Programs.Use_Program (Render_Program);
+         GL.Uniforms.Set_Int (Texture_ID, 0);
+         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP);
+         GL.Uniforms.Set_Single (Dimensions_ID, Single (Width), Height);
+         GL.Uniforms.Set_Single (Colour_ID, Colour (R), Colour (G), Colour (B));
 
-      --  Blending allows a fragment colour's alpha value to control the resulting
-      --  colour which will be transparent for all the glyph's background colours and
-      --  non-transparent for the actual character pixels.
-      GL.Toggles.Enable (GL.Toggles.Blend);
-      GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
-                                  Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      Load_Data (Vertex_Array, Vertex_Buffer);
+         --  Blending allows a fragment colour's alpha value to control the resulting
+         --  colour which will be transparent for all the glyph's background colours and
+         --  non-transparent for the actual character pixels.
+         GL.Toggles.Enable (GL.Toggles.Blend);
+         GL.Blending.Set_Blend_Func (Src_Factor => GL.Blending.Src_Alpha,
+                                     Dst_Factor => GL.Blending.One_Minus_Src_Alpha);
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         Load_Data (Vertex_Array, Vertex_Buffer);
 
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
-      GL.Attributes.Disable_Vertex_Attrib_Array (0);
-
+         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangle_Strip, 0, 4);
+         GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      end if;
       GL.Toggles.Set (GL.Toggles.Blend, Blend_State);
       GL.Blending.Set_Blend_Func (Src_Alpha_Blend, One_Minus_Src_Alpha_Blend);
 

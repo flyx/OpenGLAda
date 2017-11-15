@@ -1,9 +1,7 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -50,10 +48,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use GL.Types;
         use GL.Objects.Buffers;
 
-        Black         : GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
+        Black         : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 0.0);
         Window_Width  : Glfw.Size;
         Window_Height : Glfw.Size;
-        Now           : Single := Single (Glfw.Time);
+        Now           : constant Single := Single (Glfw.Time);
         dt_Total      : Single := Now - Last_Time;
     begin
         Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -119,7 +117,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                               Window_Width, Window_Height : GL.Types.Single) is
         use GL.Types;
         use GL.Types.Singles;
-        use Maths;
 
         Perspective   : GL.Types.Singles.Matrix4 := Singles.Identity4;
         Alpha         : Degree;
@@ -209,7 +206,7 @@ begin
     Render_Program.Delete_Id;
 
 exception
-    when anError :  others =>
+    when others =>
         Put_Line ("An exceptiom occurred in Main_Loop.");
         raise;
 end Main_Loop;

@@ -24,10 +24,10 @@ package Vertex_Data is
    --  thus six points of which two are identical pairs.
    Num_Quad_Vertices : constant Int := 6 * Num_Quads;
 
-   Animation_Speed : constant single := 2.2;
-   Max_dt          : constant single := 0.1;
+   Animation_Speed : constant Single := 2.2;
+   Max_dt          : constant Single := 0.1;
 
-   type Grid_Array is array (1 .. Grid_Width, 1 .. Grid_Height) of single;
+   type Grid_Array is array (1 .. Grid_Width, 1 .. Grid_Height) of Single;
 
    --   The grid will look like this:
    --
@@ -40,25 +40,25 @@ package Vertex_Data is
    --         1  2   3
 
    type Vertex is record
-      X     : single;
-      Y     : single;
-      Z     : single;
-      Red   : single;
-      Green : single;
-      Blue  : single;
+      X     : Single;
+      Y     : Single;
+      Z     : Single;
+      Red   : Single;
+      Green : Single;
+      Blue  : Single;
    end record;
 
    Stride        : constant Int := 6;
    Vertex_Offset : constant Int := 0;
    Colour_Offset : constant Int := 3;
-   Num_Elements       : constant int := Num_Quad_Vertices + 48 * Stride;   --  192 = 48 * 4
+   Num_Elements       : constant Int := Num_Quad_Vertices + 48 * Stride; --  192 = 48 * 4
    Vertex_Buffer_Data : Maths.Vector6_Array (1 .. Num_Vertices);
    Quad_Element_Array : Int_Array (1 .. Num_Elements);
 
    procedure Adjust_Grid;
-   procedure Calculate_Grid (dt : single);
+   procedure Calculate_Grid (dt : Single);
    procedure Get_Data (Press, VX, VY : out Grid_Array);
-   procedure Propogate_Wave (dt : single);
+   procedure Propogate_Wave (dt : Single);
    procedure Initialize_Grid;
    procedure Initialize_Simulation;
 
