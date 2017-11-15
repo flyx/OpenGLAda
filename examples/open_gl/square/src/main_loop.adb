@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -32,9 +31,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Render is
         use GL.Types;
-        Back_Colour   : Colors.Color := (0.0, 0.6, 0.6, 1.0);
-        Stride        : Int := 5;
-        Skip          : Int := 3;
+        Back_Colour   : constant Colors.Color := (0.0, 0.6, 0.6, 1.0);
+        Stride        : constant Int := 5;
+        Skip          : constant Int := 3;
     begin
         Utilities.Clear_Background_Colour (Back_Colour);
 
@@ -57,7 +56,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Setup_Graphic (Main_Window : in out Glfw.Windows.Window)  is
+    procedure Setup_Graphic is
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
         use GL.Types;
@@ -72,7 +71,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         Elements_Buffer.Initialize_Id;
         Element_Array_Buffer.Bind (Elements_Buffer);
-        Vertex_Data.Load_Element_Buffer (Element_Array_Buffer, Vertex_data.Elements, Static_Draw);
+        Vertex_Data.Load_Element_Buffer (Element_Array_Buffer, Vertex_Data.Elements, Static_Draw);
 
         Shader_Program := Program_From
           ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
@@ -101,13 +100,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     use Glfw.Input;
     Running : Boolean := True;
 begin
-    Setup_Graphic (Main_Window);
+    Setup_Graphic;
     while Running loop
         Render;
-        glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-        glfw.Input.Poll_Events;
+        Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+        Glfw.Input.Poll_Events;
         Running := Running and not
-          (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+          (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
 exception

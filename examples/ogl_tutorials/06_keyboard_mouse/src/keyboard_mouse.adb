@@ -9,8 +9,8 @@ with Initialize;
 with Main_Loop;
 
 procedure Keyboard_Mouse is
-    Main_Window : Glfw.Windows.Window;
-    Window_Title : String := "Tutorial 6 - Keyboard_Mouse Cube";
+    Main_Window  : Glfw.Windows.Window;
+    Window_Title : constant String := "Tutorial 6 - Keyboard_Mouse Cube";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

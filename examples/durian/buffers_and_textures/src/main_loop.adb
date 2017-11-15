@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -20,7 +19,6 @@ with Glfw.Windows.Context;
 
 with Program_Loader;
 with Utilities;
-with Vertex_Data;
 
 with Maths;
 with My_Buffers;
@@ -46,7 +44,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Textures.Targets;
         use Maths.Single_Math_Functions;
 
-        Back_Colour   : Colors.Color := (1.0, 1.0, 1.0, 1.0);
+        Back_Colour   : constant Colors.Color := (1.0, 1.0, 1.0, 1.0);
         Stride_Single : constant Size := 2;
     begin
         Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
@@ -86,7 +84,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Shaders;
         use GL.Objects.Textures;
         use Program_Loader;
-        Images  : My_Buffers.tImage_Sources (1 .. 2) :=
+        Images  : constant My_Buffers.tImage_Sources (1 .. 2) :=
                     (To_Unbounded_String ("src/hello1.tga"),
                      To_Unbounded_String ("src/hello2.tga"));
     begin
@@ -112,7 +110,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Setup_Graphic.");
+            Put_Line ("An exception occurred in Setup_Graphic.");
             raise;
     end Setup_Graphic;
 
@@ -124,17 +122,17 @@ begin
     Setup_Graphic;
     while Running loop
         Render;
-        glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-        glfw.Input.Poll_Events;
+        Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+        Glfw.Input.Poll_Events;
         Running := Running and not
-            (Main_Window.Key_State (glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
 exception
     when Program_Loader.Shader_Loading_Error =>
         --  message has already been written to stdout
         raise;
-    when anError :  others =>
+    when others =>
             Put_Line ("An exceptiom occurred in Main_Loop.");
             raise;
 end Main_Loop;

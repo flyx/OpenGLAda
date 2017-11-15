@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -27,11 +26,11 @@ with Vertex_Data;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Grey                   : GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
-    Window_Width           : Glfw.Size := 520;
-    Window_Height          : Glfw.Size := 520;
-    Viewport_Width         : GL.Types.Size := 500;
-    Viewport_Height        : GL.Types.Size := 500;
+    Grey                   : constant GL.Types.Colors.Color := (0.8, 0.8, 0.8, 1.0);
+    Window_Width           : constant Glfw.Size := 520;
+    Window_Height          : constant Glfw.Size := 520;
+    Viewport_Width         : constant GL.Types.Size := 500;
+    Viewport_Height        : constant GL.Types.Size := 500;
     Position_Buffer        : GL.Objects.Buffers.Buffer;
     Rendering_Program      : GL.Objects.Programs.Program;
     Vertex_Array           : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -116,8 +115,8 @@ exception
         Vertex_Array.Bind;
 
         Position_Buffer.Initialize_Id;
-        ARRAY_BUFFER.Bind (Position_Buffer);
-        Utilities.Load_Vertex_Buffer (ARRAY_BUFFER, Vertex_Data.Vertices, Static_Draw);
+        Array_Buffer.Bind (Position_Buffer);
+        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
                                                  Kind   => GL.Types.Single_Type,
