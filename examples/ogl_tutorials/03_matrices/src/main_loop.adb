@@ -1,9 +1,7 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -27,8 +25,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     procedure Load_Vertex_Buffer is new GL.Objects.Buffers.Load_To_Buffer
       (GL.Types.Single_Pointers);
 
-    Dark_Blue           : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
-    Element_Buffer_Data : Array (1 .. 3) of GL.Types.UShort := (0, 1, 2);
+    Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
     Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer       : GL.Objects.Buffers.Buffer;
     Render_Program      : GL.Objects.Programs.Program;
@@ -37,7 +34,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Render (Current_Time : Glfw.Seconds) is
+    procedure Render is
         use GL.Types;
         use GL.Objects.Buffers;
     begin
@@ -55,7 +52,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
     exception
         when others =>
-            Put_Line ("An exception occurred in Render.");raise;
+            Put_Line ("An exception occurred in Render.");
+            raise;
     end Render;
 
     --  ------------------------------------------------------------------------
@@ -66,10 +64,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         use type GL.Types.Singles.Matrix4;
         View_Width        : constant Single := 1024.0;
         View_Height       : constant Single := 768.0;
-        Camera_Position   : GL.Types.Singles.Vector3 := (4.0, 3.0, 3.0);
-        Look_At           : GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
-        Up                : GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
-        Model_Matrix      : GL.Types.Singles.Matrix4 := Singles.Identity4;
+        Camera_Position   : constant GL.Types.Singles.Vector3 := (4.0, 3.0, 3.0);
+        Look_At           : constant GL.Types.Singles.Vector3 := (0.0, 0.0, 0.0);
+        Up                : constant GL.Types.Singles.Vector3 := (0.0, 1.0, 0.0);
+        Model_Matrix      : constant GL.Types.Singles.Matrix4 := Singles.Identity4;
         Projection_Matrix : GL.Types.Singles.Matrix4;
         View_Matrix       : GL.Types.Singles.Matrix4;
     begin
@@ -123,7 +121,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 begin
     Setup (Main_Window);
     while Running loop
-        Render (Glfw.Time);
+        Render;
         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
         Glfw.Input.Poll_Events;
         Running := Running and not (Main_Window.Key_State (Glfw.Input.Keys.Escape)

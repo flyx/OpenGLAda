@@ -1,4 +1,5 @@
 with "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Tutorial_06 is
@@ -7,6 +8,8 @@ project Tutorial_06 is
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
    for Main use ("keyboard_mouse.adb");
+
+   package Compiler renames OpenGL.Compiler;
 
 end Tutorial_06;
 

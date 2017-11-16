@@ -1,10 +1,7 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
-with Ada.Numerics.Generic_Elementary_Functions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Buffers;
-with GL.Errors;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;

@@ -1,4 +1,5 @@
 with  "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project simple_texture is
@@ -7,6 +8,8 @@ project simple_texture is
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
    for Main use ("simple_texturing.adb");
+
+   package Compiler renames OpenGL.Compiler;
 
 end simple_texture;
 

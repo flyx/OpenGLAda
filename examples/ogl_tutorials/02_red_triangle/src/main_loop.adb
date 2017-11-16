@@ -1,9 +1,8 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Buffers;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -31,7 +30,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
     procedure Render is
         use GL.Types;
         use GL.Objects.Buffers;
-        Dark_Blue : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+        Dark_Blue : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
     begin
         Utilities.Clear_Background_Colour (Dark_Blue);
         GL.Objects.Programs.Use_Program (Render_Program);
@@ -95,7 +94,7 @@ begin
     Render_Program.Delete_Id;
 
 exception
-    when anError :  others =>
+    when others =>
         Put_Line ("An exceptiom occurred in Main_Loop.");
         raise;
 end Main_Loop;

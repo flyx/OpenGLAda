@@ -1,4 +1,5 @@
 with "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-soil.gpr";
 limited with "../../../opengl-glfw.gpr";
 
@@ -9,9 +10,7 @@ project Buffers_And_Textures is
    for Main use ("hello_textures.adb");
    for Exec_Dir use ".";
 
-   package Compiler is
-        for Default_Switches ("ada") use ("-gnat12", "-gnatyclux");
-   end Compiler;
+   package Compiler renames OpenGL.Compiler;
 
 end Buffers_And_Textures;
 
