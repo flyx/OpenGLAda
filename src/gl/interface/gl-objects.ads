@@ -81,5 +81,5 @@ private
    pragma Inline (Set_Raw_Id);
 
    Reference_To_Null_Object : aliased GL_Object_Reference :=
-     (GL_Id => 0, Reference_Count => 1, Is_Owner => False);
+     (GL_Id => 0, Reference_Count => 0, Is_Owner => False);
 end GL.Objects;

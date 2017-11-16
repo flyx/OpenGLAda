@@ -20,7 +20,8 @@ package body GL.Objects is
 
    overriding procedure Adjust (Object : in out GL_Object) is
    begin
-      if Object.Reference /= null then
+      if Object.Reference /= null and then
+        Object.Reference.Reference_Count > 0 then
          Object.Reference.Reference_Count :=
            Object.Reference.Reference_Count + 1;
       end if;
@@ -32,7 +33,8 @@ package body GL.Objects is
       Reference : GL_Object_Reference_Access := Object.Reference;
    begin
       Object.Reference := null;
-      if Reference /= null then
+      if Reference /= null and then Reference.Reference_Count > 0 then
+         --  Reference_Count = 0 means that the holder recides in global memory
          Reference.Reference_Count := Reference.Reference_Count - 1;
          if Reference.Reference_Count = 0 then
             if Reference.Is_Owner then
