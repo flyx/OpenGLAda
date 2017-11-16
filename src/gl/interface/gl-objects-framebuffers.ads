@@ -154,5 +154,6 @@ private
      Framebuffer_Target'(Kind => Low_Level.Enums.Read_Draw);
 
    Default_Framebuffer : constant Framebuffer :=
-     Framebuffer'(GL_Object with null record);
+     Framebuffer'(Ada.Finalization.Controlled with Reference =>
+                    Reference_To_Null_Object'Access);
 end GL.Objects.Framebuffers;
