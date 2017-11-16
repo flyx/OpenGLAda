@@ -200,11 +200,6 @@ begin
           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
-
-    Vertex_Array.Delete_Id;
-    Elements_Buffer.Delete_Id;
-    Render_Program.Delete_Id;
-
 exception
     when others =>
         Put_Line ("An exceptiom occurred in Main_Loop.");
