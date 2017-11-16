@@ -118,7 +118,7 @@ begin
           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
-   Render_Text_Program.Delete_Id;
+   Render_Text_Program.Clear;
 
 exception
    when others =>

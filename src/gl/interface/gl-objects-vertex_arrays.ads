@@ -24,6 +24,5 @@ private
 
    Null_Array_Object : constant Vertex_Array_Object
      := Vertex_Array_Object'(Ada.Finalization.Controlled with
-        Reference => null);
-
+        Reference => Reference_To_Null_Object'Access);
 end GL.Objects.Vertex_Arrays;
