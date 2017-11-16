@@ -154,11 +154,6 @@ begin
                                       Glfw.Input.Pressed);
         Running := Running and not Main_Window.Should_Close;
     end loop;
-
-    Vertex_Array.Delete_Id;
-    Rendering_Program.Delete_Id;
-    Position_Buffer.Delete_Id;
-
 exception
     when others =>
         Put_Line ("An exception occurred in Main_Loop.");
