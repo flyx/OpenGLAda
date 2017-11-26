@@ -32,16 +32,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
     UVs_Buffer               : GL.Objects.Buffers.Buffer;
+    Picking_Program          : GL.Objects.Programs.Program;
     Render_Program           : GL.Objects.Programs.Program;
     MVP_Matrix_ID            : GL.Uniforms.Uniform;
+    Model_Matrix_ID          : GL.Uniforms.Uniform;
+    View_Matrix_ID           : GL.Uniforms.Uniform;
+    Picking_Matrix_ID        : GL.Uniforms.Uniform;
     Texture_ID               : GL.Uniforms.Uniform;
     Sample_Texture           : GL.Objects.Textures.Texture;
     MVP_Matrix               : GL.Types.Singles.Matrix4;
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
-                              Render_Program : GL.Objects.Programs.Program);
+    procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
+                              Render_Program : GL.Objects.Programs.Program;
+                              Picking_Program : GL.Objects.Programs.Program);
 
     --  ------------------------------------------------------------------------
 
@@ -51,8 +56,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     begin
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
+        Setup_Matrices (Window, Render_Program, Picking_Program);
         GL.Objects.Programs.Use_Program (Render_Program);
-        Set_MVP_Matrix (Window, Render_Program);
         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
         GL.Objects.Textures.Set_Active_Unit (0);
@@ -83,24 +88,31 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     --  ------------------------------------------------------------------------
 
-    procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
-                              Render_Program : GL.Objects.Programs.Program) is
+    procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
+                              Render_Program  : GL.Objects.Programs.Program;
+                              Picking_Program : GL.Objects.Programs.Program) is
         use GL.Types.Singles;
         Model_Matrix      : constant Matrix4 := Singles.Identity4;
         Projection_Matrix : Matrix4;
         View_Matrix       : Matrix4;
     begin
         MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MVP_5");
+        (Render_Program, "MVP");
+        Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "M");
+        View_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "V");
+        Picking_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Picking_Program, "MVP");
 
         Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
 
        MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
     exception
         when others =>
-            Put_Line ("An exception occurred in Set_MVP_Matrix.");
+            Put_Line ("An exception occurred in Setup_Matrices.");
             raise;
-    end Set_MVP_Matrix;
+    end Setup_Matrices;
 
     --  ------------------------------------------------------------------------
 
@@ -110,14 +122,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use GL.Objects.Shaders;
         use GL.Objects.Textures.Targets;
         use Glfw.Input;
-        Window_Width       : Glfw.Size;
-        Window_Height      : Glfw.Size;
+        Window_Width    : constant Glfw.Size := 1024;
+        Window_Height   : constant Glfw.Size := 768;
     begin
         Window.Set_Input_Toggle (Sticky_Keys, True);
         Window.Set_Cursor_Mode (Mouse.Disabled);
         Glfw.Input.Poll_Events;
 
-        Window'Access.Get_Size (Window_Width, Window_Height);
+        Window'Access.Set_Size (Window_Width, Window_Height);
         Window'Access.Set_Cursor_Pos (Mouse.Coordinate (0.5 * Single (Window_Width)),
                                       Mouse.Coordinate (0.5 * Single (Window_Height)));
         Utilities.Clear_Background_Colour (Dark_Blue);
@@ -136,7 +148,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
              Fragment_Shader)));
         Utilities.Show_Shader_Program_Data (Render_Program);
 
-        Set_MVP_Matrix (Window, Render_Program);
+        Picking_Program := Program_Loader.Program_From
+          ((Program_Loader.Src ("src/shaders/picking_vertex_shader.glsl",
+           Vertex_Shader),
+           Program_Loader.Src ("src/shaders/picking_fragment_shader.glsl",
+             Fragment_Shader)));
+      Utilities.Show_Shader_Program_Data (Picking_Program);
+
+        Setup_Matrices (Window, Render_Program, Picking_Program);
 
         Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
         Texture_ID := GL.Objects.Programs.Uniform_Location
