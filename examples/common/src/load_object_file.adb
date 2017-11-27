@@ -1,6 +1,7 @@
 
 
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
+with Ada.Float_Text_IO;
 with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
@@ -16,8 +17,8 @@ package body Load_Object_File is
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     S_Index  : GL.Types.Int;
                     V1_Indices, V2_Indices, V3_Indices : out Vertex_Indices);
-    procedure Parse (UVs_String : Ada.Strings.Unbounded.Unbounded_String;
-                     UVs : out GL.Types.Singles.Vector2);
+    procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
+                     UV : out GL.Types.Singles.Vector2);
     procedure Parse (Vertices_String : Ada.Strings.Unbounded.Unbounded_String;
                      Vertices : out GL.Types.Singles.Vector3);
 
@@ -167,10 +168,17 @@ package body Load_Object_File is
 
    --  -------------------------------------------------------------------------
 
-   procedure Parse (UVs_String : Ada.Strings.Unbounded.Unbounded_String;
-                    UVs : out GL.Types.Singles.Vector2) is
+   procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
+                    UV : out GL.Types.Singles.Vector2) is
+        use Ada.Strings.Unbounded;
+        Last     : Natural;
+        Size     : constant Natural := Length (UV_String);
+        Value    : Float;
    begin
-      null;
+      Ada.Float_Text_IO.Get (To_String (UV_String) (1 .. Size), Value, Last);
+      UV (GL.X) := GL.Types.Single (Value);
+      Ada.Float_Text_IO.Get (To_String (UV_String)(1 .. Size), Value, Last);
+      UV (GL.Y) := GL.Types.Single (Value);
    end Parse;
 
    --  -------------------------------------------------------------------------
