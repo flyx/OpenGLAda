@@ -13,7 +13,7 @@ package body Load_Object_File is
      GL.Types.Ints.Vector3;
    type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
-   procedure Parse (F_String : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     S_Index  : GL.Types.Int;
                     V1_Indices, V2_Indices, V3_Indices : out Vertex_Indices);
     procedure Parse (UVs_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -24,7 +24,7 @@ package body Load_Object_File is
    --  -------------------------------------------------------------------------
 
    procedure Get_Array_Sizes (File_Name  : String; Vertex_Count, UV_Count,
-                              Normal_Count, Triangle_Count : out GL.Types.Int;
+                              Normal_Count, Face_Count : out GL.Types.Int;
                               S_Count, Usemtl_Count : out Integer) is
       use Ada.Strings.Unbounded;
       use GL.Types;
@@ -36,7 +36,7 @@ package body Load_Object_File is
       UV_Count := 0;
       Normal_Count := 0;
       S_Count := 0;
-      Triangle_Count := 0;
+      Face_Count := 0;
       Usemtl_Count := 0;
       Open (File_ID, In_File, File_Name);
       while not End_Of_File (File_ID) loop
@@ -52,7 +52,7 @@ package body Load_Object_File is
                end case;
             when 's' => S_Count := S_Count + 1;
             when 'u' => Usemtl_Count := Usemtl_Count + 1;
-            when 'f' => Triangle_Count := Triangle_Count + 1;
+            when 'f' => Face_Count := Face_Count + 1;
             when others => null;
          end case;
       end loop;
@@ -85,9 +85,9 @@ package body Load_Object_File is
       UV_Index     : Int := 0;
       Normal_Index : Int := 0;
       S_Index      : Int;
-      F_String     : Unbounded_String;
+      Face_String  : Unbounded_String;
       Usemtl_Index : Integer := 0;
-      F_Index      : Int := 0;
+      Face_Index   : Int := 0;
    begin
       while not End_Of_File (File_ID) loop
          Ada.Text_IO.Unbounded_IO.Get_Line (File_ID, Line);
@@ -107,8 +107,8 @@ package body Load_Object_File is
             when 's' =>  S_Index := Int'Value (To_String (Data));
             when 'u' => Usemtl_Index := Usemtl_Index + 1;
                Usemtl (Usemtl_Index) := Data;
-            when 'f' => F_Index := F_Index + 1;
-               Parse (F_String, S_Index, V1_Indices, V2_Indices, V3_Indices);
+            when 'f' => Face_Index := Face_Index + 1;
+               Parse (Face_String, S_Index, V1_Indices, V2_Indices, V3_Indices);
             when others => null;
          end case;
       end loop;
@@ -126,17 +126,17 @@ package body Load_Object_File is
       Normal_Count   : GL.Types.Int;
       S_Count        : Integer;
       Usemtl_Count   : Integer;
-      Triangle_Count : GL.Types.Int;
+      Face_Count     : GL.Types.Int;
    begin
       Get_Array_Sizes (File_Name, Num_Vertices, UV_Count, Normal_Count,
-                       Triangle_Count, S_Count, Usemtl_Count);
+                       Face_Count, S_Count, Usemtl_Count);
       declare
 --           Vertices  : GL.Types.Singles.Vector3_Array (1 .. Num_Vertices);
 --           UVs       : GL.Types.Singles.Vector2_Array (1 .. UV_Count);
 --           Normals   : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
-         V1_Indices : Vertex_Indices (1 .. S_Count, 1 .. Triangle_Count);
-         V2_Indices : Vertex_Indices (1 .. S_Count, 1 .. Triangle_Count);
-         V3_Indices : Vertex_Indices (1 .. S_Count, 1 .. Triangle_Count);
+         V1_Indices : Vertex_Indices (1 .. S_Count, 1 .. Face_Count);
+         V2_Indices : Vertex_Indices (1 .. S_Count, 1 .. Face_Count);
+         V3_Indices : Vertex_Indices (1 .. S_Count, 1 .. Face_Count);
          Usemtl    : Usemtl_Array (1 .. Usemtl_Count);
       begin
          Open (Text_File_ID, In_File, File_Name);
@@ -157,7 +157,7 @@ package body Load_Object_File is
 
      --  -------------------------------------------------------------------------
 
-   procedure Parse (F_String : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     S_Index  : GL.Types.Int;
                     V1_Indices, V2_Indices, V3_Indices : out Vertex_Indices) is
 --        V1_String, V2_String, V3_String : Vertex_String;
