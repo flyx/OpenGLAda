@@ -9,7 +9,7 @@ package body Load_Object_File is
 
    type Vertex_String is array (GL.Types.Int range <>, GL.Types.Int range <>) of
      Ada.Strings.Unbounded.Unbounded_String;
-   type Vertex_Indices is array (GL.Types.Int range <>, GL.Types.Int range <>) of
+   type Vertex_Indices is array (Integer range <>, GL.Types.Int range <>) of
      GL.Types.Ints.Vector3;
    type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
@@ -23,21 +23,22 @@ package body Load_Object_File is
 
    --  -------------------------------------------------------------------------
 
-   procedure Get_Array_Sizes (File_ID : Ada.Text_IO.File_Type;
-                              Vertex_Count, UV_Count, Normal_Count,
-                              S_Count : out GL.Types.Int;
-                              Usemtl_Count : out Integer; F_Count : out GL.Types.Int) is
+   procedure Get_Array_Sizes (File_Name  : String; Vertex_Count, UV_Count,
+                              Normal_Count, Triangle_Count : out GL.Types.Int;
+                              S_Count, Usemtl_Count : out Integer) is
       use Ada.Strings.Unbounded;
       use GL.Types;
-      Text  : Unbounded_String;
-      Label : String (1 .. 2);
+      File_ID  : Ada.Text_IO.File_Type;
+      Text     : Unbounded_String;
+      Label    : String (1 .. 2);
    begin
       Vertex_Count := 0;
       UV_Count := 0;
       Normal_Count := 0;
       S_Count := 0;
+      Triangle_Count := 0;
       Usemtl_Count := 0;
-      F_Count := 0;
+      Open (File_ID, In_File, File_Name);
       while not End_Of_File (File_ID) loop
          Text := To_Unbounded_String (Get_Line (File_ID));
          Label := To_String (Text) (1 .. 2);
@@ -51,10 +52,20 @@ package body Load_Object_File is
                end case;
             when 's' => S_Count := S_Count + 1;
             when 'u' => Usemtl_Count := Usemtl_Count + 1;
-            when 'f' => F_Count := F_Count + 1;
+            when 'f' => Triangle_Count := Triangle_Count + 1;
             when others => null;
          end case;
       end loop;
+      Close (File_ID);
+
+   exception
+      when Ada.IO_Exceptions.Name_Error  =>
+         --  File not found
+         Put_Line ("Get_Array_Sizes can't find the file " & File_Name & "!");
+         raise;
+      when others =>
+         Put_Line ("An exception occurred in Get_Array_Sizes.");
+         raise;
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
@@ -113,13 +124,12 @@ package body Load_Object_File is
       Num_Vertices   : GL.Types.Int;
       UV_Count       : GL.Types.Int;
       Normal_Count   : GL.Types.Int;
-      S_Count        : GL.Types.Int;
+      S_Count        : Integer;
       Usemtl_Count   : Integer;
       Triangle_Count : GL.Types.Int;
    begin
-      Open (Text_File_ID, In_File, File_Name);
-      Get_Array_Sizes (Text_File_ID, Num_Vertices, UV_Count, Normal_Count,
-                       S_Count, Usemtl_Count, Triangle_Count);
+      Get_Array_Sizes (File_Name, Num_Vertices, UV_Count, Normal_Count,
+                       Triangle_Count, S_Count, Usemtl_Count);
       declare
 --           Vertices  : GL.Types.Singles.Vector3_Array (1 .. Num_Vertices);
 --           UVs       : GL.Types.Singles.Vector2_Array (1 .. UV_Count);
@@ -129,11 +139,12 @@ package body Load_Object_File is
          V3_Indices : Vertex_Indices (1 .. S_Count, 1 .. Triangle_Count);
          Usemtl    : Usemtl_Array (1 .. Usemtl_Count);
       begin
-         Reset (Text_File_ID);
+         Open (Text_File_ID, In_File, File_Name);
          Load_Data (Text_File_ID, Vertices, UVs, Normals,
                     V1_Indices, V2_Indices, V3_Indices, Usemtl);
          Close (Text_File_ID);
       end;
+
    exception
       when Ada.IO_Exceptions.Name_Error  =>
          --  File not found
