@@ -8,7 +8,8 @@ with Ada.Text_IO.Unbounded_IO;
 
 package body Load_Object_File is
 
-   type Face_Indices is array (1 .. 3) of GL.Types.Ints.Vector3;
+   type Index_Type is (Vertex_Index, UV_Index, Normal_Index);
+   type Face_Indices is array (Index_Type) of GL.Types.Ints.Vector3;
    type Faces_Array is array (Integer range <>, GL.Types.Int range <>) of Face_Indices;
    type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
@@ -179,9 +180,9 @@ package body Load_Object_File is
         use Ada.Strings.Unbounded;
         Text_Index : Positive := 1;
    begin
-      Read_Vertex_Indices (Face_String, Text_Index, Face (1));
-      Read_Vertex_Indices (Face_String, Text_Index, Face (2));
-      Read_Vertex_Indices (Face_String, Text_Index, Face (3));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (Vertex_Index));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (UV_Index));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (Normal_Index));
    end Parse;
 
    --  -------------------------------------------------------------------------
@@ -208,7 +209,6 @@ package body Load_Object_File is
         Size     : constant Natural := Length (Vertex_String);
         Value    : Float;
    begin
-
         Ada.Float_Text_IO.Get (To_String (Vertex_String)(1 .. Size), Value, Last);
         Vertex (GL.X) := GL.Types.Single (Value);
         Ada.Float_Text_IO.Get (To_String (Vertex_String)(Last .. Size), Value, Last);
