@@ -8,8 +8,8 @@ with Ada.Text_IO.Unbounded_IO;
 
 package body Load_Object_File is
 
-   type Index_Type is (Vertex_Index, UV_Index, Normal_Index);
-   type Face_Indices is array (Index_Type) of GL.Types.Ints.Vector3;
+   type Vertex_ID is (Vertex_1, Vertex_2, Vertex_3);
+   type Face_Indices is array (Vertex_ID) of GL.Types.Ints.Vector3;
    type Faces_Array is array (Integer range <>, GL.Types.Int range <>) of Face_Indices;
    type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
@@ -19,6 +19,30 @@ package body Load_Object_File is
                      UV : out GL.Types.Singles.Vector2);
     procedure Parse (Vertex_String : Ada.Strings.Unbounded.Unbounded_String;
                      Vertex : out GL.Types.Singles.Vector3);
+
+   --  -------------------------------------------------------------------------
+
+   procedure Data_From_Faces (Faces        : Faces_Array; Mesh_Index : Integer;
+                              Raw_Vertices : GL.Types.Singles.Vector3_Array;
+                              Raw_UVs      : GL.Types.Singles.Vector2_Array;
+                              Raw_Normals  : GL.Types.Singles.Vector3_Array;
+                              Vertices : out GL.Types.Singles.Vector3_Array;
+                              UVs      : out GL.Types.Singles.Vector2_Array;
+                              Normals  : out GL.Types.Singles.Vector3_Array) is
+      Face           : Face_Indices;
+      Vertex_Indices : GL.Types.Ints.Vector3;
+   begin
+      for Index in Faces'Range (2) loop
+         Face := Faces (Mesh_Index, Index);
+         for Index_2 in Vertex_ID loop
+            case Index_2 is
+               when Vertex_1 => Vertex_Indices := Face (Vertex_1);
+               when Vertex_2 => Vertex_Indices := Face (Vertex_2);
+               when Vertex_3 => Vertex_Indices := Face (Vertex_3);
+            end case;
+         end loop;
+      end loop;
+   end Data_From_Faces;
 
    --  -------------------------------------------------------------------------
 
@@ -65,6 +89,18 @@ package body Load_Object_File is
       when others =>
          Put_Line ("An exception occurred in Get_Array_Sizes.");
          raise;
+   end Get_Array_Sizes;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Get_Array_Sizes (File_Name : String; Vertex_Count, UV_Count,
+                              Normal_Count : out GL.Types.Int) is
+      Face_Count   : GL.Types.Int;
+      Mesh_Count   : Integer;
+      Usemtl_Count : Integer;
+   begin
+      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
+                       Face_Count, Mesh_Count, Usemtl_Count);
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
@@ -130,12 +166,18 @@ package body Load_Object_File is
       Get_Array_Sizes (File_Name, Num_Vertices, UV_Count, Normal_Count,
                        Face_Count, Mesh_Count, Usemtl_Count);
       declare
-         Faces    : Faces_Array (1 .. Mesh_Count, 1 .. Face_Count);
-         Usemtl   : Usemtl_Array (1 .. Usemtl_Count);
+         Raw_Vertices : GL.Types.Singles.Vector3_Array (1 .. Num_Vertices);
+         Raw_UVs      : GL.Types.Singles.Vector2_Array (1 .. UV_Count);
+         Raw_Normals  : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
+         Faces        : Faces_Array (1 .. Mesh_Count, 1 .. Face_Count);
+         Usemtl       : Usemtl_Array (1 .. Usemtl_Count);
+         Mesh_Index   : constant Integer := 1;
       begin
          Open (Text_File_ID, In_File, File_Name);
-         Load_Data (Text_File_ID, Vertices, UVs, Normals, Faces, Usemtl);
+         Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals, Faces, Usemtl);
          Close (Text_File_ID);
+         Data_From_Faces (Faces, Mesh_Index, Raw_Vertices, Raw_UVs, Raw_Normals,
+                          Vertices, UVs, Normals);
       end;
 
    exception
@@ -152,7 +194,7 @@ package body Load_Object_File is
 
    procedure Read_Vertex_Indices (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     String_Index : in out Positive;
-                    Indices : in out GL.Types.Ints.Vector3) is
+                    Vertex_Indices : in out GL.Types.Ints.Vector3) is
         use Ada.Strings.Unbounded;
         Size      : constant Natural := Length (Face_String);
 
@@ -167,22 +209,21 @@ package body Load_Object_File is
         end Read_Index;
 
    begin
-       Read_Index (Face_String, Indices (GL.X));
-       Read_Index (Face_String, Indices (GL.Y));
-       Read_Index (Face_String, Indices (GL.Z));
+       Read_Index (Face_String, Vertex_Indices (GL.X));
+       Read_Index (Face_String, Vertex_Indices (GL.Y));
+       Read_Index (Face_String, Vertex_Indices (GL.Z));
    end Read_Vertex_Indices;
 
    --  -------------------------------------------------------------------------
 
---    type Face_Indices is array (1 .. 3) of GL.Types.Ints.Vector3;
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     Face : out Face_Indices) is
         use Ada.Strings.Unbounded;
         Text_Index : Positive := 1;
    begin
-      Read_Vertex_Indices (Face_String, Text_Index, Face (Vertex_Index));
-      Read_Vertex_Indices (Face_String, Text_Index, Face (UV_Index));
-      Read_Vertex_Indices (Face_String, Text_Index, Face (Normal_Index));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (Vertex_1));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (Vertex_2));
+      Read_Vertex_Indices (Face_String, Text_Index, Face (Vertex_3));
    end Parse;
 
    --  -------------------------------------------------------------------------
