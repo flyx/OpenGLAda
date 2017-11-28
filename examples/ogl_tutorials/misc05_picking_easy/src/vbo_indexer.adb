@@ -52,7 +52,9 @@ package body VBO_Indexer is
                         Vertices    : in out GL.Types.Singles.Vector3_Array;
                         UVs         : in out GL.Types.Singles.Vector2_Array;
                         Normals     : in out GL.Types.Singles.Vector3_Array;
-                        Indices     : out GL.Types.Ints.Vector3_Array) is
+                        Indices     : out GL.Types.Ints.Vector3_Array;
+                        Last_Index  : out GL.Types.Int;
+                        Last_Vertex : out GL.Types.Int) is
       use GL.Types;
       Index          : Int;
       Indices_Index  : Int := 0;
@@ -72,7 +74,9 @@ package body VBO_Indexer is
             Normals (Out_Index) := Normals_In (Index);
             Indices (Indices_Index) := (Out_Index, Out_Index, Out_Index);
          end if;
-      end loop;
+      end loop;;
+      Last_Index  := Indices_Index;
+      Last_Vertex := Out_Index;
    end Index_VBO;
 
    --  -------------------------------------------------------------------------
