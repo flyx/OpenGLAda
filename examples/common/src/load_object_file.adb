@@ -8,37 +8,33 @@ with Ada.Text_IO.Unbounded_IO;
 
 package body Load_Object_File is
 
---     type Vertex_ID is (Vertex_1, Vertex_2, Vertex_3);
---     type Indices is array (Vertex_ID) of GL.Types.Ints.Vector3;
---     type Faces_Array is array (Integer range <>, GL.Types.Int range <>) of Face_Indices;
 --     type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index : out GL.Types.Ints.Vector3);
     procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
-                     UV : out GL.Types.Singles.Vector2);
+                     UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean := True);
     procedure Parse (Vertex_String : Ada.Strings.Unbounded.Unbounded_String;
                      Vertex : out GL.Types.Singles.Vector3);
 
    --  -------------------------------------------------------------------------
 
---     procedure Data_From_Faces (Raw_Vertices : GL.Types.Singles.Vector3_Array;
---                                Raw_UVs      : GL.Types.Singles.Vector2_Array;
---                                Raw_Normals  : GL.Types.Singles.Vector3_Array;
---                                Vertex_Indices, UV_Indices, Normal_Indices :
---                                               GL.Types.Ints.Vector3_Array;
---                                Vertices : out GL.Types.Singles.Vector3_Array;
---                                UVs      : out GL.Types.Singles.Vector2_Array;
---                                Normals  : out GL.Types.Singles.Vector3_Array) is
---        Normal_Index   : Positive;
---        UV_Index       : Positive;
---        Vertex_Index   : Positive;
---     begin
---        for Vert in Vertices'Range loop
---           null;
---  --           Vertices (Vert) := Raw_Vertices (Vertex_Indices (Vert));
---        end loop;
---     end Data_From_Faces;
+   procedure Data_From_Faces (Raw_Vertices : GL.Types.Singles.Vector3_Array;
+                              Raw_UVs      : GL.Types.Singles.Vector2_Array;
+                              Raw_Normals  : GL.Types.Singles.Vector3_Array;
+                              Vertex_Indices, UV_Indices, Normal_Indices :
+                                             GL.Types.Ints.Vector3_Array;
+                              Vertices : out GL.Types.Singles.Vector3_Array;
+                              UVs      : out GL.Types.Singles.Vector2_Array;
+                              Normals  : out GL.Types.Singles.Vector3_Array) is
+      Normal_Index   : Positive;
+      UV_Index       : Positive;
+      Vertex_Index   : Positive;
+   begin
+      for Vert in Vertices'Range loop
+         Vertices (Vert) := Raw_Vertices (Vertex_Indices (Vert));
+      end loop;
+   end Data_From_Faces;
 
    --  -------------------------------------------------------------------------
 
@@ -177,9 +173,9 @@ package body Load_Object_File is
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
                     Vertex_Indices, UV_Indices, Normal_Indices);
          Close (Text_File_ID);
---           Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
---                            Vertex_Indices, UV_Indices, Normal_Indices,
---                            Vertices, UVs, Normals);
+         Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
+                          Vertex_Indices, UV_Indices, Normal_Indices,
+                          Vertices, UVs, Normals);
       end;
 
    exception
@@ -222,7 +218,7 @@ package body Load_Object_File is
    --  -------------------------------------------------------------------------
 
    procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
-                    UV : out GL.Types.Singles.Vector2) is
+                    UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean  := True) is
       use Ada.Strings.Unbounded;
       use GL.Types;
       Last     : Natural;
@@ -232,9 +228,12 @@ package body Load_Object_File is
       Ada.Float_Text_IO.Get (To_String (UV_String) (1 .. Size), Value, Last);
       UV (GL.X) := Single (Value);
       Ada.Float_Text_IO.Get (To_String (UV_String)(Last .. Size), Value, Last);
+      UV (GL.Y) := Single (Value);
       --  Invert V coordinate since we will only use DDS texture which are inverted.
       --  Remove if you want to use TGA or BMP loaders.
-      UV (GL.Y) := -Single (Value);
+      if DDS_Format then
+         UV (GL.Y) := -UV (GL.Y);
+      end if;
    end Parse;
 
    --  -------------------------------------------------------------------------
