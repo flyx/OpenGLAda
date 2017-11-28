@@ -172,6 +172,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Normals  : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
+
       end;
 
       Vertex_Buffer.Initialize_Id;
