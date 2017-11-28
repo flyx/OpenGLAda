@@ -28,8 +28,8 @@ spec GL.API is
    use GL.Types;
 
    function Get_Error return Errors.Error_Code is Static ("glGetError");
-   procedure Flush is Static ("glFlush");
-   procedure Finish is Static ("glFinish");
+   procedure Flush with Static => "glFlush", Wrapper => "GL.Flush";
+   procedure Finish with Static => "glFinish", Wrapper => "GL.Finish";
 
    -----------------------------------------------------------------------------
    --                           Parameter Getters                             --
