@@ -165,13 +165,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
+      Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
       declare
          Vertices : GL.Types.Singles.Vector3_Array (1 .. Vertex_Count);
          UVs      : GL.Types.Singles.Vector2_Array (1 .. UV_Count);
          Normals  : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
       begin
-         Load_Object_File.Load_Object ("suzanne.obj", Vertices, UVs, Normals);
+         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
       end;
 
       Vertex_Buffer.Initialize_Id;
