@@ -12,10 +12,12 @@ package body Load_Object_File is
 
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index : out GL.Types.Ints.Vector3);
-    procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
-                     UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean := True);
-    procedure Parse (Vertex_String : Ada.Strings.Unbounded.Unbounded_String;
-                     Vertex : out GL.Types.Singles.Vector3);
+   procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
+                    UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean := True);
+   procedure Parse (Vertex_String : Ada.Strings.Unbounded.Unbounded_String;
+                    Vertex : out GL.Types.Singles.Vector3);
+   procedure Read_Index (Data : Ada.Strings.Unbounded.Unbounded_String;
+                         Last : in out Positive; Index : out GL.Types.Int);
 
    --  -------------------------------------------------------------------------
 
@@ -27,12 +29,15 @@ package body Load_Object_File is
                               Vertices : out GL.Types.Singles.Vector3_Array;
                               UVs      : out GL.Types.Singles.Vector2_Array;
                               Normals  : out GL.Types.Singles.Vector3_Array) is
-      Normal_Index   : Positive;
-      UV_Index       : Positive;
-      Vertex_Index   : Positive;
+      --  The three elements of a Vertex_Index refer to the three vertices
+      --  of a triangle
    begin
-      for Vert in Vertices'Range loop
-         Vertices (Vert) := Raw_Vertices (Vertex_Indices (Vert));
+      for Index in Vertex_Indices'Range loop
+         for elem in GL.Index_3D'Range loop
+            Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
+            UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
+            Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
+         end loop;
       end loop;
    end Data_From_Faces;
 
@@ -166,8 +171,6 @@ package body Load_Object_File is
          Vertex_Indices : GL.Types.Ints.Vector3_Array (1 .. Face_Count);
          UV_Indices     : GL.Types.Ints.Vector3_Array (1 .. Face_Count);
          Normal_Indices : GL.Types.Ints.Vector3_Array (1 .. Face_Count);
---           Usemtl         : Usemtl_Array (1 .. Usemtl_Count);
---           Mesh_Index     : constant Integer := 1;
       begin
          Open (Text_File_ID, In_File, File_Name);
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
@@ -194,24 +197,15 @@ package body Load_Object_File is
                     Vertex_Index, UV_Index, Normal_Index  : out GL.Types.Ints.Vector3) is
       use Ada.Strings.Unbounded;
       Last : Positive := 1;
-      Size : constant Natural := Length (Face_String);
-
-      function Read_Index return GL.Types.Int is
-         Value : Integer;
-      begin
-         Ada.Integer_Text_IO.Get (To_String (Face_String)(Last .. Size), Value, Last);
-         return GL.Types.Int (Value);
-      end Read_Index;
-
    begin
      for indice in GL.Index_3D loop
-         Vertex_Index (indice) := Read_Index;
+          Read_Index (Face_String, Last, Vertex_Index (indice));
      end loop;
      for indice in GL.Index_3D loop
-         UV_Index (indice) := Read_Index;
+          Read_Index (Face_String, Last, UV_Index (indice));
      end loop;
      for indice in GL.Index_3D loop
-         Normal_Index (indice) := Read_Index;
+         Read_Index (Face_String, Last, Normal_Index (indice));
      end loop;
    end Parse;
 
@@ -252,6 +246,18 @@ package body Load_Object_File is
         Ada.Float_Text_IO.Get (To_String (Vertex_String)(Last .. Size), Value, Last);
         Vertex (GL.Z) := GL.Types.Single (Value);
    end Parse;
+
+   --  -------------------------------------------------------------------------
+
+   Procedure Read_Index (Data : Ada.Strings.Unbounded.Unbounded_String;
+                        Last : in out Positive; Index : out GL.Types.Int) is
+      use Ada.Strings.Unbounded;
+      Size : constant Natural := Length (Data);
+      Value : Integer;
+   begin
+      Ada.Integer_Text_IO.Get (To_String (Data)(Last .. Size), Value, Last);
+      Index := GL.Types.Int (Value);
+   end Read_Index;
 
    --  -------------------------------------------------------------------------
 
