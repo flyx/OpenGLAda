@@ -1,4 +1,5 @@
 
+with Ada.Numerics.Float_Random;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -31,7 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Element_Buffer               : GL.Objects.Buffers.Buffer;
-   Normals_Buffer            : GL.Objects.Buffers.Buffer;
+   Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
    Picking_Program          : GL.Objects.Programs.Program;
@@ -120,11 +121,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup (Window : in out Glfw.Windows.Window) is
-      use GL.Types.Singles;
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
       use GL.Types;
+      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
@@ -170,6 +171,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
       declare
+         use Ada.Numerics.Float_Random;
+         subtype Random_Single is Single range 10.0 .. 20.0;
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. UV_Count);
          Normals          : Singles.Vector3_Array (1 .. Normal_Count);
@@ -179,9 +182,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Temp_Indices     : Int_Array (1 .. Vertex_Count);
          Indices_Size     : Int;
          Vertices_Size    : Int;
+         Random_Gen       : Generator;
+         Orientations     : Singles.Vector3_Array (1 .. 100);
+         Positions        : Singles.Vector3_Array (1 .. 100);
+         function New_Value return Random_Single is
+         begin
+            return Random_Single (Random (Random_Gen));
+         end New_Value;
       begin
-         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
+         Ada.Numerics.Float_Random.Reset (Random_Gen);
+         for index in Positions'Range loop
+            Positions (index) := (New_Value, New_Value, New_Value);
+            Orientations (index) := (New_Value, New_Value, New_Value);
+         end loop;
 
+         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
          VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
                                 Indexed_Vertices, Indexed_UVs, Indexed_Normals,
                                 Temp_Indices, Indices_Size, Vertices_Size);
