@@ -1,3 +1,4 @@
+
 with Ada.Numerics;
 
 with Quaternions;
@@ -103,6 +104,19 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
+   function New_Quaternion (Angle : Radian; Axis : GL.Types.Singles.Vector3)
+                            return Single_Quaternion.Quaternion is
+        use Maths.Single_Math_Functions;
+        use Single_Quaternion;
+        Half_Angle  : constant Single := 0.5 * Single (Angle);
+        Sine        : constant Single := Sin (Half_Angle);
+   begin
+      return (Cos (Half_Angle), Axis (GL.X) * Sine,
+              Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
+   end New_Quaternion;
+
+    --  ------------------------------------------------------------------------
+
     function Normalized (V : Singles.Vector3) return Singles.Vector3 is
         use GL;
         L : constant Single := Length (V);
@@ -170,11 +184,8 @@ package body Maths is
         aQuaternion : Single_Quaternion.Quaternion;
         theMatrix   : GL.Types.Singles.Matrix4 := GL.Types.Singles.Identity4;
         NQ          : Single_Quaternion.Quaternion;
-        Half_Angle  : constant Single := 0.5 * Single (Angle);
-        Sine        : constant Single := Sin (Half_Angle);
     begin
-        aQuaternion := (Cos (Half_Angle), Axis (GL.X) * Sine,
-                          Axis (GL.Y) * Sine, Axis (GL.Z) * Sine);
+        aQuaternion := New_Quaternion (Angle, Axis);
         NQ := Normalized (aQuaternion);
 
         theMatrix (X, X) := 1.0 - 2.0 * (NQ.C * NQ.C + NQ.D * NQ.D);
