@@ -1,4 +1,6 @@
 
+with Interfaces.C;
+
 with Ada.Numerics.Float_Random;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -23,12 +25,17 @@ with Controls;
 with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
+with Quaternions;
+with Maths;
 with Utilities;
 with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
+   package Quaternion_Single is new Quaternions (GL.Types.Single);
+   type Quaternion_Array is array (GL.Types.Int range <>) of Quaternion_Single.Quaternion;
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
+   White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Element_Buffer               : GL.Objects.Buffers.Buffer;
@@ -37,13 +44,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
    Picking_Program          : GL.Objects.Programs.Program;
    Render_Program           : GL.Objects.Programs.Program;
+   Light_ID                 : GL.Uniforms.Uniform;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
    Model_Matrix_ID          : GL.Uniforms.Uniform;
    View_Matrix_ID           : GL.Uniforms.Uniform;
+   Picking_Colour_ID        : GL.Uniforms.Uniform;
    Picking_Matrix_ID        : GL.Uniforms.Uniform;
    Texture_ID               : GL.Uniforms.Uniform;
    Sample_Texture           : GL.Objects.Textures.Texture;
    MVP_Matrix               : GL.Types.Singles.Matrix4;
+
+   Last_Time                : Glfw.Seconds;
+   Number_Of_Frames         : Integer := 0;
+   Orientations             : Quaternion_Array (1 .. 100);
 
    --  ------------------------------------------------------------------------
 
@@ -53,13 +66,43 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+   procedure Pick (Window : in out Glfw.Windows.Window;
+                   Orientations : Quaternion_Array) is
+   use Glfw.Input;
+   Model_Matrix    : GL.Types.Singles.Matrix4;
+   Rot_Matrix      : GL.Types.Singles.Matrix4;
+   Trans_Matrix    : GL.Types.Singles.Matrix4;
+   begin
+      if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
+         Utilities.Clear_Background_Colour (White);
+         GL.Objects.Programs.Use_Program (Picking_Program);
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
+         for count in integer range 1 .. 100 loop
+            --              Maths.Rotation_Matrix ();
+            null;
+         end loop;
+      end if;
+
+   end Pick;
+
+   --  ------------------------------------------------------------------------
+
    procedure Render (Window : in out Glfw.Windows.Window) is
+      use Interfaces.C;
       use GL.Objects.Buffers;
       use GL.Types;
+      Current_Time     : constant Glfw.Seconds := Glfw.Time;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+      Number_Of_Frames := Number_Of_Frames + 1;
+      if Current_Time - Last_Time >= 1.0 then
+         Put_Line (Integer'Image (1000 * Number_Of_Frames) & " ms/frame");
+         Number_Of_Frames := 0;
+         Last_Time := Last_Time + 1.0;
+      end if;
 
       Setup_Matrices (Window, Render_Program, Picking_Program);
+      Pick (Window, Orientations);
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
@@ -182,8 +225,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Temp_Indices     : Int_Array (1 .. Vertex_Count);
          Indices_Size     : Int;
          Vertices_Size    : Int;
-         Random_Gen       : Generator;
-         Orientations     : Singles.Vector3_Array (1 .. 100);
+         Random_Gen       : Ada.Numerics.Float_Random.Generator;
          Positions        : Singles.Vector3_Array (1 .. 100);
          function New_Value return Random_Single is
          begin
@@ -193,7 +235,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Ada.Numerics.Float_Random.Reset (Random_Gen);
          for index in Positions'Range loop
             Positions (index) := (New_Value, New_Value, New_Value);
-            Orientations (index) := (New_Value, New_Value, New_Value);
+            Orientations (index) := (New_Value, New_Value, New_Value, New_Value);
          end loop;
 
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
@@ -227,6 +269,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Utilities.Load_Element_Buffer (Array_Buffer, Indices, Static_Draw);
          end;
       end;
+
+      Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
+        (Picking_Program, "PickingColor");
+      Light_ID := GL.Objects.Programs.Uniform_Location
+        (Picking_Program, "LightPosition_worldspace");
+      Last_Time := Glfw.Time;
        Utilities.Enable_Mouse_Callbacks (Window, True);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
