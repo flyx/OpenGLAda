@@ -10,7 +10,6 @@ with GL.Objects.Textures;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Vertex_Arrays;
 with GL.Toggles;
-with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
 
@@ -20,19 +19,21 @@ with Glfw.Windows;
 with Glfw.Windows.Context;
 
 with Controls;
-with Cube_Data;
 with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
 with Utilities;
+with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffer            : GL.Objects.Buffers.Buffer;
+   Element_Buffer               : GL.Objects.Buffers.Buffer;
+   Normals_Buffer            : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
+   Vertex_Buffer            : GL.Objects.Buffers.Buffer;
    Picking_Program          : GL.Objects.Programs.Program;
    Render_Program           : GL.Objects.Programs.Program;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
@@ -53,7 +54,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
-
+      use GL.Types;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
 
@@ -92,6 +93,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
                              Render_Program  : GL.Objects.Programs.Program;
                              Picking_Program : GL.Objects.Programs.Program) is
+      use GL.Types;
       use GL.Types.Singles;
       Model_Matrix      : constant Matrix4 := Singles.Identity4;
       Projection_Matrix : Matrix4;
@@ -122,6 +124,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
+      use GL.Types;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
@@ -167,22 +170,49 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
       declare
-         Vertices : GL.Types.Singles.Vector3_Array (1 .. Vertex_Count);
-         UVs      : GL.Types.Singles.Vector2_Array (1 .. UV_Count);
-         Normals  : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
+         Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
+         UVs              : Singles.Vector2_Array (1 .. UV_Count);
+         Normals          : Singles.Vector3_Array (1 .. Normal_Count);
+         Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
+         Indexed_UVs      : Singles.Vector2_Array (1 .. UV_Count);
+         Indexed_Normals  : Singles.Vector3_Array (1 .. Normal_Count);
+         Temp_Indices     : Int_Array (1 .. Vertex_Count);
+         Indices_Size     : Int;
+         Vertices_Size    : Int;
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
 
+         VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
+                                Indexed_Vertices, Indexed_UVs, Indexed_Normals,
+                                Temp_Indices, Indices_Size, Vertices_Size);
+         declare
+            Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
+                 := Indexed_Vertices  (1 .. Vertices_Size);
+            UVs_Indexed     : constant Singles.Vector2_Array (1 .. Vertices_Size)
+                 := Indexed_UVs  (1 .. Vertices_Size);
+            Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
+                 := Indexed_Normals  (1 .. Vertices_Size);
+            Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
+                 := Temp_Indices  (1 .. Indices_Size);
+         begin
+            Vertex_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Vertex_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
+
+            UVs_Buffer.Initialize_Id;
+            Array_Buffer.Bind (UVs_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
+
+            Normals_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Normals_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
+
+            Element_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Element_Buffer);
+            Utilities.Load_Element_Buffer (Array_Buffer, Indices, Static_Draw);
+         end;
       end;
-
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.Vertex_Data, Static_Draw);
-
-      UVs_Buffer.Initialize_Id;
-      Array_Buffer.Bind (UVs_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Cube_Data.UV_Data, Static_Draw);
-      Utilities.Enable_Mouse_Callbacks (Window, True);
+       Utilities.Enable_Mouse_Callbacks (Window, True);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
    exception
