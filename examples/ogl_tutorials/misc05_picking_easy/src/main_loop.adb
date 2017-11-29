@@ -25,14 +25,19 @@ with Controls;
 with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
-with Quaternions;
 with Maths;
 with Utilities;
 with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
-   package Quaternion_Single is new Quaternions (GL.Types.Single);
-   type Quaternion_Array is array (GL.Types.Int range <>) of Quaternion_Single.Quaternion;
+
+--     package Quaternion_Single is new Quaternions (GL.Types.Single);
+--     type Quaternion_Array is array (GL.Types.Int range <>) of Quaternion_Single.Quaternion;
+   type Orientation is record
+      Angle : Maths.Radian;
+      Axis  : GL.Types.Singles.Vector3;
+   end record;
+   type Orientation_Array is array (GL.Types.Int range <>) of Orientation;
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
    White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
@@ -56,30 +61,39 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Last_Time                : Glfw.Seconds;
    Number_Of_Frames         : Integer := 0;
-   Orientations             : Quaternion_Array (1 .. 100);
+   Orientations             : Orientation_Array (1 .. 100);
+   Positions                : GL.Types.Singles.Vector3_Array (1 .. 100);
 
    --  ------------------------------------------------------------------------
 
    procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
-                             Render_Program : GL.Objects.Programs.Program;
-                             Picking_Program : GL.Objects.Programs.Program);
+                             Render_Program, Picking_Program : GL.Objects.Programs.Program;
+                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4);
 
    --  ------------------------------------------------------------------------
 
    procedure Pick (Window : in out Glfw.Windows.Window;
-                   Orientations : Quaternion_Array) is
-   use Glfw.Input;
-   Model_Matrix    : GL.Types.Singles.Matrix4;
-   Rot_Matrix      : GL.Types.Singles.Matrix4;
-   Trans_Matrix    : GL.Types.Singles.Matrix4;
+                   Positions    : GL.Types.Singles.Vector3_Array;
+                   Orientations : Orientation_Array;
+                   View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
+      use Glfw.Input;
+      use GL.Types.Singles;
+      Model_Matrix    : Matrix4;
+      Rot_Matrix      : Matrix4;
+      Trans_Matrix    : Matrix4;
    begin
       if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
          Utilities.Clear_Background_Colour (White);
          GL.Objects.Programs.Use_Program (Picking_Program);
+         --  Only the positions are needed (not the UVs and normals)
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         for count in integer range 1 .. 100 loop
-            --              Maths.Rotation_Matrix ();
-            null;
+         for count in GL.Types.Int range 1 .. 100 loop
+            Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
+                                                 Orientations (count).Axis);
+            Trans_Matrix := Maths.Translation_Matrix (Positions (count));
+            Model_Matrix := Trans_Matrix * Rot_Matrix;
+            MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
+            GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
          end loop;
       end if;
 
@@ -91,7 +105,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Interfaces.C;
       use GL.Objects.Buffers;
       use GL.Types;
-      Current_Time     : constant Glfw.Seconds := Glfw.Time;
+      View_Matrix       : GL.Types.Singles.Matrix4;
+      Projection_Matrix : GL.Types.Singles.Matrix4;
+      Current_Time      : constant Glfw.Seconds := Glfw.Time;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       Number_Of_Frames := Number_Of_Frames + 1;
@@ -101,8 +117,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Last_Time := Last_Time + 1.0;
       end if;
 
-      Setup_Matrices (Window, Render_Program, Picking_Program);
-      Pick (Window, Orientations);
+      Setup_Matrices (Window, Render_Program, Picking_Program, View_Matrix, Projection_Matrix);
+      Pick (Window, Positions, Orientations, View_Matrix, Projection_Matrix);
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
@@ -135,13 +151,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
-                             Render_Program  : GL.Objects.Programs.Program;
-                             Picking_Program : GL.Objects.Programs.Program) is
+                             Render_Program, Picking_Program : GL.Objects.Programs.Program;
+                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4) is
       use GL.Types;
       use GL.Types.Singles;
-      Model_Matrix      : constant Matrix4 := Singles.Identity4;
-      Projection_Matrix : Matrix4;
-      View_Matrix       : Matrix4;
+
    begin
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MVP");
@@ -153,8 +167,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (Picking_Program, "MVP");
 
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
-
-      MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
    exception
       when others =>
          Put_Line ("An exception occurred in Setup_Matrices.");
@@ -206,8 +218,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            Fragment_Shader)));
       Utilities.Show_Shader_Program_Data (Picking_Program);
 
-      Setup_Matrices (Window, Render_Program, Picking_Program);
-
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
@@ -226,16 +236,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indices_Size     : Int;
          Vertices_Size    : Int;
          Random_Gen       : Ada.Numerics.Float_Random.Generator;
-         Positions        : Singles.Vector3_Array (1 .. 100);
+
          function New_Value return Random_Single is
          begin
             return Random_Single (Random (Random_Gen));
          end New_Value;
+
       begin
          Ada.Numerics.Float_Random.Reset (Random_Gen);
          for index in Positions'Range loop
             Positions (index) := (New_Value, New_Value, New_Value);
-            Orientations (index) := (New_Value, New_Value, New_Value, New_Value);
+            Orientations (index) := (Maths.Radian (New_Value),
+                                     (New_Value, New_Value, New_Value));
          end loop;
 
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
@@ -274,8 +286,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (Picking_Program, "PickingColor");
       Light_ID := GL.Objects.Programs.Uniform_Location
         (Picking_Program, "LightPosition_worldspace");
+
       Last_Time := Glfw.Time;
-       Utilities.Enable_Mouse_Callbacks (Window, True);
+      Utilities.Enable_Mouse_Callbacks (Window, True);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
    exception
