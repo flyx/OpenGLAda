@@ -51,6 +51,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Element_Buffer           : GL.Objects.Buffers.Buffer;
+   Indices_Size             : GL.Types.Int;
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -116,9 +117,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
 
          GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,
-                                           Count      => VBO_Indexer.Indices_Array'Size,
+                                           Count      => Indices_Size,
                                            Index_Type => UInt_Type);
       end loop;
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      GL.Attributes.Disable_Vertex_Attrib_Array (1);
+      GL.Attributes.Disable_Vertex_Attrib_Array (2);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_Texture.");
+         raise;
    end Load_Texture;
 
    --  ------------------------------------------------------------------------
@@ -135,7 +144,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R               : Single;
       G               : Single;
       B               : Single;
-      Pixel_Data      : Pixels_Array (1 .. 4) := (others => 1);
+      Pixel_Data      : constant Pixels_Array (1 .. 4) := (others => 1);
       Picked_ID       : Integer;
 --        Message         : Ada.Strings.Unbounded.Unbounded_String;
    begin
@@ -161,7 +170,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
             GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
             GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,
-                                              Count      => VBO_Indexer.Indices_Array'Size,
+                                              Count      => Indices_Size,
                                               Index_Type => UInt_Type);
          end loop;
          GL.Attributes.Disable_Vertex_Attrib_Array (0);
@@ -173,13 +182,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --   then convert the color back to an integer ID
       Read_Pix (1, 1, 1024 / 2, 768 / 2, GL.Pixels.RGBA, GL.Pixels.Unsigned_Byte, Pixel_Data);
       Picked_ID := Pixel_Data (1) + 256 * (Pixel_Data (2) + 256 * Pixel_Data (3));
-      if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
-         null;
+--        if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
+--           null;
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
-      else
+--        else
          Put_Line ("Mesh " & Integer'Image (Picked_ID));
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("");
-      end if;
+--        end if;
 
    exception
       when others =>
@@ -212,30 +221,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Utilities.Clear_Background_Colour (Dark_Blue);
       GL.Objects.Programs.Use_Program (Render_Program);
-
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Attributes.Enable_Vertex_Attrib_Array (1);
-      GL.Attributes.Enable_Vertex_Attrib_Array (2);
-
       Load_Texture (View_Matrix, Projection_Matrix);
-      GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
-      --  First attribute buffer : vertices
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      Array_Buffer.Bind (Vertex_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-
-      --  Second attribute buffer : UVs
-      GL.Attributes.Enable_Vertex_Attrib_Array (1);
-      Array_Buffer.Bind (UVs_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
-
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangles,
-                                            First => 0,
-                                            Count => 12 * 3);
-
-      GL.Attributes.Disable_Vertex_Attrib_Array (0);
-      GL.Attributes.Disable_Vertex_Attrib_Array (1);
    exception
       when others =>
          Put_Line ("An exception occurred in Render.");
@@ -281,6 +268,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Count    : GL.Types.Int;
       UV_Count        : GL.Types.Int;
       Normal_Count    : GL.Types.Int;
+      Vertices_Size   : Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -327,8 +315,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indexed_UVs      : Singles.Vector2_Array (1 .. UV_Count);
          Indexed_Normals  : Singles.Vector3_Array (1 .. Normal_Count);
          Temp_Indices     : Int_Array (1 .. Vertex_Count);
-         Indices_Size     : Int;
-         Vertices_Size    : Int;
          Random_Gen       : Ada.Numerics.Float_Random.Generator;
 
          function New_Value return Random_Single is
