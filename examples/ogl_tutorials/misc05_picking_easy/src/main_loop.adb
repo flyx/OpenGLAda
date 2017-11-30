@@ -76,11 +76,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                    Positions    : GL.Types.Singles.Vector3_Array;
                    Orientations : Orientation_Array;
                    View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
+      use Interfaces;
       use Glfw.Input;
+      use GL.Types;
       use GL.Types.Singles;
       Model_Matrix    : Matrix4;
       Rot_Matrix      : Matrix4;
       Trans_Matrix    : Matrix4;
+      R               : Single;
+      G               : Single;
+      B               : Single;
+
    begin
       if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
          Utilities.Clear_Background_Colour (White);
@@ -94,9 +100,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Model_Matrix := Trans_Matrix * Rot_Matrix;
             MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
             GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
+
+            R :=  Single (Unsigned_32 (count) and 16#FF#) / 255.0;
+            G :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF00#, 8)) / 255.0;
+            B :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF0000#, 16)) / 255.0;
+            GL.Uniforms.Set_Single (Picking_Colour_ID, R, G, B, 1.0);
+
+            GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+
+            GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+            GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,
+                                              Count      => VBO_Indexer.Indices_Array'Size,
+                                              Index_Type => UInt_Type);
          end loop;
+        GL.Attributes.Disable_Vertex_Attrib_Array (0);
       end if;
 
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Pick.");
+         raise;
    end Pick;
 
    --  ------------------------------------------------------------------------
