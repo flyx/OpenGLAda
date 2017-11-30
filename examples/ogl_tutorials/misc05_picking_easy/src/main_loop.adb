@@ -2,7 +2,6 @@
 with Interfaces.C;
 
 with Ada.Numerics.Float_Random;
---  with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -39,7 +38,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
      GL.Framebuffer.Read_Pixels (Element_Type => Integer,
                                  Index_Type   => Positive,
                                  Array_Type   => Pixels_Array);
---     type Quaternion_Array is array (GL.Types.Int range <>) of Quaternion_Single.Quaternion;
    type Orientation is record
       Angle : Maths.Radian;
       Axis  : GL.Types.Singles.Vector3;
@@ -319,7 +317,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          function New_Value return Random_Single is
          begin
-            return Random_Single (Random (Random_Gen));
+            return Random_Single (10.0 + 10.0 * Random (Random_Gen));
          end New_Value;
 
       begin
