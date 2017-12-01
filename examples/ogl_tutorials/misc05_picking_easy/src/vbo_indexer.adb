@@ -73,23 +73,23 @@ package body VBO_Indexer is
    procedure Index_VBO (Vertices_In : GL.Types.Singles.Vector3_Array;
                         UVs_In      : GL.Types.Singles.Vector2_Array;
                         Normals_In  : GL.Types.Singles.Vector3_Array;
-                        Vertices    : in out GL.Types.Singles.Vector3_Array;
-                        UVs         : in out GL.Types.Singles.Vector2_Array;
-                        Normals     : in out GL.Types.Singles.Vector3_Array;
-                        Indices     : out GL.Types.Int_Array;
-                        Last_Index  : out GL.Types.Int;
-                        Last_Vertex : out GL.Types.Int;
-                        Last_UV     : out GL.Types.Int;
-                        Last_Normal : out GL.Types.Int) is
+                        Vertices       : in out GL.Types.Singles.Vector3_Array;
+                        UVs            : in out GL.Types.Singles.Vector2_Array;
+                        Normals        : in out GL.Types.Singles.Vector3_Array;
+                        VBO_Indices    : out GL.Types.Int_Array;
+                        Last_VBO_Index : out GL.Types.Int;
+                        Last_Vertex    : out GL.Types.Int;
+                        Last_UV        : out GL.Types.Int;
+                        Last_Normal    : out GL.Types.Int) is
       use GL.Types;
-      Vert_In_Size   : constant Int := Vertices_In'Length;
-      UVs_In_Size    : constant Int := UVs_In'Length;
-      Norm_In_Size   : constant Int := Normals_In'Length;
-      Max_Size       : Int := Maths.Maximum (Vert_In_Size, UVs_In_Size);
-      Index          : Int := 0;
-      Indices_Index  : Int := 0;
-      Out_Index      : Int := 0;
-      Found          : Boolean;
+      Vert_In_Size       : constant Int := Vertices_In'Length;
+      UVs_In_Size        : constant Int := UVs_In'Length;
+      Norm_In_Size       : constant Int := Normals_In'Length;
+      Max_Size           : Int := Maths.Maximum (Vert_In_Size, UVs_In_Size);
+      Index              : Int := 0;
+      VBO_Indices_Index  : Int := 0;
+      Out_Index          : Int := 0;
+      Found              : Boolean;
    begin
       Max_Size := Maths.Maximum (Max_Size, Norm_In_Size);
       for Vert in 1 .. Max_Size loop
@@ -97,35 +97,37 @@ package body VBO_Indexer is
          if Vert <= Vert_In_Size then
             Get_Similar_Index_Slow (Vertices_In (Vert), Vertices, Index, Found);
          end if;
-         if not Found and then Vert <= UVs_In_Size then
+         if Found and then Vert <= UVs_In_Size then
             Get_Similar_Index_Slow (UVs_In (Vert), UVs, Index, Found);
          end if;
-         if not Found and then Vert <= Norm_In_Size then
+         if Found and then Vert <= Norm_In_Size then
             Get_Similar_Index_Slow (Normals_In (Vert), Normals, Index, Found);
          end if;
-         Indices_Index := Indices_Index + 1;
 
-         if not Found then
-            Put_Line ("Index_VBO found, Index : " & Int'Image (Index));
-            Indices (Indices_Index) := Index;
+         VBO_Indices_Index := VBO_Indices_Index + 1;
+         if Found then
+            -- A similar vertex is already in the VBO so use it instead
+            VBO_Indices (VBO_Indices_Index) := Vert;
          else
+            --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
             if Vert <= Vert_In_Size then
                Vertices (Out_Index) := Vertices_In (Vert);
                Last_Vertex := Out_Index;
             end if;
             if Vert <= UVs_In_Size then
-               UVs (Out_Index) := UVs (Vert);
+               UVs (Out_Index) := UVs_In (Vert);
                Last_UV := Out_Index;
             end if;
             if Vert <= Norm_In_Size then
                Normals (Out_Index) := Normals_In (Vert);
-               Indices (Indices_Index) := Out_Index;
+               VBO_Indices (VBO_Indices_Index) := Out_Index;
                Last_Normal := Out_Index;
             end if;
+            VBO_Indices (VBO_Indices_Index) := Out_Index;
          end if;
       end loop;
-      Last_Index  := Indices_Index;
+      Last_VBO_Index  := VBO_Indices_Index;
 
    exception
       when others =>

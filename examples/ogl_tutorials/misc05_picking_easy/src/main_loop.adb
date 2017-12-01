@@ -314,7 +314,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
          Indexed_UVs      : Singles.Vector2_Array (1 .. UV_Count);
          Indexed_Normals  : Singles.Vector3_Array (1 .. Normal_Count);
-         Temp_Indices     : Int_Array (1 .. Vertex_Count);
+         Temp_Indices     : Int_Array (1 .. Vertex_Count + UV_Count + Normal_Count);
          Random_Gen       : Ada.Numerics.Float_Random.Generator;
 
          function New_Value return Random_Single is
