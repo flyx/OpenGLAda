@@ -6,7 +6,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
---  with GL.Framebuffer;
+with GL.Framebuffer;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
@@ -33,11 +33,11 @@ with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
---     type Pixels_Array is array (Positive range <>) of aliased Integer;
---     procedure Read_Pix is new
---       GL.Framebuffer.Read_Pixels (Element_Type => Integer,
---                                   Index_Type   => Positive,
---                                   Array_Type   => Pixels_Array);
+   type Pixels_Array is array (Positive range <>) of aliased Integer;
+   procedure Read_Pix is new
+     GL.Framebuffer.Read_Pixels (Element_Type => Integer,
+                                 Index_Type   => Positive,
+                                 Array_Type   => Pixels_Array);
    type Orientation is record
       Angle : Maths.Radian;
       Axis  : GL.Types.Singles.Vector3;
@@ -142,8 +142,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R               : Single;
       G               : Single;
       B               : Single;
---        Pixel_Data      : Pixels_Array (1 .. 4);
---        Picked_ID       : Integer;
+      Pixel_Data      : Pixels_Array (1 .. 4);
+      Picked_ID       : Integer;
 --        Message         : Ada.Strings.Unbounded.Unbounded_String;
    begin
          Utilities.Clear_Background_Colour (White);
@@ -179,16 +179,16 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       --  Read the pixel at the center of the screen
       --   then convert the color back to an integer ID
---        Put_Line ("Pick Reading Pix");
---        Read_Pix (1, 1, 1024 / 2, 768 / 2, GL.Pixels.RGBA, GL.Pixels.Unsigned_Byte, Pixel_Data);
---        Put_Line ("Pick Pix read");
---        Picked_ID := Pixel_Data (1) + 256 * (Pixel_Data (2) + 256 * Pixel_Data (3));
---        Put_Line ("Pick Picked_ID set");
+      Put_Line ("Pick Reading Pix");
+      Read_Pix (1, 1, 1024 / 2, 768 / 2, GL.Pixels.RGBA, GL.Pixels.Unsigned_Byte, Pixel_Data);
+      Put_Line ("Pick Pix read");
+      Picked_ID := Pixel_Data (1) + 256 * (Pixel_Data (2) + 256 * Pixel_Data (3));
+      Put_Line ("Pick Picked_ID set");
 --        if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
 --           null;
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
 --        else
---           Put_Line ("Mesh " & Integer'Image (Picked_ID));
+         Put_Line ("Mesh " & Integer'Image (Picked_ID));
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("");
 --        end if;
 
