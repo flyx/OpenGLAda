@@ -13,6 +13,8 @@ package VBO_Indexer is
                         Normals     : in out GL.Types.Singles.Vector3_Array;
                         Indices     : out GL.Types.Int_Array;
                         Last_Index  : out GL.Types.Int;
-                        Last_Vertex : out GL.Types.Int);
+                        Last_Vertex : out GL.Types.Int;
+                        Last_UV     : out GL.Types.Int;
+                        Last_Normal : out GL.Types.Int);
 
 end VBO_Indexer;
