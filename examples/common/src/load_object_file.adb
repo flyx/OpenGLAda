@@ -8,8 +8,6 @@ with Ada.Text_IO.Unbounded_IO;
 
 package body Load_Object_File is
 
---     type Usemtl_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
-
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index : out GL.Types.Ints.Vector3);
    procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -30,21 +28,25 @@ package body Load_Object_File is
                               UVs      : out GL.Types.Singles.Vector2_Array;
                               Normals  : out GL.Types.Singles.Vector3_Array) is
       use GL;
+      use GL.Types;
+      Vert_Size : constant Types.Int := Raw_Vertices'Length;
+      UVs_Size  : constant Types.Int := Raw_UVs'Length;
+      Norm_Size : constant Types.Int := Raw_Normals'Length;
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
       for Index in Vertex_Indices'Range loop
-         Put_Line ("Data_From_Faces Index: " & Types.Int'Image (Index));
-         for elem in GL.Index_3D'Range loop
-            Put_Line ("Data_From_Faces Vertex elem: " & Index_3D'Image (elem) &
-               " " & GL.Types.Int'Image (Vertex_Indices (Index) (elem)));
-            Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
-            Put_Line ("Data_From_Faces UVs elem: " & Index_3D'Image (elem) &
-               " " & GL.Types.Int'Image (UV_Indices (Index) (elem)));
+
+         for elem in Index_3D'Range loop
+            if Index <= Vert_Size then
+               Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
+            end if;
+            if Index <= UVs_Size then
                UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
-            Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
-            Put_Line ("Data_From_Faces Normals elem: " & Index_3D'Image (elem) &
-               " " & GL.Types.Int'Image (Normal_Indices (Index) (elem)));
+            end if;
+            if Index <= Norm_Size then
+               Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
+            end if;
          end loop;
       end loop;
 
@@ -129,8 +131,6 @@ package body Load_Object_File is
       Vertex_Index : Int := 0;
       UV_Index     : Int := 0;
       Normal_Index : Int := 0;
---        Mesh_Index   : Integer;
---        Usemtl_Index : Integer := 0;
       Face_Index   : Int := 0;
    begin
       while not End_Of_File (File_ID) loop
@@ -189,14 +189,17 @@ package body Load_Object_File is
          Raw_Vertices   : Singles.Vector3_Array (1 .. Num_Vertices);
          Raw_UVs        : Singles.Vector2_Array (1 .. UV_Count);
          Raw_Normals    : Singles.Vector3_Array (1 .. Normal_Count);
-         Vertex_Indices : Ints.Vector3_Array (1 .. 3 * Face_Count);
-         UV_Indices     : Ints.Vector3_Array (1 .. 3 * Face_Count);
-         Normal_Indices : Ints.Vector3_Array (1 .. 3 * Face_Count);
+         Vertex_Indices : Ints.Vector3_Array (1 .. Face_Count);
+         UV_Indices     : Ints.Vector3_Array (1 .. Face_Count);
+         Normal_Indices : Ints.Vector3_Array (1 .. Face_Count);
       begin
          Open (Text_File_ID, In_File, File_Name);
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
                     Vertex_Indices, UV_Indices, Normal_Indices);
          Close (Text_File_ID);
+         Put_Line ("Load_Object Sizes " & Int'Image (Num_Vertices) &
+                     Int'Image (UV_Count) & Int'Image (Normal_Count) &
+                     Int'Image (Face_Count));
          Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
                           Vertex_Indices, UV_Indices, Normal_Indices,
                           Vertices, UVs, Normals);
