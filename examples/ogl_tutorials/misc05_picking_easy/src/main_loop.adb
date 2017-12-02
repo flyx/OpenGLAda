@@ -45,6 +45,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    type Orientation_Array is array (GL.Types.Int range <>) of Orientation;
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
+   Light_Blue               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.9, 0.0);
    White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -182,14 +183,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Pixels.Set_Pack_Alignment (GL.Pixels.Unpack_Alignment);
       Window'Access.Get_Size (Window_Width, Window_Height);
       --  Read the pixel at the center of the screen
-      Put_Line ("Pick Reading Pix");
       Read_Pix (Int (Window_Width) / 2, Int (Window_Height) / 2, 1, 1,
                 GL.Pixels.RGBA, GL.Pixels.Float, Pixel_Data);
-      Put_Line ("Pick Pix read");
       --   Convert the color back to an integer ID
       Picked_ID := Int (Pixel_Data (1)) + 256 * Int (Pixel_Data (2)) +
           256 * 256 * Int (Pixel_Data (3));
-      Put_Line ("Pick Picked_ID set");
       if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
          Put_Line ("Background " & Int'Image (Picked_ID));
          --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
@@ -229,7 +227,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Pick (Window, Picking_Program, Positions, Orientations, View_Matrix, Projection_Matrix);
       end if;
 
-      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+      Utilities.Clear_Background_Colour_And_Depth (Light_Blue);
       Load_Texture (Render_Program, View_Matrix, Projection_Matrix);
 
    exception
@@ -377,9 +375,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       end;
 
       Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
-          (Picking_Program, "PickingColor");
+          (Picking_Program, "Picking_Colour");
       Light_ID := GL.Objects.Programs.Uniform_Location
-          (Picking_Program, "LightPosition_worldspace");
+          (Picking_Program, "Light_Position_Worldspace");
 
       Last_Time := Glfw.Time;
       Utilities.Enable_Mouse_Callbacks (Window, True);
