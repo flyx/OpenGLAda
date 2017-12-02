@@ -60,12 +60,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Matrices (Window  : in out Glfw.Windows.Window;
-                             Render_Program : GL.Objects.Programs.Program;
-                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4);
-
-   --  ------------------------------------------------------------------------
-
    procedure Load_Texture (Render_Program : GL.Objects.Programs.Program;
                            View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Types;
@@ -127,6 +121,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Projection_Matrix : GL.Types.Singles.Matrix4;
       Current_Time      : constant Glfw.Seconds := Glfw.Time;
    begin
+      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       Number_Of_Frames := Number_Of_Frames + 1;
       if Current_Time - Last_Time >= 1.0 then
          Put_Line (Integer'Image (1000 * Number_Of_Frames) & " ms/frame");
@@ -134,9 +129,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Last_Time := Last_Time + 1.0;
       end if;
 
-      Setup_Matrices (Window, Render_Program, View_Matrix, Projection_Matrix);
+      Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
 
-      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       Load_Texture (Render_Program, View_Matrix, Projection_Matrix);
 
    exception
@@ -147,30 +141,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
-                             Render_Program : GL.Objects.Programs.Program;
-                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4) is
-      use GL.Types;
-      use GL.Types.Singles;
-
-   begin
-      MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "MVP");
-      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "M");
-      View_Matrix_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "V");
-
-      Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Setup_Matrices.");
-         raise;
-   end Setup_Matrices;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Setup (Window : in out Glfw.Windows.Window;
+    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -209,6 +180,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
            Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
                Fragment_Shader)));
       Utilities.Show_Shader_Program_Data (Render_Program);
+
+      MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "MVP");
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "M");
+      View_Matrix_ID := GL.Objects.Programs.Uniform_Location
+          (Render_Program, "V");
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
