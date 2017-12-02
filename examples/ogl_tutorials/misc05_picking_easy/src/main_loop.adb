@@ -33,11 +33,11 @@ with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   type Pixels_Array is array (Positive range <>) of aliased GL.Types.Single;
+   type Pixels_Array is array (Positive range <>) of aliased GL.Types.UByte;
    procedure Read_Pix is new
-     GL.Framebuffer.Read_Pixels (Element_Type => GL.Types.Single,
-                                 Index_Type   => Positive,
-                                 Array_Type   => Pixels_Array);
+       GL.Framebuffer.Read_Pixels (Element_Type => GL.Types.UByte,
+                                   Index_Type   => Positive,
+                                   Array_Type   => Pixels_Array);
    type Orientation is record
       Angle : Maths.Radian;
       Axis  : GL.Types.Singles.Vector3;
@@ -73,13 +73,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
+   procedure Setup_Matrices (Window                          : in out Glfw.Windows.Window;
                              Render_Program, Picking_Program : GL.Objects.Programs.Program;
-                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4);
+                             View_Matrix, Projection_Matrix  : out GL.Types.Singles.Matrix4);
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Texture (View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
+   procedure Load_Texture (Render_Program : GL.Objects.Programs.Program;
+                           View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
       use GL.Types;
       use GL.Types.Singles;
       Model_Matrix    : Matrix4;
@@ -87,6 +88,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Trans_Matrix    : Matrix4;
       Light_Pos       : constant Singles.Vector3 := (4.0, 4.0, 4.0);
    begin
+      GL.Objects.Programs.Use_Program (Render_Program);
       for count in GL.Types.Int range 1 .. Max_Items loop
          Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
                                               Orientations (count).Axis);
@@ -130,9 +132,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Pick (Window : in out Glfw.Windows.Window;
-                   Positions    : GL.Types.Singles.Vector3_Array;
-                   Orientations : Orientation_Array;
+   procedure Pick (Window                         : in out Glfw.Windows.Window;
+                   Positions                      : GL.Types.Singles.Vector3_Array;
+                   Orientations                   : Orientation_Array;
                    View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
       use Interfaces;
       use GL.Types;
@@ -146,35 +148,35 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : Glfw.Size;
       Window_Height   : Glfw.Size;
       Pixel_Data      : Pixels_Array (1 .. 4);
-      Picked_ID       : Single;
---        Message         : Ada.Strings.Unbounded.Unbounded_String;
+      Picked_ID       : Int;
+      --        Message         : Ada.Strings.Unbounded.Unbounded_String;
    begin
-         Utilities.Clear_Background_Colour (White);
-         GL.Objects.Programs.Use_Program (Picking_Program);
-         --  Only the positions are needed (not the UVs and normals)
-         GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         for count in GL.Types.Int range 1 .. Max_Items loop
-            Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
-                                                 Orientations (count).Axis);
-            Trans_Matrix := Maths.Translation_Matrix (Positions (count));
-            Model_Matrix := Trans_Matrix * Rot_Matrix;
-            MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-            GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
+      Utilities.Clear_Background_Colour_And_Depth (White);
+      GL.Objects.Programs.Use_Program (Picking_Program);
+      --  Only the positions are needed (not the UVs and normals)
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      for count in GL.Types.Int range 1 .. Max_Items loop
+         Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
+                                              Orientations (count).Axis);
+         Trans_Matrix := Maths.Translation_Matrix (Positions (count));
+         Model_Matrix := Trans_Matrix * Rot_Matrix;
+         MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
+         GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
 
-            --  Convert count, the integer mesh ID, into an RGB color
-            R :=  Single (Unsigned_32 (count) and 16#FF#) / 255.0;
-            G :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF00#, 8)) / 255.0;
-            B :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF0000#, 16)) / 255.0;
-            GL.Uniforms.Set_Single (Picking_Colour_ID, R, G, B, 1.0);
+         --  Convert count, the integer mesh ID, into an RGB color
+         R :=  Single (Unsigned_32 (count) and 16#FF#) / 255.0;
+         G :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF00#, 8)) / 255.0;
+         B :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF0000#, 16)) / 255.0;
+         GL.Uniforms.Set_Single (Picking_Colour_ID, R, G, B, 1.0);
 
-            GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+         GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
 
-            GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
-            GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,
-                                              Count      => Indices_Size,
-                                              Index_Type => UInt_Type);
-         end loop;
+         GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+         GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,
+                                           Count      => Indices_Size,
+                                           Index_Type => UInt_Type);
+      end loop;
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Flush;
 
@@ -186,15 +188,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                 GL.Pixels.RGBA, GL.Pixels.Float, Pixel_Data);
       Put_Line ("Pick Pix read");
       --   Convert the color back to an integer ID
-      Picked_ID := Pixel_Data (1) + 256.0 * Pixel_Data (2) + 256.0 * 256.0 * Pixel_Data (3);
+      Picked_ID := Int (Pixel_Data (1)) + 256 * Int (Pixel_Data (2)) +
+          256 * 256 * Int (Pixel_Data (3));
       Put_Line ("Pick Picked_ID set");
-      if Int (Picked_ID) = 16#00FFFFFF# then  --  Full white, must be the background!
-         null;
-         Put_Line ("Background " & Single'Image (Picked_ID));
---           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
+      if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
+         Put_Line ("Background " & Int'Image (Picked_ID));
+         --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
       else
-         Put_Line ("Mesh " & Single'Image (Picked_ID));
---           Message := Ada.Strings.Unbounded.To_Unbounded_String ("");
+         Put_Line ("Mesh " & Int'Image (Picked_ID));
+         --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("");
       end if;
 
    exception
@@ -226,9 +228,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Pick (Window, Positions, Orientations, View_Matrix, Projection_Matrix);
       end if;
 
-      Utilities.Clear_Background_Colour (Dark_Blue);
-      GL.Objects.Programs.Use_Program (Render_Program);
-      Load_Texture (View_Matrix, Projection_Matrix);
+      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+      Load_Texture (Render_Program, View_Matrix, Projection_Matrix);
 
    exception
       when others =>
@@ -238,21 +239,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup_Matrices (Window : in out Glfw.Windows.Window;
+   procedure Setup_Matrices (Window                          : in out Glfw.Windows.Window;
                              Render_Program, Picking_Program : GL.Objects.Programs.Program;
-                             View_Matrix, Projection_Matrix : out GL.Types.Singles.Matrix4) is
+                             View_Matrix, Projection_Matrix  : out GL.Types.Singles.Matrix4) is
       use GL.Types;
       use GL.Types.Singles;
 
    begin
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "MVP");
+          (Render_Program, "MVP");
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "M");
+          (Render_Program, "M");
       View_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "V");
+          (Render_Program, "V");
       Picking_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Picking_Program, "MVP");
+          (Picking_Program, "MVP");
 
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
    exception
@@ -296,22 +297,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
 
       Render_Program := Program_Loader.Program_From
-        ((Program_Loader.Src ("src/shaders/standard_vertex_shader.glsl",
-         Vertex_Shader),
-         Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
-           Fragment_Shader)));
+          ((Program_Loader.Src ("src/shaders/standard_vertex_shader.glsl",
+           Vertex_Shader),
+           Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
+               Fragment_Shader)));
       Utilities.Show_Shader_Program_Data (Render_Program);
 
       Picking_Program := Program_Loader.Program_From
-        ((Program_Loader.Src ("src/shaders/picking_vertex_shader.glsl",
-         Vertex_Shader),
-         Program_Loader.Src ("src/shaders/picking_fragment_shader.glsl",
-           Fragment_Shader)));
+          ((Program_Loader.Src ("src/shaders/picking_vertex_shader.glsl",
+           Vertex_Shader),
+           Program_Loader.Src ("src/shaders/picking_fragment_shader.glsl",
+               Fragment_Shader)));
       Utilities.Show_Shader_Program_Data (Picking_Program);
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "myTextureSampler");
+          (Render_Program, "myTextureSampler");
 
       Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
       declare
@@ -346,13 +347,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 UVs_Size, Normals_Size);
          declare
             Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
-                 := Indexed_Vertices  (1 .. Vertices_Size);
-            UVs_Indexed     : constant Singles.Vector2_Array (1 .. UVs_Size)
-                 := Indexed_UVs  (1 .. UVs_Size);
-            Normals_Indexed : constant Singles.Vector3_Array (1 .. Normals_Size)
-                 := Indexed_Normals  (1 .. Normals_Size);
-            Indices         : constant GL.Types.Int_Array (1 .. Indices_Size)
-                 := Temp_Indices  (1 .. Indices_Size);
+                := Indexed_Vertices  (1 .. Vertices_Size);
+            UVs_Indexed      : constant Singles.Vector2_Array (1 .. UVs_Size)
+                := Indexed_UVs  (1 .. UVs_Size);
+            Normals_Indexed  : constant Singles.Vector3_Array (1 .. Normals_Size)
+                := Indexed_Normals  (1 .. Normals_Size);
+            Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
+                := Temp_Indices  (1 .. Indices_Size);
          begin
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
@@ -373,9 +374,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       end;
 
       Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
-        (Picking_Program, "PickingColor");
+          (Picking_Program, "PickingColor");
       Light_ID := GL.Objects.Programs.Uniform_Location
-        (Picking_Program, "LightPosition_worldspace");
+          (Picking_Program, "LightPosition_worldspace");
 
       Last_Time := Glfw.Time;
       Utilities.Enable_Mouse_Callbacks (Window, True);
@@ -398,7 +399,7 @@ begin
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
-        not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+          not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 
