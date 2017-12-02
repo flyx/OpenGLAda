@@ -53,8 +53,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
-   Picking_Program          : GL.Objects.Programs.Program;
-   Render_Program           : GL.Objects.Programs.Program;
    Light_ID                 : GL.Uniforms.Uniform;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
    Model_Matrix_ID          : GL.Uniforms.Uniform;
@@ -133,6 +131,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Pick (Window                         : in out Glfw.Windows.Window;
+                   Picking_Program                : GL.Objects.Programs.Program;
                    Positions                      : GL.Types.Singles.Vector3_Array;
                    Orientations                   : Orientation_Array;
                    View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
@@ -207,7 +206,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Render (Window : in out Glfw.Windows.Window) is
+   procedure Render (Window : in out Glfw.Windows.Window;
+                     Render_Program : GL.Objects.Programs.Program;
+                     Picking_Program : GL.Objects.Programs.Program) is
       use Interfaces.C;
       use GL.Objects.Buffers;
       use GL.Types;
@@ -225,7 +226,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Setup_Matrices (Window, Render_Program, Picking_Program, View_Matrix, Projection_Matrix);
       if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
-         Pick (Window, Positions, Orientations, View_Matrix, Projection_Matrix);
+         Pick (Window, Picking_Program, Positions, Orientations, View_Matrix, Projection_Matrix);
       end if;
 
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
@@ -264,7 +265,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Setup (Window : in out Glfw.Windows.Window) is
+   procedure Setup (Window : in out Glfw.Windows.Window;
+                    Render_Program : out GL.Objects.Programs.Program;
+                    Picking_Program : out GL.Objects.Programs.Program) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -391,11 +394,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    use Glfw.Input;
-   Running : Boolean := True;
+   Picking_Program : GL.Objects.Programs.Program;
+   Render_Program  : GL.Objects.Programs.Program;
+   Running         : Boolean := True;
 begin
-   Setup (Main_Window);
+   Setup (Main_Window, Render_Program, Picking_Program);
    while Running loop
-      Render (Main_Window);
+      Render (Main_Window, Render_Program, Picking_Program);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
