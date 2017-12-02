@@ -33,9 +33,9 @@ with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-   type Pixels_Array is array (Positive range <>) of aliased Integer;
+   type Pixels_Array is array (Positive range <>) of aliased GL.Types.Single;
    procedure Read_Pix is new
-     GL.Framebuffer.Read_Pixels (Element_Type => Integer,
+     GL.Framebuffer.Read_Pixels (Element_Type => GL.Types.Single,
                                  Index_Type   => Positive,
                                  Array_Type   => Pixels_Array);
    type Orientation is record
@@ -130,7 +130,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Pick (Positions    : GL.Types.Singles.Vector3_Array;
+   procedure Pick (Window : in out Glfw.Windows.Window;
+                   Positions    : GL.Types.Singles.Vector3_Array;
                    Orientations : Orientation_Array;
                    View_Matrix, Projection_Matrix : GL.Types.Singles.Matrix4) is
       use Interfaces;
@@ -142,8 +143,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       R               : Single;
       G               : Single;
       B               : Single;
+      Window_Width    : Glfw.Size;
+      Window_Height   : Glfw.Size;
       Pixel_Data      : Pixels_Array (1 .. 4);
-      Picked_ID       : Integer;
+      Picked_ID       : Single;
 --        Message         : Ada.Strings.Unbounded.Unbounded_String;
    begin
          Utilities.Clear_Background_Colour (White);
@@ -158,6 +161,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
             GL.Uniforms.Set_Single (Picking_Matrix_ID, MVP_Matrix);
 
+            --  Convert count, the integer mesh ID, into an RGB color
             R :=  Single (Unsigned_32 (count) and 16#FF#) / 255.0;
             G :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF00#, 8)) / 255.0;
             B :=  Single (Shift_Right (Unsigned_32 (count) and 16#FF0000#, 16)) / 255.0;
@@ -171,26 +175,27 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                               Count      => Indices_Size,
                                               Index_Type => UInt_Type);
          end loop;
-      Put_Line ("Pick Elements drawn");
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Flush;
 
       GL.Pixels.Set_Pack_Alignment (GL.Pixels.Unpack_Alignment);
-
+      Window'Access.Get_Size (Window_Width, Window_Height);
       --  Read the pixel at the center of the screen
-      --   then convert the color back to an integer ID
       Put_Line ("Pick Reading Pix");
-      Read_Pix (1, 1, 1024 / 2, 768 / 2, GL.Pixels.RGBA, GL.Pixels.Unsigned_Byte, Pixel_Data);
+      Read_Pix (Int (Window_Width) / 2, Int (Window_Height) / 2, 1, 1,
+                GL.Pixels.RGBA, GL.Pixels.Float, Pixel_Data);
       Put_Line ("Pick Pix read");
-      Picked_ID := Pixel_Data (1) + 256 * (Pixel_Data (2) + 256 * Pixel_Data (3));
+      --   Convert the color back to an integer ID
+      Picked_ID := Pixel_Data (1) + 256.0 * Pixel_Data (2) + 256.0 * 256.0 * Pixel_Data (3);
       Put_Line ("Pick Picked_ID set");
---        if Picked_ID = 16#00FFFFFF# then  --  Full white, must be the background!
---           null;
+      if Int (Picked_ID) = 16#00FFFFFF# then  --  Full white, must be the background!
+         null;
+         Put_Line ("Background " & Single'Image (Picked_ID));
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("background");
---        else
-         Put_Line ("Mesh " & Integer'Image (Picked_ID));
+      else
+         Put_Line ("Mesh " & Single'Image (Picked_ID));
 --           Message := Ada.Strings.Unbounded.To_Unbounded_String ("");
---        end if;
+      end if;
 
    exception
       when others =>
@@ -218,7 +223,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Setup_Matrices (Window, Render_Program, Picking_Program, View_Matrix, Projection_Matrix);
       if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
-         Pick (Positions, Orientations, View_Matrix, Projection_Matrix);
+         Pick (Window, Positions, Orientations, View_Matrix, Projection_Matrix);
       end if;
 
       Utilities.Clear_Background_Colour (Dark_Blue);
