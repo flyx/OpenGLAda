@@ -94,6 +94,18 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Print_Vector2 (Name, anArray (Index));
+      end loop;
+      New_Line;
+   end Print_GL_Array2;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Singles.Vector3_Array) is
       use GL.Types;
    begin
