@@ -6,6 +6,9 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
+with Maths;
+with Utilities;
+
 package body Load_Object_File is
 
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -32,22 +35,39 @@ package body Load_Object_File is
       Vert_Size : constant Types.Int := Raw_Vertices'Length;
       UVs_Size  : constant Types.Int := Raw_UVs'Length;
       Norm_Size : constant Types.Int := Raw_Normals'Length;
+      Max_Size  : Types.Int := Maths.Maximum (Vert_Size, UVs_Size);
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
-      for Index in Vertex_Indices'Range loop
+      Put_Line ("Data_From_Faces Vertex_Indices, UV_Indices, Normal_Indices Sizes: "
+                & Types.Int'Image (Vertex_Indices'Length)
+                & Types.Int'Image (UV_Indices'Length)
+                & Types.Int'Image (Normal_Indices'Length));
+      New_Line;
+      Max_Size := Maths.Maximum (Max_Size, Norm_Size);
+      for Index in 1 .. Max_Size loop
          for elem in Index_3D'Range loop
-            if Index <= Vert_Size then
+            if Index <= Vert_Size and then Vertex_Indices (Index) (elem) <= Vert_Size  then
                Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
             end if;
-            if Index <= UVs_Size then
-               UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
-            end if;
-            if Index <= Norm_Size then
+            if Norm_Size > 0 and then Index <= Norm_Size and then
+                Index <= Normal_Indices'Length and then
+                Normal_Indices (Index) (elem) <= Raw_Normals'Length then
                Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
             end if;
          end loop;
+         for elem in Index_2D'Range loop
+            if UVs_Size > 0 and then Index <= UVs_Size and then
+                Index <= UV_Indices'Length and then
+                UV_Indices (Index) (elem) <= UVs_Size then
+                UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
+            end if;
+         end loop;
       end loop;
+      Utilities.Print_GL_Array3 ("Data_From_Faces Raw_Vertices array", Raw_Vertices);
+      Utilities.Print_GL_Array3 ("Vertices array", Vertices);
+      Utilities.Print_GL_Array2 ("UVs array", UVs);
+      Utilities.Print_GL_Array3 ("Normals array", Normals);
 
    exception
       when others =>
@@ -170,6 +190,7 @@ package body Load_Object_File is
             when others => null;
          end case;
       end loop;
+      Utilities.Print_GL_Array3 ("Load_Data Vertices array", Vertices);
 
    exception
       when others =>
@@ -206,12 +227,15 @@ package body Load_Object_File is
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
                     Vertex_Indices, UV_Indices, Normal_Indices);
          Close (Text_File_ID);
+      Utilities.Print_GL_Array3 ("Load_Object Raw_Vertices array", Raw_Vertices);
          Put_Line ("Load_Object Sizes " & Int'Image (Num_Vertices) &
                      Int'Image (UV_Count) & Int'Image (Normal_Count) &
                      Int'Image (Face_Count));
-         Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
-                          Vertex_Indices, UV_Indices, Normal_Indices,
-                          Vertices, UVs, Normals);
+         if Face_Count > 0 then
+            Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
+                             Vertex_Indices, UV_Indices, Normal_Indices,
+                             Vertices, UVs, Normals);
+         end if;
       end;
 
    exception
@@ -270,13 +294,14 @@ package body Load_Object_File is
                     UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean  := True) is
       use Ada.Strings.Unbounded;
       use GL.Types;
-      Last     : Natural;
+      Next     : Natural := 1;
       Size     : constant Natural := Length (UV_String);
       Value    : Float;
    begin
-      Ada.Float_Text_IO.Get (To_String (UV_String) (1 .. Size), Value, Last);
+      Ada.Float_Text_IO.Get (To_String (UV_String) (Next .. Size), Value, Next);
       UV (GL.X) := Single (Value);
-      Ada.Float_Text_IO.Get (To_String (UV_String)(Last .. Size), Value, Last);
+      Next := Next + 1;
+      Ada.Float_Text_IO.Get (To_String (UV_String)(Next .. Size), Value, Next);
       UV (GL.Y) := Single (Value);
       --  Invert V coordinate since we will only use DDS texture which are inverted.
       --  Remove if you want to use TGA or BMP loaders.
@@ -293,18 +318,21 @@ package body Load_Object_File is
    --  -------------------------------------------------------------------------
 
    procedure Parse (Vertex_String : Ada.Strings.Unbounded.Unbounded_String;
-                    Vertex : out GL.Types.Singles.Vector3) is
-        use Ada.Strings.Unbounded;
-        Last     : Natural := 1;
-        Size     : constant Natural := Length (Vertex_String);
-        Value    : float;
+                    Vertex        : out GL.Types.Singles.Vector3) is
+      use Ada.Strings.Unbounded;
+      Next     : Natural := 1;
+      Size     : constant Natural := Length (Vertex_String);
+      Value    : float;
    begin
-        Ada.Float_Text_IO.Get (To_String (Vertex_String)(Last .. Size), Value, Last);
-        Vertex (GL.X) := GL.Types.Single (Value);
-        Ada.Float_Text_IO.Get (To_String (Vertex_String)(Last .. Size), Value, Last);
-        Vertex (GL.Y) := GL.Types.Single (Value);
-        Ada.Float_Text_IO.Get (To_String (Vertex_String)(Last .. Size), Value, Last);
+      Ada.Float_Text_IO.Get (To_String (Vertex_String) (Next .. Size), Value, Next);
+      Vertex (GL.X) := GL.Types.Single (Value);
+      Next := Next + 1;
+      Ada.Float_Text_IO.Get (To_String (Vertex_String) (Next .. Size), Value, Next);
+      Next := Next + 1;
+      Vertex (GL.Y) := GL.Types.Single (Value);
+      Ada.Float_Text_IO.Get (To_String (Vertex_String) (Next .. Size), Value, Next);
       Vertex (GL.Z) := GL.Types.Single (Value);
+      New_Line;
 
    exception
       when others =>
