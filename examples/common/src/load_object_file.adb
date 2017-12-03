@@ -117,6 +117,18 @@ package body Load_Object_File is
 
    --  -------------------------------------------------------------------------
 
+   procedure Get_Array_Sizes (File_Name : String;
+                              Vertex_Count, UV_Count : out GL.Types.Int) is
+       Normal_Count : GL.Types.Int;
+       Face_Count   : GL.Types.Int;
+       Mesh_Count   : Integer;
+       Usemtl_Count : Integer;
+   begin
+      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
+                       Face_Count, Mesh_Count, Usemtl_Count);
+   end Get_Array_Sizes;
+
+   --  -------------------------------------------------------------------------
    procedure Load_Data (File_ID  : Ada.Text_IO.File_Type;
                         Vertices : in out GL.Types.Singles.Vector3_Array;
                         UVs      : in out GL.Types.Singles.Vector2_Array;
@@ -151,10 +163,7 @@ package body Load_Object_File is
                   when others => null;
                end case;
             when 's' => null;
---                 Mesh_Index := Integer'Value (To_String (Data));
             when 'u' => null;
---                 Usemtl_Index := Usemtl_Index + 1;
---                 Usemtl (Usemtl_Index) := Data;
             when 'f' =>  Face_Index := Face_Index + 1;
                Parse (Data, Vertex_Indicies (Face_Index),
                       UV_Indicies (Face_Index), Normal_Indicies (Face_Index));
@@ -213,6 +222,23 @@ package body Load_Object_File is
       when others =>
          Put_Line ("An exception occurred in Load_Object.");
          raise;
+   end Load_Object;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Load_Object (File_Name  : String;
+                          Vertices : out GL.Types.Singles.Vector3_Array;
+                          UVs      : out GL.Types.Singles.Vector2_Array) is
+      Vertex_Count   : GL.Types.Int;
+      UV_Count       : GL.Types.Int;
+      Normal_Count   : GL.Types.Int;
+   begin
+      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count);
+      declare
+         Normals : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
+      begin
+         Load_Object (File_Name, Vertices, UVs, Normals);
+      end;
    end Load_Object;
 
    --  -------------------------------------------------------------------------
