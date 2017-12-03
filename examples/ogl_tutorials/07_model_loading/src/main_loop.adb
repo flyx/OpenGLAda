@@ -29,7 +29,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
@@ -80,13 +79,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  Second attribute buffer : UVs
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
-      --  Third attribute buffer : Normals
-      GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
-      GL.Attributes.Disable_Vertex_Attrib_Array (2);
 
    exception
       when others =>
@@ -139,12 +134,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("src/textures/cube.obj", Vertex_Count, UV_Count, Normal_Count);
+      Load_Object_File.Get_Array_Sizes ("src/textures/cube.obj", Vertex_Count, UV_Count);
       declare
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. UV_Count);
       begin
-         Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs, Normals);
+         Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
 
          Vertex_Buffer.Initialize_Id;
          Array_Buffer.Bind (Vertex_Buffer);

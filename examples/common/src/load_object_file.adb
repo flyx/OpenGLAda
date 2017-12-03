@@ -39,23 +39,28 @@ package body Load_Object_File is
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
-      Put_Line ("Data_From_Faces Vertex_Indices, UV_Indices, Normal_Indices Sizes: "
-                & Types.Int'Image (Vertex_Indices'Length)
-                & Types.Int'Image (UV_Indices'Length)
-                & Types.Int'Image (Normal_Indices'Length));
+      Put_Line ("Data_From_Faces Indices Size: "
+                & Types.Int'Image (Vertex_Indices'Length));
       New_Line;
       Max_Size := Maths.Maximum (Max_Size, Norm_Size);
-      for Index in 1 .. Max_Size loop
+      Utilities.Print_GL_Array3 ("Vertex_Indices", Vertex_Indices);
+      Utilities.Print_GL_Array3 ("UV_Indices", UV_Indices);
+      Utilities.Print_GL_Array3 ("Normal_Indices", Normal_Indices);
+      for Index in Vertex_Indices'Range loop
+         Put ("Data_From_Faces Index: ");
          for elem in Index_3D'Range loop
-            if Index <= Vert_Size and then Vertex_Indices (Index) (elem) <= Vert_Size  then
+            if Vertex_Indices (Index) (elem) <= Vert_Size  then
+            Put (Types.Int'Image (Vertex_Indices (Index) (elem)) & "  ");
                Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
             end if;
+
             if Norm_Size > 0 and then Index <= Norm_Size and then
                 Index <= Normal_Indices'Length and then
                 Normal_Indices (Index) (elem) <= Raw_Normals'Length then
                Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
             end if;
          end loop;
+         New_Line;
          for elem in Index_2D'Range loop
             if UVs_Size > 0 and then Index <= UVs_Size and then
                 Index <= UV_Indices'Length and then
@@ -66,7 +71,9 @@ package body Load_Object_File is
       end loop;
       Utilities.Print_GL_Array3 ("Data_From_Faces Raw_Vertices array", Raw_Vertices);
       Utilities.Print_GL_Array3 ("Vertices array", Vertices);
+      Utilities.Print_GL_Array2 ("Data_From_Faces Raw_UVs array", Raw_UVs);
       Utilities.Print_GL_Array2 ("UVs array", UVs);
+      Utilities.Print_GL_Array3 ("Data_From_Faces Raw_Normals array", Raw_Normals);
       Utilities.Print_GL_Array3 ("Normals array", Normals);
 
    exception
@@ -190,7 +197,6 @@ package body Load_Object_File is
             when others => null;
          end case;
       end loop;
-      Utilities.Print_GL_Array3 ("Load_Data Vertices array", Vertices);
 
    exception
       when others =>
@@ -227,7 +233,6 @@ package body Load_Object_File is
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
                     Vertex_Indices, UV_Indices, Normal_Indices);
          Close (Text_File_ID);
-      Utilities.Print_GL_Array3 ("Load_Object Raw_Vertices array", Raw_Vertices);
          Put_Line ("Load_Object Sizes " & Int'Image (Num_Vertices) &
                      Int'Image (UV_Count) & Int'Image (Normal_Count) &
                      Int'Image (Face_Count));
@@ -274,13 +279,9 @@ package body Load_Object_File is
    begin
       for indice in GL.Index_3D loop
          Read_Index (Face_String, Start, Vertex_Index (indice));
-      end loop;
-     for indice in GL.Index_3D loop
          Read_Index (Face_String, Start, UV_Index (indice));
-     end loop;
-     for indice in GL.Index_3D loop
          Read_Index (Face_String, Start, Normal_Index (indice));
-     end loop;
+      end loop;
 
    exception
       when others =>
@@ -332,7 +333,6 @@ package body Load_Object_File is
       Vertex (GL.Y) := GL.Types.Single (Value);
       Ada.Float_Text_IO.Get (To_String (Vertex_String) (Next .. Size), Value, Next);
       Vertex (GL.Z) := GL.Types.Single (Value);
-      New_Line;
 
    exception
       when others =>
