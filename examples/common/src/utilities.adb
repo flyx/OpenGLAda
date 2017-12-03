@@ -15,7 +15,11 @@ package body Utilities is
 
    procedure Print_Vector1 (Name : String; aVector : Vector_Type) is
    begin
-      Put (Name & ":  ");
+      if Name = "" then
+         Put ("  ");
+      else
+         Put (Name & ":  ");
+      end if;
       for Index in aVector'Range loop
          Put (GL.Types.Single'Image (aVector (Index)) & "   ");
       end loop;
@@ -30,8 +34,6 @@ package body Utilities is
      new Print_Vector1 (GL.Index_3D, GL.Types.Singles.Vector3);
    procedure Print_Vector4 is
      new Print_Vector1 (GL.Index_Homogeneous, GL.Types.Singles.Vector4);
-   --  procedure Print_Vector5 is
-   --    new Print_Vector1 (Maths.Index_5, Maths.Vector5);
    procedure Print_Vector6 is
      new Print_Vector1 (Maths.Index_6, Maths.Vector6);
 
@@ -99,7 +101,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Vector2 (Name, anArray (Index));
+         Print_Vector2 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_GL_Array2;
@@ -111,7 +113,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Vector3 (Name, anArray (Index));
+         Print_Vector3 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_GL_Array3;
@@ -123,7 +125,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Vector4 (Name, anArray (Index));
+         Print_Vector4 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_GL_Array4;
@@ -135,7 +137,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Vector6 (Name, anArray (Index));
+         Print_Vector6 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_Array6;
