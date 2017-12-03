@@ -23,7 +23,6 @@ with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
 with Utilities;
---  with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
@@ -33,10 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
-   Light_ID                 : GL.Uniforms.Uniform;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
-   Model_Matrix_ID          : GL.Uniforms.Uniform;
-   View_Matrix_ID           : GL.Uniforms.Uniform;
    Texture_ID               : GL.Uniforms.Uniform;
    Sample_Texture           : GL.Objects.Textures.Texture;
 
@@ -50,18 +46,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
-      Light_Pos         : constant Singles.Vector3 := (4.0, 4.0, 4.0);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
-
-      Put_Line ("Load_Texture setting Light_Pos");
-      GL.Uniforms.Set_Single (Light_ID, Light_Pos);
-      Put_Line ("Load_Texture Light_Pos set");
 
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
@@ -119,7 +108,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Height   : constant Glfw.Size := 768;
       Vertex_Count    : GL.Types.Int;
       UV_Count        : GL.Types.Int;
-      Normal_Count    : GL.Types.Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -138,32 +126,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertices_Array_Object.Bind;
 
       Render_Program := Program_Loader.Program_From
-        ((Program_Loader.Src ("src/shaders/standard_vertex_shader.glsl",
+        ((Program_Loader.Src ("src/shaders/Transform_Vertex_Shader.glsl",
          Vertex_Shader),
-         Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
+         Program_Loader.Src ("src/shaders/Texture_Fragment_Shader.glsl",
            Fragment_Shader)));
       Utilities.Show_Shader_Program_Data (Render_Program);
 
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MVP");
-      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "M");
-      View_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "V");
-      Light_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Light_Position_Worldspace");
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
+      Load_Object_File.Get_Array_Sizes ("src/textures/cube.obj", Vertex_Count, UV_Count, Normal_Count);
       declare
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. UV_Count);
-         Normals          : Singles.Vector3_Array (1 .. Normal_Count);
       begin
-         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
+         Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs, Normals);
 
          Vertex_Buffer.Initialize_Id;
          Array_Buffer.Bind (Vertex_Buffer);
@@ -172,10 +153,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          UVs_Buffer.Initialize_Id;
          Array_Buffer.Bind (UVs_Buffer);
          Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
-
-         Normals_Buffer.Initialize_Id;
-         Array_Buffer.Bind (Normals_Buffer);
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
       end;
 
    exception
