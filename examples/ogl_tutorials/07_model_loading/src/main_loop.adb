@@ -101,8 +101,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
-      Vertex_Count    : GL.Types.Int;
-      UV_Count        : GL.Types.Int;
+      Array_Size    : GL.Types.Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -134,12 +133,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("src/textures/cube.obj", Vertex_Count, UV_Count);
+      Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
       declare
-         Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
-         UVs              : Singles.Vector2_Array (1 .. UV_Count);
+         Vertices         : Singles.Vector3_Array (1 .. Array_Size);
+         UVs              : Singles.Vector2_Array (1 .. Array_Size);
       begin
          Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
+         Utilities.Print_GL_Array3 ("Vertices array", Vertices);
+         Utilities.Print_GL_Array2 ("UVs array", UVs);
 
          Vertex_Buffer.Initialize_Id;
          Array_Buffer.Bind (Vertex_Buffer);

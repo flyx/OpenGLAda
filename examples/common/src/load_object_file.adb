@@ -6,8 +6,6 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
-with Utilities;
-
 package body Load_Object_File is
 
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -40,9 +38,6 @@ package body Load_Object_File is
             Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
          end loop;
       end loop;
-      Utilities.Print_GL_Array3 ("Vertices array", Vertices);
-      Utilities.Print_GL_Array2 ("UVs array", UVs);
-      Utilities.Print_GL_Array3 ("Normals array", Normals);
 
    exception
       when others =>
@@ -53,7 +48,7 @@ package body Load_Object_File is
    --  -------------------------------------------------------------------------
 
    procedure Get_Array_Sizes (File_Name  : String; Vertex_Count, UV_Count,
-                              Normal_Count, Face_Count : out GL.Types.Int;
+                              Normal_Count, Indices_Count : out GL.Types.Int;
                               Mesh_Count, Usemtl_Count : out Integer) is
       use Ada.Strings.Unbounded;
       use GL.Types;
@@ -64,8 +59,8 @@ package body Load_Object_File is
       Vertex_Count := 0;
       UV_Count := 0;
       Normal_Count := 0;
+      Indices_Count := 0;
       Mesh_Count := 0;
-      Face_Count := 0;
       Usemtl_Count := 0;
       Open (File_ID, In_File, File_Name);
       while not End_Of_File (File_ID) loop
@@ -81,7 +76,7 @@ package body Load_Object_File is
                end case;
             when 's' => Mesh_Count := Mesh_Count + 1;
             when 'u' => Usemtl_Count := Usemtl_Count + 1;
-            when 'f' => Face_Count := Face_Count + 1;
+            when 'f' => Indices_Count := Indices_Count + 1;
             when others => null;
          end case;
       end loop;
@@ -95,38 +90,6 @@ package body Load_Object_File is
       when others =>
          Put_Line ("An exception occurred in Get_Array_Sizes.");
          raise;
-   end Get_Array_Sizes;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Get_Array_Sizes (File_Name : String; Vertex_Count, UV_Count,
-                              Normal_Count : out GL.Types.Int) is
-      use GL.Types;
-      Face_Count   : GL.Types.Int;
-      Mesh_Count   : Integer;
-      Usemtl_Count : Integer;
-   begin
-      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
-                       Face_Count, Mesh_Count, Usemtl_Count);
-      Vertex_Count := Face_Count;
-      UV_Count := Face_Count;
-      Normal_Count := Face_Count;
-   end Get_Array_Sizes;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Get_Array_Sizes (File_Name : String;
-                              Vertex_Count, UV_Count : out GL.Types.Int) is
-      use GL.Types;
-       Normal_Count : GL.Types.Int;
-       Face_Count   : GL.Types.Int;
-       Mesh_Count   : Integer;
-       Usemtl_Count : Integer;
-   begin
-      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
-                       Face_Count, Mesh_Count, Usemtl_Count);
-      Vertex_Count := Face_Count;
-      UV_Count := Face_Count;
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
@@ -191,18 +154,18 @@ package body Load_Object_File is
       Normal_Count   : GL.Types.Int;
       Mesh_Count     : Integer;
       Usemtl_Count   : Integer;
-      Face_Count     : GL.Types.Int;
+      Vertex_Count     : GL.Types.Int;
    begin
       Get_Array_Sizes (File_Name, Num_Vertices, UV_Count, Normal_Count,
-                       Face_Count, Mesh_Count, Usemtl_Count);
+                       Vertex_Count, Mesh_Count, Usemtl_Count);
       declare
          use GL.Types;
          Raw_Vertices   : Singles.Vector3_Array (1 .. Num_Vertices);
          Raw_UVs        : Singles.Vector2_Array (1 .. UV_Count);
          Raw_Normals    : Singles.Vector3_Array (1 .. Normal_Count);
-         Vertex_Indices : Ints.Vector3_Array (1 .. Face_Count);
-         UV_Indices     : Ints.Vector3_Array (1 .. Face_Count);
-         Normal_Indices : Ints.Vector3_Array (1 .. Face_Count);
+         Vertex_Indices : Ints.Vector3_Array (1 .. Vertex_Count);
+         UV_Indices     : Ints.Vector3_Array (1 .. Vertex_Count);
+         Normal_Indices : Ints.Vector3_Array (1 .. Vertex_Count);
       begin
          Open (Text_File_ID, In_File, File_Name);
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
@@ -210,8 +173,8 @@ package body Load_Object_File is
          Close (Text_File_ID);
          Put_Line ("Load_Object Sizes " & Int'Image (Num_Vertices) &
                      Int'Image (UV_Count) & Int'Image (Normal_Count) &
-                     Int'Image (Face_Count));
-         if Face_Count > 0 then
+                     Int'Image (Vertex_Count));
+         if Vertex_Count > 0 then
             Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
                              Vertex_Indices, UV_Indices, Normal_Indices,
                              Vertices, UVs, Normals);
@@ -233,19 +196,46 @@ package body Load_Object_File is
    procedure Load_Object (File_Name  : String;
                           Vertices : out GL.Types.Singles.Vector3_Array;
                           UVs      : out GL.Types.Singles.Vector2_Array) is
-      Vertex_Count   : GL.Types.Int;
-      UV_Count       : GL.Types.Int;
-      Normal_Count   : GL.Types.Int;
    begin
-      Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count);
       declare
-         Normals : GL.Types.Singles.Vector3_Array (1 .. Normal_Count);
+         Normals : GL.Types.Singles.Vector3_Array (1 .. Mesh_Size (File_Name));
       begin
          Load_Object (File_Name, Vertices, UVs, Normals);
       end;
    end Load_Object;
 
    --  -------------------------------------------------------------------------
+
+   function Mesh_Size (File_Name  : String) return GL.Types.Int is
+      use Ada.Strings.Unbounded;
+      use GL.Types;
+      File_ID    : Ada.Text_IO.File_Type;
+      Mesh_Count : Int := 0;
+      Text       : Unbounded_String;
+      Label      : String (1 .. 2);
+   begin
+      Open (File_ID, In_File, File_Name);
+      while not End_Of_File (File_ID) loop
+         Text := To_Unbounded_String (Get_Line (File_ID));
+         Label := To_String (Text) (1 .. 2);
+         if Label (1) = 'f' then
+            Mesh_Count := Mesh_Count + 1;
+         end if;
+      end loop;
+      Close (File_ID);
+      return Mesh_Count;
+
+   exception
+      when Ada.IO_Exceptions.Name_Error  =>
+         --  File not found
+         Put_Line ("Mesh_Size can't find the file " & File_Name & "!");
+         raise;
+      when others =>
+         Put_Line ("An exception occurred in Mesh_Size.");
+         raise;
+   end Mesh_Size;
+
+    --  -------------------------------------------------------------------------
 
    procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index  : out GL.Types.Ints.Vector3) is
