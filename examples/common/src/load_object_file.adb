@@ -36,7 +36,6 @@ package body Load_Object_File is
       --  of a triangle
    begin
       for Index in Vertex_Indices'Range loop
-
          for elem in Index_3D'Range loop
             if Index <= Vert_Size then
                Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
@@ -129,6 +128,7 @@ package body Load_Object_File is
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
+
    procedure Load_Data (File_ID  : Ada.Text_IO.File_Type;
                         Vertices : in out GL.Types.Singles.Vector3_Array;
                         UVs      : in out GL.Types.Singles.Vector2_Array;
