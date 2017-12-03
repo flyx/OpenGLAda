@@ -6,7 +6,6 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
-with Maths;
 with Utilities;
 
 package body Load_Object_File is
@@ -31,49 +30,18 @@ package body Load_Object_File is
                               UVs      : out GL.Types.Singles.Vector2_Array;
                               Normals  : out GL.Types.Singles.Vector3_Array) is
       use GL;
-      use GL.Types;
-      Vert_Size : constant Types.Int := Raw_Vertices'Length;
-      UVs_Size  : constant Types.Int := Raw_UVs'Length;
-      Norm_Size : constant Types.Int := Raw_Normals'Length;
-      Max_Size  : Types.Int := Maths.Maximum (Vert_Size, UVs_Size);
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
-      Put_Line ("Data_From_Faces Indices Size: "
-                & Types.Int'Image (Vertex_Indices'Length));
-      New_Line;
-      Max_Size := Maths.Maximum (Max_Size, Norm_Size);
-      Utilities.Print_GL_Array3 ("Vertex_Indices", Vertex_Indices);
-      Utilities.Print_GL_Array3 ("UV_Indices", UV_Indices);
-      Utilities.Print_GL_Array3 ("Normal_Indices", Normal_Indices);
       for Index in Vertex_Indices'Range loop
-         Put ("Data_From_Faces Index: ");
          for elem in Index_3D'Range loop
-            if Vertex_Indices (Index) (elem) <= Vert_Size  then
-            Put (Types.Int'Image (Vertex_Indices (Index) (elem)) & "  ");
-               Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
-            end if;
-
-            if Norm_Size > 0 and then Index <= Norm_Size and then
-                Index <= Normal_Indices'Length and then
-                Normal_Indices (Index) (elem) <= Raw_Normals'Length then
-               Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
-            end if;
-         end loop;
-         New_Line;
-         for elem in Index_2D'Range loop
-            if UVs_Size > 0 and then Index <= UVs_Size and then
-                Index <= UV_Indices'Length and then
-                UV_Indices (Index) (elem) <= UVs_Size then
-                UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
-            end if;
+            Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
+            UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
+            Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
          end loop;
       end loop;
-      Utilities.Print_GL_Array3 ("Data_From_Faces Raw_Vertices array", Raw_Vertices);
       Utilities.Print_GL_Array3 ("Vertices array", Vertices);
-      Utilities.Print_GL_Array2 ("Data_From_Faces Raw_UVs array", Raw_UVs);
       Utilities.Print_GL_Array2 ("UVs array", UVs);
-      Utilities.Print_GL_Array3 ("Data_From_Faces Raw_Normals array", Raw_Normals);
       Utilities.Print_GL_Array3 ("Normals array", Normals);
 
    exception
@@ -133,18 +101,23 @@ package body Load_Object_File is
 
    procedure Get_Array_Sizes (File_Name : String; Vertex_Count, UV_Count,
                               Normal_Count : out GL.Types.Int) is
+      use GL.Types;
       Face_Count   : GL.Types.Int;
       Mesh_Count   : Integer;
       Usemtl_Count : Integer;
    begin
       Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
                        Face_Count, Mesh_Count, Usemtl_Count);
+      Vertex_Count := Face_Count;
+      UV_Count := Face_Count;
+      Normal_Count := Face_Count;
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
 
    procedure Get_Array_Sizes (File_Name : String;
                               Vertex_Count, UV_Count : out GL.Types.Int) is
+      use GL.Types;
        Normal_Count : GL.Types.Int;
        Face_Count   : GL.Types.Int;
        Mesh_Count   : Integer;
@@ -152,6 +125,8 @@ package body Load_Object_File is
    begin
       Get_Array_Sizes (File_Name, Vertex_Count, UV_Count, Normal_Count,
                        Face_Count, Mesh_Count, Usemtl_Count);
+      Vertex_Count := Face_Count;
+      UV_Count := Face_Count;
    end Get_Array_Sizes;
 
    --  -------------------------------------------------------------------------
