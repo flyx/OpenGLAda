@@ -37,7 +37,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Texture (Window : in out Glfw.Windows.Window;
+   procedure Load_Texture (Window         : in out Glfw.Windows.Window;
                            Render_Program : GL.Objects.Programs.Program) is
       use GL.Types;
       use GL.Types.Singles;
@@ -65,12 +65,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Render (Window : in out Glfw.Windows.Window;
-                     Render_Program : GL.Objects.Programs.Program) is
+                     Render_Program : GL.Objects.Programs.Program;
+                     Vertices       : GL.Types.Singles.Vector3_Array;
+                     UVs            : GL.Types.Singles.Vector2_Array) is
       use GL.Objects.Buffers;
       use GL.Types;
       use Glfw.Input;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
+      Array_Buffer.Bind (Vertex_Buffer);
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+
+      Array_Buffer.Bind (UVs_Buffer);
+      Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
       Load_Texture (Window, Render_Program);
 
       --  First attribute buffer : vertices
@@ -82,7 +89,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
-
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Vertices'Length);
    exception
       when others =>
          Put_Line ("An exception occurred in Render.");
@@ -92,7 +99,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup (Window : in out Glfw.Windows.Window;
-                    Render_Program : out GL.Objects.Programs.Program) is
+                    Render_Program : out GL.Objects.Programs.Program;
+                    Vertices       : out GL.Types.Singles.Vector3_Array;
+                    UVs            : out GL.Types.Singles.Vector2_Array) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -101,7 +110,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
-      Array_Size    : GL.Types.Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -131,26 +139,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "myTextureSampler");
+          (Render_Program, "myTextureSampler");
 
-      Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
-      declare
-         Vertices         : Singles.Vector3_Array (1 .. Array_Size);
-         UVs              : Singles.Vector2_Array (1 .. Array_Size);
-      begin
-         Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
-         Utilities.Print_GL_Array3 ("Vertices array", Vertices);
-         Utilities.Print_GL_Array2 ("UVs array", UVs);
+      Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
+      Utilities.Print_GL_Array3 ("Vertices array", Vertices);
+      Utilities.Print_GL_Array2 ("UVs array", UVs);
 
-         Vertex_Buffer.Initialize_Id;
-         Array_Buffer.Bind (Vertex_Buffer);
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+      Vertex_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Vertex_Buffer);
 
-         UVs_Buffer.Initialize_Id;
-         Array_Buffer.Bind (UVs_Buffer);
-         Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
-      end;
-
+      UVs_Buffer.Initialize_Id;
+      Array_Buffer.Bind (UVs_Buffer);
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
@@ -160,18 +159,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    use Glfw.Input;
-   Render_Program  : GL.Objects.Programs.Program;
+   Array_Size      : GL.Types.Int;
    Running         : Boolean := True;
 begin
-   Setup (Main_Window, Render_Program);
-   while Running loop
-      Render (Main_Window, Render_Program);
-      Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-      Glfw.Input.Poll_Events;
-      Running := Running and then
-        not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
-      Running := Running and then not Main_Window.Should_Close;
-   end loop;
+   Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
+   declare
+      Render_Program  : GL.Objects.Programs.Program;
+      Vertices        : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
+      UVs             : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
+   begin
+      Setup (Main_Window, Render_Program, Vertices, UVs);
+      while Running loop
+         Render (Main_Window, Render_Program, Vertices, UVs);
+         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+         Glfw.Input.Poll_Events;
+         Running := Running and then
+             not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+         Running := Running and then not Main_Window.Should_Close;
+      end loop;
+   end;
 
 exception
    when others =>
