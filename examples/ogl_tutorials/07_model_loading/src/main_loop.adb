@@ -33,12 +33,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
    Texture_ID               : GL.Uniforms.Uniform;
-   Sample_Texture           : GL.Objects.Textures.Texture;
 
    --  ------------------------------------------------------------------------
 
    procedure Load_Texture (Window         : in out Glfw.Windows.Window;
-                           Render_Program : GL.Objects.Programs.Program) is
+                           Render_Program : GL.Objects.Programs.Program;
+                           Sample_Texture : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -67,29 +67,29 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program : GL.Objects.Programs.Program;
                      Vertices       : GL.Types.Singles.Vector3_Array;
-                     UVs            : GL.Types.Singles.Vector2_Array) is
+                     Sample_Texture : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
       use Glfw.Input;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
-      Array_Buffer.Bind (Vertex_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+      GL.Objects.Programs.Use_Program (Render_Program);
 
-      Array_Buffer.Bind (UVs_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
-      Load_Texture (Window, Render_Program);
+      Load_Texture (Window, Render_Program, Sample_Texture);
 
       --  First attribute buffer : vertices
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       --  Second attribute buffer : UVs
+      GL.Attributes.Enable_Vertex_Attrib_Array (1);
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
 
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3 * Vertices'Length);
+
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Vertices'Length);
    exception
       when others =>
          Put_Line ("An exception occurred in Render.");
@@ -101,7 +101,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program;
                     Vertices       : out GL.Types.Singles.Vector3_Array;
-                    UVs            : out GL.Types.Singles.Vector2_Array) is
+                    UVs            : out GL.Types.Singles.Vector2_Array;
+                    Sample_Texture : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -111,18 +112,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
    begin
+      Utilities.Clear_Background_Colour (Dark_Blue);
       Window.Set_Input_Toggle (Sticky_Keys, True);
+      GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      GL.Buffers.Set_Depth_Function (GL.Types.Less);
+--        GL.Toggles.Enable (GL.Toggles.Cull_Face);
       Window.Set_Cursor_Mode (Mouse.Disabled);
       Glfw.Input.Poll_Events;
 
       Window'Access.Set_Size (Window_Width, Window_Height);
       Window'Access.Set_Cursor_Pos (Mouse.Coordinate (0.5 * Single (Window_Width)),
                                     Mouse.Coordinate (0.5 * Single (Window_Height)));
-      Utilities.Clear_Background_Colour (Dark_Blue);
-
-      GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      GL.Buffers.Set_Depth_Function (GL.Types.Less);
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Vertices_Array_Object.Initialize_Id;
       Vertices_Array_Object.Bind;
@@ -147,9 +147,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
+      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
       UVs_Buffer.Initialize_Id;
       Array_Buffer.Bind (UVs_Buffer);
+      Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
+
    exception
       when others =>
          Put_Line ("An exception occurred in Setup.");
@@ -167,10 +170,11 @@ begin
       Render_Program  : GL.Objects.Programs.Program;
       Vertices        : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
       UVs             : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
+      Sample_Texture  : GL.Objects.Textures.Texture;
    begin
-      Setup (Main_Window, Render_Program, Vertices, UVs);
+      Setup (Main_Window, Render_Program, Vertices, UVs, Sample_Texture);
       while Running loop
-         Render (Main_Window, Render_Program, Vertices, UVs);
+         Render (Main_Window, Render_Program, Vertices, Sample_Texture);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
          Running := Running and then
