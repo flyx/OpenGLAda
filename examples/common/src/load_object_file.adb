@@ -8,7 +8,7 @@ with Ada.Text_IO.Unbounded_IO;
 
 package body Load_Object_File is
 
-   procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Parse (Mesh_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index : out GL.Types.Ints.Vector3);
    procedure Parse (UV_String : Ada.Strings.Unbounded.Unbounded_String;
                     UV : out GL.Types.Singles.Vector2; DDS_Format : Boolean := True);
@@ -19,23 +19,23 @@ package body Load_Object_File is
 
    --  -------------------------------------------------------------------------
 
-   procedure Data_From_Faces (Raw_Vertices : GL.Types.Singles.Vector3_Array;
-                              Raw_UVs      : GL.Types.Singles.Vector2_Array;
-                              Raw_Normals  : GL.Types.Singles.Vector3_Array;
+   procedure Data_From_Faces (Raw_Vertices  : GL.Types.Singles.Vector3_Array;
+                              Raw_UVs       : GL.Types.Singles.Vector2_Array;
+                              Raw_Normals   : GL.Types.Singles.Vector3_Array;
                               Vertex_Indices, UV_Indices, Normal_Indices :
                                              GL.Types.Ints.Vector3_Array;
-                              Vertices : out GL.Types.Singles.Vector3_Array;
-                              UVs      : out GL.Types.Singles.Vector2_Array;
-                              Normals  : out GL.Types.Singles.Vector3_Array) is
+                              Mesh_Vertices : out GL.Types.Singles.Vector3_Array;
+                              Mesh_UVs      : out GL.Types.Singles.Vector2_Array;
+                              Mesh_Normals  : out GL.Types.Singles.Vector3_Array) is
       use GL;
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
       for Index in Vertex_Indices'Range loop
          for elem in Index_3D'Range loop
-            Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
-            UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
-            Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
+            Mesh_Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
+            Mesh_UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
+            Mesh_Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
          end loop;
       end loop;
 
@@ -102,13 +102,13 @@ package body Load_Object_File is
                                    in out GL.Types.Ints.Vector3_Array) is
       use Ada.Strings.Unbounded;
       use GL.Types;
-      Line         : Unbounded_String;
-      Data         : Unbounded_String;
-      Label        : String (1 .. 2);
-      Vertex_Index : Int := 0;
-      UV_Index     : Int := 0;
-      Normal_Index : Int := 0;
-      Face_Index   : Int := 0;
+      Line               : Unbounded_String;
+      Data               : Unbounded_String;
+      Label              : String (1 .. 2);
+      Vertex_Index       : Int := 0;
+      UV_Index           : Int := 0;
+      Normal_Index       : Int := 0;
+      Mesh_Vertice_Index : Int := 0;
    begin
       while not End_Of_File (File_ID) loop
          Ada.Text_IO.Unbounded_IO.Get_Line (File_ID, Line);
@@ -129,9 +129,10 @@ package body Load_Object_File is
                end case;
             when 's' => null;
             when 'u' => null;
-            when 'f' =>  Face_Index := Face_Index + 1;
-               Parse (Data, Vertex_Indicies (Face_Index),
-                      UV_Indicies (Face_Index), Normal_Indicies (Face_Index));
+            when 'f' =>  Mesh_Vertice_Index := Mesh_Vertice_Index + 1;
+               Parse (Data, Vertex_Indicies (Mesh_Vertice_Index),
+                      UV_Indicies (Mesh_Vertice_Index),
+                      Normal_Indicies (Mesh_Vertice_Index));
             when others => null;
          end case;
       end loop;
@@ -154,7 +155,7 @@ package body Load_Object_File is
       Normal_Count   : GL.Types.Int;
       Mesh_Count     : Integer;
       Usemtl_Count   : Integer;
-      Vertex_Count     : GL.Types.Int;
+      Vertex_Count   : GL.Types.Int;
    begin
       Get_Array_Sizes (File_Name, Num_Vertices, UV_Count, Normal_Count,
                        Vertex_Count, Mesh_Count, Usemtl_Count);
@@ -209,21 +210,21 @@ package body Load_Object_File is
    function Mesh_Size (File_Name  : String) return GL.Types.Int is
       use Ada.Strings.Unbounded;
       use GL.Types;
-      File_ID    : Ada.Text_IO.File_Type;
-      Mesh_Count : Int := 0;
-      Text       : Unbounded_String;
-      Label      : String (1 .. 2);
+      File_ID           : Ada.Text_IO.File_Type;
+      Mesh_Vertex_Count : Int := 0;
+      Text              : Unbounded_String;
+      Label             : String (1 .. 2);
    begin
       Open (File_ID, In_File, File_Name);
       while not End_Of_File (File_ID) loop
          Text := To_Unbounded_String (Get_Line (File_ID));
          Label := To_String (Text) (1 .. 2);
          if Label (1) = 'f' then
-            Mesh_Count := Mesh_Count + 1;
+            Mesh_Vertex_Count := Mesh_Vertex_Count + 1;
          end if;
       end loop;
       Close (File_ID);
-      return Mesh_Count;
+      return Mesh_Vertex_Count;
 
    exception
       when Ada.IO_Exceptions.Name_Error  =>
@@ -237,20 +238,20 @@ package body Load_Object_File is
 
     --  -------------------------------------------------------------------------
 
-   procedure Parse (Face_String : Ada.Strings.Unbounded.Unbounded_String;
+   procedure Parse (Mesh_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index  : out GL.Types.Ints.Vector3) is
       use Ada.Strings.Unbounded;
       Start : Positive := 1;
    begin
       for indice in GL.Index_3D loop
-         Read_Index (Face_String, Start, Vertex_Index (indice));
-         Read_Index (Face_String, Start, UV_Index (indice));
-         Read_Index (Face_String, Start, Normal_Index (indice));
+         Read_Index (Mesh_String, Start, Vertex_Index (indice));
+         Read_Index (Mesh_String, Start, UV_Index (indice));
+         Read_Index (Mesh_String, Start, Normal_Index (indice));
       end loop;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Parse Face_String.");
+         Put_Line ("An exception occurred in Parse Mesh_String.");
          raise;
    end Parse;
 
@@ -310,10 +311,10 @@ package body Load_Object_File is
    Procedure Read_Index (Data : Ada.Strings.Unbounded.Unbounded_String;
                          Start : in out Positive; Index : out GL.Types.Int) is
       use Ada.Strings.Unbounded;
-      Size : constant Natural := Length (Data);
-      Pos  : Positive := Start;
-      Last_Pos  : Positive;
-      Value : Integer;
+      Size     : constant Natural := Length (Data);
+      Pos      : Positive := Start;
+      Last_Pos : Positive;
+      Value    : Integer;
    begin
       if Element (Data, Start) = '/' then
          Pos := Pos + 1;
