@@ -6,6 +6,8 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
+WITH Utilities;
+
 package body Load_Object_File is
 
    procedure Parse (Mesh_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -31,14 +33,14 @@ package body Load_Object_File is
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
    begin
-      for Index in Vertex_Indices'Range loop
+      for Index in Mesh_Vertices'Range loop
          for elem in Index_3D'Range loop
             Mesh_Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
             Mesh_UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
             Mesh_Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
          end loop;
       end loop;
-
+      Utilities.Print_GL_Array3 ("Mesh_Vertices", Mesh_Vertices);
    exception
       when others =>
          Put_Line ("An exception occurred in Data_From_Faces.");
@@ -81,6 +83,7 @@ package body Load_Object_File is
          end case;
       end loop;
       Close (File_ID);
+      Mesh_Count := 3 * Mesh_Count;
 
    exception
       when Ada.IO_Exceptions.Name_Error  =>
@@ -136,6 +139,8 @@ package body Load_Object_File is
             when others => null;
          end case;
       end loop;
+
+      Utilities.Print_GL_Array3 ("Vertex_Indicies", Vertex_Indicies);
 
    exception
       when others =>

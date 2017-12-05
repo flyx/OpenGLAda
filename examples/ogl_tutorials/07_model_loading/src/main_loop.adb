@@ -36,46 +36,28 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Texture (Window         : in out Glfw.Windows.Window;
-                           Render_Program : GL.Objects.Programs.Program;
-                           Sample_Texture : GL.Objects.Textures.Texture) is
+   procedure Render (Window : in out Glfw.Windows.Window;
+                     Render_Program : GL.Objects.Programs.Program;
+--                       Vertices       : GL.Types.Singles.Vector3_Array;
+                     Sample_Texture : GL.Objects.Textures.Texture) is
+      use GL.Objects.Buffers;
       use GL.Types;
       use GL.Types.Singles;
+      use Glfw.Input;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
    begin
+      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       GL.Objects.Programs.Use_Program (Render_Program);
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
-
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Sample_Texture);
       GL.Uniforms.Set_Int (Texture_ID, 0);
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Load_Texture.");
-         raise;
-   end Load_Texture;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Render (Window : in out Glfw.Windows.Window;
-                     Render_Program : GL.Objects.Programs.Program;
-                     Vertices       : GL.Types.Singles.Vector3_Array;
-                     Sample_Texture : GL.Objects.Textures.Texture) is
-      use GL.Objects.Buffers;
-      use GL.Types;
-      use Glfw.Input;
-   begin
-      Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
-      GL.Objects.Programs.Use_Program (Render_Program);
-
-      Load_Texture (Window, Render_Program, Sample_Texture);
 
       --  First attribute buffer : vertices
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
@@ -86,7 +68,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
 
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3 * Vertices'Length);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 12);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -116,7 +98,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window.Set_Input_Toggle (Sticky_Keys, True);
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
       GL.Buffers.Set_Depth_Function (GL.Types.Less);
---        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+            GL.Toggles.Enable (GL.Toggles.Cull_Face);
       Window.Set_Cursor_Mode (Mouse.Disabled);
       Glfw.Input.Poll_Events;
 
@@ -139,11 +121,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
       Texture_ID := GL.Objects.Programs.Uniform_Location
-          (Render_Program, "myTextureSampler");
+        (Render_Program, "myTextureSampler");
 
       Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
-      Utilities.Print_GL_Array3 ("Vertices array", Vertices);
-      Utilities.Print_GL_Array2 ("UVs array", UVs);
 
       Vertex_Buffer.Initialize_Id;
       Array_Buffer.Bind (Vertex_Buffer);
@@ -174,11 +154,11 @@ begin
    begin
       Setup (Main_Window, Render_Program, Vertices, UVs, Sample_Texture);
       while Running loop
-         Render (Main_Window, Render_Program, Vertices, Sample_Texture);
+         Render (Main_Window, Render_Program, Sample_Texture);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
          Running := Running and then
-             not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+           not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
          Running := Running and then not Main_Window.Should_Close;
       end loop;
    end;
