@@ -38,7 +38,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program : GL.Objects.Programs.Program;
---                       Vertices       : GL.Types.Singles.Vector3_Array;
                      Sample_Texture : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
@@ -48,6 +47,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
+      Num_Triangles     : constant GL.Types.Int := 12;
+      Num_Vertices      : constant GL.Types.Int := 3 * Num_Triangles;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -68,7 +69,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
 
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 12);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -124,8 +125,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
       declare
-         Vertices        : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
-         UVs             : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
+         Vertices : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
+         UVs      : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
       begin
          Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
 
