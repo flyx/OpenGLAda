@@ -48,11 +48,11 @@ package body Utilities is
 
    --  -------------------------------------------------------------------
 
-   procedure Print_Int_Vector2 is
+   procedure Print_Ints_Vector2 is
      new Print_Int_Vector (GL.Index_2D, GL.Types.Ints.Vector2);
    procedure Print_Singles_Vector2 is
      new Print_Singles_Vector (GL.Index_2D, GL.Types.Singles.Vector2);
-   procedure Print_Int_Vector3 is
+   procedure Print_Ints_Vector3 is
      new Print_Int_Vector (GL.Index_3D, GL.Types.Ints.Vector3);
    procedure Print_Singles_Vector3 is
      new Print_Singles_Vector (GL.Index_3D, GL.Types.Singles.Vector3);
@@ -137,7 +137,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Int_Vector2 ("", anArray (Index));
+         Print_Ints_Vector2 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_GL_Array2;
@@ -149,7 +149,7 @@ package body Utilities is
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
-         Print_Int_Vector3 ("", anArray (Index));
+         Print_Ints_Vector3 ("", anArray (Index));
       end loop;
       New_Line;
    end Print_GL_Array3;
@@ -239,6 +239,13 @@ package body Utilities is
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector2) is
    begin
       Print_Singles_Vector2 (Name, aVector);
+   end Print_Vector;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Vector (Name : String; aVector : GL.Types.Ints.Vector3) is
+   begin
+      Print_Ints_Vector3 (Name, aVector);
    end Print_Vector;
 
    --  ------------------------------------------------------------------------
