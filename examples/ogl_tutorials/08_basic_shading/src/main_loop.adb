@@ -23,7 +23,6 @@ with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
 with Utilities;
---  with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
@@ -77,7 +76,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Render (Window : in out Glfw.Windows.Window;
-                     Render_Program : GL.Objects.Programs.Program) is
+                     Render_Program : GL.Objects.Programs.Program;
+                     Vertex_Count   : GL.Types.Int) is
       use GL.Objects.Buffers;
       use GL.Types;
       use Glfw.Input;
@@ -95,6 +95,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
 
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0,  Vertex_Count);
+
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
       GL.Attributes.Disable_Vertex_Attrib_Array (2);
@@ -108,7 +110,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Setup (Window : in out Glfw.Windows.Window;
-                    Render_Program : out GL.Objects.Programs.Program) is
+                    Render_Program : out GL.Objects.Programs.Program;
+                    Vertex_Count   : out GL.Types.Int) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -117,9 +120,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
-      Vertex_Count    : GL.Types.Int;
-      UV_Count        : GL.Types.Int;
-      Normal_Count    : GL.Types.Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -157,11 +157,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
+      Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
       declare
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
-         UVs              : Singles.Vector2_Array (1 .. UV_Count);
-         Normals          : Singles.Vector3_Array (1 .. Normal_Count);
+         UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
+         Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
 
@@ -189,10 +189,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    use Glfw.Input;
    Render_Program  : GL.Objects.Programs.Program;
    Running         : Boolean := True;
+   Vertex_Count    : GL.Types.Int;
 begin
-   Setup (Main_Window, Render_Program);
+   Setup (Main_Window, Render_Program, Vertex_Count);
    while Running loop
-      Render (Main_Window, Render_Program);
+      Render (Main_Window, Render_Program, Vertex_Count);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
