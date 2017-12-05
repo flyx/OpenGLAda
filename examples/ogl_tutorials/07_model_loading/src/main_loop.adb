@@ -38,6 +38,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program : GL.Objects.Programs.Program;
+                     Num_Vertices   : GL.Types.Int;
                      Sample_Texture : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
@@ -47,8 +48,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
-      Num_Triangles     : constant GL.Types.Int := 12;
-      Num_Vertices      : constant GL.Types.Int := 3 * Num_Triangles;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -83,7 +82,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program;
-                    Sample_Texture : in out GL.Objects.Textures.Texture) is
+                    Array_Size     : out GL.Types.Int;
+                    Sample_Texture : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -92,7 +92,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
-      Array_Size      : GL.Types.Int;
    begin
       Utilities.Clear_Background_Colour (Dark_Blue);
       Window.Set_Input_Toggle (Sticky_Keys, True);
@@ -150,10 +149,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    use Glfw.Input;
    Running         : Boolean := True;
    Render_Program  : GL.Objects.Programs.Program;
+   Array_Size      : GL.Types.Int;
    Sample_Texture  : GL.Objects.Textures.Texture;
 begin
-   Setup (Main_Window, Render_Program, Sample_Texture);   while Running loop
-      Render (Main_Window, Render_Program, Sample_Texture);
+   Setup (Main_Window, Render_Program, Array_Size, Sample_Texture);
+   while Running loop
+      Render (Main_Window, Render_Program, Array_Size, Sample_Texture);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
