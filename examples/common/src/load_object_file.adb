@@ -55,13 +55,10 @@ package body Load_Object_File is
             Mesh_Vertices (Mesh_Index) := Raw_Vertices (Raw_Vertex_Index);
             Mesh_UVs (Mesh_Index) := Raw_UVs (Raw_UVs_Index);
             Mesh_Normals (Mesh_Index) := Raw_Normals (Raw_Normal_Index);
-            Put ("Mesh_Index: " &
-            Int'Image (Mesh_Index) & "  ");
-            Utilities.Print_Vector ("Mesh_UV", Mesh_UVs (Mesh_Index));
             Mesh_Index := Mesh_Index + 1;
          end loop;
       end loop;
-      Utilities.Print_GL_Array2 ("Mesh_UVs", Mesh_UVs);
+      Utilities.Print_GL_Array3 ("Mesh_Vertices", Mesh_Vertices);
    exception
       when others =>
          Put_Line ("An exception occurred in Data_From_Faces.");

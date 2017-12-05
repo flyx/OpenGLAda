@@ -82,9 +82,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program;
-                    Vertices       : out GL.Types.Singles.Vector3_Array;
-                    UVs            : out GL.Types.Singles.Vector2_Array;
-                    Sample_Texture : out GL.Objects.Textures.Texture) is
+                    Sample_Texture : in out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -93,6 +91,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
+      Array_Size      : GL.Types.Int;
    begin
       Utilities.Clear_Background_Colour (Dark_Blue);
       Window.Set_Input_Toggle (Sticky_Keys, True);
@@ -123,15 +122,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
+      Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
+      declare
+         Vertices        : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
+         UVs             : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
+      begin
+         Load_Object_File.Load_Object ("src/textures/cube.obj", Vertices, UVs);
 
-      Vertex_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Vertex_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+         Vertex_Buffer.Initialize_Id;
+         Array_Buffer.Bind (Vertex_Buffer);
+         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
 
-      UVs_Buffer.Initialize_Id;
-      Array_Buffer.Bind (UVs_Buffer);
-      Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
+         UVs_Buffer.Initialize_Id;
+         Array_Buffer.Bind (UVs_Buffer);
+         Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
+      end;
 
    exception
       when others =>
@@ -142,26 +147,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    use Glfw.Input;
-   Array_Size      : GL.Types.Int;
    Running         : Boolean := True;
+   Render_Program  : GL.Objects.Programs.Program;
+   Sample_Texture  : GL.Objects.Textures.Texture;
 begin
-   Array_Size := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
-   declare
-      Render_Program  : GL.Objects.Programs.Program;
-      Vertices        : GL.Types.Singles.Vector3_Array (1 .. Array_Size);
-      UVs             : GL.Types.Singles.Vector2_Array (1 .. Array_Size);
-      Sample_Texture  : GL.Objects.Textures.Texture;
-   begin
-      Setup (Main_Window, Render_Program, Vertices, UVs, Sample_Texture);
-      while Running loop
-         Render (Main_Window, Render_Program, Sample_Texture);
-         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-         Glfw.Input.Poll_Events;
-         Running := Running and then
-           not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
-         Running := Running and then not Main_Window.Should_Close;
-      end loop;
-   end;
+   Setup (Main_Window, Render_Program, Sample_Texture);   while Running loop
+      Render (Main_Window, Render_Program, Sample_Texture);
+      Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+      Glfw.Input.Poll_Events;
+      Running := Running and then
+          not (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+      Running := Running and then not Main_Window.Should_Close;
+   end loop;
 
 exception
    when others =>
