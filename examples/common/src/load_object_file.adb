@@ -6,8 +6,6 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
-With Utilities;
-
 package body Load_Object_File is
 
    procedure Parse (Mesh_String : Ada.Strings.Unbounded.Unbounded_String;
@@ -58,11 +56,6 @@ package body Load_Object_File is
             Mesh_Index := Mesh_Index + 1;
          end loop;
       end loop;
-      Utilities.Print_GL_Array3 ("Mesh_Vertices", Mesh_Vertices);
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Data_From_Faces.");
-         raise;
    end Data_From_Faces;
 
    --  -------------------------------------------------------------------------
@@ -156,13 +149,6 @@ package body Load_Object_File is
             when others => null;
          end case;
       end loop;
-
-      Utilities.Print_GL_Array3 ("Vertex_Indicies", Vertex_Indicies);
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Load_Data.");
-         raise;
    end Load_Data;
 
    --  -------------------------------------------------------------------------
@@ -194,9 +180,7 @@ package body Load_Object_File is
          Load_Data (Text_File_ID, Raw_Vertices, Raw_UVs, Raw_Normals,
                     Vertex_Indices, UV_Indices, Normal_Indices);
          Close (Text_File_ID);
-         Put_Line ("Load_Object Sizes " & Int'Image (Num_Vertices) &
-                     Int'Image (UV_Count) & Int'Image (Normal_Count) &
-                     Int'Image (Vertex_Count));
+
          if Vertex_Count > 0 then
             Data_From_Faces (Raw_Vertices, Raw_UVs, Raw_Normals,
                              Vertex_Indices, UV_Indices, Normal_Indices,
@@ -270,11 +254,6 @@ package body Load_Object_File is
          Read_Index (Mesh_String, Start, UV_Index (indice));
          Read_Index (Mesh_String, Start, Normal_Index (indice));
       end loop;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Parse Mesh_String.");
-         raise;
    end Parse;
 
    --  -------------------------------------------------------------------------
@@ -297,11 +276,6 @@ package body Load_Object_File is
       if DDS_Format then
          UV (GL.Y) := -UV (GL.Y);
       end if;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Parse UV_String.");
-         raise;
    end Parse;
 
    --  -------------------------------------------------------------------------
@@ -321,11 +295,6 @@ package body Load_Object_File is
       Vertex (GL.Y) := GL.Types.Single (Value);
       Ada.Float_Text_IO.Get (To_String (Vertex_String) (Next .. Size), Value, Next);
       Vertex (GL.Z) := GL.Types.Single (Value);
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Parse Vertex_String.");
-         raise;
    end Parse;
 
    --  -------------------------------------------------------------------------
@@ -345,11 +314,6 @@ package body Load_Object_File is
       Ada.Integer_Text_IO.Get (To_String (Data)(Pos .. Size), Value, Last_Pos);
       Index := GL.Types.Int (Value);
       Start := Last_Pos + 1;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Read_Index.");
-         raise;
    end Read_Index;
 
    --  -------------------------------------------------------------------------
