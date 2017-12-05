@@ -6,7 +6,7 @@ with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Text_IO.Unbounded_IO;
 
-WITH Utilities;
+With Utilities;
 
 package body Load_Object_File is
 
@@ -30,17 +30,38 @@ package body Load_Object_File is
                               Mesh_UVs      : out GL.Types.Singles.Vector2_Array;
                               Mesh_Normals  : out GL.Types.Singles.Vector3_Array) is
       use GL;
+      use GL.Types;
       --  The three elements of a Vertex_Index refer to the three vertices
       --  of a triangle
+      Raw_Vertex_Indices  : Ints.Vector3;
+      Raw_UVs_Indices     : Ints.Vector3;
+      Raw_Normals_Indices : Ints.Vector3;
+      Raw_Vertex_Index    : Int;
+      Raw_UVs_Index       : Int;
+      Raw_Normal_Index    : Int;
+      Mesh_Index          : Int := 1;
    begin
-      for Index in Mesh_Vertices'Range loop
+      for Index in Vertex_Indices'Range loop
+         -- Get vector of three indices, one for each vertex of a triangle
+         Raw_Vertex_Indices :=  Vertex_Indices (Index);
+         Raw_UVs_Indices :=  UV_Indices (Index);
+         Raw_Normals_Indices :=  Normal_Indices (Index);
          for elem in Index_3D'Range loop
-            Mesh_Vertices (Index) := Raw_Vertices (Vertex_Indices (Index) (elem));
-            Mesh_UVs (Index) := Raw_UVs (UV_Indices (Index) (elem));
-            Mesh_Normals (Index) := Raw_Normals (Normal_Indices (Index) (elem));
+            --  for each vertex of a triangle, get the vertex index
+            Raw_Vertex_Index := Raw_Vertex_Indices (elem);
+            Raw_UVs_Index := Raw_UVs_Indices (elem);
+            Raw_Normal_Index := Raw_Normals_Indices (elem);
+            -- for each vertex of a triangle, get the vertex components (x, y, z)
+            Mesh_Vertices (Mesh_Index) := Raw_Vertices (Raw_Vertex_Index);
+            Mesh_UVs (Mesh_Index) := Raw_UVs (Raw_UVs_Index);
+            Mesh_Normals (Mesh_Index) := Raw_Normals (Raw_Normal_Index);
+            Put ("Mesh_Index: " &
+            Int'Image (Mesh_Index) & "  ");
+            Utilities.Print_Vector ("Mesh_UV", Mesh_UVs (Mesh_Index));
+            Mesh_Index := Mesh_Index + 1;
          end loop;
       end loop;
-      Utilities.Print_GL_Array3 ("Mesh_Vertices", Mesh_Vertices);
+      Utilities.Print_GL_Array2 ("Mesh_UVs", Mesh_UVs);
    exception
       when others =>
          Put_Line ("An exception occurred in Data_From_Faces.");
@@ -76,14 +97,13 @@ package body Load_Object_File is
                   when 'n' => Normal_Count := Normal_Count + 1;
                   when others => null;
                end case;
-            when 's' => Mesh_Count := Mesh_Count + 1;
+            when 's' => Mesh_Count := Mesh_Count + 3;
             when 'u' => Usemtl_Count := Usemtl_Count + 1;
             when 'f' => Indices_Count := Indices_Count + 1;
             when others => null;
          end case;
       end loop;
       Close (File_ID);
-      Mesh_Count := 3 * Mesh_Count;
 
    exception
       when Ada.IO_Exceptions.Name_Error  =>
@@ -225,7 +245,7 @@ package body Load_Object_File is
          Text := To_Unbounded_String (Get_Line (File_ID));
          Label := To_String (Text) (1 .. 2);
          if Label (1) = 'f' then
-            Mesh_Vertex_Count := Mesh_Vertex_Count + 1;
+            Mesh_Vertex_Count := Mesh_Vertex_Count + 3;
          end if;
       end loop;
       Close (File_ID);
