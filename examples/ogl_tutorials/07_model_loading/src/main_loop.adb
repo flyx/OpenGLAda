@@ -152,7 +152,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program  : GL.Objects.Programs.Program;
    Sample_Texture  : GL.Objects.Textures.Texture;
 begin
-   Setup (Main_Window, Render_Program, Sample_Texture);   while Running loop
+   Setup (Main_Window, Render_Program, Sample_Texture);
+   while Running loop
       Render (Main_Window, Render_Program, Sample_Texture);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
