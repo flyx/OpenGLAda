@@ -32,7 +32,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
-   Light_ID                 : GL.Uniforms.Uniform;
+   Light_Position_ID        : GL.Uniforms.Uniform;
    MVP_Matrix_ID            : GL.Uniforms.Uniform;
    Model_Matrix_ID          : GL.Uniforms.Uniform;
    View_Matrix_ID           : GL.Uniforms.Uniform;
@@ -49,7 +49,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
-      Light_Pos         : constant Singles.Vector3 := (4.0, 4.0, 4.0);
+--        Light_Position    : constant Singles.Vector3 := (4.0, 4.0, 4.0);
    begin
       GL.Objects.Programs.Use_Program (Render_Program);
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
@@ -58,9 +58,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
-      Put_Line ("Load_Texture setting Light_Pos");
-      GL.Uniforms.Set_Single (Light_ID, Light_Pos);
-      Put_Line ("Load_Texture Light_Pos set");
+      GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
+--        GL.Uniforms.Set_Single (Light_Position_ID, Light_Position);
 
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
@@ -150,7 +149,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (Render_Program, "M");
       View_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "V");
-      Light_ID := GL.Objects.Programs.Uniform_Location
+      Light_Position_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "Light_Position_Worldspace");
 
       Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
