@@ -275,8 +275,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
       Vertex_Count    : GL.Types.Int;
-      UV_Count        : GL.Types.Int;
-      Normal_Count    : GL.Types.Int;
       Vertices_Size   : Int;
       UVs_Size        : Int;
       Normals_Size    : Int;
@@ -315,17 +313,17 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Texture_ID := GL.Objects.Programs.Uniform_Location
           (Render_Program, "myTextureSampler");
 
-      Load_Object_File.Get_Array_Sizes ("src/textures/suzanne.obj", Vertex_Count, UV_Count, Normal_Count);
+      Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
       declare
          use Ada.Numerics.Float_Random;
          subtype Random_Single is Single range 10.0 .. 20.0;
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
-         UVs              : Singles.Vector2_Array (1 .. UV_Count);
-         Normals          : Singles.Vector3_Array (1 .. Normal_Count);
+         UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
+         Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
          Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
-         Indexed_UVs      : Singles.Vector2_Array (1 .. UV_Count);
-         Indexed_Normals  : Singles.Vector3_Array (1 .. Normal_Count);
-         Temp_Indices     : Int_Array (1 .. Vertex_Count + UV_Count + Normal_Count);
+         Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
+         Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
+         Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
          Random_Gen       : Ada.Numerics.Float_Random.Generator;
 
          function New_Value return Random_Single is
