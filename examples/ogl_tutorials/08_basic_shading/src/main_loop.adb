@@ -42,7 +42,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Load_Texture (Window : in out Glfw.Windows.Window;
                            Render_Program : GL.Objects.Programs.Program;
-                           Suzanne        : GL.Objects.Textures.Texture) is
+                           UV_Map         : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -63,7 +63,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
-      GL.Objects.Textures.Targets.Texture_2D.Bind (Suzanne);
+      GL.Objects.Textures.Targets.Texture_2D.Bind (UV_Map);
       GL.Uniforms.Set_Int (Texture_ID, 0);
 
    exception
@@ -112,7 +112,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program;
                     Vertex_Count   : out GL.Types.Int;
-                    Suzanne       : out GL.Objects.Textures.Texture) is
+                    UV_Map         : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -123,17 +123,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Height   : constant Glfw.Size := 768;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
+      GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      GL.Buffers.Set_Depth_Function (GL.Types.Less);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
       Window.Set_Cursor_Mode (Mouse.Disabled);
       Glfw.Input.Poll_Events;
 
       Window'Access.Set_Size (Window_Width, Window_Height);
       Window'Access.Set_Cursor_Pos (Mouse.Coordinate (0.5 * Single (Window_Width)),
                                     Mouse.Coordinate (0.5 * Single (Window_Height)));
-      Utilities.Clear_Background_Colour (Dark_Blue);
-
-      GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      GL.Buffers.Set_Depth_Function (GL.Types.Less);
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
 
       Vertices_Array_Object.Initialize_Id;
       Vertices_Array_Object.Bind;
@@ -154,7 +152,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Light_Position_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "Light_Position_Worldspace");
 
-      Load_DDS ("src/textures/uvmap.DDS", Suzanne);
+      Load_DDS ("src/textures/uvmap.DDS", UV_Map);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
@@ -191,11 +189,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program  : GL.Objects.Programs.Program;
    Running         : Boolean := True;
    Vertex_Count    : GL.Types.Int;
-   Suzanne        : GL.Objects.Textures.Texture;
+   UV_Map          : GL.Objects.Textures.Texture;
 begin
-   Setup (Main_Window, Render_Program, Vertex_Count, Suzanne);
+   Setup (Main_Window, Render_Program, Vertex_Count, UV_Map);
    while Running loop
-      Render (Main_Window, Render_Program, Vertex_Count, Suzanne);
+      Render (Main_Window, Render_Program, Vertex_Count, UV_Map);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
