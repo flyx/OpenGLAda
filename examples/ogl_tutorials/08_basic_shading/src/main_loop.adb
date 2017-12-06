@@ -37,12 +37,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Model_Matrix_ID          : GL.Uniforms.Uniform;
    View_Matrix_ID           : GL.Uniforms.Uniform;
    Texture_ID               : GL.Uniforms.Uniform;
-   Sample_Texture           : GL.Objects.Textures.Texture;
 
    --  ------------------------------------------------------------------------
 
    procedure Load_Texture (Window : in out Glfw.Windows.Window;
-                           Render_Program : GL.Objects.Programs.Program) is
+                           Render_Program : GL.Objects.Programs.Program;
+                           Suzanne        : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -63,7 +63,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
-      GL.Objects.Textures.Targets.Texture_2D.Bind (Sample_Texture);
+      GL.Objects.Textures.Targets.Texture_2D.Bind (Suzanne);
       GL.Uniforms.Set_Int (Texture_ID, 0);
 
    exception
@@ -76,13 +76,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program : GL.Objects.Programs.Program;
-                     Vertex_Count   : GL.Types.Int) is
+                     Vertex_Count   : GL.Types.Int;
+                     Suzanne       : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
       use Glfw.Input;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
-      Load_Texture (Window, Render_Program);
+      Load_Texture (Window, Render_Program, Suzanne);
 
       --  First attribute buffer : vertices
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
@@ -110,7 +111,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program : out GL.Objects.Programs.Program;
-                    Vertex_Count   : out GL.Types.Int) is
+                    Vertex_Count   : out GL.Types.Int;
+                    Suzanne       : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use GL.Objects.Textures.Targets;
@@ -152,7 +154,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Light_Position_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "Light_Position_Worldspace");
 
-      Load_DDS ("src/textures/uvmap.DDS", Sample_Texture);
+      Load_DDS ("src/textures/uvmap.DDS", Suzanne);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
@@ -189,10 +191,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Render_Program  : GL.Objects.Programs.Program;
    Running         : Boolean := True;
    Vertex_Count    : GL.Types.Int;
+   Suzanne        : GL.Objects.Textures.Texture;
 begin
-   Setup (Main_Window, Render_Program, Vertex_Count);
+   Setup (Main_Window, Render_Program, Vertex_Count, Suzanne);
    while Running loop
-      Render (Main_Window, Render_Program, Vertex_Count);
+      Render (Main_Window, Render_Program, Vertex_Count, Suzanne);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and then
