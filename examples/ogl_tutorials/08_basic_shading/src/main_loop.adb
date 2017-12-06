@@ -41,7 +41,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Load_Texture (Window : in out Glfw.Windows.Window;
-                           Render_Program : GL.Objects.Programs.Program;
                            UV_Map         : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
@@ -51,7 +50,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       MVP_Matrix        : Singles.Matrix4;
 --        Light_Position    : constant Singles.Vector3 := (4.0, 4.0, 4.0);
    begin
-      GL.Objects.Programs.Use_Program (Render_Program);
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
@@ -59,7 +57,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
 
       GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
---        GL.Uniforms.Set_Single (Light_Position_ID, Light_Position);
 
       --  Bind our texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
@@ -77,21 +74,25 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program : GL.Objects.Programs.Program;
                      Vertex_Count   : GL.Types.Int;
-                     Suzanne       : GL.Objects.Textures.Texture) is
+                     UV_Map         : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
       use Glfw.Input;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
-      Load_Texture (Window, Render_Program, Suzanne);
+      GL.Objects.Programs.Use_Program (Render_Program);
+      Load_Texture (Window, UV_Map);
 
       --  First attribute buffer : vertices
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       --  Second attribute buffer : UVs
+      GL.Attributes.Enable_Vertex_Attrib_Array (1);
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
       --  Third attribute buffer : Normals
+      GL.Attributes.Enable_Vertex_Attrib_Array (2);
       GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
 
@@ -141,7 +142,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Vertex_Shader),
          Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
            Fragment_Shader)));
-      Utilities.Show_Shader_Program_Data (Render_Program);
 
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MVP");
