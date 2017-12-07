@@ -71,6 +71,7 @@ package body VBO_Indexer is
       use GL.Types;
       Vert_In_Size       : constant Int := Vertices_In'Length;
       Index              : Int := 0;
+      Check_Index        : Int := 0;
       VBO_Indices_Index  : Int := 0;
       Out_Index          : Int := 0;
       Found              : Boolean;
@@ -87,18 +88,19 @@ package body VBO_Indexer is
 
       for Vert in 1 .. Vert_In_Size loop
          Found := False;
-         Get_Similar_Index_Slow (Vertices_In (Vert), Vertices_Out, Index, Found);
+         Get_Similar_Index_Slow (Vertices_In (Vert), Vertices_Out, Check_Index, Found);
          if Found then
             Get_Similar_Index_Slow (UVs_In (Vert), UVs_Out, Index, Found);
          end if;
-         if Found then
+         if Found and then Index = Check_Index then
+            Check_Index := Index;
             Get_Similar_Index_Slow (Normals_In (Vert), Normals_Out, Index, Found);
          end if;
 
          VBO_Indices_Index := VBO_Indices_Index + 1;
-         if Found then
+         if Found and then Index = Check_Index then
             -- A similar vertex is already in the VBO so use it instead
-            VBO_Indices (VBO_Indices_Index) := Index;
+            VBO_Indices (VBO_Indices_Index) := Check_Index;
          else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
