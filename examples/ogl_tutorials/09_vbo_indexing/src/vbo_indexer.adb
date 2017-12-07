@@ -4,11 +4,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body VBO_Indexer is
 
-   --     package VBO_Map is
-   --       new Ada.Containers.Indefinite_Ordered_Maps
-   --           (Key_Type => tElement, Element_Type => tEnergy_Level_Basis_Set);
-   --     type tBasis_Set_Map is new Basis_Set_Map.Map with null record;
-
    --     type Packed_Vertex is record
    --        Position : GL.Types.Singles.Vector3;
    --        UV       : GL.Types.Singles.Vector2;
