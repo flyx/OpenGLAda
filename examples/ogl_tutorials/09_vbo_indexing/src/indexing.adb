@@ -8,9 +8,9 @@ with Glfw.Windows;
 with Initialize;
 with Main_Loop;
 
-procedure Picking is
+procedure Indexing is
     Main_Window  : Glfw.Windows.Window;
-    Window_Title : constant String := "Miscellaneous 5 - Picking Slow Easy";
+    Window_Title : constant String := "Tutorial 9 - VBO Indexing";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);
@@ -18,10 +18,10 @@ begin
     Glfw.Shutdown;
 exception
     when anError : Constraint_Error =>
-        Put ("Picking returned constraint error: ");
+        Put ("Indexing returned constraint error: ");
         Put_Line (Exception_Information (anError));
 
     when anError :  others =>
-        Put_Line ("An exception occurred in Picking.");
+        Put_Line ("An exception occurred in Indexing.");
         Put_Line (Exception_Information (anError));
-end Picking;
+end Indexing;
