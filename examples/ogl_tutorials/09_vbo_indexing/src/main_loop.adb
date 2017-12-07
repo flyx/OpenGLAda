@@ -1,7 +1,6 @@
 
 with Interfaces.C;
 
-with Ada.Numerics.Float_Random;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -49,8 +48,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Last_Time                : Glfw.Seconds;
    Number_Of_Frames         : Integer := 0;
-   Max_Items                : constant GL.Types.Int := 100;
-   Positions                : GL.Types.Singles.Vector3_Array (1 .. Max_Items);
 
    --  ------------------------------------------------------------------------
 
@@ -62,34 +59,30 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Model_Matrix      : Matrix4;
       View_Matrix       : Matrix4;
       Projection_Matrix : Matrix4;
-      Trans_Matrix      : Matrix4;
       --        Light_Pos         : constant Vector3 := (4.0, 4.0, 4.0);
       Scale             : constant Singles.Vector3 := (1.0, 1.0, 1.0);
    begin
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       Utilities.Clear_Background_Colour_And_Depth (White);
-      for count in GL.Types.Int range 1 .. Max_Items loop
-         Trans_Matrix := Maths.Translation_Matrix (Positions (count) * 2.0 * Scale (GL.X));
-         Model_Matrix := Trans_Matrix * Maths.Scaling_Matrix (Scale);
-         MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-         GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-         GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
-         GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
-         GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
-         --           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
+      Model_Matrix := Maths.Scaling_Matrix (Scale);
+      MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
+      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+      GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
+      GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
+      GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
+      --           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
 
-         --  Bind the texture in Texture Unit 0
-         GL.Objects.Textures.Set_Active_Unit (0);
-         GL.Objects.Textures.Targets.Texture_2D.Bind (UV_Map);
-         GL.Uniforms.Set_Int (Texture_ID, 0);
+      --  Bind the texture in Texture Unit 0
+      GL.Objects.Textures.Set_Active_Unit (0);
+      GL.Objects.Textures.Targets.Texture_2D.Bind (UV_Map);
+      GL.Uniforms.Set_Int (Texture_ID, 0);
 
-         --  First attribute buffer : vertices
-         GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-         --  Index Buffer
-         GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
-         GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
-      end loop;
+      --  First attribute buffer : vertices
+      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      --  Index Buffer
+      GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+      GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
 
    exception
       when others =>
@@ -178,15 +171,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "V");
       Light_Position_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "Light_Position_Worldspace");
+        (Render_Program, "LightPosition_worldspace");
       Load_DDS ("src/textures/uvmap.DDS", UV_Map);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
       Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
       declare
-         use Ada.Numerics.Float_Random;
-         subtype Random_Single is Single range -10.0 .. 10.0;
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
          Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
@@ -194,32 +185,21 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
          Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
          Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
-         Random_Gen       : Ada.Numerics.Float_Random.Generator;
-
-         function New_Value return Random_Single is
-         begin
-            return Random_Single (20.0 * Random (Random_Gen) - 10.0);
-         end New_Value;
 
       begin
-         Ada.Numerics.Float_Random.Reset (Random_Gen);
-         for index in Positions'Range loop
-            Positions (index) := (New_Value, New_Value, New_Value);
-         end loop;
-
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
          VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
                                 Indexed_Vertices, Indexed_UVs, Indexed_Normals,
                                 Temp_Indices, Indices_Size, Vertices_Size);
          declare
             Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
-                := Indexed_Vertices  (1 .. Vertices_Size);
+              := Indexed_Vertices  (1 .. Vertices_Size);
             UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
-                := Indexed_UVs  (1 .. Vertices_Size);
+              := Indexed_UVs  (1 .. Vertices_Size);
             Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
-                := Indexed_Normals  (1 .. Vertices_Size);
+              := Indexed_Normals  (1 .. Vertices_Size);
             Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
-                := Temp_Indices  (1 .. Indices_Size);
+              := Temp_Indices  (1 .. Indices_Size);
          begin
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
@@ -239,7 +219,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          end;
       end;
 
-   Utilities.Enable_Mouse_Callbacks (Window, True);
+      Utilities.Enable_Mouse_Callbacks (Window, True);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Position);
    exception
