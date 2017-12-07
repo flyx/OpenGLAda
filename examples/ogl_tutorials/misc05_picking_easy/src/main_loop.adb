@@ -1,5 +1,5 @@
 
---  with Interfaces.C;
+with Interfaces.C;
 
 with Ada.Numerics.Float_Random;
 with Ada.Text_IO; use Ada.Text_IO;
@@ -27,7 +27,7 @@ with Controls;
 with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
---  with Maths;
+with Maths;
 with Utilities;
 with VBO_Indexer;
 
@@ -45,7 +45,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --     type Orientation_Array is array (GL.Types.Int range <>) of Orientation;
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
---     White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
+   White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Element_Buffer           : GL.Objects.Buffers.Buffer;
@@ -62,30 +62,35 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Texture_ID               : GL.Uniforms.Uniform;
    MVP_Matrix               : GL.Types.Singles.Matrix4;
 
---     Last_Time                : Glfw.Seconds;
---     Number_Of_Frames         : Integer := 0;
+   Last_Time                : Glfw.Seconds;
+   Number_Of_Frames         : Integer := 0;
    Max_Items                : constant GL.Types.Int := 100;
 --     Orientations             : Orientation_Array (1 .. Max_Items);
    Positions                : GL.Types.Singles.Vector3_Array (1 .. Max_Items);
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Texture (Window : in out Glfw.Windows.Window;
-                           UV_Map : GL.Objects.Textures.Texture) is
+   procedure Load_Texture (Window       : in out Glfw.Windows.Window;
+                           Vertex_Count : GL.Types.Int;
+                           UV_Map       : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
-      Model_Matrix      : constant Matrix4 := Singles.Identity4;
+      Model_Matrix      : Matrix4;
       View_Matrix       : Matrix4;
       Projection_Matrix : Matrix4;
---        Rot_Matrix        : Matrix4;
---        Trans_Matrix      : Matrix4;
---        Light_Pos         : constant Vector3 := (4.0, 4.0, 4.0);
+--        Rot_Matrix        : Matrix4 := Singles.Identity4;
+      Trans_Matrix      : Matrix4;
+      --        Light_Pos         : constant Vector3 := (4.0, 4.0, 4.0);
+      Scale             : constant Singles.Vector3 := (0.1, 0.1, 0.1);
    begin
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
---        for count in GL.Types.Int range 1 .. Max_Items loop
+      Utilities.Clear_Background_Colour_And_Depth (White);
+      for count in GL.Types.Int range 1 .. Max_Items loop
 --           Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
 --                                                Orientations (count).Axis);
---           Trans_Matrix := Maths.Translation_Matrix (Positions (count));
+         Trans_Matrix := Maths.Translation_Matrix (Positions (count) * 2.0 * Scale (GL.X));
+         Model_Matrix := Trans_Matrix * Maths.Scaling_Matrix (Scale);
+--           Utilities.Print_Matrix ("Model_Matrix", Model_Matrix);
 --           Model_Matrix := Trans_Matrix * Rot_Matrix;
          MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
          GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
@@ -94,11 +99,19 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
       --           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
 
-         --  Bind our texture in Texture Unit 0
+         --  Bind the texture in Texture Unit 0
          GL.Objects.Textures.Set_Active_Unit (0);
          GL.Objects.Textures.Targets.Texture_2D.Bind (UV_Map);
          GL.Uniforms.Set_Int (Texture_ID, 0);
---        end loop;
+
+         --  First attribute buffer : vertices
+         GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
+         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+         --  Index Buffer
+         GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+         GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
+
+      end loop;
 
    exception
       when others =>
@@ -186,45 +199,33 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                       Picking_Program : GL.Objects.Programs.Program;
                      Vertex_Count    : GL.Types.Int;
                      UV_Map          : GL.Objects.Textures.Texture) is
---        use Interfaces.C;
+      use Interfaces.C;
       use GL.Objects.Buffers;
 --        use GL.Objects.Shaders;
       use GL.Types;
       use Glfw.Input;
 --        View_Matrix       : GL.Types.Singles.Matrix4;
 --        Projection_Matrix : GL.Types.Singles.Matrix4;
---        Current_Time      : constant Glfw.Seconds := Glfw.Time;
+      Current_Time      : constant Glfw.Seconds := Glfw.Time;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
---        Number_Of_Frames := Number_Of_Frames + 1;
---        if Current_Time - Last_Time >= 1.0 then
---           Put_Line (Integer'Image (1000 * Number_Of_Frames) & " ms/frame");
---           Number_Of_Frames := 0;
---           Last_Time := Last_Time + 1.0;
---        end if;
+      Number_Of_Frames := Number_Of_Frames + 1;
+      if Current_Time - Last_Time >= 1.0 then
+         Put_Line (Integer'Image (1000 * Number_Of_Frames) & " ms/frame");
+         Number_Of_Frames := 0;
+         Last_Time := Last_Time + 1.0;
+      end if;
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      Load_Texture (Window, UV_Map);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      Load_Texture (Window, Vertex_Count, UV_Map);
 
 --        if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
 --           Pick (Window, Picking_Program, Positions, Orientations,
 --                 View_Matrix, Projection_Matrix);
 --        end if;
 
-      --  First attribute buffer : vertices
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-      --  Index Buffer
---        GL.Attributes.Enable_Vertex_Attrib_Array (1);
-      GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
---        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
-
-      GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
-
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
-      GL.Attributes.Disable_Vertex_Attrib_Array (1);
-      GL.Attributes.Disable_Vertex_Attrib_Array (2);
    exception
       when others =>
          Put_Line ("An exception occurred in Render.");
@@ -299,7 +300,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
       declare
          use Ada.Numerics.Float_Random;
-         subtype Random_Single is Single range 10.0 .. 20.0;
+         subtype Random_Single is Single range -10.0 .. 10.0;
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
          Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
@@ -311,7 +312,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          function New_Value return Random_Single is
          begin
-            return Random_Single (10.0 + 10.0 * Random (Random_Gen));
+            return Random_Single (20.0 * Random (Random_Gen) - 10.0);
          end New_Value;
 
       begin

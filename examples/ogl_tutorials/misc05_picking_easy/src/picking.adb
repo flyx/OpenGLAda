@@ -18,7 +18,7 @@ begin
     Glfw.Shutdown;
 exception
     when anError : Constraint_Error =>
-        Put ("Tutorial_6 returned constraint error: ");
+        Put ("Picking returned constraint error: ");
         Put_Line (Exception_Information (anError));
 
     when anError :  others =>
