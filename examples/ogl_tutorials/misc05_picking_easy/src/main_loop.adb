@@ -38,11 +38,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --         GL.Framebuffer.Read_Pixels (Element_Type => GL.Types.UByte,
    --                                     Index_Type   => Positive,
    --                                     Array_Type   => Pixels_Array);
-   --     type Orientation is record
-   --        Angle : Maths.Radian;
-   --        Axis  : GL.Types.Singles.Vector3;
-   --     end record;
-   --     type Orientation_Array is array (GL.Types.Int range <>) of Orientation;
+      type Orientation is record
+         Angle : Maths.Radian;
+         Axis  : GL.Types.Singles.Vector3;
+      end record;
+      type Orientation_Array is array (GL.Types.Int range <>) of Orientation;
 
    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 0.0);
    White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
@@ -65,7 +65,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Last_Time                : Glfw.Seconds;
    Number_Of_Frames         : Integer := 0;
    Max_Items                : constant GL.Types.Int := 100;
-   --     Orientations             : Orientation_Array (1 .. Max_Items);
+   Orientations             : Orientation_Array (1 .. Max_Items);
    Positions                : GL.Types.Singles.Vector3_Array (1 .. Max_Items);
 
    --  ------------------------------------------------------------------------
@@ -78,7 +78,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Model_Matrix      : Matrix4;
       View_Matrix       : Matrix4;
       Projection_Matrix : Matrix4;
-      --        Rot_Matrix        : Matrix4 := Singles.Identity4;
+      Rot_Matrix        : Matrix4 := Singles.Identity4;
       Trans_Matrix      : Matrix4;
       --        Light_Pos         : constant Vector3 := (4.0, 4.0, 4.0);
       Scale             : constant Singles.Vector3 := (1.0, 1.0, 1.0);
@@ -86,12 +86,10 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       Utilities.Clear_Background_Colour_And_Depth (White);
       for count in GL.Types.Int range 1 .. Max_Items loop
-         --           Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
-         --                                                Orientations (count).Axis);
+         Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
+                                              Orientations (count).Axis);
          Trans_Matrix := Maths.Translation_Matrix (Positions (count) * 2.0 * Scale (GL.X));
-         Model_Matrix := Trans_Matrix * Maths.Scaling_Matrix (Scale);
-         --           Utilities.Print_Matrix ("Model_Matrix", Model_Matrix);
-         --           Model_Matrix := Trans_Matrix * Rot_Matrix;
+         Model_Matrix := Trans_Matrix * Maths.Scaling_Matrix (Scale) * Rot_Matrix;
          MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
          GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
          GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
@@ -110,7 +108,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  Index Buffer
          GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
          GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
---        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0,  Vertex_Count);
       end loop;
 
    exception
@@ -317,8 +314,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Ada.Numerics.Float_Random.Reset (Random_Gen);
          for index in Positions'Range loop
             Positions (index) := (New_Value, New_Value, New_Value);
-            --              Orientations (index) := (Maths.Radian (New_Value),
-            --                                       (New_Value, New_Value, New_Value));
+            Orientations (index) := (Maths.Radian (New_Value),
+                                     (New_Value, New_Value, New_Value));
          end loop;
 
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
