@@ -88,16 +88,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --           Trans_Matrix := Maths.Translation_Matrix (Positions (count));
 --           Model_Matrix := Trans_Matrix * Rot_Matrix;
          MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
-         Put_Line ("Load_Texture, MVP_Matrix set");
          GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-         Put_Line ("Load_Texture, Model_Matrix set");
          GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
-         Put_Line ("Load_Texture, View_Matrix set");
          GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
-         Put_Line ("Load_Texture, setting Light_Position_ID");
          GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
---           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
-         Put_Line ("Load_Texture, Light_Position_ID set");
+      --           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
 
          --  Bind our texture in Texture Unit 0
          GL.Objects.Textures.Set_Active_Unit (0);
@@ -220,16 +215,12 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-      --  Second attribute buffer : UVs
-      GL.Attributes.Enable_Vertex_Attrib_Array (1);
-      GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
-      --  Third attribute buffer : Normals
-      GL.Attributes.Enable_Vertex_Attrib_Array (2);
-      GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
+      --  Index Buffer
+--        GL.Attributes.Enable_Vertex_Attrib_Array (1);
+      GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+--        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
 
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0,  Vertex_Count);
+      GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
