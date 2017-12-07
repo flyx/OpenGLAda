@@ -340,21 +340,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
---              Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
 
             UVs_Buffer.Initialize_Id;
             Array_Buffer.Bind (UVs_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
---              Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
 
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
             Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
---              Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
 
             Element_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Element_Buffer);
-            Utilities.Load_Element_Buffer (Array_Buffer, Indices, Static_Draw);
+            Element_Array_Buffer.Bind (Element_Buffer);
+            Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
          end;
       end;
 
