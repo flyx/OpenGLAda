@@ -33,7 +33,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    White                    : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 1.0);
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
---     Element_Buffer           : GL.Objects.Buffers.Buffer;
+   Element_Buffer           : GL.Objects.Buffers.Buffer;
 
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
@@ -199,33 +199,32 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                                 Indexed_Vertices, Indexed_UVs, Indexed_Normals,
                                 Temp_Indices, Indices_Size, Vertices_Size);
          declare
---              Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
---                := Indexed_Vertices  (1 .. Vertices_Size);
---              UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
---                := Indexed_UVs  (1 .. Vertices_Size);
---              Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
---                := Indexed_Normals  (1 .. Vertices_Size);
---              Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
---                := Temp_Indices  (1 .. Indices_Size);
+            Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
+              := Indexed_Vertices  (1 .. Vertices_Size);
+            UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
+              := Indexed_UVs  (1 .. Vertices_Size);
+            Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
+              := Indexed_Normals  (1 .. Vertices_Size);
+            Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
+              := Temp_Indices  (1 .. Indices_Size);
          begin
---              Put_Line ("Setup Indices_Size;" & Int'Image (Indices_Size) &
---                 Int'Image (Vertices_Size));
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_Vertices, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
 
             UVs_Buffer.Initialize_Id;
             Array_Buffer.Bind (UVs_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_UVs, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
 
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_Normals, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
 
---              Element_Buffer.Initialize_Id;
---              Element_Array_Buffer.Bind (Element_Buffer);
---              Utilities.Load_Element_Buffer (Element_Array_Buffer, Temp_Indices, Static_Draw);
+            Element_Buffer.Initialize_Id;
+            Element_Array_Buffer.Bind (Element_Buffer);
+            Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
          end;
+
       end;
 
       Light_Position_ID := GL.Objects.Programs.Uniform_Location

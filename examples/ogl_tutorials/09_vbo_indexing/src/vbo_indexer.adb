@@ -73,10 +73,6 @@ package body VBO_Indexer is
          end loop;
       end loop;
 
-      Put_Line ("Index_VBO in sizes;" & Int'Image (Vertices_In'Length) &
-               Int'Image (UVs_In'Length) & Int'Image (Normals_In'Length));
-      Put_Line ("Index_VBO out sizes;" & Int'Image (Vertices_Out'Length) &
-               Int'Image (UVs_Out'Length) & Int'Image (Normals_Out'Length));
       for Vert in 1 .. In_Size loop
          Get_Similar_Vertex_Index (Vertices_In (Vert), UVs_In (Vert), Normals_In (Vert),
                                    Vertices_Out, UVs_Out, Normals_Out,
