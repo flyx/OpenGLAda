@@ -1,5 +1,4 @@
 
---  with Ada.Containers.Indefinite_Ordered_Maps;
 with Ada.Text_IO; use Ada.Text_IO;
 
 package body VBO_Indexer is

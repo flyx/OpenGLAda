@@ -25,7 +25,7 @@ with Program_Loader;
 with Load_DDS;
 with Load_Object_File;
 with Utilities;
---  with VBO_Indexer;
+with VBO_Indexer;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
@@ -34,7 +34,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 --     Element_Buffer           : GL.Objects.Buffers.Buffer;
---     Indices_Size             : GL.Types.Int;
 
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
@@ -147,7 +146,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
---        Vertices_Size   : Int;
+      Vertices_Size   : Int;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -188,17 +187,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
          UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
          Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
---           Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
---           Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
---           Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
---           Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
+         Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
+         Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
+         Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
+         Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
+         Indices_Size             : GL.Types.Int;
 
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
---           VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
---                                  Indexed_Vertices, Indexed_UVs, Indexed_Normals,
---                                  Temp_Indices, Indices_Size, Vertices_Size);
---           declare
+         VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
+                                Indexed_Vertices, Indexed_UVs, Indexed_Normals,
+                                Temp_Indices, Indices_Size, Vertices_Size);
+         declare
 --              Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
 --                := Indexed_Vertices  (1 .. Vertices_Size);
 --              UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
@@ -207,7 +207,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                := Indexed_Normals  (1 .. Vertices_Size);
 --              Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
 --                := Temp_Indices  (1 .. Indices_Size);
---           begin
+         begin
 --              Put_Line ("Setup Indices_Size;" & Int'Image (Indices_Size) &
 --                 Int'Image (Vertices_Size));
             Vertex_Buffer.Initialize_Id;
@@ -225,7 +225,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --              Element_Buffer.Initialize_Id;
 --              Element_Array_Buffer.Bind (Element_Buffer);
 --              Utilities.Load_Element_Buffer (Element_Array_Buffer, Temp_Indices, Static_Draw);
---           end;
+         end;
       end;
 
       Light_Position_ID := GL.Objects.Programs.Uniform_Location
