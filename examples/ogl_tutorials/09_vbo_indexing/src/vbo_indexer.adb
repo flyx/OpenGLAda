@@ -69,14 +69,14 @@ package body VBO_Indexer is
                         Last_Vertex    : out GL.Types.Int) is
       use GL;
       use GL.Types;
-      Vert_In_Size       : constant Int := Vertices_In'Length;
+      In_Size            : constant Int := Vertices_In'Length;
       Index              : Int := 0;
       Check_Index        : Int := 0;
       VBO_Indices_Index  : Int := 0;
       Out_Index          : Int := 0;
       Found              : Boolean;
    begin
-      for Vert in 1 .. Vert_In_Size loop
+      for Vert in 1 .. Int (Vertices_Out'Length) loop
          for elem in Singles.Vector3'Range loop
             Vertices_Out (Vert) (elem) := 0.0;
             if elem /= GL.Z then
@@ -86,7 +86,11 @@ package body VBO_Indexer is
          end loop;
       end loop;
 
-      for Vert in 1 .. Vert_In_Size loop
+      Put_Line ("Index_VBO in sizes;" & Int'Image (Vertices_In'Length) &
+               Int'Image (UVs_In'Length) & Int'Image (Normals_In'Length));
+      Put_Line ("Index_VBO out sizes;" & Int'Image (Vertices_Out'Length) &
+               Int'Image (UVs_Out'Length) & Int'Image (Normals_Out'Length));
+      for Vert in 1 .. In_Size loop
          Found := False;
          Get_Similar_Index_Slow (Vertices_In (Vert), Vertices_Out, Check_Index, Found);
          if Found then
@@ -98,20 +102,22 @@ package body VBO_Indexer is
          end if;
 
          VBO_Indices_Index := VBO_Indices_Index + 1;
-         if Found and then Index = Check_Index then
-            -- A similar vertex is already in the VBO so use it instead
-            VBO_Indices (VBO_Indices_Index) := Check_Index;
-         else
+--           if Found and then Index = Check_Index then
+--              -- A similar vertex is already in the VBO so use it instead
+--              VBO_Indices (VBO_Indices_Index) := Check_Index;
+--           else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
             Vertices_Out (Out_Index) := Vertices_In (Vert);
-            Last_Vertex := Out_Index;
             UVs_Out (Out_Index) := UVs_In (Vert);
             Normals_Out (Out_Index) := Normals_In (Vert);
             VBO_Indices (VBO_Indices_Index) := Out_Index;
-         end if;
+--           end if;
       end loop;
+      Last_Vertex := Out_Index;
       Last_VBO_Index  := VBO_Indices_Index;
+      Put_Line ("Index_VBO Last indices;" & Int'Image (Out_Index) &
+               Int'Image (Last_VBO_Index));
 
    exception
       when others =>
