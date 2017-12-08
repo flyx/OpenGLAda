@@ -212,15 +212,15 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --                 Int'Image (Vertices_Size));
             Vertex_Buffer.Initialize_Id;
             Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_Vertices, Static_Draw);
 
             UVs_Buffer.Initialize_Id;
             Array_Buffer.Bind (UVs_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, UVs, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_UVs, Static_Draw);
 
             Normals_Buffer.Initialize_Id;
             Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals, Static_Draw);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Indexed_Normals, Static_Draw);
 
 --              Element_Buffer.Initialize_Id;
 --              Element_Array_Buffer.Bind (Element_Buffer);

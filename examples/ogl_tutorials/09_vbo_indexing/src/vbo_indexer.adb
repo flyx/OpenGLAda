@@ -13,47 +13,35 @@ package body VBO_Indexer is
 
    --  -------------------------------------------------------------------------
 
-   procedure Get_Similar_Index_Slow
-     (Data_In : GL.Types.Singles.Vector2;
-      Data    : GL.Types.Singles.Vector2_Array;
-      Result  : out GL.Types.Int; Found : out Boolean) is
-   begin
+   procedure Get_Similar_Vertex_Index
+     (Vertices_In    : GL.Types.Singles.Vector3;
+      UVs_In         : GL.Types.Singles.Vector2;
+      Normals_In     : GL.Types.Singles.Vector3;
+      Vertices_Out   : GL.Types.Singles.Vector3_Array;
+      UVs_Out        : GL.Types.Singles.Vector2_Array;
+      Normals_Out    : GL.Types.Singles.Vector3_Array;
+      Result         : out GL.Types.Int; Found : out Boolean) is
+      begin
       Found := False;
       Result := 0;
-      for Index in Data'Range loop
-         Found := Is_Near (Data_In (GL.X), Data (Index) (GL.X))
-           and then Is_Near (Data_In (GL.Y), Data (Index) (GL.Y));
+
+      for Index in Vertices_Out'Range loop
+         Found := Is_Near (Vertices_In (GL.X), Vertices_Out (Index) (GL.X)) and then
+           Is_Near (Vertices_In (GL.Y), Vertices_Out (Index) (GL.Y)) and then
+           Is_Near (Vertices_In (GL.Z), Vertices_Out (Index) (GL.Z)) and then
+           Is_Near (UVs_In (GL.X), UVs_Out (Index) (GL.X)) and then
+           Is_Near (UVs_In (GL.Y), UVs_Out (Index) (GL.Y)) and then
+           Is_Near (Normals_In (GL.X), Normals_Out (Index) (GL.X)) and then
+           Is_Near (Normals_In (GL.Y), Normals_Out (Index) (GL.Y)) and then
+           Is_Near (Normals_In (GL.Z), Normals_Out (Index) (GL.Z));
          if Found then
             Result := Index;
             exit;
          end if;
+
       end loop;
 
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Get_Similar_Vertex_Index_Slow.");
-         raise;
-   end Get_Similar_Index_Slow;
-
-   --  -------------------------------------------------------------------------
-
-   procedure Get_Similar_Index_Slow
-     (Data_In : GL.Types.Singles.Vector3;
-      Data    : GL.Types.Singles.Vector3_Array;
-      Result  : out GL.Types.Int; Found : out Boolean) is
-   begin
-      Found := False;
-      Result := 0;
-      for Index in Data'Range loop
-         Found := Is_Near (Data_In (GL.X), Data (Index) (GL.X))
-           and then Is_Near (Data_In (GL.Y), Data (Index) (GL.Y))
-           and then Is_Near (Data_In (GL.Z), Data (Index) (GL.Z));
-         if Found then
-            Result := Index;
-            exit;
-         end if;
-      end loop;
-   end Get_Similar_Index_Slow;
+      end Get_Similar_Vertex_Index;
 
    --  -------------------------------------------------------------------------
 
@@ -70,7 +58,7 @@ package body VBO_Indexer is
       use GL.Types;
       In_Size            : constant Int := Vertices_In'Length;
       Index              : Int := 0;
-      Check_Index        : Int := 0;
+--        Check_Index        : Int := 0;
       VBO_Indices_Index  : Int := 0;
       Out_Index          : Int := 0;
       Found              : Boolean;
@@ -90,16 +78,9 @@ package body VBO_Indexer is
       Put_Line ("Index_VBO out sizes;" & Int'Image (Vertices_Out'Length) &
                Int'Image (UVs_Out'Length) & Int'Image (Normals_Out'Length));
       for Vert in 1 .. In_Size loop
-         Found := False;
-         Get_Similar_Index_Slow (Vertices_In (Vert), Vertices_Out, Check_Index, Found);
-         if Found then
-            Get_Similar_Index_Slow (UVs_In (Vert), UVs_Out, Index, Found);
-         end if;
-         if Found and then Index = Check_Index then
-            Check_Index := Index;
-            Get_Similar_Index_Slow (Normals_In (Vert), Normals_Out, Index, Found);
-         end if;
-
+         Get_Similar_Vertex_Index (Vertices_In (Vert), UVs_In (Vert), Normals_In (Vert),
+                                   Vertices_Out, UVs_Out, Normals_Out,
+                                   Index, Found);
          VBO_Indices_Index := VBO_Indices_Index + 1;
 --           if Found and then Index = Check_Index then
 --              -- A similar vertex is already in the VBO so use it instead
