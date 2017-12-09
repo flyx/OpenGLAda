@@ -1,8 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Utilities;
-
 package body VBO_Indexer is
 
    --     type Packed_Vertex is record
@@ -22,7 +20,7 @@ package body VBO_Indexer is
       Vertices_Out   : GL.Types.Singles.Vector3_Array;
       UVs_Out        : GL.Types.Singles.Vector2_Array;
       Normals_Out    : GL.Types.Singles.Vector3_Array;
-      Result         : out GL.Types.Int; Found : out Boolean) is
+      Result         : out GL.Types.UInt; Found : out Boolean) is
       begin
       Found := False;
       Result := 0;
@@ -37,7 +35,7 @@ package body VBO_Indexer is
            Is_Near (Normals_In (GL.Y), Normals_Out (Index) (GL.Y)) and then
            Is_Near (Normals_In (GL.Z), Normals_Out (Index) (GL.Z));
          if Found then
-            Result := Index;
+            Result := GL.Types.UInt (Index);
             exit;
          end if;
 
@@ -53,14 +51,14 @@ package body VBO_Indexer is
                         Vertices_Out   : out GL.Types.Singles.Vector3_Array;
                         UVs_Out        : out GL.Types.Singles.Vector2_Array;
                         Normals_Out    : out GL.Types.Singles.Vector3_Array;
-                        VBO_Indices    : out GL.Types.Int_Array;
-                        Last_VBO_Index : out GL.Types.Int;
+                        VBO_Indices    : out GL.Types.UInt_Array;
+                        Last_VBO_Index : out GL.Types.Size;
                         Last_Vertex    : out GL.Types.Int) is
       use GL;
       use GL.Types;
       In_Size            : constant Int := Vertices_In'Length;
-      Index              : Int := 0;
-      VBO_Indices_Index  : Int := 0;
+      Index              : UInt := 0;
+      VBO_Indices_Index  : Size := 0;
       Out_Index          : Int := 0;
       Found              : Boolean;
    begin
@@ -79,23 +77,22 @@ package body VBO_Indexer is
                                    Vertices_Out, UVs_Out, Normals_Out,
                                    Index, Found);
          VBO_Indices_Index := VBO_Indices_Index + 1;
---           if Found then
---              -- A similar vertex is already in the VBO so use it instead
---              VBO_Indices (VBO_Indices_Index) := Index;
---           else
+         if Found then
+            -- A similar vertex is already in the VBO so use it instead
+            VBO_Indices (VBO_Indices_Index) := Index;
+         else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
             Vertices_Out (Out_Index) := Vertices_In (Vert);
             UVs_Out (Out_Index) := UVs_In (Vert);
             Normals_Out (Out_Index) := Normals_In (Vert);
-            VBO_Indices (VBO_Indices_Index) := Out_Index;
---           end if;
+            VBO_Indices (VBO_Indices_Index) := UInt (Out_Index);
+         end if;
       end loop;
       Last_Vertex := Out_Index;
       Last_VBO_Index  := VBO_Indices_Index;
       Put_Line ("Index_VBO Last indices;" & Int'Image (Out_Index) &
-                  Int'Image (Last_VBO_Index));
-      Utilities.Print_GL_Int_Array ("VBO_Indices", VBO_Indices);
+                  Size'Image (Last_VBO_Index));
 
    exception
       when others =>

@@ -134,7 +134,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program  : out GL.Objects.Programs.Program;
-                    Indices_Size    : out GL.Types.Int;
+                    Indices_Size    : out GL.Types.Size;
                     UV_Map          : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -145,7 +145,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
       Vertices_Size   : Int;
-      Vertex_Count    : Int;
+      Vertex_Count    : GL.Types.Size;
 
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
@@ -190,7 +190,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
          Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
          Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
-         Temp_Indices     : Int_Array (1 .. Vertex_Count);
+         Temp_Indices     : UInt_Array (1 .. Vertex_Count);
 
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
@@ -204,7 +204,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
               := Indexed_UVs  (1 .. Vertices_Size);
             Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
               := Indexed_Normals  (1 .. Vertices_Size);
-            Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
+            Indices          : constant GL.Types.UInt_Array (1 .. Indices_Size)
               := Temp_Indices  (1 .. Indices_Size);
          begin
             Vertex_Buffer.Initialize_Id;
