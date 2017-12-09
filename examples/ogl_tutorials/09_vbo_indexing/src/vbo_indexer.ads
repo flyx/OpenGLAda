@@ -11,8 +11,8 @@ package VBO_Indexer is
                         Vertices_Out   : out GL.Types.Singles.Vector3_Array;
                         UVs_Out        : out GL.Types.Singles.Vector2_Array;
                         Normals_Out    : out GL.Types.Singles.Vector3_Array;
-                        VBO_Indices    : out GL.Types.Int_Array;
-                        Last_VBO_Index : out GL.Types.Int;
+                        VBO_Indices    : out GL.Types.UInt_Array;
+                        Last_VBO_Index : out GL.Types.Size;
                         Last_Vertex    : out GL.Types.Int);
 
 end VBO_Indexer;

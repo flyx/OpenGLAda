@@ -191,7 +191,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program  : out GL.Objects.Programs.Program;
-                    Indices_Size    : out GL.Types.Int;
+                    Indices_Size    : out GL.Types.Size;
                     UV_Map          : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -201,6 +201,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
+      Vertices_Size   : Int;
+      Vertex_Count    : GL.Types.Size;
 
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);

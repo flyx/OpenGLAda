@@ -186,7 +186,7 @@ package body Utilities is
       New_Line;
    end Print_Array6;
 
-   --  ---------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
       use GL.Types;
@@ -197,6 +197,18 @@ package body Utilities is
       end loop;
       New_Line;
    end Print_GL_Int_Array;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_GL_UInt_Array (Name : String; anArray : GL.Types.UInt_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put_Line (Int'Image (Index) & ":  " & UInt'Image (anArray (Index)));
+      end loop;
+      New_Line;
+   end Print_GL_UInt_Array;
 
    --  ------------------------------------------------------------------------
 
