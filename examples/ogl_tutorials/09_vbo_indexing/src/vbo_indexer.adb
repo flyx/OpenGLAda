@@ -1,6 +1,8 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+with Utilities;
+
 package body VBO_Indexer is
 
    --     type Packed_Vertex is record
@@ -58,7 +60,6 @@ package body VBO_Indexer is
       use GL.Types;
       In_Size            : constant Int := Vertices_In'Length;
       Index              : Int := 0;
---        Check_Index        : Int := 0;
       VBO_Indices_Index  : Int := 0;
       Out_Index          : Int := 0;
       Found              : Boolean;
@@ -78,9 +79,9 @@ package body VBO_Indexer is
                                    Vertices_Out, UVs_Out, Normals_Out,
                                    Index, Found);
          VBO_Indices_Index := VBO_Indices_Index + 1;
---           if Found and then Index = Check_Index then
+--           if Found then
 --              -- A similar vertex is already in the VBO so use it instead
---              VBO_Indices (VBO_Indices_Index) := Check_Index;
+--              VBO_Indices (VBO_Indices_Index) := Index;
 --           else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
@@ -93,7 +94,8 @@ package body VBO_Indexer is
       Last_Vertex := Out_Index;
       Last_VBO_Index  := VBO_Indices_Index;
       Put_Line ("Index_VBO Last indices;" & Int'Image (Out_Index) &
-               Int'Image (Last_VBO_Index));
+                  Int'Image (Last_VBO_Index));
+      Utilities.Print_GL_Int_Array ("VBO_Indices", VBO_Indices);
 
    exception
       when others =>

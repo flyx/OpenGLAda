@@ -84,7 +84,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Render (Window : in out Glfw.Windows.Window;
                      Render_Program  : GL.Objects.Programs.Program;
-                     Vertex_Count    : GL.Types.Int;
+                     Indices_Size    : GL.Types.Int;
                      UV_Map          : GL.Objects.Textures.Texture) is
       use Interfaces.C;
       use GL.Objects.Buffers;
@@ -117,11 +117,9 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
 
       --  Index Buffer
---        GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
-      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0,  Vertex_Count);
-
---        GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
-
+      GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
+--        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0,  Vertex_Count);
+      GL.Objects.Buffers.Draw_Elements (Triangles, Indices_Size, UInt_Type, 0);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
       GL.Attributes.Disable_Vertex_Attrib_Array (1);
@@ -136,7 +134,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program  : out GL.Objects.Programs.Program;
-                    Vertex_Count    : out GL.Types.Int;
+                    Indices_Size    : out GL.Types.Int;
                     UV_Map          : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -147,6 +145,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
       Vertices_Size   : Int;
+      Vertex_Count    : Int;
+
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       Window.Set_Cursor_Mode (Mouse.Disabled);
@@ -190,8 +190,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
          Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
          Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
-         Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
-         Indices_Size             : GL.Types.Int;
+         Temp_Indices     : Int_Array (1 .. Vertex_Count);
 
       begin
          Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
