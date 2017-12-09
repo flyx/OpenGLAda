@@ -37,14 +37,15 @@ package body Load_Object_File is
       Raw_Vertex_Index    : Int;
       Raw_UVs_Index       : Int;
       Raw_Normal_Index    : Int;
-      Mesh_Index          : Int := 1;
+      Mesh_Index          : Int := 0;
    begin
-      for Index in Vertex_Indices'Range loop
+      for Index in UV_Indices'Range loop
          -- Get vector of three indices, one for each vertex of a triangle
          Raw_Vertex_Indices :=  Vertex_Indices (Index);
          Raw_UVs_Indices :=  UV_Indices (Index);
          Raw_Normals_Indices :=  Normal_Indices (Index);
          for elem in Index_3D'Range loop
+            Mesh_Index := Mesh_Index + 1;
             --  for each vertex of a triangle, get the vertex index
             Raw_Vertex_Index := Raw_Vertex_Indices (elem);
             Raw_UVs_Index := Raw_UVs_Indices (elem);
@@ -53,7 +54,6 @@ package body Load_Object_File is
             Mesh_Vertices (Mesh_Index) := Raw_Vertices (Raw_Vertex_Index);
             Mesh_UVs (Mesh_Index) := Raw_UVs (Raw_UVs_Index);
             Mesh_Normals (Mesh_Index) := Raw_Normals (Raw_Normal_Index);
-            Mesh_Index := Mesh_Index + 1;
          end loop;
       end loop;
    end Data_From_Faces;
