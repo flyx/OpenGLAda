@@ -21,7 +21,8 @@ package body VBO_Indexer is
       UVs_Out        : GL.Types.Singles.Vector2_Array;
       Normals_Out    : GL.Types.Singles.Vector3_Array;
       Result         : out GL.Types.UInt; Found : out Boolean) is
-      begin
+      use GL.Types;
+   begin
       Found := False;
       Result := 0;
 
@@ -35,10 +36,9 @@ package body VBO_Indexer is
            Is_Near (Normals_In (GL.Y), Normals_Out (Index) (GL.Y)) and then
            Is_Near (Normals_In (GL.Z), Normals_Out (Index) (GL.Z));
          if Found then
-            Result := GL.Types.UInt (Index);
+            Result := GL.Types.UInt (Index - 1);
             exit;
          end if;
-
       end loop;
 
       end Get_Similar_Vertex_Index;
@@ -51,7 +51,8 @@ package body VBO_Indexer is
       Vertices_Out   : GL.Types.Singles.Vector3_Array;
       UVs_Out        : GL.Types.Singles.Vector2_Array;
       Result         : out GL.Types.UInt; Found : out Boolean) is
-      begin
+      use GL.Types;
+   begin
       Found := False;
       Result := 0;
 
@@ -62,7 +63,7 @@ package body VBO_Indexer is
            Is_Near (UVs_In (GL.X), UVs_Out (Index) (GL.X)) and then
            Is_Near (UVs_In (GL.Y), UVs_Out (Index) (GL.Y));
          if Found then
-            Result := GL.Types.UInt (Index);
+            Result := GL.Types.UInt (Index - 1);
             exit;
          end if;
       end loop;
@@ -85,7 +86,7 @@ package body VBO_Indexer is
       In_Size            : constant Int := Vertices_In'Length;
       Index              : UInt := 0;
       VBO_Indices_Index  : Size := 0;
-      Out_Index          : Int := 0;
+      Out_Index          : UInt := 0;
       Found              : Boolean;
    begin
       for Vert in 1 .. Int (Vertices_Out'Length) loop
@@ -109,16 +110,14 @@ package body VBO_Indexer is
          else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
-            Vertices_Out (Out_Index) := Vertices_In (Vert);
-            UVs_Out (Out_Index) := UVs_In (Vert);
-            Normals_Out (Out_Index) := Normals_In (Vert);
-            VBO_Indices (VBO_Indices_Index) := UInt (Out_Index);
+            Vertices_Out (Int (Out_Index)) := Vertices_In (Vert);
+            UVs_Out (Int (Out_Index)) := UVs_In (Vert);
+            Normals_Out (Int (Out_Index)) := Normals_In (Vert);
+            VBO_Indices (VBO_Indices_Index) := Out_Index - 1;
          end if;
       end loop;
-      Last_Vertex := Out_Index;
+      Last_Vertex := Int (Out_Index);
       Last_VBO_Index  := VBO_Indices_Index;
-      Put_Line ("Index_VBO Last indices;" & Int'Image (Out_Index) &
-                  Size'Image (Last_VBO_Index));
 
    exception
       when others =>
@@ -140,9 +139,10 @@ package body VBO_Indexer is
       In_Size            : constant Int := Vertices_In'Length;
       Index              : UInt := 0;
       VBO_Indices_Index  : Size := 0;
-      Out_Index          : Int := 0;
+      Out_Index          : UInt := 0;
       Found              : Boolean;
    begin
+      --  Initialize output arrays
       for Vert in 1 .. Int (Vertices_Out'Length) loop
          for elem in Singles.Vector3'Range loop
             Vertices_Out (Vert) (elem) := 0.0;
@@ -162,15 +162,13 @@ package body VBO_Indexer is
          else
             --  No other vertex can be used instead so add it to the VBO.
             Out_Index := Out_Index + 1;
-            Vertices_Out (Out_Index) := Vertices_In (Vert);
-            UVs_Out (Out_Index) := UVs_In (Vert);
-            VBO_Indices (VBO_Indices_Index) := UInt (Out_Index);
+            Vertices_Out (Int (Out_Index)) := Vertices_In (Vert);
+            UVs_Out (Int (Out_Index)) := UVs_In (Vert);
+            VBO_Indices (VBO_Indices_Index) := Out_Index - 1;
          end if;
       end loop;
-      Last_Vertex := Out_Index;
+      Last_Vertex := Int (Out_Index);
       Last_VBO_Index  := VBO_Indices_Index;
-      Put_Line ("Index_VBO Last indices;" & Int'Image (Out_Index) &
-                  Size'Image (Last_VBO_Index));
 
    exception
       when others =>
@@ -179,6 +177,7 @@ package body VBO_Indexer is
    end Index_VBO;
 
    --  -------------------------------------------------------------------------
+
    function Is_Near (V1, V2 : GL.Types.Single) return Boolean is
       use GL.Types;
    begin

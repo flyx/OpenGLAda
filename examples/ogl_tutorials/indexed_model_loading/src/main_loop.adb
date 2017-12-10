@@ -41,8 +41,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    Procedure Load_Buffers (Indices_Size : out GL.Types.Int) is
       use GL.Objects.Buffers;
       use GL.Types;
-      Vertex_Count    : Int;
-      Indexed_Vertices_Size   : Int;
+      Vertex_Count          : Int;
+      Indexed_Vertices_Size : Int;
    begin
       Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/cube.obj");
       declare
@@ -75,11 +75,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             Element_Buffer.Initialize_Id;
             Element_Array_Buffer.Bind (Element_Buffer);
             Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
-
-            Utilities.Print_GL_Array3 ("Vertices", Vertices);
-            Utilities.Print_GL_Array3 ("Vertices_Indexed", Vertices_Indexed);
-            Put_Line ("Load_Buffers, Vertex_Count: " & Int'Image (Vertex_Count));
-            Put_Line ("Load_Buffers, Indexed_Vertices_Size: " & Int'Image (Indexed_Vertices_Size));
          end;
       end;
 
@@ -124,7 +119,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Textures.Targets.Texture_2D.Bind (Sample_Texture);
       GL.Uniforms.Set_Int (Texture_ID, 0);
 
-      Put_Line ("Render, Indices_Size: " & Int'Image (Indices_Size));
+--        Put_Line ("Render, Indices_Size: " & Int'Image (Indices_Size));
 --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 36 * 3);
       GL.Objects.Buffers.Draw_Elements (Triangles, Indices_Size, UInt_Type);
 
