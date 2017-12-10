@@ -15,4 +15,11 @@ package VBO_Indexer is
                         Last_VBO_Index : out GL.Types.Size;
                         Last_Vertex    : out GL.Types.Int);
 
+   procedure Index_VBO (Vertices_In    : GL.Types.Singles.Vector3_Array;
+                        UVs_In         : GL.Types.Singles.Vector2_Array;
+                        Vertices_Out   : out GL.Types.Singles.Vector3_Array;
+                        UVs_Out        : out GL.Types.Singles.Vector2_Array;
+                        VBO_Indices    : out GL.Types.UInt_Array;
+                        Last_VBO_Index : out GL.Types.Size;
+                        Last_Vertex    : out GL.Types.Int);
 end VBO_Indexer;
