@@ -49,7 +49,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Element_Buffer           : GL.Objects.Buffers.Buffer;
-   Indices_Size             : GL.Types.Int;
    Normals_Buffer           : GL.Objects.Buffers.Buffer;
    UVs_Buffer               : GL.Objects.Buffers.Buffer;
    Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -70,6 +69,63 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
+   Procedure Load_Buffers (Indices_Size : out GL.Types.Int) is
+      use GL.Objects.Buffers;
+      use GL.Types;
+      Vertex_Count    : Int;
+      Vertices_Size   : Int;
+   begin
+      Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
+      declare
+         Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
+         UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
+         Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
+         Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
+         Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
+         Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
+         Temp_Indices     : UInt_Array (1 .. Vertex_Count);
+
+      begin
+         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
+         VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
+                                Indexed_Vertices, Indexed_UVs, Indexed_Normals,
+                                Temp_Indices, Indices_Size, Vertices_Size);
+         declare
+            Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
+              := Indexed_Vertices  (1 .. Vertices_Size);
+            UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
+              := Indexed_UVs  (1 .. Vertices_Size);
+            Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
+              := Indexed_Normals  (1 .. Vertices_Size);
+            Indices          : constant GL.Types.UInt_Array (1 .. Indices_Size)
+              := Temp_Indices  (1 .. Indices_Size);
+         begin
+            Vertex_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Vertex_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
+
+            UVs_Buffer.Initialize_Id;
+            Array_Buffer.Bind (UVs_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
+
+            Normals_Buffer.Initialize_Id;
+            Array_Buffer.Bind (Normals_Buffer);
+            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
+
+            Element_Buffer.Initialize_Id;
+            Element_Array_Buffer.Bind (Element_Buffer);
+            Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
+         end;
+      end;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_Buffers.");
+         raise;
+   end Load_Buffers;
+
+   --  ------------------------------------------------------------------------
+
    procedure Load_Texture (Window       : in out Glfw.Windows.Window;
                            Vertex_Count : GL.Types.Int;
                            UV_Map       : GL.Objects.Textures.Texture) is
@@ -85,6 +141,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    begin
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       Utilities.Clear_Background_Colour_And_Depth (White);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
       for count in GL.Types.Int range 1 .. Max_Items loop
          Rot_Matrix := Maths.Rotation_Matrix (Orientations (count).Angle,
                                               Orientations (count).Axis);
@@ -109,6 +166,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
          GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
       end loop;
+      GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
    exception
       when others =>
@@ -214,7 +272,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       end if;
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Texture (Window, Vertex_Count, UV_Map);
 
       --        if Window.Mouse_Button_State (Mouse.Left_Button) = Glfw.Input.Pressed then
@@ -222,7 +279,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --                 View_Matrix, Projection_Matrix);
       --        end if;
 
-      GL.Attributes.Disable_Vertex_Attrib_Array (0);
    exception
       when others =>
          Put_Line ("An exception occurred in Render.");
@@ -234,7 +290,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup (Window : in out Glfw.Windows.Window;
                     Render_Program  : out GL.Objects.Programs.Program;
                     --                      Picking_Program : out GL.Objects.Programs.Program;
-                    Vertex_Count    : out GL.Types.Int;
+                    Indices_Size    : out GL.Types.Int;
                     UV_Map          : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
@@ -242,9 +298,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Types;
       use GL.Types.Singles;
       use Glfw.Input;
-      Window_Width    : constant Glfw.Size := 1024;
-      Window_Height   : constant Glfw.Size := 768;
-      Vertices_Size   : Int;
+      Window_Width  : constant Glfw.Size := 1024;
+      Window_Height : constant Glfw.Size := 768;
+      Gen           : Ada.Numerics.Float_Random.Generator;
+
+      function Position return Single is
+      begin
+         return Single (20.0 * Ada.Numerics.Float_Random.Random (Gen) - 10.0);
+      end  Position;
+      function Direction return Maths.Radian is
+      begin
+         return Maths.Radian (2.0 * Ada.Numerics.Pi * Ada.Numerics.Float_Random.Random (Gen));
+      end  Direction;
    begin
       Window.Set_Input_Toggle (Sticky_Keys, True);
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
@@ -288,73 +353,22 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         (Render_Program, "Light_Position_Worldspace");
       --        Picking_Matrix_ID := GL.Objects.Programs.Uniform_Location
       --          (Picking_Program, "MVP");
+
       Load_DDS ("src/textures/uvmap.DDS", UV_Map);
       Texture_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "myTextureSampler");
 
-      Vertex_Count := Load_Object_File.Mesh_Size ("src/textures/suzanne.obj");
-      declare
-         use Ada.Numerics.Float_Random;
-         subtype Random_Single is Single range -10.0 .. 10.0;
-         Vertices         : Singles.Vector3_Array (1 .. Vertex_Count);
-         UVs              : Singles.Vector2_Array (1 .. Vertex_Count);
-         Normals          : Singles.Vector3_Array (1 .. Vertex_Count);
-         Indexed_Vertices : Singles.Vector3_Array (1 .. Vertex_Count);
-         Indexed_UVs      : Singles.Vector2_Array (1 .. Vertex_Count);
-         Indexed_Normals  : Singles.Vector3_Array (1 .. Vertex_Count);
-         Temp_Indices     : Int_Array (1 .. 3 * Vertex_Count);
-         Random_Gen       : Ada.Numerics.Float_Random.Generator;
-
-         function New_Value return Random_Single is
-         begin
-            return Random_Single (20.0 * Random (Random_Gen) - 10.0);
-         end New_Value;
-
-      begin
-         Ada.Numerics.Float_Random.Reset (Random_Gen);
-         for index in Positions'Range loop
-            Positions (index) := (New_Value, New_Value, New_Value);
-            Orientations (index) := (Maths.Radian (New_Value),
-                                     (New_Value, New_Value, New_Value));
-         end loop;
-
-         Load_Object_File.Load_Object ("src/textures/suzanne.obj", Vertices, UVs, Normals);
-         VBO_Indexer.Index_VBO (Vertices, UVs,  Normals,
-                                Indexed_Vertices, Indexed_UVs, Indexed_Normals,
-                                Temp_Indices, Indices_Size, Vertices_Size);
-         declare
-            Vertices_Indexed : constant Singles.Vector3_Array (1 .. Vertices_Size)
-                := Indexed_Vertices  (1 .. Vertices_Size);
-            UVs_Indexed      : constant Singles.Vector2_Array (1 .. Vertices_Size)
-                := Indexed_UVs  (1 .. Vertices_Size);
-            Normals_Indexed  : constant Singles.Vector3_Array (1 .. Vertices_Size)
-                := Indexed_Normals  (1 .. Vertices_Size);
-            Indices          : constant GL.Types.Int_Array (1 .. Indices_Size)
-                := Temp_Indices  (1 .. Indices_Size);
-         begin
-            Vertex_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Vertex_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices_Indexed, Static_Draw);
-
-            UVs_Buffer.Initialize_Id;
-            Array_Buffer.Bind (UVs_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, UVs_Indexed, Static_Draw);
-
-            Normals_Buffer.Initialize_Id;
-            Array_Buffer.Bind (Normals_Buffer);
-            Utilities.Load_Vertex_Buffer (Array_Buffer, Normals_Indexed, Static_Draw);
-
-            Element_Buffer.Initialize_Id;
-            Element_Array_Buffer.Bind (Element_Buffer);
-            Utilities.Load_Element_Buffer (Element_Array_Buffer, Indices, Static_Draw);
-         end;
-      end;
+      Load_Buffers (Indices_Size);
 
       --        Picking_Colour_ID := GL.Objects.Programs.Uniform_Location
       --            (Picking_Program, "Picking_Colour");
       --        Light_Position_ID := GL.Objects.Programs.Uniform_Location
       --            (Picking_Program, "Light_Position_Worldspace");
-
+      Ada.Numerics.Float_Random.Reset (Gen);
+      for Index in 1 .. Max_Items loop
+         Positions (Index) := (Position, Position, Position);
+         Orientations (Index) := (Direction, (1.0, 1.0, 1.0));
+      end loop;
       --        Last_Time := Glfw.Time;
       Utilities.Enable_Mouse_Callbacks (Window, True);
       Window.Enable_Callback (Glfw.Windows.Callbacks.Char);
