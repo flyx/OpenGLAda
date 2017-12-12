@@ -231,6 +231,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          --  Read the pixel at the center of the screen
          Read_Pix (Int (Window_Width) / 2, Int (Window_Height) / 2, 1, 1,
                    GL.Pixels.RGBA, GL.Pixels.Float, Pixel_Data);
+      Put_Line ("Pick R" & UByte'Image (Pixel_Data (1)) & UByte'Image (Pixel_Data (2))
+               & UByte'Image (Pixel_Data (3)));
          --   Convert the color back to an integer ID
          Picked_ID := Int (Pixel_Data (1)) + 256 * Int (Pixel_Data (2)) +
              256 * 256 * Int (Pixel_Data (3));
