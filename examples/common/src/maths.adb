@@ -17,6 +17,13 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Cube_Root (Value : Single) return Single is
+   begin
+      return Maths.Single_Math_Functions.Exp (Maths.Single_Math_Functions.Log (Value) / 3.0);
+   end Cube_Root;
+
+   --  ------------------------------------------------------------------------
+
    function Degrees (Angle : Radian) return Degree is
    begin
       return Degree (Angle) * Degrees_Per_Radian;
