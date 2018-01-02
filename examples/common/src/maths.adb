@@ -150,6 +150,19 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Maximum (I1, I2 : Integer) return Integer is
+      Max : Integer;
+   begin
+      if I1 > I2 then
+         Max := I1;
+      else
+         Max := I2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
    function Maximum (I1, I2 : Single) return Single is
       Max : Single;
    begin
