@@ -43,6 +43,7 @@ package Maths is
       Transform  : out Singles.Matrix4);
    function Length (V : Singles.Vector3) return Single;
    function Minimum (I1, I2 : Int) return Int;
+   function Minimum (I1, I2 : Integer) return Integer;
    function Minimum (I1, I2 : Single) return Single;
    function Maximum (I1, I2 : Int) return Int;
    function Maximum (I1, I2 : Integer) return Integer;

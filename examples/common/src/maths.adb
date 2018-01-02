@@ -124,6 +124,19 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Minimum (I1, I2 : Integer) return Integer is
+      Min : Integer;
+   begin
+      if I1 < I2 then
+         Min := I1;
+      else
+         Min := I2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
    function Minimum (I1, I2 : Single) return Single is
       Min : Single;
    begin
