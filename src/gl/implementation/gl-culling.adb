@@ -11,7 +11,7 @@ package body GL.Culling is
    function Front_Face return Orientation is
       Ret : aliased Orientation;
    begin
-      API.Get_Orientation (Enums.Getter.Cull_Face, Ret'Access);
+      API.Get_Orientation (Enums.Getter.Front_Face, Ret'Access);
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Front_Face;
