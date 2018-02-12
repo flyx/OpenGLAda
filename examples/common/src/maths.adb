@@ -310,6 +310,13 @@ package body Maths is
    end Scaling_Matrix;
 
    --  ------------------------------------------------------------------------
+
+   function Scaling_Matrix (Scale_Factor : Single) return Singles.Matrix4 is
+   begin
+      return Scale_Factor * Singles.Identity4;
+   end Scaling_Matrix;
+
+   --  ------------------------------------------------------------------------
    --  Translation_Matrix is derived from Computer Graphics Using OpenGL
    --  Chapter 5, transpose of equation preceding (5.25)
 
