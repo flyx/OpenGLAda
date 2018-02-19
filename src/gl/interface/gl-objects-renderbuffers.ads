@@ -37,13 +37,16 @@ package GL.Objects.Renderbuffers is
 
    function Current (Target : Renderbuffer_Target) return Renderbuffer'Class;
 
-   overriding
-   procedure Initialize_Id (Object : in out Renderbuffer);
-
    No_Renderbuffer : constant Renderbuffer;
 private
 
    type Renderbuffer is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Renderbuffer; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Renderbuffer; Id : UInt);
 
    type Renderbuffer_Target (Kind : Low_Level.Enums.Renderbuffer_Kind) is
      tagged limited null record;
@@ -52,5 +55,6 @@ private
      := Renderbuffer_Target'(Kind => Low_Level.Enums.Renderbuffer);
 
    No_Renderbuffer : constant Renderbuffer :=
-     Renderbuffer'(GL_Object with null record);
+     Renderbuffer'(Ada.Finalization.Controlled with Reference =>
+                     Reference_To_Null_Object'Access);
 end GL.Objects.Renderbuffers;

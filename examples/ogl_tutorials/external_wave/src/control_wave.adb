@@ -2,27 +2,19 @@
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 
-with Maths;
-with Vertex_Data;
-
 package body Control_Wave is
 
-    --    Mouse_X        : GL.Types.Single;
-    --    Mouse_Y        : GL.Types.Single;
-    --     Cursor_X       : Glfw.Input.Mouse.Coordinate;
-    --     Cursor_Y       : Glfw.Input.Mouse.Coordinate;
     Cursor_X       : GL.Types.Single;
     Cursor_Y       : GL.Types.Single;
 
     Alpha          : Degree := -210.0;
     Beta           : Degree := -70.0;
-    Zoom           : GL.Types.single := 2.0;
+    Zoom           : GL.Types.Single := 2.0;
 
     Key_Pressed    : Boolean := False;
 
     procedure Check_Keyboard (Window : in out Glfw.Windows.Window);
     procedure Check_Mouse_Buttons (Window : in out Glfw.Windows.Window);
-    --     procedure Check_Scroll (Window : in out Glfw.Windows.Window);
 
     --  ------------------------------------------------------------------------
 
@@ -49,7 +41,6 @@ package body Control_Wave is
     --  ------------------------------------------------------------------------
 
     procedure Check_Input (Window : in out Glfw.Windows.Window) is
-        use Maths;
     begin
         Check_Keyboard (Window);
         Check_Mouse_Buttons (Window);
@@ -139,33 +130,7 @@ package body Control_Wave is
 
     --  ------------------------------------------------------------------------
 
-    --     procedure Mouse_Scrolled (Object : not null access Glfw.Windows.Window;
-    --                                 X, Y   : Glfw.Input.Mouse.Scroll_Offset) is
-    --        use GL.Types;
-    --     begin
-    --        Put_Line ("Mouse_Scrolled called");
-    --        Zoom := Zoom + Single (Y) / 4.0;
-    --        if Zoom < 0.0 then
-    --           Zoom := 0.0;
-    --        end if;
-    --     end Mouse_Scrolled;
-
-    --     procedure Check_Scroll (Window : in out Glfw.Windows.Window) is
-    --        use GL.Types;
-    --        use Glfw.Input;
-    --        Scroll_X   : Mouse.Scroll_Offset;
-    --        Scroll_Y   : Mouse.Scroll_Offset;
-    --     begin
-    --        Window'Access.Mouse_Scrolled (Scroll_X, Scroll_Y);
-    --        Zoom := Zoom + Single (Scroll_Y) / 4.0;
-    --        if Zoom < 0.0 then
-    --           Zoom := 0.0;
-    --        end if;
-    --     end Check_Scroll;
-
-    --  ------------------------------------------------------------------------
-
-    procedure Get_Settings (A, B : out Maths.Degree; Z : out GL.Types.single) is
+    procedure Get_Settings (A, B : out Maths.Degree; Z : out GL.Types.Single) is
     begin
         A := Alpha;
         B := Beta;

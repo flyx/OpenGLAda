@@ -78,21 +78,20 @@ package body GL.Objects.Shaders is
       end if;
    end Info_Log;
 
-   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   overriding
+   procedure Internal_Create_Id (Object : Shader; Id : out UInt) is
    begin
-      API.Delete_Shader (Reference.GL_Id);
+      Id := API.Create_Shader (Object.Kind);
       Raise_Exception_On_OpenGL_Error;
-      Reference.GL_Id := 0;
-      Reference.Initialized := Uninitialized;
-   end Destructor;
+   end Internal_Create_Id;
 
-   procedure Initialize_Id (Object : in out Shader) is
+   overriding
+   procedure Internal_Release_Id (Object : Shader; Id : UInt) is
+      pragma Unreferenced (Object);
    begin
-      Object.Reference.GL_Id := API.Create_Shader (Object.Kind);
+      API.Delete_Shader (Id);
       Raise_Exception_On_OpenGL_Error;
-      Object.Reference.Initialized := Allocated;
-      Object.Reference.Destructor := Destructor'Access;
-   end Initialize_Id;
+   end Internal_Release_Id;
 
    function Create_From_Id (Id : UInt) return Shader is
       Kind : Shader_Type := Shader_Type'First;
@@ -100,8 +99,7 @@ package body GL.Objects.Shaders is
       API.Get_Shader_Type (Id, Enums.Shader_Type, Kind);
       Raise_Exception_On_OpenGL_Error;
       return Object : Shader (Kind) do
-         Object.Reference.GL_Id := Id;
-         Object.Reference.Initialized := External;
+         Object.Set_Raw_Id (Id);
       end return;
    end Create_From_Id;
 

@@ -12,8 +12,8 @@ with Main_Loop;
 with Glfw.Windows;
 
 procedure Simple_Geometry is
-    Main_Window : Glfw.Windows.Window;
-    Window_Title : String := "OpenGL SuperBible Simple Tesselation Example";
+    Main_Window  : Glfw.Windows.Window;
+    Window_Title : constant String := "OpenGL SuperBible Simple Tesselation Example";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

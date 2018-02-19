@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -14,7 +13,6 @@ with GL.Toggles;
 with GL.Types; use GL.Types;
 with GL.Types.Colors;
 with GL.Uniforms;
-with GL.Window;
 
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
@@ -23,14 +21,13 @@ with Glfw.Windows.Context;
 
 with Controls;
 with Cube_Data;
-with Maths;
 with Program_Loader;
 with Load_DDS;
 with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Dark_Blue                : GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+    Dark_Blue                : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -40,7 +37,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     Texture_ID               : GL.Uniforms.Uniform;
     Cube_Texture             : GL.Objects.Textures.Texture;
     MVP_Matrix               : GL.Types.Singles.Matrix4;
-    UV_Texture               : GL.Objects.Textures.Texture;
 
     --  ------------------------------------------------------------------------
 
@@ -50,9 +46,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
-        use GL.Types;
         use GL.Objects.Buffers;
-        use Maths;
 
     begin
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
@@ -91,9 +85,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
                               Render_Program : GL.Objects.Programs.Program) is
-        use GL.Types;
         use GL.Types.Singles;
-        Model_Matrix      : Matrix4 := Singles.Identity4;
+        Model_Matrix      : constant Matrix4 := Singles.Identity4;
         Projection_Matrix : Matrix4;
         View_Matrix       : Matrix4;
     begin
@@ -112,7 +105,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;

@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Numerics;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -19,7 +18,7 @@ package body Vertex_Data is
             for x_index in 1 .. Grid_Width loop
                 Position := (y_index - 1) * Grid_Width + x_index;
                 Vertex_Buffer_Data (Position) (Z) :=
-                  Single (Pressure (x_index, y_index)) / 50.0;
+                  Pressure (x_index, y_index) / 50.0;
             end loop;
         end loop;
 
@@ -31,12 +30,12 @@ package body Vertex_Data is
 
    --  -------------------------------------------------------------------------
 
-    procedure Calculate_Grid (dt : single) is
+    procedure Calculate_Grid (dt : Single) is
         Acc_X     : Grid_Array;
         Acc_Y     : Grid_Array;
-        X2        : int;
-        Y2        : int;
-        Time_Step : single := dt * Animation_Speed;
+        X2        : Int;
+        Y2        : Int;
+        Time_Step : constant Single := dt * Animation_Speed;
     begin
         --  Acceleration
         for X in 1 .. Grid_Width loop
@@ -85,17 +84,17 @@ package body Vertex_Data is
     --  ------------------------------------------------------------------------
 
     procedure Initialize_Grid is
-        Half_Height  : constant single := single (Grid_Height) / 2.0;
-        Half_Width   : constant single := single (Grid_Width) / 2.0;
-        dx           : single;
-        dy           : single;
-        d            : single;
-        Angle_Step   : single := Ada.Numerics.Pi / single (4 * Grid_Width);
+        Half_Height  : constant Single := Single (Grid_Height) / 2.0;
+        Half_Width   : constant Single := Single (Grid_Width) / 2.0;
+        dx           : Single;
+        dy           : Single;
+        d            : Single;
+        Angle_Step   : constant Single := Ada.Numerics.Pi / Single (4 * Grid_Width);
     begin
         for y_index in 1 .. Grid_Height loop
             for x_index in 1 .. Grid_Width loop
-                dx := single (x_index) - Half_Width;
-                dy := single (y_index) - Half_Height;
+                dx := Single (x_index) - Half_Width;
+                dy := Single (y_index) - Half_Height;
                 d := Single_Functions.Sqrt (dx * dx + dy * dy);
                 if d < 0.1 * Half_Width then
                     d := 10.0 * d;
@@ -119,8 +118,8 @@ package body Vertex_Data is
     --  Iniialize_Vertices places the vertices in a grid
     procedure Initialize_Vertices is
       use Maths;
-        Half_Height  : constant single := single (Grid_Height) / 2.0;
-        Half_Width   : constant single := single (Grid_Width) / 2.0;
+        Half_Height  : constant Single := Single (Grid_Height) / 2.0;
+        Half_Width   : constant Single := Single (Grid_Width) / 2.0;
         V_Point      : Int;
         Q_Point      : Int := 0;
         Vy_GW        : Int;
@@ -131,8 +130,10 @@ package body Vertex_Data is
             Vy_GW := y_index * Grid_Width;
             for x_index in Int range 0 .. Grid_Width - 1 loop
                 V_Point := Vy_GW + x_index + 1;
-                Vertex_Buffer_Data (V_Point) (X) := (single (x_index) - Half_Width) / single (Half_Width);
-                Vertex_Buffer_Data (V_Point) (Y) := (single (y_index) - Half_Height) / single (Half_Height);
+                Vertex_Buffer_Data (V_Point) (X) := (Single (x_index) -
+                                          Half_Width) / Half_Width;
+                Vertex_Buffer_Data (V_Point) (Y) := (Single (y_index) -
+                                           Half_Height) / Half_Height;
                 Vertex_Buffer_Data (V_Point) (Z) := 0.0;
 
                 if (x_index mod 4 < 2) xor (y_index mod 4 < 2) then
@@ -140,17 +141,17 @@ package body Vertex_Data is
                 else
                     Vertex_Buffer_Data (V_Point) (R) := 1.0;
                 end if;
-                Vertex_Buffer_Data (V_Point) (G) := single (y_index) / single (Grid_Height);
+                Vertex_Buffer_Data (V_Point) (G) := Single (y_index) / Single (Grid_Height);
                 Vertex_Buffer_Data (V_Point) (B) := 1.0 -
-                  0.5 * (single (x_index) / single (Grid_Width) +
-                  single (y_index) / single (Grid_Height));
+                  0.5 * (Single (x_index) / Single (Grid_Width) +
+                  Single (y_index) / Single (Grid_Height));
             end loop;
         end loop;
 
-        for y_index in Int range  1 .. Int (Quad_Height) loop
-            Qym1_GW := (y_index - 1) * Int (Grid_Width);
-            Qy_GW := y_index * Int (Grid_Width);
-            for x_index in Int range 1 .. Int (Quad_Width) loop
+        for y_index in Int range  1 .. Quad_Height loop
+            Qym1_GW := (y_index - 1) * Grid_Width;
+            Qy_GW := y_index * Grid_Width;
+            for x_index in Int range 1 .. Quad_Width loop
                 Q_Point := 6 * (Qym1_GW + x_index) - 5;
                 --  Four vertices of a quadralateral:
                 --  First triangle
@@ -181,9 +182,9 @@ package body Vertex_Data is
 
     --  ------------------------------------------------------------------------
 
-    procedure Propogate_Wave (dt : single) is
-        Animation_Speed : constant single := 10.0;
-        Time_Step       : single := dt * Animation_Speed;
+    procedure Propogate_Wave (dt : Single) is
+        Animation_Speed : constant Single := 10.0;
+        Time_Step       : constant Single := dt * Animation_Speed;
         Acc_X           : Grid_Array;
         Acc_Y           : Grid_Array;
         x2              : Int;

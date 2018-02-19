@@ -118,7 +118,7 @@ begin
       Running := Running and then not Main_Window.Should_Close;
    end loop;
 
-   Render_Program.Delete_Id;
+   Render_Program.Clear;
 exception
    when others =>
       Put_Line ("An exception occurred in Main_Loop.");

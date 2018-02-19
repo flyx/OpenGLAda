@@ -230,24 +230,21 @@ package body GL.Objects.Textures is
       end if;
    end Current_Texture;
 
-   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
-      Arr : constant Low_Level.UInt_Array := (1 => Reference.GL_Id);
+   overriding
+   procedure Internal_Create_Id (Object : Texture; Id : out UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Delete_Textures (1, Arr);
+      API.Gen_Textures (1, Id);
       Raise_Exception_On_OpenGL_Error;
-      Reference.GL_Id := 0;
-      Reference.Initialized := Uninitialized;
-   end Destructor;
+   end Internal_Create_Id;
 
-   procedure Initialize_Id (Object : in out Texture) is
-      New_Id : Low_Level.UInt_Array (1 .. 2) := (1 => 0, 2 => 0);
+   overriding
+   procedure Internal_Release_Id (Object : Texture; Id : UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Gen_Textures (1, New_Id (1)'Access);
+      API.Delete_Textures (1, (1 => Id));
       Raise_Exception_On_OpenGL_Error;
-      Object.Reference.GL_Id := New_Id (1);
-      Object.Reference.Initialized := Allocated;
-      Object.Reference.Destructor := Destructor'Access;
-   end Initialize_Id;
+   end Internal_Release_Id;
 
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level) is
    begin

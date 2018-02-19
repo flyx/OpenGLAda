@@ -9,8 +9,8 @@ with Initialize;
 with Main_Loop;
 
 procedure Tutorial_04 is
-    Main_Window : Glfw.Windows.Window;
-    Window_Title : String := "Tutorial 4 - Coloured Cube";
+    Main_Window  : Glfw.Windows.Window;
+    Window_Title : constant String := "Tutorial 4 - Coloured Cube";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);
