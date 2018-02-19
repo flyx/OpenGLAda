@@ -183,9 +183,6 @@ package GL.Objects.Textures is
 
    function Current_Texture (Target : Texture_Target) return Texture'Class;
 
-   overriding
-   procedure Initialize_Id (Object : in out Texture);
-
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level);
 
    procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
@@ -223,5 +220,11 @@ private
    --  new Texture_Proxy (Kind) with null record;
 
    type Texture is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Texture; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Texture; Id : UInt);
 
 end GL.Objects.Textures;

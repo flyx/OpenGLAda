@@ -262,20 +262,21 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Use_Program;
 
-   procedure Destructor (Reference : not null GL_Object_Reference_Access) is
+   overriding
+   procedure Internal_Create_Id (Object : Program; Id : out UInt) is
+      pragma Unreferenced (Object);
    begin
-      API.Delete_Program (Reference.GL_Id);
+      Id := API.Create_Program.all;
       Raise_Exception_On_OpenGL_Error;
-      Reference.GL_Id := 0;
-      Reference.Initialized := Uninitialized;
-   end Destructor;
+   end Internal_Create_Id;
 
-   procedure Initialize_Id (Object : in out Program) is
+   overriding
+   procedure Internal_Release_Id (Object : Program; Id : UInt) is
+      pragma Unreferenced (Object);
    begin
-      Object.Reference.GL_Id := API.Create_Program.all;
-      Object.Reference.Initialized := Allocated;
-      Object.Reference.Destructor := Destructor'Access;
-   end Initialize_Id;
+      API.Delete_Program (Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Internal_Release_Id;
 
    function Uniform_Location (Subject : Program; Name : String)
      return Uniforms.Uniform is

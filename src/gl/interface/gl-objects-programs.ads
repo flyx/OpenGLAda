@@ -113,13 +113,16 @@ package GL.Objects.Programs is
    -- raises Unknown_Variable_Name if Name is not an out variable
    function Frag_Data_Location (Object : Program; Name : String)
      return Buffers.Draw_Buffer_Index;
-
-   overriding
-   procedure Initialize_Id (Object : in out Program);
 private
    Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;
 
    type Program is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Program; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Program; Id : UInt);
 
    for Tessellation_Primitive_Mode use (Triangles => 16#0004#,
                                         Quads     => 16#0007#,

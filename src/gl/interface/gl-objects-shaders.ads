@@ -22,13 +22,16 @@ package GL.Objects.Shaders is
 
    function Info_Log (Subject : Shader) return String;
 
-   overriding
-   procedure Initialize_Id (Object : in out Shader);
-
    -- low-level
    function Create_From_Id (Id : UInt) return Shader;
 private
    type Shader (Kind : Shader_Type) is new GL_Object with null record;
+
+   overriding
+   procedure Internal_Create_Id (Object : Shader; Id : out UInt);
+
+   overriding
+   procedure Internal_Release_Id (Object : Shader; Id : UInt);
 
    for Shader_Type use (Fragment_Shader        => 16#8B30#,
                         Vertex_Shader          => 16#8B31#,

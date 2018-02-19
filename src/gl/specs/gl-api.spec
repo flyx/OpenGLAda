@@ -28,8 +28,8 @@ spec GL.API is
    use GL.Types;
 
    function Get_Error return Errors.Error_Code is Static ("glGetError");
-   procedure Flush is Static ("glFlush");
-   procedure Finish is Static ("glFinish");
+   procedure Flush with Static => "glFlush", Wrapper => "GL.Flush";
+   procedure Finish with Static => "glFinish", Wrapper => "GL.Finish";
 
    -----------------------------------------------------------------------------
    --                           Parameter Getters                             --
@@ -574,8 +574,8 @@ spec GL.API is
       Value      : out Low_Level.Bool) with
      Static  => "glGetTexLevelParameteriv",
      Wrapper => "GL.Objects.Textures.Compressed";
-   procedure Gen_Textures (N : Size; Textures : access UInt) with
-     Static => "glGenTextures", Wrapper => "GL.Objects.Textures.Initialize_Id";
+   procedure Gen_Textures (N : Size; Textures : out UInt) with
+     Static => "glGenTextures", Wrapper => "GL.Objects.Initialize_Id";
 
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
                            Texture : UInt) with
@@ -784,7 +784,7 @@ spec GL.API is
    -----------------------------------------------------------------------------
 
    procedure Gen_Buffers (N : Size; Buffers : out UInt) with
-     Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Buffers.Initialize_Id";
+     Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) with
      Dynamic => "glDeleteBuffers";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
@@ -844,7 +844,7 @@ spec GL.API is
 
    procedure Gen_Vertex_Arrays (N : Size; Arrays : out UInt) with
      Dynamic => "glGenVertexArrays",
-     Wrapper => "GL.Objects.Vertex_Arrays.Initialize_Id";
+     Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Vertex_Arrays (N : Size; Arrays : Low_Level.UInt_Array)
      with Dynamic => "glDeleteVertexArrays";
    procedure Bind_Vertex_Array (Arr : UInt) with
@@ -856,7 +856,7 @@ spec GL.API is
 
    procedure Gen_Renderbuffers (N : Size; Renderbuffers : out UInt) with
      Dynamic => "glGenRenderbuffers",
-     Wrapper => "GL.Objects.Renderbuffers.Initialize_Id";
+     Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Renderbuffers
      (N : Size; Renderbuffers : Low_Level.UInt_Array) with
      Dynamic => "glDeleteBuffers";
@@ -912,7 +912,7 @@ spec GL.API is
      Static => "glReadBuffer", Wrapper => "GL.Framebuffer.Set_Read_Buffer";
    procedure Gen_Framebuffers (N : Size; Framebuffers : out UInt) with
      Dynamic => "glGenFramebuffers",
-     Wrapper => "GL.Objects.Framebuffers.Initialize_Id";
+     Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Framebuffers
      (N : Size; Framebuffers : Low_Level.UInt_Array) with
      Dynamic => "glDeleteFramebuffers";
@@ -999,7 +999,7 @@ spec GL.API is
      Dynamic => "glGetShaderiv", Wrapper => "GL.Objects.Shaders.Create_From_Id";
    function Create_Shader (Shader_Type : Objects.Shaders.Shader_Type)
                           return UInt with
-     Dynamic => "glCreateShader", Wrapper => "GL.Objects.Shaders.Initialize_Id";
+     Dynamic => "glCreateShader", Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Shader (Shader : UInt) with Dynamic => "glDeleteShader";
    procedure Shader_Source
      (Shader : UInt; Count : Size;
@@ -1019,7 +1019,7 @@ spec GL.API is
      Dynamic => "glGetShaderInfoLog", Wrapper => "GL.Objects.Shaders.Info_Log";
    function Create_Program return UInt with
      Dynamic => "glCreateProgram",
-     Wrapper => "GL.Objects.Programs.Initialize_Id";
+     Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Program (Program : UInt) with Dynamic => "glDeleteProgram";
    procedure Get_Program_Param (Program : UInt; Pname : Enums.Program_Param;
                                 Params : out Int) with

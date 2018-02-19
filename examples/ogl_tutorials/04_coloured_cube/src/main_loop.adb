@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -17,7 +16,6 @@ with GL.Window;
 with Glfw;
 with Glfw.Input;
 with Glfw.Input.Keys;
-with Glfw.Input.Mouse;
 with Glfw.Windows.Context;
 
 with Cube_Data;
@@ -27,7 +25,7 @@ with Utilities;
 
 procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
-    Dark_Blue                : Colors.Color := (0.0, 0.0, 0.4, 1.0);
+    Dark_Blue                : constant Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
     Vertices_Array_Object    : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
     Vertex_Buffer            : GL.Objects.Buffers.Buffer;
@@ -44,7 +42,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
-        use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
         use Maths;
@@ -86,15 +83,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Set_MVP_Matrix (Window : in out Glfw.Windows.Window;
                               Render_Program : GL.Objects.Programs.Program) is
-        use GL.Types;
         use GL.Types.Singles;
         use Maths;
         --  Camera position, Look_At and Up are world coordinates.
-        Camera_Position   : Vector3 := (4.0, 3.0, -3.0);
-        Look_At           : Vector3 := (0.0, 0.0, 0.0);
-        Up                : Vector3 := (0.0, 1.0, 0.0);
+        Camera_Position   : constant Vector3 := (4.0, 3.0, -3.0);
+        Look_At           : constant Vector3 := (0.0, 0.0, 0.0);
+        Up                : constant Vector3 := (0.0, 1.0, 0.0);
         --  The Model_Matrix operates in world coordinates.
-        Model_Matrix      : Matrix4 := Singles.Identity4;
+        Model_Matrix      : constant Matrix4 := Singles.Identity4;
         --  The Projection_Matrix projects the camera view in camera coordinates
         --  onto the camera view's Near plane
         Projection_Matrix : Matrix4;
@@ -124,7 +120,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types;
         use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;

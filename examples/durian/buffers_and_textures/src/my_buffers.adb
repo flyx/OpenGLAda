@@ -1,5 +1,4 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use  Ada.Text_IO;
 
 with GL.Attributes;
@@ -25,7 +24,6 @@ package body My_Buffers is
         use GL.Pixels;
         Width       : GL.Types.Size;
         Height      : GL.Types.Size;
-        File_Format : SOIL.Image_Save_Type := SOIL.TGA;
         Image       : SOIL.Images.Image;
     begin
         Image.Load (Image_File_Name);
@@ -66,7 +64,7 @@ package body My_Buffers is
                              Element_Buffer : in out tBuffer) is
         use GL.Objects.Buffers;
 
-        Stride : GL.Types.Size := GL.Types.Size (Vertex_Data.Vertex_Array_Size);
+        Stride : constant GL.Types.Size := GL.Types.Size (Vertex_Data.Vertex_Array_Size);
     begin
        Make_Buffer (GL.Objects.Buffers.Array_Buffer, Vertex_Buffer);
        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
@@ -86,7 +84,7 @@ package body My_Buffers is
 
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Setup_Buffers.");
+            Put_Line ("An exception occurred in Setup_Buffers.");
             raise;
     end Setup_Buffers;
 
@@ -97,14 +95,14 @@ package body My_Buffers is
         use Ada.Strings.Unbounded;
         Image_Index : Positive := 1;
     begin
-        for tex of Textures loop
-            Make_Texture (tex, To_String (Images (Image_Index)));
+        for index of Textures loop
+            Make_Texture (index, To_String (Images (Image_Index)));
             Put_Line ("Setup_Textures; image " & To_String (Images (Image_Index)) & " loaded.");
             Image_Index := Image_Index + 1;
         end loop;
     exception
         when others =>
-            Put_Line ("An exceptiom occurred in Setup_Textures.");
+            Put_Line ("An exception occurred in Setup_Textures.");
             raise;
     end Setup_Textures;
 

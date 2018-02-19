@@ -10,7 +10,7 @@ with Main_Loop;
 
 procedure Tutorial_02 is
     Main_Window  : Glfw.Windows.Window;
-    Window_Title : String := "Tutorial 2 - Red Triangle";
+    Window_Title : constant String := "Tutorial 2 - Red Triangle";
 begin
     Glfw.Init;
     Initialize (Main_Window, Window_Title);

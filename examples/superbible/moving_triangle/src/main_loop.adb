@@ -1,13 +1,12 @@
 
-with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 with GL.Buffers;
 with GL.Culling;
 with GL.Objects.Programs;
+with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
-with GL.Objects.Shaders.Lists;
 with GL.Toggles;
 with GL.Types;
 with GL.Types.Colors;
@@ -51,7 +50,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 
     exception
-        when anError :  others =>
+        when others =>
             Put_Line ("An exceptiom occurred in Render_Triangle.");
             raise;
     end Render_Triangle;
@@ -59,8 +58,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 --  ----------------------------------------------------------------------------
 
     procedure Setup_Graphic is
-        use Program_Loader;
         use GL.Objects.Shaders;
+        use Program_Loader;
     begin
         Rendering_Program := Program_Loader.Program_From (
           (Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),

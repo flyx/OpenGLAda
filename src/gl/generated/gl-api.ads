@@ -597,7 +597,7 @@ private package GL.API is
    pragma Import (StdCall, Get_Tex_Level_Parameter_Type, "glGetTexLevelParameteriv");
    procedure Get_Tex_Level_Parameter_Bool (Target : Low_Level.Enums.Texture_Kind; Level : Objects.Textures.Mipmap_Level; Param_Name : Enums.Textures.Level_Parameter; Value : out Low_Level.Bool);
    pragma Import (StdCall, Get_Tex_Level_Parameter_Bool, "glGetTexLevelParameteriv");
-   procedure Gen_Textures (N : Size; Textures : access UInt);
+   procedure Gen_Textures (N : Size; Textures : out UInt);
    pragma Import (StdCall, Gen_Textures, "glGenTextures");
    procedure Bind_Texture (Target : Low_Level.Enums.Texture_Kind; Texture : UInt);
    pragma Import (StdCall, Bind_Texture, "glBindTexture");

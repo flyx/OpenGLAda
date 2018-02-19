@@ -1,15 +1,15 @@
+with "../../common/common.gpr";
+with "../../../opengl.gpr";
 limited with "../../../opengl-glfw.gpr";
 
 project Tutorial_02 is
 
-   for Source_Dirs use ("../../common", "src");
+   for Source_Dirs use ("src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
    for Main use ("tutorial_02.adb");
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-gnatyclux");
-   end Compiler;
+    package Compiler renames OpenGL.Compiler;
 
 end Tutorial_02;
 
