@@ -1,6 +1,7 @@
 
 with GL.Objects.Programs;
 with GL.Types; use  GL.Types;
+with Ada.Strings.Unbounded;
 
 package Transform_Feedback_API is
 
@@ -13,7 +14,7 @@ package Transform_Feedback_API is
    --  glGetTransformFeedbackVarying (GLuint program, GLuint index,
    --     GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name);
 
-   type Varyings_Array is array (Integer range <>) of String (1 .. 12);
+   type Varyings_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
 
    procedure Get_Transform_Feedback_Varying
      (Program :  GL.Objects.Programs.Program;

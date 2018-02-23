@@ -1,5 +1,6 @@
 
 
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
@@ -9,6 +10,7 @@ with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
 with GL.Types;
 with GL.Types.Colors;
+with GL.Uniforms;
 
 with Glfw;
 with Glfw.Input;
@@ -23,19 +25,29 @@ with Transform_Feedback_API;
 with Vertex_Data;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
+   use GL.Types;
+   use Ada.Strings.Unbounded;
 
-   Vertex_Array   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffer  : GL.Objects.Buffers.Buffer;
-   Render_Program : GL.Objects.Programs.Program;
-   Update_Program : GL.Objects.Programs.Program;
-   Varyings       : constant Transform_Feedback_API.Varyings_Array (1 .. 2) :=
-     ("position_out", "velocity_out");
+   type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
+   type Varyings_Array_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
+   Vertex_Array      : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Vertex_Buffer     : GL.Objects.Buffers.Buffer;
+   Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
+   View_Matrix       : Singles.Matrix4;
+   Projection_Matrix : Singles.Matrix4;
+   MVP_Matrix        : Singles.Matrix4;
+   Render_Program    : GL.Objects.Programs.Program;
+   Update_Program    : GL.Objects.Programs.Program;
+   Varyings          : constant Varyings_Array_2 :=
+     (To_Unbounded_String ("position_out"),
+      To_Unbounded_String ("velocity_out"));
+   Varyings_2          : constant Varyings_Array_1 :=
+     (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
 
    --  ------------------------------------------------------------------------
 
    procedure Render is
-      use GL.Types;
       use GL.Objects.Buffers;
       Dark_Blue : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
    begin
@@ -62,6 +74,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
+
+      Model_Matrix_ID             : GL.Uniforms.Uniform;
+      Projection_Matrix_ID        : GL.Uniforms.Uniform;
+      Triangle_Count_ID           : GL.Uniforms.Uniform;
+      Time_Step_ID                : GL.Uniforms.Uniform;
+      Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
+      Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
    begin
       Vertex_Array.Initialize_Id;
       Vertex_Array.Bind;
@@ -79,8 +98,27 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
-      Feedback.Transform_Feedback_Varyings (Update_Program, 2, Varyings,
+      Feedback.Transform_Feedback_Varyings (Update_Program, 2,
+                                            Transform_Feedback_API.Varyings_Array (Varyings),
                                             Transform_Feedback_API.GL_Interleaved_Attribs);
+
+      Feedback.Transform_Feedback_Varyings (Update_Program, 2,
+                                            Transform_Feedback_API.Varyings_Array (Varyings_2),
+                                            Transform_Feedback_API.GL_Interleaved_Attribs);
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "model_matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "projection_matrix");
+      Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "triangle_count");
+      Time_Step_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "time_step");
+      Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "model_matrix");
+      Render_Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Render_Program, "projection_matrix");
+
+      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
 
    exception
       when others =>
