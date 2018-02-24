@@ -41,21 +41,27 @@ package body Load_VB_Object is
                               Header  : out VBM_Header) is
       use Ada.Streams.Stream_IO;
 
-      Header_Stream   : constant Stream_Access := Stream (File_ID);
+      Header_Stream  : constant Stream_Access := Stream (File_ID);
+      Magic          : UInt;
    begin
-      UInt'Read (Header_Stream, Header.Magic);
-      UInt'Read (Header_Stream, Header.Size);
-      String'Read (Header_Stream, Header.Name);
-      UInt'Read (Header_Stream, Header.Num_Attributes);
-      UInt'Read (Header_Stream, Header.Num_Frames);
-      if Header.Magic /= New_Header_Magic then
-         UInt'Read (Header_Stream, Header.Num_Chunks);
-      end if;
-      UInt'Read (Header_Stream, Header.Num_Vertices);
-      UInt'Read (Header_Stream, Header.Num_Indices);
-      UInt'Read (Header_Stream, Header.Index_Type);
-      UInt'Read (Header_Stream, Header.Num_Materials);
-      UInt'Read (Header_Stream, Header.Flags);
+      UInt'Read (Header_Stream, Magic);
+      declare
+         Head : VBM_Header (Magic);
+      begin
+         UInt'Read (Header_Stream, Head.Size);
+         String'Read (Header_Stream, Head.Name);
+         UInt'Read (Header_Stream, Head.Num_Attributes);
+         UInt'Read (Header_Stream, Head.Num_Frames);
+         if Header.Magic /= New_Header_Magic then
+            UInt'Read (Header_Stream, Head.Num_Chunks);
+         end if;
+         UInt'Read (Header_Stream, Head.Num_Vertices);
+         UInt'Read (Header_Stream, Head.Num_Indices);
+         UInt'Read (Header_Stream, Head.Index_Type);
+         UInt'Read (Header_Stream, Head.Num_Materials);
+         UInt'Read (Header_Stream, Head.Flags);
+         Header := Head;
+      end;
 
    exception
       when others =>
