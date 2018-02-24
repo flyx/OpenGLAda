@@ -16,6 +16,15 @@ package body Feedback is
 
    --  -------------------------------------------------------------------------
 
+   procedure Texture_Buffer (Target : GL.Objects.Buffers.Buffer_Target;
+                             Format : GL.Pixels.Internal_Format;
+                             Object : GL.Objects.Buffers.Buffer'Class) is
+   begin
+      Transform_Feedback_API.Tex_Buffer (Target, Format, Object);
+   end Texture_Buffer;
+
+   --  -------------------------------------------------------------------------
+
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
       Count : Integer; Varyings : Transform_Feedback_API.Varyings_Array;
