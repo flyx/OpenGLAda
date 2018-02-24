@@ -92,7 +92,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
-   procedure Map (Target : in out Buffer_Target; Access_Type : Access_Kind;
+   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
@@ -101,7 +101,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Map;
 
-   procedure Unmap (Target : in out Buffer_Target) is
+   procedure Unmap (Target : Buffer_Target) is
    begin
       API.Unmap_Buffer (Target.Kind);
       Raise_Exception_On_OpenGL_Error;
