@@ -39,24 +39,11 @@ private
       end case;
    end record;
 
---     type VBM_Old_Header is record
---        Name           : String (1 .. 64);
---        Magic          : UInt;
---        Size           : UInt;
---        Num_Attributes : UInt;
---        Num_Frames     : UInt;
---        Num_Vertices   : UInt;
---        Num_Indices    : UInt;
---        Num_Materials  : UInt;
---        Index_Type     : UInt;
---        Flags          : UInt;
---     end record;
-
    type VBM_Attributes_Header is record
       Name           : String (1 .. 64);
       Attribute_Type : UInt := 0;
       Components     : UInt := 0;
-      Flags          : VBM_Flags;
+      Flags          : UInt := 0;
    end record;
 
    type VBM_Frame_Header is record

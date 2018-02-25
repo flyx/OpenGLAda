@@ -61,6 +61,13 @@ package body Load_VB_Object is
       String'Read (Header_Stream, Header.Name);
       Byte_Count := Byte_Count + 64;
       Put_Line ("Load_Attribute_Header Header.Name: " & Header.Name);
+      UInt'Read (Header_Stream, Header.Attribute_Type);
+      Byte_Count := Byte_Count + UInt_Size;
+      UInt'Read (Header_Stream, Header.Components);
+      Byte_Count := Byte_Count + UInt_Size;
+      UInt'Read (Header_Stream, Header.Flags);
+      Byte_Count := Byte_Count + UInt_Size;
+      Put_Line ("Load_Attribute_Header Byte_Count: " & UInt'Image (Byte_Count));
 
    exception
       when others =>
