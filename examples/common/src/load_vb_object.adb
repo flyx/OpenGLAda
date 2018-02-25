@@ -36,9 +36,11 @@ package body Load_VB_Object is
       Data_Stream := Stream (File_ID);
 
       Load_VBM_Header (Data_Stream, Header);
-      Load_Attribute_Header (Data_Stream, Attributes_Header);
-         Put_Line ("Load_VBM_Header Head.Name: " & Header.Name);
-      Put_Line ("Load_Attribute_Header Header.Name: " & Attributes_Header.Name);
+      Put_Line ("Load_VBM_Header Head.Name: " & Header.Name);
+      for count in 1 .. Header.Num_Attributes loop
+         Load_Attribute_Header (Data_Stream, Attributes_Header);
+         Put_Line ("Load_Attribute_Header Header.Name: " & Attributes_Header.Name);
+      end loop;
 
       Close (File_ID);
 
