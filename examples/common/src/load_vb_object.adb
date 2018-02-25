@@ -7,6 +7,12 @@ package body Load_VB_Object is
 
    --     type VBM_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
 
+   UInt_Size      : constant UInt := UInt'Size / 8;
+   Byte_Count     : UInt := 0;
+
+
+   procedure Load_Attribute_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                              Header              : out VBM_Attributes_Header);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header);
 
@@ -17,9 +23,10 @@ package body Load_VB_Object is
                             Result : out Boolean) is
       use Ada.Streams.Stream_IO;
 
-      File_ID      : Ada.Streams.Stream_IO.File_Type;
-      Data_Stream  : Ada.Streams.Stream_IO.Stream_Access;
-      Header       : VBM_Header;
+      File_ID           : Ada.Streams.Stream_IO.File_Type;
+      Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
+      Header            : VBM_Header;
+      Attributes_Header : VBM_Attributes_Header;
    begin
       if Vertex_Index = 0 and Normal_Index = 0 and Tex_Coord0_Index = 0 then
          Put_Line ("Load_From_VBM; all indices are 0");
@@ -29,9 +36,9 @@ package body Load_VB_Object is
       Data_Stream := Stream (File_ID);
 
       Load_VBM_Header (Data_Stream, Header);
-      if Header.Magic = 0 then
-         Put_Line ("Header.Magic = 0");
-      end if;
+      Load_Attribute_Header (Data_Stream, Attributes_Header);
+         Put_Line ("Load_VBM_Header Head.Name: " & Header.Name);
+      Put_Line ("Load_Attribute_Header Header.Name: " & Attributes_Header.Name);
 
       Close (File_ID);
 
@@ -47,12 +54,26 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Load_Attribute_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                                    Header        : out VBM_Attributes_Header) is
+      use Ada.Streams.Stream_IO;
+   begin
+      String'Read (Header_Stream, Header.Name);
+      Byte_Count := Byte_Count + 64;
+      Put_Line ("Load_Attribute_Header Header.Name: " & Header.Name);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_Attribute_Header.");
+         raise;
+   end Load_Attribute_Header;
+
+   --  ------------------------------------------------------------------------
+
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header) is
       use Ada.Streams.Stream_IO;
       Magic          : UInt;
-      UInt_Size      : constant UInt := UInt'Size / 8;
-      Byte_Count     : UInt := 0;
    begin
       UInt'Read (Header_Stream, Magic);
       Byte_Count := Byte_Count + UInt_Size;
