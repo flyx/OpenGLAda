@@ -5,9 +5,16 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Load_VB_Object is
 
+   package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
+     (VBM_Attributes_Header);
+   type Attribute_List is new Attribute_Package.List with null record;
+
+--     package Image_Data_Package is new Ada.Containers.Doubly_Linked_Lists (UByte);
+--     type Image_Data_List is new Image_Data_Package.List with null record;
    --     type VBM_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
 
    UInt_Size      : constant UInt := UInt'Size / 8;
+   Float_Size     : constant UInt := Float'Size / 8;
    Byte_Count     : UInt := 0;
 
 
@@ -27,6 +34,8 @@ package body Load_VB_Object is
       Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
       Header            : VBM_Header;
       Attributes_Header : VBM_Attributes_Header;
+      Attributes        : Attribute_List;
+      Image_Data_Size   : UInt := 0;
    begin
       if Vertex_Index = 0 and Normal_Index = 0 and Tex_Coord0_Index = 0 then
          Put_Line ("Load_From_VBM; all indices are 0");
@@ -39,9 +48,31 @@ package body Load_VB_Object is
       Put_Line ("Load_VBM_Header Head.Name: " & Header.Name);
       for count in 1 .. Header.Num_Attributes loop
          Load_Attribute_Header (Data_Stream, Attributes_Header);
+         Attributes.Append (Attributes_Header);
+         Image_Data_Size := Image_Data_Size +
+           Attributes_Header.Components * Header.Num_Vertices * Float_Size;
          Put_Line ("Load_Attribute_Header Header.Name: " & Attributes_Header.Name);
       end loop;
 
+      declare
+         Image_Data  : array (1 .. Image_Data_Size) of UByte;
+         Data_Byte   : UByte;
+         Byte_Count  : UInt := 0;
+      begin
+         while Byte_Count <= Image_Data_Size loop
+            Byte_Count := Byte_Count + 1;
+            if not End_Of_File (File_ID) then
+               UByte'Read (Data_Stream, Data_Byte);
+               Image_Data (Byte_Count) := Data_Byte;
+            else
+               Image_Data (Byte_Count) := 0;
+               Put_Line ("Load_Attribute_Header EOF reached before Image_Data filled.");
+            end if;
+         end loop;
+         if not End_Of_File (File_ID) then
+             Put_Line ("Load_Attribute_Header Image_Data filled before EOF.");
+         end if;
+      end;  --  declare block
       Close (File_ID);
 
    exception
@@ -62,14 +93,12 @@ package body Load_VB_Object is
    begin
       String'Read (Header_Stream, Header.Name);
       Byte_Count := Byte_Count + 64;
-      Put_Line ("Load_Attribute_Header Header.Name: " & Header.Name);
       UInt'Read (Header_Stream, Header.Attribute_Type);
       Byte_Count := Byte_Count + UInt_Size;
       UInt'Read (Header_Stream, Header.Components);
       Byte_Count := Byte_Count + UInt_Size;
       UInt'Read (Header_Stream, Header.Flags);
       Byte_Count := Byte_Count + UInt_Size;
-      Put_Line ("Load_Attribute_Header Byte_Count: " & UInt'Image (Byte_Count));
 
    exception
       when others =>
