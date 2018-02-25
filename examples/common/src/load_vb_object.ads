@@ -18,74 +18,75 @@ package Load_VB_Object is
 
    procedure Load_From_VBM (File_Name : String;
                                Vertex_Index, Normal_Index,
-                               Tex_Coord0_Index : out Int; Result : out Boolean);
+                               Tex_Coord0_Index : Int; Result : out Boolean);
 
 private
-   New_Header_Magic : UInt := 16#314d4253#;
+   New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
+
    type VBM_Header (Magic : UInt := New_Header_Magic) is record
       Name           : String (1 .. 64);
-      Size           : UInt;
-      Num_Attributes : UInt;
-      Num_Frames     : UInt;
-      Num_Vertices   : UInt;
-      Num_Indices    : UInt;
-      Num_Materials  : UInt;
-      Index_Type     : UInt;
-      Flags          : UInt;
+      Size           : UInt := 0;
+      Num_Attributes : UInt := 0;
+      Num_Frames     : UInt := 0;
+      Num_Vertices   : UInt := 0;
+      Num_Indices    : UInt := 0;
+      Num_Materials  : UInt := 0;
+      Index_Type     : UInt := 0;
+      Flags          : UInt := 0;
       case Magic is
          when others =>
             Num_Chunks  : UInt;
       end case;
    end record;
 
-   type VBM_Old_Header is record
-      Name           : String (1 .. 64);
-      Magic          : UInt;
-      Size           : UInt;
-      Num_Attributes : UInt;
-      Num_Frames     : UInt;
-      Num_Vertices   : UInt;
-      Num_Indices    : UInt;
-      Num_Materials  : UInt;
-      Index_Type     : UInt;
-      Flags          : UInt;
-   end record;
+--     type VBM_Old_Header is record
+--        Name           : String (1 .. 64);
+--        Magic          : UInt;
+--        Size           : UInt;
+--        Num_Attributes : UInt;
+--        Num_Frames     : UInt;
+--        Num_Vertices   : UInt;
+--        Num_Indices    : UInt;
+--        Num_Materials  : UInt;
+--        Index_Type     : UInt;
+--        Flags          : UInt;
+--     end record;
 
    type VBM_Attributes_Header is record
       Name           : String (1 .. 64);
-      Attribute_Type : UInt;
-      Components     : UInt;
+      Attribute_Type : UInt := 0;
+      Components     : UInt := 0;
       Flags          : VBM_Flags;
    end record;
 
    type VBM_Frame_Header is record
-      First  : UInt;
-      Count  : UInt;
+      First  : UInt := 0;
+      Count  : UInt := 0;
       Flags  : VBM_Flags;
    end record;
 
    type VBM_Render_Chunk is record
-      Material_Index  : UInt;
-      First           : UInt;
-      Count           : UInt;
+      Material_Index  : UInt := 0;
+      First           : UInt := 0;
+      Count           : UInt := 0;
    end record;
 
    type VBM_Vec2F is record
-      X  : Float;
-      Y  : Float;
+      X  : Float := 0.0;
+      Y  : Float := 0.0;
    end record;
 
    type VBM_Vec3F is record
-      X  : Float;
-      Y  : Float;
-      Z  : Float;
+      X  : Float := 0.0;
+      Y  : Float := 0.0;
+      Z  : Float := 0.0;
    end record;
 
    type VBM_Vec4F is record
-      X  : Float;
-      Y  : Float;
-      Z  : Float;
-      W  : Float;
+      X  : Float := 0.0;
+      Y  : Float := 0.0;
+      Z  : Float := 0.0;
+      W  : Float := 0.0;
    end record;
 
    type VBM_Material is record
@@ -95,8 +96,8 @@ private
       Specular           : VBM_Vec3F;
       Specular_Exponent  : VBM_Vec3F;
       Transmission       : VBM_Vec3F;
-      Shininess          : Float;
-      Alpha              : Float;
+      Shininess          : Float := 0.0;
+      Alpha              : Float := 0.0;
       Ambient_Map        : String (1 .. 64);
       Diffuse_Map        : String (1 .. 64);
       Specular_Map       : String (1 .. 64);
@@ -104,9 +105,9 @@ private
    end record;
 
    type Material_Texture is record
-      Diffuse  : UInt;
-      Specular : UInt;
-      Normal   : UInt;
+      Diffuse  : UInt := 0;
+      Specular : UInt := 0;
+      Normal   : UInt := 0;
    end record;
    package Material_Textures_Package is new
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
