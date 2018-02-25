@@ -23,7 +23,7 @@ exception
         Put_Line (Exception_Information (anError));
 
     when anError :  others =>
-        Put_Line ("An exceptiom occurred in Transform_Feedback.");
+        Put_Line ("An exception occurred in Transform_Feedback.");
         Put_Line (Exception_Information (anError));
 
 end Transform_Feedback;

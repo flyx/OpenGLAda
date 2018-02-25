@@ -1,7 +1,5 @@
 
-with GL.Objects.Buffers;
 with GL.Objects.Programs;
-with GL.Pixels;
 with GL.Types; use  GL.Types;
 with Ada.Strings.Unbounded;
 
@@ -26,10 +24,10 @@ package Transform_Feedback_API is
    pragma Import (StdCall, Get_Transform_Feedback_Varying,
                   "glGetTransformFeedbackVarying");
 
-   procedure Tex_Buffer (Target : GL.Objects.Buffers.Buffer_Target;
-                             Format : GL.Pixels.Internal_Format;
-                             Object : GL.Objects.Buffers.Buffer'Class);
-   pragma Import (StdCall, Tex_Buffer, "glTexBuffer");
+--     procedure Tex_Buffer (Target : GL.Objects.Buffers.Buffer_Target;
+--                               Format : GL.Pixels.Internal_Format;
+--                               Object : GL.Objects.Buffers.Buffer'Class);
+--     pragma Import (StdCall, Tex_Buffer, "glTexBuffer");
 
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
