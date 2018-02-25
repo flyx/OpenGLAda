@@ -12,7 +12,7 @@ uniform mat4 projection_matrix;
 void main(void)
     {
     vec4 pos = (model_matrix * (position * vec4(1.0, 1.0, 1.0, 1.0)));
-    world_space_position = pos;\n"
+    world_space_position = pos;
     vs_fs_normal = normalize((model_matrix * vec4(normal, 0.0)).xyz);
     gl_Position = projection_matrix * pos;
     }

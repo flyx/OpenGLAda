@@ -39,7 +39,6 @@ bool intersect(vec3 origin, vec3 direction, vec3 v0, vec3 v1, vec3 v2, out vec3 
 
     point = origin + r * direction;
 
-
     uu = dot(u, u);
     uv = dot(u, v);
     vv = dot(v, v);
@@ -94,4 +93,4 @@ void main(void)
     velocity_out = new_velocity * 0.9999;
     position_out = new_position;
     gl_Position = projection_matrix * (model_matrix * position);
-    };
+    }
