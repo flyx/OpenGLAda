@@ -29,8 +29,24 @@ package body GL.Objects.Buffers is
 
    Current_Buffers : Buffer_Maps.Map;
 
-
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class) is
+      Cursor : constant Buffer_Maps.Cursor
+        := Current_Buffers.Find (Target.Kind);
+   begin
+      if Cursor = Buffer_Maps.No_Element or else
+        Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
+         API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
+         Raise_Exception_On_OpenGL_Error;
+         if Cursor = Buffer_Maps.No_Element then
+            Current_Buffers.Insert (Target.Kind, Object);
+         else
+            Current_Buffers.Replace_Element (Cursor, Object);
+         end if;
+      end if;
+   end Bind;
+
+   procedure Bind (Target : Texture_Buffer_Target; Object : Buffer'Class) is
       Cursor : constant Buffer_Maps.Cursor
         := Current_Buffers.Find (Target.Kind);
    begin
@@ -74,6 +90,14 @@ package body GL.Objects.Buffers is
    begin
       API.Buffer_Data (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
                        System.Null_Address, Usage);
+      Raise_Exception_On_OpenGL_Error;
+   end Allocate;
+
+   procedure Allocate (Target : Texture_Buffer_Target;
+                       Format : GL.Pixels.Internal_Format;
+                       Object : Buffer'Class) is
+   begin
+      API.Texture_Buffer_Data (Target.Kind, Format, Object.Reference.GL_Id);
       Raise_Exception_On_OpenGL_Error;
    end Allocate;
 
