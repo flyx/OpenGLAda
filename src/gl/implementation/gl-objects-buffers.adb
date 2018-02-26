@@ -63,6 +63,24 @@ package body GL.Objects.Buffers is
       end if;
    end Bind;
 
+   procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
+                               Object : Buffer'Class) is
+      Cursor : constant Buffer_Maps.Cursor
+        := Current_Buffers.Find (Target.Kind);
+   begin
+      if Cursor = Buffer_Maps.No_Element or else
+        Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
+         API.Bind_Buffer_Base (Target.Kind, Index, Object.Reference.GL_Id);
+         Raise_Exception_On_OpenGL_Error;
+         if Cursor = Buffer_Maps.No_Element then
+            Current_Buffers.Insert (Target.Kind, Object);
+         else
+            Current_Buffers.Replace_Element (Cursor, Object);
+         end if;
+      end if;
+   end Bind_Buffer_Base;
+
    function Current_Object (Target : Buffer_Target) return Buffer'Class is
       Cursor : constant Buffer_Maps.Cursor
         := Current_Buffers.Find (Target.Kind);

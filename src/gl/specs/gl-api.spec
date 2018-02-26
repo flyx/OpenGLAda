@@ -789,6 +789,8 @@ spec GL.API is
      Dynamic => "glDeleteBuffers";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
+procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
+    with Dynamic =>"glBindBufferBase", Wrapper => "GL.Objects.Buffers.Bind_Buffer_Base";
    procedure Buffer_Data
      (Target : Low_Level.Enums.Buffer_Kind;
       Size : Low_Level.SizeIPtr; Data : System.Address;

@@ -20,6 +20,8 @@ package GL.Objects.Buffers is
 
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class);
    procedure Bind (Target : Texture_Buffer_Target; Object : Buffer'Class);
+   procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
+                               Object : Buffer'Class);
 
    function Current_Object (Target : Buffer_Target) return Buffer'Class;
 
