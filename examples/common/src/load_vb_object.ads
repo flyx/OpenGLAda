@@ -28,7 +28,7 @@ private
       Num_Vertices   : UInt := 0;
       Num_Indices    : UInt := 0;
       Num_Materials  : UInt := 0;
-      Index_Type     : UInt := 0;
+      Index_Type     : Numeric_Type := UByte_Type;
       Flags          : UInt := 0;
       case Magic is
          when others =>

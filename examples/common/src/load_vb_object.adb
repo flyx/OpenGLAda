@@ -35,17 +35,22 @@ package body Load_VB_Object is
    type Image_Data is array (UInt range <>) of aliased UByte;
    package Image_Data_Pointers is new
      Interfaces.C.Pointers (UInt, UByte, Image_Data, 0);
+--     type Data_Pointers is new Image_Data_Pointers.Pointer;
 
-   procedure Load_Image is new
+   procedure Load_Data is new
       GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
 
-   UInt_Size         : constant UInt := UInt'Size / 8;
-   Float_Size        : constant UInt := Float'Size / 8;
-   Byte_Count        : UInt := 0;
+   UInt_Size     : constant UInt := UInt'Size / 8;
+   Float_Size    : constant UInt := Float'Size / 8;
+   UShort_Size   : constant UInt := UShort'Size / 8;
+   Byte_Count    : UInt := 0;
 
 
    procedure Load_Attribute_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                                     Header        : out VBM_Attributes_Header);
+   procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                           Header : VBM_Header;
+                           Object : in out VB_Object);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header);
    procedure Set_Attributes (Header : VBM_Header;
@@ -62,7 +67,7 @@ package body Load_VB_Object is
       Object.Attribute_Buffer.Initialize_Id;
       Array_Buffer.Bind (Object.Attribute_Buffer);
 
-      Load_Image (Array_Buffer, Image, Static_Draw);
+      Load_Data (Array_Buffer, Image, Static_Draw);
 
    exception
       when others =>
@@ -123,7 +128,7 @@ package body Load_VB_Object is
          Load_Buffer (VBM_Object, Image);
          Set_Attributes (Header, Attributes_Header,
                          Vertex_Index, Normal_Index, Tex_Coord0_Index);
-
+         Load_Indices (Data_Stream, Header, VBM_Object);
       end;  --  declare block
       Close (File_ID);
 
@@ -162,10 +167,58 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                           Header : VBM_Header;
+                           Object : in out VB_Object) is
+      use GL.Objects.Buffers;
+      Element_Size      : UInt;
+      Element_Data_Size : UInt;
+   begin
+      if Header.Num_Indices > 0 then
+         case Header.Index_Type is
+            when UShort_Type => Element_Size := UShort_Size;
+            when UInt_Type => Element_Size := UInt_Size;
+            when others =>
+               Put_Line ("Load_VB_Object.Set_Indices, invalid Index_Type.");
+         end case;
+         Element_Data_Size := Header.Num_Indices * Element_Size;
+         Object.Indices.Initialize_Id;
+         Element_Array_Buffer.Bind (Object.Indices);
+         declare
+            Indices_Array : Image_Data (1 .. Element_Data_Size);
+            Data_Byte     : UByte;
+            Byte_Count    : UInt := 0;
+         begin
+            while Byte_Count < Element_Data_Size loop
+               Byte_Count := Byte_Count + 1;
+               if not End_Of_File then
+                  UByte'Read (Data_Stream, Data_Byte);
+                  Indices_Array (Byte_Count) := Data_Byte;
+               else
+                  Indices_Array (Byte_Count) := 0;
+                  Put_Line ("Load_Indices; EOF reached before Image_Data filled.");
+               end if;
+            end loop;
+            if not End_Of_File then
+               Put_Line ("Load_Indices Image_Data filled before EOF.");
+            end if;
+            Load_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
+         end;  --  declare block
+      end if;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Set_Indices.");
+         raise;
+   end Load_Indices;
+
+   --  ------------------------------------------------------------------------
+
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header) is
       use Ada.Streams.Stream_IO;
       Magic          : UInt;
+      Index_Type     : UInt;
    begin
       UInt'Read (Header_Stream, Magic);
       Byte_Count := Byte_Count + UInt_Size;
@@ -195,7 +248,11 @@ package body Load_VB_Object is
          Byte_Count := Byte_Count + UInt_Size;
          UInt'Read (Header_Stream, Head.Num_Indices);
          Byte_Count := Byte_Count + UInt_Size;
-         UInt'Read (Header_Stream, Head.Index_Type);
+         UInt'Read (Header_Stream, Index_Type);
+         Put_Line ("Load_VBM_Header Index_Type: " & UInt'Image (Index_Type));
+         if Index_Type /= 0 then
+            Head.Index_Type := Numeric_Type'Enum_Val (Index_Type);
+         end if;
          Byte_Count := Byte_Count + UInt_Size;
          if Byte_Count < Head.Size then
             UInt'Read (Header_Stream, Head.Num_Materials);
@@ -207,7 +264,7 @@ package body Load_VB_Object is
          end if;
          Put_Line ("Load_VBM_Header Head.Num_Vertices: " & UInt'Image (Head.Num_Vertices));
          Put_Line ("Load_VBM_Header Head.Num_Indices: " & UInt'Image (Head.Num_Indices));
-         Put_Line ("Load_VBM_Header Head.Index_Type: " & UInt'Image (Head.Index_Type));
+         Put_Line ("Load_VBM_Header Head.Index_Type: " & Numeric_Type'Image (Head.Index_Type));
          Put_Line ("Load_VBM_Header Head.Num_Materials: " & UInt'Image (Head.Num_Materials));
          Put_Line ("Load_VBM_Header Byte_Count: " & UInt'Image (Byte_Count));
          Header := Head;
