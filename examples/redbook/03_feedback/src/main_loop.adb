@@ -7,21 +7,24 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Interfaces.C.Pointers;
 
 with GL.Attributes;
+with GL.Buffers;
 with GL.Objects;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
---  with GL.Toggles;
+with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
+with GL.Window;
 
 with Glfw;
 with Glfw.Input;
 with Glfw.Input.Keys;
 with Glfw.Windows.Context;
 
+with Maths;
 with Program_Loader;
 with Utilities;
 
@@ -39,29 +42,29 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Velocity : Singles.Vector3;
    end record;
    type Buffer_Array is array (Integer range <>) of aliased PV_Buffer;
---     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
+   --     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
 
    package Buffer_Pointers_Package is new
      Interfaces.C.Pointers (Integer, PV_Buffer, Buffer_Array,
                             ((0.0, 0.0, 0.0, 0.0), (10.0 ** 20, 10.0 ** 20, 10.0 ** 20)));
 
---     package Texture_Pointers_Package is new
---       Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
---                              (10.0 ** 20, 10.0 ** 20, 10.0 ** 20, 10.0 ** 20));
+   --     package Texture_Pointers_Package is new
+   --       Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
+   --                              (10.0 ** 20, 10.0 ** 20, 10.0 ** 20, 10.0 ** 20));
 
    procedure Load_Transform_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (Buffer_Pointers_Package);
---     procedure Load_Texture_Buffer is new
---       GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
+   --     procedure Load_Texture_Buffer is new
+   --       GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
 
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
---     type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
+   --     type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
    type Varyings_Array_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
-   White               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
---     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
+   Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
+   --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
    Vertex_Arrays       : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffers      : array (1 .. 2) of GL.Objects.Buffers.Buffer;
@@ -69,7 +72,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Geometry_Texture    : GL.Objects.Buffers.Buffer;
    Render_Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Point_Count         : constant Integer := 5000;
-   Model_Matrix        : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
+   Triangle_Count              : UInt := 0;
+   Time_Step                   : UInt := 0;
+   Model_Matrix_ID             : GL.Uniforms.Uniform;
+   Projection_Matrix_ID        : GL.Uniforms.Uniform;
+   Triangle_Count_ID           : GL.Uniforms.Uniform;
+   Time_Step_ID                : GL.Uniforms.Uniform;
+   Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
+   Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
+   Model_Matrix        :  Singles.Matrix4 := GL.Types.Singles.Identity4;
    Render_Model_Matrix : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
    Projection_Matrix    : Singles.Matrix4;
    Render_Projection_Matrix : Singles.Matrix4;
@@ -78,11 +89,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Varyings             : constant Varyings_Array_2 :=
      (To_Unbounded_String ("position_out"),
       To_Unbounded_String ("velocity_out"));
---     Varyings_2           : constant Varyings_Array_1 :=
---       (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
+   --     Varyings_2           : constant Varyings_Array_1 :=
+   --       (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
    Buffer               : Buffer_Array (1 .. Point_Count);
    Buffer_Pointer       : Buffer_Pointers_Package.Pointer;
---     T_Buffer             : Texture_Array (1 .. Point_Count);
+   --     T_Buffer             : Texture_Array (1 .. Point_Count);
 
    --  ------------------------------------------------------------------------
 
@@ -93,7 +104,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Gen : Generator;
       RV  : Vector3;
    begin
---        GL.Toggles.Enable (GL.Toggles.Normalize);
+      --        GL.Toggles.Enable (GL.Toggles.Normalize);
       RV := (2.0 * Single (Random (Gen)) - 1.0,
              2.0 * Single (Random (Gen)) - 1.0, 2.0 * Single (Random (Gen)) - 1.0);
       return Single (Min_Mag + Random (Gen) * (Max_Mag - Min_Mag)) * RV;
@@ -106,24 +117,60 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-  procedure Render is
+   procedure Display (Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
+      use GL.Types.Singles;
+      use Maths;
+      Window_Width  : Glfw.Size;
+      Window_Height : Glfw.Size;
+      Aspect        : Single;
+      Frame_Count   : Integer := 0;
+      Current_Time  : Float;
+      q             : Float := 0.0;
+      X             : Vector3 := (1.0, 0.0, 0.0);
+      Y             : Vector3 := (0.0, 1.0, 0.0);
+      Z             : Vector3 := (0.0, 0.0, 1.0);
    begin
-      Utilities.Clear_Background_Colour (White);
---        GL.Objects.Programs.Use_Program (Render_Program);
---
---        GL.Attributes.Enable_Vertex_Attrib_Array (0);
---
---        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
---
---        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
---        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      Utilities.Clear_Background_Colour (Black);
+      Current_Time :=  Float (Glfw.Time);
+      Window.Get_Framebuffer_Size (Window_Width, Window_Height);
+      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
+                              GL.Types.Int (Window_Height));
+      Aspect := Single (Window_Height) / Single (Window_Width);
+      Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, 1.0, 5000.0,
+                                   Projection_Matrix);
+      Projection_Matrix := Translation_Matrix ((0.0, 0.0, -100.0)) *
+        Projection_Matrix;
+      Model_Matrix :=  Scaling_Matrix (0.3) *
+        Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
+          Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0));
+
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Buffers.Set_Depth_Function (LEqual);
+
+      GL.Objects.Programs.Use_Program (Render_Program);
+      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Render_Model_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      Render_Vertex_Array.Bind;
+      Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
+
+      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
+      GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
+      GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
+      --
+      --        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+      --
+      --        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      --
+      --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
+      --        GL.Attributes.Disable_Vertex_Attrib_Array (0);
 
    exception
       when  others =>
-         Put_Line ("An exception occurred in Main_Loop.Render.");
+         Put_Line ("An exception occurred in Main_Loop.Display.");
          raise;
-   end Render;
+   end Display;
 
    --  ------------------------------------------------------------------------
 
@@ -133,19 +180,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Types.Singles;
       use Program_Loader;
 
-      Model_Matrix_ID             : GL.Uniforms.Uniform;
-      Projection_Matrix_ID        : GL.Uniforms.Uniform;
-      Triangle_Count_ID           : GL.Uniforms.Uniform;
-      Time_Step_ID                : GL.Uniforms.Uniform;
-      Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
-      Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
       Velocity                    : Vector3;
-      Time_Step                   : UInt := 0;
-      Triangle_Count              : UInt := 0;
       VBM_Result                  : Boolean;
    begin
-      Time_Step := 0;
-      Triangle_Count := 0;
       Projection_Matrix := GL.Types.Singles.Identity4;
       Render_Projection_Matrix := GL.Types.Singles.Identity4;
       Render_Program := Program_From
@@ -162,12 +199,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                                             Transform_Feedback_API.GL_Interleaved_Attribs);
 
       Put_Line ("Setup, returned from Transform_Feedback_Varying");
---
---        Feedback.Transform_Feedback_Varyings (Update_Program, 2,
---                                              Transform_Feedback_API.Varyings_Array (Varyings_2),
---                                              Transform_Feedback_API.GL_Interleaved_Attribs);
+      --
+      --        Feedback.Transform_Feedback_Varyings (Update_Program, 2,
+      --                                              Transform_Feedback_API.Varyings_Array (Varyings_2),
+      --                                              Transform_Feedback_API.GL_Interleaved_Attribs);
 
-     Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "model_matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
@@ -213,10 +250,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
---        Load_Texture_Buffer (Texture_Buffer, Point_Count, Dynamic_Copy);
+      --        Load_Texture_Buffer (Texture_Buffer, Point_Count, Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
-     Put_Line ("Setup, Texture_Buffer allocated");
+      Put_Line ("Setup, Texture_Buffer allocated");
 
       Render_Vertex_Array.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_Vertex_Array);
@@ -224,15 +261,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
-      Utilities.Clear_Background_Colour_And_Depth (White);
-
-      GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Render_Model_Matrix);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
-      GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
-      GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
+      Utilities.Clear_Background_Colour_And_Depth (Black);
 
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", 0, 1, 2, VBM_Result);
       If not VBM_Result then
@@ -252,7 +281,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 begin
    Setup;
    while Running loop
-      Render;
+      Display (Main_Window);
       Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
       Glfw.Input.Poll_Events;
       Running := Running and not

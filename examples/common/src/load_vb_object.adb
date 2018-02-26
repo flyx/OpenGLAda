@@ -122,15 +122,14 @@ package body Load_VB_Object is
                Put_Line ("Load_Attribute_Header EOF reached before Image_Data filled.");
             end if;
          end loop;
-         if not End_Of_File (File_ID) then
-             Put_Line ("Load_Attribute_Header Image_Data filled before EOF.");
-         end if;
+
          Load_Buffer (VBM_Object, Image);
          Set_Attributes (Header, Attributes_Header,
                          Vertex_Index, Normal_Index, Tex_Coord0_Index);
          Load_Indices (Data_Stream, Header, VBM_Object);
       end;  --  declare block
       Close (File_ID);
+      Result := True;
 
    exception
       when Ada.IO_Exceptions.Name_Error  =>

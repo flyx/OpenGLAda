@@ -24,11 +24,6 @@ package Transform_Feedback_API is
    pragma Import (StdCall, Get_Transform_Feedback_Varying,
                   "glGetTransformFeedbackVarying");
 
---     procedure Tex_Buffer (Target : GL.Objects.Buffers.Buffer_Target;
---                               Format : GL.Pixels.Internal_Format;
---                               Object : GL.Objects.Buffers.Buffer'Class);
---     pragma Import (StdCall, Tex_Buffer, "glTexBuffer");
-
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
       Count : Size; Varyings : Varyings_Array;
