@@ -6,6 +6,21 @@ with GL.Types;
 package body Feedback is
    use GL.Types;
 
+
+   procedure Begin_Transform_Feedback (Primitive_Mode : GL.Types.Connection_Mode) is
+   begin
+      Transform_Feedback_API.Begin_Transform_Feedback (Primitive_Mode);
+   end Begin_Transform_Feedback;
+
+   --  -------------------------------------------------------------------------
+
+   procedure End_Transform_Feedback is
+   begin
+      Transform_Feedback_API.End_Transform_Feedback;
+   end End_Transform_Feedback;
+
+   --  -------------------------------------------------------------------------
+
      procedure Get_Transform_Feedback_Varying
      (Program :  GL.Objects.Programs.Program;
       Index, Buffer_Size, Length, V_Length : Integer;

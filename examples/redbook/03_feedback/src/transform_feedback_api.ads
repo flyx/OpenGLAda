@@ -5,17 +5,23 @@ with Ada.Strings.Unbounded;
 
 package Transform_Feedback_API is
 
-
    type Transform_Buffer_Mode is (GL_Interleaved_Attribs, GL_Separate_Attribs);
    for Transform_Buffer_Mode use
      (GL_Interleaved_Attribs => 16#8C8C#,
       GL_Separate_Attribs    => 16#8C8D#);
+
+   type Varyings_Array is array (Integer range <>) of
+     Ada.Strings.Unbounded.Unbounded_String;
    --  glTransformFeedbackVaryings (GLuint program, GLsizei count,
    --     const GLchar* const *varyings, GLenum bufferMode);
    --  glGetTransformFeedbackVarying (GLuint program, GLuint index,
    --     GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name);
 
-   type Varyings_Array is array (Integer range <>) of Ada.Strings.Unbounded.Unbounded_String;
+   procedure Begin_Transform_Feedback (Primitive_Mode : GL.Types.Connection_Mode);
+   pragma Import (StdCall, Begin_Transform_Feedback, "glBeginTransformFeedback");
+
+   procedure End_Transform_Feedback;
+   pragma Import (StdCall, End_Transform_Feedback,   "glEndTransformFeedback");
 
    procedure Get_Transform_Feedback_Varying
      (Program :  GL.Objects.Programs.Program;
