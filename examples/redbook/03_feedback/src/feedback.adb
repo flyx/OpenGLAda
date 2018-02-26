@@ -1,8 +1,6 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with GL.Types;
-
 package body Feedback is
    use GL.Types;
 

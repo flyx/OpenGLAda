@@ -72,12 +72,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Geometry_Texture    : GL.Objects.Buffers.Buffer;
    Render_Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Point_Count         : constant Integer := 5000;
-   Triangle_Count              : UInt := 0;
-   Time_Step                   : UInt := 0;
+--     Triangle_Count              : UInt := 0;
+--     Time_Step                   : UInt := 0;
    Model_Matrix_ID             : GL.Uniforms.Uniform;
    Projection_Matrix_ID        : GL.Uniforms.Uniform;
-   Triangle_Count_ID           : GL.Uniforms.Uniform;
-   Time_Step_ID                : GL.Uniforms.Uniform;
+--     Triangle_Count_ID           : GL.Uniforms.Uniform;
+--     Time_Step_ID                : GL.Uniforms.Uniform;
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
    Model_Matrix        :  Singles.Matrix4 := GL.Types.Singles.Identity4;
@@ -124,12 +124,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Width  : Glfw.Size;
       Window_Height : Glfw.Size;
       Aspect        : Single;
-      Frame_Count   : Integer := 0;
+      VBM_Result    : Boolean;
+--        Frame_Count   : Integer := 0;
       Current_Time  : Float;
-      q             : Float := 0.0;
-      X             : Vector3 := (1.0, 0.0, 0.0);
-      Y             : Vector3 := (0.0, 1.0, 0.0);
-      Z             : Vector3 := (0.0, 0.0, 1.0);
+--        q             : Float := 0.0;
+--        X             : Vector3 := (1.0, 0.0, 0.0);
+--        Y             : Vector3 := (0.0, 1.0, 0.0);
+--        Z             : Vector3 := (0.0, 0.0, 1.0);
    begin
       Utilities.Clear_Background_Colour (Black);
       Current_Time :=  Float (Glfw.Time);
@@ -153,18 +154,22 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       Render_Vertex_Array.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
-
-      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
-      GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
-      GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
+      Feedback.Begin_Transform_Feedback (Triangles);
+      Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", 0, 1, 2, VBM_Result);
+      Feedback.End_Transform_Feedback;
+      if VBM_Result then
+         GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+         GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
+--        GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
+--        GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
       --
       --        GL.Attributes.Enable_Vertex_Attrib_Array (0);
       --
       --        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
       --
       --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
-      --        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+--        GL.Attributes.Disable_Vertex_Attrib_Array (0);
+      end if;
 
    exception
       when  others =>
@@ -208,10 +213,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "model_matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
-      Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "triangle_count");
-      Time_Step_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "time_step");
+--        Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
+--          (Render_Program, "triangle_count");
+--        Time_Step_ID := GL.Objects.Programs.Uniform_Location
+--          (Render_Program, "time_step");
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "model_matrix");
       Render_Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
