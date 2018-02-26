@@ -228,8 +228,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Vertex_Buffers (1).Initialize_Id;
       Vertex_Buffers (2).Initialize_Id;
 
-      Put_Line ("Setup, Vertex_Buffers initialized");
-
       for index in Vertex_Buffers'Range loop
          Transform_Feedback_Buffer.Bind (Vertex_Buffers (index));
          Load_Transform_Buffer (Transform_Feedback_Buffer, Buffer, Dynamic_Copy);
@@ -258,7 +256,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       --        Load_Texture_Buffer (Texture_Buffer, Point_Count, Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
-      Put_Line ("Setup, Texture_Buffer allocated");
 
       Render_Vertex_Array.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_Vertex_Array);

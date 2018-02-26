@@ -13,9 +13,8 @@ package Load_VB_Object is
 
    type Material_Texture is private;
 
-   procedure Load_From_VBM (File_Name : String;
-                               Vertex_Index, Normal_Index,
-                               Tex_Coord0_Index : Int; Result : out Boolean);
+   procedure Load_From_VBM (File_Name : String; Vertex_Index, Normal_Index,
+                            Tex_Coord0_Index : Int; Result : out Boolean);
 
 private
    New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
