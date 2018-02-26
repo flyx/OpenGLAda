@@ -1,13 +1,10 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
 
-with GL.Objects.Buffers;
-with GL.Objects.Vertex_Arrays;
 with GL.Types; use GL.Types;
 
 package Load_VB_Object is
 
-   type VB_Object is private;
    type VBM_Flags is (VBM_Has_Vertices, VBM_Has_Indices, VBM_Has_Frames,
                       VBM_Has_Materials);
    for VBM_Flags use
@@ -99,17 +96,5 @@ private
    package Material_Textures_Package is new
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
    type Material_Textures is new Material_Textures_Package.List with null record;
-
-   type VB_Object is record
-      Header             : VBM_Header;
-      Attribute_Header   : VBM_Attributes_Header;
-      Frame_Header       : VBM_Frame_Header;
-      Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Attribute_Buffer   : GL.Objects.Buffers.Buffer;
-      Indices            : GL.Objects.Buffers.Buffer;
-      Material           : VBM_Material;
-      Render_Chunk       : VBM_Render_Chunk;
-      Texture_List       : Material_Textures;
-   end record;
 
 end Load_VB_Object;

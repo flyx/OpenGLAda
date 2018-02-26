@@ -1,7 +1,12 @@
 
+with Interfaces.C.Pointers;
+
 with Ada.IO_Exceptions; use Ada.IO_Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
+
+with GL.Objects.Buffers;
+with GL.Objects.Vertex_Arrays;
 
 package body Load_VB_Object is
 
@@ -13,17 +18,55 @@ package body Load_VB_Object is
 --     type Image_Data_List is new Image_Data_Package.List with null record;
    --     type VBM_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
 
-   UInt_Size      : constant UInt := UInt'Size / 8;
-   Float_Size     : constant UInt := Float'Size / 8;
-   Byte_Count     : UInt := 0;
+
+   type VB_Object is record
+      Header             : VBM_Header;
+      Attribute_Header   : VBM_Attributes_Header;
+      Frame_Header       : VBM_Frame_Header;
+      Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Attribute_Buffer   : GL.Objects.Buffers.Buffer;
+      Indices            : GL.Objects.Buffers.Buffer;
+      Material           : VBM_Material;
+      Render_Chunk       : VBM_Render_Chunk;
+      Texture_List       : Material_Textures;
+   end record;
+
+   type Image_Data is array (UInt range <>) of aliased UByte;
+   package Image_Data_Pointers is new
+     Interfaces.C.Pointers (UInt, UByte, Image_Data, 0);
+
+   procedure Load_Image is new
+      GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
+
+   UInt_Size         : constant UInt := UInt'Size / 8;
+   Float_Size        : constant UInt := Float'Size / 8;
+   Byte_Count        : UInt := 0;
 
 
    procedure Load_Attribute_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                              Header              : out VBM_Attributes_Header);
+                                    Header        : out VBM_Attributes_Header);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header);
 
    --  ------------------------------------------------------------------------
+
+   procedure Load_Buffer (Object : in out VB_Object; Image : Image_Data) is
+      use GL.Objects.Buffers;
+   begin
+      Object.Vertex_Array.Initialize_Id;
+      Object.Vertex_Array.Bind;
+      Object.Attribute_Buffer.Initialize_Id;
+      Array_Buffer.Bind (Object.Attribute_Buffer);
+
+      Load_Image (Array_Buffer, Image, Static_Draw);
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Buffer.");
+         raise;
+   end Load_Buffer;
+
+     --  ------------------------------------------------------------------------
 
    procedure Load_From_VBM (File_Name : String;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
@@ -32,6 +75,7 @@ package body Load_VB_Object is
 
       File_ID           : Ada.Streams.Stream_IO.File_Type;
       Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
+      VBM_Object        : VB_Object;
       Header            : VBM_Header;
       Attributes_Header : VBM_Attributes_Header;
       Attributes        : Attribute_List;
@@ -55,23 +99,24 @@ package body Load_VB_Object is
       end loop;
 
       declare
-         Image_Data  : array (1 .. Image_Data_Size) of UByte;
+         Image       : Image_Data (1 .. Image_Data_Size);
          Data_Byte   : UByte;
          Byte_Count  : UInt := 0;
       begin
-         while Byte_Count <= Image_Data_Size loop
+         while Byte_Count < Image_Data_Size loop
             Byte_Count := Byte_Count + 1;
             if not End_Of_File (File_ID) then
                UByte'Read (Data_Stream, Data_Byte);
-               Image_Data (Byte_Count) := Data_Byte;
+               Image (Byte_Count) := Data_Byte;
             else
-               Image_Data (Byte_Count) := 0;
+               Image (Byte_Count) := 0;
                Put_Line ("Load_Attribute_Header EOF reached before Image_Data filled.");
             end if;
          end loop;
          if not End_Of_File (File_ID) then
              Put_Line ("Load_Attribute_Header Image_Data filled before EOF.");
          end if;
+         Load_Buffer (VBM_Object, Image);
       end;  --  declare block
       Close (File_ID);
 
@@ -81,7 +126,7 @@ package body Load_VB_Object is
          Put_Line ("Load_From_VBM can't find the file " & File_Name & "!");
          raise;
       when others =>
-         Put_Line ("An exception occurred in Load_From_VBM.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_From_VBM.");
          raise;
    end Load_From_VBM;
 
@@ -102,7 +147,7 @@ package body Load_VB_Object is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_Attribute_Header.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Attribute_Header.");
          raise;
    end Load_Attribute_Header;
 
@@ -161,7 +206,7 @@ package body Load_VB_Object is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VBM_Header.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_VBM_Header.");
          raise;
    end Load_VBM_Header;
 
