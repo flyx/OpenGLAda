@@ -124,7 +124,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Width  : Glfw.Size;
       Window_Height : Glfw.Size;
       Aspect        : Single;
-      VBM_Result    : Boolean;
 --        Frame_Count   : Integer := 0;
       Current_Time  : Float;
 --        q             : Float := 0.0;
@@ -155,11 +154,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_Vertex_Array.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
       Feedback.Begin_Transform_Feedback (Triangles);
-      Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", 0, 1, 2, VBM_Result);
+      Load_VB_Object.Render;
       Feedback.End_Transform_Feedback;
-      if VBM_Result then
-         GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-         GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
+      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
 --        GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
 --        GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
       --
@@ -169,8 +167,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       --
       --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 --        GL.Attributes.Disable_Vertex_Attrib_Array (0);
-      end if;
-
    exception
       when  others =>
          Put_Line ("An exception occurred in Main_Loop.Display.");

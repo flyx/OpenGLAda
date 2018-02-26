@@ -282,6 +282,19 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Render is
+
+   begin
+      null;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Load_VBM_Header.");
+         raise;
+   end Render;
+
+   --  ------------------------------------------------------------------------
+
    procedure Set_Attributes (Header : VBM_Header;
                              Attributes_Header : VBM_Attributes_Header;
                              Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
