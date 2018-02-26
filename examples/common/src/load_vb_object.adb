@@ -5,6 +5,7 @@ with Ada.IO_Exceptions; use Ada.IO_Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
 
+with GL.Attributes;
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
 
@@ -47,6 +48,9 @@ package body Load_VB_Object is
                                     Header        : out VBM_Attributes_Header);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header);
+   procedure Set_Attributes (Header : VBM_Header;
+                             Attributes_Header : VBM_Attributes_Header;
+                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
 
    --  ------------------------------------------------------------------------
 
@@ -117,6 +121,9 @@ package body Load_VB_Object is
              Put_Line ("Load_Attribute_Header Image_Data filled before EOF.");
          end if;
          Load_Buffer (VBM_Object, Image);
+         Set_Attributes (Header, Attributes_Header,
+                         Vertex_Index, Normal_Index, Tex_Coord0_Index);
+
       end;  --  declare block
       Close (File_ID);
 
@@ -135,10 +142,12 @@ package body Load_VB_Object is
    procedure Load_Attribute_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                                     Header        : out VBM_Attributes_Header) is
       use Ada.Streams.Stream_IO;
+      Numeric : UInt;
    begin
       String'Read (Header_Stream, Header.Name);
       Byte_Count := Byte_Count + 64;
-      UInt'Read (Header_Stream, Header.Attribute_Type);
+      UInt'Read (Header_Stream, Numeric);
+      Header.Attribute_Type := Numeric_Type'Enum_Val (Numeric);
       Byte_Count := Byte_Count + UInt_Size;
       UInt'Read (Header_Stream, Header.Components);
       Byte_Count := Byte_Count + UInt_Size;
@@ -209,6 +218,41 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Load_VBM_Header.");
          raise;
    end Load_VBM_Header;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Attributes (Header : VBM_Header;
+                             Attributes_Header : VBM_Attributes_Header;
+                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+      use GL.Attributes;
+      Attribute_Index : Attribute;
+      Data_Size       : Int := 0;
+   begin
+      for Index in 1 .. Header.Num_Attributes loop
+         Attribute_Index := Attribute (Index - 1);
+         case Attribute_Index is
+            when 0 => Attribute_Index := Attribute (Vertex_Index);
+            when 1 => Attribute_Index := Attribute (Normal_Index);
+            when 2 => Attribute_Index := Attribute (Tex_Coord0_Index);
+            when others =>
+               Put_Line ("Load_VB_Object.Set_Attributes, invalid Attribute_Index.");
+         end case;
+
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (Index  => Attribute_Index,
+            Count  => Int (Attributes_Header.Components),
+            Kind   => Attributes_Header.Attribute_Type,
+            Stride => 0, Offset => Data_Size);
+         GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
+         Data_Size := Data_Size + Int (Attributes_Header.Components *
+           Header.Num_Vertices * Float_Size);
+      end loop;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
+         raise;
+   end Set_Attributes;
 
    --  ------------------------------------------------------------------------
 

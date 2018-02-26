@@ -38,7 +38,7 @@ private
 
    type VBM_Attributes_Header is record
       Name           : String (1 .. 64);
-      Attribute_Type : UInt := 0;
+      Attribute_Type : Numeric_Type := UByte_Type;
       Components     : UInt := 0;
       Flags          : UInt := 0;
    end record;
