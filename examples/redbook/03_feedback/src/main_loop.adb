@@ -65,7 +65,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    Vertex_Arrays       : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffers      : array (1 .. 2) of GL.Objects.Buffers.Buffer;
-   Geometry_VBO     : GL.Objects.Buffers.Buffer;
+   Geometry_VBO        : GL.Objects.Buffers.Buffer;
    Geometry_Texture    : GL.Objects.Buffers.Buffer;
    Render_Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Point_Count         : constant Integer := 5000;
