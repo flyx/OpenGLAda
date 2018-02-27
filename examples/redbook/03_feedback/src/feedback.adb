@@ -18,8 +18,7 @@ package body Feedback is
 
    procedure End_Transform_Feedback is
    begin
-      null;
---        Transform_Feedback_API.End_Transform_Feedback;
+      Transform_Feedback_API.End_Transform_Feedback;
       --        Raise_Exception_On_OpenGL_Error;
    exception
       when  others =>
@@ -61,9 +60,8 @@ package body Feedback is
       Count : Integer; Varyings : Transform_Feedback_API.Varyings_Array;
       Buffer_Mode : Transform_Feedback_API.Transform_Buffer_Mode) is
    begin
-      null;
---        Transform_Feedback_API.Transform_Feedback_Varyings
---          (Program, Size (Count), Varyings, Buffer_Mode);
+      Transform_Feedback_API.Transform_Feedback_Varyings
+        (Program, Size (Count), Varyings, Buffer_Mode);
       --        Raise_Exception_On_OpenGL_Error;
    exception
       when  others =>
