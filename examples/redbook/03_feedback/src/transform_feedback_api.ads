@@ -17,11 +17,11 @@ package Transform_Feedback_API is
    --  glGetTransformFeedbackVarying (GLuint program, GLuint index,
    --     GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name);
 
-   procedure Begin_Transform_Feedback (Primitive_Mode : GL.Types.Connection_Mode);
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode);
    pragma Import (StdCall, Begin_Transform_Feedback, "glBeginTransformFeedback");
 
    procedure End_Transform_Feedback;
-   pragma Import (StdCall, End_Transform_Feedback,   "glEndTransformFeedback");
+   pragma Import (StdCall, End_Transform_Feedback, "glEndTransformFeedback");
 
    procedure Get_Transform_Feedback_Varying
      (Program :  GL.Objects.Programs.Program;
