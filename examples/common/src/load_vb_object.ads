@@ -1,5 +1,6 @@
 
 with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Containers.Vectors;
 
 with GL.Objects.Buffers;
 with GL.Objects.Vertex_Arrays;
@@ -19,7 +20,8 @@ package Load_VB_Object is
    procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
-   procedure Render;
+   procedure Render (VBM_Object : in out VB_Object;
+                     Frame_Index, Instances : UInt := 0);
 
 private
    New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
@@ -101,10 +103,15 @@ private
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
    type Material_Textures is new Material_Textures_Package.List with null record;
 
+
+   package Frame_Package is new
+     Ada.Containers.Vectors (Natural, VBM_Frame_Header);
+   type Frame_List is new Frame_Package.Vector with null record;
+
    type VB_Object is record
       Header             : VBM_Header;
       Attribute_Header   : VBM_Attributes_Header;
-      Frame_Header       : VBM_Frame_Header;
+      Frames             : Frame_List;
       Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Attribute_Buffer   : GL.Objects.Buffers.Buffer;
       Indices            : GL.Objects.Buffers.Buffer;

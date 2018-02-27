@@ -188,7 +188,7 @@ package body Load_VB_Object is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Set_Indices.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Indices.");
          raise;
    end Load_Indices;
 
@@ -256,14 +256,33 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Render is
-
+   procedure Render (VBM_Object : in out VB_Object;
+                     Frame_Index, Instances : UInt := 0) is
+      use GL.Objects.Buffers;
+      Frame : VBM_Frame_Header;
    begin
-      null;
+       if Frame_Index < VBM_Object.Header.Num_Frames then
+         Frame := VBM_Object.Frames.Element (Natural (Frame_Index));
+         VBM_Object.Vertex_Array.Bind;
+         if Instances > 0 then
+            if VBM_Object.Header.Num_Indices > 0 then
+               Draw_Elements_Instanced (Triangles, Frame.Count,
+                                        GL.Types.UInt_Type, Frame.First);
+            else
+               null;
+            end if;
+         else
+            if VBM_Object.Header.Num_Indices > 0 then
+               null;
+            else
+               null;
+            end if;
+         end if;
+      end if;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Load_VBM_Header.");
+         Put_Line ("An exception occurred in Load_VB_Object.Render.");
          raise;
    end Render;
 
