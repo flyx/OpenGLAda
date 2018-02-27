@@ -1,7 +1,7 @@
 
 
 with Ada.Numerics.Float_Random;
---  with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Interfaces.C.Pointers;
@@ -28,9 +28,9 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
---  with Feedback;
+with Feedback;
 with Load_VB_Object;
---  with Transform_Feedback_API;
+with Transform_Feedback_API;
 --  with Vertex_Data;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
@@ -59,7 +59,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
-   --     type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
+     type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
 --     type Varyings_Array_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
    Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
@@ -89,8 +89,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --     Varyings             : constant Varyings_Array_2 :=
 --       (To_Unbounded_String ("position_out"),
 --        To_Unbounded_String ("velocity_out"));
-   --     Varyings_2           : constant Varyings_Array_1 :=
-   --       (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
+   Varyings_2           : constant Varyings_Array_1 :=
+        (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
    Buffer               : Buffer_Array (1 .. Point_Count);
    Buffer_Pointer       : Buffer_Pointers_Package.Pointer;
    --     T_Buffer             : Texture_Array (1 .. Point_Count);
@@ -209,15 +209,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --                                              Transform_Feedback_API.Varyings_Array (Varyings),
 --                                              Transform_Feedback_API.GL_Interleaved_Attribs);
 
+      Feedback.Transform_Feedback_Varyings (Update_Program, 2,
+                                            Transform_Feedback_API.Varyings_Array (Varyings_2),
+                                            Transform_Feedback_API.GL_Interleaved_Attribs);
       Put_Line ("Setup, returned from Transform_Feedback_Varying");
-
       GL.Objects.Programs.Validate (Update_Program);
          Put_Line ("Setup, Update_Program validated");
       GL.Objects.Programs.Validate (Render_Program);
          Put_Line ("Setup, Render_Program validated");
-      --        Feedback.Transform_Feedback_Varyings (Update_Program, 2,
-      --                                              Transform_Feedback_API.Varyings_Array (Varyings_2),
-      --                                              Transform_Feedback_API.GL_Interleaved_Attribs);
       Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
       Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
       If not GL.Objects.Programs.Validate_Status (Render_Program) then
