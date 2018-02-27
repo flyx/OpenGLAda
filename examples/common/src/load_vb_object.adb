@@ -6,8 +6,6 @@ with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
-with GL.Objects.Buffers;
-with GL.Objects.Vertex_Arrays;
 
 package body Load_VB_Object is
 
@@ -15,27 +13,9 @@ package body Load_VB_Object is
      (VBM_Attributes_Header);
    type Attribute_List is new Attribute_Package.List with null record;
 
---     package Image_Data_Package is new Ada.Containers.Doubly_Linked_Lists (UByte);
---     type Image_Data_List is new Image_Data_Package.List with null record;
-   --     type VBM_Data is array (GL.Types.UInt range <>) of GL.Types.UByte;
-
-
-   type VB_Object is record
-      Header             : VBM_Header;
-      Attribute_Header   : VBM_Attributes_Header;
-      Frame_Header       : VBM_Frame_Header;
-      Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Attribute_Buffer   : GL.Objects.Buffers.Buffer;
-      Indices            : GL.Objects.Buffers.Buffer;
-      Material           : VBM_Material;
-      Render_Chunk       : VBM_Render_Chunk;
-      Texture_List       : Material_Textures;
-   end record;
-
    type Image_Data is array (UInt range <>) of aliased UByte;
    package Image_Data_Pointers is new
      Interfaces.C.Pointers (UInt, UByte, Image_Data, 0);
---     type Data_Pointers is new Image_Data_Pointers.Pointer;
 
    procedure Load_Data is new
       GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
@@ -63,9 +43,7 @@ package body Load_VB_Object is
       use GL.Objects.Buffers;
    begin
       Object.Vertex_Array.Initialize_Id;
-      Put_Line ("Load_VB_Object.Load_Buffer Vertex_Array initialized.");
       Object.Vertex_Array.Bind;
-      Put_Line ("Load_VB_Object.Load_Buffer Vertex_Array bound.");
       Object.Attribute_Buffer.Initialize_Id;
       Array_Buffer.Bind (Object.Attribute_Buffer);
 
@@ -77,16 +55,15 @@ package body Load_VB_Object is
          raise;
    end Load_Buffer;
 
-     --  ------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
 
-   procedure Load_From_VBM (File_Name : String;
+   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean) is
       use Ada.Streams.Stream_IO;
 
       File_ID           : Ada.Streams.Stream_IO.File_Type;
       Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
-      VBM_Object        : VB_Object;
       Header            : VBM_Header;
       Attributes_Header : VBM_Attributes_Header;
       Attributes        : Attribute_List;
@@ -127,11 +104,8 @@ package body Load_VB_Object is
          Set_Attributes (Header, Attributes_Header,
                          Vertex_Index, Normal_Index, Tex_Coord0_Index);
          Load_Indices (Data_Stream, Header, VBM_Object);
---           GL.Objects.Buffers.Invalidate_Data (VBM_Object.Attribute_Buffer);
          GL.Objects.Vertex_Arrays.Bind
            (GL.Objects.Vertex_Arrays.Null_Array_Object);
---           VBM_Object.Attribute_Buffer.Clear;
---           VBM_Object.Vertex_Array.Clear;
       end;  --  declare block
       Close (File_ID);
       Result := True;
