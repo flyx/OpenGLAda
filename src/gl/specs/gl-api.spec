@@ -218,11 +218,22 @@ spec GL.API is
                           First : Int; Count : Size) with
      Static  => "glDrawArrays",
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays";
+   procedure Draw_Arrays_Instanced (Mode  : Connection_Mode;
+                                    First : Int; Count : Size;
+                                    Instance_Count : Size) with
+    Static  => "glDrawArraysInstanced",
+    Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays_Instanced";
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Low_Level.IntPtr) with
      Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
+   procedure Draw_Elements_Instanced (Mode       : Connection_Mode;
+                                      Count      : Size;
+                                      Index_Type : Unsigned_Numeric_Type;
+                                      Indices    : Low_Level.IntPtr;
+                                      Instances  : Size) with
+    Static => "glDrawElementsInstanced", Wrapper => "Draw_Elements_Instanced";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
    procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with

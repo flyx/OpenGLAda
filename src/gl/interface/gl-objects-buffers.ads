@@ -65,7 +65,10 @@ package GL.Objects.Buffers is
    procedure Draw_Elements (Mode : Connection_Mode; Count : Types.Size;
                             Index_Type : Unsigned_Numeric_Type;
                             Element_Offset : Natural := 0);
-
+   procedure Draw_Elements_Instanced (Mode : Connection_Mode; Count : Types.Size;
+                                      Index_Type : Unsigned_Numeric_Type;
+                                      Element_Offset : Natural := 0;
+                                      Instance_Count : UInt := 0);
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
                                   Offset, Length : Long_Size);
