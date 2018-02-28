@@ -197,6 +197,9 @@ procedure GL.Load_Function_Pointers is
    function Load_T166 is new Load (T166);
    function Load_T167 is new Load (T167);
    function Load_T168 is new Load (T168);
+   function Load_T169 is new Load (T169);
+   function Load_T170 is new Load (T170);
+   function Load_T171 is new Load (T171);
 begin
    GL.API.Doubles.Vertex_Attrib1 := Load_T1 ("glVertexAttribL1d");
    GL.API.Doubles.Vertex_Attrib2 := Load_T2 ("glVertexAttribL2d");
@@ -373,6 +376,9 @@ begin
    GL.API.Get_Attached_Shaders := Load_T164 ("glGetAttachedShaders");
    GL.API.Bind_Frag_Data_Location := Load_T165 ("glBindFragDataLocation");
    GL.API.Get_Frag_Data_Location := Load_T166 ("glGetFragDataLocation");
-   GL.API.Set_Patch_Parameter_Int := Load_T167 ("glPatchParameteri");
-   GL.API.Set_Patch_Parameter_Float_Array := Load_T168 ("glPatchParameterfv");
+   GL.API.Begin_Transform_Feedback := Load_T167 ("glBeginTransformFeedback");
+   GL.API.Get_Transform_Feedback_Varying := Load_T168 ("glGetTransformFeedbackVarying");
+   GL.API.Transform_Feedback_Varyings := Load_T169 ("glTransformFeedbackVaryings");
+   GL.API.Set_Patch_Parameter_Int := Load_T170 ("glPatchParameteri");
+   GL.API.Set_Patch_Parameter_Float_Array := Load_T171 ("glPatchParameterfv");
 end GL.Load_Function_Pointers;

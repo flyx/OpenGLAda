@@ -800,7 +800,7 @@ spec GL.API is
      Dynamic => "glDeleteBuffers";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
-procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
+   procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
     with Dynamic =>"glBindBufferBase", Wrapper => "GL.Objects.Buffers.Bind_Buffer_Base";
    procedure Buffer_Data
      (Target : Low_Level.Enums.Buffer_Kind;
@@ -1058,7 +1058,10 @@ procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; 
      Wrapper => "GL.Objects.Programs.Tess_Gen_Vertex_Order",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Buffer_Mode",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings",
-     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length";
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length",
+     Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying",
+     Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback",
+     Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Attach_Shader (Program, Shader : UInt) with
      Dynamic => "glAttachShader", Wrapper => "GL.Objects.Programs.Attach";
    procedure Link_Program (Program : UInt) with
@@ -1140,6 +1143,23 @@ procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; 
      (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int with
      Dynamic => "glGetFragDataLocation",
      Wrapper => "GL.Objects.Programs.Frag_Data_Location";
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode) with
+     Dynamic => "glBeginTransformFeedback",
+     Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback";
+   procedure End_Transform_Feedback with
+     Static => "glEndTransformFeedback",
+     Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
+   procedure Get_Transform_Feedback_Varying
+    (Program :  UInt; Index : Int; Buffer_Size : Size;
+     Length : Size; V_Length : Size; V_Type : GL.Objects.Programs.Buffer_Mode;
+     Name : Interfaces.C.Strings.chars_ptr) with
+     Dynamic => "glGetTransformFeedbackVarying",
+     Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
+   procedure Transform_Feedback_Varyings
+    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
+     Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
+     Dynamic => "glTransformFeedbackVaryings",
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --
