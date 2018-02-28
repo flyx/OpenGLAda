@@ -124,6 +124,13 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Minimum (U1, U2 : UInt) return UInt is
+   begin
+      return UInt (Minimum (Int (U1), Int (U2)));
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
    function Minimum (I1, I2 : Integer) return Integer is
       Min : Integer;
    begin
@@ -137,13 +144,26 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Minimum (I1, I2 : Single) return Single is
+   function Minimum (F1, F2 : Float) return Float is
+      Min : Float;
+   begin
+      if F1 < F2 then
+         Min := F1;
+      else
+         Min := F2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
+   function Minimum (S1, S2 : Single) return Single is
       Min : Single;
    begin
-      if I1 < I2 then
-         Min := I1;
+      if S1 < S2 then
+         Min := S1;
       else
-         Min := I2;
+         Min := S2;
       end if;
       return Min;
    end Minimum;
@@ -163,6 +183,13 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Maximum (U1, U2 : UInt) return UInt is
+   begin
+      return UInt (Maximum (Int (U1), Int (U2)));
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
    function Maximum (I1, I2 : Integer) return Integer is
       Max : Integer;
    begin
@@ -176,13 +203,25 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
-   function Maximum (I1, I2 : Single) return Single is
+   function Maximum (F1, F2 : Float) return Float is
+      Max : Float;
+   begin
+      if F1 < F2 then
+         Max := F1;
+      else
+         Max := F2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+   function Maximum (S1, S2 : Single) return Single is
       Max : Single;
    begin
-      if I1 > I2 then
-         Max := I1;
+      if S1 > S2 then
+         Max := S1;
       else
-         Max := I2;
+         Max := S2;
       end if;
       return Max;
    end Maximum;

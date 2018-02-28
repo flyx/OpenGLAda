@@ -43,11 +43,15 @@ package Maths is
       Transform  : out Singles.Matrix4);
    function Length (V : Singles.Vector3) return Single;
    function Minimum (I1, I2 : Int) return Int;
+   function Minimum (U1, U2 : UInt) return UInt;
    function Minimum (I1, I2 : Integer) return Integer;
-   function Minimum (I1, I2 : Single) return Single;
+   function Minimum (F1, F2 : Float) return Float;
+   function Minimum (S1, S2 : Single) return Single;
    function Maximum (I1, I2 : Int) return Int;
+   function Maximum (U1, U2 : UInt) return UInt;
    function Maximum (I1, I2 : Integer) return Integer;
-   function Maximum (I1, I2 : Single) return Single;
+   function Maximum (F1, F2 : Float) return Float;
+   function Maximum (S1, S2 : Single) return Single;
    function Normalized (V : Singles.Vector3) return Singles.Vector3;
    function Perspective_Matrix (View_Angle : Degree; Aspect, Near, Far : Single)
                                 return Singles.Matrix4;
