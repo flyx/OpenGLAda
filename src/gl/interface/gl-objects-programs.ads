@@ -65,18 +65,17 @@ package GL.Objects.Programs is
 
    function Tess_Gen_Vertex_Order (Subject : Program) return Orientation;
 
-   function Transform_Feedback_Buffer_Mode (Object : Program)
-                                            return Buffer_Mode;
+   function Transform_Feedback_Buffer_Mode (Object : Program) return Buffer_Mode;
 
    function Transform_Feedback_Varyings (Object : Program) return Size;
 
    function Transform_Feedback_Varying_Max_Length (Object : Program)
                                                    return Size;
 
-   procedure Transform_Feedback_Varyings_Test (Object : Program);
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode);
 
-   procedure Begin_Transform_Feedback (Primitive_Mode : GL.Types.Connection_Mode);
    procedure End_Transform_Feedback;
+
    procedure Get_Transform_Feedback_Varying
      (Object : Program; Index, Buffer_Size, Length, V_Length : Integer;
       V_Type : Buffer_Mode; Name : String);

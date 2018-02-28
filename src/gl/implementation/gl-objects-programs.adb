@@ -211,18 +211,6 @@ package body GL.Objects.Programs is
             Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
-   procedure Transform_Feedback_Varyings_Test
-     (Object :  Program) is
-      use Interfaces.C.Strings;
-      C_Varyings   : chars_ptr_array (1 .. 1);
-   begin
-      C_Varyings (1) := New_String ("world_space_position");
-
-      API.Transform_Feedback_Varyings
-        (Object.Reference.GL_Id, 1, C_Varyings, GL.Objects.Programs.Interleaved_Attribs);
-      Raise_Exception_On_OpenGL_Error;
-   end Transform_Feedback_Varyings_Test;
-
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size is
       Ret : Size := 0;
