@@ -1,4 +1,6 @@
 
+with Interfaces.C.Strings;
+
 with GL.Objects.Programs;
 with GL.Types; use  GL.Types;
 with Ada.Strings.Unbounded;
@@ -32,7 +34,7 @@ package Transform_Feedback_API is
 
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
-      Count : Size; Varyings : Varyings_Array;
+      Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
       Buffer_Mode : Transform_Buffer_Mode);
    pragma Import (StdCall, Transform_Feedback_Varyings,
                   "glTransformFeedbackVaryings");

@@ -209,12 +209,16 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --                                              Transform_Feedback_API.Varyings_Array (Varyings),
 --                                              Transform_Feedback_API.GL_Interleaved_Attribs);
 
-      Feedback.Transform_Feedback_Varyings (Update_Program, 2,
+      Feedback.Transform_Feedback_Varyings (Update_Program, Varyings_2'Length,
                                             Transform_Feedback_API.Varyings_Array (Varyings_2),
                                             Transform_Feedback_API.GL_Interleaved_Attribs);
+
       Put_Line ("Setup, returned from Transform_Feedback_Varying");
-      GL.Objects.Programs.Validate (Update_Program);
-         Put_Line ("Setup, Update_Program validated");
+      GL.Objects.Programs.Link (Update_Program);
+      if GL.Objects.Programs.Link_Status (Update_Program) then
+         Put_Line ("Setup, Update_Program Link failed");
+      end if;
+         Put_Line ("Setup, Update_Program link checked");
       GL.Objects.Programs.Validate (Render_Program);
          Put_Line ("Setup, Render_Program validated");
       Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
