@@ -15,6 +15,6 @@ package Feedback  is
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
       Count : Integer; Varyings : Transform_Feedback_API.Varyings_Array;
-      Buffer_Mode : Transform_Feedback_API.Transform_Buffer_Mode);
+      Buffer_Mode : GL.Objects.Programs.Buffer_Mode);
 
 end Feedback;

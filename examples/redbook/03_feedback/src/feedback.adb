@@ -63,20 +63,22 @@ package body Feedback is
    procedure Transform_Feedback_Varyings
      (Program :  GL.Objects.Programs.Program;
       Count : Integer; Varyings : Transform_Feedback_API.Varyings_Array;
-      Buffer_Mode : Transform_Feedback_API.Transform_Buffer_Mode) is
+      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) is
       use Interfaces.C.Strings;
       use Ada.Strings.Unbounded;
       Array_Length : constant Integer := Count;
       C_Varyings   : chars_ptr_array (1 .. Interfaces.C.size_t (Array_Length));
       Vary_Ptr     : chars_ptr;
    begin
-      pragma Assert (Array_Length = Varyings'Length,
-                     "Feedback.Transform_Feedback_Varyings, invlaid count.");
+      if Array_Length /= Varyings'Length then
+         Put_Line ("Feedback.Transform_Feedback_Varyings, invlaid count.");
+      end if;
+
       for index in Varyings'Range loop
          Interfaces.C.Strings.Free (Vary_Ptr);
---           Raise_Exception_On_OpenGL_Error;
+         Put_Line ("Feedback.Transform_Feedback_Varyings, Vary: " & To_String (Varyings (index)));
          Vary_Ptr :=  New_String (To_String (Varyings (index)));
-         C_Varyings (Interfaces.C.size_t (index)) := Vary_Ptr;
+         C_Varyings (Interfaces.C.size_t (index - 1)) := Vary_Ptr;
       end loop;
 
       Transform_Feedback_API.Transform_Feedback_Varyings

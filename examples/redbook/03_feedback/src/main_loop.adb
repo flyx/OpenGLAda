@@ -59,8 +59,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
-     type Varyings_Array_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
---     type Varyings_Array_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
+     type Varyings_Length_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
+--     type Varyings_Length_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
    Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
@@ -86,11 +86,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Render_Projection_Matrix : Singles.Matrix4;
    Render_Program       : GL.Objects.Programs.Program;
    Update_Program       : GL.Objects.Programs.Program;
---     Varyings             : constant Varyings_Array_2 :=
---       (To_Unbounded_String ("position_out"),
---        To_Unbounded_String ("velocity_out"));
-   Varyings_2           : constant Varyings_Array_1 :=
-        (Varyings_Array_1'First => To_Unbounded_String ("world_space_position"));
    Buffer               : Buffer_Array (1 .. Point_Count);
    Buffer_Pointer       : Buffer_Pointers_Package.Pointer;
    --     T_Buffer             : Texture_Array (1 .. Point_Count);
@@ -193,6 +188,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       Velocity   : Vector3;
       VBM_Result : Boolean;
+--     Varyings   : constant Transform_Feedback_API.Varyings_Array (1 .. 2) :=
+--       (To_Unbounded_String ("position_out"),
+--        To_Unbounded_String ("velocity_out"));
+      Varyings_2  : constant Transform_Feedback_API.Varyings_Array (1 .. 1) :=
+        (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
    begin
       Projection_Matrix := GL.Types.Singles.Identity4;
       Render_Projection_Matrix := GL.Types.Singles.Identity4;
@@ -204,21 +204,19 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
-      GL.Objects.Programs.Use_Program (Update_Program);
---        Feedback.Transform_Feedback_Varyings (Update_Program, 2,
---                                              Transform_Feedback_API.Varyings_Array (Varyings),
---                                              Transform_Feedback_API.GL_Interleaved_Attribs);
+--        Feedback.Transform_Feedback_Varyings (Update_Program, 2, Varyings,
+--                                              GL.Objects.Programs.Interleaved_Attribs);
 
-      Feedback.Transform_Feedback_Varyings (Update_Program, Varyings_2'Length,
-                                            Transform_Feedback_API.Varyings_Array (Varyings_2),
-                                            Transform_Feedback_API.GL_Interleaved_Attribs);
-
+      Feedback.Transform_Feedback_Varyings (Render_Program, 1, Varyings_2,
+                                            GL.Objects.Programs.Interleaved_Attribs);
       Put_Line ("Setup, returned from Transform_Feedback_Varying");
-      GL.Objects.Programs.Link (Update_Program);
-      if GL.Objects.Programs.Link_Status (Update_Program) then
+
+      GL.Objects.Programs.Link (Render_Program);
+      if GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Update_Program Link failed");
       end if;
-         Put_Line ("Setup, Update_Program link checked");
+      Put_Line ("Setup, Update_Program link checked");
+
       GL.Objects.Programs.Validate (Render_Program);
          Put_Line ("Setup, Render_Program validated");
       Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
