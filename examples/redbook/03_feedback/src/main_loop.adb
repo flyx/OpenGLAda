@@ -1,7 +1,7 @@
 
 
 with Ada.Numerics.Float_Random;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+--  with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Interfaces.C.Pointers;
@@ -28,9 +28,8 @@ with Maths;
 with Program_Loader;
 with Utilities;
 
-with Feedback;
 with Load_VB_Object;
-with Transform_Feedback_API;
+
 --  with Vertex_Data;
 
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
@@ -59,7 +58,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
-     type Varyings_Length_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
+--       type Varyings_Length_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
 --     type Varyings_Length_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
    Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
@@ -153,11 +152,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Feedback.Begin_Transform_Feedback (Triangles);
 --        Load_VB_Object.Render (VBM_Object);
 --        Feedback.End_Transform_Feedback;
-      Put_Line ("Main_Loop.Display returned from End_Transform_Feedback.");
+--        Put_Line ("Main_Loop.Display returned from End_Transform_Feedback.");
 
       Model_Matrix := Identity4;
       GL.Objects.Programs.Use_Program (Render_Program);
-      Put_Line ("Main_Loop.Display returned from Use_Program.");
+--        Put_Line ("Main_Loop.Display returned from Use_Program.");
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
 --        GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
@@ -191,8 +190,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --     Varyings   : constant Transform_Feedback_API.Varyings_Array (1 .. 2) :=
 --       (To_Unbounded_String ("position_out"),
 --        To_Unbounded_String ("velocity_out"));
-      Varyings_2  : constant Transform_Feedback_API.Varyings_Array (1 .. 1) :=
-        (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
+--        Varyings_2  : constant Transform_Feedback_API.Varyings_Array (1 .. 1) :=
+--          (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
    begin
       Projection_Matrix := GL.Types.Singles.Identity4;
       Render_Projection_Matrix := GL.Types.Singles.Identity4;
@@ -207,15 +206,16 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Feedback.Transform_Feedback_Varyings (Update_Program, 2, Varyings,
 --                                              GL.Objects.Programs.Interleaved_Attribs);
 
-      Feedback.Transform_Feedback_Varyings (Render_Program, 1, Varyings_2,
-                                            GL.Objects.Programs.Interleaved_Attribs);
+--        Feedback.Transform_Feedback_Varyings (Render_Program, 1, Varyings_2,
+--                                              GL.Objects.Programs.Interleaved_Attribs);
+      GL.Objects.Programs.Transform_Feedback_Varyings_Test (Render_Program);
       Put_Line ("Setup, returned from Transform_Feedback_Varying");
 
       GL.Objects.Programs.Link (Render_Program);
       if GL.Objects.Programs.Link_Status (Render_Program) then
-         Put_Line ("Setup, Update_Program Link failed");
+         Put_Line ("Setup, Render_Program Link failed");
       end if;
-      Put_Line ("Setup, Update_Program link checked");
+      Put_Line ("Setup, Render_Program link checked");
 
       GL.Objects.Programs.Validate (Render_Program);
          Put_Line ("Setup, Render_Program validated");
