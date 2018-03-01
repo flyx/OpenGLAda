@@ -41,20 +41,20 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    end record;
 
    type Buffer_Array is array (UInt range <>) of aliased PV_Buffer;
-   --     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
+--     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
 
    package Buffer_Pointers_Package is new
      Interfaces.C.Pointers (UInt, PV_Buffer, Buffer_Array,
                             ((0.0, 0.0, 0.0, 0.0), (10.0 ** 20, 10.0 ** 20, 10.0 ** 20)));
 
-   --     package Texture_Pointers_Package is new
-   --       Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
-   --                              (10.0 ** 20, 10.0 ** 20, 10.0 ** 20, 10.0 ** 20));
+--     package Texture_Pointers_Package is new
+--          Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
+--                                 (10.0 ** 20, 10.0 ** 20, 10.0 ** 20, 10.0 ** 20));
 
 --     procedure Load_Transform_Buffer is new
 --       GL.Objects.Buffers.Load_To_Buffer (Buffer_Pointers_Package);
-   --     procedure Load_Texture_Buffer is new
-   --       GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
+--     procedure Load_Texture_Buffer is new
+--          GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
 
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
@@ -62,16 +62,18 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --       type Varyings_Length_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
 --     type Varyings_Length_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
 
+   Vec3_Size           : constant UInt := GL.Types.Singles.Vector3'Size / 8;
+   Vec4_Size           : constant UInt := GL.Types.Singles.Vector4'Size / 8;
    Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
-   Vertex_Arrays       : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffers      : array (1 .. 2) of GL.Objects.Buffers.Buffer;
-   VBM_Object          : Load_VB_Object.VB_Object;
-   Geometry_VBO        : GL.Objects.Buffers.Buffer;
-   Geometry_Texture    : GL.Objects.Buffers.Buffer;
-   Render_Vertex_Array : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Point_Count         : constant UInt := 5000;
+   Vertex_Arrays               : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Vertex_Buffers              : array (1 .. 2) of GL.Objects.Buffers.Buffer;
+   VBM_Object                  : Load_VB_Object.VB_Object;
+   Geometry_VBO                : GL.Objects.Buffers.Buffer;
+   Geometry_Texture            : GL.Objects.Buffers.Buffer;
+   Render_VAO                  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Point_Count                 : constant UInt := 5000;
    Triangle_Count              : constant UInt := 0;
    Time_Step                   : constant UInt := 0;
    Model_Matrix_ID             : GL.Uniforms.Uniform;
@@ -80,14 +82,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Time_Step_ID                : GL.Uniforms.Uniform;
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
-   Model_Matrix                :  Singles.Matrix4 := GL.Types.Singles.Identity4;
-   Render_Model_Matrix         : Singles.Matrix4 := GL.Types.Singles.Identity4;
+   Model_Matrix                : Singles.Matrix4 := GL.Types.Singles.Identity4;
    Projection_Matrix           : Singles.Matrix4;
-   Render_Projection_Matrix    : Singles.Matrix4 := GL.Types.Singles.Identity4;
    Render_Program              : GL.Objects.Programs.Program;
    Update_Program              : GL.Objects.Programs.Program;
    Buffer                      : aliased Buffer_Array (1 .. Point_Count);
-   Buffer_Pointer              : Buffer_Pointers_Package.Pointer := Buffer'Access;
+   Buffer_Pointer              : Buffer_Pointers_Package.Pointer;
    --     T_Buffer             : Texture_Array (1 .. Point_Count);
    Frame_Count                 : UInt := 0;
 
@@ -144,10 +144,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Buffers.Set_Depth_Function (LEqual);
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Render_Model_Matrix);
+      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
 
-      Render_Vertex_Array.Bind;
+      Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
@@ -156,7 +156,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Model_Matrix := Identity4;
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Render_Projection_Matrix);
+      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
       GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
       --
@@ -252,14 +252,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       for index in Vertex_Buffers'Range loop
          Transform_Feedback_Buffer.Bind (Vertex_Buffers (index));
          Transform_Feedback_Buffer.Allocate
-         (Long (Point_Count * (Vector4'Size / 8) + (Vector3'Size / 8)), Dynamic_Copy);
+         (Long (Point_Count * Vec4_Size + Vec3_Size), Dynamic_Copy);
 
          if index = Vertex_Buffers'First then
             Map_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
-            for i2 in 1 .. Point_Count loop
+            for B_Index in 1 .. Point_Count loop
                Velocity := Random_Vector;
-               Buffer (i2).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 1.0);
-               Buffer (i2).Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
+               Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 1.0);
+               Buffer (B_Index).Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
                                         0.3 * Velocity (GL.Z));
             end loop;
             Unmap (Transform_Feedback_Buffer);
@@ -268,8 +268,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Vertex_Arrays (index).Bind;
          Array_Buffer.Bind (Vertex_Buffers (index));
 
-         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (0, 4, Single_Type, Int (Vec4_Size + Vec3_Size), 0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (1, 3, Single_Type,  Int (Vec4_Size + Vec3_Size), Int (Vec4_Size));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
       end loop;
@@ -277,12 +279,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
-      --        Load_Texture_Buffer (Texture_Buffer, Point_Count, Dynamic_Copy);
+      Texture_Buffer_Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
+                               Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
 
-      Render_Vertex_Array.Initialize_Id;
-      GL.Objects.Vertex_Arrays.Bind (Render_Vertex_Array);
+      Render_VAO.Initialize_Id;
+      GL.Objects.Vertex_Arrays.Bind (Render_VAO);
       Array_Buffer.Bind (Geometry_VBO);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
