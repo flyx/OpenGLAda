@@ -64,7 +64,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    Vec3_Size           : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size           : constant UInt := GL.Types.Singles.Vector4'Size / 8;
-   Black               : constant GL.Types.Colors.Color := (0.0, 0.0, 0.0, 1.0);
+   Background          : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
    Vertex_Arrays               : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -75,7 +75,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Render_VAO                  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Point_Count                 : constant UInt := 5000;
    Triangle_Count              : constant UInt := 0;
-   Time_Step                   : constant UInt := 0;
+   Last_Time                   : Float := 0.0;  --  q
+--     Time_Step                   : constant UInt := 0;
    Model_Matrix_ID             : GL.Uniforms.Uniform;
    Projection_Matrix_ID        : GL.Uniforms.Uniform;
    Triangle_Count_ID           : GL.Uniforms.Uniform;
@@ -121,7 +122,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Height : Glfw.Size;
       Aspect        : Single;
       Current_Time  : Float;
---        q             : Float := 0.0;
 --        X             : Vector3 := (1.0, 0.0, 0.0);
 --        Y             : Vector3 := (0.0, 1.0, 0.0);
 --        Z             : Vector3 := (0.0, 0.0, 1.0);
@@ -131,6 +131,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Aspect := Single (Window_Height) / Single (Window_Width);
+
       Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, 1.0, 5000.0,
                                    Projection_Matrix);
       Projection_Matrix := Translation_Matrix ((0.0, 0.0, -100.0)) *
@@ -145,7 +146,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
 
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
@@ -154,11 +155,18 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
 
+      GL.Objects.Programs.Use_Program (Update_Program);
       Model_Matrix := Identity4;
+
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
-      GL.Uniforms.Set_UInt (Time_Step_ID, Time_Step);
+
+      if Current_Time > Last_Time then
+         GL.Uniforms.Set_Single (Time_Step_ID,
+                                 2000.0 * Single (Current_Time - Last_Time));
+      end if;
+      Last_Time := Current_Time;
       --
       --        GL.Attributes.Enable_Vertex_Attrib_Array (0);
       --
@@ -173,10 +181,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
       GL.Objects.Programs.Begin_Transform_Feedback (Points);
-         Put_Line ("Main_Loop.Display, Frame_Count" & UInt'Image (Frame_Count));
       GL.Objects.Vertex_Arrays.Draw_Arrays
         (Points, 1, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
-      Put_Line ("Main_Loop.Display, Frame_Count / 8" & UInt'Image (Frame_Count / 8));
       GL.Objects.Programs.End_Transform_Feedback;
 
       if Frame_Count > 5000 then
@@ -184,6 +190,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       else
          Frame_Count := Frame_Count + 1;
       end if;
+
    exception
       when  others =>
          Put_Line ("An exception occurred in Main_Loop.Display.");
@@ -291,7 +298,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
-      Utilities.Clear_Background_Colour_And_Depth (Black);
+      Utilities.Clear_Background_Colour_And_Depth (Background);
 
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
