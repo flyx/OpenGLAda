@@ -74,11 +74,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Geometry_Texture            : GL.Objects.Buffers.Buffer;
    Render_VAO                  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Point_Count                 : constant UInt := 5000;
-   Triangle_Count              : constant UInt := 0;
+--     Triangle_Count              : constant UInt := 0;
    Last_Time                   : Float := 0.0;  --  q
 --     Time_Step                   : constant UInt := 0;
-   Model_Matrix_ID             : GL.Uniforms.Uniform;
-   Projection_Matrix_ID        : GL.Uniforms.Uniform;
+   Model_Matrix_ID      : GL.Uniforms.Uniform;
+   Projection_Matrix_ID : GL.Uniforms.Uniform;
    Triangle_Count_ID           : GL.Uniforms.Uniform;
    Time_Step_ID                : GL.Uniforms.Uniform;
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
@@ -150,17 +150,30 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
+      Put_Line ("Main_Loop.Display, Geometry_VBO bound");
 
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
+      Put_Line ("Main_Loop.Display, End_Transform_Feedback");
 
-      GL.Objects.Programs.Use_Program (Update_Program);
       Model_Matrix := Identity4;
+      GL.Objects.Programs.Use_Program (Update_Program);
+      if not GL.Objects.Programs.Link_Status (Update_Program) then
+         Put_Line ("Display, Update_Program Link failed");
+      else
+         Put_Line ("Display, Update_Program Link OK");
+      end if;
+      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+      Put_Line ("Main_Loop.Display, Model_Matrix_ID set");
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      GL.Uniforms.Set_UInt (Triangle_Count_ID, Triangle_Count);
+      Put_Line ("Main_Loop.Display, Projection_Matrix_ID set");
+      GL.Uniforms.Set_UInt (Triangle_Count_ID,
+                            Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
+
+      Put_Line ("Main_Loop.Display, Triangle_Count_ID set");
 
       if Current_Time > Last_Time then
          GL.Uniforms.Set_Single (Time_Step_ID,
@@ -208,9 +221,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       Velocity   : Vector3;
       VBM_Result : Boolean;
-      Varyings   : constant Varyings_Array (1 .. 2) :=
-        (To_Unbounded_String ("position_out"),
-         To_Unbounded_String ("velocity_out"));
+      Varyings   : constant Varyings_Array (1 .. 1) :=
+        (Varyings_Length_1'First => To_Unbounded_String ("position_out"));
+--          (To_Unbounded_String ("position_out"),
+--           To_Unbounded_String ("velocity_out"));
       Varyings_2  : constant Varyings_Length_1 :=
         (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
    begin
@@ -218,25 +232,27 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
-      Transform_Feedback_Varyings (Update_Program, 2, Varyings, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Update_Program, 1, Varyings, Interleaved_Attribs);
       GL.Objects.Programs.Link (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
       end if;
       Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
+      GL.Objects.Programs.Use_Program  (Update_Program);
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "model_matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "projection_matrix");
+      Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "triangle_count");
+      Time_Step_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "time_step");
+      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
+
       Render_Program := Program_From
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
-
-      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "model_matrix");
-      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "projection_matrix");
-      Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "triangle_count");
-      Time_Step_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "time_step");
 
       Transform_Feedback_Varyings (Render_Program, 1, Varyings_2, Interleaved_Attribs);
       GL.Objects.Programs.Link (Render_Program);
@@ -245,11 +261,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
       Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
 
+      GL.Objects.Programs.Use_Program  (Render_Program);
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "model_matrix");
       Render_Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
-      Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
 
       Vertex_Arrays (1).Initialize_Id;
       Vertex_Arrays (2).Initialize_Id;
