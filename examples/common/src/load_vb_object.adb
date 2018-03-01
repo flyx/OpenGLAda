@@ -39,6 +39,24 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 0) return UInt is
+      Count : UInt := 0;
+      Frame : VBM_Frame_Header;
+   begin
+      if Frame_Index < Object.Header.Num_Frames then
+         Frame := Object.Frames.Element (Integer (Frame_Index));
+         Count := Frame.Count;
+      end if;
+      return Count;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Get_Vertex_Count.");
+         raise;
+   end Get_Vertex_Count;
+
+   --  ------------------------------------------------------------------------
+
    procedure Load_Buffer (Object : in out VB_Object; Image : Image_Data) is
       use GL.Objects.Buffers;
    begin
