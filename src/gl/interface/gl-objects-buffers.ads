@@ -34,6 +34,9 @@ package GL.Objects.Buffers is
    -- Use this instead of Load_To_Buffer when you don't want to copy any data
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
                        Usage  : Buffer_Usage);
+   procedure Texture_Buffer_Allocate (Target : Texture_Buffer_Target;
+                                      Number_Of_Bytes : Long;
+                                      Usage  : Buffer_Usage);
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
                        Object : Buffer'Class);

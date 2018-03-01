@@ -111,6 +111,14 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Allocate;
 
+    procedure Texture_Buffer_Allocate (Target : Texture_Buffer_Target; Number_Of_Bytes : Long;
+      Usage  : Buffer_Usage) is
+   begin
+      API.Texture_Buffer_Allocate (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
+                                   System.Null_Address, Usage);
+      Raise_Exception_On_OpenGL_Error;
+   end Texture_Buffer_Allocate;
+
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
                        Object : Buffer'Class) is
