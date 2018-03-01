@@ -16,7 +16,7 @@ package GL.Objects.Programs is
    subtype Subroutine_Index_Type is UInt;
    subtype Uniform_Location_Type is Int range -1 .. Int'Last;
 
-   type Varyings_Array is array (Integer range <>) of
+   type Varyings_Array is array (UInt range <>) of
      Ada.Strings.Unbounded.Unbounded_String;
 
    Unknown_Variable_Name : exception;
