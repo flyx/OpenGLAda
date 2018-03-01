@@ -216,6 +216,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
       end if;
+      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
+
+      Render_Program := Program_From
+        ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "model_matrix");
@@ -225,17 +230,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "triangle_count");
       Time_Step_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "time_step");
-      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
-
-      Render_Program := Program_From
-        ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
       Transform_Feedback_Varyings (Render_Program, 1, Varyings_2, Interleaved_Attribs);
       GL.Objects.Programs.Link (Render_Program);
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
       end if;
+      Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
 
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "model_matrix");
