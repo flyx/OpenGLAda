@@ -17,7 +17,7 @@ package Load_VB_Object is
    type Material_Texture is private;
    type VB_Object is private;
 
-   function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return UInt;
+   function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return Int;
    procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);

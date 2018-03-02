@@ -43,7 +43,7 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return UInt is
+   function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return Int is
       Count : UInt := 0;
       Frame : VBM_Frame_Header;
    begin
@@ -51,7 +51,7 @@ package body Load_VB_Object is
          Frame := Object.Frames.Element (Integer (Frame_Index));
          Count := Frame.Count;
       end if;
-      return Count;
+      return Int (Count);
 
    exception
       when others =>
@@ -112,7 +112,6 @@ package body Load_VB_Object is
          Image :  Image_Data (1 .. Image_Data_Size);
       begin
          Load_Image (File_ID, Data_Stream, Image, Byte_Count);
-         --  Load image
          Load_Buffer (VBM_Object, Image);
          Set_Attributes (Header, Attributes_Header,
                          Vertex_Index, Normal_Index, Tex_Coord0_Index);

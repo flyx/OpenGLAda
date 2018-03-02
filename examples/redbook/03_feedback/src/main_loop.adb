@@ -90,7 +90,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Buffer                      : aliased Buffer_Array (1 .. Point_Count);
    Buffer_Pointer              : Buffer_Pointers_Package.Pointer;
    --     T_Buffer             : Texture_Array (1 .. Point_Count);
-   Frame_Count                 : UInt := 0;
+   Frame_Count                 : UInt := 1;
 
    --  ------------------------------------------------------------------------
 
@@ -170,7 +170,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Put_Line ("Main_Loop.Display, Model_Matrix_ID set");
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       Put_Line ("Main_Loop.Display, Projection_Matrix_ID set");
-      GL.Uniforms.Set_UInt (Triangle_Count_ID,
+      Put_Line ("Main_Loop.Display, Vertex_Count: " &
+                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
+      GL.Uniforms.Set_Int (Triangle_Count_ID,
                             Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
 
       Put_Line ("Main_Loop.Display, Triangle_Count_ID set");
