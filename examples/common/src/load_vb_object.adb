@@ -294,6 +294,7 @@ package body Load_VB_Object is
    procedure Render (VBM_Object : in out VB_Object;
                      Frame_Index, Instances : UInt := 0) is
       use GL.Objects.Buffers;
+      use GL.Objects.Vertex_Arrays;
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index < VBM_Object.Header.Num_Frames then
@@ -310,7 +311,7 @@ package body Load_VB_Object is
             if VBM_Object.Header.Num_Indices > 0 then
                null;
             else
-               null;
+               Draw_Arrays (Triangles, Int (Frame.First), Int (Frame.Count));
             end if;
          end if;
       end if;
