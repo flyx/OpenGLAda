@@ -62,6 +62,10 @@ private
       Count           : UInt := 0;
    end record;
 
+   package Chunk_Package is new
+     Ada.Containers.Vectors (Positive, VBM_Render_Chunk);
+   type Chunk_List is new Chunk_Package.Vector with null record;
+
    type VBM_Vec2F is record
       X  : Float := 0.0;
       Y  : Float := 0.0;
@@ -95,6 +99,10 @@ private
       Normal_Map         : String (1 .. 64);
    end record;
 
+   package Materials_Package is new
+     Ada.Containers.Vectors (Positive, VBM_Material);
+   type Materials_List is new Materials_Package.Vector with null record;
+
    type Material_Texture is record
       Diffuse  : UInt := 0;
       Specular : UInt := 0;
@@ -103,7 +111,6 @@ private
    package Material_Textures_Package is new
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
    type Material_Textures is new Material_Textures_Package.List with null record;
-
 
    package Frame_Package is new
      Ada.Containers.Vectors (Positive, VBM_Frame_Header);
@@ -116,9 +123,9 @@ private
       Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Attribute_Buffer   : GL.Objects.Buffers.Buffer;
       Indices            : GL.Objects.Buffers.Buffer;
-      Material           : VBM_Material;
-      Render_Chunk       : VBM_Render_Chunk;
-      Texture_List       : Material_Textures;
+      Material           : Materials_List;
+      Render_Chunk       : Chunk_List;
+      Texture_List       : Materials_List;
    end record;
 
 end Load_VB_Object;
