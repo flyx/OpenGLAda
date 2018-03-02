@@ -37,9 +37,9 @@ package body Load_VB_Object is
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
                               Byte_Count    : in out UInt);
-   procedure Set_Attributes (Header : VBM_Header;
-                             Attributes_Header : VBM_Attributes_Header;
-                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
+   procedure Load_Attributes (Header : VBM_Header;
+                              Attributes_Header : VBM_Attributes_Header;
+                              Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
 
    --  ------------------------------------------------------------------------
 
@@ -113,8 +113,8 @@ package body Load_VB_Object is
       begin
          Load_Image (File_ID, Data_Stream, Image, Byte_Count);
          Load_Buffer (VBM_Object, Image);
-         Set_Attributes (Header, Attributes_Header,
-                         Vertex_Index, Normal_Index, Tex_Coord0_Index);
+         Load_Attributes (Header, Attributes_Header,
+                          Vertex_Index, Normal_Index, Tex_Coord0_Index);
          Load_Indices (Data_Stream, Header, VBM_Object);
          GL.Objects.Vertex_Arrays.Bind
            (GL.Objects.Vertex_Arrays.Null_Array_Object);
@@ -195,6 +195,7 @@ package body Load_VB_Object is
          when others =>
             Put_Line ("Load_VB_Object.Set_Indices, invalid Index_Type.");
          end case;
+
          Element_Data_Size := Header.Num_Indices * Element_Size;
          Object.Indices.Initialize_Id;
          Element_Array_Buffer.Bind (Object.Indices);
@@ -322,9 +323,9 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Attributes (Header : VBM_Header;
-                             Attributes_Header : VBM_Attributes_Header;
-                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+   procedure Load_Attributes (Header : VBM_Header;
+                              Attributes_Header : VBM_Attributes_Header;
+                              Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;
       Data_Size       : Int := 0;
@@ -351,9 +352,9 @@ package body Load_VB_Object is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Attributes.");
          raise;
-   end Set_Attributes;
+   end Load_Attributes;
 
    --  ------------------------------------------------------------------------
 
