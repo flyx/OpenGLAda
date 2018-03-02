@@ -150,32 +150,24 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
-      Put_Line ("Main_Loop.Display, Geometry_VBO bound");
 
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
-      Put_Line ("Main_Loop.Display, End_Transform_Feedback");
 
       Model_Matrix := Identity4;
       GL.Objects.Programs.Use_Program (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Display, Update_Program Link failed");
-      else
-         Put_Line ("Display, Update_Program Link OK");
       end if;
       Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
-      Put_Line ("Main_Loop.Display, Model_Matrix_ID set");
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Put_Line ("Main_Loop.Display, Projection_Matrix_ID set");
       Put_Line ("Main_Loop.Display, Vertex_Count: " &
                 Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       GL.Uniforms.Set_Int (Triangle_Count_ID,
                             Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
-
-      Put_Line ("Main_Loop.Display, Triangle_Count_ID set");
 
       if Current_Time > Last_Time then
          GL.Uniforms.Set_Single (Time_Step_ID,
@@ -223,10 +215,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       Velocity   : Vector3;
       VBM_Result : Boolean;
-      Varyings   : constant Varyings_Array (1 .. 1) :=
-        (Varyings_Length_1'First => To_Unbounded_String ("position_out"));
---          (To_Unbounded_String ("position_out"),
---           To_Unbounded_String ("velocity_out"));
+      Varyings   : constant Varyings_Array (1 .. 2) :=
+        (To_Unbounded_String ("position_out"),
+         To_Unbounded_String ("velocity_out"));
       Varyings_2  : constant Varyings_Length_1 :=
         (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
    begin
@@ -234,7 +225,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
-      Transform_Feedback_Varyings (Update_Program, 1, Varyings, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Update_Program, 2, Varyings, Interleaved_Attribs);
       GL.Objects.Programs.Link (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");

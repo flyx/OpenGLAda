@@ -201,7 +201,6 @@ package body GL.Objects.Programs is
       Vary_Ptr     : chars_ptr;
    begin
       for index in Varyings'Range loop
-         Interfaces.C.Strings.Free (Vary_Ptr);
          Vary_Ptr :=  New_String (To_String (Varyings (index)));
          C_Varyings (Interfaces.C.size_t (index)) := Vary_Ptr;
       end loop;
