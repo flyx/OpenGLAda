@@ -137,7 +137,6 @@ package body Load_VB_Object is
       Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
       Header            : VBM_Header;
       Attributes_Header : VBM_Attributes_Header;
-      Attributes        : Attribute_List;
       Image_Data_Size   : UInt := 0;
       Byte_Count        : UInt := 0;
    begin
@@ -152,9 +151,9 @@ package body Load_VB_Object is
       Load_VBM_Header (Data_Stream, Header, Byte_Count);
       for count in 1 .. Header.Num_Attributes loop
          Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
-         Attributes.Append (Attributes_Header);
          Image_Data_Size := Image_Data_Size +
            Attributes_Header.Components * Header.Num_Vertices * Float_Size;
+         VBM_Object.Attribute_Headers.Append (Attributes_Header);
       end loop;
 
       declare

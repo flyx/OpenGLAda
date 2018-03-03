@@ -52,7 +52,7 @@ private
 
    package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
      (VBM_Attributes_Header);
-   type Attribute_List is new Attribute_Package.List with null record;
+   type Attribute_Headers_List is new Attribute_Package.List with null record;
 
 
    type VBM_Frame_Header is record
@@ -123,7 +123,7 @@ private
 
    type VB_Object is record
       Header             : VBM_Header;
-      Attribute_Header   : VBM_Attributes_Header;
+      Attribute_Headers  : Attribute_Headers_List;
       Frames             : Frame_List;
       Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Attribute_Buffer   : GL.Objects.Buffers.Buffer;
