@@ -121,13 +121,20 @@ private
      Ada.Containers.Vectors (Positive, VBM_Frame_Header);
    type Frame_List is new Frame_Package.Vector with null record;
 
-   type VB_Object is record
+   Max_Frames : Positive := 10;
+   subtype Num_Frames_Range is Positive range 1 .. Max_Frames;
+   type VAO_List is array (Num_Frames_Range range <>) of
+     GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   type Buffer_List is array (Num_Frames_Range range <>) of
+     GL.Objects.Buffers.Buffer;
+
+   type VB_Object (Num_Frames : Positive := 1) is record
       Header             : VBM_Header;
       Attribute_Headers  : Attribute_Headers_List;
       Frames             : Frame_List;
-      Vertex_Array       : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Attribute_Buffer   : GL.Objects.Buffers.Buffer;
-      Indices            : GL.Objects.Buffers.Buffer;
+      Vertex_Arrays      : VAO_List (1 .. Num_Frames);
+      Attribute_Buffer   : Buffer_List (1 .. Num_Frames);
+      Indices            : Buffer_List (1 .. Num_Frames);
       Material           : Materials_List;
       Render_Chunk       : Chunk_List;
       Texture_List       : Materials_List;
