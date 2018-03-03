@@ -9,10 +9,6 @@ with GL.Attributes;
 
 package body Load_VB_Object is
 
-   package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
-     (VBM_Attributes_Header);
-   type Attribute_List is new Attribute_Package.List with null record;
-
    type Image_Data is array (UInt range <>) of aliased UByte;
    package Image_Data_Pointers is new
      Interfaces.C.Pointers (UInt, UByte, Image_Data, 0);

@@ -50,6 +50,11 @@ private
       Flags          : UInt := 0;
    end record;
 
+   package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
+     (VBM_Attributes_Header);
+   type Attribute_List is new Attribute_Package.List with null record;
+
+
    type VBM_Frame_Header is record
       First  : UInt := 0;
       Count  : UInt := 0;
