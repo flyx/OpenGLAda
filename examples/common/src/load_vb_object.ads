@@ -18,7 +18,7 @@ package Load_VB_Object is
    type VB_Object is private;
 
    function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return Int;
-   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
+   procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
    procedure Render (VBM_Object : in out VB_Object;
@@ -58,7 +58,7 @@ private
    type VBM_Frame_Header is record
       First  : UInt := 0;
       Count  : UInt := 0;
-      Flags  : VBM_Flags;
+      Flags  : UInt := 0;
    end record;
 
    type VBM_Render_Chunk is record
@@ -117,11 +117,11 @@ private
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
    type Material_Textures is new Material_Textures_Package.List with null record;
 
-   package Frame_Package is new
+   package Frame_Headers_Package is new
      Ada.Containers.Vectors (Positive, VBM_Frame_Header);
-   type Frame_List is new Frame_Package.Vector with null record;
+   type Frame_Headers_List is new Frame_Headers_Package.Vector with null record;
 
-   Max_Frames : Positive := 10;
+   Max_Frames : Positive := 10000;
    subtype Num_Frames_Range is Positive range 1 .. Max_Frames;
    type VAO_List is array (Num_Frames_Range range <>) of
      GL.Objects.Vertex_Arrays.Vertex_Array_Object;
@@ -131,9 +131,9 @@ private
    type VB_Object (Num_Frames : Positive := 1) is record
       Header             : VBM_Header;
       Attribute_Headers  : Attribute_Headers_List;
-      Frames             : Frame_List;
+      Frame_Headers      : Frame_Headers_List;
       Vertex_Arrays      : VAO_List (1 .. Num_Frames);
-      Attribute_Buffer   : Buffer_List (1 .. Num_Frames);
+      Attribute_Buffers  : Buffer_List (1 .. Num_Frames);
       Indices            : Buffer_List (1 .. Num_Frames);
       Material           : Materials_List;
       Render_Chunk       : Chunk_List;

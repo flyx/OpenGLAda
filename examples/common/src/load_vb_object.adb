@@ -20,9 +20,9 @@ package body Load_VB_Object is
    Float_Size    : constant UInt := Float'Size / 8;
    UShort_Size   : constant UInt := UShort'Size / 8;
 
-   procedure Load_Image (File_ID     : Ada.Streams.Stream_IO.File_Type;
-                         Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                         Image : out Image_Data; Byte_Count : in out UInt);
+   procedure Load_Image_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
+                              Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                              Image : out Image_Data; Byte_Count : in out UInt);
 
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                            Header : VBM_Header;
@@ -38,7 +38,7 @@ package body Load_VB_Object is
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index <= Object.Header.Num_Frames then
-         Frame := Object.Frames.Element (Integer (Frame_Index));
+         Frame := Object.Frame_Headers.Element (Integer (Frame_Index));
          Count := Frame.Count;
       end if;
       return Int (Count);
@@ -75,12 +75,12 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Attributes (Header : VBM_Header;
-                              Attributes_Header : VBM_Attributes_Header;
-                              Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+   procedure Load_Attribute_Data (Header : VBM_Header;
+                                  Attributes_Header : VBM_Attributes_Header;
+                                  Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;
-      Data_Size       : Int := 0;
+      Total_Data_Size : Int := 0;
    begin
       for Index in 1 .. Header.Num_Attributes loop
          Attribute_Index := Attribute (Index - 1);
@@ -96,27 +96,27 @@ package body Load_VB_Object is
            (Index  => Attribute_Index,
             Count  => Int (Attributes_Header.Components),
             Kind   => Attributes_Header.Attribute_Type,
-            Stride => 0, Offset => Data_Size);
+            Stride => 0, Offset => Total_Data_Size);
          GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
-         Data_Size := Data_Size + Int (Attributes_Header.Components *
-                                         Header.Num_Vertices * Float_Size);
+         Total_Data_Size := Total_Data_Size +
+           Int (Attributes_Header.Components * Header.Num_Vertices * Float_Size);
       end loop;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Load_Attributes.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Attribute_Data.");
          raise;
-   end Load_Attributes;
+   end Load_Attribute_Data;
 
    --  ------------------------------------------------------------------------
 
    procedure Load_Buffer (Object : in out VB_Object; Image : Image_Data) is
       use GL.Objects.Buffers;
    begin
-      Object.Vertex_Array.Initialize_Id;
-      Object.Vertex_Array.Bind;
-      Object.Attribute_Buffer.Initialize_Id;
-      Array_Buffer.Bind (Object.Attribute_Buffer);
+      Object.Vertex_Arrays (1).Initialize_Id;
+      Object.Vertex_Arrays (1).Bind;
+      Object.Attribute_Buffers (1).Initialize_Id;
+      Array_Buffer.Bind (Object.Attribute_Buffers (1));
 
       Load_Data (Array_Buffer, Image, Static_Draw);
 
@@ -128,17 +128,38 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
+   procedure Load_Frame_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                                Header        : out VBM_Frame_Header;
+                                Byte_Count    : in out UInt) is
+      use Ada.Streams.Stream_IO;
+   begin
+      UInt'Read (Header_Stream, Header.First);
+      Byte_Count := Byte_Count + UInt_Size;
+      UInt'Read (Header_Stream, Header.Count);
+      Byte_Count := Byte_Count + UInt_Size;
+      UInt'Read (Header_Stream, Header.Flags);
+      Byte_Count := Byte_Count + UInt_Size;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Frame_Header.");
+         raise;
+   end Load_Frame_Header;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean) is
       use Ada.Streams.Stream_IO;
 
-      File_ID           : Ada.Streams.Stream_IO.File_Type;
-      Data_Stream       : Ada.Streams.Stream_IO.Stream_Access;
-      Header            : VBM_Header;
-      Attributes_Header : VBM_Attributes_Header;
-      Image_Data_Size   : UInt := 0;
-      Byte_Count        : UInt := 0;
+      File_ID             : Ada.Streams.Stream_IO.File_Type;
+      Data_Stream         : Ada.Streams.Stream_IO.Stream_Access;
+      Header              : VBM_Header;
+      Attributes_Header   : VBM_Attributes_Header;
+      Frame_Header        : VBM_Frame_Header;
+      Image_Data_Size     : UInt := 0;
+      Byte_Count          : UInt := 0;
    begin
       if Vertex_Index = 0 and Normal_Index = 0 and Tex_Coord0_Index = 0 then
          Put_Line ("Load_From_VBM; all indices are 0");
@@ -149,25 +170,37 @@ package body Load_VB_Object is
       Data_Stream := Stream (File_ID);
 
       Load_VBM_Header (Data_Stream, Header, Byte_Count);
+      declare
+         Object : VB_Object (Positive (Header.Num_Frames));
+      begin
+      --  Load attribute headers
       for count in 1 .. Header.Num_Attributes loop
          Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
+         Object.Attribute_Headers.Append (Attributes_Header);
          Image_Data_Size := Image_Data_Size +
            Attributes_Header.Components * Header.Num_Vertices * Float_Size;
-         VBM_Object.Attribute_Headers.Append (Attributes_Header);
       end loop;
 
-      declare
-         Image :  Image_Data (1 .. Image_Data_Size);
-      begin
-         Load_Image (File_ID, Data_Stream, Image, Byte_Count);
-         Load_Buffer (VBM_Object, Image);
-         Load_Attributes (Header, Attributes_Header,
-                          Vertex_Index, Normal_Index, Tex_Coord0_Index);
-         Load_Indices (Data_Stream, Header, VBM_Object);
-         GL.Objects.Vertex_Arrays.Bind
-           (GL.Objects.Vertex_Arrays.Null_Array_Object);
+      --  Load frame headers
+      for count in 1 .. Header.Num_Frames loop
+         Load_Frame_Header (Data_Stream, Frame_Header, Byte_Count);
+         Object.Frame_Headers.Append (Frame_Header);
+      end loop;
+
+         declare
+            Image :  Image_Data (1 .. Image_Data_Size);
+         begin
+            Load_Image_Data (File_ID, Data_Stream, Image, Byte_Count);
+            Load_Buffer (Object, Image);
+            Load_Attribute_Data (Header, Attributes_Header,
+                                 Vertex_Index, Normal_Index, Tex_Coord0_Index);
+            Load_Indices (Data_Stream, Header, Object);
+            GL.Objects.Vertex_Arrays.Bind
+              (GL.Objects.Vertex_Arrays.Null_Array_Object);
+         end;
+         Close (File_ID);
+         VBM_Object := Object;
       end;
-      Close (File_ID);
       Result := True;
       New_Line;
 
@@ -183,9 +216,9 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Image (File_ID     : Ada.Streams.Stream_IO.File_Type;
-                         Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                         Image : out Image_Data; Byte_Count : in out UInt) is
+   procedure Load_Image_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
+                              Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                              Image : out Image_Data; Byte_Count : in out UInt) is
    begin
       for Count in UInt range 1 .. Image'Length loop
          Byte_Count := Byte_Count + 1;
@@ -193,15 +226,15 @@ package body Load_VB_Object is
             UByte'Read (Data_Stream, Image (Count));
          else
             Image (Count) := 0;
-            Put_Line ("Load_Attribute_Header EOF reached before Image_Data filled.");
+            Put_Line ("Load_Attribute_Header EOF reached before Image data list filled.");
          end if;
       end loop;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Load_Image.");
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Image_Data.");
          raise;
-   end Load_Image;
+   end Load_Image_Data;
 
    --  ------------------------------------------------------------------------
 
@@ -221,8 +254,8 @@ package body Load_VB_Object is
          end case;
 
          Element_Data_Size := Header.Num_Indices * Element_Size;
-         Object.Indices.Initialize_Id;
-         Element_Array_Buffer.Bind (Object.Indices);
+         Object.Indices (1).Initialize_Id;
+         Element_Array_Buffer.Bind (Object.Indices (1));
          declare
             Indices_Array : Image_Data (1 .. Element_Data_Size);
             Data_Byte     : UByte;
@@ -322,8 +355,8 @@ package body Load_VB_Object is
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index < VBM_Object.Header.Num_Frames then
-         Frame := VBM_Object.Frames.Element (Natural (Frame_Index));
-         VBM_Object.Vertex_Array.Bind;
+         Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
+         VBM_Object.Vertex_Arrays (1).Bind;
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Count,
