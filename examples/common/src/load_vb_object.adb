@@ -173,19 +173,25 @@ package body Load_VB_Object is
       declare
          Object : VB_Object (Positive (Header.Num_Frames));
       begin
-      --  Load attribute headers
-      for count in 1 .. Header.Num_Attributes loop
-         Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
-         Object.Attribute_Headers.Append (Attributes_Header);
-         Image_Data_Size := Image_Data_Size +
-           Attributes_Header.Components * Header.Num_Vertices * Float_Size;
-      end loop;
+         --  Load attribute headers
+         for count in 1 .. Header.Num_Attributes loop
+            Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
+            Object.Attribute_Headers.Append (Attributes_Header);
+            Image_Data_Size := Image_Data_Size +
+              Attributes_Header.Components * Header.Num_Vertices * Float_Size;
+         end loop;
 
-      --  Load frame headers
-      for count in 1 .. Header.Num_Frames loop
-         Load_Frame_Header (Data_Stream, Frame_Header, Byte_Count);
-         Object.Frame_Headers.Append (Frame_Header);
-      end loop;
+         --  Load frame headers
+         for count in 1 .. Header.Num_Frames loop
+            Load_Frame_Header (Data_Stream, Frame_Header, Byte_Count);
+            Object.Frame_Headers.Append (Frame_Header);
+         end loop;
+
+         VBM_Object.Vertex_Arrays (1).Initialize_Id;
+         VBM_Object.Vertex_Arrays (1).Bind;
+
+         VBM_Object.Attribute_Buffers (1).Initialize_Id;
+         GL.Objects.Buffers.Array_Buffer.Bind (VBM_Object.Attribute_Buffers (1));
 
          declare
             Image :  Image_Data (1 .. Image_Data_Size);
