@@ -172,10 +172,12 @@ package body Load_VB_Object is
          use GL.Objects.Buffers;
          Object : VB_Object (Positive (Header.Num_Frames));
       begin
+         Object.Header := Header;
+         VBM_Object := Object;
          --  Load attribute headers
          for count in 1 .. Header.Num_Attributes loop
             Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
-            Object.Attribute_Headers.Append (Attributes_Header);
+            VBM_Object.Attribute_Headers.Append (Attributes_Header);
             Total_Data_Size := Total_Data_Size +
               Attributes_Header.Components * Header.Num_Vertices * Float_Size;
          end loop;
@@ -183,7 +185,7 @@ package body Load_VB_Object is
          --  Load frame headers
          for count in 1 .. Header.Num_Frames loop
             Load_Frame_Header (Data_Stream, Frame_Header, Byte_Count);
-            Object.Frame_Headers.Append (Frame_Header);
+            VBM_Object.Frame_Headers.Append (Frame_Header);
          end loop;
 
          VBM_Object.Vertex_Array_Object.Initialize_Id;
@@ -203,19 +205,18 @@ package body Load_VB_Object is
             --  Load vertices, indices and texture coordinates
             Load_Attribute_Data (Header, Attributes_Header,
                                  Vertex_Index, Normal_Index, Tex_Coord0_Index);
-            Load_Indices (Data_Stream, Header, Object);
+            Load_Indices (Data_Stream, Header, VBM_Object);
 
             -- unbind the current array object
             GL.Objects.Vertex_Arrays.Bind
               (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
-            Load_Materials (Data_Stream, Header, Object);
+            Load_Materials (Data_Stream, Header, VBM_Object);
          end;  --  declare block
          Close (File_ID);
-         VBM_Object := Object;
+
       end;
       Result := True;
-      New_Line;
 
    exception
       when Ada.IO_Exceptions.Name_Error  =>
@@ -384,20 +385,15 @@ package body Load_VB_Object is
          Byte_Count := Byte_Count + UInt_Size;
          UInt'Read (Header_Stream, Head.Num_Frames);
          Byte_Count := Byte_Count + UInt_Size;
-         Put_Line ("Load_VBM_Header Head.Size: " & UInt'Image (Head.Size));
-         Put_Line ("Load_VBM_Header Head.Num_Attributes: " & UInt'Image (Head.Num_Attributes));
-         Put_Line ("Load_VBM_Header Head.Num_Frames: " & UInt'Image (Head.Num_Frames));
          if Header.Magic /= New_Header_Magic then
             UInt'Read (Header_Stream, Head.Num_Chunks);
             Byte_Count := Byte_Count + UInt_Size;
-            Put_Line ("Load_VBM_Header Head.Num_Chunks: " & UInt'Image (Head.Num_Chunks));
          end if;
          UInt'Read (Header_Stream, Head.Num_Vertices);
          Byte_Count := Byte_Count + UInt_Size;
          UInt'Read (Header_Stream, Head.Num_Indices);
          Byte_Count := Byte_Count + UInt_Size;
          UInt'Read (Header_Stream, Index_Type);
-         Put_Line ("Load_VBM_Header Index_Type: " & UInt'Image (Index_Type));
          if Index_Type /= 0 then
             Head.Index_Type := Numeric_Type'Enum_Val (Index_Type);
          end if;
@@ -410,11 +406,6 @@ package body Load_VB_Object is
                Byte_Count := Byte_Count + UInt_Size;
             end if;
          end if;
-         Put_Line ("Load_VBM_Header Head.Num_Vertices: " & UInt'Image (Head.Num_Vertices));
-         Put_Line ("Load_VBM_Header Head.Num_Indices: " & UInt'Image (Head.Num_Indices));
-         Put_Line ("Load_VBM_Header Head.Index_Type: " & Numeric_Type'Image (Head.Index_Type));
-         Put_Line ("Load_VBM_Header Head.Num_Materials: " & UInt'Image (Head.Num_Materials));
-         Put_Line ("Load_VBM_Header Byte_Count: " & UInt'Image (Byte_Count));
          Header := Head;
       end;
 
@@ -423,6 +414,26 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Load_VBM_Header.");
          raise;
    end Load_VBM_Header;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_VBM_Object_Data (Message : String; Object : VB_Object) is
+   begin
+      Put_Line (Message);
+
+      Put_Line ("Header.Size: " & UInt'Image (Object.Header.Size));
+      Put_Line ("Number of attributes: " & UInt'Image (Object.Header.Num_Attributes));
+      Put_Line ("Number of frames: " & UInt'Image (Object.Header.Num_Frames));
+      Put_Line ("Number of vertices: " & UInt'Image (Object.Header.Num_Vertices));
+      Put_Line ("Number of indices: " & UInt'Image (Object.Header.Num_Indices));
+      Put_Line ("Index type: " & Numeric_Type'Image (Object.Header.Index_Type));
+      Put_Line ("Number of Materials: " & UInt'Image (Object.Header.Num_Materials));
+      if Object.Header.Magic /= New_Header_Magic then
+         Put_Line ("Number of chunks: " & UInt'Image (Object.Header.Num_Chunks));
+      end if;
+      New_Line;
+
+   end Print_VBM_Object_Data;
 
    --  ------------------------------------------------------------------------
 

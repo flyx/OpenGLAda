@@ -21,6 +21,7 @@ package Load_VB_Object is
    procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
+   procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
    procedure Render (VBM_Object : in out VB_Object;
                      Frame_Index, Instances : UInt := 0);
 

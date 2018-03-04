@@ -151,7 +151,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
-      Put_Line ("Main_Loop.Display, Vertex_Count 1 : " &
+      Put_Line ("Main_Loop.Display, Vertex_Count : " &
                 Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
@@ -311,13 +311,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
-      Put_Line ("Main_Loop.Setup, Vertex_Count: " &
-                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
 
       If not VBM_Result then
          Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
       end if;
+      Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
       return VBM_Result;
 
    exception
@@ -333,8 +332,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 begin
    if Setup then
       while Running loop
-         Put_Line ("Main_Loop, Vertex_Count : " &
-                     Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
          Display (Main_Window);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
