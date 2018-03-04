@@ -137,7 +137,7 @@ private
       Indices            : Buffer_List (1 .. Num_Frames);
       Material           : Materials_List;
       Render_Chunk       : Chunk_List;
-      Texture_List       : Materials_List;
+      Texture_List       : Material_Textures;
    end record;
 
 end Load_VB_Object;

@@ -23,11 +23,13 @@ package body Load_VB_Object is
    procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
                             Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                             Raw_Data : out Image_Data; Byte_Count : in out UInt);
-
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                            Header : VBM_Header;
                            Object : in out VB_Object);
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                             Header : VBM_Header;
+                             Object : in out VB_Object);
+   procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                              Header : VBM_Header;
                              Object : in out VB_Object);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
@@ -275,25 +277,24 @@ package body Load_VB_Object is
                              Object : in out VB_Object) is
       use GL.Objects.Buffers;
       Material_Record     : VBM_Material;
-      Byte_Count          : UInt := 0;
+      Record_Count        : UInt := 0;
       Materials_Data_Size : UInt;
    begin
       if Header.Num_Materials > 0 then
          Materials_Data_Size := Header.Num_Materials * VBM_Material'Size / 8;
-         while Byte_Count < Materials_Data_Size loop
-            Byte_Count := Byte_Count + 1;
+         while Record_Count < Materials_Data_Size loop
+            Record_Count := Record_Count + 1;
             if not End_Of_File then
                VBM_Material'Read (Data_Stream, Material_Record);
                Object.Material.Append (Material_Record);
             else
-               Put_Line ("Load_Indices; EOF reached before Materials completed.");
+               Put_Line ("Load_Materials; EOF reached before Materials loading completed.");
             end if;
          end loop;
 
-         if not End_Of_File then
-            Put_Line ("Load_Indices, Materials filled before EOF.");
-         end if;
+         Load_Textures (Data_Stream, Header, Object);
       end if;
+
    exception
       when others =>
          Put_Line ("An exception occurred in Load_VB_Object.Load_Materials.");
@@ -324,6 +325,36 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                             Header : VBM_Header;
+                             Object : in out VB_Object) is
+      use GL.Objects.Buffers;
+      Texture_Record     : Material_Texture;
+      Record_Count       : UInt := 0;
+      Textures_Data_Size : UInt;
+   begin
+         Textures_Data_Size := Header.Num_Materials * Material_Texture'Size / 8;
+         while Record_Count < Textures_Data_Size loop
+            Record_Count := Record_Count + 1;
+            if not End_Of_File then
+               Material_Texture'Read (Data_Stream, Texture_Record);
+               Object.Texture_List.Append (Texture_Record);
+            else
+               Put_Line ("Load_Textures; EOF reached before Materials completed.");
+            end if;
+         end loop;
+
+         if not End_Of_File then
+            Put_Line ("Load_Textures, Materials filled before EOF.");
+      end if;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Textures.");
+         raise;
+   end Load_Textures;
+
+   --  ------------------------------------------------------------------------
 
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
