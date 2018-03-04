@@ -80,25 +80,28 @@ package body Load_VB_Object is
                                   Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;
-      Total_Data_Size : Int := 0;
+      Data_Offset     : Int := 0;  --  Total_Data_Size
+                                   --  Offset into buffer
    begin
       for Index in 1 .. Header.Num_Attributes loop
          Attribute_Index := Attribute (Index - 1);
          case Attribute_Index is
-         when 0 => Attribute_Index := Attribute (Vertex_Index);
-         when 1 => Attribute_Index := Attribute (Normal_Index);
-         when 2 => Attribute_Index := Attribute (Tex_Coord0_Index);
+         when 0 => Attribute_Index := Attribute (Vertex_Index);  --  Vertices
+         when 1 => Attribute_Index := Attribute (Normal_Index);  --  Indices
+         when 2 => Attribute_Index := Attribute (Tex_Coord0_Index);  --  Texture coordinates
          when others =>
             Put_Line ("Load_VB_Object.Set_Attributes, invalid Attribute_Index.");
          end case;
 
+         --  glVertexAttribPointer (attribIndex, m_attrib[i].components,
+         --           m_attrib[i].type, GL_FALSE, 0, (GLvoid *)total_data_size);
          GL.Attributes.Set_Vertex_Attrib_Pointer
            (Index  => Attribute_Index,
             Count  => Int (Attributes_Header.Components),
             Kind   => Attributes_Header.Attribute_Type,
-            Stride => 0, Offset => Total_Data_Size);
+            Stride => 0, Offset => Data_Offset);
          GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
-         Total_Data_Size := Total_Data_Size +
+         Data_Offset := Data_Offset +
            Int (Attributes_Header.Components * Header.Num_Vertices * Float_Size);
       end loop;
 
@@ -179,16 +182,20 @@ package body Load_VB_Object is
          declare
             Raw_Data :  Image_Data (1 .. Total_Data_Size);
          begin
+            --  Read rest of file.
             Load_Raw_Data (File_ID, Data_Stream, Raw_Data, Byte_Count);
             --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
             --               GL_STATIC_DRAW);
             Load_Data (Array_Buffer, Raw_Data, Static_Draw);
+            --  Load vertices, indices and texture coordinates
             Load_Attribute_Data (Header, Attributes_Header,
                                  Vertex_Index, Normal_Index, Tex_Coord0_Index);
             Load_Indices (Data_Stream, Header, Object);
+
+            -- unbind the current array object
             GL.Objects.Vertex_Arrays.Bind
               (GL.Objects.Vertex_Arrays.Null_Array_Object);
-         end;
+         end;  --  declare block
          Close (File_ID);
          VBM_Object := Object;
       end;
@@ -219,7 +226,7 @@ package body Load_VB_Object is
          when UShort_Type => Element_Size := UShort_Size;
          when UInt_Type => Element_Size := UInt_Size;
          when others =>
-            Put_Line ("Load_VB_Object.Set_Indices, invalid Index_Type.");
+            Put_Line ("Load_VB_Object.Load_Indices, invalid Index_Type.");
          end case;
 
          Element_Data_Size := Header.Num_Indices * Element_Size;
@@ -237,12 +244,15 @@ package body Load_VB_Object is
                   Indices_Array (Byte_Count) := Data_Byte;
                else
                   Indices_Array (Byte_Count) := 0;
-                  Put_Line ("Load_Indices; EOF reached before Image_Data filled.");
+                  Put_Line ("Load_Indices; EOF reached before Indices_Array filled.");
                end if;
             end loop;
             if not End_Of_File then
-               Put_Line ("Load_Indices Image_Data filled before EOF.");
+               Put_Line ("Load_Indices, Indices_Array filled before EOF.");
             end if;
+            --  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            --               m_header.num_indices * element_size,
+            --               raw_data + total_data_size, GL_STATIC_DRAW);
             Load_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
          end;  --  declare block
       end if;
@@ -252,6 +262,57 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Load_Indices.");
          raise;
    end Load_Indices;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                           Header : VBM_Header;
+                           Object : in out VB_Object) is
+      use GL.Objects.Buffers;
+      Element_Size      : UInt;
+      Element_Data_Size : UInt;
+   begin
+      if Header.Num_Indices > 0 then
+         case Header.Index_Type is
+         when UShort_Type => Element_Size := UShort_Size;
+         when UInt_Type => Element_Size := UInt_Size;
+         when others =>
+            Put_Line ("Load_VB_Object.Load_Materials, invalid Index_Type.");
+         end case;
+
+         Element_Data_Size := Header.Num_Indices * Element_Size;
+         Object.Indices (1).Initialize_Id;
+         Element_Array_Buffer.Bind (Object.Indices (1));
+         declare
+            Indices_Array : Image_Data (1 .. Element_Data_Size);
+            Data_Byte     : UByte;
+            Byte_Count    : UInt := 0;
+         begin
+            while Byte_Count < Element_Data_Size loop
+               Byte_Count := Byte_Count + 1;
+               if not End_Of_File then
+                  UByte'Read (Data_Stream, Data_Byte);
+                  Indices_Array (Byte_Count) := Data_Byte;
+               else
+                  Indices_Array (Byte_Count) := 0;
+                  Put_Line ("Load_Indices; EOF reached before Materials filled.");
+               end if;
+            end loop;
+            if not End_Of_File then
+               Put_Line ("Load_Indices, Materials filled before EOF.");
+            end if;
+            --  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            --               m_header.num_indices * element_size,
+            --               raw_data + total_data_size, GL_STATIC_DRAW);
+            Load_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
+         end;  --  declare block
+      end if;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Load_Materials.");
+         raise;
+   end Load_Materials;
 
    --  ------------------------------------------------------------------------
 
@@ -265,7 +326,7 @@ package body Load_VB_Object is
             UByte'Read (Data_Stream, Raw_Data (Count));
          else
             Raw_Data (Count) := 0;
-            Put_Line ("Load_Attribute_Header EOF reached before raw data list filled.");
+            Put_Line ("Load_Raw_Data, EOF reached before raw data list filled.");
          end if;
       end loop;
 
