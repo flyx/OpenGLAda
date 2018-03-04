@@ -129,15 +129,18 @@ private
      GL.Objects.Buffers.Buffer;
 
    type VB_Object (Num_Frames : Positive := 1) is record
-      Header             : VBM_Header;
-      Attribute_Headers  : Attribute_Headers_List;
-      Frame_Headers      : Frame_Headers_List;
-      Vertex_Arrays      : VAO_List (1 .. Num_Frames);
-      Attribute_Buffers  : Buffer_List (1 .. Num_Frames);
-      Indices            : Buffer_List (1 .. Num_Frames);
-      Material           : Materials_List;
-      Render_Chunk       : Chunk_List;
-      Texture_List       : Material_Textures;
+      Vertex_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Attribute_Buffer    : GL.Objects.Buffers.Buffer;
+      Index_Buffer        : GL.Objects.Buffers.Buffer;
+      Header              : VBM_Header;
+      Attribute_Headers   : Attribute_Headers_List;
+      Frame_Headers       : Frame_Headers_List;
+--        Vertex_Arrays      : VAO_List (1 .. Num_Frames);
+--        Attribute_Buffers  : Buffer_List (1 .. Num_Frames);
+--        Indices            : Buffer_List (1 .. Num_Frames);
+      Materials           : Materials_List;
+      Render_Chunks       : Chunk_List;
+      Texture_List        : Material_Textures;
    end record;
 
 end Load_VB_Object;

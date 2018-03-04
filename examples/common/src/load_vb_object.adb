@@ -178,11 +178,11 @@ package body Load_VB_Object is
             Object.Frame_Headers.Append (Frame_Header);
          end loop;
 
-         VBM_Object.Vertex_Arrays (1).Initialize_Id;
-         VBM_Object.Vertex_Arrays (1).Bind;
+         VBM_Object.Vertex_Array_Object.Initialize_Id;
+         VBM_Object.Vertex_Array_Object.Bind;
 
-         VBM_Object.Attribute_Buffers (1).Initialize_Id;
-         GL.Objects.Buffers.Array_Buffer.Bind (VBM_Object.Attribute_Buffers (1));
+         VBM_Object.Attribute_Buffer.Initialize_Id;
+         GL.Objects.Buffers.Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
 
          declare
             Raw_Data :  Image_Data (1 .. Total_Data_Size);
@@ -237,8 +237,8 @@ package body Load_VB_Object is
          end case;
 
          Element_Data_Size := Header.Num_Indices * Element_Size;
-         Object.Indices (1).Initialize_Id;
-         Element_Array_Buffer.Bind (Object.Indices (1));
+         Object.Index_Buffer.Initialize_Id;
+         Element_Array_Buffer.Bind (Object.Index_Buffer);
          declare
             Indices_Array : Image_Data (1 .. Element_Data_Size);
             Data_Byte     : UByte;
@@ -286,7 +286,7 @@ package body Load_VB_Object is
             Record_Count := Record_Count + 1;
             if not End_Of_File then
                VBM_Material'Read (Data_Stream, Material_Record);
-               Object.Material.Append (Material_Record);
+               Object.Materials.Append (Material_Record);
             else
                Put_Line ("Load_Materials; EOF reached before Materials loading completed.");
             end if;
@@ -426,7 +426,7 @@ package body Load_VB_Object is
    begin
       if Frame_Index < VBM_Object.Header.Num_Frames then
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
-         VBM_Object.Vertex_Arrays (1).Bind;
+         VBM_Object.Vertex_Array_Object.Bind;
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Count,
