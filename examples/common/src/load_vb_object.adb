@@ -27,6 +27,9 @@ package body Load_VB_Object is
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                            Header : VBM_Header;
                            Object : in out VB_Object);
+   procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+                             Header : VBM_Header;
+                             Object : in out VB_Object);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
                               Byte_Count    : in out UInt);
@@ -195,6 +198,8 @@ package body Load_VB_Object is
             -- unbind the current array object
             GL.Objects.Vertex_Arrays.Bind
               (GL.Objects.Vertex_Arrays.Null_Array_Object);
+
+            Load_Materials (Data_Stream, Header, Object);
          end;  --  declare block
          Close (File_ID);
          VBM_Object := Object;
@@ -266,48 +271,29 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                           Header : VBM_Header;
-                           Object : in out VB_Object) is
+                             Header : VBM_Header;
+                             Object : in out VB_Object) is
       use GL.Objects.Buffers;
-      Element_Size      : UInt;
-      Element_Data_Size : UInt;
+      Material_Record     : VBM_Material;
+      Byte_Count          : UInt := 0;
+      Materials_Data_Size : UInt;
    begin
-      if Header.Num_Indices > 0 then
-         case Header.Index_Type is
-         when UShort_Type => Element_Size := UShort_Size;
-         when UInt_Type => Element_Size := UInt_Size;
-         when others =>
-            Put_Line ("Load_VB_Object.Load_Materials, invalid Index_Type.");
-         end case;
-
-         Element_Data_Size := Header.Num_Indices * Element_Size;
-         Object.Indices (1).Initialize_Id;
-         Element_Array_Buffer.Bind (Object.Indices (1));
-         declare
-            Indices_Array : Image_Data (1 .. Element_Data_Size);
-            Data_Byte     : UByte;
-            Byte_Count    : UInt := 0;
-         begin
-            while Byte_Count < Element_Data_Size loop
-               Byte_Count := Byte_Count + 1;
-               if not End_Of_File then
-                  UByte'Read (Data_Stream, Data_Byte);
-                  Indices_Array (Byte_Count) := Data_Byte;
-               else
-                  Indices_Array (Byte_Count) := 0;
-                  Put_Line ("Load_Indices; EOF reached before Materials filled.");
-               end if;
-            end loop;
+      if Header.Num_Materials > 0 then
+         Materials_Data_Size := Header.Num_Materials * VBM_Material'Size / 8;
+         while Byte_Count < Materials_Data_Size loop
+            Byte_Count := Byte_Count + 1;
             if not End_Of_File then
-               Put_Line ("Load_Indices, Materials filled before EOF.");
+               VBM_Material'Read (Data_Stream, Material_Record);
+               Object.Material.Append (Material_Record);
+            else
+               Put_Line ("Load_Indices; EOF reached before Materials completed.");
             end if;
-            --  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            --               m_header.num_indices * element_size,
-            --               raw_data + total_data_size, GL_STATIC_DRAW);
-            Load_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
-         end;  --  declare block
-      end if;
+         end loop;
 
+         if not End_Of_File then
+            Put_Line ("Load_Indices, Materials filled before EOF.");
+         end if;
+      end if;
    exception
       when others =>
          Put_Line ("An exception occurred in Load_VB_Object.Load_Materials.");
