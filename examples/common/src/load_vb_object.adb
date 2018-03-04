@@ -42,9 +42,17 @@ package body Load_VB_Object is
       Count : UInt := 0;
       Frame : VBM_Frame_Header;
    begin
-      if Frame_Index <= Object.Header.Num_Frames then
-         Frame := Object.Frame_Headers.Element (Integer (Frame_Index));
-         Count := Frame.Count;
+      if Object.Header.Num_Frames > 0 then
+         if Frame_Index > 0 and then
+           Frame_Index <= Object.Header.Num_Frames then
+            Frame := Object.Frame_Headers.Element (Integer (Frame_Index));
+            Count := Frame.Count;
+         else
+            Put_Line ("Load_VB_Object.Get_Vertex_Count, invalid frame index: " &
+                   UInt'Image (Frame_Index));
+         end if;
+      else
+         Put_Line ("Load_VB_Object.Get_Vertex_Count, no frames are available.");
       end if;
       return Int (Count);
 
@@ -424,7 +432,7 @@ package body Load_VB_Object is
       use GL.Objects.Vertex_Arrays;
       Frame : VBM_Frame_Header;
    begin
-      if Frame_Index < VBM_Object.Header.Num_Frames then
+      if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          VBM_Object.Vertex_Array_Object.Bind;
          if Instances > 0 then

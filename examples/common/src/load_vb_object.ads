@@ -139,7 +139,7 @@ private
 --        Attribute_Buffers  : Buffer_List (1 .. Num_Frames);
 --        Indices            : Buffer_List (1 .. Num_Frames);
       Materials           : Materials_List;
-      Render_Chunks       : Chunk_List;
+      Render_Chunks        : Chunk_List;
       Texture_List        : Material_Textures;
    end record;
 

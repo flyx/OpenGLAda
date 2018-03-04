@@ -151,6 +151,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
+      Put_Line ("Main_Loop.Display, Vertex_Count 1 : " &
+                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
@@ -164,8 +166,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Put_Line ("Main_Loop.Display, Vertex_Count: " &
-                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       GL.Uniforms.Set_Int (Triangle_Count_ID,
                             Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
 
@@ -207,7 +207,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    type Varyings_Length_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
-   procedure Setup is
+   function Setup return Boolean is
       use GL.Objects.Buffers;
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
@@ -311,9 +311,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
+      Put_Line ("Main_Loop.Setup, Vertex_Count: " &
+                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
+      VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
+
       If not VBM_Result then
          Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
       end if;
+      return VBM_Result;
 
    exception
       when others =>
@@ -326,15 +331,19 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    use Glfw.Input;
    Running : Boolean := True;
 begin
-   Setup;
-   while Running loop
-      Display (Main_Window);
-      Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
-      Glfw.Input.Poll_Events;
-      Running := Running and not
-        (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
-      Running := Running and not Main_Window.Should_Close;
-   end loop;
+   if Setup then
+      while Running loop
+         Put_Line ("Main_Loop, Vertex_Count : " &
+                     Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
+         Display (Main_Window);
+         Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
+         Glfw.Input.Poll_Events;
+         Running := Running and not
+           (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
+         Running := Running and not Main_Window.Should_Close;
+      end loop;
+   end if;
+
 exception
    when others =>
       Put_Line ("An exception occurred in Main_Loop.");
