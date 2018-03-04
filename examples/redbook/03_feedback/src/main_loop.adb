@@ -151,8 +151,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
-      Put_Line ("Main_Loop.Display, Vertex_Count : " &
-                Int'Image (Load_VB_Object.Get_Vertex_Count (VBM_Object)));
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
@@ -161,8 +159,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Objects.Programs.Use_Program (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Display, Update_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
       end if;
-      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
