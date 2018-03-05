@@ -10,12 +10,17 @@ with Maths;
 
 package Utilities is
 
+    procedure Allocate_Vertex_Buffer is new
+      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
-    procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean);
+   procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window;
+                                     Enable : Boolean);
     procedure Load_Element_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Int_Pointers);
+    procedure Load_Element_Buffer is new
+      GL.Objects.Buffers.Load_To_Buffer (GL.Types.UInt_Pointers);
     procedure Load_Vertex_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
     procedure Load_Vertex_Buffer is new
