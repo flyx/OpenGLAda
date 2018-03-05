@@ -30,8 +30,6 @@ with Utilities;
 
 with Load_VB_Object;
 
---  with Vertex_Data;
-
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    use GL.Types;
 
@@ -59,36 +57,39 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
---       type Varyings_Length_1 is new Transform_Feedback_API.Varyings_Array (1 .. 1);
---     type Varyings_Length_2 is new Transform_Feedback_API.Varyings_Array (1 .. 2);
+   type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
+   type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
 
-   Vec3_Size           : constant UInt := GL.Types.Singles.Vector3'Size / 8;
-   Vec4_Size           : constant UInt := GL.Types.Singles.Vector4'Size / 8;
-   Background          : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
+   Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
+   Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
+   Background                  : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
-   Vertex_Arrays               : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Vertex_Buffers              : array (1 .. 2) of GL.Objects.Buffers.Buffer;
-   VBM_Object                  : Load_VB_Object.VB_Object;
+   --  BEGIN_APP_DECLARATION Member variables
+   Update_Program              : GL.Objects.Programs.Program;
+   VAO                         : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   VBO                         : array (1 .. 2) of GL.Objects.Buffers.Buffer;
+
+   Render_Program              : GL.Objects.Programs.Program;
    Geometry_VBO                : GL.Objects.Buffers.Buffer;
-   Geometry_Texture            : GL.Objects.Buffers.Buffer;
    Render_VAO                  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Point_Count                 : constant UInt := 5000;
---     Triangle_Count              : constant UInt := 0;
-   Last_Time                   : Float := 0.0;  --  q
---     Time_Step                   : constant UInt := 0;
-   Model_Matrix_ID      : GL.Uniforms.Uniform;
-   Projection_Matrix_ID : GL.Uniforms.Uniform;
-   Triangle_Count_ID           : GL.Uniforms.Uniform;
-   Time_Step_ID                : GL.Uniforms.Uniform;
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
-   Model_Matrix                : Singles.Matrix4 := GL.Types.Singles.Identity4;
-   Projection_Matrix           : Singles.Matrix4;
-   Render_Program              : GL.Objects.Programs.Program;
-   Update_Program              : GL.Objects.Programs.Program;
-   Buffer                      : aliased Buffer_Array (1 .. Point_Count);
-   Buffer_Pointer              : Buffer_Pointers_Package.Pointer;
+
+   Geometry_Texture            : GL.Objects.Buffers.Buffer;
+
+   Model_Matrix_ID             : GL.Uniforms.Uniform;
+   Projection_Matrix_ID        : GL.Uniforms.Uniform;
+   Triangle_Count_ID           : GL.Uniforms.Uniform;
+   Time_Step_ID                : GL.Uniforms.Uniform;
+
+   VBM_Object                  : Load_VB_Object.VB_Object;
+   --  END_APP_DECLARATION
+
+   Point_Count                 : constant UInt := 5000;
+
+--     Triangle_Count              : constant UInt := 0;
+   Last_Time                   : Float := 0.0;  --  q
    --     T_Buffer             : Texture_Array (1 .. Point_Count);
    Frame_Count                 : UInt := 1;
 
@@ -118,9 +119,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Types.Singles;
       use Maths;
-      Window_Width  : Glfw.Size;
-      Window_Height : Glfw.Size;
-      Aspect        : Single;
+      Window_Width     : Glfw.Size;
+      Window_Height      : Glfw.Size;
+      Aspect            : Single;
+      Model_Matrix      : Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Projection_Matrix : Singles.Matrix4;
       Current_Time  : Float;
 --        X             : Vector3 := (1.0, 0.0, 0.0);
 --        Y             : Vector3 := (0.0, 1.0, 0.0);
@@ -180,9 +183,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
 --        GL.Attributes.Disable_Vertex_Attrib_Array (0);
       if (Frame_Count rem 2) = 0 then
-         Vertex_Arrays (2).Initialize_Id;
+         VAO (2).Initialize_Id;
       else
-         Vertex_Arrays (1).Initialize_Id;
+         VAO (1).Initialize_Id;
       end if;
 
       GL.Objects.Programs.Begin_Transform_Feedback (Points);
@@ -204,20 +207,21 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    --  ------------------------------------------------------------------------
 
-   type Varyings_Length_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
    function Setup return Boolean is
       use GL.Objects.Buffers;
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
       use GL.Types.Singles;
       use Program_Loader;
-      Velocity   : Vector3;
-      VBM_Result : Boolean;
-      Varyings   : constant Varyings_Array (1 .. 2) :=
+      Velocity       : Vector3;
+      VBM_Result     : Boolean := False;
+      Varyings       : constant Varyings_Size_2 :=
         (To_Unbounded_String ("position_out"),
          To_Unbounded_String ("velocity_out"));
-      Varyings_2  : constant Varyings_Length_1 :=
-        (Varyings_Length_1'First => To_Unbounded_String ("world_space_position"));
+      Varyings_2     : constant Varyings_Size_1 :=
+        (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
+      Buffer         : aliased Buffer_Array (1 .. Point_Count);
+      Buffer_Pointer : Buffer_Pointers_Package.Pointer;
    begin
       Update_Program := Program_From
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
@@ -227,8 +231,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Objects.Programs.Link (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
       end if;
-      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -249,8 +253,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Objects.Programs.Link (Render_Program);
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
       end if;
-      Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -258,18 +262,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
 
-      Vertex_Arrays (1).Initialize_Id;
-      Vertex_Arrays (2).Initialize_Id;
 
-      Vertex_Buffers (1).Initialize_Id;
-      Vertex_Buffers (2).Initialize_Id;
-
-      for index in Vertex_Buffers'Range loop
-         Transform_Feedback_Buffer.Bind (Vertex_Buffers (index));
+      for index in VBO'Range loop
+         VAO (index).Initialize_Id;
+         VBO (index).Initialize_Id;
+         Transform_Feedback_Buffer.Bind (VBO (index));
          Transform_Feedback_Buffer.Allocate
          (Long (Point_Count * Vec4_Size + Vec3_Size), Dynamic_Copy);
 
-         if index = Vertex_Buffers'First then
+         if index = VBO'First then
             Map_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
             for B_Index in 1 .. Point_Count loop
                Velocity := Random_Vector;
@@ -280,8 +281,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
             Unmap (Transform_Feedback_Buffer);
          end if;
 
-         Vertex_Arrays (index).Bind;
-         Array_Buffer.Bind (Vertex_Buffers (index));
+         VAO (index).Bind;
+         Array_Buffer.Bind (VBO (index));
 
          GL.Attributes.Set_Vertex_Attrib_Pointer
            (0, 4, Single_Type, Int (Vec4_Size + Vec3_Size), 0);
