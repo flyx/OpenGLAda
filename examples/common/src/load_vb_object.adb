@@ -431,6 +431,9 @@ package body Load_VB_Object is
       if Object.Header.Magic /= New_Header_Magic then
          Put_Line ("Number of chunks: " & UInt'Image (Object.Header.Num_Chunks));
       end if;
+      Put_Line ("Vertex_Array_Object size: " & Integer'Image (Object.Vertex_Array_Object'Size));
+      Put_Line ("Attribute_Buffer size: " & Integer'Image (Object.Attribute_Buffer'Size));
+      Put_Line ("Index_Buffer size: " & Integer'Image (Object.Index_Buffer'Size));
       New_Line;
 
    end Print_VBM_Object_Data;
@@ -462,6 +465,10 @@ package body Load_VB_Object is
                Draw_Arrays (Triangles, Int (Frame.First), Int (Frame.Count));
             end if;
          end if;
+         GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
+      else
+         Put_Line ("Load_VB_Object.Render, invalid frame index: " &
+                  UInt'Image (Frame_Index));
       end if;
 
    exception
