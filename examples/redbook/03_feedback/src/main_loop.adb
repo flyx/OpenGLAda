@@ -181,8 +181,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
          VAO (2).Initialize_Id;
+         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
       else
          VAO (1).Initialize_Id;
+         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
       end if;
 
       GL.Objects.Programs.Begin_Transform_Feedback (Points);
