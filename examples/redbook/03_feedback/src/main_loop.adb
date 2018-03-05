@@ -88,10 +88,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    Point_Count                 : constant UInt := 5000;
 
---     Triangle_Count              : constant UInt := 0;
-   Last_Time                   : Float := 0.0;  --  q
-   --     T_Buffer             : Texture_Array (1 .. Point_Count);
+   --  Display static variables
    Frame_Count                 : UInt := 1;
+   Last_Time                   : Float := 0.0;  --  q
+--        X             : Vector3 := (1.0, 0.0, 0.0);
+--        Y             : Vector3 := (0.0, 1.0, 0.0);
+--        Z             : Vector3 := (0.0, 0.0, 1.0);
+
+   --     T_Buffer             : Texture_Array (1 .. Point_Count);
+   --     Triangle_Count              : constant UInt := 0;
 
    --  ------------------------------------------------------------------------
 
@@ -119,15 +124,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Types.Singles;
       use Maths;
-      Window_Width     : Glfw.Size;
-      Window_Height      : Glfw.Size;
+      Window_Width      : Glfw.Size;
+      Window_Height     : Glfw.Size;
       Aspect            : Single;
       Model_Matrix      : Singles.Matrix4 := GL.Types.Singles.Identity4;
       Projection_Matrix : Singles.Matrix4;
-      Current_Time  : Float;
---        X             : Vector3 := (1.0, 0.0, 0.0);
---        Y             : Vector3 := (0.0, 1.0, 0.0);
---        Z             : Vector3 := (0.0, 0.0, 1.0);
+      Current_Time      : Float;  --  t
    begin
       Current_Time :=  Float (Glfw.Time);
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
@@ -139,6 +141,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                                    Projection_Matrix);
       Projection_Matrix := Translation_Matrix ((0.0, 0.0, -100.0)) *
         Projection_Matrix;
+
       Model_Matrix :=  Scaling_Matrix (0.3) *
         Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
           Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0));
@@ -158,31 +161,25 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
 
-      Model_Matrix := Identity4;
       GL.Objects.Programs.Use_Program (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Display, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
       end if;
 
+      Model_Matrix := Identity4;
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Int (Triangle_Count_ID,
                             Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
 
-      if Current_Time > Last_Time then
+      if Current_Time > Last_Time then    --  t > q
          GL.Uniforms.Set_Single (Time_Step_ID,
                                  2000.0 * Single (Current_Time - Last_Time));
       end if;
-      Last_Time := Current_Time;
-      --
-      --        GL.Attributes.Enable_Vertex_Attrib_Array (0);
-      --
-      --        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
-      --
-      --        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
---        GL.Attributes.Disable_Vertex_Attrib_Array (0);
-      if (Frame_Count rem 2) = 0 then
+      Last_Time := Current_Time;   --  q = t
+
+      if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
          VAO (2).Initialize_Id;
       else
          VAO (1).Initialize_Id;
