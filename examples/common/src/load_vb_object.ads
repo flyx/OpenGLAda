@@ -23,7 +23,7 @@ package Load_VB_Object is
                             Result : out Boolean);
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
    procedure Render (VBM_Object : in out VB_Object;
-                     Frame_Index, Instances : UInt := 0);
+                     Frame_Index : UInt := 1; Instances : UInt := 0);
 
 private
    New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
@@ -136,11 +136,8 @@ private
       Header              : VBM_Header;
       Attribute_Headers   : Attribute_Headers_List;
       Frame_Headers       : Frame_Headers_List;
---        Vertex_Arrays      : VAO_List (1 .. Num_Frames);
---        Attribute_Buffers  : Buffer_List (1 .. Num_Frames);
---        Indices            : Buffer_List (1 .. Num_Frames);
       Materials           : Materials_List;
-      Render_Chunks        : Chunk_List;
+      Render_Chunks       : Chunk_List;
       Texture_List        : Material_Textures;
    end record;
 

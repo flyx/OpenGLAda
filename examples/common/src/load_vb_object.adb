@@ -438,7 +438,7 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Render (VBM_Object : in out VB_Object;
-                     Frame_Index, Instances : UInt := 0) is
+                     Frame_Index : UInt := 1; Instances : UInt := 0) is
       use GL.Objects.Buffers;
       use GL.Objects.Vertex_Arrays;
       Frame : VBM_Frame_Header;
@@ -447,6 +447,7 @@ package body Load_VB_Object is
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          VBM_Object.Vertex_Array_Object.Bind;
          if Instances > 0 then
+            Put_Line ("Load_VB_Object.Render Instances > 0");
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Count,
                                         GL.Types.UInt_Type, Frame.First);
@@ -455,6 +456,7 @@ package body Load_VB_Object is
             end if;
          else
             if VBM_Object.Header.Num_Indices > 0 then
+               Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
                Draw_Arrays (Triangles, Int (Frame.First), Int (Frame.Count));

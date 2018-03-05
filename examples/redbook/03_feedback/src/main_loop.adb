@@ -189,9 +189,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Objects.Programs.Begin_Transform_Feedback (Points);
       GL.Objects.Vertex_Arrays.Draw_Arrays
-        (Points, 1, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
+        (Points, 0, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
       GL.Objects.Programs.End_Transform_Feedback;
 
+      GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
       if Frame_Count > 5000 then
          Frame_Count := 0;
       else
@@ -260,7 +261,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "model_matrix");
       Render_Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
-
 
       for index in VBO'Range loop
          VAO (index).Initialize_Id;
