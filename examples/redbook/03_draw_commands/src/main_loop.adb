@@ -34,8 +34,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
 
-   Vertex_Data_Bytes : constant Int := Vertex_Data.Vertex_Positions'Size / 8;
-
    --  ------------------------------------------------------------------------
 
    procedure Render (Window :  in out Glfw.Windows.Window) is
@@ -64,7 +62,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       --  Top, Bottom, Left, Right, Near, Far
       Maths.Init_Orthographic_Transform (Scale, -Scale, -Aspect, Aspect, -1.0, 500.0,
                                          Projection_Matrix);
-      Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
+--        Utilities.Print_Matrix ("Projection_Matrix", Projection_Matrix);
       GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
 
       --  Set up for a Draw_Elements call
@@ -73,9 +71,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       --  Draw arrays
       Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((0.0, 0.0, 0.0));
-      Utilities.Print_Matrix ("Draw arrays Model_Matrix", Model_Matrix);
+--        Utilities.Print_Matrix ("Draw arrays Model_Matrix", Model_Matrix);
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       Array_Buffer.Bind (Vertex_Buffer);
+
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 4, Single_Type, 4, 0);
 
       Draw_Arrays (Triangles, 0, 3);
 
@@ -108,6 +109,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
       use Program_Loader;
+      Vertex_Data_Bytes : constant Int := Vertex_Data.Vertex_Positions'Size / 8;
       Colour_Data_Size : constant Int := Vertex_Data.Vertex_Colours'Size / 8;
    begin
       Render_Program := Program_From
@@ -141,7 +143,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Utilities.Load_Vertex_Sub_Buffer
         (Array_Buffer, Vertex_Data_Bytes, Vertex_Data.Vertex_Colours);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 4, Single_Type, 0, Vertex_Data_Bytes);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 4, Single_Type, 4, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
 
