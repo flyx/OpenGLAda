@@ -75,14 +75,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Draw_Arrays (Triangles, 0, 3);
 
       -- Draw elements
---        Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, -5.0));
---        GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
---        Utilities.Print_Matrix ("Draw elements Model_Matrix", Model_Matrix);
+      Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, 5.0));
+      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
+      Utilities.Print_Matrix ("Draw elements Model_Matrix", Model_Matrix);
 --        Draw_Elements (Triangles, 3, UInt_Type);
---        Put_Line ("Main_Loop.Render, elements drawn.");
+      Put_Line ("Main_Loop.Render, elements drawn.");
 
       -- Draw elements base vertex
---        Model_Matrix :=  Maths.Translation_Matrix ((1.0, 0.0, -5.0));
+--        Model_Matrix :=  Maths.Translation_Matrix ((1.0, 0.0, 5.0));
 --        GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
 --        Draw_Elements (Triangles, 3, UShort_Type);
 
