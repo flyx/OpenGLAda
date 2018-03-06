@@ -10,8 +10,6 @@ with Maths;
 
 package Utilities is
 
-    procedure Load_Vertex_Sub_Buffer is new
-      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
@@ -31,6 +29,9 @@ package Utilities is
       (Maths.Vector5_Pointers);
     procedure Load_Vector6_Buffer is new GL.Objects.Buffers.Load_To_Buffer
       (Maths.Vector6_Pointers);
+    procedure Load_Vertex_Sub_Buffer is new
+     GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
+
     procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array);
     procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Ints.Vector2_Array);
     procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array);
