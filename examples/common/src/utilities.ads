@@ -10,7 +10,7 @@ with Maths;
 
 package Utilities is
 
-    procedure Allocate_Vertex_Buffer is new
+    procedure Load_Vertex_Sub_Buffer is new
       GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
     procedure Clear_All (Colour : GL.Types.Colors.Color);
     procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
