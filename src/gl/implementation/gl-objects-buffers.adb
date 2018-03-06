@@ -120,9 +120,10 @@ package body GL.Objects.Buffers is
    procedure Set_Sub_Data (Target : Buffer_Target;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array) is
+      use type C.long;
    begin
       API.Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
-                           Low_Level.SizeIPtr (Data'Length),
+                           Pointers.Element'Size * Data'Length / System.Storage_Unit,
                            Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Set_Sub_Data;
