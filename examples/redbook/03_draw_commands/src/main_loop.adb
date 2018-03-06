@@ -29,7 +29,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Render_Program              : GL.Objects.Programs.Program;
    Vertex_Array                : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Vertex_Buffer               : GL.Objects.Buffers.Buffer;
---     Element_Buffer              : GL.Objects.Buffers.Buffer;
+   Element_Buffer              : GL.Objects.Buffers.Buffer;
 
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
@@ -75,16 +75,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       Array_Buffer.Bind (Vertex_Buffer);
 
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 4, Single_Type, 4, 0);
-
       Draw_Arrays (Triangles, 0, 3);
 
       -- Draw elements
 --        Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, -5.0));
 --        GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
+--        Element_Array_Buffer.Bind (Element_Buffer);
 --        Utilities.Print_Matrix ("Draw elements Model_Matrix", Model_Matrix);
---        Draw_Elements (Triangles, 3, UInt_Type);
+--        Draw_Elements (Triangles, GL.Types.Size (4), UInt_Type);
 --        Put_Line ("Main_Loop.Render, elements drawn.");
 
       -- Draw elements base vertex
@@ -122,11 +120,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "projection_matrix");
 
       --  Set up the element array buffer
---        Element_Buffer.Initialize_Id;
---        Element_Array_Buffer.Bind (Element_Buffer);
---        Utilities.Load_Element_Buffer (Element_Array_Buffer,
---                                       Vertex_Data.Vertex_Indices,
---                                       Static_Draw);
+      Element_Buffer.Initialize_Id;
+      Element_Array_Buffer.Bind (Element_Buffer);
+      Utilities.Load_Element_Buffer (Element_Array_Buffer,
+                                     Vertex_Data.Vertex_Indices,
+                                     Static_Draw);
 
       --  Set up the vertex attributes
       Vertex_Array.Initialize_Id;
@@ -138,8 +136,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Allocate (Array_Buffer, Long (Vertex_Data_Bytes + Colour_Data_Size), Static_Draw);
       Utilities.Load_Vertex_Sub_Buffer
         (Array_Buffer, 0, Vertex_Data.Vertex_Positions);
-      Put_Line (" Main_Loop.Setup Array_Buffer size" &
-               Int'Image (GL.Objects.Buffers.Size (Array_Buffer)));
       Utilities.Load_Vertex_Sub_Buffer
         (Array_Buffer, Vertex_Data_Bytes, Vertex_Data.Vertex_Colours);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
