@@ -66,15 +66,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
 
       --  Set up for a Draw_Elements call
---        Vertex_Array.Bind;
---        Element_Array_Buffer.Bind (Element_Buffer);
+      Vertex_Array.Bind;
+      Element_Array_Buffer.Bind (Element_Buffer);
 
       --  Draw arrays
       Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((0.0, 0.0, 0.0));
---        Utilities.Print_Matrix ("Draw arrays Model_Matrix", Model_Matrix);
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
-      Array_Buffer.Bind (Vertex_Buffer);
-
       Draw_Arrays (Triangles, 0, 3);
 
       -- Draw elements
