@@ -70,16 +70,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Element_Array_Buffer.Bind (Element_Buffer);
 
       --  Draw arrays
-      Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((0.0, 0.0, 0.0));
+      Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, 5.0));
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       Draw_Arrays (Triangles, 0, 3);
 
       -- Draw elements
 --        Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, -5.0));
 --        GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
---        Element_Array_Buffer.Bind (Element_Buffer);
 --        Utilities.Print_Matrix ("Draw elements Model_Matrix", Model_Matrix);
---        Draw_Elements (Triangles, GL.Types.Size (4), UInt_Type);
+--        Draw_Elements (Triangles, 3, UInt_Type);
 --        Put_Line ("Main_Loop.Render, elements drawn.");
 
       -- Draw elements base vertex
@@ -88,9 +87,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Draw_Elements (Triangles, 3, UShort_Type);
 
       --  Draw arrays instanced
---        Model_Matrix :=  Maths.Translation_Matrix ((3.0, 0.0, -5.0));
---        GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
---        Draw_Arrays_Instanced (Triangles, 0, 3, 1);
+      Model_Matrix :=  Maths.Translation_Matrix ((1.5, 0.0, 5.0));
+      GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
+      Draw_Arrays_Instanced (Triangles, 0, 3, 1);
 
    exception
       when  others =>
