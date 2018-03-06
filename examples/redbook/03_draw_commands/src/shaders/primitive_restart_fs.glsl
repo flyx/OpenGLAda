@@ -1,10 +1,10 @@
-#version 330
+#version 410 core
 
-in vec4 vs_fs_color;
+in vec4 vs_fs_colour;
 
-layout (location = 0) out vec4 color;
+layout (location = 0) out vec4 colour;
 
 void main(void)
 {
-    color = vs_fs_color;
+    colour = vs_fs_colour;
 }
