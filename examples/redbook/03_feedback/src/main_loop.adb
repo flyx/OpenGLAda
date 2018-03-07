@@ -183,7 +183,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
 --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
-      --        GL.Objects.Programs.End_Transform_Feedback;
+--        GL.Objects.Vertex_Arrays.Draw_Arrays
+--          (Points, 0, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
+--        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
@@ -217,6 +219,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Buffer         : aliased Buffer_Array (1 .. Point_Count);
       Buffer_Pointer : Buffer_Pointers_Package.Pointer;
    begin
+      VAO (1).Initialize_Id;
+      VAO (2).Initialize_Id;
+      Render_VAO.Initialize_Id;
+      GL.Objects.Vertex_Arrays.Bind (Render_VAO);
+
       Update_Program := Program_From
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
@@ -257,7 +264,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "projection_matrix");
 
       for index in VBO'Range loop
-         VAO (index).Initialize_Id;
          VBO (index).Initialize_Id;
          Transform_Feedback_Buffer.Bind (VBO (index));
          Transform_Feedback_Buffer.Allocate
@@ -293,8 +299,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
 
-      Render_VAO.Initialize_Id;
-      GL.Objects.Vertex_Arrays.Bind (Render_VAO);
       Array_Buffer.Bind (Geometry_VBO);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
