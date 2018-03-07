@@ -1,7 +1,8 @@
 
 
 with Ada.Numerics.Float_Random;
---  with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 with Ada.Text_IO; use Ada.Text_IO;
 
 with Interfaces.C.Pointers;
@@ -13,7 +14,7 @@ with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
---  with GL.Pixels;
+with GL.Pixels;
 --  with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
@@ -57,8 +58,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Map_Buffer is new
      GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
---     type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
---     type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
+   type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
+   type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
 
    Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
@@ -66,22 +67,22 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
    --  BEGIN_APP_DECLARATION Member variables
---     Update_Program              : GL.Objects.Programs.Program;
+   Update_Program              : GL.Objects.Programs.Program;
    VAO                         : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    VBO                         : array (1 .. 2) of GL.Objects.Buffers.Buffer;
 
    Render_Program              : GL.Objects.Programs.Program;
---     Geometry_VBO                : GL.Objects.Buffers.Buffer;
+   Geometry_VBO                : GL.Objects.Buffers.Buffer;
    Render_VAO                  : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    Render_Model_Matrix_ID      : GL.Uniforms.Uniform;
    Render_Projection_Matrix_ID : GL.Uniforms.Uniform;
 
---     Geometry_Texture            : GL.Objects.Buffers.Buffer;
+   Geometry_Texture            : GL.Objects.Buffers.Buffer;
 
---     Model_Matrix_ID             : GL.Uniforms.Uniform;
---     Projection_Matrix_ID        : GL.Uniforms.Uniform;
---     Triangle_Count_ID           : GL.Uniforms.Uniform;
---     Time_Step_ID                : GL.Uniforms.Uniform;
+   Model_Matrix_ID             : GL.Uniforms.Uniform;
+   Projection_Matrix_ID        : GL.Uniforms.Uniform;
+   Triangle_Count_ID           : GL.Uniforms.Uniform;
+   Time_Step_ID                : GL.Uniforms.Uniform;
 --
    VBM_Object                  : Load_VB_Object.VB_Object;
    --  END_APP_DECLARATION
@@ -90,10 +91,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    --  Display static variables
    Frame_Count                 : UInt := 1;
---     Last_Time                   : Float := 0.0;  --  q
---        X             : Vector3 := (1.0, 0.0, 0.0);
---        Y             : Vector3 := (0.0, 1.0, 0.0);
---        Z             : Vector3 := (0.0, 0.0, 1.0);
+   Last_Time                   : Float := 0.0;  --  q
 
    --  ------------------------------------------------------------------------
 
@@ -152,49 +150,43 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (Render_Projection_Matrix_ID, Projection_Matrix);
 
       Render_VAO.Bind;
---        Put_Line ("Main_Loop.Display, Render_VAO bound");
---        Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
+      Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
 --        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
-      Load_VB_Object.Print_VBM_Object_Data ("VBM_Object", VBM_Object);
 --        GL.Objects.Programs.End_Transform_Feedback;
 
---        GL.Objects.Programs.Use_Program (Update_Program);
---        if not GL.Objects.Programs.Link_Status (Update_Program) then
---           Put_Line ("Display, Update_Program Link failed");
---        GL.Objects.Programs.Use_Program (Update_Program);
---        if not GL.Objects.Programs.Link_Status (Update_Program) then
---           Put_Line ("Display, Update_Program Link failed");
---           Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
---        end if;
+      GL.Objects.Programs.Use_Program (Update_Program);
+      if not GL.Objects.Programs.Link_Status (Update_Program) then
+         Put_Line ("Display, Update_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
+      end if;
 --
---        Model_Matrix := Identity4;
---        GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
---        GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
---        GL.Uniforms.Set_Int (Triangle_Count_ID,
---                              Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
---
---        if Current_Time > Last_Time then    --  t > q
---           GL.Uniforms.Set_Single (Time_Step_ID,
---                                   2000.0 * Single (Current_Time - Last_Time));
---        end if;
---        Last_Time := Current_Time;   --  q = t
+      Model_Matrix := Identity4;
+      GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
+      GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
+      GL.Uniforms.Set_Int (Triangle_Count_ID,
+                            Load_VB_Object.Get_Vertex_Count (VBM_Object) / 3);
 
---        if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
---           VAO (2).Initialize_Id;
---           Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
---        else
---           VAO (1).Initialize_Id;
---           Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
---        end if;
---
+      if Current_Time > Last_Time then    --  t > q
+         GL.Uniforms.Set_Single (Time_Step_ID,
+                                 2000.0 * Single (Current_Time - Last_Time));
+      end if;
+      Last_Time := Current_Time;   --  q = t
+
+      if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
+         VAO (2).Initialize_Id;
+         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
+      else
+         VAO (1).Initialize_Id;
+         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
+      end if;
+
 --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
---        GL.Objects.Vertex_Arrays.Draw_Arrays
---          (Points, 0, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
---        GL.Objects.Programs.End_Transform_Feedback;
+      --        GL.Objects.Programs.End_Transform_Feedback;
 
---        GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
+      GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
+
       if Frame_Count > 5000 then
          Frame_Count := 0;
       else
@@ -217,46 +209,46 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       Velocity       : Vector3;
       VBM_Result     : Boolean := False;
---        Varyings       : constant Varyings_Size_2 :=
---          (To_Unbounded_String ("position_out"),
---           To_Unbounded_String ("velocity_out"));
---        Varyings_2     : constant Varyings_Size_1 :=
---          (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
+      Varyings       : constant Varyings_Size_2 :=
+        (To_Unbounded_String ("position_out"),
+         To_Unbounded_String ("velocity_out"));
+      Varyings_2     : constant Varyings_Size_1 :=
+        (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
       Buffer         : aliased Buffer_Array (1 .. Point_Count);
       Buffer_Pointer : Buffer_Pointers_Package.Pointer;
    begin
---        Update_Program := Program_From
---          ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
---           Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
+      Update_Program := Program_From
+        ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
+         Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 --
---        Transform_Feedback_Varyings (Update_Program, 2, Varyings, Interleaved_Attribs);
---        GL.Objects.Programs.Link (Update_Program);
---        if not GL.Objects.Programs.Link_Status (Update_Program) then
---           Put_Line ("Setup, Update_Program Link failed");
---           Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
---        end if;
+      Transform_Feedback_Varyings (Update_Program, 2, Varyings, Interleaved_Attribs);
+      GL.Objects.Programs.Link (Update_Program);
+      if not GL.Objects.Programs.Link_Status (Update_Program) then
+         Put_Line ("Setup, Update_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
+      end if;
 
---        GL.Objects.Programs.Use_Program  (Update_Program);
---        Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
---          (Update_Program, "model_matrix");
---        Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
---          (Update_Program, "projection_matrix");
---        Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
---          (Update_Program, "triangle_count");
---        Time_Step_ID := GL.Objects.Programs.Uniform_Location
---          (Update_Program, "time_step");
---        Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
+      GL.Objects.Programs.Use_Program  (Update_Program);
+      Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "model_matrix");
+      Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "projection_matrix");
+      Triangle_Count_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "triangle_count");
+      Time_Step_ID := GL.Objects.Programs.Uniform_Location
+        (Update_Program, "time_step");
+      Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
 
       Render_Program := Program_From
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
---        Transform_Feedback_Varyings (Render_Program, 1, Varyings_2, Interleaved_Attribs);
---        GL.Objects.Programs.Link (Render_Program);
---        if not GL.Objects.Programs.Link_Status (Render_Program) then
---           Put_Line ("Setup, Render_Program Link failed");
---           Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
---        end if;
+      Transform_Feedback_Varyings (Render_Program, 1, Varyings_2, Interleaved_Attribs);
+      GL.Objects.Programs.Link (Render_Program);
+      if not GL.Objects.Programs.Link_Status (Render_Program) then
+         Put_Line ("Setup, Render_Program Link failed");
+         Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
+      end if;
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -293,17 +285,17 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
       end loop;
 
---        Geometry_VBO.Initialize_Id;
---        Geometry_Texture.Initialize_Id;
---        Texture_Buffer.Bind (Geometry_VBO);
---        Texture_Buffer_Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
---                                 Dynamic_Copy);
---        Texture_Buffer.Bind (Geometry_Texture);
---        Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
+      Geometry_VBO.Initialize_Id;
+      Geometry_Texture.Initialize_Id;
+      Texture_Buffer.Bind (Geometry_VBO);
+      Texture_Buffer_Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
+                               Dynamic_Copy);
+      Texture_Buffer.Bind (Geometry_Texture);
+      Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
 
       Render_VAO.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_VAO);
---        Array_Buffer.Bind (Geometry_VBO);
+      Array_Buffer.Bind (Geometry_VBO);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
