@@ -69,19 +69,19 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Element_Array_Buffer.Bind (Element_Buffer);
 
       --  Draw arrays
-      Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((0.0, 0.0, 5.0));
+      Model_Matrix := Model_Matrix * Maths.Translation_Matrix ((0.0, -0.3, 5.0));
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       Draw_Arrays (Triangles, 0, 3);
 
       -- Draw elements
-      Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-1.0, 0.0, 5.0));
+      Model_Matrix :=  Model_Matrix * Maths.Translation_Matrix ((-0.5, 0.2, 5.0));
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
       Draw_Elements (Triangles, 3, UInt_Type);
 
       -- Draw elements base vertex
       Model_Matrix :=  Maths.Translation_Matrix ((1.0, 0.4, 5.0));
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
-      Draw_Elements (Triangles, 3, UShort_Type);
+      Draw_Elements (Triangles, 3, UInt_Type);
 
       --  Draw arrays instanced
       Model_Matrix :=  Maths.Translation_Matrix ((1.5, 0.5, 5.0));
@@ -101,7 +101,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       Vertex_Data_Bytes : constant Int := Vertex_Data.Vertex_Positions'Size / 8;
-      Colour_Data_Size : constant Int := Vertex_Data.Vertex_Colours'Size / 8;
+      Colour_Data_Size  : constant Int := Vertex_Data.Vertex_Colours'Size / 8;
    begin
       Render_Program := Program_From
         ((Src ("src/shaders/primitive_restart_vs.glsl", Vertex_Shader),
