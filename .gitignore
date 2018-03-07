@@ -28,6 +28,7 @@ picking
 shading
 model_loading
 transform_feedback
+draw_triangles
 
 
 
