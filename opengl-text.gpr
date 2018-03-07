@@ -1,6 +1,5 @@
 with "opengl";
 with "FreeTypeAda/freetype";
-with "strings_edit";
 
 library project OpenGL.Text is
    for Languages use ("ada");
