@@ -1,3 +1,6 @@
+--  Draw_Triangles implements Redbook example 03-drawcommands from OGLPG-9th-Edition
+--  Author: R Mc Murtrie
+--  5th March 1918
 
 with Ada.Exceptions; use Ada.Exceptions;
 with Ada.Text_IO; use Ada.Text_IO;
