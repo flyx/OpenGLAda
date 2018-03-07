@@ -1,5 +1,5 @@
 package body GL.Text.UTF8 is
-   type Byte is mod 255;
+   type Byte is mod 2**8;
 
    subtype Surrogate_Halves is UTF8_Code_Point range 16#D800# .. 16#DFFF#;
 
