@@ -16,6 +16,8 @@ package Utilities is
     procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean);
     procedure Load_Element_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Int_Pointers);
+   procedure Load_Element_Buffer is new
+     GL.Objects.Buffers.Load_To_Buffer (GL.Types.UInt_Pointers);
     procedure Load_Vertex_Buffer is new
       GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector2_Pointers);
     procedure Load_Vertex_Buffer is new
@@ -26,6 +28,11 @@ package Utilities is
       (Maths.Vector5_Pointers);
     procedure Load_Vector6_Buffer is new GL.Objects.Buffers.Load_To_Buffer
       (Maths.Vector6_Pointers);
+   procedure Load_Vertex_Sub_Buffer is new
+     GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector3_Pointers);
+   procedure Load_Vertex_Sub_Buffer is new
+     GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
+
     procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array);
     procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Ints.Vector2_Array);
     procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array);
