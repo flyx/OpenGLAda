@@ -143,7 +143,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
           Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0));
 
-      Utilities.Clear_Colour_And_Depth;
+      Utilities.Clear_Background_Colour_And_Depth ((1.0, 1.0, 1.0, 1.0));
 --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 --        GL.Buffers.Set_Depth_Function (LEqual);
 
