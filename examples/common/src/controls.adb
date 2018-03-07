@@ -78,9 +78,9 @@ package body Controls is
         elsif Window'Access.Key_State (Keys.Down) = Pressed then
             Position := Position - Direction * Delta_Time * Speed;
         elsif Window'Access.Key_State (Keys.Right) = Pressed then
-            Position := Position + Right * Delta_Time * Speed;
-        elsif Window'Access.Key_State (Keys.Down) = Pressed then
             Position := Position - Right * Delta_Time * Speed;
+        elsif Window'Access.Key_State (Keys.Left) = Pressed then
+            Position := Position + Right * Delta_Time * Speed;
         end if;
 
         Maths.Init_Perspective_Transform (View_Angle, Single (Window_Width),

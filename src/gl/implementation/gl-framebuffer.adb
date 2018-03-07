@@ -29,7 +29,7 @@ package body GL.Framebuffer is
                           Width, Height : Size;
                           Format : Pixels.Framebuffer_Format;
                           Data_Type : Pixels.Data_Type;
-                          Data : Array_Type) is
+                          Data : out Array_Type) is
    begin
       API.Read_Pixels
         (X, Y, Width, Height, Format, Data_Type, Data (Data'First)'Address);
