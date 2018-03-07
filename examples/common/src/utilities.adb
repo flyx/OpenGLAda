@@ -103,17 +103,6 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Clear_Colour_And_Depth is
-   begin
-      GL.Buffers.Clear ((True, False, False, True));
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Clear_Background_Colour_And_Depth.");
-         raise;
-   end Clear_Colour_And_Depth;
-
-   --  ------------------------------------------------------------------------
-
    procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean) is
    begin
       if Enable then
