@@ -95,8 +95,8 @@ package body My_Buffers is
         use Ada.Strings.Unbounded;
         Image_Index : Positive := 1;
     begin
-        for index of Textures loop
-            Make_Texture (index, To_String (Images (Image_Index)));
+        for Index in Textures'Range loop
+            Make_Texture (Textures (Index), To_String (Images (Image_Index)));
             Put_Line ("Setup_Textures; image " & To_String (Images (Image_Index)) & " loaded.");
             Image_Index := Image_Index + 1;
         end loop;
