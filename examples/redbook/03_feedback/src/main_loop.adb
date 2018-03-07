@@ -87,6 +87,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    VBM_Object                  : Load_VB_Object.VB_Object;
    --  END_APP_DECLARATION
 
+   Random_Gen                  : Ada.Numerics.Float_Random.Generator;
    Point_Count                 : constant UInt := 5000;
 
    --  Display static variables
@@ -99,13 +100,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                            return GL.Types.Singles.Vector3 is
       use Ada.Numerics.Float_Random;
       use GL.Types.Singles;
-      Gen : Generator;
       RV  : Vector3;
    begin
-      --        GL.Toggles.Enable (GL.Toggles.Normalize);
-      RV := (2.0 * Single (Random (Gen)) - 1.0,
-             2.0 * Single (Random (Gen)) - 1.0, 2.0 * Single (Random (Gen)) - 1.0);
-      return Single (Min_Mag + Random (Gen) * (Max_Mag - Min_Mag)) * RV;
+      RV := (2.0 * Single (Random (Random_Gen)) - 1.0,
+             2.0 * Single (Random (Random_Gen)) - 1.0,
+             2.0 * Single (Random (Random_Gen)) - 1.0);
+      RV :=  Single (Min_Mag + Random (Random_Gen) * (Max_Mag - Min_Mag)) * RV;
+      return Maths.Normalized (RV);
 
    exception
       when  others =>
@@ -268,14 +269,16 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Transform_Feedback_Buffer.Bind (VBO (index));
          Transform_Feedback_Buffer.Allocate
          (Long (Point_Count * Vec4_Size + Vec3_Size), Dynamic_Copy);
-
+         --  Point_Count = 5000
          if index = VBO'First then
             Map_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
             for B_Index in 1 .. Point_Count loop
                Velocity := Random_Vector;
-               Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 1.0);
+--                 Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
+               Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 0.2, 0.0, 0.0);
                Buffer (B_Index).Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
-                                        0.3 * Velocity (GL.Z));
+                                             0.3 * Velocity (GL.Z));
+--           Utilities.Print_Vector ("Main_Loop.Setup; Position", Buffer (B_Index).Position);
             end loop;
             Unmap (Transform_Feedback_Buffer);
          end if;
@@ -283,6 +286,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
 
+         --  Set_Vertex_Attrib_Pointer (Index  : Attribute;
+         --     Count : Component_Count; Kind : Numeric_Type; Stride, Offset : Size);
          GL.Attributes.Set_Vertex_Attrib_Pointer
            (0, 4, Single_Type, Int (Vec4_Size + Vec3_Size), 0);
          GL.Attributes.Set_Vertex_Attrib_Pointer
