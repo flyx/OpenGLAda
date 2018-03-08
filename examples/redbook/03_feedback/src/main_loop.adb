@@ -61,6 +61,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
+   PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
    Background                  : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
@@ -86,7 +87,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    --  END_APP_DECLARATION
 
    Random_Gen                  : Ada.Numerics.Float_Random.Generator;
-   Point_Count                 : constant UInt := 5000;
+   Num_Points                  : constant UInt := 5000;  --  Point_Count
 
    --  Display static variables
    Frame_Count                 : UInt := 1;
@@ -151,9 +152,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
-      --        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
-      --        GL.Objects.Programs.End_Transform_Feedback;
+      GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Programs.Use_Program (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
@@ -211,7 +212,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Velocity       : Vector3;
    begin
       Map_PV_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
-      for B_Index in 1 .. Point_Count loop
+      for B_Index in 1 .. Num_Points loop
          Velocity := Random_Vector;
          --                 Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
          PV.Position := To_Vector4 (Velocity) + (-0.5, 0.2, 0.0, 0.0);
@@ -294,8 +295,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       for index in VBO'Range loop
          Transform_Feedback_Buffer.Bind (VBO (index));
          Transform_Feedback_Buffer.Allocate
-           (Long (Point_Count * (Vec4_Size + Vec3_Size)), Dynamic_Copy);
-         --  Point_Count = 5000
+           (Long (Num_Points * PV_Buffer_Size), Dynamic_Copy);
          if index = VBO'First then
             Load_PV_Buffer;
          end if;
@@ -306,9 +306,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          --  Set_Vertex_Attrib_Pointer (Index  : Attribute;
          --     Count : Component_Count; Kind : Numeric_Type; Stride, Offset : Size);
          GL.Attributes.Set_Vertex_Attrib_Pointer
-           (0, 4, Single_Type, Int (Vec4_Size + Vec3_Size), 0);
+           (0, 4, Single_Type, Int (PV_Buffer_Size), 0);
          GL.Attributes.Set_Vertex_Attrib_Pointer
-           (1, 3, Single_Type,  Int (Vec4_Size + Vec3_Size), Int (Vec4_Size));
+           (1, 3, Single_Type, Int (PV_Buffer_Size), Int (Vec4_Size));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
       end loop;
