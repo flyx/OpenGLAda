@@ -39,24 +39,17 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Velocity : Singles.Vector3;
    end record;
 
-   type Buffer_Array is array (UInt range <>) of aliased PV_Buffer;
+   type PV_Buffer_Array is array (UInt range <>) of aliased PV_Buffer;
 --     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
-
-   package Buffer_Pointers_Package is new
-     Interfaces.C.Pointers (UInt, PV_Buffer, Buffer_Array,
-                            ((0.0, 0.0, 0.0, 0.0), (10.0 ** 20, 10.0 ** 20, 10.0 ** 20)));
-
+--
 --     package Texture_Pointers_Package is new
 --          Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
---                                 (10.0 ** 20, 10.0 ** 20, 10.0 ** 20, 10.0 ** 20));
+--                                 Singles.Vector4'(others => <>));
 
 --     procedure Load_Transform_Buffer is new
 --       GL.Objects.Buffers.Load_To_Buffer (Buffer_Pointers_Package);
 --     procedure Load_Texture_Buffer is new
 --          GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
-
-   procedure Map_Buffer is new
-     GL.Objects.Buffers.Map (Buffer_Pointers_Package);
 
    type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
    type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
@@ -217,13 +210,16 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          To_Unbounded_String ("velocity_out"));
       Varyings_2     : constant Varyings_Size_1 :=
         (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
-      Buffer         : aliased Buffer_Array (1 .. Point_Count);
-      Buffer_Pointer : Buffer_Pointers_Package.Pointer;
-   begin
+    begin
       VAO (1).Initialize_Id;
       VAO (2).Initialize_Id;
       Render_VAO.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_VAO);
+
+      for index in VBO'Range loop
+         VBO (index).Initialize_Id;
+         Transform_Feedback_Buffer.Bind (VBO (index));
+      end loop;
 
       Update_Program := Program_From
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
@@ -265,22 +261,37 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Render_Program, "projection_matrix");
 
       for index in VBO'Range loop
-         VBO (index).Initialize_Id;
          Transform_Feedback_Buffer.Bind (VBO (index));
          Transform_Feedback_Buffer.Allocate
          (Long (Point_Count * Vec4_Size + Vec3_Size), Dynamic_Copy);
          --  Point_Count = 5000
          if index = VBO'First then
-            Map_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
-            for B_Index in 1 .. Point_Count loop
-               Velocity := Random_Vector;
---                 Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
-               Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 0.2, 0.0, 0.0);
-               Buffer (B_Index).Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
-                                             0.3 * Velocity (GL.Z));
---           Utilities.Print_Vector ("Main_Loop.Setup; Position", Buffer (B_Index).Position);
-            end loop;
-            Unmap (Transform_Feedback_Buffer);
+            declare
+               package PV_Buffer_Package is new Interfaces.C.Pointers
+                 (UInt, PV_Buffer, PV_Buffer_Array, PV_Buffer'(others => <>));
+               procedure Map_PV_Buffer is new
+                 GL.Objects.Buffers.Map (PV_Buffer_Package);
+               --  Pointer to PV_Buffer_Array
+               Buffer_Pointer : PV_Buffer_Package.Pointer;
+               PV             : PV_Buffer;
+            begin
+               Put_Line ("Setup, Entering declare block begin");
+               Map_PV_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
+               for B_Index in 1 .. Point_Count loop
+                  Velocity := Random_Vector;
+                  --                 Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
+                  PV.Position := To_Vector4 (Velocity) + (-0.5, 0.2, 0.0, 0.0);
+                  PV.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
+                                  0.3 * Velocity (GL.Z));
+
+                  Buffer_Pointer.all := PV;
+                  Put_Line ("Setup, Buffer_Pointer.all Set");
+                  PV_Buffer_Package.Increment (Buffer_Pointer);
+                  --           Utilities.Print_Vector ("Main_Loop.Setup; Position", Buffer (B_Index).Position);
+               end loop;
+               Unmap (Transform_Feedback_Buffer);
+            end;  --  declare block
+            Put_Line ("Setup, left declare block");
          end if;
 
          VAO (index).Bind;
