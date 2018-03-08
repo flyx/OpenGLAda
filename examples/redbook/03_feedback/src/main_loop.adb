@@ -201,7 +201,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    end Display;
 
    --  ------------------------------------------------------------------------
-
+   --  Load_PV_Buffer loads Transform_Feedback_Buffer with data points
    procedure Load_PV_Buffer is
       use GL.Objects.Buffers;
       use GL.Types.Singles;
