@@ -10,7 +10,7 @@ with GL.Objects.Shaders;
 with GL.Objects.Textures.Targets;
 with GL.Pixels;
 with GL.Window;
-with Strings_Edit.UTF8;
+with GL.Text.UTF8;
 
 package body GL.Text is
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
@@ -125,11 +125,11 @@ package body GL.Text is
 
 
    function Character_Data (Object : Renderer_Reference;
-                            Code_Point : Strings_Edit.UTF8.Code_Point)
+                            Code_Point : UTF8.UTF8_Code_Point)
                             return Loaded_Characters.Cursor is
       use type FT.Position;
       use type FT.Faces.Char_Index_Type;
-      use type Strings_Edit.UTF8.Code_Point;
+      use type UTF8.UTF8_Code_Point;
    begin
       return Ret : Loaded_Characters.Cursor :=
         Object.Data.Characters.Find (FT.ULong (Code_Point)) do
@@ -201,13 +201,13 @@ package body GL.Text is
    is
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
-      Code_Point : Strings_Edit.UTF8.Code_Point;
+      Code_Point : UTF8.UTF8_Code_Point;
    begin
       Width := 0;
       Y_Min := 0;
       Y_Max := 0;
       while Char_Position <= Content'Last loop
-         Strings_Edit.UTF8.Get (Content, Char_Position, Code_Point);
+         UTF8.Read (Content, Char_Position, Code_Point);
          Map_Position := Character_Data (Object, Code_Point);
          declare
             Char_Data : constant Loaded_Character :=
@@ -242,7 +242,7 @@ package body GL.Text is
       Target : GL.Objects.Textures.Texture;
       Char_Position : Integer := Content'First;
       Map_Position : Loaded_Characters.Cursor;
-      Code_Point : Strings_Edit.UTF8.Code_Point;
+      Code_Point : UTF8.UTF8_Code_Point;
       X_Offset : Pixel_Difference := 0;
       Height : constant Pixel_Difference := Y_Max - Y_Min;
       Transformation : constant GL.Types.Singles.Matrix4 :=
@@ -282,7 +282,7 @@ package body GL.Text is
       GL.Buffers.Set_Color_Clear_Value ((0.0, 0.0, 0.0, 1.0));
       GL.Buffers.Clear ((Color => True, others => False));
       while Char_Position <= Content'Last loop
-         Strings_Edit.UTF8.Get (Content, Char_Position, Code_Point);
+         UTF8.Read (Content, Char_Position, Code_Point);
          Map_Position := Character_Data (Object, Code_Point);
          declare
             Char_Data : constant Loaded_Character :=
