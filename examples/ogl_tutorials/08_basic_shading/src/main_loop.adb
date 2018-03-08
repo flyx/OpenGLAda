@@ -41,14 +41,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    --  ------------------------------------------------------------------------
 
    procedure Load_Texture (Window : in out Glfw.Windows.Window;
-                           UV_Map         : GL.Objects.Textures.Texture) is
+                           UV_Map : GL.Objects.Textures.Texture) is
       use GL.Types;
       use GL.Types.Singles;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       MVP_Matrix        : Singles.Matrix4;
---        Light_Position    : constant Singles.Vector3 := (4.0, 4.0, 4.0);
    begin
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       MVP_Matrix :=  Projection_Matrix * View_Matrix * Model_Matrix;
