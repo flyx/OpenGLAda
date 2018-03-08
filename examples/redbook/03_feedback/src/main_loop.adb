@@ -8,14 +8,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Interfaces.C.Pointers;
 
 with GL.Attributes;
---  with GL.Buffers;
+with GL.Buffers;
 with GL.Objects;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
---  with GL.Toggles;
+with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
@@ -45,16 +45,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
      (UInt, PV_Buffer, PV_Buffer_Array, PV_Buffer'(others => <>));
    procedure Map_PV_Buffer is new
      GL.Objects.Buffers.Map (PV_Buffer_Package);
-   --     type Texture_Array is array (Integer range <>) of aliased Singles.Vector4;
-   --
-   --     package Texture_Pointers_Package is new
-   --          Interfaces.C.Pointers (Integer, Singles.Vector4, Texture_Array,
-   --                                 Singles.Vector4'(others => <>));
-
-   --     procedure Load_Transform_Buffer is new
-   --       GL.Objects.Buffers.Load_To_Buffer (Buffer_Pointers_Package);
-   --     procedure Load_Texture_Buffer is new
-   --          GL.Objects.Buffers.Load_To_Buffer (Texture_Pointers_Package);
 
    type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
    type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
@@ -122,28 +112,32 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
       Aspect            : Single;
-      Model_Matrix      : Singles.Matrix4 := GL.Types.Singles.Identity4;
+      Model_Matrix      : Singles.Matrix4 := Identity4;
       Projection_Matrix : Singles.Matrix4;
+      Scale             : constant Single := 0.3;
+--        Scale             : constant Single := 0.3;
       Current_Time      : Float;  --  t
    begin
       Current_Time :=  Float (Glfw.Time);
+      Utilities.Clear_Background_Colour_And_Depth ((0.0, 0.0, 0.8, 1.0));
+
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Aspect := Single (Window_Height) / Single (Window_Width);
 
-      Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, 1.0, 5000.0,
+--        Projection_Matrix := Identity4;
+      Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
                                    Projection_Matrix);
-      Projection_Matrix := Translation_Matrix ((0.0, 0.0, -100.0)) *
+      Projection_Matrix := Translation_Matrix ((0.0, 0.0, 1.99)) *
         Projection_Matrix;
 
-      Model_Matrix :=  Scaling_Matrix (0.3) *
+      Model_Matrix :=  Scaling_Matrix (Scale) *
         Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
           Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0));
 
-      Utilities.Clear_Background_Colour_And_Depth ((1.0, 1.0, 1.0, 1.0));
-      --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      --        GL.Buffers.Set_Depth_Function (LEqual);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Buffers.Set_Depth_Function (LEqual);
 
       GL.Objects.Programs.Use_Program (Render_Program);
       GL.Uniforms.Set_Single (Render_Model_Matrix_ID, Model_Matrix);
@@ -174,18 +168,20 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
       Last_Time := Current_Time;   --  q = t
 
-      if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
-         VAO (2).Initialize_Id;
-         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
-      else
-         VAO (1).Initialize_Id;
+--        if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
+--           VAO (2).Bind;
+--           Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
+--        else
+         VAO (1).Bind;
          Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
-      end if;
+--        end if;
 
-      --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
-      --        GL.Objects.Vertex_Arrays.Draw_Arrays
-      --          (Points, 0, GL.Types.Size (Maths.Minimum (Point_Count, Frame_Count / 8)));
-      --        GL.Objects.Programs.End_Transform_Feedback;
+      GL.Objects.Programs.Begin_Transform_Feedback (Points);
+      GL.Objects.Vertex_Arrays.Draw_Arrays
+        (Mode  => GL.Types.Points,
+         First => 0,
+         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count / 8)));
+      GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
@@ -206,20 +202,16 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    procedure Load_PV_Buffer is
       use GL.Objects.Buffers;
       use GL.Types.Singles;
-      --  Pointer to PV_Buffer_Array
-      Buffer_Pointer : PV_Buffer_Package.Pointer;
-      PV             : PV_Buffer;
+      Buffer_Pointer : PV_Buffer_Package.Pointer;  --  to PV_Buffer_Array
       Velocity       : Vector3;
    begin
       Map_PV_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
       for B_Index in 1 .. Num_Points loop
          Velocity := Random_Vector;
-         --                 Buffer (B_Index).Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
-         PV.Position := To_Vector4 (Velocity) + (-0.5, 0.2, 0.0, 0.0);
-         PV.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
+--           Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
+         Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
+         Buffer_Pointer.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
                          0.3 * Velocity (GL.Z));
-
-         Buffer_Pointer.all := PV;
          PV_Buffer_Package.Increment (Buffer_Pointer);
       end loop;
       Unmap (Transform_Feedback_Buffer);
@@ -244,7 +236,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
    begin
       VAO (1).Initialize_Id;
+      VAO (1).Bind;
       VAO (2).Initialize_Id;
+      VAO (2).Bind;
       Render_VAO.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_VAO);
 
