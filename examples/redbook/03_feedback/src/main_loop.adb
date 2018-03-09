@@ -220,14 +220,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       VBM_Result     : Boolean := False;
-      Varyings       : Varyings_Package.List;
-      Varyings_2     : Varyings_Package.List;
-
+      Varyings       : constant String := "position_out,velocity_out";
+      Varyings_2     : constant String := "world_space_position";
    begin
-      Varyings.Append ("position_out");
-      Varyings.Append ("velocity_out");
-      Varyings_2.Append ("world_space_position");
-
       VAO (1).Initialize_Id;
       VAO (1).Bind;
       VAO (2).Initialize_Id;

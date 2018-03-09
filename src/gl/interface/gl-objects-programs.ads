@@ -1,8 +1,6 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Ada.Containers.Indefinite_Doubly_Linked_Lists;
-
 with GL.Attributes;
 with GL.Buffers;
 with GL.Objects.Shaders.Lists;
@@ -15,9 +13,6 @@ package GL.Objects.Programs is
 
    subtype Subroutine_Index_Type is UInt;
    subtype Uniform_Location_Type is Int range -1 .. Int'Last;
-
-   package Varyings_Package is new
-     Ada.Containers.Indefinite_Doubly_Linked_Lists (String);
 
    Unknown_Variable_Name : exception;
 
@@ -81,7 +76,7 @@ package GL.Objects.Programs is
       V_Type : Buffer_Mode; Name : String);
 
    procedure Transform_Feedback_Varyings
-     (Object : Program; Varyings : Varyings_Package.List; Mode : Buffer_Mode);
+     (Object : Program; Varyings : String; Mode : Buffer_Mode);
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size;
