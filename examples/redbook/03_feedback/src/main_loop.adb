@@ -1,7 +1,6 @@
 
 
 with Ada.Numerics.Float_Random;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -45,9 +44,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
      (UInt, PV_Buffer, PV_Buffer_Array, PV_Buffer'(others => <>));
    procedure Map_PV_Buffer is new
      GL.Objects.Buffers.Map (PV_Buffer_Package);
-
-   type Varyings_Size_1 is new GL.Objects.Programs.Varyings_Array (1 .. 1);
-   type Varyings_Size_2 is new GL.Objects.Programs.Varyings_Array (1 .. 2);
 
    Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
@@ -229,12 +225,14 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       VBM_Result     : Boolean := False;
-      Varyings       : constant Varyings_Size_2 :=
-        (To_Unbounded_String ("position_out"),
-         To_Unbounded_String ("velocity_out"));
-      Varyings_2     : constant Varyings_Size_1 :=
-        (Varyings_Size_1'First => To_Unbounded_String ("world_space_position"));
+      Varyings       : Varyings_Package.List;
+      Varyings_2     : Varyings_Package.List;
+
    begin
+      Varyings.Append ("position_out");
+      Varyings.Append ("velocity_out");
+      Varyings_2.Append ("world_space_position");
+
       VAO (1).Initialize_Id;
       VAO (1).Bind;
       VAO (2).Initialize_Id;
@@ -251,7 +249,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
       --
-      Transform_Feedback_Varyings (Update_Program, 2, Varyings, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
       GL.Objects.Programs.Link (Update_Program);
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
@@ -273,7 +271,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
-      Transform_Feedback_Varyings (Render_Program, 1, Varyings_2, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
       GL.Objects.Programs.Link (Render_Program);
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");

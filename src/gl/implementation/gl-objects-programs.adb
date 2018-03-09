@@ -193,21 +193,23 @@ package body GL.Objects.Programs is
    end Get_Transform_Feedback_Varying;
 
    procedure Transform_Feedback_Varyings
-     (Object :  Program; Count : Integer; Varyings : Varyings_Array;
-      Mode : Buffer_Mode) is
+     (Object :  Program; Varyings : Varyings_Package.List; Mode : Buffer_Mode) is
       use Interfaces.C.Strings;
-      use Ada.Strings.Unbounded;
-      C_Varyings   : chars_ptr_array (1 .. Interfaces.C.size_t (Count));
-      Vary_Ptr     : chars_ptr;
+      use Varyings_Package;
+      List_Size    : constant Int := Int (Length (Varyings));
+      C_Varyings   : chars_ptr_array (1 .. Interfaces.C.size_t (List_Size));
+      Curs         : Cursor := Varyings.First;
+      Index        : Int := 1;
    begin
-      for index in Varyings'Range loop
-         Vary_Ptr :=  New_String (To_String (Varyings (index)));
-         C_Varyings (Interfaces.C.size_t (index)) := Vary_Ptr;
+      while Has_Element (Curs) loop
+         C_Varyings (Interfaces.C.size_t (Index)) := New_String (Element (Curs));
+         Index := Index + 1;
+         Next (Curs);
       end loop;
 
       API.Transform_Feedback_Varyings
-        (Object.Reference.GL_Id, Size (Count), C_Varyings, Mode);
-            Raise_Exception_On_OpenGL_Error;
+        (Object.Reference.GL_Id, List_Size, C_Varyings, Mode);
+      Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
