@@ -103,6 +103,17 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
 
+   procedure Load_To_Texture_Buffer (Target : Texture_Buffer_Target;
+                                     Data   : Pointers.Element_Array;
+                                     Usage  : Buffer_Usage) is
+      use type C.long;
+   begin
+      API.Buffer_Data (Target.Kind,
+        Pointers.Element'Size * Data'Length / System.Storage_Unit,
+        Data (Data'First)'Address, Usage);
+      Raise_Exception_On_OpenGL_Error;
+   end Load_To_Texture_Buffer;
+
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
       Usage  : Buffer_Usage) is
    begin
