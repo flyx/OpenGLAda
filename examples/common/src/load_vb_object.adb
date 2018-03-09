@@ -462,7 +462,7 @@ package body Load_VB_Object is
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
-               Draw_Arrays (Triangles, Int (Frame.First), Int (Frame.Count));
+               Draw_Arrays (Triangles, Int (Frame.First), Int (Frame.Count / 3));
             end if;
          end if;
          GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;

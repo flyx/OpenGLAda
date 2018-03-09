@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Aspect            : Single;
       Model_Matrix      : Singles.Matrix4 := Identity4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Single := 0.3;
+      Scale             : constant Single := 40.0;
 --        Scale             : constant Single := 0.3;
       Current_Time      : Float;  --  t
    begin
@@ -128,7 +128,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Model_Matrix :=  Scaling_Matrix (Scale) *
         Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
-          Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0));
+          Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0)) *
+          Model_Matrix;
 
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
       GL.Buffers.Set_Depth_Function (LEqual);
@@ -146,7 +147,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Objects.Programs.Use_Program (Update_Program);
 
-      Model_Matrix := Identity4;
+      Model_Matrix := Scaling_Matrix (Scale) * Identity4;
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       GL.Uniforms.Set_Int (Triangle_Count_ID,
@@ -196,7 +197,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Velocity       : Vector3;
    begin
       Map_PV_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
-      for B_Index in 1 .. Num_Points loop
+      for B_Index in 1 .. Num_Points loop   --  j
          Velocity := Random_Vector;
 --           Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
          Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
