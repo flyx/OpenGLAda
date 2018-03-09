@@ -202,16 +202,23 @@ package body GL.Objects.Programs is
       C_Varyings  : chars_ptr_array (1 .. Interfaces.C.size_t (List_Size));
       Pos         : Natural := 1;
       Start       : Natural := 1;
-      Text_End    : Natural := Index (Varyings, ",");
+      Text_End    : Natural;
    begin
+      if List_Size = 1 then
+         Text_End := String_Size;
+      else
+         Text_End := Index (Varyings, ",") - 1;
+      end if;
       while Pos in 1 .. List_Size loop
          declare
-            Vary_Text : constant String := Varyings (Start .. Text_End - 1);
+            Vary_Text : constant String := Varyings (Start .. Text_End);
          begin
             C_Varyings (Interfaces.C.size_t (Pos)) := New_String (Vary_Text);
-            if Text_End < String_Size - 2 then
-               Start := Text_End + 1;
+            Start := Text_End + 2;
+            if Pos < List_Size - 1 then
                Text_End := Index (Varyings (Start .. String_Size), ",") - 1;
+            else
+               Text_End := String_Size;
             end if;
          end;  --  declare block
          Pos := Pos + 1;
