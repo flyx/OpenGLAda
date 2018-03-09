@@ -1,5 +1,4 @@
 
-
 with Ada.Numerics.Float_Random;
 
 with Ada.Text_IO; use Ada.Text_IO;
@@ -48,7 +47,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
    PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
-   Background                  : constant GL.Types.Colors.Color := (0.9, 0.9, 0.9, 1.0);
+   Background                  : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
    --  BEGIN_APP_DECLARATION Member variables
@@ -115,14 +114,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Current_Time      : Float;  --  t
    begin
       Current_Time :=  Float (Glfw.Time);
-      Utilities.Clear_Background_Colour_And_Depth ((0.0, 0.0, 0.8, 1.0));
+      Utilities.Clear_Background_Colour_And_Depth (Background);
 
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
                               GL.Types.Int (Window_Height));
       Aspect := Single (Window_Height) / Single (Window_Width);
 
---        Projection_Matrix := Identity4;
       Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
                                    Projection_Matrix);
       Projection_Matrix := Translation_Matrix ((0.0, 0.0, 1.99)) *
@@ -147,11 +145,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Programs.Use_Program (Update_Program);
-      if not GL.Objects.Programs.Link_Status (Update_Program) then
-         Put_Line ("Display, Update_Program Link failed");
-         Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
-      end if;
-      --
+
       Model_Matrix := Identity4;
       GL.Uniforms.Set_Single (Model_Matrix_ID, Model_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
@@ -164,19 +158,19 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
       Last_Time := Current_Time;   --  q = t
 
---        if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
---           VAO (2).Bind;
---           Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
---        else
+      if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
+         VAO (2).Bind;
+         Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (1));
+      else
          VAO (1).Bind;
          Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
---        end if;
+      end if;
 
       GL.Objects.Programs.Begin_Transform_Feedback (Points);
       GL.Objects.Vertex_Arrays.Draw_Arrays
         (Mode  => GL.Types.Points,
          First => 0,
-         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count / 8)));
+         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
       GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
@@ -248,9 +242,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Update_Program := Program_From
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
-      --
+
       Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
-      GL.Objects.Programs.Link (Update_Program);
+      Update_Program.Link;
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
@@ -272,7 +266,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
       Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
-      GL.Objects.Programs.Link (Render_Program);
+      Render_Program.Link;
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
@@ -342,9 +336,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 begin
    if Setup then
       while Running loop
+--           delay (0.03);
          Display (Main_Window);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
+         delay (0.03);
          Running := Running and not
            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
          Running := Running and not Main_Window.Should_Close;
