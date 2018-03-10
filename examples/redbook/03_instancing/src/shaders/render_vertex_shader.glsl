@@ -4,9 +4,6 @@ layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec4 colour;
 
-out vec4 world_space_position;
-out vec3 vs_fs_normal;
-
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
@@ -36,6 +33,7 @@ void main(void)
         vec4 col4 = texelFetch(model_matrix_tbo, gl_InstanceID * 4 + 3);
         // Now assemble the four columns into a matrix.
         mat4 model_matrix = mat4(col1, col2, col3, col4);
+        
         // Now construct a model-view matrix from the uniform view matrix
         // and the per-instance model matrix.
         mat4 model_view_matrix = view_matrix * model_matrix;
