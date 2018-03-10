@@ -31,24 +31,24 @@ with Load_VB_Object;
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    use GL.Types;
 
-   Background                  : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
+   Background            : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
 
    --  BEGIN_APP_DECLARATION Member variables
-   VAO                         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-   Colour_Buffer               : GL.Objects.Buffers.Buffer;
-   Model_Matrix_Buffer         : GL.Objects.Buffers.Buffer;
-   Colour_TBO                  : GL.Objects.Buffers.Buffer;
-   Model_Matrix_TBO            : GL.Objects.Buffers.Buffer;
-   Render_Program              : GL.Objects.Programs.Program;
+   VAO                   : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Colour_Buffer         : GL.Objects.Buffers.Buffer;
+   Model_Matrix_Buffer   : GL.Objects.Buffers.Buffer;
+   Colour_TBO            : GL.Objects.Buffers.Buffer;
+   Model_Matrix_TBO      : GL.Objects.Buffers.Buffer;
+   Render_Program        : GL.Objects.Programs.Program;
 
-   View_Matrix_ID              : GL.Uniforms.Uniform;
-   Projection_Matrix_ID        : GL.Uniforms.Uniform;
+   View_Matrix_ID        : GL.Uniforms.Uniform;
+   Projection_Matrix_ID  : GL.Uniforms.Uniform;
 
-   VBM_Object                  : Load_VB_Object.VB_Object;
+   VBM_Object            : Load_VB_Object.VB_Object;
    --  END_APP_DECLARATION
 
    --  Display static variables
-   Num_Instances               : constant UInt := 100;
+   Num_Instances         : constant UInt := 100;
 
    --  ------------------------------------------------------------------------
 
@@ -63,33 +63,33 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
 --        Scale             : constant Single := 40.0;
-      Current_Time      : Float;  --  t
-      a                 : Single;
-      b                 : Single;
-      c                 : Single;
-      Time_Component    : Single;
+--        Current_Time      : Float;  --  t
+--        a                 : Single;
+--        b                 : Single;
+--        c                 : Single;
+--        Time_Component    : Single;
    begin
-      Current_Time :=  Float (Glfw.Time);
+--        Current_Time :=  Float (Glfw.Time);
       Utilities.Clear_Background_Colour_And_Depth (Background);
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
       GL.Toggles.Enable (GL.Toggles.Depth_Test);
       GL.Buffers.Set_Depth_Function (LEqual);
 
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
-      GL.Window.Set_Viewport (0, 0, GL.Types.Int (Window_Width),
-                              GL.Types.Int (Window_Height));
+      GL.Window.Set_Viewport (10, 10, GL.Types.Int (Window_Width) - 10,
+                              GL.Types.Int (Window_Height) - 10);
       Aspect := Single (Window_Height) / Single (Window_Width);
 
-      Time_Component := Single (360.0 * Current_Time);
+--        Time_Component := Single (360.0 * Current_Time);
       for Index in Model_Matrices'Range loop
-         a := Single (50 * Index) / 4.0;
-         b := Single (50 * Index) / 5.0;
-         c := Single (50 * Index) / 6.0;
-         Model_Matrices (Index) :=
-           Maths.Translation_Matrix ((a + 10.0, b + 40.0, c + 50.0)) *
-           Maths.Rotation_Matrix (Degree (c + Time_Component), (0.0, 0.0, 1.0)) *
-           Maths.Rotation_Matrix (Degree (a + Time_Component), (1.0, 0.0, 0.0)) *
-           Maths.Rotation_Matrix (Degree (b + Time_Component), (0.0, 1.0, 0.0));
+--           a := Single (50 * Index) / 4.0;
+--           b := Single (50 * Index) / 5.0;
+--           c := Single (50 * Index) / 6.0;
+         Model_Matrices (Index) := Identity4;
+--             Maths.Translation_Matrix ((a + 10.0, b + 40.0, c + 50.0)) *
+--             Maths.Rotation_Matrix (Degree (c + Time_Component), (0.0, 0.0, 1.0)) *
+--             Maths.Rotation_Matrix (Degree (a + Time_Component), (1.0, 0.0, 0.0)) *
+--             Maths.Rotation_Matrix (Degree (b + Time_Component), (0.0, 1.0, 0.0));
       end loop;
 
       --  Bind the weight VBO and change its data
@@ -97,9 +97,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      View_Matrix :=
-           Maths.Translation_Matrix ((0.0, 0.0, -1500.0)) *
-           Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0));
+      View_Matrix := Identity4;
+--             Maths.Translation_Matrix ((0.0, 0.0, -1500.0)) *
+--             Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0));
       Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
                                    Projection_Matrix);
 

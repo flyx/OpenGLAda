@@ -93,8 +93,7 @@ package body Load_VB_Object is
                                   Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;
-      Data_Offset     : Int := 0;  --  Total_Data_Size
-                                   --  Offset into buffer
+      Data_Offset     : Int := 0;  --  Offset into buffer
    begin
       for Index in 1 .. Header.Num_Attributes loop
          Attribute_Index := Attribute (Index - 1);
