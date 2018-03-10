@@ -1,9 +1,9 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Interfaces.C.Pointers;
+--  with Interfaces.C.Pointers;
 
-with GL.Attributes;
+--  with GL.Attributes;
 with GL.Buffers;
 with GL.Objects;
 with GL.Objects.Buffers;
@@ -78,11 +78,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
       Aspect            : Single;
-      Model_Matrix      : Singles.Matrix4 := Identity4;
+      Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       Projection_Matrix : Singles.Matrix4;
       Scale             : constant Single := 40.0;
       --        Scale             : constant Single := 0.3;
       Current_Time      : Float;  --  t
+      a                 : Single;
+      b                 : Single;
+      c                 : Single;
+      Time_Component    : Single;
    begin
       Current_Time :=  Float (Glfw.Time);
       Utilities.Clear_Background_Colour_And_Depth (Background);
@@ -97,10 +101,22 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Projection_Matrix := Translation_Matrix ((0.0, 0.0, 1.99)) *
         Projection_Matrix;
 
-      Model_Matrix :=  Scaling_Matrix (Scale) *
-        Rotation_Matrix (Degree (360.0 * Current_Time), (0.0, 1.0, 0.0)) *
-          Rotation_Matrix (Degree (360.0 * 3.0 * Current_Time), (0.0, 0.0, 1.0)) *
-            Model_Matrix;
+      Time_Component := Single (360.0 * Current_Time);
+      for Index in Model_Matrices'Range loop
+         a := Single (50 * Index) / 4.0;
+         b := Single (50 * Index) / 5.0;
+         c := Single (50 * Index) / 6.0;
+         Model_Matrices (Index) :=
+           Maths.Translation_Matrix ((a + 10.0, b + 40.0, c + 50.0)) *
+           Maths.Rotation_Matrix (Degree (a + Time_Component), (1.0, 0.0, 0.0)) *
+           Maths.Rotation_Matrix (Degree (b + Time_Component), (0.0, 1.0, 0.0)) *
+           Maths.Rotation_Matrix (Degree (c + Time_Component), (0.0, 0.0, 1.0));
+      end loop;
+
+      --  Bind the weight VBO and change its data
+      Texture_Buffer.Bind (Model_Matrix_Buffer);
+      Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
+
 
       GL.Toggles.Enable (GL.Toggles.Cull_Face);
       GL.Buffers.Set_Depth_Function (LEqual);
@@ -124,7 +140,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          VAO (1).Bind;
          Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
       end if;
-
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
