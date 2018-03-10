@@ -417,6 +417,25 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
+                                   Frame_Index : UInt) is
+      Frame : VBM_Frame_Header;
+   begin
+      if Frame_Index > 0 and then Frame_Index <= Object.Header.Num_Frames then
+         Frame := Object.Frame_Headers.Element (Natural (Frame_Index));
+         Put_Line (Message);
+         Put_Line ("First: " & UInt'Image (Frame.First));
+         Put_Line ("Count: " & UInt'Image (Frame.Count));
+         Put_Line ("Flags: " & UInt'Image (Frame.Flags));
+      else
+         Put_Line ("Load_VB_Object.Print_VBM_Frame_Data, invalid frame index: " &
+                  UInt'Image (Frame_Index));
+      end if;
+      New_Line;
+   end Print_VBM_Frame_Data;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object) is
    begin
       Put_Line (Message);
@@ -450,12 +469,12 @@ package body Load_VB_Object is
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          VBM_Object.Vertex_Array_Object.Bind;
          if Instances > 0 then
-            Put_Line ("Load_VB_Object.Render Instances > 0");
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Count,
                                         GL.Types.UInt_Type, Frame.First);
             else
-               null;
+               Draw_Arrays_Instanced (Triangles, Int (Frame.First),
+                                      Int (Frame.Count), Int (Instances));
             end if;
          else
             if VBM_Object.Header.Num_Indices > 0 then

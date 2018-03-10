@@ -22,6 +22,8 @@ package Load_VB_Object is
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
+   procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
+                                   Frame_Index : UInt);
    procedure Render (VBM_Object : in out VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0);
 
