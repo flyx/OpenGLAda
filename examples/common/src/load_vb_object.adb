@@ -88,9 +88,9 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_Attribute_Data (Header : VBM_Header;
-                                  Attributes_Header : VBM_Attributes_Header;
-                                  Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+   procedure Set_Attributes (Header : VBM_Header;
+                             Attributes_Header : VBM_Attributes_Header;
+                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;
       Data_Offset     : Int := 0;  --  Offset into buffer
@@ -119,9 +119,9 @@ package body Load_VB_Object is
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Load_Attribute_Data.");
+         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
          raise;
-   end Load_Attribute_Data;
+   end Set_Attributes;
 
    --  ------------------------------------------------------------------------
 
@@ -201,9 +201,8 @@ package body Load_VB_Object is
             --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
             --               GL_STATIC_DRAW);
             Load_Data (Array_Buffer, Raw_Data, Static_Draw);
-            --  Load vertices, indices and texture coordinates
-            Load_Attribute_Data (Header, Attributes_Header,
-                                 Vertex_Index, Normal_Index, Tex_Coord0_Index);
+            Set_Attributes (Header, Attributes_Header,
+                            Vertex_Index, Normal_Index, Tex_Coord0_Index);
             Load_Indices (Data_Stream, Header, VBM_Object);
 
             -- unbind the current array object
