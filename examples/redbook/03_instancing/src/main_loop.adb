@@ -167,6 +167,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
       end if;
       Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
+      Load_VB_Object.Print_VBM_Frame_Data ("Setup, Frame 1", VBM_Object, 1);
 
       for index in Colours'Range loop
          a := Single (index) / 4.0;
