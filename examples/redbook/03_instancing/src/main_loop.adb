@@ -9,6 +9,7 @@ with GL.Objects;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
+with GL.Objects.Textures;
 with GL.Objects.Vertex_Arrays;
 with GL.Pixels;
 with GL.Toggles;
@@ -30,21 +31,21 @@ with Load_VB_Object;
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    use GL.Types;
 
-   type PV_Buffer is record
-      Position : Singles.Vector4;
-      Velocity : Singles.Vector3;
-   end record;
-
-   type PV_Buffer_Array is array (UInt range <>) of aliased PV_Buffer;
-
-   package PV_Buffer_Package is new Interfaces.C.Pointers
-     (UInt, PV_Buffer, PV_Buffer_Array, PV_Buffer'(others => <>));
-   procedure Map_PV_Buffer is new
-     GL.Objects.Buffers.Map (PV_Buffer_Package);
+--     type PV_Buffer is record
+--        Position : Singles.Vector4;
+--        Velocity : Singles.Vector3;
+--     end record;
+--
+--     type PV_Buffer_Array is array (UInt range <>) of aliased PV_Buffer;
+--
+--     package PV_Buffer_Package is new Interfaces.C.Pointers
+--       (UInt, PV_Buffer, PV_Buffer_Array, PV_Buffer'(others => <>));
+--     procedure Map_PV_Buffer is new
+--       GL.Objects.Buffers.Map (PV_Buffer_Package);
 
    Vec3_Size                   : constant UInt := GL.Types.Singles.Vector3'Size / 8;
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
-   PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
+--     PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
    Background                  : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
    --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
@@ -168,7 +169,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_Program := Program_From
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
+         Src ("src/shaders/render_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       View_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -209,12 +210,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Texture_Buffer.Bind (Colour_Buffer);
       Utilities.Load_Texture_Buffer (Texture_Buffer, Colours, Static_Draw);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Colour_Buffer);
-      GL.Objects.Textures.Set_Active_Unit (1);
 
+      GL.Objects.Textures.Set_Active_Unit (1);
       Texture_Buffer.Bind (Model_Matrix_TBO);
-      Allocate (Texture_Buffer, Instance_Count * GL.Types.Matrix4'Size, Dynamic_Draw);
 
       Texture_Buffer.Bind (Model_Matrix_Buffer);
+      Texture_Buffer_Allocate (Texture_Buffer,
+                               Long (Instance_Count * Singles.Matrix4'Size),
+                               Dynamic_Draw);
+
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
       GL.Objects.Textures.Set_Active_Unit (0);
 
