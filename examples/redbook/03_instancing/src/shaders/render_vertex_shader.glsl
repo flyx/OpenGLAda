@@ -11,7 +11,7 @@ uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
 // These are the texture buffer objects that hold per-instance colors and per-instance model matrices
-uniform samplerBuffer color_tbo;
+uniform samplerBuffer colour_tbo;
 uniform samplerBuffer model_matrix_tbo;
 
 // The output of the vertex shader (matched to the fragment shader)
