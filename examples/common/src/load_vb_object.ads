@@ -73,7 +73,7 @@ private
 
    package Chunk_Package is new
      Ada.Containers.Vectors (Positive, VBM_Render_Chunk);
-   type Chunk_List is new Chunk_Package.Vector with null record;
+   type Render_Chunk_List is new Chunk_Package.Vector with null record;
 
    type VBM_Vec2F is record
       X  : Float := 0.0;
@@ -119,7 +119,7 @@ private
    end record;
    package Material_Textures_Package is new
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
-   type Material_Textures is new Material_Textures_Package.List with null record;
+   type Material_Texture_List is new Material_Textures_Package.List with null record;
 
    package Frame_Headers_Package is new
      Ada.Containers.Vectors (Positive, VBM_Frame_Header);
@@ -133,15 +133,16 @@ private
      GL.Objects.Buffers.Buffer;
 
    type VB_Object (Num_Frames : Positive := 1) is record
+      --  One Vertex_Array_Object
       Vertex_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Attribute_Buffer    : GL.Objects.Buffers.Buffer;
-      Index_Buffer        : GL.Objects.Buffers.Buffer;
+      Attribute_Buffer    : GL.Objects.Buffers.Buffer;  --  One Attribute_Buffer
+      Index_Buffer        : GL.Objects.Buffers.Buffer;  --  Index_Buffer
       Header              : VBM_Header;
-      Attribute_Headers   : Attribute_Headers_List;
-      Frame_Headers       : Frame_Headers_List;
-      Materials           : Materials_List;
-      Render_Chunks       : Chunk_List;
-      Texture_List        : Material_Textures;
+      Attribute_Headers   : Attribute_Headers_List;  --  Array of attribute records
+      Frame_Headers       : Frame_Headers_List;      --  Array of frame records
+      Materials           : Materials_List;          --  Array of material records
+      Chunks              : Render_Chunk_List;       --  Array of chunk records
+      Material_Textures   : Material_Texture_List;
    end record;
 
 end Load_VB_Object;
