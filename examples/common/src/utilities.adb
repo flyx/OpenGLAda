@@ -205,7 +205,7 @@ package body Utilities is
             Count := Count + 1;
             if Count > 5 then
                New_Line;
-               Count := 0;
+               Count := 1;
             end if;
          end loop;
       else
@@ -257,6 +257,30 @@ package body Utilities is
       end loop;
       New_Line;
    end Print_Matrix;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Singles_Array (Name : String; anArray : Singles_Array;
+                                  Start, Finish : GL.Types.Int) is
+      use GL.Types;
+      Count : Integer := 1;
+   begin
+      Put_Line (Name & ": ");
+      if Start >= anArray'First and then Finish <= anArray'Last then
+         for Index in Start .. Finish loop
+            Put (Int'Image (Index) & ": " & Single'Image (anArray (Index)) &
+                "   ");
+            Count := Count + 1;
+            if Count > 4 then
+               New_Line;
+               Count := 1;
+            end if;
+         end loop;
+      else
+         Put_Line ("Print_Singles_Array called with invalid start or finish index.");
+      end if;
+      New_Line;
+   end Print_Singles_Array;
 
    --  ------------------------------------------------------------------------
 

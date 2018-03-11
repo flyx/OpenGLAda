@@ -12,6 +12,7 @@ package Utilities is
 
 
    type Byte_Array is array (GL.Types.Int range <>) of aliased GL.Types.UByte;
+   type Singles_Array is array (GL.Types.Int range <>) of aliased GL.Types.Single;
 
    procedure Clear_All (Colour : GL.Types.Colors.Color);
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
@@ -40,6 +41,7 @@ package Utilities is
    procedure Load_Vertex_Sub_Buffer is new
      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
+   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array);
    procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
                                Start, Finish : GL.Types.Int);
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array);
@@ -48,7 +50,8 @@ package Utilities is
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Ints.Vector3_Array);
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Singles.Vector3_Array);
    procedure Print_GL_Array4 (Name : String; anArray : GL.Types.Singles.Vector4_Array);
-   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array);
+   procedure Print_Singles_Array (Name : String; anArray : Singles_Array;
+                                  Start, Finish : GL.Types.Int);
    procedure Print_Matrix (Name : String; aMatrix : GL.Types.Singles.Matrix3);
    procedure Print_Matrix (Name : String; aMatrix : GL.Types.Singles.Matrix4);
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector2);
