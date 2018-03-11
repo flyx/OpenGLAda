@@ -26,7 +26,7 @@ package Load_VB_Object is
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
    procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
                                    Frame_Index : UInt);
-   procedure Render (VBM_Object : in out VB_Object;
+   procedure Render (VBM_Object : VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0);
 
 private
@@ -60,9 +60,9 @@ private
    type Attribute_Headers_List is new Attribute_Package.Vector with null record;
 
    type VBM_Frame_Header is record
-      First  : UInt := 0;
-      Count  : UInt := 0;
-      Flags  : UInt := 0;
+      First        : UInt := 0;
+      Num_Vertices : UInt := 0;
+      Flags        : UInt := 0;
    end record;
 
    type VBM_Render_Chunk is record

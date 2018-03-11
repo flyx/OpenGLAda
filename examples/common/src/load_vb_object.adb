@@ -7,18 +7,26 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 
+with Utilities;
+
 package body Load_VB_Object is
 
    type Image_Data is array (UInt range <>) of aliased UByte;
    package Image_Data_Pointers is new
-     Interfaces.C.Pointers (UInt, UByte, Image_Data, 0);
+     Interfaces.C.Pointers (UInt, UByte, Image_Data, UByte'Last);
 
    procedure Load_Data is new
      GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
 
+   type Vertex_Data is array (UInt range <>) of aliased Single;
+   package Vertex_Data_Pointers is new
+     Interfaces.C.Pointers (UInt, Single, Vertex_Data, Single'Last);
+
+   procedure Load_Data is new
+     GL.Objects.Buffers.Load_To_Buffer (Vertex_Data_Pointers);
+
    UInt_Size     : constant UInt := UInt'Size / 8;
-   Single_Size
-   : constant UInt := Single'Size / 8;
+   Single_Size   : constant UInt := Single'Size / 8;  --  GLfloat
    UShort_Size   : constant UInt := UShort'Size / 8;
 
    procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
@@ -49,7 +57,7 @@ package body Load_VB_Object is
          if Frame_Index > 0 and then
            Frame_Index <= Object.Header.Num_Frames then
             Frame := Object.Frame_Headers.Element (Integer (Frame_Index));
-            Count := Frame.Count;
+            Count := Frame.Num_Vertices;
          else
             Put_Line ("Load_VB_Object.Get_Vertex_Count, invalid frame index: " &
                    UInt'Image (Frame_Index));
@@ -98,7 +106,7 @@ package body Load_VB_Object is
    begin
       UInt'Read (Header_Stream, Header.First);
       Byte_Count := Byte_Count + UInt_Size;
-      UInt'Read (Header_Stream, Header.Count);
+      UInt'Read (Header_Stream, Header.Num_Vertices);
       Byte_Count := Byte_Count + UInt_Size;
       UInt'Read (Header_Stream, Header.Flags);
       Byte_Count := Byte_Count + UInt_Size;
@@ -160,13 +168,32 @@ package body Load_VB_Object is
          Array_Buffer.Bind (Object.Attribute_Buffer);
 
          declare
-            Raw_Data :  Image_Data (1 .. Total_Data_Size);
+            Raw_Data    : Image_Data (1 .. Total_Data_Size);
+            --  Image_Data is an array of bytes
+--              Vertex_Data : array (1 .. Header.Num_Vertices) of Single :=
+--                (others => 0.0);
+            Vertices    : Vertex_Data (1 .. Header.Num_Vertices);
+            Raw_Index   : UInt := 1;
          begin
             --  Read rest of file.
             Load_Raw_Data (File_ID, Data_Stream, Raw_Data, Byte_Count);
+            Utilities.Print_Byte_Array ("Raw Data Array",
+                                        Utilities.Byte_Array (Raw_Data), 1, 50);
+            for index in Vertices'Range loop
+               Vertices (index) := 0.0;
+               for i in 1 .. Single_Size loop
+                  Vertices (index) := Vertices (index) +
+                    Single (Raw_Data (Raw_Index) * 8 ** Natural (i - 1));
+               Raw_Index := Raw_Index + 1;
+               end loop;
+               Vertices (index) := Vertices (index) / 1000.0;
+            end loop;
+            Utilities.Print_Singles_Array
+              ("Vertex_Data", Utilities.Singles_Array (Vertices), 1, 40);
             --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
             --               GL_STATIC_DRAW);
-            Load_Data (Array_Buffer, Raw_Data, Static_Draw);
+--              Load_Data (Array_Buffer, Raw_Data, Static_Draw);
+            Load_Data (Array_Buffer, Vertices, Static_Draw);
             Set_Attributes (Object, Vertex_Index, Normal_Index,
                             Tex_Coord0_Index);
             Load_Indices (Data_Stream, Header, Object);
@@ -298,8 +325,8 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                             Header : VBM_Header;
-                             Object : in out VB_Object) is
+                            Header : VBM_Header;
+                            Object : in out VB_Object) is
       use GL.Objects.Buffers;
       Texture_Record     : Material_Texture;
       Record_Count       : UInt := 0;
@@ -408,7 +435,7 @@ package body Load_VB_Object is
          Frame := Object.Frame_Headers.Element (Natural (Frame_Index));
          Put_Line (Message);
          Put_Line ("First: " & UInt'Image (Frame.First));
-         Put_Line ("Count: " & UInt'Image (Frame.Count));
+         Put_Line ("Vertices: " & UInt'Image (Frame.Num_Vertices));
          Put_Line ("Flags: " & UInt'Image (Frame.Flags));
       else
          Put_Line ("Load_VB_Object.Print_VBM_Frame_Data, invalid frame index: " &
@@ -442,7 +469,7 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Render (VBM_Object : in out VB_Object;
+   procedure Render (VBM_Object : VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0) is
       use GL.Objects.Buffers;
       use GL.Objects;
@@ -451,15 +478,15 @@ package body Load_VB_Object is
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
          Vertex_Arrays.Bind (VBM_Object.Vertex_Array_Object);
          Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
-         Set_Attributes (VBM_Object, 0, 1, 2);
+--           Set_Attributes (VBM_Object, 0, 1, 2);
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
-               Draw_Elements_Instanced (Triangles, Frame.Count,
+               Draw_Elements_Instanced (Triangles, Frame.Num_Vertices,
                                         GL.Types.UInt_Type, Frame.First);
             else
                Vertex_Arrays.Draw_Arrays_Instanced
-                 (Triangles, Int (Frame.First), Int (Frame.Count),
+                 (Triangles, Int (Frame.First), Int (Frame.Num_Vertices),
                   Int (Instances));
             end if;
          else
@@ -467,9 +494,8 @@ package body Load_VB_Object is
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
-               Put_Line ("Load_VB_Object.Render Drawing arrays");
                Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
-                                          Int (Frame.Count));
+                                          Int (Frame.Num_Vertices));
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
@@ -493,7 +519,7 @@ package body Load_VB_Object is
       Attr_Header     : VBM_Attributes_Header;
       Data_Offset     : Int := 0;  --  Offset into buffer
    begin
-      GL.Objects.Vertex_Arrays.Bind (VBM_Object.Vertex_Array_Object);
+--        GL.Objects.Vertex_Arrays.Bind (VBM_Object.Vertex_Array_Object);
       for Index in 0 .. VBM_Object.Header.Num_Attributes - 1 loop
          Attr_Header := VBM_Object.Attribute_Headers.Element (Natural (Index));
          case Index is
