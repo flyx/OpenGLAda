@@ -415,6 +415,26 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Attributes_Header (Message : String; Object : VB_Object;
+                                      Attributes_Index : UInt) is
+      Attributes : VBM_Attributes_Header;
+   begin
+      if Attributes_Index < Object.Header.Num_Attributes then
+         Attributes := Object.Attribute_Headers.Element (Natural (Attributes_Index));
+         Put_Line (Message);
+         Put_Line ("Name: " & Attributes.Name);
+         Put_Line ("Type: " & Numeric_Type'Image (Attributes.Attribute_Type));
+         Put_Line ("Components: " & UInt'Image (Attributes.Components));
+         Put_Line ("Flags: " & UInt'Image (Attributes.Flags));
+      else
+         Put_Line ("Load_VB_Object.Print_Attributes_Header, invalid attribute index: " &
+                  UInt'Image (Attributes_Index));
+      end if;
+      New_Line;
+   end Print_Attributes_Header;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
                                    Frame_Index : UInt) is
       Frame : VBM_Frame_Header;

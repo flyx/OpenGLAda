@@ -21,6 +21,8 @@ package Load_VB_Object is
    procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
+   procedure Print_Attributes_Header (Message : String; Object : VB_Object;
+                                      Attributes_Index : UInt);
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
    procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
                                    Frame_Index : UInt);
@@ -53,9 +55,9 @@ private
       Flags          : UInt := 0;
    end record;
 
-   package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
-     (VBM_Attributes_Header);
-   type Attribute_Headers_List is new Attribute_Package.List with null record;
+   package Attribute_Package is new Ada.Containers.Vectors
+     (Natural, VBM_Attributes_Header);
+   type Attribute_Headers_List is new Attribute_Package.Vector with null record;
 
 
    type VBM_Frame_Header is record
