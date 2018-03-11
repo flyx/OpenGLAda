@@ -192,6 +192,30 @@ package body Utilities is
 
    --  ---------------------------------------------------------------
 
+   procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
+                               Start, Finish : GL.Types.Int) is
+      use GL.Types;
+      Count : Integer := 1;
+   begin
+      Put_Line (Name & ": ");
+      if Start >= anArray'First and then Finish <= anArray'Last then
+         for Index in Start .. Finish loop
+            Put (Int'Image (Index) & ": " & UByte'Image (anArray (Index)) &
+                "   ");
+            Count := Count + 1;
+            if Count > 5 then
+               New_Line;
+               Count := 0;
+            end if;
+         end loop;
+      else
+         Put_Line ("Print_Byte_Array called with invalid start or finish index.");
+      end if;
+      New_Line;
+   end Print_Byte_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
       use GL.Types;
    begin
