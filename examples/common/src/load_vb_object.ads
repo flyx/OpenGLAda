@@ -3,6 +3,7 @@ with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Containers.Vectors;
 
 with GL.Objects.Buffers;
+with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Types; use GL.Types;
 
@@ -26,7 +27,8 @@ package Load_VB_Object is
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
    procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
                                    Frame_Index : UInt);
-   procedure Render (VBM_Object : VB_Object;
+   procedure Render (Render_Program : GL.Objects.Programs.Program;
+                     VBM_Object : VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0);
 
 private
@@ -132,12 +134,14 @@ private
    type Buffer_List is array (Num_Frames_Range range <>) of
      GL.Objects.Buffers.Buffer;
 
-   type VB_Object (Num_Frames : Positive := 1) is record
+--     type VB_Object (Num_Frames : Positive := 1) is record
+   type VB_Object is record
       --  One Vertex_Array_Object
-      Vertex_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
       Attribute_Buffer    : GL.Objects.Buffers.Buffer;  --  One Attribute_Buffer
       Index_Buffer        : GL.Objects.Buffers.Buffer;  --  Index_Buffer
       Header              : VBM_Header;
+      Num_Frames          : Positive := 1;
       Attribute_Headers   : Attribute_Headers_List;  --  Array of attribute records
       Frame_Headers       : Frame_Headers_List;      --  Array of frame records
       Materials           : Materials_List;          --  Array of material records
