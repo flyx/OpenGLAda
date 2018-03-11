@@ -59,7 +59,6 @@ private
      (Natural, VBM_Attributes_Header);
    type Attribute_Headers_List is new Attribute_Package.Vector with null record;
 
-
    type VBM_Frame_Header is record
       First  : UInt := 0;
       Count  : UInt := 0;

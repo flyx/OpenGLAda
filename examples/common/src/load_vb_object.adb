@@ -17,7 +17,8 @@ package body Load_VB_Object is
      GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
 
    UInt_Size     : constant UInt := UInt'Size / 8;
-   Float_Size    : constant UInt := Float'Size / 8;
+   Single_Size
+   : constant UInt := Single'Size / 8;
    UShort_Size   : constant UInt := UShort'Size / 8;
 
    procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
@@ -35,6 +36,8 @@ package body Load_VB_Object is
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
                               Byte_Count    : in out UInt);
+  procedure Set_Attributes (VBM_Object : VB_Object;
+                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
 
    --  ------------------------------------------------------------------------
 
@@ -85,43 +88,6 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Load_Attribute_Header.");
          raise;
    end Load_Attribute_Header;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Set_Attributes (Header : VBM_Header;
-                             Attributes_Header : VBM_Attributes_Header;
-                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
-      use GL.Attributes;
-      Attribute_Index : Attribute;
-      Data_Offset     : Int := 0;  --  Offset into buffer
-   begin
-      for Index in 1 .. Header.Num_Attributes loop
-         Attribute_Index := Attribute (Index - 1);
-         case Attribute_Index is
-         when 0 => Attribute_Index := Attribute (Vertex_Index);  --  Vertices
-         when 1 => Attribute_Index := Attribute (Normal_Index);  --  Indices
-         when 2 => Attribute_Index := Attribute (Tex_Coord0_Index);  --  Texture coordinates
-         when others =>
-            Put_Line ("Load_VB_Object.Set_Attributes, invalid Attribute_Index.");
-         end case;
-
-         --  glVertexAttribPointer (attribIndex, m_attrib[i].components,
-         --           m_attrib[i].type, GL_FALSE, 0, (GLvoid *)total_data_size);
-         GL.Attributes.Set_Vertex_Attrib_Pointer
-           (Index  => Attribute_Index,
-            Count  => Int (Attributes_Header.Components),
-            Kind   => Attributes_Header.Attribute_Type,
-            Stride => 0, Offset => Data_Offset);
-         GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
-         Data_Offset := Data_Offset +
-           Int (Attributes_Header.Components * Header.Num_Vertices * Float_Size);
-      end loop;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
-         raise;
-   end Set_Attributes;
 
    --  ------------------------------------------------------------------------
 
@@ -178,7 +144,7 @@ package body Load_VB_Object is
             Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
             VBM_Object.Attribute_Headers.Append (Attributes_Header);
             Total_Data_Size := Total_Data_Size +
-              Attributes_Header.Components * Header.Num_Vertices * Float_Size;
+              Attributes_Header.Components * Header.Num_Vertices * Single_Size;
          end loop;
 
          --  Load frame headers
@@ -201,8 +167,8 @@ package body Load_VB_Object is
             --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
             --               GL_STATIC_DRAW);
             Load_Data (Array_Buffer, Raw_Data, Static_Draw);
-            Set_Attributes (Header, Attributes_Header,
-                            Vertex_Index, Normal_Index, Tex_Coord0_Index);
+            Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
+                            Tex_Coord0_Index);
             Load_Indices (Data_Stream, Header, VBM_Object);
 
             -- unbind the current array object
@@ -298,7 +264,6 @@ package body Load_VB_Object is
                Put_Line ("Load_Materials; EOF reached before Materials loading completed.");
             end if;
          end loop;
-
          Load_Textures (Data_Stream, Header, Object);
       end if;
 
@@ -484,6 +449,8 @@ package body Load_VB_Object is
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
+--              Set_Attributes (VBM_Object.Header, VBM_Object.Attribute_Headers, 0, 1, 2);
+            Set_Attributes (VBM_Object, 0, 1, 2);
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          VBM_Object.Vertex_Array_Object.Bind;
          if Instances > 0 then
@@ -513,6 +480,42 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Render.");
          raise;
    end Render;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Set_Attributes (VBM_Object : VB_Object;
+                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+      use GL.Attributes;
+      Attribute_Index : Attribute;  --  UInt
+      Attr_Header     : VBM_Attributes_Header;
+      Data_Offset     : Int := 0;  --  Offset into buffer
+   begin
+      GL.Objects.Vertex_Arrays.Bind (VBM_Object.Vertex_Array_Object);
+      for Index in 0 .. VBM_Object.Header.Num_Attributes - 1 loop
+         Attr_Header := VBM_Object.Attribute_Headers.Element (Natural (Index));
+         case Index is
+         when 0 => Attribute_Index := Attribute (Vertex_Index);  --  Vertices
+         when 1 => Attribute_Index := Attribute (Normal_Index);  --  Indices
+         when 2 => Attribute_Index := Attribute (Tex_Coord0_Index);  --  Texture coordinates
+         when others =>
+            Put_Line ("Load_VB_Object.Set_Attributes, invalid attribute index.");
+         end case;
+
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (Index  => Attribute_Index,
+            Count  => Int (Attr_Header.Components),
+            Kind   => Attr_Header.Attribute_Type,
+            Stride => 0, Offset => Data_Offset);
+         GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
+         Data_Offset := Data_Offset +
+           Int (Attr_Header.Components * VBM_Object.Header.Num_Vertices * Single_Size);
+      end loop;
+
+   exception
+      when others =>
+         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
+         raise;
+   end Set_Attributes;
 
    --  ------------------------------------------------------------------------
 
