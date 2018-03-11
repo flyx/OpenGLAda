@@ -19,7 +19,7 @@ package Load_VB_Object is
    type VB_Object is private;
 
    function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return Int;
-   procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
+   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
    procedure Print_Attributes_Header (Message : String; Object : VB_Object;
@@ -134,7 +134,6 @@ private
    type Buffer_List is array (Num_Frames_Range range <>) of
      GL.Objects.Buffers.Buffer;
 
---     type VB_Object (Num_Frames : Positive := 1) is record
    type VB_Object is record
       --  One Vertex_Array_Object
       Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
