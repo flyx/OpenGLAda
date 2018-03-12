@@ -193,15 +193,15 @@ package body Utilities is
    --  ---------------------------------------------------------------
 
    procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
-                               Start, Finish : GL.Types.Int) is
+                               Start, Finish : GL.Types.UInt) is
       use GL.Types;
       Count : Integer := 1;
    begin
       Put_Line (Name & ": ");
-      if Start >= anArray'First and then Finish <= anArray'Last then
+      if Int (Start) >= anArray'First and then Int (Finish) <= anArray'Last then
          for Index in Start .. Finish loop
-            Put (Int'Image (Index) & ": " & UByte'Image (anArray (Index)) &
-                "   ");
+            Put (UInt'Image (Index) & ": " &
+                   UByte'Image (anArray (Int (Index))) & "   ");
             Count := Count + 1;
             if Count > 5 then
                New_Line;

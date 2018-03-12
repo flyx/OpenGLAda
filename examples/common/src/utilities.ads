@@ -43,7 +43,7 @@ package Utilities is
 
    procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array);
    procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
-                               Start, Finish : GL.Types.Int);
+                               Start, Finish : GL.Types.UInt);
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array);
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Ints.Vector2_Array);
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array);

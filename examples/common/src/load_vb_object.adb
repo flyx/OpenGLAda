@@ -165,7 +165,6 @@ package body Load_VB_Object is
       declare
          use Interfaces.C;
          use Image_Data_Pointers;
-         Attr_Buffer : GL.Objects.Buffers.Buffer;  --  One Attribute_Buffer
          Raw_Data    : Image_Data (1 .. Total_Data_Size);
          Raw_Copy    : Image_Data (1 .. Total_Data_Size);
          Raw_Ptr     : Image_Data_Pointers.Pointer;
@@ -178,8 +177,8 @@ package body Load_VB_Object is
          Print_Vertices (Raw_Data, Header.Num_Vertices);
          --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
          --               GL_STATIC_DRAW);
-         Attr_Buffer.Initialize_Id;
-         Array_Buffer.Bind (Attr_Buffer);
+         VBM_Object.Attribute_Buffer.Initialize_Id;
+         Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
          Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
          Raw_Ptr := Read_Image_Data (Array_Buffer);
          if Raw_Ptr /= null then
