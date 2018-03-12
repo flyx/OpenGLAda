@@ -15,8 +15,10 @@ package body Load_VB_Object is
    package Image_Data_Pointers is new
      Interfaces.C.Pointers (UInt, UByte, Image_Data, UByte'Last);
 
-   procedure Load_Data is new
+   procedure Load_Image_Data is new
      GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
+   function Read_Image_Data is new
+     GL.Objects.Buffers.Pointer (Image_Data_Pointers);
 
    type Vertex_Data is array (UInt range <>) of aliased Single;
    --     package Vertex_Data_Pointers is new
@@ -29,9 +31,9 @@ package body Load_VB_Object is
    Single_Size   : constant UInt := Single'Size / 8;  --  GLfloat
    UShort_Size   : constant UInt := UShort'Size / 8;
 
-   procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
-                            Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                            Raw_Data : out Image_Data; Byte_Count : in out UInt);
+--     procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
+--                              Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
+--                              Raw_Data : out Image_Data; Byte_Count : in out UInt);
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                            Header : VBM_Header;
                            Object : in out VB_Object);
@@ -136,8 +138,8 @@ package body Load_VB_Object is
       Byte_Count          : UInt := 0;
    begin
       Result := False;
---        VBM_Object.Vertex_Array.Initialize_Id;
---        VBM_Object.Vertex_Array.Bind;
+      VBM_Object.Vertex_Array.Initialize_Id;
+      VBM_Object.Vertex_Array.Bind;
       VBM_Object.Attribute_Buffer.Initialize_Id;
       Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
 
@@ -160,21 +162,33 @@ package body Load_VB_Object is
          VBM_Object.Frame_Headers.Append (Frame_Header);
       end loop;
 
-      Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
-
       declare
+         use Interfaces.C;
+         use Image_Data_Pointers;
+         Attr_Buffer : GL.Objects.Buffers.Buffer;  --  One Attribute_Buffer
          Raw_Data    : Image_Data (1 .. Total_Data_Size);
+         Raw_Copy    : Image_Data (1 .. Total_Data_Size);
+         Raw_Ptr     : Image_Data_Pointers.Pointer;
          --  Image_Data is an array of bytes
       begin
          --  Read rest of file.
-         Load_Raw_Data (File_ID, Data_Stream, Raw_Data, Byte_Count);
+         Image_Data'Read (Data_Stream, Raw_Data);
          Utilities.Print_Byte_Array ("Raw Data Array",
                                      Utilities.Byte_Array (Raw_Data), 1, 50);
          Print_Vertices (Raw_Data, Header.Num_Vertices);
          --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
          --               GL_STATIC_DRAW);
+         Attr_Buffer.Initialize_Id;
+         Array_Buffer.Bind (Attr_Buffer);
+         Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
+         Raw_Ptr := Read_Image_Data (Array_Buffer);
+         if Raw_Ptr /= null then
+            Raw_Copy (1) := Raw_Ptr.all;
+            Put_Line ("Raw_Copy: " & UByte'Image (Raw_Copy (1)));
+         else
+            Put_Line ("Array_Buffer pointer is null.");
+         end if;
          Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
-         Load_Data (Array_Buffer, Raw_Data, Static_Draw);
          Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
                          Tex_Coord0_Index);
          Load_Indices (Data_Stream, Header, VBM_Object);
@@ -238,7 +252,7 @@ package body Load_VB_Object is
             --  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
             --               m_header.num_indices * element_size,
             --               raw_data + total_data_size, GL_STATIC_DRAW);
-            Load_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
+            Load_Image_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
          end;  --  declare block
       end if;
 
@@ -277,28 +291,6 @@ package body Load_VB_Object is
          Put_Line ("An exception occurred in Load_VB_Object.Load_Materials.");
          raise;
    end Load_Materials;
-
-   --  ------------------------------------------------------------------------
-
-   procedure Load_Raw_Data (File_ID     : Ada.Streams.Stream_IO.File_Type;
-                            Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                            Raw_Data : out Image_Data; Byte_Count : in out UInt) is
-   begin
-      for Count in UInt range 1 .. Raw_Data'Length loop
-         Byte_Count := Byte_Count + 1;
-         if not Ada.Streams.Stream_IO.End_Of_File (File_ID) then
-            UByte'Read (Data_Stream, Raw_Data (Count));
-         else
-            Raw_Data (Count) := 0;
-            Put_Line ("Load_Raw_Data, EOF reached before raw data list filled.");
-         end if;
-      end loop;
-
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Load_Raw_Data.");
-         raise;
-   end Load_Raw_Data;
 
    --  ------------------------------------------------------------------------
 
@@ -468,17 +460,14 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-procedure Render (Render_Program : GL.Objects.Programs.Program;
-                     VBM_Object : VB_Object;
+procedure Render (VBM_Object : VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0) is
       use GL.Objects.Buffers;
       use GL.Objects;
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
---           VBM_Object.Vertex_Array.Bind;
-         Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
-         GL.Objects.Programs.Use_Program (Render_Program);
+         VBM_Object.Vertex_Array.Bind;
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
@@ -494,20 +483,11 @@ procedure Render (Render_Program : GL.Objects.Programs.Program;
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
-               GL.Attributes.Set_Vertex_Attrib_Pointer
-                 (Index  => 0,
-                  Count  => 4,
-                  Kind   => Single_Type,
-                  Stride => 0, Offset => 0);
-               GL.Attributes.Enable_Vertex_Attrib_Array (0);
-
-               --                 Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
-               Vertex_Arrays.Draw_Arrays (Triangles, 0,
+              Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
                                           Int (Frame.Num_Vertices));
-               GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
---           Vertex_Arrays.Null_Array_Object.Bind;
+         Vertex_Arrays.Null_Array_Object.Bind;
       else
          Put_Line ("Load_VB_Object.Render, invalid frame index: " &
                      UInt'Image (Frame_Index));
