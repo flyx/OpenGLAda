@@ -342,10 +342,6 @@ package body Load_VB_Object is
       Put_Line ("Index type: " & Numeric_Type'Image (Object.Header.Index_Type));
       Put_Line ("Number of Materials: " & UInt'Image (Object.Header.Num_Materials));
       Put_Line ("Flags: " & UInt'Image (Object.Header.Flags));
-
-      Put_Line ("Vertex_Array size: " & Integer'Image (Object.Vertex_Array'Size));
-      Put_Line ("Attribute_Buffer size: " & Integer'Image (Object.Attribute_Buffer'Size));
-      Put_Line ("Index_Buffer size: " & Integer'Image (Object.Index_Buffer'Size));
       New_Line;
 
    end Print_VBM_Object_Data;
@@ -359,8 +355,8 @@ package body Load_VB_Object is
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
-         Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          VBM_Object.Vertex_Array.Bind;
+         Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
