@@ -33,14 +33,14 @@ private
    New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
 
    type VBM_Header (Magic : UInt := New_Header_Magic) is record
-      Name           : String (1 .. 64);
       Size           : UInt := 0;
+      Name           : String (1 .. 64);
       Num_Attributes : UInt := 0;
       Num_Frames     : UInt := 0;
       Num_Vertices   : UInt := 0;
       Num_Indices    : UInt := 0;
-      Num_Materials  : UInt := 0;
       Index_Type     : Numeric_Type := UByte_Type;
+      Num_Materials  : UInt := 0;
       Flags          : UInt := 0;
       case Magic is
          when others =>

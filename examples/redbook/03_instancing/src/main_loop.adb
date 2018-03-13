@@ -4,15 +4,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 --  with Interfaces.C.Pointers;
 
 --  with GL.Attributes;
-with GL.Buffers;
+--  with GL.Buffers;
 with GL.Objects;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
 --  with GL.Objects.Textures;
---  with GL.Objects.Vertex_Arrays;
-with GL.Pixels;
-with GL.Toggles;
+--  with GL.Pixels;
+--  with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
@@ -46,6 +45,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    VBM_Object            : Load_VB_Object.VB_Object;
    --  END_APP_DECLARATION
 
+   Vertex_Location       : constant Int := 0;
+   Normal_Location       : constant Int := 1;
+   Tex_Coord0_Location   : constant Int := 2;
+
    --  Display static variables
    Num_Instances         :  UInt := 100;
 
@@ -61,7 +64,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Single := 40.0;
+      Scale             : constant Single := 400.0;
 --        Current_Time      : Float;  --  t
 --        a                 : Single;
 --        b                 : Single;
@@ -70,9 +73,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    begin
 --        Current_Time :=  Float (Glfw.Time);
       Utilities.Clear_Background_Colour_And_Depth (Background);
-      GL.Toggles.Enable (GL.Toggles.Cull_Face);
-      GL.Toggles.Enable (GL.Toggles.Depth_Test);
-      GL.Buffers.Set_Depth_Function (LEqual);
+--        GL.Toggles.Enable (GL.Toggles.Cull_Face);
+--        GL.Toggles.Enable (GL.Toggles.Depth_Test);
+--        GL.Buffers.Set_Depth_Function (LEqual);
 
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (10, 10, GL.Types.Int (Window_Width) - 10,
@@ -128,6 +131,20 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       c                    : Single;
       VBM_Result           : Boolean := False;
    begin
+      Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
+                                    Vertex_Location, Normal_Location,
+                                    Tex_Coord0_Location, VBM_Result);
+      VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
+
+      If not VBM_Result then
+         Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
+      end if;
+      Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
+      Load_VB_Object.Print_VBM_Frame_Data ("Setup, Frame 1", VBM_Object, 1);
+      Load_VB_Object.Print_Attributes_Header ("Setup, Vertex Attribute", VBM_Object, 0);
+      Load_VB_Object.Print_Attributes_Header ("Setup, Normal Attribute", VBM_Object, 1);
+      Load_VB_Object.Print_Attributes_Header ("Setup, Tex Coord Attribute", VBM_Object, 2);
+
       Colour_TBO.Initialize_Id;
       Texture_Buffer.Bind (Colour_TBO);
       Colour_Buffer.Initialize_Id;
@@ -155,19 +172,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Int (Colour_TBO_ID, 0);
       GL.Uniforms.Set_Int (Model_Matrix_TBO_ID, 1);
 
-      Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
-                                    0, 1, 2, VBM_Result);
-      VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
-
-      If not VBM_Result then
-         Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
-      end if;
-      Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
-      Load_VB_Object.Print_VBM_Frame_Data ("Setup, Frame 1", VBM_Object, 1);
-      Load_VB_Object.Print_Attributes_Header ("Setup, Vertex Attribute", VBM_Object, 0);
-      Load_VB_Object.Print_Attributes_Header ("Setup, Normal Attribute", VBM_Object, 1);
-      Load_VB_Object.Print_Attributes_Header ("Setup, Tex Coord Attribute", VBM_Object, 2);
-
       for index in Colours'Range loop
          a := Single (index) / 4.0;
          b := Single (index) / 5.0;
@@ -188,12 +192,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        GL.Objects.Textures.Set_Active_Unit (1);
 --        Texture_Buffer.Bind (Model_Matrix_TBO);
 
-      Texture_Buffer.Bind (Model_Matrix_Buffer);
-      Texture_Buffer_Allocate (Texture_Buffer,
-                               Long (Num_Instances * Singles.Matrix4'Size),
-                               Dynamic_Draw);
-
-      Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
+--        Texture_Buffer.Bind (Model_Matrix_Buffer);
+--        Texture_Buffer_Allocate (Texture_Buffer,
+--                                 Long (Num_Instances * Singles.Matrix4'Size),
+--                                 Dynamic_Draw);
+--
+--        Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
 --        GL.Objects.Textures.Set_Active_Unit (0);
 
       return VBM_Result;
