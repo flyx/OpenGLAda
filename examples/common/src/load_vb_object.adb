@@ -7,8 +7,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 with GL.Attributes;
 
-with Utilities;
-
 package body Load_VB_Object is
 
    type Image_Data is array (UInt range <>) of aliased UByte;
@@ -17,15 +15,6 @@ package body Load_VB_Object is
 
    procedure Load_Image_Data is new
      GL.Objects.Buffers.Load_To_Buffer (Image_Data_Pointers);
---     function Read_Image_Data is new
---       GL.Objects.Buffers.Pointer (Image_Data_Pointers);
-
---     type Vertex_Data is array (UInt range <>) of aliased Single;
---        package Vertex_Data_Pointers is new
---          Interfaces.C.Pointers (UInt, Single, Vertex_Data, Single'Last);
-
-   --     procedure Load_Data is new
-   --       GL.Objects.Buffers.Load_To_Buffer (Vertex_Data_Pointers);
 
    UInt_Size     : constant UInt := UInt'Size / 8;
    Single_Size   : constant UInt := Single'Size / 8;  --  GLfloat
@@ -45,8 +34,8 @@ package body Load_VB_Object is
                               Byte_Count    : in out UInt);
    procedure Set_Attributes (VBM_Object : VB_Object;
                              Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
-   function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
-                              return GL.Types.Singles.Vector4_Array;
+--     function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
+--                                return GL.Types.Singles.Vector4_Array;
 
    --  ------------------------------------------------------------------------
 
@@ -125,36 +114,16 @@ package body Load_VB_Object is
          use Interfaces.C;
          use Image_Data_Pointers;
          Raw_Data    : Image_Data (1 .. Total_Data_Size);
-         Vertices    : Singles.Vector4_Array
-           (1 .. GL.Types.Int (VBM_Object.Header.Num_Vertices));
---           Raw_Copy    : Image_Data (1 .. Total_Data_Size);
---           Raw_Ptr     : Image_Data_Pointers.Pointer;
          --  Image_Data is an array of bytes
       begin
---           Put_Line ("Load_VB_Object.Load_From_VBM, Total_Data_Size: " &
---                       UInt'Image (Total_Data_Size));
          --  Read rest of file.
          Image_Data'Read (Data_Stream, Raw_Data);
---           Utilities.Print_Byte_Array ("Raw Data Array",
---                                       Utilities.Byte_Array (Raw_Data), 1, 50);
-         Vertices := To_Vector4_Array (Raw_Data, VBM_Object.Header.Num_Vertices);
-         Utilities.Print_GL_Array4 ("To_Vector4_Array vertices", Vertices);
-
---           Print_Vertices (Raw_Data, VBM_Object.Header.Num_Vertices);
          --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
          --               GL_STATIC_DRAW);
          VBM_Object.Attribute_Buffer.Initialize_Id;
          Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
-         Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
---           Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
-
---           Raw_Ptr := Read_Image_Data (Array_Buffer);
---           if Raw_Ptr /= null then
---              Raw_Copy (1) := Raw_Ptr.all;
---              Put_Line ("Raw_Copy: " & UByte'Image (Raw_Copy (1)));
---           else
---              Put_Line ("Array_Buffer pointer is null.");
---           end if;
+--           Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
+         Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
 
          Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
                          Tex_Coord0_Index);
@@ -189,8 +158,6 @@ package body Load_VB_Object is
    begin
       if Header.Num_Indices > 0 then
          case Header.Index_Type is
---              when Numeric_Type'Enum_Rep (UShort_Type) => Element_Size := UShort_Size;
---              when Numeric_Type'Enum_Rep (UInt_Type) => Element_Size := UInt_Size;
             when UShort_Type => Element_Size := UShort_Size;
             when UInt_Type => Element_Size := UInt_Size;
            when others =>
@@ -394,9 +361,7 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-
    procedure Render (VBM_Object : VB_Object;
-                     Render_Program : GL.Objects.Programs.Program;
                      Frame_Index : UInt := 1; Instances : UInt := 0) is
       use GL.Objects.Buffers;
       use GL.Objects;
@@ -404,7 +369,6 @@ package body Load_VB_Object is
    begin
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
-         GL.Objects.Programs.Use_Program (Render_Program);
          VBM_Object.Vertex_Array.Bind;
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          if Instances > 0 then
@@ -421,12 +385,12 @@ package body Load_VB_Object is
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
-              Put_Line ("Load_VB_Object.Render Num_Indices = 0");
+--                Put_Line ("Load_VB_Object.Render Num_Indices = 0");
 --                Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
 --                                            Int (Frame.Num_Vertices));
 
               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-              Vertex_Arrays.Draw_Arrays (Triangles, 0, 10);
+              Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
               GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
@@ -489,32 +453,30 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
-                              return GL.Types.Singles.Vector4_Array is
-      use GL;
-      Vertices    : GL.Types.Singles.Vector4_Array (1 .. Int (Num_Vertices));
-      aVertex     : GL.Types.Singles.Vector4;
-      Raw_Index   : UInt := 1;
-   begin
-      for index in Vertices'Range loop
-         for v_index in GL.X .. GL.W loop
-            aVertex (v_index) := 0.0;
-            for i in 1 .. Single_Size loop
-               aVertex (v_index) := aVertex (v_index) +
-                 Single (Raw_Data (Raw_Index) * 8 ** Natural (i - 1));
-               Raw_Index := Raw_Index + 1;
-            end loop;
-            if v_index = GL.W then
-               aVertex (v_index) := 1.0;
-            else
-               aVertex (v_index) := aVertex (v_index) * 0.001;
-            end if;
-         end loop;
-         Vertices (index) := aVertex;
-      end loop;
-      return Vertices;
-
-   end To_Vector4_Array;
+--     function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
+--                                return GL.Types.Singles.Vector4_Array is
+--        use GL;
+--        Vertices    : GL.Types.Singles.Vector4_Array (1 .. Int (Num_Vertices));
+--        aVertex     : GL.Types.Singles.Vector4;
+--        Raw_Index   : UInt := 1;
+--     begin
+--        for index in Vertices'Range loop
+--           for v_index in GL.X .. GL.W loop
+--              aVertex (v_index) := 0.0;
+--              for i in 1 .. Single_Size loop
+--                 aVertex (v_index) := aVertex (v_index) +
+--                   Single (Raw_Data (Raw_Index) * 8 ** Natural (i - 1));
+--                 Raw_Index := Raw_Index + 1;
+--              end loop;
+--              if v_index = GL.W then
+--                 aVertex (v_index) := 1.0;
+--              end if;
+--           end loop;
+--           Vertices (index) := aVertex;
+--        end loop;
+--        return Vertices;
+--
+--     end To_Vector4_Array;
 
    --  ------------------------------------------------------------------------
 

@@ -64,7 +64,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Single := 400.0;
+      Scale             : constant Vector3 := (0.001, 0.001, 0.001);
 --        Current_Time      : Float;  --  t
 --        a                 : Single;
 --        b                 : Single;
@@ -99,7 +99,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      View_Matrix := Maths.Scaling_Matrix (Scale) * Identity4;
+      View_Matrix := Maths.Scaling_Matrix (Scale);
+      Utilities.Print_Matrix ("View_Matrix", View_Matrix);
 --             Maths.Translation_Matrix ((0.0, 0.0, -1500.0)) *
 --             Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0));
 --        Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
@@ -108,8 +109,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       Num_Instances := 0;
-      Load_VB_Object.Render (VBM_Object, Render_Program);
---        Load_VB_Object.Render (VBM_Object, Render_Program, 1, Num_Instances);
+      Load_VB_Object.Render (VBM_Object, 1, Num_Instances);
 
    exception
       when  others =>
@@ -161,7 +161,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       View_Matrix_ID := GL.Objects.Programs.Uniform_Location
-        (Render_Program, "View_matrix");
+        (Render_Program, "view_matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "projection_matrix");
       --   Set up the TBO samplers

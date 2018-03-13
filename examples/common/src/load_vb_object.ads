@@ -3,7 +3,6 @@ with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Containers.Vectors;
 
 with GL.Objects.Buffers;
-with GL.Objects.Programs;
 with GL.Objects.Vertex_Arrays;
 with GL.Types; use GL.Types;
 
@@ -28,7 +27,6 @@ package Load_VB_Object is
    procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
                                    Frame_Index : UInt);
    procedure Render (VBM_Object : VB_Object;
-                     Render_Program : GL.Objects.Programs.Program;
                      Frame_Index : UInt := 1; Instances : UInt := 0);
 
 private
