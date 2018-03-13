@@ -60,18 +60,18 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Maths;
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
---        Aspect            : Single;
+      Aspect            : Single;
 --        Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       Scale             : constant Vector3 := (0.001, 0.001, 0.001);
---        Current_Time      : Float;  --  t
+      Current_Time      : Float;  --  t
 --        a                 : Single;
 --        b                 : Single;
 --        c                 : Single;
---        Time_Component    : Single;
+      Time_Component    : Single;
    begin
---        Current_Time :=  Float (Glfw.Time);
+      Current_Time :=  Float (Glfw.Time);
       Utilities.Clear_Background_Colour_And_Depth (Background);
 --        GL.Toggles.Enable (GL.Toggles.Cull_Face);
 --        GL.Toggles.Enable (GL.Toggles.Depth_Test);
@@ -80,9 +80,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (10, 10, GL.Types.Int (Window_Width) - 10,
                               GL.Types.Int (Window_Height) - 10);
---        Aspect := Single (Window_Height) / Single (Window_Width);
+      Aspect := Single (Window_Height) / Single (Window_Width);
 
---        Time_Component := Single (360.0 * Current_Time);
+      Time_Component := Single (360.0 * Current_Time);
 --        for Index in Model_Matrices'Range loop
 --           a := Single (50 * Index) / 4.0;
 --           b := Single (50 * Index) / 5.0;
@@ -99,13 +99,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
 
       GL.Objects.Programs.Use_Program (Render_Program);
-      View_Matrix := Maths.Scaling_Matrix (Scale);
-      Utilities.Print_Matrix ("View_Matrix", View_Matrix);
+      View_Matrix :=
 --             Maths.Translation_Matrix ((0.0, 0.0, -1500.0)) *
---             Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0));
---        Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
---                                     Projection_Matrix);
-      Projection_Matrix := Identity4;
+           Maths.Translation_Matrix ((0.0, 0.0, 0.0)) *
+          Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0)) *
+          Maths.Scaling_Matrix (Scale);
+      Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
+                                   Projection_Matrix);
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       Num_Instances := 0;

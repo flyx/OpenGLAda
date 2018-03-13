@@ -415,8 +415,6 @@ package body Load_VB_Object is
       Attribute_Data  : VBM_Attributes_Header;
       Data_Offset     : Int := 0;  --  Offset into buffer
    begin
-      VBM_Object.Vertex_Array.Bind;
-
       for Index in 0 .. VBM_Object.Header.Num_Attributes - 1 loop
          Attribute_Data := VBM_Object.Attribute_Headers.Element (Natural (Index));
          case Index is
@@ -427,16 +425,11 @@ package body Load_VB_Object is
             Put_Line ("Load_VB_Object.Set_Attributes, invalid attribute index.");
          end case;
          if Int (Attribute_Index) = Vertex_Index then
---              GL.Attributes.Set_Vertex_Attrib_Pointer
---                (Index  => Attribute_Index,
---                 Count  => Int (Attribute_Data.Components),
---                 Kind   => Attribute_Data.Attribute_Type,
---                 Stride => 0, Offset => Data_Offset);
             GL.Attributes.Set_Vertex_Attrib_Pointer
-                          (Index  => 0,
-                           Count  => 4,
-                           Kind   => Single_Type,
-                           Stride => 0, Offset => 0);
+              (Index  => Attribute_Index,
+               Count  => Int (Attribute_Data.Components),
+               Kind   => Attribute_Data.Attribute_Type,
+               Stride => 0, Offset => Data_Offset);
             GL.Attributes.Enable_Vertex_Attrib_Array (0);
          else
             GL.Attributes.Disable_Vertex_Attrib_Array (Attribute_Index);
