@@ -59,7 +59,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Vector3 := (-0.004, -0.004, -0.004);
+      Scale             : constant Single := -0.006;
       Current_Time      : Float;  --  t
       a                 : Single;
       b                 : Single;
@@ -78,7 +78,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Aspect := Single (Window_Height) / Single (Window_Width);
 
       Time_Component := Single (36.0 * Current_Time);
---        Time_Component := Single (360.0 * Current_Time);
       for Index in Model_Matrices'Range loop
          a := Single (50 * Index) / 4.0;
          b := Single (50 * Index) / 5.0;

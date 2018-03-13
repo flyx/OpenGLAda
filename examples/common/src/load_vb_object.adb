@@ -32,8 +32,8 @@ package body Load_VB_Object is
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
                               Byte_Count    : in out UInt);
-   procedure Set_Attributes (VBM_Object : VB_Object;
-                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
+   procedure Set_Attribute_Pointers (VBM_Object : VB_Object;
+                                     Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
 --     function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
 --                                return GL.Types.Singles.Vector4_Array;
 
@@ -95,7 +95,6 @@ package body Load_VB_Object is
       --  Load attribute headers
       for count in 1 .. VBM_Object.Header.Num_Attributes loop
          VBM_Attributes_Header'Read (Data_Stream, Attributes_Header);
---           Load_Attribute_Header (Data_Stream, Attributes_Header, Byte_Count);
          VBM_Object.Attribute_Headers.Append (Attributes_Header);
          Total_Data_Size := Total_Data_Size +
            Attributes_Header.Components * VBM_Object.Header.Num_Vertices * Single_Size;
@@ -120,8 +119,8 @@ package body Load_VB_Object is
          Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
          Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
 
-         Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
-                         Tex_Coord0_Index);
+         Set_Attribute_Pointers (VBM_Object, Vertex_Index, Normal_Index,
+                                 Tex_Coord0_Index);
          Load_Indices (Data_Stream, VBM_Object.Header, VBM_Object);
 
          -- unbind the current array object
@@ -391,8 +390,8 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Set_Attributes (VBM_Object : VB_Object;
-                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
+   procedure Set_Attribute_Pointers (VBM_Object : VB_Object;
+                                     Vertex_Index, Normal_Index, Tex_Coord0_Index : Int) is
       use GL.Attributes;
       Attribute_Index : Attribute;  --  UInt
       Attribute_Data  : VBM_Attributes_Header;
@@ -407,25 +406,22 @@ package body Load_VB_Object is
          when others =>
             Put_Line ("Load_VB_Object.Set_Attributes, invalid attribute index.");
          end case;
-         if Int (Attribute_Index) = Vertex_Index then
-            GL.Attributes.Set_Vertex_Attrib_Pointer
-              (Index  => Attribute_Index,
-               Count  => Int (Attribute_Data.Components),
-               Kind   => Attribute_Data.Attribute_Type,
-               Stride => 0, Offset => Data_Offset);
-            GL.Attributes.Enable_Vertex_Attrib_Array (0);
-         else
-            GL.Attributes.Disable_Vertex_Attrib_Array (Attribute_Index);
-         end if;
+
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (Index  => Attribute_Index,
+            Count  => Int (Attribute_Data.Components),
+            Kind   => Attribute_Data.Attribute_Type,
+            Stride => 0, Offset => Data_Offset);
+         GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
          Data_Offset := Data_Offset +
            Int (Attribute_Data.Components * VBM_Object.Header.Num_Vertices * Single_Size);
       end loop;
 
    exception
       when others =>
-         Put_Line ("An exception occurred in Load_VB_Object.Set_Attributes.");
+         Put_Line ("An exception occurred in Load_VB_Object.Set_Attribute_Pointers.");
          raise;
-   end Set_Attributes;
+   end Set_Attribute_Pointers;
 
    --  ------------------------------------------------------------------------
 
