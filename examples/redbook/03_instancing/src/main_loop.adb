@@ -29,7 +29,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
    Background            : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 0.0);
 
-   --  BEGIN_APP_DECLARATION Member variables
    Colour_Buffer         : GL.Objects.Buffers.Buffer;
    Model_Matrix_Buffer   : GL.Objects.Buffers.Buffer;
    Colour_TBO            : GL.Objects.Buffers.Buffer;
@@ -40,14 +39,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Projection_Matrix_ID  : GL.Uniforms.Uniform;
 
    VBM_Object            : Load_VB_Object.VB_Object;
-   --  END_APP_DECLARATION
 
    Vertex_Location       : constant Int := 0;
    Normal_Location       : constant Int := 1;
    Tex_Coord0_Location   : constant Int := 2;
 
-   --  Display static variables
-   Num_Instances         : constant UInt := 100;
+   Num_Instances         : constant UInt := 50;
+--     Num_Instances         : constant UInt := 100;
 
    --  ------------------------------------------------------------------------
 
@@ -79,7 +77,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                               GL.Types.Int (Window_Height) - 10);
       Aspect := Single (Window_Height) / Single (Window_Width);
 
-      Time_Component := Single (360.0 * Current_Time);
+      Time_Component := Single (36.0 * Current_Time);
+--        Time_Component := Single (360.0 * Current_Time);
       for Index in Model_Matrices'Range loop
          a := Single (50 * Index) / 4.0;
          b := Single (50 * Index) / 5.0;
@@ -214,7 +213,7 @@ begin
          Display (Main_Window);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
-         delay (1.0);
+--           delay (1.0);
          Running := Running and not
            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
          Running := Running and not Main_Window.Should_Close;
