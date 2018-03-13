@@ -138,7 +138,7 @@ package body Load_VB_Object is
 --           Utilities.Print_Byte_Array ("Raw Data Array",
 --                                       Utilities.Byte_Array (Raw_Data), 1, 50);
          Vertices := To_Vector4_Array (Raw_Data, VBM_Object.Header.Num_Vertices);
---           Utilities.Print_GL_Array4 ("To_Vector4_Array vertices", Vertices);
+         Utilities.Print_GL_Array4 ("To_Vector4_Array vertices", Vertices);
 
 --           Print_Vertices (Raw_Data, VBM_Object.Header.Num_Vertices);
          --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
@@ -156,7 +156,6 @@ package body Load_VB_Object is
 --              Put_Line ("Array_Buffer pointer is null.");
 --           end if;
 
-         Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
          Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
                          Tex_Coord0_Index);
          Load_Indices (Data_Stream, VBM_Object.Header, VBM_Object);
@@ -397,14 +396,17 @@ package body Load_VB_Object is
 
 
    procedure Render (VBM_Object : VB_Object;
+                     Render_Program : GL.Objects.Programs.Program;
                      Frame_Index : UInt := 1; Instances : UInt := 0) is
       use GL.Objects.Buffers;
       use GL.Objects;
       Frame : VBM_Frame_Header;
    begin
       if Frame_Index > 0 and then Frame_Index <= VBM_Object.Header.Num_Frames then
-         VBM_Object.Vertex_Array.Bind;
          Frame := VBM_Object.Frame_Headers.Element (Natural (Frame_Index));
+         GL.Objects.Programs.Use_Program (Render_Program);
+         VBM_Object.Vertex_Array.Bind;
+         GL.Attributes.Enable_Vertex_Attrib_Array (0);
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Num_Vertices,
@@ -419,8 +421,13 @@ package body Load_VB_Object is
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
-              Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
-                                          Int (Frame.Num_Vertices));
+              Put_Line ("Load_VB_Object.Render Num_Indices = 0");
+--                Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
+--                                            Int (Frame.Num_Vertices));
+
+              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
+              Vertex_Arrays.Draw_Arrays (Triangles, 0, 10);
+              GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
@@ -444,7 +451,8 @@ package body Load_VB_Object is
       Attribute_Data  : VBM_Attributes_Header;
       Data_Offset     : Int := 0;  --  Offset into buffer
    begin
---        VBM_Object.Vertex_Array.Bind;
+      VBM_Object.Vertex_Array.Bind;
+
       for Index in 0 .. VBM_Object.Header.Num_Attributes - 1 loop
          Attribute_Data := VBM_Object.Attribute_Headers.Element (Natural (Index));
          case Index is
@@ -465,7 +473,7 @@ package body Load_VB_Object is
                            Count  => 4,
                            Kind   => Single_Type,
                            Stride => 0, Offset => 0);
-                        GL.Attributes.Enable_Vertex_Attrib_Array (0);
+            GL.Attributes.Enable_Vertex_Attrib_Array (0);
          else
             GL.Attributes.Disable_Vertex_Attrib_Array (Attribute_Index);
          end if;
@@ -483,6 +491,7 @@ package body Load_VB_Object is
 
    function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
                               return GL.Types.Singles.Vector4_Array is
+      use GL;
       Vertices    : GL.Types.Singles.Vector4_Array (1 .. Int (Num_Vertices));
       aVertex     : GL.Types.Singles.Vector4;
       Raw_Index   : UInt := 1;
@@ -495,6 +504,11 @@ package body Load_VB_Object is
                  Single (Raw_Data (Raw_Index) * 8 ** Natural (i - 1));
                Raw_Index := Raw_Index + 1;
             end loop;
+            if v_index = GL.W then
+               aVertex (v_index) := 1.0;
+            else
+               aVertex (v_index) := aVertex (v_index) * 0.001;
+            end if;
          end loop;
          Vertices (index) := aVertex;
       end loop;

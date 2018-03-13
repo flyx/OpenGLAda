@@ -108,7 +108,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
       Num_Instances := 0;
-      Load_VB_Object.Render (VBM_Object, 1, Num_Instances);
+      Load_VB_Object.Render (VBM_Object, Render_Program);
+--        Load_VB_Object.Render (VBM_Object, Render_Program, 1, Num_Instances);
 
    exception
       when  others =>
