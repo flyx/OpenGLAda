@@ -27,7 +27,7 @@ with Load_VB_Object;
 procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    use GL.Types;
 
-   Background            : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
+   Background            : constant GL.Types.Colors.Color := (1.0, 1.0, 1.0, 0.0);
 
    --  BEGIN_APP_DECLARATION Member variables
    Colour_Buffer         : GL.Objects.Buffers.Buffer;
@@ -61,7 +61,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Vector3 := (-0.005, -0.005, -0.01);
+      Scale             : constant Vector3 := (-0.004, -0.004, -0.004);
       Current_Time      : Float;  --  t
       a                 : Single;
       b                 : Single;
@@ -211,11 +211,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 begin
    if Setup then
       while Running loop
-         --           delay (0.03);
          Display (Main_Window);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
-         delay (0.03);
+         delay (1.0);
          Running := Running and not
            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
          Running := Running and not Main_Window.Should_Close;
