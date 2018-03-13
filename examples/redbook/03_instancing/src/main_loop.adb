@@ -1,17 +1,14 @@
 
 with Ada.Text_IO; use Ada.Text_IO;
 
---  with Interfaces.C.Pointers;
-
---  with GL.Attributes;
---  with GL.Buffers;
+with GL.Buffers;
 with GL.Objects;
 with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Objects.Shaders;
---  with GL.Objects.Textures;
---  with GL.Pixels;
---  with GL.Toggles;
+with GL.Objects.Textures;
+with GL.Pixels;
+with GL.Toggles;
 with GL.Types.Colors;
 with GL.Uniforms;
 with GL.Window;
@@ -50,7 +47,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Tex_Coord0_Location   : constant Int := 2;
 
    --  Display static variables
-   Num_Instances         :  UInt := 100;
+   Num_Instances         : constant UInt := 100;
 
    --  ------------------------------------------------------------------------
 
@@ -61,21 +58,21 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Window_Width      : Glfw.Size;
       Window_Height     : Glfw.Size;
       Aspect            : Single;
---        Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
+      Model_Matrices    : Singles.Matrix4_Array (1 .. 4);
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
       Scale             : constant Vector3 := (0.001, 0.001, 0.001);
       Current_Time      : Float;  --  t
---        a                 : Single;
---        b                 : Single;
---        c                 : Single;
+      a                 : Single;
+      b                 : Single;
+      c                 : Single;
       Time_Component    : Single;
    begin
       Current_Time :=  Float (Glfw.Time);
       Utilities.Clear_Background_Colour_And_Depth (Background);
---        GL.Toggles.Enable (GL.Toggles.Cull_Face);
---        GL.Toggles.Enable (GL.Toggles.Depth_Test);
---        GL.Buffers.Set_Depth_Function (LEqual);
+      GL.Toggles.Enable (GL.Toggles.Cull_Face);
+      GL.Toggles.Enable (GL.Toggles.Depth_Test);
+      GL.Buffers.Set_Depth_Function (LEqual);
 
       Window.Get_Framebuffer_Size (Window_Width, Window_Height);
       GL.Window.Set_Viewport (10, 10, GL.Types.Int (Window_Width) - 10,
@@ -83,32 +80,33 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Aspect := Single (Window_Height) / Single (Window_Width);
 
       Time_Component := Single (360.0 * Current_Time);
---        for Index in Model_Matrices'Range loop
---           a := Single (50 * Index) / 4.0;
---           b := Single (50 * Index) / 5.0;
---           c := Single (50 * Index) / 6.0;
---           Model_Matrices (Index) := Identity4;
---             Maths.Translation_Matrix ((a + 10.0, b + 40.0, c + 50.0)) *
---             Maths.Rotation_Matrix (Degree (c + Time_Component), (0.0, 0.0, 1.0)) *
---             Maths.Rotation_Matrix (Degree (a + Time_Component), (1.0, 0.0, 0.0)) *
---             Maths.Rotation_Matrix (Degree (b + Time_Component), (0.0, 1.0, 0.0));
---        end loop;
+      for Index in Model_Matrices'Range loop
+         a := Single (50 * Index) / 4.0;
+         b := Single (50 * Index) / 5.0;
+         c := Single (50 * Index) / 6.0;
+         Model_Matrices (Index) := Maths.Translation_Matrix
+           ((a + 10.0, b + 40.0, c + 50.0)) *
+           Maths.Rotation_Matrix
+             (Degree (c + Time_Component), (0.0, 0.0, 1.0)) *
+               Maths.Rotation_Matrix
+                 (Degree (a + Time_Component), (1.0, 0.0, 0.0)) *
+                   Maths.Rotation_Matrix
+                     (Degree (b + Time_Component), (0.0, 1.0, 0.0));
+      end loop;
 
       --  Bind the weight VBO and change its data
---        Texture_Buffer.Bind (Model_Matrix_Buffer);
---        Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
+      Texture_Buffer.Bind (Model_Matrix_Buffer);
+      Utilities.Load_Texture_Buffer (Texture_Buffer, Model_Matrices, Dynamic_Draw);
 
       GL.Objects.Programs.Use_Program (Render_Program);
       View_Matrix :=
---             Maths.Translation_Matrix ((0.0, 0.0, -1500.0)) *
-           Maths.Translation_Matrix ((0.0, 0.0, 0.0)) *
+          Maths.Translation_Matrix ((0.0, 0.0, 1500.0)) *
           Maths.Rotation_Matrix (Degree (2.0 * Time_Component), (0.0, 1.0, 0.0)) *
           Maths.Scaling_Matrix (Scale);
       Init_Orthographic_Transform (-1.0, 1.0, -Aspect, Aspect, -1.0, 5000.0,
                                    Projection_Matrix);
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (Projection_Matrix_ID, Projection_Matrix);
-      Num_Instances := 0;
       Load_VB_Object.Render (VBM_Object, 1, Num_Instances);
 
    exception
@@ -186,21 +184,20 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Colours (index) (GL.W) := 1.0;
       end loop;
 
---        Texture_Buffer.Bind (Colour_Buffer);
---        Utilities.Load_Texture_Buffer (Texture_Buffer, Colours, Static_Draw);
---        Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Colour_Buffer);
+      Texture_Buffer.Bind (Colour_Buffer);
+      Utilities.Load_Texture_Buffer (Texture_Buffer, Colours, Static_Draw);
+      Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Colour_Buffer);
 
---        GL.Objects.Textures.Set_Active_Unit (1);
---        Texture_Buffer.Bind (Model_Matrix_TBO);
+      GL.Objects.Textures.Set_Active_Unit (1);
+      Texture_Buffer.Bind (Model_Matrix_TBO);
 
---        Texture_Buffer.Bind (Model_Matrix_Buffer);
---        Texture_Buffer_Allocate (Texture_Buffer,
---                                 Long (Num_Instances * Singles.Matrix4'Size),
---                                 Dynamic_Draw);
---
---        Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
---        GL.Objects.Textures.Set_Active_Unit (0);
+      Texture_Buffer.Bind (Model_Matrix_Buffer);
+      Texture_Buffer_Allocate (Texture_Buffer,
+                               Long (Num_Instances * Singles.Matrix4'Size),
+                               Dynamic_Draw);
 
+      Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
+      GL.Objects.Textures.Set_Active_Unit (0);
       return VBM_Result;
 
    exception

@@ -108,8 +108,6 @@ package body Load_VB_Object is
       end loop;
 
       Print_VBM_Object_Data ("VBM_Object", VBM_Object);
---        Put_Line ("Load_VB_Object.Load_From_VBM, Total_Data_Size: " &
---                   UInt'Image (Total_Data_Size));
       declare
          use Interfaces.C;
          use Image_Data_Pointers;
@@ -118,11 +116,8 @@ package body Load_VB_Object is
       begin
          --  Read rest of file.
          Image_Data'Read (Data_Stream, Raw_Data);
-         --  glBufferData(GL_ARRAY_BUFFER, total_data_size, raw_data,
-         --               GL_STATIC_DRAW);
          VBM_Object.Attribute_Buffer.Initialize_Id;
          Array_Buffer.Bind (VBM_Object.Attribute_Buffer);
---           Utilities.Load_Vertex_Buffer (Array_Buffer, Vertices, Static_Draw);
          Load_Image_Data (Array_Buffer, Raw_Data, Static_Draw);
 
          Set_Attributes (VBM_Object, Vertex_Index, Normal_Index,
@@ -171,9 +166,6 @@ package body Load_VB_Object is
             Indices_Array : Image_Data (1 .. Element_Data_Size);
          begin
             Image_Data'Read (Data_Stream, Indices_Array);
-            --  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            --               m_header.num_indices * element_size,
-            --               raw_data + total_data_size, GL_STATIC_DRAW);
             Load_Image_Data (Element_Array_Buffer, Indices_Array, Static_Draw);
          end;  --  declare block
       end if;
@@ -259,7 +251,6 @@ package body Load_VB_Object is
       declare
          Head : VBM_Header (Magic);
       begin
---           Header'Read (Header_Stream, Head);
          UInt'Read (Header_Stream, Head.Size);
          Byte_Count := Byte_Count + UInt_Size;
          String'Read (Header_Stream, Head.Name);
@@ -385,10 +376,6 @@ package body Load_VB_Object is
                Put_Line ("Load_VB_Object.Render Num_Indices > 0");
                null;
             else
---                Put_Line ("Load_VB_Object.Render Num_Indices = 0");
---                Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
---                                            Int (Frame.Num_Vertices));
-
               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
               Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
               GL.Attributes.Disable_Vertex_Attrib_Array (0);
