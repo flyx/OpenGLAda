@@ -89,7 +89,6 @@ package body Load_VB_Object is
       Open (File_ID, In_File, File_Name);
       Data_Stream := Stream (File_ID);
 
---        VBM_Header'Read (Data_Stream, VBM_Object.Header);
       Load_VBM_Header (Data_Stream,  Header, Byte_Count);
       VBM_Object.Header := Header;
       --  Load attribute headers
@@ -360,7 +359,8 @@ package body Load_VB_Object is
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Num_Vertices,
-                                        GL.Types.UInt_Type, Frame.First);
+                                        GL.Types.UInt_Type, Frame.First,
+                                        Instances);
             else
                Vertex_Arrays.Draw_Arrays_Instanced
                  (Triangles, Int (Frame.First), Int (Frame.Num_Vertices),
@@ -368,12 +368,10 @@ package body Load_VB_Object is
             end if;
          else
             if VBM_Object.Header.Num_Indices > 0 then
-               Put_Line ("Load_VB_Object.Render Num_Indices > 0");
-               null;
+               Draw_Elements (Triangles, Int (Frame.Num_Vertices),
+                              GL.Types.UInt_Type, Integer (Frame.First));
             else
-              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-              Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
-              GL.Attributes.Disable_Vertex_Attrib_Array (0);
+               Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
