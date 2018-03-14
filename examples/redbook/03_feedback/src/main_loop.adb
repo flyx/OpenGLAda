@@ -109,7 +109,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Aspect            : Single;
       Model_Matrix      : Singles.Matrix4 := Identity4;
       Projection_Matrix : Singles.Matrix4;
-      Scale             : constant Single := 40.0;
+      Scale             : constant Single := 0.003;
 --        Scale             : constant Single := 0.3;
       Current_Time      : Float;  --  t
    begin
