@@ -196,35 +196,29 @@ package body GL.Objects.Programs is
    procedure Transform_Feedback_Varyings
      (Object :  Program; Varyings : String; Mode : Buffer_Mode) is
       use Ada.Strings.Fixed;
+      use Interfaces.C;
       use Interfaces.C.Strings;
       String_Size : constant Natural := Varyings'Length;
-      List_Size   : constant Natural := Count (Varyings, ",") + 1;
-      C_Varyings  : chars_ptr_array (1 .. Interfaces.C.size_t (List_Size));
-      Pos         : Natural := 1;
-      Start       : Natural := 1;
-      Text_End    : Natural;
+      Num_Strings : constant GL.Types.Int :=
+        GL.Types.Int (Count (Varyings, ",") + 1);
+      Prev        : Natural := 1;
+      Vary_Index  : size_t := 1;
+      C_Varyings  : chars_ptr_array (1 .. Interfaces.C.size_t (String_Size));
    begin
-      if List_Size = 1 then
-         Text_End := String_Size;
+      if Num_Strings = 1 then
+         C_Varyings (1) := New_String (Varyings);
       else
-         Text_End := Index (Varyings, ",") - 1;
-      end if;
-      while Pos in 1 .. List_Size loop
-         declare
-            Vary_Text : constant String := Varyings (Start .. Text_End);
-         begin
-            C_Varyings (Interfaces.C.size_t (Pos)) := New_String (Vary_Text);
-            Start := Text_End + 2;
-            if Pos < List_Size - 1 then
-               Text_End := Index (Varyings (Start .. String_Size), ",") - 1;
-            else
-               Text_End := String_Size;
+         for Pos in 2 .. String_Size - 1 loop
+            if Varyings (Pos) =  ',' then
+               C_Varyings (Vary_Index) := New_String (Varyings (Prev .. Pos - 1));
+               Prev := Pos + 1;
+               Vary_Index := Vary_Index + 1;
             end if;
-         end;  --  declare block
-         Pos := Pos + 1;
-      end loop;
+         end loop;
+         C_Varyings (Vary_Index) := New_String (Varyings (Prev .. String_Size));
+      end if;
       API.Transform_Feedback_Varyings
-        (Object.Reference.GL_Id, Int (List_Size), C_Varyings, Mode);
+        (Object.Reference.GL_Id, Num_Strings, C_Varyings, Mode);
       Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
