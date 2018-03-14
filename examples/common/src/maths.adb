@@ -352,7 +352,7 @@ package body Maths is
 
    function Scaling_Matrix (Scale_Factor : Single) return Singles.Matrix4 is
    begin
-      return Scale_Factor * Singles.Identity4;
+      return Scaling_Matrix ((Scale_Factor, Scale_Factor, Scale_Factor));
    end Scaling_Matrix;
 
    --  ------------------------------------------------------------------------

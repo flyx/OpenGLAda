@@ -18,25 +18,29 @@ package Load_VB_Object is
    type VB_Object is private;
 
    function Get_Vertex_Count (Object : VB_Object; Frame_Index : UInt := 1) return Int;
-   procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
+   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean);
+   procedure Print_Attributes_Header (Message : String; Object : VB_Object;
+                                      Attributes_Index : UInt);
    procedure Print_VBM_Object_Data (Message : String; Object : VB_Object);
-   procedure Render (VBM_Object : in out VB_Object;
+   procedure Print_VBM_Frame_Data (Message : String; Object : VB_Object;
+                                   Frame_Index : UInt);
+   procedure Render (VBM_Object : VB_Object;
                      Frame_Index : UInt := 1; Instances : UInt := 0);
 
 private
    New_Header_Magic : UInt := 16#314d4253#;  -- 1MBS
 
    type VBM_Header (Magic : UInt := New_Header_Magic) is record
-      Name           : String (1 .. 64);
       Size           : UInt := 0;
+      Name           : String (1 .. 64);
       Num_Attributes : UInt := 0;
       Num_Frames     : UInt := 0;
       Num_Vertices   : UInt := 0;
       Num_Indices    : UInt := 0;
-      Num_Materials  : UInt := 0;
       Index_Type     : Numeric_Type := UByte_Type;
+      Num_Materials  : UInt := 0;
       Flags          : UInt := 0;
       case Magic is
          when others =>
@@ -51,15 +55,14 @@ private
       Flags          : UInt := 0;
    end record;
 
-   package Attribute_Package is new Ada.Containers.Doubly_Linked_Lists
-     (VBM_Attributes_Header);
-   type Attribute_Headers_List is new Attribute_Package.List with null record;
-
+   package Attribute_Package is new Ada.Containers.Vectors
+     (Natural, VBM_Attributes_Header);
+   type Attribute_Headers_List is new Attribute_Package.Vector with null record;
 
    type VBM_Frame_Header is record
-      First  : UInt := 0;
-      Count  : UInt := 0;
-      Flags  : UInt := 0;
+      First        : UInt := 0;
+      Num_Vertices : UInt := 0;
+      Flags        : UInt := 0;
    end record;
 
    type VBM_Render_Chunk is record
@@ -70,7 +73,7 @@ private
 
    package Chunk_Package is new
      Ada.Containers.Vectors (Positive, VBM_Render_Chunk);
-   type Chunk_List is new Chunk_Package.Vector with null record;
+   type Render_Chunk_List is new Chunk_Package.Vector with null record;
 
    type VBM_Vec2F is record
       X  : Float := 0.0;
@@ -116,7 +119,7 @@ private
    end record;
    package Material_Textures_Package is new
      Ada.Containers.Doubly_Linked_Lists (Material_Texture);
-   type Material_Textures is new Material_Textures_Package.List with null record;
+   type Material_Texture_List is new Material_Textures_Package.List with null record;
 
    package Frame_Headers_Package is new
      Ada.Containers.Vectors (Positive, VBM_Frame_Header);
@@ -129,16 +132,18 @@ private
    type Buffer_List is array (Num_Frames_Range range <>) of
      GL.Objects.Buffers.Buffer;
 
-   type VB_Object (Num_Frames : Positive := 1) is record
-      Vertex_Array_Object : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      Attribute_Buffer    : GL.Objects.Buffers.Buffer;
-      Index_Buffer        : GL.Objects.Buffers.Buffer;
+   type VB_Object is record
+      --  One Vertex_Array_Object
+      Vertex_Array        : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      Attribute_Buffer    : GL.Objects.Buffers.Buffer;  --  One Attribute_Buffer
+      Index_Buffer        : GL.Objects.Buffers.Buffer;  --  Index_Buffer
       Header              : VBM_Header;
-      Attribute_Headers   : Attribute_Headers_List;
-      Frame_Headers       : Frame_Headers_List;
-      Materials           : Materials_List;
-      Render_Chunks       : Chunk_List;
-      Texture_List        : Material_Textures;
+      Num_Frames          : Positive := 1;
+      Attribute_Headers   : Attribute_Headers_List;  --  Array of attribute records
+      Frame_Headers       : Frame_Headers_List;      --  Array of frame records
+      Materials           : Materials_List;          --  Array of material records
+      Chunks              : Render_Chunk_List;       --  Array of chunk records
+      Material_Textures   : Material_Texture_List;
    end record;
 
 end Load_VB_Object;
