@@ -43,6 +43,12 @@ package GL.Objects.Buffers is
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Load_To_Texture_Buffer (Target : Texture_Buffer_Target;
+                                     Data   : Pointers.Element_Array;
+                                     Usage  : Buffer_Usage);
+
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
    procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
    procedure Unmap (Target : Buffer_Target);
