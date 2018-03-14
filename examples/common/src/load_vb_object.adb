@@ -371,7 +371,8 @@ package body Load_VB_Object is
                Draw_Elements (Triangles, Int (Frame.Num_Vertices),
                               GL.Types.UInt_Type, Integer (Frame.First));
             else
-               Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
+               Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
+                                          Int (Frame.Num_Vertices));
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
