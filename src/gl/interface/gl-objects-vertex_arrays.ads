@@ -9,6 +9,9 @@ package GL.Objects.Vertex_Arrays is
 
    procedure Draw_Arrays (Mode : Connection_Mode; First, Count : Size);
 
+   procedure Draw_Arrays_Instanced (Mode : Connection_Mode;
+                                    First, Count, Instances : Size);
+
    function Current_Array_Object return Vertex_Array_Object;
 
    -- bind this object to unbind the current array object.
