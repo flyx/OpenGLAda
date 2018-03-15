@@ -17,6 +17,13 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Cube_Root (Value : Single) return Single is
+   begin
+      return Maths.Single_Math_Functions.Exp (Maths.Single_Math_Functions.Log (Value) / 3.0);
+   end Cube_Root;
+
+   --  ------------------------------------------------------------------------
+
    function Degrees (Angle : Radian) return Degree is
    begin
       return Degree (Angle) * Degrees_Per_Radian;
@@ -117,6 +124,19 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
+   function Minimum (I1, I2 : Integer) return Integer is
+      Min : Integer;
+   begin
+      if I1 < I2 then
+         Min := I1;
+      else
+         Min := I2;
+      end if;
+      return Min;
+   end Minimum;
+
+   --  ------------------------------------------------------------------------
+
    function Minimum (I1, I2 : Single) return Single is
       Min : Single;
    begin
@@ -132,6 +152,19 @@ package body Maths is
 
    function Maximum (I1, I2 : Int) return Int is
       Max : Int;
+   begin
+      if I1 > I2 then
+         Max := I1;
+      else
+         Max := I2;
+      end if;
+      return Max;
+   end Maximum;
+
+   --  ------------------------------------------------------------------------
+
+   function Maximum (I1, I2 : Integer) return Integer is
+      Max : Integer;
    begin
       if I1 > I2 then
          Max := I1;
@@ -274,6 +307,13 @@ package body Maths is
       theMatrix (Y, Y) := Scale_Factor (Y);
       theMatrix (Z, Z) := Scale_Factor (Z);
       return theMatrix;
+   end Scaling_Matrix;
+
+   --  ------------------------------------------------------------------------
+
+   function Scaling_Matrix (Scale_Factor : Single) return Singles.Matrix4 is
+   begin
+      return Scaling_Matrix ((Scale_Factor, Scale_Factor, Scale_Factor));
    end Scaling_Matrix;
 
    --  ------------------------------------------------------------------------

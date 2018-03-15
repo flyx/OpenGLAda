@@ -92,7 +92,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
-   procedure Map (Target : in out Buffer_Target; Access_Type : Access_Kind;
+   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
@@ -101,7 +101,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Map;
 
-   procedure Unmap (Target : in out Buffer_Target) is
+   procedure Unmap (Target : Buffer_Target) is
    begin
       API.Unmap_Buffer (Target.Kind);
       Raise_Exception_On_OpenGL_Error;
@@ -120,9 +120,10 @@ package body GL.Objects.Buffers is
    procedure Set_Sub_Data (Target : Buffer_Target;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array) is
+      use type C.long;
    begin
       API.Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
-                           Low_Level.SizeIPtr (Data'Length),
+                           Pointers.Element'Size * Data'Length / System.Storage_Unit,
                            Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Set_Sub_Data;

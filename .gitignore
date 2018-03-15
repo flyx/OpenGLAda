@@ -29,6 +29,7 @@ shading
 model_loading
 indexed_loading
 indexing
+draw_triangles
 
 
 
