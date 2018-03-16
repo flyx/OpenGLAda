@@ -218,6 +218,10 @@ spec GL.API is
                           First : Int; Count : Size) with
      Static  => "glDrawArrays",
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays";
+   procedure Draw_Arrays_Instanced (Mode  : Connection_Mode;
+     First : Size; Count : Size; Instances : Size) with
+     Static  => "glDrawArraysInstanced",
+     Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays_Instanced";
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
                             Index_Type : Unsigned_Numeric_Type;
