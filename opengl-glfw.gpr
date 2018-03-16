@@ -17,24 +17,24 @@ library project OpenGL.Glfw is
    -- the defined GLFW version.
    Shared_Test_Sources := ("tests/shared");
 
-   Default_GLFW_Lib := "";
+   Default_GLFW_Linker_Param := "";
    case GLFW_Version is
       when "2" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v2";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw2_backend";
-         Default_GLFW_Lib := "glfw";
+         Default_GLFW_Linker_Param := "-lglfw";
       when "3" =>
          GLFW_Sources := GLFW_Sources & "src/glfw/v3";
          Shared_Test_Sources := Shared_Test_Sources & "tests/shared/glfw3_backend";
          case OpenGL.Windowing_System is
             when "windows" =>
-               Default_GLFW_Lib := "glfw3";
+               Default_GLFW_Linker_Param := "-lglfw3";
             when "x11" | "quartz" =>
-               Default_GLFW_Lib := "glfw";
+               Default_GLFW_Linker_Param := "-lglfw";
          end case;
    end case;
 
-   GLFW_Lib := external ("GLFW_LIBRARY_NAME", Default_GLFW_Lib);
+   GLFW_Lib := external ("GLFW_Linker_Param", Default_GLFW_Linker_Param);
 
    for Source_Dirs use GLFW_Sources;
    for Object_Dir use "obj";
@@ -48,13 +48,13 @@ library project OpenGL.Glfw is
       case OpenGL.Windowing_System is
          when "quartz" =>
             for Linker_Options use
-              ("-l" & GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit");
+              (GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit");
          when "windows" =>
-            for Linker_Options use ("-l" & GLFW_Lib, "-lwinmm", "-lgdi32");
+            for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
          when "x11" =>
 	      --  -lX11 is already set in opengl.gpr
             for Linker_Options use
-              ("-l" & GLFW_Lib, "-pthread", "-lm", "-lXcursor", "-lXxf86vm",
+              (GLFW_Lib, "-pthread", "-lm", "-lXcursor", "-lXxf86vm",
                "-lXrandr", "-lXinerama", "-lXi", "-ldl");
       end case;
    end Linker;

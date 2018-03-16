@@ -1,0 +1,3 @@
+aggregate project Install is
+   for Project_Files use ("../opengl.gpr", "../opengl-glfw.gpr", "../opengl-text.gpr", "../opengl-soil.gpr", "../FreeTypeAda/freetype.gpr");
+end Install;
