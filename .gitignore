@@ -26,6 +26,7 @@ textured_cube
 wave
 picking
 shading
+indexing
 model_loading
 instancing
 transform_feedback
