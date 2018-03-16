@@ -60,13 +60,23 @@ package GL.Objects.Programs is
 
    function Tess_Gen_Vertex_Order (Subject : Program) return Orientation;
 
-   function Transform_Feedback_Buffer_Mode (Subject : Program)
-                                            return Buffer_Mode;
+   function Transform_Feedback_Buffer_Mode (Object : Program) return Buffer_Mode;
 
-   function Transform_Feedback_Varyings (Subject : Program) return Size;
+   function Transform_Feedback_Varyings (Object : Program) return Size;
 
-   function Transform_Feedback_Varying_Max_Length (Subject : Program)
+   function Transform_Feedback_Varying_Max_Length (Object : Program)
                                                    return Size;
+
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode);
+
+   procedure End_Transform_Feedback;
+
+   procedure Get_Transform_Feedback_Varying
+     (Object : Program; Index, Buffer_Size, Length, V_Length : Integer;
+      V_Type : Buffer_Mode; Name : String);
+
+   procedure Transform_Feedback_Varyings
+     (Object : Program; Varyings : String; Mode : Buffer_Mode);
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size;
@@ -112,7 +122,8 @@ package GL.Objects.Programs is
 
    -- raises Unknown_Variable_Name if Name is not an out variable
    function Frag_Data_Location (Object : Program; Name : String)
-     return Buffers.Draw_Buffer_Index;
+                                return Buffers.Draw_Buffer_Index;
+
 private
    Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;
 
@@ -137,4 +148,5 @@ private
    for Buffer_Mode use (Interleaved_Attribs => 16#8C8C#,
                         Separate_Attribs    => 16#8C8D#);
    for Buffer_Mode'Size use Low_Level.Enum'Size;
+
 end GL.Objects.Programs;
