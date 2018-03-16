@@ -27,6 +27,6 @@ wave
 picking
 shading
 model_loading
-transform_feedback
 draw_triangles
+transform_feedback
 instancing
