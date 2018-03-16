@@ -228,6 +228,18 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_GL_UInt_Array (Name : String; anArray : GL.Types.UInt_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put_Line (Int'Image (Index) & ":  " & UInt'Image (anArray (Index)));
+      end loop;
+      New_Line;
+   end Print_GL_UInt_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_Matrix (Name    : String;
                            aMatrix : GL.Types.Singles.Matrix3) is
       use GL.Types.Singles;

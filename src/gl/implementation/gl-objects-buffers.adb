@@ -153,6 +153,23 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
+   procedure Draw_Elements_Instanced (Mode : Connection_Mode; Count : UInt;
+                                      Index_Type : Unsigned_Numeric_Type;
+                                      Element_Offset : UInt := 0;
+                                      Instance_Count : UInt := 0) is
+      Element_Bytes : UInt;
+   begin
+      case Index_Type is
+         when UByte_Type => Element_Bytes := 1;
+         when UShort_Type => Element_Bytes := 2;
+         when UInt_Type => Element_Bytes := 4;
+      end case;
+      API.Draw_Elements_Instanced (Mode, Int (Count), Index_Type,
+                                   Low_Level.IntPtr (Element_Bytes * Element_Offset),
+                                   Int (Instance_Count));
+      Raise_Exception_On_OpenGL_Error;
+   end Draw_Elements_Instanced;
+
    procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
