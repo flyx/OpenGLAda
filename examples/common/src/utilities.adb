@@ -116,6 +116,30 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
+                               Start, Finish : GL.Types.UInt) is
+      use GL.Types;
+      Count : Integer := 1;
+   begin
+      Put_Line (Name & ": ");
+      if Int (Start) >= anArray'First and then Int (Finish) <= anArray'Last then
+         for Index in Start .. Finish loop
+            Put (UInt'Image (Index) & ": " &
+                   UByte'Image (anArray (Int (Index))) & "   ");
+            Count := Count + 1;
+            if Count > 5 then
+               New_Line;
+               Count := 1;
+            end if;
+         end loop;
+      else
+         Put_Line ("Print_Byte_Array called with invalid start or finish index.");
+      end if;
+      New_Line;
+   end Print_Byte_Array;
+
+   --  ------------------------------------------------------------------------
+
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array) is
       use GL.Types;
    begin
@@ -241,6 +265,30 @@ package body Utilities is
       end loop;
       New_Line;
    end Print_Matrix;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_Singles_Array (Name : String; anArray : Singles_Array;
+                                  Start, Finish : GL.Types.Int) is
+      use GL.Types;
+      Count : Integer := 1;
+   begin
+      Put_Line (Name & ": ");
+      if Start >= anArray'First and then Finish <= anArray'Last then
+         for Index in Start .. Finish loop
+            Put (Int'Image (Index) & ": " & Single'Image (anArray (Index)) &
+                "   ");
+            Count := Count + 1;
+            if Count > 4 then
+               New_Line;
+               Count := 1;
+            end if;
+         end loop;
+      else
+         Put_Line ("Print_Singles_Array called with invalid start or finish index.");
+      end if;
+      New_Line;
+   end Print_Singles_Array;
 
    --  ------------------------------------------------------------------------
 
