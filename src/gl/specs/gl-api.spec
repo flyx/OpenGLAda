@@ -220,7 +220,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays";
    procedure Draw_Arrays_Instanced (Mode  : Connection_Mode;
      First : Size; Count : Size; Instances : Size) with
-     Static  => "glDrawArraysInstanced",
+     Dynamic  => "glDrawArraysInstanced",
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays_Instanced";
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;

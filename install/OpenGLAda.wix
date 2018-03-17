@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Name="OpenGLAda" Manufacturer="Felix Krause"
+           Id="7fcf30f6-a362-4cfb-afdf-61ad489eace2"
+           UpgradeCode="f01186d7-0f72-475d-8609-46f8feff1c71"
+           Language="1033" Codepage="1252" Version="0.7.0">
+    <Package Keywords="Installer"
+             Description="OpenGLAda Binary Distribution Installer"
+             InstallerVersion="100" Languages="1033" Compressed="yes"
+             SummaryCodepage="1252" />
+    <Media Id="1" Cabinet="OpenGLAda.cab" EmbedCab="yes" />
+    <Property Id="INSTALLDIR" Value="C:\GNAT\2017" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="INSTALLDIR" Name="GNAT" ComponentGuidGenerationSeed="005645a9-cb2e-43da-a920-68b7e8d3ae11">
+        <Component Id="dummy" Guid="fd86164a-4408-496d-a3fb-633a56f1a955" KeyPath="yes" />
+        <Directory Id="libFolder" Name="lib">
+          <Directory Id="libOpenglFolder" Name="opengl" />
+          <Directory Id="libOpenglGlfwFolder" Name="opengl.glfw" />
+          <Directory Id="libOpenglSoilFolder" Name="opengl.soil" />
+          <Directory Id="libOpenglTextFolder" Name="opengl.text" />
+          <Directory Id="libFreetypeFolder" Name="freetype" />
+          <Component Id="GlfwStaticLibrary" Guid="*">
+            <File Id="GlfwStaticLibraryA" Name="libglfw3.a" DiskId="1" Source="$(var.lib)\libglfw3.a" KeyPath="yes" />
+          </Component>
+          <Component Id="FreetypeDynamicLibrary" Guid="*">
+            <File Id="FreetypeDLL" Name="freetype.dll" DiskId="1" Source="$(var.lib)\freetype.dll" KeyPath="yes" />
+          </Component>
+        </Directory>
+        <Directory Id="includeFolder" Name="include">
+          <Directory Id="includeOpenglFolder" Name="opengl" />
+          <Directory Id="includeOpenglGlfwFolder" Name="opengl.glfw" />
+          <Directory Id="includeOpenglSoilFolder" Name="opengl.soil" />
+          <Directory Id="includeOpenglTextFolder" Name="opengl.text" />
+          <Directory Id="includeFreetypeFolder" Name="freetype" />
+        </Directory>
+        <Directory Id="shareFolder" Name="share">
+          <Directory Id="gprFolder" Name="gpr">
+            <Component Id="CoreProject" Guid="*">
+              <File Id="CoreGPR" Name="opengl.gpr" DiskId="1" Source="$(var.gpr)\opengl.gpr" KeyPath="yes" />
+            </Component>
+            <Component Id="GlfwProject" Guid="*">
+              <File Id="GlfwGPR" Name="opengl-glfw.gpr" DiskId="1" Source="$(var.gpr)\opengl-glfw.gpr" KeyPath="yes" />
+            </Component>
+            <Component Id="SoilProject" Guid="*">
+              <File Id="SoilGPR" Name="opengl-soil.gpr" DiskId="1" Source="$(var.gpr)\opengl-soil.gpr" KeyPath="yes" />
+            </Component>
+            <Component Id="TextProject" Guid="*">
+              <File Id="TextGPR" Name="opengl-text.gpr" DiskId="1" Source="$(var.gpr)\opengl-text.gpr" KeyPath="yes" />
+            </Component>
+            <Component Id="FreetypeProject" Guid="*">
+              <File Id="FreetypeGPR" Name="freetype.gpr" DiskId="1" Source="$(var.gpr)\freetype.gpr" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete" Title="OpenGLAda 0.6.0"
+             Description="OpenGLAda package – Please ensure that the selected install path points to your GNAT installation!"
+             Display="expand" Level="1" Absent="disallow"
+             ConfigurableDirectory="INSTALLDIR"
+             AllowAdvertise="no">
+      <!-- this one is necessary to disable the "will be installed to run from networt" option in GUI -->
+      <ComponentRef Id="dummy" />
+
+      <Feature Id="Core" Title="Core" Absent="disallow"
+               Description="The core OpenGL Ada wrapper." 
+               Level="1" AllowAdvertise="no">
+        <ComponentGroupRef Id="CoreLibFiles" />
+        <ComponentGroupRef Id="CoreIncludeFiles" />
+        <ComponentRef Id="CoreProject" />
+      </Feature>
+      <Feature Id="GLFW" Title="GLFW" AllowAdvertise="no"
+               Description="Includes the GLFW library and an Ada wrapper for it."
+               Level="1">
+        <ComponentGroupRef Id="GlfwLibFiles" />
+        <ComponentGroupRef Id="GlfwIncludeFiles" />
+        <ComponentRef Id="GlfwStaticLibrary" />
+        <ComponentRef Id="GlfwProject" />
+      </Feature>
+      <Feature Id="SOIL" Title="SOIL" AllowAdvertise="no"
+               Description="Includes the SOIL library and an Ada  wrapper for it." Level="1">
+        <ComponentGroupRef Id="SoilLibFiles" />
+        <ComponentGroupRef Id="SoilIncludeFiles" />
+        <ComponentRef Id="SoilProject" />
+      </Feature>
+      <Feature Id="Text" Title="Text" AllowAdvertise="no"
+               Description="Library for rendering text with FreeType. Includes the FreeType library and an Ada wrapper for it."
+               Level="1">
+        <ComponentGroupRef Id="TextLibFiles" />
+        <ComponentGroupRef Id="FreetypeLibFiles" />
+        <ComponentGroupRef Id="TextIncludeFiles" />
+        <ComponentGroupRef Id="FreetypeIncludeFiles" />
+        <ComponentRef Id="FreetypeDynamicLibrary" />
+        <ComponentRef Id="TextProject" />
+        <ComponentRef Id="FreetypeProject" />
+      </Feature>
+    </Feature>
+    <UIRef Id="WixUI_FeatureTree" />
+  </Product>
+</Wix>

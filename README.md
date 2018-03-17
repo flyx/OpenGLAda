@@ -109,13 +109,14 @@ versions (e.g. on Windows 7 instead of Windows 10).
    working directory because they are loading shader files from hardcoded paths.
  * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
    for them to work.
- * If you want to use FreeType, download the official 32-bit Windows binary from
-   the [FreeType website][19] and copy the file `freetype6.dll` from the `bin`
-   folder into `C:\GNAT\2017\lib`, then execute:
+ * If you want to use FreeType, you need at least FreeType 2.7.1. There is an
+   [unofficial GitHub repository][19] which hosts current Windows binaries known
+   to work; get the `freetype.dll` file from the `win32` folder and copy it into
+   `C:\GNAT\2017\lib`, then execute:
 
-       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=windows -XFREETYPE_LIBRARY_NAME=freetype6
+       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=windows -XFreeType_Linker_Param=-l:freetype.dll
 
-   The same things stated for the `glfw3.dll` are valid for the `freetype6.dll`.
+   The same things stated for the `glfw3.dll` are valid for the `freetype.dll`.
 
 ### Windows 10 / TDM-GCC 64bit / GLFW 3
 
@@ -183,39 +184,14 @@ separate package.
 
 ### With GPRBuild
 
-The easiest way to use OpenGLAda in your project is to just copy the sources
-in some dependency folder within your project folder, e.g.:
+To install OpenGLAda with all optional libraries, go to the `install` folder and
+execute
 
-    YourProject
-     |
-     |-dependencies
-     |  |
-     |  +-OpenGLAda
-     |
-     |-your
-     |-project
-     |-files
-     +-...
+    gprbuild [options] install.gpr
+    gprinstall [options] install.gpr
 
-If you're using the GPRBuild system, you can then just declare using OpenGLAda
-in your *.gpr file:
-
-    with "dependencies/OpenGLAda/opengl";
-
-Alternatively, you can specify the path to the OpenGL project file in as
-environment variable:
-
-    export GPR_PROJECT_PATH=dependencies/OpenGLAda
-
-... and then specify the dependency without the path:
-
-    with "opengl";
-
-If you want to use GLFW, you also need to refer to the project `opengl-glfw.gpr`
-instead (it automatically adds a dependency to the `opengl` project).
-
-The project files `opengl.gpr` and `opengl-glfw.gpr` take the following
-scenario parameters:
+Where *[options]* is the set of scenario variables you want to use. The
+available variables are:
 
  * `Windowing_System`: Sets the backend windowing system. Used for GLFW and also
                        for system-dependent parts of the API (GLX, WGL, CGL):
@@ -244,25 +220,30 @@ scenario parameters:
       exception.
     - `disabled`: The user has to query the error flag on their own.
 
- * `GLFW_LIBRARY_NAME`: Sets the name of the GLFW library for linking. Default
-   is `glfw` everywhere but on Windows with GLFW 3, in which case it is `glfw3`.
+ * `GLFW_Linker_Param`: Define how you will link to GLFW. Default is `-lglfw`
+   everywhere but on Windows with GLFW 3, in which case it is `-lglfw3`.
 
- * `FREETYPE_LIBRARY_NAME`: Sets the name of the FreeType library for linking.
-   Default is `freetype`.
+ * `FreeType_Linker_Param`: Define how you will link to FreeType.
+   Default is `-lfreetype`.
+
+
+Installing OpenGLAda makes its projects available to `gprbuild` and also to the
+GPS GUI. You can now just declare using OpenGLAda in your *.gpr file:
+
+    with "opengl";
+    with "opengl-glfw";
+    with "opengl-text";
+    -- and so on
+
+Alternatively, you can *with* the source projects of OpenGLAda without
+installing them, which will require you to define the scenario variables every
+time.
 
 ### With other build systems
 
 If you want to use another build system, take a look at the `.gpr` files bundled
 with OpenGLAda, they tell you which compiler and linker options you need to give
 in order to compile it.
-
-## Installation
-
-OpenGLAda is not designed to be installed as a standalone library. The reasoning
-behind this is that OpenGLAda is a wrapper library that doesn't provide much
-functionality on its own. Therefore, maintaining a library installing routine
-does not seem worth the effort - even less as it would be expected to support
-multiple platforms.
 
 ## Examples
 
@@ -318,5 +299,5 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [16]: http://getadanow.com/#get_windows
  [17]: http://tdm-gcc.tdragon.net/
  [18]: https://brew.sh
- [19]: https://www.freetype.org
+ [19]: https://github.com/ubawurinna/freetype-windows-binaries/
  [20]: https://github.com/flyx/FreeTypeAda

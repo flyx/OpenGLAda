@@ -26,8 +26,10 @@ textured_cube
 wave
 picking
 shading
-indexing
 model_loading
+indexed_loading
+indexing
+draw_triangles
 instancing
 transform_feedback
 draw_triangles

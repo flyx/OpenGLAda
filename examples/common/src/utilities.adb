@@ -71,10 +71,6 @@ package body Utilities is
    begin
       GL.Buffers.Set_Color_Clear_Value (Colour);
       GL.Buffers.Clear ((True, True, True, True));
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Clear_All.");
-         raise;
    end Clear_All;
 
    --  ------------------------------------------------------------------------
@@ -83,10 +79,6 @@ package body Utilities is
    begin
       GL.Buffers.Set_Color_Clear_Value (Colour);
       GL.Buffers.Clear ((False, False, False, True));
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Clear_Background_Colour.");
-         raise;
    end Clear_Background_Colour;
 
    --  ------------------------------------------------------------------------
@@ -95,13 +87,17 @@ package body Utilities is
    begin
       GL.Buffers.Set_Color_Clear_Value (Colour);
       GL.Buffers.Clear ((True, False, False, True));
-   exception
-      when others =>
-         Put_Line ("An exception occurred in Clear_Background_Colour_And_Depth.");
-         raise;
    end Clear_Background_Colour_And_Depth;
 
    --  ------------------------------------------------------------------------
+
+   procedure Clear_Colour_Buffer_And_Depth is
+   begin
+      GL.Buffers.Clear ((True, False, False, True));
+   end Clear_Colour_Buffer_And_Depth;
+
+   --  ------------------------------------------------------------------------
+
 
    procedure Enable_Mouse_Callbacks (Window : in out Glfw.Windows.Window; Enable : Boolean) is
    begin
@@ -190,7 +186,7 @@ package body Utilities is
       New_Line;
    end Print_Array6;
 
-   --  ---------------------------------------------------------------
+   --  -------------------------------------------------------------------------
 
    procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
                                Start, Finish : GL.Types.UInt) is
@@ -225,6 +221,18 @@ package body Utilities is
       end loop;
       New_Line;
    end Print_GL_Int_Array;
+
+   --  ------------------------------------------------------------------------
+
+   procedure Print_GL_UInt_Array (Name : String; anArray : GL.Types.UInt_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Put_Line (Int'Image (Index) & ":  " & UInt'Image (anArray (Index)));
+      end loop;
+      New_Line;
+   end Print_GL_UInt_Array;
 
    --  ------------------------------------------------------------------------
 
@@ -360,7 +368,6 @@ package body Utilities is
       when others =>
          Put_Line ("An exception occurred in Show_Shader_Program_Data.");
          raise;
-
    end Show_Shader_Program_Data;
 
    --  ------------------------------------------------------------------------
@@ -394,8 +401,8 @@ package body Utilities is
       when others =>
          Put_Line ("An exception occurred in Show_Shader_Info_Log.");
          raise;
-
    end Show_Shader_Info_Log;
 
    --  ------------------------------------------------------------------------
+
 end Utilities;
