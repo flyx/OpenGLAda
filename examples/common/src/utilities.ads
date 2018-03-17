@@ -10,6 +10,9 @@ with Maths;
 
 package Utilities is
 
+   type Byte_Array is array (GL.Types.Int range <>) of aliased GL.Types.UByte;
+   type Singles_Array is array (GL.Types.Int range <>) of aliased GL.Types.Single;
+
    procedure Clear_All (Colour : GL.Types.Colors.Color);
    procedure Clear_Background_Colour (Colour : GL.Types.Colors.Color);
    procedure Clear_Background_Colour_And_Depth (Colour : GL.Types.Colors.Color);
@@ -25,6 +28,10 @@ package Utilities is
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector3_Pointers);
    procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
+   procedure Load_Texture_Buffer is new
+     GL.Objects.Buffers.Load_To_Texture_Buffer (GL.Types.Singles.Matrix4_Pointers);
+   procedure Load_Texture_Buffer is new
+     GL.Objects.Buffers.Load_To_Texture_Buffer (GL.Types.Singles.Vector4_Pointers);
    procedure Load_Vector5_Buffer is new GL.Objects.Buffers.Load_To_Buffer
      (Maths.Vector5_Pointers);
    procedure Load_Vector6_Buffer is new GL.Objects.Buffers.Load_To_Buffer
