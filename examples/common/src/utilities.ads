@@ -10,7 +10,6 @@ with Maths;
 
 package Utilities is
 
-
    type Byte_Array is array (GL.Types.Int range <>) of aliased GL.Types.UByte;
    type Singles_Array is array (GL.Types.Int range <>) of aliased GL.Types.Single;
 
@@ -43,6 +42,8 @@ package Utilities is
      GL.Objects.Buffers.Set_Sub_Data (GL.Types.Singles.Vector4_Pointers);
 
    procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array);
+   procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
+                               Start, Finish : GL.Types.UInt);
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Ints.Vector2_Array);
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array);
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Ints.Vector3_Array);
@@ -52,6 +53,8 @@ package Utilities is
    procedure Print_GL_UInt_Array (Name : String; anArray : GL.Types.UInt_Array);
    procedure Print_Matrix (Name : String; aMatrix : GL.Types.Singles.Matrix3);
    procedure Print_Matrix (Name : String; aMatrix : GL.Types.Singles.Matrix4);
+   procedure Print_Singles_Array (Name : String; anArray : Singles_Array;
+                                  Start, Finish : GL.Types.Int);
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector2);
    procedure Print_Vector (Name : String; aVector : GL.Types.Ints.Vector3);
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3);
