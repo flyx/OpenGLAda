@@ -178,7 +178,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Colour_Buffer.Initialize_Id;
       Texture_Buffer.Bind (Colour_Buffer);
-      Utilities.Load_Texture_Buffer (Texture_Buffer, Colours, Static_Draw);
+      Utilities.Load_Vertex_Buffer (Texture_Buffer, Colours, Static_Draw);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Colour_Buffer);
 
       Model_Matrix_TBO.Initialize_Id;
@@ -187,7 +187,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Model_Matrix_Buffer.Initialize_Id;
       Texture_Buffer.Bind (Model_Matrix_Buffer);
-      Texture_Buffer_Allocate (Texture_Buffer,
+      Allocate (Texture_Buffer,
                                Long (Num_Instances * Singles.Matrix4'Size),
                                Dynamic_Draw);
 

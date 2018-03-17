@@ -46,23 +46,6 @@ package body GL.Objects.Buffers is
       end if;
    end Bind;
 
-   procedure Bind (Target : Texture_Buffer_Target; Object : Buffer'Class) is
-      Cursor : constant Buffer_Maps.Cursor
-        := Current_Buffers.Find (Target.Kind);
-   begin
-      if Cursor = Buffer_Maps.No_Element or else
-        Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
-        then
-         API.Bind_Buffer (Target.Kind, Object.Reference.GL_Id);
-         Raise_Exception_On_OpenGL_Error;
-         if Cursor = Buffer_Maps.No_Element then
-            Current_Buffers.Insert (Target.Kind, Object);
-         else
-            Current_Buffers.Replace_Element (Cursor, Object);
-         end if;
-      end if;
-   end Bind;
-
    procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
                                Object : Buffer'Class) is
       Cursor : constant Buffer_Maps.Cursor
@@ -103,17 +86,6 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
 
-   procedure Load_To_Texture_Buffer (Target : Texture_Buffer_Target;
-                                     Data   : Pointers.Element_Array;
-                                     Usage  : Buffer_Usage) is
-      use type C.long;
-   begin
-      API.Buffer_Data (Target.Kind,
-        Pointers.Element'Size * Data'Length / System.Storage_Unit,
-        Data (Data'First)'Address, Usage);
-      Raise_Exception_On_OpenGL_Error;
-   end Load_To_Texture_Buffer;
-
    procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
       Usage  : Buffer_Usage) is
    begin
@@ -121,14 +93,6 @@ package body GL.Objects.Buffers is
                        System.Null_Address, Usage);
       Raise_Exception_On_OpenGL_Error;
    end Allocate;
-
-    procedure Texture_Buffer_Allocate (Target : Texture_Buffer_Target; Number_Of_Bytes : Long;
-      Usage  : Buffer_Usage) is
-   begin
-      API.Texture_Buffer_Allocate (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
-                                   System.Null_Address, Usage);
-      Raise_Exception_On_OpenGL_Error;
-   end Texture_Buffer_Allocate;
 
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
@@ -157,16 +121,12 @@ package body GL.Objects.Buffers is
                                       Index_Type : Unsigned_Numeric_Type;
                                       Element_Offset : UInt := 0;
                                       Instance_Count : UInt := 0) is
-      Element_Bytes : UInt;
+      Element_Bytes : constant array (Unsigned_Numeric_Type) of UInt :=
+        (UByte_Type => 1, UShort_Type => 2, UInt_Type => 4);
    begin
-      case Index_Type is
-         when UByte_Type => Element_Bytes := 1;
-         when UShort_Type => Element_Bytes := 2;
-         when UInt_Type => Element_Bytes := 4;
-      end case;
       API.Draw_Elements_Instanced (Mode, Int (Count), Index_Type,
-                                   Low_Level.IntPtr (Element_Bytes * Element_Offset),
-                                   Int (Instance_Count));
+                Low_Level.IntPtr (Element_Bytes (Index_Type) * Element_Offset),
+                Int (Instance_Count));
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Instanced;
 
