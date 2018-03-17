@@ -1,3 +1,12 @@
+Upcoming:
+ * Changed to SemVer versioning (added revision number)
+ * Improvements to GL.Object system
+ * Fixed problems in uniforms setter (#105)
+ * Removed dependency to Strings_Edit by implementing UTF-8
+   in GL.Text.
+ * Fixed a bug in GL.Culling (#110)
+ * added GL.Objects.Vertex_Arrays.Draw_Arrays_Instanced
+ * Added Windows Installer
 v0.6:
  * Changed license to MIT which is more well-known than ISC
  * Added missing functionality in:

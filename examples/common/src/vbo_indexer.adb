@@ -3,12 +3,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body VBO_Indexer is
 
-   --     type Packed_Vertex is record
-   --        Position : GL.Types.Singles.Vector3;
-   --        UV       : GL.Types.Singles.Vector2;
-   --        Normal   : GL.Types.Singles.Vector3;
-   --     end record;
-
    function Is_Near (V1, V2 : GL.Types.Single) return Boolean;
 
    --  -------------------------------------------------------------------------
@@ -41,7 +35,7 @@ package body VBO_Indexer is
          end if;
       end loop;
 
-      end Get_Similar_Vertex_Index;
+   end Get_Similar_Vertex_Index;
 
    --  -------------------------------------------------------------------------
 
@@ -68,7 +62,7 @@ package body VBO_Indexer is
          end if;
       end loop;
 
-      end Get_Similar_Vertex_Index;
+   end Get_Similar_Vertex_Index;
 
    --  -------------------------------------------------------------------------
 

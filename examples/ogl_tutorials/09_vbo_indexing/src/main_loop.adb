@@ -113,7 +113,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       View_Matrix       : Matrix4;
       Projection_Matrix : Matrix4;
       MVP_Matrix        : Matrix4;
-      --        Light_Pos         : constant Vector3 := (4.0, 4.0, 4.0);
    begin
       Controls.Compute_Matrices_From_Inputs (Window, Projection_Matrix, View_Matrix);
       Utilities.Clear_Background_Colour_And_Depth (White);
@@ -123,7 +122,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Uniforms.Set_Single (View_Matrix_ID, View_Matrix);
       GL.Uniforms.Set_Single (MVP_Matrix_ID, MVP_Matrix);
       GL.Uniforms.Set_Single (Light_Position_ID, 4.0, 4.0, 4.0);
-      --           GL.Uniforms.Set_Single (Light_Position_ID, Light_Pos);
 
    exception
       when others =>
@@ -175,7 +173,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       GL.Objects.Textures.Targets.Texture_2D.Bind (UV_Map);
       GL.Uniforms.Set_Int (Texture_ID, 0);
 
---        GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Indices_Size);
       GL.Objects.Buffers.Draw_Elements (Triangles, Indices_Size, UInt_Type, 0);
 
       GL.Attributes.Disable_Vertex_Attrib_Array (0);
