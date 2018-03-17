@@ -153,10 +153,11 @@ package body GL.Objects.Programs is
 
    function Transform_Feedback_Buffer_Mode (Object : Program)
                                             return Buffer_Mode is
-      function To_Buffer_Mode is new Ada.Unchecked_Conversion (Int, Buffer_Mode);
+      Program_Buffer_Mode_Param : constant Buffer_Mode :=
+        Buffer_Mode'Enum_Val
+          (Program_Int_Param (Object, Enums.Transform_Feedback_Buffer_Mode));
    begin
-      return To_Buffer_Mode
-        (Program_Int_Param (Object, Enums.Transform_Feedback_Buffer_Mode));
+      return Program_Buffer_Mode_Param;
    end Transform_Feedback_Buffer_Mode;
 
    function Transform_Feedback_Varyings (Object : Program) return Size is
