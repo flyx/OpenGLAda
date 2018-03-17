@@ -198,25 +198,25 @@ package body GL.Objects.Programs is
       use Ada.Strings.Fixed;
       use Interfaces.C;
       use Interfaces.C.Strings;
-      String_Size : constant Natural := Varyings'Length;
+      String_Size : constant Natural := Varyings'Length + 1;
       Num_Strings : constant GL.Types.Int :=
         GL.Types.Int (Count (Varyings, ",") + 1);
-      Prev        : Natural := 1;
-      Vary_Index  : size_t := 1;
-      C_Varyings  : chars_ptr_array (1 .. Interfaces.C.size_t (String_Size));
+      New_Varyings : aliased String (1 .. String_Size) :=
+        Varyings & Character'Val (0);
+      C_Varyings  : aliased chars_ptr_array (1 .. Interfaces.C.size_t (String_Size));
    begin
-      if Num_Strings = 1 then
-         C_Varyings (1) := New_String (Varyings);
-      else
-         for Pos in 2 .. String_Size - 1 loop
-            if Varyings (Pos) =  ',' then
-               C_Varyings (Vary_Index) := New_String (Varyings (Prev .. Pos - 1));
-               Prev := Pos + 1;
-               Vary_Index := Vary_Index + 1;
-            end if;
-         end loop;
-         C_Varyings (Vary_Index) := New_String (Varyings (Prev .. String_Size));
-      end if;
+      --  The implementation should search all commas,
+      --  replace them by Character'Val (0) and append one,
+      --  then you have a list of zero-terminated strings
+      --  ready for OpenGL processing.
+      --  You only need to throw the access Character values into an array,
+      --  which you can then use to call the OpenGL function.
+      for Pos in 1 .. String_Size - 1 loop
+         if Varyings (Pos) =  ',' then
+            New_Varyings (Pos) := Character'Val (0);
+         end if;
+      end loop;
+
       API.Transform_Feedback_Varyings
         (Object.Reference.GL_Id, Num_Strings, C_Varyings, Mode);
       Raise_Exception_On_OpenGL_Error;
