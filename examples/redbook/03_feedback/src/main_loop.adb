@@ -220,8 +220,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       VBM_Result     : Boolean := False;
-      Varyings       : constant String := "position_out,velocity_out";
-      Varyings_2     : constant String := "world_space_position";
+--        Varyings       : constant String := "position_out,velocity_out";
+--        Varyings_2     : constant String := "world_space_position";
    begin
       VAO (1).Initialize_Id;
       VAO (1).Bind;
@@ -239,7 +239,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
-      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+--        Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
       Update_Program.Link;
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
@@ -261,12 +261,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
-      Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
+--        Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
       Render_Program.Link;
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
       end if;
+      Put_Line ("Main_Loop.Setup; programs linked.");
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -284,6 +285,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
+         Put_Line ("Main_Loop.Setup; Array_Buffer bound.");
 
          --  Set_Vertex_Attrib_Pointer (Index  : Attribute;
          --     Count : Component_Count; Kind : Numeric_Type; Stride, Offset : Size);
@@ -298,7 +300,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
-      Texture_Buffer_Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
+      Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
                                Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
@@ -309,6 +311,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Utilities.Clear_Background_Colour_And_Depth (Background);
 
+      Put_Line ("Main_Loop.Setup; Load_From_VBM.");
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
       VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
