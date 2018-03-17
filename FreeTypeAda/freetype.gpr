@@ -38,8 +38,8 @@ library project FreeType is
       end case;
    end Compiler;
 
+   FreeTypeLib := external ("FreeType_Linker_Param", "-lfreetype");
    package Linker is
-      for Linker_Options use ("-l" & external ("FREETYPE_LIBRARY_NAME",
-                                               "freetype"));
+      for Linker_Options use (FreeTypeLib);
    end Linker;
 end FreeType;
