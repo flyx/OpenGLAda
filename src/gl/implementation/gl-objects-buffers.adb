@@ -157,16 +157,12 @@ package body GL.Objects.Buffers is
                                       Index_Type : Unsigned_Numeric_Type;
                                       Element_Offset : UInt := 0;
                                       Instance_Count : UInt := 0) is
-      Element_Bytes : UInt;
+      Element_Bytes : constant array (Unsigned_Numeric_Type) of UInt :=
+        (UByte_Type => 1, UShort_Type => 2, UInt_Type => 4);
    begin
-      case Index_Type is
-         when UByte_Type => Element_Bytes := 1;
-         when UShort_Type => Element_Bytes := 2;
-         when UInt_Type => Element_Bytes := 4;
-      end case;
       API.Draw_Elements_Instanced (Mode, Int (Count), Index_Type,
-                                   Low_Level.IntPtr (Element_Bytes * Element_Offset),
-                                   Int (Instance_Count));
+                Low_Level.IntPtr (Element_Bytes (Index_Type) * Element_Offset),
+                Int (Instance_Count));
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Instanced;
 
