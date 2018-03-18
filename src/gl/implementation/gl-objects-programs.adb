@@ -204,22 +204,25 @@ package body GL.Objects.Programs is
         GL.Types.Int (Count (Varyings, ",") + 1);
       New_Varyings : aliased String (1 .. String_Size) :=
         Varyings & Character'Val (0);
---        aChar_Array  : aliased char_array := (1 .. size_t (String_Size) => nul);
+      aChar_Array  : aliased char_array := (1 .. size_t (String_Size) => nul);
       C_Varyings   : aliased chars_ptr_array (1 .. size_t (Num_Strings));
    begin
       --  1. search all commas and replace each one with Character'Val (0)
      --   2. append  Character'Val (0) to he string
       --  Now you have a list of zero-terminated strings
       --  ready for OpenGL processing.
-      --  3. Throw the access Character values into an array,
-      --  4. Use the array to call the OpenGL function.
+     --  3. Throw the access Character values into an array,
+     --     What are "access Character values"?
+     --  4. Use the array to call the OpenGL function.
+     --     "the array" needs to be a chars_ptr_array?
       for Pos in 1 .. String_Size - 1 loop
          if Varyings (Pos) =  ',' then
             New_Varyings (Pos) := Character'Val (0);
+            aChar_Array (size_t (Pos)) := To_C (New_Varyings (Pos));
          end if;
       end loop;
 
-      --  Load C_Varyings from New_Varyings. How?
+      --  Load C_Varyings from aChar_Array. How?
 
       API.Transform_Feedback_Varyings
         (Object.Reference.GL_Id, Num_Strings, C_Varyings, Mode);
