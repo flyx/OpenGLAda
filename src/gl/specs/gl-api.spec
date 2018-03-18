@@ -1161,7 +1161,7 @@ spec GL.API is
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
    procedure Transform_Feedback_Varyings
-    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
+    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr;
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
