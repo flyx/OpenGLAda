@@ -142,9 +142,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
       Put_Line ("Main_Loop.Display; Buffer_Base bound.");
 
---        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
---        Load_VB_Object.Render (VBM_Object);
---        GL.Objects.Programs.End_Transform_Feedback;
+      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+      Load_VB_Object.Render (VBM_Object);
+      GL.Objects.Programs.End_Transform_Feedback;
       Put_Line ("Main_Loop.Display; End_Transform_Feedback.");
 
       GL.Objects.Programs.Use_Program (Update_Program);
@@ -222,8 +222,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       VBM_Result     : Boolean := False;
-      Varyings       : constant String := "position_out,velocity_out";
-      Varyings_2     : constant String := "world_space_position";
+--        Varyings       : constant String := "position_out,velocity_out";
+--        Varyings_2     : constant String := "world_space_position";
    begin
       Put_Line ("Setup entered");
       VAO (1).Initialize_Id;
@@ -233,7 +233,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Initialize_Id;
       GL.Objects.Vertex_Arrays.Bind (Render_VAO);
 
-      Put_Line ("Setup Render_VAO bound");
       for index in VBO'Range loop
          VBO (index).Initialize_Id;
          Transform_Feedback_Buffer.Bind (VBO (index));
@@ -244,10 +243,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
-      Put_Line ("Setup calling Transform_Feedback_Varyings");
-      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
-      Put_Line ("Setup Transform_Feedback_Varyings returned");
-      Update_Program.Link;
+--        Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+        Update_Program.Link;
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
@@ -269,8 +266,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
 
-      Put_Line ("Setup, calling Transform_Feedback_Varyings ");
-      Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
+--        Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
       Render_Program.Link;
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
