@@ -232,7 +232,7 @@ spec GL.API is
                                       Index_Type : Unsigned_Numeric_Type;
                                       Indices    : Low_Level.IntPtr;
                                       Instances  : Size) with
-    Static => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
+    Dynamic => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
    procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with
@@ -808,16 +808,11 @@ spec GL.API is
      Dynamic => "glBufferData",
      Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
      Wrapper => "GL.Objects.Buffers.Allocate";
-   procedure Texture_Buffer_Allocate
-    (Target : Low_Level.Enums.Buffer_Kind;
-    Size : Low_Level.SizeIPtr; Data : System.Address;
-    Usage : Objects.Buffers.Buffer_Usage) with
-    Dynamic => "glBufferData",
-    Wrapper => "GL.Objects.Buffers.Texture_Buffer_Allocate";
    procedure Texture_Buffer_Data
     (Target : Low_Level.Enums.Buffer_Kind;
     Internal_Format : Pixels.Internal_Format; Buffer : UInt) with
     Dynamic => "glTexBuffer",
+    Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
     Wrapper => "GL.Objects.Buffers.Allocate";
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
@@ -1161,7 +1156,7 @@ spec GL.API is
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
    procedure Transform_Feedback_Varyings
-    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
+    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr;
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
