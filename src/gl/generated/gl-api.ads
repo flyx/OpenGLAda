@@ -671,6 +671,7 @@ private package GL.API is
    Bind_Buffer : T106;
    Bind_Buffer_Base : T107;
    Buffer_Data : T108;
+   Texture_Buffer_Allocate : T108;
    Texture_Buffer_Data : T109;
    Map_Buffer : T110;
    Buffer_Pointer : T111;

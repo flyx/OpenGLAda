@@ -313,6 +313,7 @@ begin
    GL.API.Bind_Buffer := Load_T106 ("glBindBuffer");
    GL.API.Bind_Buffer_Base := Load_T107 ("glBindBufferBase");
    GL.API.Buffer_Data := Load_T108 ("glBufferData");
+   GL.API.Texture_Buffer_Allocate := Load_T108 ("glBufferData");
    GL.API.Texture_Buffer_Data := Load_T109 ("glTexBuffer");
    GL.API.Map_Buffer := Load_T110 ("glMapBuffer");
    GL.API.Buffer_Pointer := Load_T111 ("glGetBufferPointerv");

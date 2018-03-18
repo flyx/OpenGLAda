@@ -26,7 +26,8 @@ package body GL.Objects.Vertex_Arrays is
    end Draw_Arrays;
 
    procedure Draw_Arrays_Instanced (Mode : Connection_Mode;
-                                    First, Count, Instances : Size) is   begin
+                                    First, Count, Instances : Size) is
+   begin
       API.Draw_Arrays_Instanced (Mode, First, Count, Instances);
       Raise_Exception_On_OpenGL_Error;
    end Draw_Arrays_Instanced;
