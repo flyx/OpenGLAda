@@ -204,9 +204,8 @@ package body GL.Objects.Programs is
         GL.Types.Int (Count (Varyings, ",") + 1);
       New_Varyings : aliased String (1 .. String_Size) :=
         Varyings & Character'Val (0);
-      Char_Ptr     : chars_ptr;
 --        aChar_Array  : aliased char_array := (1 .. size_t (String_Size) => nul);
---        C_Varyings   : aliased chars_ptr_array (1 .. size_t (String_Size));
+      C_Varyings   : aliased chars_ptr_array (1 .. size_t (Num_Strings));
    begin
       --  1. search all commas and replace each one with Character'Val (0)
      --   2. append  Character'Val (0) to he string
@@ -220,10 +219,10 @@ package body GL.Objects.Programs is
          end if;
       end loop;
 
-      Char_Ptr := New_Char_Array (To_C (New_Varyings));
+      --  Load C_Varyings from New_Varyings. How?
 
       API.Transform_Feedback_Varyings
-        (Object.Reference.GL_Id, Num_Strings, Char_Ptr, Mode);
+        (Object.Reference.GL_Id, Num_Strings, C_Varyings, Mode);
       Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
