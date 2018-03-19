@@ -141,9 +141,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
-      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+--        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
-      GL.Objects.Programs.End_Transform_Feedback;
+--        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Programs.Use_Program (Update_Program);
 
@@ -167,12 +167,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
       end if;
 
-      GL.Objects.Programs.Begin_Transform_Feedback (Points);
-      GL.Objects.Vertex_Arrays.Draw_Arrays
-        (Mode  => GL.Types.Points,
-         First => 0,
-         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
-      GL.Objects.Programs.End_Transform_Feedback;
+--        GL.Objects.Programs.Begin_Transform_Feedback (Points);
+--        GL.Objects.Vertex_Arrays.Draw_Arrays
+--          (Mode  => GL.Types.Points,
+--           First => 0,
+--           Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
+--        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
@@ -267,7 +267,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Put_Line ("Setup, Render_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Render_Program));
       end if;
-      Put_Line ("Main_Loop.Setup; programs linked.");
 
       GL.Objects.Programs.Use_Program  (Render_Program);
       Render_Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
@@ -285,7 +284,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
-         Put_Line ("Main_Loop.Setup; Array_Buffer bound.");
 
          --  Set_Vertex_Attrib_Pointer (Index  : Attribute;
          --     Count : Component_Count; Kind : Numeric_Type; Stride, Offset : Size);
@@ -300,18 +298,17 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
-      Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
-                               Dynamic_Copy);
+      Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size), Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
 
+      Render_VAO.Bind;
       Array_Buffer.Bind (Geometry_VBO);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       Utilities.Clear_Background_Colour_And_Depth (Background);
 
-      Put_Line ("Main_Loop.Setup; Load_From_VBM.");
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
       VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
