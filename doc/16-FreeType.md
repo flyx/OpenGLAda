@@ -2,7 +2,7 @@
 layout : default
 title : API - FreeType
 packages : FT
-api : true
+navclass: api
 permalink: ft.html
 ---
 

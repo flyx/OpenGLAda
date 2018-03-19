@@ -2,7 +2,7 @@
 layout : default
 title : API - FTGL
 packages : FTGL
-api : true
+navclass: api
 permalink: ftgl.html
 ---
 

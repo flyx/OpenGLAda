@@ -28,8 +28,7 @@
 					<ul>
 						{% assign sorted_pages = site.pages | sort:"name" | where_exp: "page", "page.ext != 'css'" %}
 						{% for p in sorted_pages %}
-							{% assign api = p.api %}
-							<li {% if api %}class="api"{% endif %}>
+							<li{% if p.navclass %} class="{{p.navclass}}"{% endif %}>
 								<a {% if p.url == page.url %}class="active"{% endif %}href="{{ site.baseurl }}{{ p.url }}">
 									{% if api %}
 										<span>

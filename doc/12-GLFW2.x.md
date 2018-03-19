@@ -3,7 +3,7 @@ layout : default
 title : API - GLFW 2.x Binding
 packages :
   - GLFW (2.x)
-api: true
+navclass: api
 permalink: glfw-v2.html
 ---
 

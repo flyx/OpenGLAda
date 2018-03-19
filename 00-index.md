@@ -6,9 +6,9 @@ permalink: index.html
 
 ## About
 
-**OpenGLAda** is a thick Ada binding for [OpenGL][5] and [GLFW][4]. It enables
-you to create complex graphical applications in Ada, using the OpenGL industry
-standard.
+**OpenGLAda** is a thick Ada binding for [OpenGL][5] and related C libraries
+([GLFW][4], [SOIL][6], [FreeType][7]). It enables you to create complex
+graphical applications in Ada using the OpenGL industry standard.
 
 ## Highlights
 
@@ -21,7 +21,7 @@ standard.
  * Object-oriented design: All OpenGL objects are wrapped as tagged types. They
    are also reference-counted, so you do not need to worry about freeing memory
    yourself.
- * Cross-Platform: OpenGLAda builds on MacOSX, Windows and X11-based operating
+ * Cross-Platform: OpenGLAda supports MacOSX, Windows and X11-based operating
    systems like Linux.
  * Structured: In contrast to the raw OpenGL library, OpenGLAda's functionality
    is structured into packages, so you have a better overview over the

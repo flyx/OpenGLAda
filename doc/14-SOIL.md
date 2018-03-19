@@ -2,7 +2,7 @@
 layout : default
 title : API - Simple OpenGL Image Loader
 packages : SOIL
-api: true
+navclass: api
 permalink: soil.html
 ---
 

@@ -152,6 +152,10 @@ body > #main-row > nav ul > li.api > a > span {
 	margin-left: 1em;
 }
 
+body > #main-row > nav ul > li.setup > a > span {
+	margin-left: 1em;
+}
+
 body > #main-row > nav > div#main-nav {
 	overflow-y: auto;
 	padding-bottom: 5em;
