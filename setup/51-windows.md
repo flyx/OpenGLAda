@@ -1,7 +1,7 @@
 ---
 layout : default
 title : Windows Instructions
-permalink: setup.html
+permalink: setup/windows.html
 navclass: setup
 ---
 

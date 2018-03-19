@@ -1,3 +1,10 @@
+---
+layout : default
+title : macOS Instructions
+permalink: setup/macos.html
+navclass: setup
+---
+
 # macOS
 
 ### GNAT GPL 2017

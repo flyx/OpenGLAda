@@ -30,18 +30,18 @@
 						{% for p in sorted_pages %}
 							<li{% if p.navclass %} class="{{p.navclass}}"{% endif %}>
 								<a {% if p.url == page.url %}class="active"{% endif %}href="{{ site.baseurl }}{{ p.url }}">
-									{% if api %}
-										<span>
-											{% for package in p.packages %}
-												{% unless forloop.first %}
-													<br />
-												{% endunless %}
-												{{ package }}
-											{% endfor %}
-										</span>
-									{% else %}
-										{{ p.title }}
-									{% endif %}
+									<span>
+										{% if p.navclass == "api" %}
+  										{% for package in p.packages %}
+	  										{% unless forloop.first %}
+		  										<br />
+			  								{% endunless %}
+				  							{{ package }}
+					  					{% endfor %}
+										{% else %}
+											{{ p.title }}
+										{% endif %}
+									</span>
 								</a>
 							</li>
 						{% endfor %}
