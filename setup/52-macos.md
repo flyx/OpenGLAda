@@ -1,6 +1,6 @@
 ---
 layout : default
-title : macOS Instructions
+title : macOS
 permalink: setup/macos.html
 navclass: setup
 ---

@@ -1,6 +1,6 @@
 ---
 layout : default
-title : Windows Instructions
+title : Windows
 permalink: setup/windows.html
 navclass: setup
 ---
@@ -63,8 +63,8 @@ These instructions are for building 64bit binaries on Windows.
    install it.
  * Open your shell and navigate to the root folder of OpenGLAda. Execute:
 
-        gnatmake -p -P opengl-test.gpr -XWindowing_System=windows
-        gnatmake -p -P opengl-text-test.gpr -XWindowing_System=quartz
+        $ gnatmake -p -P opengl-test.gpr -XWindowing_System=windows
+        $ gnatmake -p -P opengl-text-test.gpr -XWindowing_System=quartz
 
    This should produce executables in the `bin` folder inside OpenGLAda.
  * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
