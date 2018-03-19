@@ -265,9 +265,9 @@ private package GL.API is
    pragma Convention (StdCall, T118);
    type T119 is access procedure (P1 : UInt; P2 : Low_Level.IntPtr; P3 : Low_Level.SizeIPtr);
    pragma Convention (StdCall, T119);
-   type T120 is access procedure (P1 : Size; P2 : Low_Level.UInt_Array);
+   type T120 is access procedure (P1 : Size; P2 : out UInt);
    pragma Convention (StdCall, T120);
-   type T121 is access procedure (P1 : UInt);
+   type T121 is access procedure (P1 : Size; P2 : Low_Level.UInt_Array);
    pragma Convention (StdCall, T121);
    type T122 is access procedure (P1 : UInt);
    pragma Convention (StdCall, T122);
