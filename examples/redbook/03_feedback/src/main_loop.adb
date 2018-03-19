@@ -142,11 +142,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
       Put_Line ("Main_Loop.Display; Buffer_Base bound.");
 
-      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
-      Put_Line ("Main_Loop.Display; Begin_Transform_Feedback.");
+--        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
-      GL.Objects.Programs.End_Transform_Feedback;
-      Put_Line ("Main_Loop.Display; End_Transform_Feedback.");
+--        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Programs.Use_Program (Update_Program);
 
@@ -171,10 +169,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
 --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
---        GL.Objects.Vertex_Arrays.Draw_Arrays
---          (Mode  => GL.Types.Points,
---           First => 0,
---           Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
+      GL.Objects.Vertex_Arrays.Draw_Arrays
+        (Mode  => GL.Types.Points, First => 0,
+         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
 --        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
@@ -203,7 +200,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       for B_Index in 1 .. Num_Points loop   --  j
          Velocity := Random_Vector;
 --           Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
-         Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
+--           Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
+         Buffer_Pointer.Position := To_Vector4 (Random_Vector);
          Buffer_Pointer.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
                          0.3 * Velocity (GL.Z));
          PV_Buffer_Package.Increment (Buffer_Pointer);
@@ -226,7 +224,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        Varyings       : constant String := "position_out,velocity_out";
 --        Varyings_2     : constant String := "world_space_position";
    begin
-      Put_Line ("Setup entered");
       VAO (1).Initialize_Id;
       VAO (1).Bind;
       VAO (2).Initialize_Id;
@@ -306,18 +303,17 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
-      Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size),
-                               Dynamic_Copy);
+      Allocate (Texture_Buffer, Long (1024 * 1024 * Vec4_Size), Dynamic_Copy);
       Texture_Buffer.Bind (Geometry_Texture);
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Geometry_VBO);
 
+      Render_VAO.Bind;
       Array_Buffer.Bind (Geometry_VBO);
       GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       Utilities.Clear_Background_Colour_And_Depth (Background);
 
-      Put_Line ("Main_Loop.Setup; Load_From_VBM.");
       Load_VB_Object.Load_From_VBM ("../media/armadillo_low.vbm", VBM_Object,
                                     0, 1, 2, VBM_Result);
       VBM_Result := VBM_Result and Load_VB_Object.Get_Vertex_Count (VBM_Object) > 0;
