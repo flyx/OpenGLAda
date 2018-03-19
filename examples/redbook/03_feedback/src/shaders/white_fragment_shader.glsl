@@ -1,9 +1,9 @@
 #version 410 core
 
-layout (location = 0) out vec4 color;
+layout (location = 0) out vec4 colour;
 
 void main(void)
     {
-    color = vec4(1.0, 1.0, 1.0, 1.0);
-  //  color = vec4(1.0);
+    colour = vec4(1.0, 1.0, 1.0, 1.0);
+  //  colour = vec4(1.0);
     }
