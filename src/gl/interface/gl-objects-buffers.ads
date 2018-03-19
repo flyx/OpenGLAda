@@ -68,7 +68,7 @@ package GL.Objects.Buffers is
    procedure Invalidate_Sub_Data (Object : in out Buffer;
                                   Offset, Length : Long_Size);
 
-   subtype Texture_Buffer_Target is Buffer_Target;
+   type Texture_Buffer_Target is limited new Buffer_Target with private;
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
                        Object : Buffer'Class);
@@ -99,6 +99,7 @@ private
 
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
      tagged limited null record;
+   type Texture_Buffer_Target is limited new Buffer_Target with null record;
 
    type Buffer is new GL_Object with null record;
 
