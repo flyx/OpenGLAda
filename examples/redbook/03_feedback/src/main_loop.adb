@@ -168,10 +168,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
 --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
---        GL.Objects.Vertex_Arrays.Draw_Arrays
---          (Mode  => GL.Types.Points,
---           First => 0,
---           Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
+      GL.Objects.Vertex_Arrays.Draw_Arrays
+        (Mode  => GL.Types.Points, First => 0,
+         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
 --        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
@@ -200,7 +199,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       for B_Index in 1 .. Num_Points loop   --  j
          Velocity := Random_Vector;
 --           Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
-         Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
+--           Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
+         Buffer_Pointer.Position := To_Vector4 (Random_Vector);
          Buffer_Pointer.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
                          0.3 * Velocity (GL.Z));
          PV_Buffer_Package.Increment (Buffer_Pointer);
