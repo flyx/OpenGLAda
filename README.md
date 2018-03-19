@@ -44,7 +44,7 @@ In order to build OpenGLAda, you need to have:
    [GnuAda][12], [AdaCore GNAT GPL 2017][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
-   can get it from [here][[16] (**NOTE: The gprbuild bundled in this zip is
+   can get it from [here][16] (**NOTE: The gprbuild bundled in this zip is
    known not to work. For the time being, if you're using TDM-GCC, replace
    gprbuild with gnatmake in all commands even though that will tell you that
    project support in gnatmake is deprecated and will soon be removed.** The
