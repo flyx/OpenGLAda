@@ -232,7 +232,7 @@ spec GL.API is
                                       Index_Type : Unsigned_Numeric_Type;
                                       Indices    : Low_Level.IntPtr;
                                       Instances  : Size) with
-    Dynamic => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
+    Static => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
    procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with

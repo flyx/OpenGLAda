@@ -143,6 +143,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Put_Line ("Main_Loop.Display; Buffer_Base bound.");
 
       GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+      Put_Line ("Main_Loop.Display; Begin_Transform_Feedback.");
       Load_VB_Object.Render (VBM_Object);
       GL.Objects.Programs.End_Transform_Feedback;
       Put_Line ("Main_Loop.Display; End_Transform_Feedback.");
