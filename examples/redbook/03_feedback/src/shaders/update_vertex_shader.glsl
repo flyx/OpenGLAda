@@ -3,8 +3,8 @@
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 velocity;
 
-//  out vec4 position_out;
-//  out vec3 velocity_out;
+out vec4 position_out;
+out vec3 velocity_out;
 
 uniform mat4 model_matrix;
 uniform mat4 projection_matrix;
