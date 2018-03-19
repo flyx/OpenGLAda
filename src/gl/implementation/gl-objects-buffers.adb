@@ -75,7 +75,7 @@ package body GL.Objects.Buffers is
       end if;
    end Current_Object;
 
-   procedure Load_To_Buffer (Target : Buffer_Target;
+   procedure Load_To_Buffer (Target : Buffer_Target'Class;
                              Data   : Pointers.Element_Array;
                              Usage  : Buffer_Usage) is
       use type C.long;
@@ -86,7 +86,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
 
-   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
+   procedure Allocate (Target : Buffer_Target'Class; Number_Of_Bytes : Long;
       Usage  : Buffer_Usage) is
    begin
       API.Buffer_Data (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
