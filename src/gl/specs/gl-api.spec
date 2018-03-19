@@ -812,6 +812,7 @@ spec GL.API is
     (Target : Low_Level.Enums.Buffer_Kind;
     Internal_Format : Pixels.Internal_Format; Buffer : UInt) with
     Dynamic => "glTexBuffer",
+    Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
     Wrapper => "GL.Objects.Buffers.Allocate";
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
