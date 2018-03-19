@@ -196,4 +196,5 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [13]: http://flyx.github.io/OpenGLAda/setup.html
  [16]: http://getadanow.com/#get_windows
  [17]: http://tdm-gcc.tdragon.net/
+ [19]: https://freetype.org/
  [20]: https://github.com/flyx/FreeTypeAda
