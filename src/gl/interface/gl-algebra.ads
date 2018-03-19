@@ -111,6 +111,6 @@ package GL.Algebra is
      (Index_Type, Matrix3, Matrix3_Array, Matrix3'(others => (others => <>)));
    package Matrix4_Pointers is new Interfaces.C.Pointers
      (Index_Type, Matrix4, Matrix4_Array, Matrix4'(others => (others => <>)));
-   
+
    function Cross_Product (Left, Right : Vector3) return Vector3;
 end GL.Algebra;
