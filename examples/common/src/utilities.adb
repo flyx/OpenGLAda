@@ -116,7 +116,7 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+  procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
       use GL.Types;
    begin
       Put_Line (Name & ": ");
