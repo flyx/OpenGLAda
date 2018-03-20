@@ -227,6 +227,12 @@ spec GL.API is
                             Index_Type : Unsigned_Numeric_Type;
                             Indices    : Low_Level.IntPtr) with
      Static => "glDrawElements", Wrapper => "GL.Objects.Buffers.Draw_Elements";
+   procedure Draw_Elements_Instanced (Mode       : Connection_Mode;
+                                      Count      : Size;
+                                      Index_Type : Unsigned_Numeric_Type;
+                                      Indices    : Low_Level.IntPtr;
+                                      Instances  : Size) with
+    Dynamic => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
    procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with
@@ -793,6 +799,8 @@ spec GL.API is
      Dynamic => "glDeleteBuffers";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
+   procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
+    with Dynamic =>"glBindBufferBase", Wrapper => "GL.Objects.Buffers.Bind_Buffer_Base";
    procedure Buffer_Data
      (Target : Low_Level.Enums.Buffer_Kind;
       Size : Low_Level.SizeIPtr; Data : System.Address;
@@ -800,6 +808,11 @@ spec GL.API is
      Dynamic => "glBufferData",
      Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
      Wrapper => "GL.Objects.Buffers.Allocate";
+   procedure Texture_Buffer_Data
+    (Target : Low_Level.Enums.Buffer_Kind;
+    Internal_Format : Pixels.Internal_Format; Buffer : UInt) with
+    Dynamic => "glTexBuffer",
+    Wrapper => "GL.Objects.Buffers.Allocate";
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
      Dynamic => "glMapBuffer", Wrapper => "GL.Objects.Buffers.Map";
@@ -1044,7 +1057,10 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.Tess_Gen_Vertex_Order",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Buffer_Mode",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings",
-     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length";
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length",
+     Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying",
+     Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback",
+     Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Attach_Shader (Program, Shader : UInt) with
      Dynamic => "glAttachShader", Wrapper => "GL.Objects.Programs.Attach";
    procedure Link_Program (Program : UInt) with
@@ -1126,6 +1142,23 @@ spec GL.API is
      (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int with
      Dynamic => "glGetFragDataLocation",
      Wrapper => "GL.Objects.Programs.Frag_Data_Location";
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode) with
+     Dynamic => "glBeginTransformFeedback",
+     Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback";
+   procedure End_Transform_Feedback with
+     Static => "glEndTransformFeedback",
+     Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
+   procedure Get_Transform_Feedback_Varying
+    (Program :  UInt; Index : Int; Buffer_Size : Size;
+     Length : Size; V_Length : Size; V_Type : GL.Objects.Programs.Buffer_Mode;
+     Name : Interfaces.C.Strings.chars_ptr) with
+     Dynamic => "glGetTransformFeedbackVarying",
+     Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
+   procedure Transform_Feedback_Varyings
+    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
+     Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
+     Dynamic => "glTransformFeedbackVaryings",
+     Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --
