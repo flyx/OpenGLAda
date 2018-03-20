@@ -1,0 +1,6 @@
+
+aggregate project OpenGLAda is
+   for Project_Files use
+     ("../opengl.gpr", "../opengl-glfw.gpr", "../opengl-text.gpr",
+      "../opengl-soil.gpr", "../FreeTypeAda/freetype.gpr");
+end OpenGLAda;
