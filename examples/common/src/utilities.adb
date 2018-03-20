@@ -49,17 +49,17 @@ package body Utilities is
    --  -------------------------------------------------------------------
 
    procedure Print_Ints_Vector2 is
-     new Print_Int_Vector (GL.Index_2D, GL.Types.Ints.Vector2);
+       new Print_Int_Vector (GL.Index_2D, GL.Types.Ints.Vector2);
    procedure Print_Singles_Vector2 is
-     new Print_Singles_Vector (GL.Index_2D, GL.Types.Singles.Vector2);
+       new Print_Singles_Vector (GL.Index_2D, GL.Types.Singles.Vector2);
    procedure Print_Ints_Vector3 is
-     new Print_Int_Vector (GL.Index_3D, GL.Types.Ints.Vector3);
+       new Print_Int_Vector (GL.Index_3D, GL.Types.Ints.Vector3);
    procedure Print_Singles_Vector3 is
-     new Print_Singles_Vector (GL.Index_3D, GL.Types.Singles.Vector3);
+       new Print_Singles_Vector (GL.Index_3D, GL.Types.Singles.Vector3);
    procedure Print_Singles_Vector4 is
-     new Print_Singles_Vector (GL.Index_Homogeneous, GL.Types.Singles.Vector4);
+       new Print_Singles_Vector (GL.Index_Homogeneous, GL.Types.Singles.Vector4);
    procedure Print_Singles_Vector6 is
-     new Print_Singles_Vector (Maths.Index_6, Maths.Vector6);
+       new Print_Singles_Vector (Maths.Index_6, Maths.Vector6);
 
    --  ---------------------------------------------------------------
 
@@ -116,7 +116,19 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
+   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Print_Singles_Vector6 ("", anArray (Index));
+      end loop;
+      New_Line;
+   end Print_Array6;
+
+   --  -------------------------------------------------------------------------
+
+   procedure Print_Byte_Array (Name          : String; anArray : Byte_Array;
                                Start, Finish : GL.Types.UInt) is
       use GL.Types;
       Count : Integer := 1;
@@ -125,7 +137,7 @@ package body Utilities is
       if Int (Start) >= anArray'First and then Int (Finish) <= anArray'Last then
          for Index in Start .. Finish loop
             Put (UInt'Image (Index) & ": " &
-                   UByte'Image (anArray (Int (Index))) & "   ");
+                     UByte'Image (anArray (Int (Index))) & "   ");
             Count := Count + 1;
             if Count > 5 then
                New_Line;
@@ -200,18 +212,6 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
-      use GL.Types;
-   begin
-      Put_Line (Name & ": ");
-      for Index in anArray'First .. anArray'Last loop
-         Print_Singles_Vector6 ("", anArray (Index));
-      end loop;
-      New_Line;
-   end Print_Array6;
-
-   --  -------------------------------------------------------------------------
-
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
       use GL.Types;
    begin
@@ -268,7 +268,7 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Singles_Array (Name : String; anArray : Singles_Array;
+   procedure Print_Singles_Array (Name          : String; anArray : Singles_Array;
                                   Start, Finish : GL.Types.Int) is
       use GL.Types;
       Count : Integer := 1;
@@ -277,7 +277,7 @@ package body Utilities is
       if Start >= anArray'First and then Finish <= anArray'Last then
          for Index in Start .. Finish loop
             Put (Int'Image (Index) & ": " & Single'Image (anArray (Index)) &
-                "   ");
+                     "   ");
             Count := Count + 1;
             if Count > 4 then
                New_Line;
@@ -326,10 +326,10 @@ package body Utilities is
       Shading_Language_Version  : Unbounded_String;
    begin
       GL_Version := To_Unbounded_String (GL.Types.Int'image (GL.Context.Major_Version) & "." &
-                                           GL.Types.Int'image (GL.Context.Minor_Version));
+                                             GL.Types.Int'image (GL.Context.Minor_Version));
       Renderer := To_Unbounded_String (GL.Context.Renderer);
       Shading_Language_Version :=
-        To_Unbounded_String (GL.Context.Primary_Shading_Language_Version);
+          To_Unbounded_String (GL.Context.Primary_Shading_Language_Version);
       New_Line;
       Put_Line ("OpenGL version supported: " & To_String (GL_Version));
       Put_Line ("Renderer: " & To_String (Renderer));
@@ -342,10 +342,10 @@ package body Utilities is
    procedure Show_Shader_Program_Data (aProgram : GL.Objects.Programs.Program) is
       use GL.Objects;
       Shaders_List        : constant Shaders.Lists.List :=
-        Programs.Attached_Shaders (aProgram);
+                              Programs.Attached_Shaders (aProgram);
       List_Cursor         : Shaders.Lists.Cursor := Shaders_List.First;
       Shader1             : constant Shaders.Shader :=
-        Shaders.Lists.Element (List_Cursor);
+                              Shaders.Lists.Element (List_Cursor);
       Shader_Count        : Positive := 1;
    begin
       Put_Line ("Shader: " & Positive'Image (Shader_Count));
@@ -355,7 +355,7 @@ package body Utilities is
          List_Cursor := Shaders.Lists.Next (List_Cursor);
          declare
             ShaderN  : constant Shaders.Shader :=
-              Shaders.Lists.Element (List_Cursor);
+                         Shaders.Lists.Element (List_Cursor);
          begin
             Shader_Count := Shader_Count + 1;
             Put_Line ("Shader: " & Positive'Image (Shader_Count));
@@ -375,7 +375,7 @@ package body Utilities is
    procedure Show_Shader_Info_Log (aProgram : GL.Objects.Programs.Program) is
       use GL.Objects;
       Shaders_List        : constant Shaders.Lists.List :=
-        Programs.Attached_Shaders (aProgram);
+                              Programs.Attached_Shaders (aProgram);
       List_Cursor         : Shaders.Lists.Cursor := Shaders_List.First;
       Shader_Count        : Positive := 1;
    begin
@@ -384,13 +384,13 @@ package body Utilities is
          List_Cursor := Shaders.Lists.Next (List_Cursor);
          declare
             ShaderN  : constant Shaders.Shader :=
-              Shaders.Lists.Element (List_Cursor);
+                         Shaders.Lists.Element (List_Cursor);
          begin
             Shader_Count := Shader_Count + 1;
             Put_Line ("Shader: " & Positive'Image (Shader_Count) & " log:");
             declare
                Shader_Log : constant String :=
-                 GL.Objects.Shaders.Info_Log (ShaderN);
+                              GL.Objects.Shaders.Info_Log (ShaderN);
             begin
                Put_Line (Shader_Log);
             end;
