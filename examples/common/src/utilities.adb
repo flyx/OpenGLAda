@@ -116,6 +116,18 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
+  procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+      use GL.Types;
+   begin
+      Put_Line (Name & ": ");
+      for Index in anArray'First .. anArray'Last loop
+         Print_Singles_Vector6 ("", anArray (Index));
+      end loop;
+      New_Line;
+   end Print_Array6;
+
+   --  -------------------------------------------------------------------------
+
    procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
                                Start, Finish : GL.Types.UInt) is
       use GL.Types;
@@ -199,18 +211,6 @@ package body Utilities is
    end Print_GL_Array4;
 
    --  ------------------------------------------------------------------------
-
-   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
-      use GL.Types;
-   begin
-      Put_Line (Name & ": ");
-      for Index in anArray'First .. anArray'Last loop
-         Print_Singles_Vector6 ("", anArray (Index));
-      end loop;
-      New_Line;
-   end Print_Array6;
-
-   --  -------------------------------------------------------------------------
 
    procedure Print_GL_Int_Array (Name : String; anArray : GL.Types.Int_Array) is
       use GL.Types;
