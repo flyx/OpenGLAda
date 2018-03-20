@@ -12,11 +12,13 @@ $heat = "${env:WIX}bin\heat.exe"
 $candle = "${env:WIX}bin\candle.exe"
 $light = "${env:WIX}bin\light.exe"
 
-mkdir -Force $tmp
-mkdir -Force "$target\lib"
-mkdir -Force "$target\bin"
-
 if (-Not ($wixonly -or $skipdownloads)) {
+  Remove-Item -Path $tmp -Recurse
+  Remove-Item -Path $target -Recurse
+
+  mkdir -Force $tmp
+  mkdir -Force "$target\lib"
+
   # necessary because by default, PowerShell uses TLS1.0
   [System.Net.ServicePointManager]::SecurityProtocol = `
       [System.Net.SecurityProtocolType]::Tls11 -bor [System.Net.SecurityProtocolType]::Tls12;
@@ -44,11 +46,12 @@ if (-Not $wixonly) {
   $scenario = @("-XWindowing_System=windows", "-XGLFW_Version=3", "-XMode=release",
                 "-XFreeType_Linker_Param=-l:freetype.dll", "-XGLFW_Linker_Param=-l:libglfw3.a")
 
-  $env:LD_LIBRARY_PATH = "$target\lib:$target\bin"
+  $env:LD_LIBRARY_PATH = "$target\lib"
+  $project = "..\opengl-full.gpr"
 
-  &"gprclean" $scenario install.gpr
-  &"gprbuild" -p $scenario install.gpr
-  &"gprinstall" -p --prefix=target $scenario install.gpr
+  &"gprclean" $scenario $project
+  &"gprbuild" -p $scenario $project
+  &"gprinstall" -p --prefix=target $scenario $project
 }
 
 # Create file lists for WiX

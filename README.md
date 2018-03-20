@@ -44,7 +44,7 @@ In order to build OpenGLAda, you need to have:
    [GnuAda][12], [AdaCore GNAT GPL 2017][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
-   can get it from [here][[16] (**NOTE: The gprbuild bundled in this zip is
+   can get it from [here][16] (**NOTE: The gprbuild bundled in this zip is
    known not to work. For the time being, if you're using TDM-GCC, replace
    gprbuild with gnatmake in all commands even though that will tell you that
    project support in gnatmake is deprecated and will soon be removed.** The
@@ -61,134 +61,12 @@ project and whichever build system you are using. I never used other Ada
 compilers apart from GNAT, so if I accidentally used some GNAT-specific features
 in the code, please drop me a message.
 
-## Compilation
+## Installation
 
-A Makefile is provided mainly for building the tests:
+To install OpenGLAda with all optional libraries, execute
 
-    $ make tests
-
-If you're on Windows and do not have the `make` utility available, you can build
-the test by executing
-
-    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows
-    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows
-
-The tests require GLFW, because they need to create windows. By default, they
-try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
-by executing:
-
-    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows -XGLFW_Version=2
-    $ gprbuild -P opengl-glfw-test.gpr   -XWindowing_System=windows -XGLFW_Version=2
-
-(Substitute `windows` with `x11` or `quartz` if needed.)
-
-## Detailed Installation & Compilation Instructions
-
-Each section has in its title the major version numbers of the environment in
-which it has been tested. Chances are that the instructions also work with other
-versions (e.g. on Windows 7 instead of Windows 10).
-
-### Windows 10 / GNAT GPL 2017 / GLFW 3
-
- * Download and install GNAT GPL 2017 Windows x86 from
-   [AdaCore's Libre Site][1]. We assume you install it to `C:\GNAT\2017`. Make
-   sure the `bin` folder is in the `PATH` of your shell.
- * Download *32-bit Windows binaries* from the [GLFW download section][14]
-   (tested with GLFW 3.2.1).
- * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw`
-   folder into `C:\GNAT\2017\lib`.
- * Open your shell and navigate to the root folder of OpenGLAda. Execute:
-
-        gprbuild -p -P opengl-test.gpr -XWindowing_System=windows
-
-   This should produce executables in the `bin` folder inside OpenGLAda.
- * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
-   `glfw3.dll` from there to the `bin` folder. One of those two options is
-   necessary so that the binaries can find the dll.
- * Some of the test binaries require to be launched from the `bin` folder as
-   working directory because they are loading shader files from hardcoded paths.
- * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
-   for them to work.
- * If you want to use FreeType, you need at least FreeType 2.7.1. There is an
-   [unofficial GitHub repository][19] which hosts current Windows binaries known
-   to work; get the `freetype.dll` file from the `win32` folder and copy it into
-   `C:\GNAT\2017\lib`, then execute:
-
-       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=windows -XFreeType_Linker_Param=-l:freetype.dll
-
-   The same things stated for the `glfw3.dll` are valid for the `freetype.dll`.
-
-### Windows 10 / TDM-GCC 64bit / GLFW 3
-
-These instructions are for building 64bit binaries on Windows.
-
- * Download and install the 64bit TDM-GCC compiler from [here][15]. In the
-   installation wizard, make sure to check the (by default unchecked) *ada*
-   option. Make sure the `bin` folder is in the `PATH` of your shell.
-
-<!-- These currently do not work – uncomment when fixed
-
- * Download `gpr-tools.zip` from [here][16] and extract its contents to the
-   folder where you installed TDM-GCC (e.g. `C:\TDM-GCC-64\`).
-
--->
-
- * Download the *64-bit Windows binaries* from the [GLFW download section][14]
-   (tested with GLFW 3.2.1).
- * Open the zip folder and copy the file `glfw3.dll` from the `lib-mingw-w64`
-   folder into `C:\TDM-GCC-64\lib`.
- * Open your shell and navigate to the root folder of OpenGLAda. Execute:
-
-        gnatmake -p -P opengl-test.gpr -XWindowing_System=windows
-
-   This should produce executables in the `bin` folder inside OpenGLAda.
- * You can now either add `C:\TDM-GCC-64\lib` to your `PATH` or copy the
-   `glfw3.dll` from there to the `bin` folder. One of those two options is
-   necessary so that the binary can find the dll.
- * Some of the test binaries require to be launched from the `bin` folder as
-   working directory because they are loading shader files from hardcoded paths.
- * Keep in mind that you need to spread the `glfw3.dll` alongside your binaries
-   for them to work.
-
-### macOS High Sierra / GNAT GPL 2017 / GLFW 3
-
- * Download and install GNAT GPL 2017 x86_64 Mac OS X from
-   [AdaCore's Libre Site][1]. We assume you install it to `/usr/local/gnat`. Make
-   sure the `bin` folder is in the `PATH` of your shell.
- * There are multiple ways to install `glfw`; the most popular one is probably
-   using [Homebrew][18] and executing `brew install glfw`.
- * Open your shell and navigate to the root folder of OpenGLAda. Execute:
-
-        gprbuild -p -P opengl-test.gpr -XWindowing_System=quartz
-
-   This should produce executables in the `bin` folder inside OpenGLAda.
- * Some of the test binaries require to be launched from the `bin` folder as
-   working directory because they are loading shader files from hardcoded paths.
- * Keep in mind that you need to spread the `glfw.dylib` alongside your binaries
-   for them to work.
- * If you want to use FreeType, you can install it with `brew install freetype`.
-   You can build the tests with:
-
-       gprbuild -p -P opengl-text-test.gpr -XWindowing_System=quartz
-
-   The same things stated for the `glfw.dylib` are valid for the
-   `freetype.dylib`.
-
-### Linux
-
-Please refer to your package manager documentation. Most Linux distributions
-provide packages for GNAT and GLFW. On Debian, you need to install `gprbuild` as
-separate package.
-
-## Using OpenGLAda in your project
-
-### With GPRBuild
-
-To install OpenGLAda with all optional libraries, go to the `install` folder and
-execute
-
-    gprbuild [options] install.gpr
-    gprinstall [options] install.gpr
+    $ gprbuild [options] openglada.gpr
+    $ gprinstall [options] openglada.gpr
 
 Where *[options]* is the set of scenario variables you want to use. The
 available variables are:
@@ -206,13 +84,6 @@ available variables are:
                optimization.
     - `release`: Compile the project for a release environment.
 
- * `GLFW_Version` (GLFW only): Sets the version of the GLFW library to link
-                               against. See [here][6] for a detailed comparison
-                               of the two API versions.
-
-    - `2`: GLFW 2.x. Only one window.
-    - `3` (default): GLFW 3+. Multiple windows, multiple monitor support, etc.
-
  * `Auto_Exceptions`: Configures exception handling:
 
     - `enabled` (default): After each call to OpenGL, OpenGLAda checks whether
@@ -220,30 +91,59 @@ available variables are:
       exception.
     - `disabled`: The user has to query the error flag on their own.
 
+ * `GLFW_Version`: Sets the version of the GLFW library to link against. See
+                   [here][6] for a detailed comparison of the two API versions.
+
+    - `2`: GLFW 2.x. Only one window.
+    - `3` (default): GLFW 3+. Multiple windows, multiple monitor support, etc.
+
  * `GLFW_Linker_Param`: Define how you will link to GLFW. Default is `-lglfw`
    everywhere but on Windows with GLFW 3, in which case it is `-lglfw3`.
 
  * `FreeType_Linker_Param`: Define how you will link to FreeType.
    Default is `-lfreetype`.
 
+For example, a typical Windows installation would be
+
+    $ gprbuild -XWindowing_System=windows -Xmode=release openglada.gpr
+    $ gprinstall -XWindowing_System=windows -Xmode=release openglada.gpr
 
 Installing OpenGLAda makes its projects available to `gprbuild` and also to the
-GPS GUI. You can now just declare using OpenGLAda in your *.gpr file:
+GPS GUI. You can now import it like this:
 
     with "opengl";
     with "opengl-glfw";
     with "opengl-text";
     -- and so on
 
-Alternatively, you can *with* the source projects of OpenGLAda without
-installing them, which will require you to define the scenario variables every
-time.
+**Note:** The projects file `openglada.gpr` is just an aggregate project used
+for installation. In your projects, depend on `opengl.gpr` and its child
+projects.
 
-### With other build systems
+If you are having trouble getting OpenGLAda to compile in your environment,
+please refer to the [detailed guides on the website][13].
 
-If you want to use another build system, take a look at the `.gpr` files bundled
-with OpenGLAda, they tell you which compiler and linker options you need to give
-in order to compile it.
+## Tests
+
+The tests in this repository are small programs that are mainly used to check
+if the basic system is working. You can build them with
+
+    $ make tests
+
+If you're on Windows and do not have the `make` utility available, do this
+instead:
+
+    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows
+
+The tests require GLFW, because they need to create windows. By default, they
+try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
+by executing:
+
+    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows -XGLFW_Version=2
+    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows -XGLFW_Version=2
+
+(Substitute `windows` with `x11` or `quartz` if needed.)
 
 ## Examples
 
@@ -293,11 +193,8 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [10]: http://www.lonesock.net/soil.html
  [11]: https://sourceforge.net/projects/ftgl/
  [12]: https://sourceforge.net/projects/gnuada/files/
- [13]: https://github.com/flyx/OpenGLAda/issues/15
- [14]: http://www.glfw.org/download.html
- [15]: http://tdm-gcc.tdragon.net/download
+ [13]: http://flyx.github.io/OpenGLAda/setup.html
  [16]: http://getadanow.com/#get_windows
  [17]: http://tdm-gcc.tdragon.net/
- [18]: https://brew.sh
- [19]: https://github.com/ubawurinna/freetype-windows-binaries/
+ [19]: https://freetype.org/
  [20]: https://github.com/flyx/FreeTypeAda

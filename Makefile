@@ -31,7 +31,10 @@ generate: ${GENERATE_EXE}
 compile:
 	mkdir -p lib
 	mkdir -p obj
-	${GPRBUILD} -P opengl-glfw.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
+	${GPRBUILD} -P openglada.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
+
+install: compile
+	${GPRINSTALL} openglada.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 
 clean:
 	rm -rf ./obj ./bin ./lib
@@ -41,4 +44,4 @@ tests:
 	${GPRBUILD} -P opengl-glfw-test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 	${GPRBUILD} -P opengl-test.gpr ${WINDOWING_SYSTEM} ${GLFW_VERSION}
 
-.PHONY: generate compile clean tests
+.PHONY: generate compile install clean tests
