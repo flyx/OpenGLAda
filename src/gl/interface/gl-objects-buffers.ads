@@ -30,22 +30,22 @@ package GL.Objects.Buffers is
                              Usage  : Buffer_Usage);
 
    -- Use this instead of Load_To_Buffer when you don't want to copy any data
-   procedure Allocate (Target : Buffer_Target'Class; Number_Of_Bytes : Long;
+   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
                        Usage  : Buffer_Usage);
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
+   procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
    procedure Unmap (Target : Buffer_Target);
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   function Pointer (Target : Buffer_Target) return Pointers.Pointer;
+   function Pointer (Target : Buffer_Target'Class) return Pointers.Pointer;
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   procedure Set_Sub_Data (Target : Buffer_Target;
+   procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
 

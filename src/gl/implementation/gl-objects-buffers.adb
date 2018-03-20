@@ -86,7 +86,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Load_To_Buffer;
 
-   procedure Allocate (Target : Buffer_Target'Class; Number_Of_Bytes : Long;
+   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
       Usage  : Buffer_Usage) is
    begin
       API.Buffer_Data (Target.Kind, Low_Level.SizeIPtr (Number_Of_Bytes),
@@ -130,7 +130,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Instanced;
 
-   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
+   procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
@@ -145,7 +145,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Unmap;
 
-   function Pointer (Target : Buffer_Target) return Pointers.Pointer is
+   function Pointer (Target : Buffer_Target'Class) return Pointers.Pointer is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
       Ret : System.Address := System.Null_Address;
@@ -155,7 +155,7 @@ package body GL.Objects.Buffers is
       return To_Pointer (Ret);
    end Pointer;
 
-   procedure Set_Sub_Data (Target : Buffer_Target;
+   procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array) is
       use type C.long;
