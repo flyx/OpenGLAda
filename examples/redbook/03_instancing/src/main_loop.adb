@@ -45,7 +45,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Tex_Coord0_Location   : constant Int := 2;
 
    Num_Instances         : constant UInt := 50;
---     Num_Instances         : constant UInt := 100;
 
    --  ------------------------------------------------------------------------
 
@@ -212,7 +211,6 @@ begin
          Display (Main_Window);
          Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
          Glfw.Input.Poll_Events;
---           delay (1.0);
          Running := Running and not
            (Main_Window.Key_State (Glfw.Input.Keys.Escape) = Glfw.Input.Pressed);
          Running := Running and not Main_Window.Should_Close;
