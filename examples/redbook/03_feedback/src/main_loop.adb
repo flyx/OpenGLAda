@@ -220,7 +220,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use GL.Objects.Shaders;
       use Program_Loader;
       VBM_Result     : Boolean := False;
---        Varyings       : constant String := "position_out,velocity_out";
+      Varyings       : constant String := "position_out,velocity_out";
 --        Varyings_2     : constant String := "world_space_position";
    begin
       VAO (1).Initialize_Id;
@@ -240,7 +240,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
---        Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+      Put_Line ("Setup,Transform_Feedback_Varyings set");
         Update_Program.Link;
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
