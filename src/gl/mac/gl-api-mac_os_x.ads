@@ -1,14 +1,14 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Interfaces.C.Strings;
+with Interfaces.C;
 with System;
 private package GL.API.Mac_OS_X is
    pragma Preelaborate;
 
    -- package for MacOSX-specific stuff
 
-   package IFC renames Interfaces.C.Strings;
+   package IFC renames Interfaces.C;
 
    subtype CFStringRef    is System.Address;
    subtype CFBundleRef    is System.Address;
@@ -26,7 +26,7 @@ private package GL.API.Mac_OS_X is
                   External_Name => "CFBundleGetBundleWithIdentifier");
 
    function CFStringCreateWithCString (alloc    : CFAllocatorRef;
-                                       cStr     : IFC.chars_ptr;
+                                       cStr     : IFC.char_array;
                                        encoding : CFStringEncoding)
                                        return CFStringRef;
    pragma Import (Convention => C, Entity => CFStringCreateWithCString,

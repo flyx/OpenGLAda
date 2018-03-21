@@ -11,7 +11,7 @@ package body GL.API.Mac_OS_X is
          declare
             OpenGLFramework_ID : constant CFStringRef
               := CFStringCreateWithCString (System.Null_Address,
-                                            IFC.New_String ("com.apple.opengl"),
+                                            IFC.To_C ("com.apple.opengl"),
                                             kCFStringEncodingASCII);
          begin
             OpenGLFramework_Cached

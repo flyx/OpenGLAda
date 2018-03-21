@@ -1,9 +1,8 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Ada.Strings.Fixed;
 with Ada.Unchecked_Conversion;
-with Interfaces.C.Strings;
+with Interfaces.C;
 
 with GL.API;
 with GL.Enums;
@@ -190,42 +189,42 @@ package body GL.Objects.Programs is
    begin
       API.Get_Transform_Feedback_Varying
         (Object.Reference.GL_Id, Int (Index), Size (Buffer_Size), Size (Length),
-         Size (V_Length), V_Type, Interfaces.C.Strings.New_String (Name));
+         Size (V_Length), V_Type, Interfaces.C.To_C (Name));
       Raise_Exception_On_OpenGL_Error;
    end Get_Transform_Feedback_Varying;
 
    procedure Transform_Feedback_Varyings
      (Object :  Program; Varyings : String; Mode : Buffer_Mode) is
-      use Ada.Strings.Fixed;
-      use Interfaces.C;
-      use Interfaces.C.Strings;
-      String_Size : constant Natural := Varyings'Length + 1;
-      Num_Strings : constant GL.Types.Int :=
-        GL.Types.Int (Count (Varyings, ",") + 1);
-      New_Varyings : aliased String (1 .. String_Size) :=
-        Varyings & Character'Val (0);
-      aChar_Array  : aliased char_array := (1 .. size_t (String_Size) => nul);
-      C_Varyings   : aliased chars_ptr_array (1 .. size_t (Num_Strings));
+      use type Interfaces.C.size_t;
+      use type Interfaces.C.char;
+
+      Parameter_Buffer : Interfaces.C.char_array :=
+        Interfaces.C.To_C (Varyings);
+      Pointer_Array : Low_Level.Char_Access_Array
+        (1 .. Parameter_Buffer'Length / 2);
+        -- cannot be longer than this if every name has a length of at least 1
+      Pointer_Count : Size := 1;
+      Recent_Was_Comma : Boolean := True;
    begin
-      --  1. search all commas and replace each one with Character'Val (0)
-     --   2. append  Character'Val (0) to he string
-      --  Now you have a list of zero-terminated strings
-      --  ready for OpenGL processing.
-     --  3. Throw the access Character values into an array,
-     --     What are "access Character values"?
-     --  4. Use the array to call the OpenGL function.
-     --     "the array" needs to be a chars_ptr_array?
-      for Pos in 1 .. String_Size - 1 loop
-         if Varyings (Pos) =  ',' then
-            New_Varyings (Pos) := Character'Val (0);
-            aChar_Array (size_t (Pos)) := To_C (New_Varyings (Pos));
+      Pointer_Array (1) :=
+        Parameter_Buffer (Parameter_Buffer'First)'Unchecked_Access;
+      for Pos in Parameter_Buffer'First .. Parameter_Buffer'Last - 1 loop
+         if Parameter_Buffer (Pos) = ',' then
+            if Recent_Was_Comma then
+               raise Constraint_Error with
+                 "every varying name must have at least one character";
+            end if;
+            Parameter_Buffer (Pos) := Interfaces.C.nul;
+            Recent_Was_Comma := True;
+         elsif Recent_Was_Comma then
+            Pointer_Count := Pointer_Count + 1;
+            Pointer_Array (Pointer_Count) :=
+              Parameter_Buffer (Pos)'Unchecked_Access;
+            Recent_Was_Comma := False;
          end if;
       end loop;
-
-      --  Load C_Varyings from aChar_Array. How?
-
       API.Transform_Feedback_Varyings
-        (Object.Reference.GL_Id, Num_Strings, C_Varyings, Mode);
+        (Object.Reference.GL_Id, Pointer_Count, Pointer_Array, Mode);
       Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
@@ -383,23 +382,17 @@ package body GL.Objects.Programs is
    procedure Bind_Frag_Data_Location
      (Object : Program; Color_Number : Buffers.Draw_Buffer_Index;
       Name : String) is
-      C_Name : Interfaces.C.Strings.chars_ptr :=
-        Interfaces.C.Strings.New_String (Name);
    begin
       API.Bind_Frag_Data_Location
-        (Object.Reference.GL_Id, Color_Number, C_Name);
-      Interfaces.C.Strings.Free (C_Name);
+        (Object.Reference.GL_Id, Color_Number, C.To_C (Name));
       Raise_Exception_On_OpenGL_Error;
    end Bind_Frag_Data_Location;
 
    function Frag_Data_Location (Object : Program; Name : String)
                                 return Buffers.Draw_Buffer_Index is
-      C_Name : Interfaces.C.Strings.chars_ptr :=
-        Interfaces.C.Strings.New_String (Name);
       Ret : constant Int := API.Get_Frag_Data_Location
-        (Object.Reference.GL_Id, C_Name);
+        (Object.Reference.GL_Id, C.To_C (Name));
    begin
-      Interfaces.C.Strings.Free (C_Name);
       Raise_Exception_On_OpenGL_Error;
       if Ret < 0 then
          raise Unknown_Variable_Name with Name;

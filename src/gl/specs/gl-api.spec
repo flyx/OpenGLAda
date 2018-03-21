@@ -812,7 +812,6 @@ spec GL.API is
     (Target : Low_Level.Enums.Buffer_Kind;
     Internal_Format : Pixels.Internal_Format; Buffer : UInt) with
     Dynamic => "glTexBuffer",
-    Wrapper => "GL.Objects.Buffers.Load_To_Buffer",
     Wrapper => "GL.Objects.Buffers.Allocate";
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
@@ -1021,7 +1020,7 @@ spec GL.API is
    procedure Delete_Shader (Shader : UInt) with Dynamic => "glDeleteShader";
    procedure Shader_Source
      (Shader : UInt; Count : Size;
-      Str : Low_Level.CharPtr_Array; Length : Low_Level.Int_Array) with
+      Str : Low_Level.Char_Access_Array; Length : Low_Level.Int_Array) with
      Dynamic => "glShaderSource", Wrapper => "GL.Objects.Shaders.Set_Source";
    procedure Get_Shader_Source (Shader : UInt; Buffer_Size : Size;
                                 Length : out Size; Value : in out String) with
@@ -1136,11 +1135,11 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.Attached_Shaders";
    procedure Bind_Frag_Data_Location
      (Program : UInt; Color_Number : Buffers.Draw_Buffer_Index;
-      Name : Interfaces.C.Strings.chars_ptr)
+      Name : Interfaces.C.char_array)
      is Dynamic ("glBindFragDataLocation"),
         Wrapper ("GL.Objects.Programs.Bind_Frag_Data_Location");
    function Get_Frag_Data_Location
-     (Program : UInt; Name : Interfaces.C.Strings.chars_ptr) return Int with
+     (Program : UInt; Name : Interfaces.C.char_array) return Int with
      Dynamic => "glGetFragDataLocation",
      Wrapper => "GL.Objects.Programs.Frag_Data_Location";
    procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode) with
@@ -1152,11 +1151,11 @@ spec GL.API is
    procedure Get_Transform_Feedback_Varying
     (Program :  UInt; Index : Int; Buffer_Size : Size;
      Length : Size; V_Length : Size; V_Type : GL.Objects.Programs.Buffer_Mode;
-     Name : Interfaces.C.Strings.chars_ptr) with
+     Name : Interfaces.C.char_array) with
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
    procedure Transform_Feedback_Varyings
-    (Program :  UInt; Count : Size; Varyings : Interfaces.C.Strings.chars_ptr_array;
+    (Program :  UInt; Count : Size; Varyings : Low_Level.Char_Access_Array;
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";

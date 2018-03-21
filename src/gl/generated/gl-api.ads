@@ -323,7 +323,7 @@ private package GL.API is
    pragma Convention (StdCall, T147);
    type T148 is access procedure (P1 : UInt);
    pragma Convention (StdCall, T148);
-   type T149 is access procedure (P1 : UInt; P2 : Size; P3 : Low_Level.CharPtr_Array; P4 : Low_Level.Int_Array);
+   type T149 is access procedure (P1 : UInt; P2 : Size; P3 : Low_Level.Char_Access_Array; P4 : Low_Level.Int_Array);
    pragma Convention (StdCall, T149);
    type T150 is access procedure (P1 : UInt; P2 : Size; P3 : out Size; P4 : in out String);
    pragma Convention (StdCall, T150);
@@ -359,15 +359,15 @@ private package GL.API is
    pragma Convention (StdCall, T165);
    type T166 is access procedure (P1 : UInt; P2 : Size; P3 : out Size; P4 : in out UInt_Array);
    pragma Convention (StdCall, T166);
-   type T167 is access procedure (P1 : UInt; P2 : Buffers.Draw_Buffer_Index; P3 : Interfaces.C.Strings.chars_ptr);
+   type T167 is access procedure (P1 : UInt; P2 : Buffers.Draw_Buffer_Index; P3 : Interfaces.C.char_array);
    pragma Convention (StdCall, T167);
-   type T168 is access function (P1 : UInt; P2 : Interfaces.C.Strings.chars_ptr) return Int;
+   type T168 is access function (P1 : UInt; P2 : Interfaces.C.char_array) return Int;
    pragma Convention (StdCall, T168);
    type T169 is access procedure (P1 : Connection_Mode);
    pragma Convention (StdCall, T169);
-   type T170 is access procedure (P1 : UInt; P2 : Int; P3 : Size; P4 : Size; P5 : Size; P6 : GL.Objects.Programs.Buffer_Mode; P7 : Interfaces.C.Strings.chars_ptr);
+   type T170 is access procedure (P1 : UInt; P2 : Int; P3 : Size; P4 : Size; P5 : Size; P6 : GL.Objects.Programs.Buffer_Mode; P7 : Interfaces.C.char_array);
    pragma Convention (StdCall, T170);
-   type T171 is access procedure (P1 : UInt; P2 : Size; P3 : Interfaces.C.Strings.chars_ptr_array; P4 : GL.Objects.Programs.Buffer_Mode);
+   type T171 is access procedure (P1 : UInt; P2 : Size; P3 : Low_Level.Char_Access_Array; P4 : GL.Objects.Programs.Buffer_Mode);
    pragma Convention (StdCall, T171);
    type T172 is access procedure (P1 : Enums.Patch_Parameter_Int; P2 : Int);
    pragma Convention (StdCall, T172);
