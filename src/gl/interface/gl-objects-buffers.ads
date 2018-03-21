@@ -35,17 +35,17 @@ package GL.Objects.Buffers is
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
+   procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
    procedure Unmap (Target : Buffer_Target);
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   function Pointer (Target : Buffer_Target) return Pointers.Pointer;
+   function Pointer (Target : Buffer_Target'Class) return Pointers.Pointer;
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
-   procedure Set_Sub_Data (Target : Buffer_Target;
+   procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
 

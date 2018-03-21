@@ -31,7 +31,7 @@
 --  POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Interfaces.C.Strings;
+with Interfaces.C;
 with System;
 
 package GL.WGL is
@@ -186,7 +186,7 @@ package GL.WGL is
 
    function wglGetCurrentContext return HANDLE;
 
-   function wglGetProcAddress (Proc_Desc : Interfaces.C.Strings.chars_ptr)
+   function wglGetProcAddress (Proc_Desc : Interfaces.C.char_array)
                                return System.Address;
 
    function wglChoosePixelFormat (Device_Context    : HDC;

@@ -1,20 +1,17 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Interfaces.C.Strings;
-
 with GL.API;
 with GL.Enums;
 
 package body GL.Objects.Shaders is
 
    procedure Set_Source (Subject : Shader; Source : String) is
-      C_Source : constant Low_Level.CharPtr_Array
-        := (1 => C.Strings.New_String (Source));
-      Lengths : constant Low_Level.Int_Array
-        := (1 => Source'Length);
+      C_Source : C.char_array := C.To_C (Source);
    begin
-      API.Shader_Source (Subject.Reference.GL_Id, 1, C_Source, Lengths);
+      API.Shader_Source (Subject.Reference.GL_Id, 1,
+                         (1 => C_Source (1)'Unchecked_Access),
+                         (1 => Source'Length));
       Raise_Exception_On_OpenGL_Error;
    end Set_Source;
 
