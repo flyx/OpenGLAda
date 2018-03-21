@@ -9,18 +9,15 @@ function GL.API.Subprogram_Reference (Function_Name : String)
    -- OSX-specific implementation uses CoreFoundation functions
    use GL.API.Mac_OS_X;
 
-   package IFC renames Interfaces.C.Strings;
-
-   GL_Function_Name_C : IFC.chars_ptr := IFC.New_String (Function_Name);
+   package IFC renames Interfaces.C;
 
    Symbol_Name : constant CFStringRef := CFStringCreateWithCString
-      (alloc => System.Null_Address, cStr => GL_Function_Name_C,
+      (alloc => System.Null_Address, cStr => IFC.To_C (Function_Name),
       encoding => kCFStringEncodingASCII);
    Result : constant System.Address := CFBundleGetFunctionPointerForName
       (bundle => OpenGLFramework,
       functionName => Symbol_Name);
 begin
    CFRelease (Symbol_Name);
-   IFC.Free (GL_Function_Name_C);
    return Result;
 end GL.API.Subprogram_Reference;
