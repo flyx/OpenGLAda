@@ -30,7 +30,7 @@ package GL.Objects.Buffers is
                              Usage  : Buffer_Usage);
 
    -- Use this instead of Load_To_Buffer when you don't want to copy any data
-   procedure Allocate (Target : Buffer_Target'Class; Number_Of_Bytes : Long;
+   procedure Allocate (Target : Buffer_Target; Number_Of_Bytes : Long;
                        Usage  : Buffer_Usage);
 
    generic
