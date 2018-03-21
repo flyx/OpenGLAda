@@ -116,7 +116,7 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
-   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
+  procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
       use GL.Types;
    begin
       Put_Line (Name & ": ");
@@ -128,7 +128,7 @@ package body Utilities is
 
    --  -------------------------------------------------------------------------
 
-   procedure Print_Byte_Array (Name          : String; anArray : Byte_Array;
+   procedure Print_Byte_Array (Name : String; anArray : Byte_Array;
                                Start, Finish : GL.Types.UInt) is
       use GL.Types;
       Count : Integer := 1;

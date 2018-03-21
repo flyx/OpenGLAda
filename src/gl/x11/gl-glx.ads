@@ -2,7 +2,7 @@
 --  released under the terms of the MIT license, see the file "COPYING"
 
 with System;
-with Interfaces.C.Strings;
+with Interfaces.C;
 
 with GL.Low_Level;
 
@@ -60,7 +60,7 @@ package GL.GLX is
 
    function Get_Current_Display return System.Address;
 
-   function Get_Proc_Address (Name : Interfaces.C.Strings.chars_ptr)
+   function Get_Proc_Address (Name : Interfaces.C.char_array)
      return System.Address;
 
 private

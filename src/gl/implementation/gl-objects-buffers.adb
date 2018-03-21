@@ -29,7 +29,6 @@ package body GL.Objects.Buffers is
 
    Current_Buffers : Buffer_Maps.Map;
 
-
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class) is
       Cursor : constant Buffer_Maps.Cursor
         := Current_Buffers.Find (Target.Kind);
@@ -47,6 +46,24 @@ package body GL.Objects.Buffers is
       end if;
    end Bind;
 
+   procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
+                               Object : Buffer'Class) is
+      Cursor : constant Buffer_Maps.Cursor
+        := Current_Buffers.Find (Target.Kind);
+   begin
+      if Cursor = Buffer_Maps.No_Element or else
+        Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
+         API.Bind_Buffer_Base (Target.Kind, Index, Object.Reference.GL_Id);
+         Raise_Exception_On_OpenGL_Error;
+         if Cursor = Buffer_Maps.No_Element then
+            Current_Buffers.Insert (Target.Kind, Object);
+         else
+            Current_Buffers.Replace_Element (Cursor, Object);
+         end if;
+      end if;
+   end Bind_Buffer_Base;
+
    function Current_Object (Target : Buffer_Target) return Buffer'Class is
       Cursor : constant Buffer_Maps.Cursor
         := Current_Buffers.Find (Target.Kind);
@@ -58,7 +75,7 @@ package body GL.Objects.Buffers is
       end if;
    end Current_Object;
 
-   procedure Load_To_Buffer (Target : Buffer_Target;
+   procedure Load_To_Buffer (Target : Buffer_Target'Class;
                              Data   : Pointers.Element_Array;
                              Usage  : Buffer_Usage) is
       use type C.long;
@@ -77,6 +94,14 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Allocate;
 
+   procedure Allocate (Target : Texture_Buffer_Target;
+                       Format : GL.Pixels.Internal_Format;
+                       Object : Buffer'Class) is
+   begin
+      API.Texture_Buffer_Data (Target.Kind, Format, Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Allocate;
+
    procedure Draw_Elements (Mode : Connection_Mode; Count : Types.Size;
                             Index_Type : Unsigned_Numeric_Type;
                             Element_Offset : Natural := 0) is
@@ -92,7 +117,20 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements;
 
-   procedure Map (Target : Buffer_Target; Access_Type : Access_Kind;
+   procedure Draw_Elements_Instanced (Mode : Connection_Mode; Count : UInt;
+                                      Index_Type : Unsigned_Numeric_Type;
+                                      Element_Offset : UInt := 0;
+                                      Instance_Count : UInt := 0) is
+      Element_Bytes : constant array (Unsigned_Numeric_Type) of UInt :=
+        (UByte_Type => 1, UShort_Type => 2, UInt_Type => 4);
+   begin
+      API.Draw_Elements_Instanced (Mode, Int (Count), Index_Type,
+                Low_Level.IntPtr (Element_Bytes (Index_Type) * Element_Offset),
+                Int (Instance_Count));
+      Raise_Exception_On_OpenGL_Error;
+   end Draw_Elements_Instanced;
+
+   procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
@@ -107,7 +145,7 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Unmap;
 
-   function Pointer (Target : Buffer_Target) return Pointers.Pointer is
+   function Pointer (Target : Buffer_Target'Class) return Pointers.Pointer is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
       Ret : System.Address := System.Null_Address;
@@ -117,7 +155,7 @@ package body GL.Objects.Buffers is
       return To_Pointer (Ret);
    end Pointer;
 
-   procedure Set_Sub_Data (Target : Buffer_Target;
+   procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array) is
       use type C.long;

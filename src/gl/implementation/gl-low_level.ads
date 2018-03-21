@@ -3,8 +3,6 @@
 
 with GL.Types;
 
-with Interfaces.C.Strings;
-
 package GL.Low_Level is
    pragma Preelaborate;
 
@@ -43,7 +41,7 @@ package GL.Low_Level is
    subtype IntPtr is C.long;
    subtype SizeIPtr is C.long;
 
-   type CharPtr_Array is array (Positive range <>) of aliased C.Strings.chars_ptr;
+   type Char_Access_Array is array (Size range <>) of access C.char;
 
    -- used in API calls
    type Size_Access is access all Types.Size;
@@ -59,4 +57,5 @@ private
    pragma Convention (C, UInt_Array);
    pragma Convention (C, Size_Access);
    pragma Convention (C, Bool_Access);
+   pragma Convention (C, Char_Access_Array);
 end GL.Low_Level;

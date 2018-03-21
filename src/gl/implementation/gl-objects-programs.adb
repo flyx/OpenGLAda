@@ -2,7 +2,7 @@
 --  released under the terms of the MIT license, see the file "COPYING"
 
 with Ada.Unchecked_Conversion;
-with Interfaces.C.Strings;
+with Interfaces.C;
 
 with GL.API;
 with GL.Enums;
@@ -150,25 +150,83 @@ package body GL.Objects.Programs is
         (Program_Int_Param (Subject, Enums.Tess_Gen_Vertex_Order));
    end Tess_Gen_Vertex_Order;
 
-   function Transform_Feedback_Buffer_Mode (Subject : Program)
+   function Transform_Feedback_Buffer_Mode (Object : Program)
                                             return Buffer_Mode is
-      function To_Buffer_Mode is new Ada.Unchecked_Conversion (Int, Buffer_Mode);
+      Program_Buffer_Mode_Param : constant Buffer_Mode :=
+        Buffer_Mode'Enum_Val
+          (Program_Int_Param (Object, Enums.Transform_Feedback_Buffer_Mode));
    begin
-      return To_Buffer_Mode
-        (Program_Int_Param (Subject, Enums.Transform_Feedback_Buffer_Mode));
+      return Program_Buffer_Mode_Param;
    end Transform_Feedback_Buffer_Mode;
 
-   function Transform_Feedback_Varyings (Subject : Program) return Size is
+   function Transform_Feedback_Varyings (Object : Program) return Size is
    begin
-      return Program_Size_Param (Subject, Enums.Transform_Feedback_Varyings);
+      return Program_Size_Param (Object, Enums.Transform_Feedback_Varyings);
    end Transform_Feedback_Varyings;
 
-   function Transform_Feedback_Varying_Max_Length (Subject : Program)
-                                                  return Size is
+   function Transform_Feedback_Varying_Max_Length (Object : Program)
+                                                   return Size is
    begin
       return Program_Size_Param
-        (Subject, Enums.Transform_Feedback_Varying_Max_Length);
+        (Object, Enums.Transform_Feedback_Varying_Max_Length);
    end Transform_Feedback_Varying_Max_Length;
+
+   procedure Begin_Transform_Feedback (Primitive_Mode : Connection_Mode) is
+   begin
+      API.Begin_Transform_Feedback (Primitive_Mode);
+      Raise_Exception_On_OpenGL_Error;
+   end Begin_Transform_Feedback;
+
+   procedure End_Transform_Feedback is
+   begin
+      API.End_Transform_Feedback;
+      Raise_Exception_On_OpenGL_Error;
+   end End_Transform_Feedback;
+
+   procedure Get_Transform_Feedback_Varying
+     (Object :  Program; Index, Buffer_Size, Length, V_Length : Integer;
+      V_Type : Buffer_Mode; Name : String) is
+   begin
+      API.Get_Transform_Feedback_Varying
+        (Object.Reference.GL_Id, Int (Index), Size (Buffer_Size), Size (Length),
+         Size (V_Length), V_Type, Interfaces.C.To_C (Name));
+      Raise_Exception_On_OpenGL_Error;
+   end Get_Transform_Feedback_Varying;
+
+   procedure Transform_Feedback_Varyings
+     (Object :  Program; Varyings : String; Mode : Buffer_Mode) is
+      use type Interfaces.C.size_t;
+      use type Interfaces.C.char;
+
+      Parameter_Buffer : Interfaces.C.char_array :=
+        Interfaces.C.To_C (Varyings);
+      Pointer_Array : Low_Level.Char_Access_Array
+        (1 .. Parameter_Buffer'Length / 2);
+        -- cannot be longer than this if every name has a length of at least 1
+      Pointer_Count : Size := 1;
+      Recent_Was_Comma : Boolean := True;
+   begin
+      Pointer_Array (1) :=
+        Parameter_Buffer (Parameter_Buffer'First)'Unchecked_Access;
+      for Pos in Parameter_Buffer'First .. Parameter_Buffer'Last - 1 loop
+         if Parameter_Buffer (Pos) = ',' then
+            if Recent_Was_Comma then
+               raise Constraint_Error with
+                 "every varying name must have at least one character";
+            end if;
+            Parameter_Buffer (Pos) := Interfaces.C.nul;
+            Recent_Was_Comma := True;
+         elsif Recent_Was_Comma then
+            Pointer_Count := Pointer_Count + 1;
+            Pointer_Array (Pointer_Count) :=
+              Parameter_Buffer (Pos)'Unchecked_Access;
+            Recent_Was_Comma := False;
+         end if;
+      end loop;
+      API.Transform_Feedback_Varyings
+        (Object.Reference.GL_Id, Pointer_Count, Pointer_Array, Mode);
+      Raise_Exception_On_OpenGL_Error;
+   end Transform_Feedback_Varyings;
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size is
@@ -245,7 +303,7 @@ package body GL.Objects.Programs is
    begin
       return Index : constant Uniform_Location_Type
         := API.Get_Subroutine_Uniform_Location
-        (Object.Reference.GL_Id, Shader, C_String) do
+          (Object.Reference.GL_Id, Shader, C_String) do
          Raise_Exception_On_OpenGL_Error;
       end return;
    end Subroutine_Uniform_Locations;
@@ -279,7 +337,7 @@ package body GL.Objects.Programs is
    end Internal_Release_Id;
 
    function Uniform_Location (Subject : Program; Name : String)
-     return Uniforms.Uniform is
+                              return Uniforms.Uniform is
       Result : constant Uniforms.Uniform := API.Get_Uniform_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
@@ -292,12 +350,12 @@ package body GL.Objects.Programs is
                                    Name : String) is
    begin
       API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index,
-                               Interfaces.C.To_C (Name));
+                                Interfaces.C.To_C (Name));
       Raise_Exception_On_OpenGL_Error;
    end Bind_Attrib_Location;
 
    function Attrib_Location (Subject : Program; Name : String)
-     return Attributes.Attribute is
+                             return Attributes.Attribute is
       Location : constant Attributes.Attribute := API.Get_Attrib_Location
         (Subject.Reference.GL_Id, Interfaces.C.To_C (Name));
    begin
@@ -324,23 +382,17 @@ package body GL.Objects.Programs is
    procedure Bind_Frag_Data_Location
      (Object : Program; Color_Number : Buffers.Draw_Buffer_Index;
       Name : String) is
-      C_Name : Interfaces.C.Strings.chars_ptr :=
-        Interfaces.C.Strings.New_String (Name);
    begin
       API.Bind_Frag_Data_Location
-        (Object.Reference.GL_Id, Color_Number, C_Name);
-      Interfaces.C.Strings.Free (C_Name);
+        (Object.Reference.GL_Id, Color_Number, C.To_C (Name));
       Raise_Exception_On_OpenGL_Error;
    end Bind_Frag_Data_Location;
 
    function Frag_Data_Location (Object : Program; Name : String)
-     return Buffers.Draw_Buffer_Index is
-      C_Name : Interfaces.C.Strings.chars_ptr :=
-        Interfaces.C.Strings.New_String (Name);
+                                return Buffers.Draw_Buffer_Index is
       Ret : constant Int := API.Get_Frag_Data_Location
-        (Object.Reference.GL_Id, C_Name);
+        (Object.Reference.GL_Id, C.To_C (Name));
    begin
-      Interfaces.C.Strings.Free (C_Name);
       Raise_Exception_On_OpenGL_Error;
       if Ret < 0 then
          raise Unknown_Variable_Name with Name;
@@ -348,4 +400,5 @@ package body GL.Objects.Programs is
          return Buffers.Draw_Buffer_Index (Ret);
       end if;
    end Frag_Data_Location;
+
 end GL.Objects.Programs;
