@@ -237,7 +237,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Update_Program := Program_From
         ((Src ("src/shaders/update_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/white_fragment_shader.glsl", Fragment_Shader)));
+         Src ("src/shaders/update_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
       Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
@@ -262,7 +262,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_Program := Program_From
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
-         Src ("src/shaders/blue_fragment_shader.glsl", Fragment_Shader)));
+         Src ("src/shaders/render_fragment_shader.glsl", Fragment_Shader)));
 
 --        Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
       Render_Program.Link;
