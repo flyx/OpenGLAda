@@ -72,8 +72,8 @@ package GL.Objects.Programs is
    procedure End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object : Program; Index, Buffer_Size, Length, V_Length : Integer;
-      V_Type : Buffer_Mode; Name : String);
+     (Object : Program; Index : Integer; Length, V_Length : out Integer;
+      V_Type : out Buffer_Mode; Name : out String);
 
    procedure Transform_Feedback_Varyings
      (Object : Program; Varyings : String; Mode : Buffer_Mode);
