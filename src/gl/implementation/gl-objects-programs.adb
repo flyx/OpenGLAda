@@ -184,17 +184,28 @@ package body GL.Objects.Programs is
    end End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object :  Program; Index : Integer; Length, V_Length : out Integer;
+     (Object :  Program; Index : Integer; Length, V_Length : out Size;
       V_Type : out Buffer_Mode; Name : out String) is
       use Interfaces.C;
       Buffer_Size : constant Size := Name'Length + 1;
-      C_Name      : Interfaces.C.char_array (1 .. size_t (Buffer_Size));
+      C_Name      : Interfaces.C.char_array (1 .. size_t (Buffer_Size + 10));
    begin
-      API.Get_Transform_Feedback_Varying
-        (Object.Reference.GL_Id, GL.Types.Int (Index), Buffer_Size,
-         Size (Length), Size (V_Length), V_Type, C_Name);
-      Raise_Exception_On_OpenGL_Error;
-      Name := Interfaces.C.To_Ada (C_Name);
+      if Buffer_Size > 1 then
+         V_Length := Transform_Feedback_Varyings (Object);
+         if  V_Length > 0 and then
+            Transform_Feedback_Varying_Max_Length (Object) > 0 then
+            API.Get_Transform_Feedback_Varying
+                (Object.Reference.GL_Id, GL.Types.Int (Index), Buffer_Size,
+                 Length, V_Length, V_Type, C_Name);
+            Raise_Exception_On_OpenGL_Error;
+            Name := Interfaces.C.To_Ada (C_Name);
+         else
+            raise Constraint_Error with "Max_Length or V_Length is 0";
+         end if;
+      else
+         raise Constraint_Error with
+                 "String must have at least one character";
+      end if;
    end Get_Transform_Feedback_Varying;
 
    procedure Transform_Feedback_Varyings
