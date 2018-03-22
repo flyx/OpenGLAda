@@ -170,7 +170,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 --        GL.Objects.Programs.Begin_Transform_Feedback (Points);
       GL.Objects.Vertex_Arrays.Draw_Arrays
         (Mode  => GL.Types.Points, First => 0,
-         Count => GL.Types.Size (Maths.Minimum (Num_Points, Frame_Count)));
+         Count => GL.Types.Size (UInt'Min (Num_Points, Frame_Count)));
 --        GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
