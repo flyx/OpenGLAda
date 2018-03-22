@@ -222,6 +222,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       VBM_Result     : Boolean := False;
       Varyings       : constant String := "position_out,velocity_out";
 --        Varyings_2     : constant String := "world_space_position";
+      Name            : String (1 .. 30);
+      Length, V_Length : Integer;
+      V_Type           : Buffer_Mode;
    begin
       VAO (1).Initialize_Id;
       VAO (1).Bind;
@@ -241,6 +244,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       GL.Objects.Programs.Use_Program  (Update_Program);
       Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+      Get_Transform_Feedback_Varying (Update_Program, 1, 30, Length, V_Length,
+                                      V_Type, Name);
+      Put_Line ("Name, Length, V_Length, V_Type" & Name & Integer'Image (Length) &
+               Integer'Image (V_Length) & Buffer_Mode'Image (V_Type));
       Put_Line ("Setup,Transform_Feedback_Varyings set");
         Update_Program.Link;
       if not GL.Objects.Programs.Link_Status (Update_Program) then
@@ -250,6 +257,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Put_Line ("Setup, Update_Program Link ok");
       end if;
 
+      GL.Objects.Programs.Use_Program  (Update_Program);
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Update_Program, "model_matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
