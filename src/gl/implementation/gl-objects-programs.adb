@@ -218,11 +218,9 @@ package body GL.Objects.Programs is
       Pointer_Array : Low_Level.Char_Access_Array
         (1 .. Parameter_Buffer'Length / 2);
         -- cannot be longer than this if every name has a length of at least 1
-      Pointer_Count : Size := 1;
+      Pointer_Count : Size := 0;
       Recent_Was_Comma : Boolean := True;
    begin
-      Pointer_Array (1) :=
-        Parameter_Buffer (Parameter_Buffer'First)'Unchecked_Access;
       for Pos in Parameter_Buffer'First .. Parameter_Buffer'Last - 1 loop
          if Parameter_Buffer (Pos) = ',' then
             if Recent_Was_Comma then
