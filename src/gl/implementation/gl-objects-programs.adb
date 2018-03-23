@@ -188,7 +188,8 @@ package body GL.Objects.Programs is
       V_Type : out Buffer_Mode; Name : out String) is
       use Interfaces.C;
       Buffer_Size : constant Size := Name'Length + 1;
-      C_Name      : Interfaces.C.char_array (1 .. size_t (Buffer_Size + 10));
+      C_Name      : Interfaces.C.char_array (1 .. size_t (Buffer_Size + 1)) :=
+       (others => nul);
    begin
       if Buffer_Size > 1 then
          V_Length := Transform_Feedback_Varyings (Object);

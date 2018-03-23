@@ -222,9 +222,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       VBM_Result     : Boolean := False;
       Varyings       : constant String := "position_out,velocity_out";
 --        Varyings_2     : constant String := "world_space_position";
-      Name           : String (1 .. 30);
-      Length         : GL.Types.Size;
-      V_Length       : GL.Types.Size;
+--        Name           : String (1 .. 30);
+--        Length         : GL.Types.Size := 99;
+      V_Length       : GL.Types.Size := 99;
       Max_Length     : Int;
       V_Type         : Buffer_Mode;
    begin
@@ -245,19 +245,18 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Src ("src/shaders/update_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
-      Transform_Feedback_Varyings (Update_Program, Varyings, Separate_Attribs);
-      GL.Objects.Programs.Use_Program  (Update_Program);
+      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+      Update_Program.Link;
       V_Type := Transform_Feedback_Buffer_Mode (Update_Program);
       V_Length := Int (Transform_Feedback_Varyings (Update_Program));
       Max_Length := Transform_Feedback_Varying_Max_Length (Update_Program);
-      Put_Line ("Setup,Transform_Feedback_Varyings set");
       Put_Line ("V_Type: " & Buffer_Mode'Image (V_Type) & "   V_Length: " &
                 Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
-      Get_Transform_Feedback_Varying (Update_Program, 1, Length, V_Length,
-                                      V_Type, Name);
-      Put_Line ("Name, Length, V_Length, V_Type" & Name & Int'Image (Length) &
-               Int'Image (V_Length) & Buffer_Mode'Image (V_Type));
-        Update_Program.Link;
+--        Get_Transform_Feedback_Varying (Update_Program, 1, Length, V_Length,
+--                                        V_Type, Name);
+--        Put_Line ("Name, Length, V_Length, V_Type" & Name & Int'Image (Length) &
+--                 Int'Image (V_Length) & Buffer_Mode'Image (V_Type));
+--
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
@@ -266,6 +265,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
       GL.Objects.Programs.Use_Program  (Update_Program);
+      Put_Line ("Setup, using Update_Program");
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Update_Program, "model_matrix");
       Projection_Matrix_ID := GL.Objects.Programs.Uniform_Location
