@@ -245,7 +245,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Src ("src/shaders/update_fragment_shader.glsl", Fragment_Shader)));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
-      Transform_Feedback_Varyings (Update_Program, Varyings, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Update_Program, Varyings, Separate_Attribs);
       GL.Objects.Programs.Use_Program  (Update_Program);
       V_Type := Transform_Feedback_Buffer_Mode (Update_Program);
       V_Length := Int (Transform_Feedback_Varyings (Update_Program));
