@@ -1058,7 +1058,6 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Buffer_Mode",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length",
-     Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying",
      Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback",
      Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Attach_Shader (Program, Shader : UInt) with
