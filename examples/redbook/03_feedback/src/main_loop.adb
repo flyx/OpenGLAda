@@ -48,7 +48,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Vec4_Size                   : constant UInt := GL.Types.Singles.Vector4'Size / 8;
    PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
    Background                  : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
-   --     Dark_Blue           : constant GL.Types.Colors.Color := (0.0, 0.0, 0.4, 1.0);
 
    --  BEGIN_APP_DECLARATION Member variables
    Update_Program              : GL.Objects.Programs.Program;
@@ -110,7 +109,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Model_Matrix      : Singles.Matrix4 := Identity4;
       Projection_Matrix : Singles.Matrix4;
       Scale             : constant Single := 0.003;
---        Scale             : constant Single := 0.3;
       Current_Time      : Float;  --  t
    begin
       Current_Time :=  Float (Glfw.Time);
@@ -141,9 +139,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Render_VAO.Bind;
       Transform_Feedback_Buffer.Bind_Buffer_Base (0, Geometry_VBO);
 
---        GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
+      GL.Objects.Programs.Begin_Transform_Feedback (Triangles);
       Load_VB_Object.Render (VBM_Object);
---        GL.Objects.Programs.End_Transform_Feedback;
+      GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Programs.Use_Program (Update_Program);
 
@@ -167,11 +165,11 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Transform_Feedback_Buffer.Bind_Buffer_Base (0, VBO (2));
       end if;
 
---        GL.Objects.Programs.Begin_Transform_Feedback (Points);
+      GL.Objects.Programs.Begin_Transform_Feedback (Points);
       GL.Objects.Vertex_Arrays.Draw_Arrays
         (Mode  => GL.Types.Points, First => 0,
          Count => GL.Types.Size (UInt'Min (Num_Points, Frame_Count)));
---        GL.Objects.Programs.End_Transform_Feedback;
+      GL.Objects.Programs.End_Transform_Feedback;
 
       GL.Objects.Vertex_Arrays.Bind (GL.Objects.Vertex_Arrays.Null_Array_Object);
 
@@ -198,9 +196,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Map_PV_Buffer (Transform_Feedback_Buffer, GL.Objects.Write_Only, Buffer_Pointer);
       for B_Index in 1 .. Num_Points loop   --  j
          Velocity := Random_Vector;
---           Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
---           Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
-         Buffer_Pointer.Position := To_Vector4 (Random_Vector);
+         Buffer_Pointer.Position := To_Vector4 (Velocity) + (-0.5, 40.0, 0.0, 0.0);
+         Buffer_Pointer.Position := To_Vector4 (0.1 * Velocity) + (-0.5, 0.2, 0.0, 0.0);
          Buffer_Pointer.Velocity := (Velocity (GL.X), 0.3 * Velocity (GL.Y),
                          0.3 * Velocity (GL.Z));
          PV_Buffer_Package.Increment (Buffer_Pointer);
