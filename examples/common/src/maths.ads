@@ -42,12 +42,6 @@ package Maths is
      (View_Angle : Degree; Width, Height, Z_Near, Z_Far : Single;
       Transform  : out Singles.Matrix4);
    function Length (V : Singles.Vector3) return Single;
-   function Minimum (I1, I2 : Int) return Int;
-   function Minimum (I1, I2 : Integer) return Integer;
-   function Minimum (I1, I2 : Single) return Single;
-   function Maximum (I1, I2 : Int) return Int;
-   function Maximum (I1, I2 : Integer) return Integer;
-   function Maximum (I1, I2 : Single) return Single;
    function Normalized (V : Singles.Vector3) return Singles.Vector3;
    function Perspective_Matrix (View_Angle : Degree; Aspect, Near, Far : Single)
                                 return Singles.Matrix4;
