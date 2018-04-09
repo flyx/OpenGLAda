@@ -92,9 +92,9 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
-   procedure Init_Perspective_Transform (View_Angle                   : Degree;
+   procedure Init_Perspective_Transform (View_Angle : Degree;
                                          Width, Height, Z_Near, Z_Far : Single;
-                                         Transform                    : out GL.Types.Singles.Matrix4) is
+                                         Transform  : out GL.Types.Singles.Matrix4) is
    begin
       Transform := Perspective_Matrix (View_Angle, Width / Height,
                                        Z_Near, Z_Far);
@@ -108,84 +108,6 @@ package body Maths is
    begin
       return Sqrt (V (X) * V (X) + V (Y) * V (Y) + V (Z) * V (Z));
    end Length;
-
-   --  ------------------------------------------------------------------------
-
-   function Minimum (I1, I2 : Int) return Int is
-      Min : Int;
-   begin
-      if I1 < I2 then
-         Min := I1;
-      else
-         Min := I2;
-      end if;
-      return Min;
-   end Minimum;
-
-   --  ------------------------------------------------------------------------
-
-   function Minimum (I1, I2 : Integer) return Integer is
-      Min : Integer;
-   begin
-      if I1 < I2 then
-         Min := I1;
-      else
-         Min := I2;
-      end if;
-      return Min;
-   end Minimum;
-
-   --  ------------------------------------------------------------------------
-
-   function Minimum (I1, I2 : Single) return Single is
-      Min : Single;
-   begin
-      if I1 < I2 then
-         Min := I1;
-      else
-         Min := I2;
-      end if;
-      return Min;
-   end Minimum;
-
-   --  ------------------------------------------------------------------------
-
-   function Maximum (I1, I2 : Int) return Int is
-      Max : Int;
-   begin
-      if I1 > I2 then
-         Max := I1;
-      else
-         Max := I2;
-      end if;
-      return Max;
-   end Maximum;
-
-   --  ------------------------------------------------------------------------
-
-   function Maximum (I1, I2 : Integer) return Integer is
-      Max : Integer;
-   begin
-      if I1 > I2 then
-         Max := I1;
-      else
-         Max := I2;
-      end if;
-      return Max;
-   end Maximum;
-
-   --  ------------------------------------------------------------------------
-
-   function Maximum (I1, I2 : Single) return Single is
-      Max : Single;
-   begin
-      if I1 > I2 then
-         Max := I1;
-      else
-         Max := I2;
-      end if;
-      return Max;
-   end Maximum;
 
    --  ------------------------------------------------------------------------
 
