@@ -92,9 +92,9 @@ package body Maths is
 
    --  ------------------------------------------------------------------------
 
-   procedure Init_Perspective_Transform (View_Angle                   : Degree;
+   procedure Init_Perspective_Transform (View_Angle : Degree;
                                          Width, Height, Z_Near, Z_Far : Single;
-                                         Transform                    : out GL.Types.Singles.Matrix4) is
+                                         Transform  : out GL.Types.Singles.Matrix4) is
    begin
       Transform := Perspective_Matrix (View_Angle, Width / Height,
                                        Z_Near, Z_Far);
@@ -109,6 +109,7 @@ package body Maths is
       return Sqrt (V (X) * V (X) + V (Y) * V (Y) + V (Z) * V (Z));
    end Length;
 
+   --  ------------------------------------------------------------------------
 
    function New_Quaternion (Angle : Radian; Axis : GL.Types.Singles.Vector3)
                             return Single_Quaternion.Quaternion is
