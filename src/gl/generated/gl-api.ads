@@ -745,8 +745,7 @@ private package GL.API is
    Bind_Frag_Data_Location : T167;
    Get_Frag_Data_Location : T168;
    Begin_Transform_Feedback : T169;
-   procedure End_Transform_Feedback;
-   pragma Import (StdCall, End_Transform_Feedback, "glEndTransformFeedback");
+   End_Transform_Feedback : T151;
    Get_Transform_Feedback_Varying : T170;
    Transform_Feedback_Varyings : T171;
    Set_Patch_Parameter_Int : T172;
