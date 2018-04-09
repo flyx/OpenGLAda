@@ -381,6 +381,7 @@ begin
    GL.API.Bind_Frag_Data_Location := Load_T167 ("glBindFragDataLocation");
    GL.API.Get_Frag_Data_Location := Load_T168 ("glGetFragDataLocation");
    GL.API.Begin_Transform_Feedback := Load_T169 ("glBeginTransformFeedback");
+   GL.API.End_Transform_Feedback := Load_T151 ("glEndTransformFeedback");
    GL.API.Get_Transform_Feedback_Varying := Load_T170 ("glGetTransformFeedbackVarying");
    GL.API.Transform_Feedback_Varyings := Load_T171 ("glTransformFeedbackVaryings");
    GL.API.Set_Patch_Parameter_Int := Load_T172 ("glPatchParameteri");
