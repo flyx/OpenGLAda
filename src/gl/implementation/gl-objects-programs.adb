@@ -179,7 +179,7 @@ package body GL.Objects.Programs is
 
    procedure End_Transform_Feedback is
    begin
-      API.End_Transform_Feedback;
+      API.End_Transform_Feedback.all;
       Raise_Exception_On_OpenGL_Error;
    end End_Transform_Feedback;
 

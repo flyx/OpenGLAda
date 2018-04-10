@@ -1145,7 +1145,7 @@ spec GL.API is
      Dynamic => "glBeginTransformFeedback",
      Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback";
    procedure End_Transform_Feedback with
-     Static => "glEndTransformFeedback",
+     Dynamic => "glEndTransformFeedback",
      Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Get_Transform_Feedback_Varying
     (Program :  UInt; Index : Int; Buffer_Size : Size;

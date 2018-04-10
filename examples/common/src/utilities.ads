@@ -30,7 +30,9 @@ package Utilities is
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector3_Pointers);
    procedure Load_Vertex_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Vector4_Pointers);
-   procedure Load_Vector5_Buffer is new GL.Objects.Buffers.Load_To_Buffer
+   procedure Load_Texture_Buffer is new
+     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Matrix4_Pointers);
+      procedure Load_Vector5_Buffer is new GL.Objects.Buffers.Load_To_Buffer
      (Maths.Vector5_Pointers);
    procedure Load_Vector6_Buffer is new GL.Objects.Buffers.Load_To_Buffer
      (Maths.Vector6_Pointers);
