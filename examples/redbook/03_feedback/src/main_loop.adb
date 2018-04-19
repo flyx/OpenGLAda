@@ -49,7 +49,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    PV_Buffer_Size              : constant UInt := Vec4_Size + Vec3_Size;
    Background                  : constant GL.Types.Colors.Color := (0.0, 1.0, 0.0, 0.0);
 
-   --  BEGIN_APP_DECLARATION Member variables
    Update_Program              : GL.Objects.Programs.Program;
    VAO                         : array (1 .. 2) of GL.Objects.Vertex_Arrays.Vertex_Array_Object;
    VBO                         : array (1 .. 2) of GL.Objects.Buffers.Buffer;
@@ -66,14 +65,13 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
    Projection_Matrix_ID        : GL.Uniforms.Uniform;
    Triangle_Count_ID           : GL.Uniforms.Uniform;
    Time_Step_ID                : GL.Uniforms.Uniform;
-   --
+
    VBM_Object                  : Load_VB_Object.VB_Object;
-   --  END_APP_DECLARATION
 
    Random_Gen                  : Ada.Numerics.Float_Random.Generator;
    Num_Points                  : constant UInt := 5000;  --  Point_Count
 
-   --  Display static variables
+   --  Display variables
    Frame_Count                 : UInt := 1;
    Last_Time                   : Float := 0.0;  --  q
 
@@ -155,7 +153,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          GL.Uniforms.Set_Single (Time_Step_ID,
                                  2000.0 * Single (Current_Time - Last_Time));
       end if;
-      Last_Time := Current_Time;   --  q = t
+      Last_Time := Current_Time;        --  q = t
 
       if (Frame_Count rem 2) = 0 then   --  (frame_count & 1) != 0
          VAO (2).Bind;
@@ -218,7 +216,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       VBM_Result     : Boolean := False;
       Varyings       : constant String := "position_out,velocity_out";
---        Varyings_2     : constant String := "world_space_position";
+      Varyings_2     : constant String := "world_space_position";
+      --  Commented out to allow debug of Transform_Feedback_Varyings problem
 --        Name           : String (1 .. 30);
 --        Length         : GL.Types.Size := 99;
       V_Length       : GL.Types.Size := 99;
@@ -249,11 +248,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Max_Length := Transform_Feedback_Varying_Max_Length (Update_Program);
       Put_Line ("V_Type: " & Buffer_Mode'Image (V_Type) & "   V_Length: " &
                 Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
+      --  Commented out to allow debug of Transform_Feedback_Varyings problem
 --        Get_Transform_Feedback_Varying (Update_Program, 1, Length, V_Length,
 --                                        V_Type, Name);
 --        Put_Line ("Name, Length, V_Length, V_Type" & Name & Int'Image (Length) &
 --                 Int'Image (V_Length) & Buffer_Mode'Image (V_Type));
---
+
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
@@ -277,7 +277,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         ((Src ("src/shaders/render_vertex_shader.glsl", Vertex_Shader),
          Src ("src/shaders/render_fragment_shader.glsl", Fragment_Shader)));
 
---        Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
+      Transform_Feedback_Varyings (Render_Program, Varyings_2, Interleaved_Attribs);
       Render_Program.Link;
       if not GL.Objects.Programs.Link_Status (Render_Program) then
          Put_Line ("Setup, Render_Program Link failed");
@@ -303,8 +303,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
 
-         --  Set_Vertex_Attrib_Pointer (Index  : Attribute;
-         --     Count : Component_Count; Kind : Numeric_Type; Stride, Offset : Size);
          GL.Attributes.Set_Vertex_Attrib_Pointer
            (0, 4, Single_Type, Int (PV_Buffer_Size), 0);
          GL.Attributes.Set_Vertex_Attrib_Pointer
