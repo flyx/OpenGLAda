@@ -34,8 +34,6 @@ package Glfw is
 private
    package C renames Interfaces.C;
 
-   use type Interfaces.C.int;
-
    type Bool is new Boolean;
 
    for Bool use (False => 0, True => 1);

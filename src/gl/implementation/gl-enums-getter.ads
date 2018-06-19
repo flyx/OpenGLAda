@@ -1,6 +1,8 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
+with GL.Types;
+
 package GL.Enums.Getter is
    pragma Preelaborate;
 
@@ -516,4 +518,6 @@ package GL.Enums.Getter is
                                    Stencil_Size    => 16#8D55#);
    for Renderbuffer_Parameter'Size use Low_Level.Enum'Size;
 
+   --  declared here so that Max in GL.Enums.Indexes works
+   function Get_Max (Getter_Param : Parameter) return Types.Int;
 end GL.Enums.Getter;
