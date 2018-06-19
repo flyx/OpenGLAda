@@ -30,7 +30,6 @@ package body SOIL.Images is
    end Adjust;
 
    overriding procedure Finalize (Object : in out Image) is
-      use type System.Address;
    begin
       if Object.Reference.Reference_Count = 1 then
          if Object.Reference.Pointer /= Null_Image then
@@ -44,7 +43,6 @@ package body SOIL.Images is
    end Finalize;
 
    procedure Load (Object : in out Image; File_Name : String) is
-      use type System.Address;
    begin
       if Object.Reference.Pointer /= Null_Image then
          API.Free_Image_Data (Object.Reference.Pointer);
@@ -62,7 +60,6 @@ package body SOIL.Images is
                    File_Name       : String;
                    Force_Format    : Explicit_Image_Format;
                    Original_Format : out Explicit_Image_Format) is
-      use type System.Address;
 
       Tmp_Original_Format : aliased Explicit_Image_Format;
    begin
@@ -82,7 +79,6 @@ package body SOIL.Images is
 
    procedure Save (Object : in out Image; File_Name : String;
                    Image_Type : Image_Save_Type) is
-      use type System.Address;
 
       Result : Bool;
    begin
@@ -114,7 +110,6 @@ package body SOIL.Images is
    end Channels;
 
    function Loaded   (Object : Image) return Boolean is
-      use type System.Address;
    begin
       return Object.Reference.Pointer /= Null_Image;
    end Loaded;
@@ -125,7 +120,6 @@ package body SOIL.Images is
    end Data;
 
    procedure Clear (Object : in out Image) is
-      use type System.Address;
    begin
       if Object.Reference.Pointer /= Null_Image then
          API.Free_Image_Data (Object.Reference.Pointer);
@@ -136,7 +130,6 @@ package body SOIL.Images is
    procedure To_Texture (Object  : Image;
                          Texture : in out GL.Objects.Textures.Texture'Class;
                          Flags   : Texture_Flags) is
-      use type System.Address;
       Raw_Id : GL.Types.UInt;
    begin
       if Object.Reference.Pointer = Null_Image then
@@ -157,7 +150,6 @@ package body SOIL.Images is
                          Texture    : in out GL.Objects.Textures.Texture'Class;
                          Face_Order : Cubemap_Layout;
                          Flags      : Texture_Flags) is
-      use type System.Address;
       Raw_Id : GL.Types.UInt;
    begin
       if Object.Reference.Pointer = Null_Image then
