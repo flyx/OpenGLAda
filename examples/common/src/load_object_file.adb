@@ -1,5 +1,5 @@
 
-with Ada.IO_Exceptions; use Ada.IO_Exceptions;
+with Ada.IO_Exceptions;
 with Ada.Float_Text_IO;
 with Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded;
@@ -246,7 +246,6 @@ package body Load_Object_File is
 
    procedure Parse (Mesh_String : Ada.Strings.Unbounded.Unbounded_String;
                     Vertex_Index, UV_Index, Normal_Index  : out GL.Types.Ints.Vector3) is
-      use Ada.Strings.Unbounded;
       Start : Positive := 1;
    begin
       for indice in GL.Index_3D loop
