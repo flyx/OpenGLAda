@@ -6,6 +6,7 @@ with Glfw.API;
 with Interfaces.C.Strings;
 
 package body Glfw is
+   use type Interfaces.C.int;
 
    procedure Init is
    begin

@@ -22,7 +22,6 @@ package body Glfw.Errors is
    end Raw_Handler;
 
    procedure Set_Callback (Handler : Callback) is
-      use type API.Error_Callback;
       Previous : API.Error_Callback;
       pragma Warnings (Off, Previous);
    begin

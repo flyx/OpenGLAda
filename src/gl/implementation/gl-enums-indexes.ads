@@ -12,9 +12,7 @@ package GL.Enums.Indexes is
 
    use GL.Types;
 
-   function Get_Max return Int;
-
-   Max : constant Int := Get_Max;
+   Max : constant Int := Getter.Get_Max (Getter_Param);
 
    subtype Index is Int range 0 .. Max;
 
