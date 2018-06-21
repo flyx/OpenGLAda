@@ -42,9 +42,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
-        use Maths;
         Window_Width  : Glfw.Size;
         Window_Height : Glfw.Size;
     begin
@@ -120,7 +118,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
     begin

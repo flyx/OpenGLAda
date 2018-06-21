@@ -6,7 +6,6 @@ with GL.Objects.Textures.Targets;
 with GL.Pixels;
 
 with FT;
-with FT.Errors;
 with FT.Faces;
 with FT.Glyphs;
 with FT.Utilities;
@@ -14,7 +13,6 @@ with FT.Utilities;
 with Utilities;
 
 package body Texture_Manager is
-   use type FT.Errors.Error_Code;
 
    Face_Ptr      : FT.Faces.Face_Reference;
    Vertex_Data   : Vertex_Array;
@@ -29,7 +27,6 @@ package body Texture_Manager is
    procedure Setup_Buffer (Vertex_Buffer : in out V_Buffer;
                            X, Y, Scale   : GL.Types.Single) is
       use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
       Num_Triangles : constant Int := 2;
       Stride        : constant Int := 4;
@@ -62,7 +59,6 @@ package body Texture_Manager is
    --  ------------------------------------------------------------------------
 
    procedure Setup_Font (My_Library : FT.Library_Reference) is
-      use GL.Types;
       Font_File  : constant String := "../fonts/NotoSerif-Regular.ttf";
    begin
       FT.Faces.New_Face (My_Library, Font_File, 0, Face_Ptr);
@@ -77,7 +73,6 @@ package body Texture_Manager is
                             aTexture      : in out GL.Objects.Textures.Texture;
                             X, Y : GL.Types.Single; Scale : GL.Types.Single;
                             Char          : Character := 'g') is
-      use GL.Types;
 
       My_Library : FT.Library_Reference;
    begin
