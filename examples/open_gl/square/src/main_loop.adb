@@ -59,7 +59,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Setup_Graphic is
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-        use GL.Types;
         use Program_Loader;
     begin
         Vertex_Array.Initialize_Id;

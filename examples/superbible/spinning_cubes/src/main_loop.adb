@@ -92,7 +92,6 @@ exception
         use GL.Objects.Shaders;
         use GL;
         use GL.Types;
-        use GL.Types.Singles;
         use Program_Loader;
 
     begin

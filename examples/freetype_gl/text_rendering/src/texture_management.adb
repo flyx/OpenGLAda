@@ -52,7 +52,6 @@ package body Texture_Management is
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
-      use GL.Types;
       theLibrary : FT.Library_Reference;
       Face_Ptr   : FT.Faces.Face_Reference;
    begin
@@ -111,7 +110,6 @@ package body Texture_Management is
       use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
-      use FT.Faces;
 
       Num_Triangles  : constant GL.Types.Int := 2;
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
@@ -255,7 +253,6 @@ package body Texture_Management is
 
    procedure Setup_Font (theLibrary : FT.Library_Reference;
                          Face_Ptr   : out FT.Faces.Face_Reference; Font_File : String) is
-      use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48

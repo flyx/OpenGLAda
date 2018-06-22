@@ -43,7 +43,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Types;
       use GL.Types.Singles;
-      use Glfw.Input;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
@@ -86,9 +85,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     Sample_Texture : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;
