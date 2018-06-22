@@ -138,7 +138,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Interfaces.C;
       use GL.Objects.Buffers;
       use GL.Types;
-      use Glfw.Input;
       Current_Time : constant Glfw.Seconds := Glfw.Time;
    begin
       Number_Of_Frames := Number_Of_Frames + 1;
@@ -190,11 +189,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     Render_Program  : out GL.Objects.Programs.Program;
                     Indices_Size    : out GL.Types.Size;
                     UV_Map          : out GL.Objects.Textures.Texture) is
-      use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;

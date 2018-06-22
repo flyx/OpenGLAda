@@ -52,7 +52,6 @@ package body Text_Management is
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                           Colour_ID      : GL.Uniforms.Uniform;
                           MVP_Matrix     : GL.Types.Singles.Matrix4) is
-      use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Text;
       use GL.Types.Colors;
@@ -116,12 +115,6 @@ package body Text_Management is
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                           Colour_ID      : GL.Uniforms.Uniform;
                           MVP_Matrix     : GL.Types.Singles.Matrix4) is
-      use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
-      use GL.Text;
-      use GL.Types.Colors;
-      use GL.Types;
-      use GL.Types.Singles;
    begin
       for Index in Text_Data'Range loop
          Render_Text (Render_Program,

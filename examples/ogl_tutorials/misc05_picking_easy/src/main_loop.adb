@@ -258,9 +258,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                      Vertex_Count    : GL.Types.Int;
                      UV_Map          : GL.Objects.Textures.Texture) is
       use Interfaces.C;
-      use GL.Objects.Buffers;
       --        use GL.Objects.Shaders;
-      use GL.Types;
       use Glfw.Input;
       View_Matrix       : GL.Types.Singles.Matrix4;
       Projection_Matrix : GL.Types.Singles.Matrix4;
@@ -295,11 +293,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     Picking_Program : out GL.Objects.Programs.Program;
                     Indices_Size    : out GL.Types.Int;
                     UV_Map          : out GL.Objects.Textures.Texture) is
-      use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width  : constant Glfw.Size := 1024;
       Window_Height : constant Glfw.Size := 768;

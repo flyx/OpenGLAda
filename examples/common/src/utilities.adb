@@ -117,7 +117,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
   procedure Print_Array6 (Name : String; anArray : Maths.Vector6_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -153,7 +152,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -165,7 +163,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Ints.Vector2_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -177,7 +174,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -189,7 +185,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Singles.Vector3_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -201,7 +196,6 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array4 (Name : String; anArray : GL.Types.Singles.Vector4_Array) is
-      use GL.Types;
    begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
@@ -238,7 +232,6 @@ package body Utilities is
 
    procedure Print_Matrix (Name    : String;
                            aMatrix : GL.Types.Singles.Matrix3) is
-      use GL.Types.Singles;
    begin
       Put_Line (Name & ":");
       for Row in GL.Index_3D'Range loop
@@ -254,7 +247,6 @@ package body Utilities is
 
    procedure Print_Matrix (Name    : String;
                            aMatrix : GL.Types.Singles.Matrix4) is
-      use GL.Types.Singles;
    begin
       Put_Line (Name & ":");
       for Row in GL.Index_Homogeneous'Range loop
