@@ -46,7 +46,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Render is
         use GL.Objects.Buffers;
-        use Maths;
 
     begin
         Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
@@ -120,10 +119,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-        use GL.Objects.Textures.Targets;
     begin
         Window.Set_Input_Toggle (Glfw.Input.Sticky_Keys, True);
         Utilities.Clear_Background_Colour (Dark_Blue);

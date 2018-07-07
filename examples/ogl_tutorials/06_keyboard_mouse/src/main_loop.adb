@@ -105,10 +105,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-        use GL.Objects.Textures.Targets;
         use Glfw.Input;
         Window_Width       : Glfw.Size;
         Window_Height      : Glfw.Size;

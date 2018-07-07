@@ -76,7 +76,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                      UV_Map         : GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Types;
-      use Glfw.Input;
    begin
       Utilities.Clear_Background_Colour_And_Depth (Dark_Blue);
       GL.Objects.Programs.Use_Program (Render_Program);
@@ -115,9 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     UV_Map         : out GL.Objects.Textures.Texture) is
       use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;

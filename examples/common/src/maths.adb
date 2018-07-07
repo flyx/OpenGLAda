@@ -4,7 +4,6 @@ with Ada.Numerics;
 with Quaternions;
 
 package body Maths is
-   use type GL.Types.Singles.Matrix4;
    use type GL.Types.Singles.Vector3;
 
    package Single_Quaternion is new Quaternions (GL.Types.Single);
@@ -114,7 +113,6 @@ package body Maths is
    function New_Quaternion (Angle : Radian; Axis : GL.Types.Singles.Vector3)
                             return Single_Quaternion.Quaternion is
       use Maths.Single_Math_Functions;
-      use Single_Quaternion;
       Half_Angle  : constant Single := 0.5 * Single (Angle);
       Sine        : constant Single := Sin (Half_Angle);
    begin
@@ -185,7 +183,6 @@ package body Maths is
    function Rotation_Matrix (Angle : Radian; Axis : GL.Types.Singles.Vector3)
                               return GL.Types.Singles.Matrix4 is
       use GL;
-      use Maths.Single_Math_Functions;
       use Single_Quaternion;
 
       aQuaternion : Single_Quaternion.Quaternion;
