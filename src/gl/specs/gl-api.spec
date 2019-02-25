@@ -233,6 +233,17 @@ spec GL.API is
                                       Indices    : Low_Level.IntPtr;
                                       Instances  : Size) with
     Dynamic => "glDrawElementsInstanced", Wrapper => "GL.Objects.Buffers.Draw_Elements_Instanced";
+   procedure Draw_Elements_Base_Vertex (Mode           : Connection_Mode; 
+                                        Count          : UInt;
+                                        Index_Type     : Unsigned_Numeric_Type;
+                                        Element_Offset : UInt;
+                                        Base_Vertex    : Int) with
+	Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
+   procedure Primitive_Restart_Index (Index : UInt) with
+    Dynamic => "glPrimitiveRestartIndex", Wrapper => "GL.Objects.Buffers.Primitive_Restart_Index";
+   procedure Vertex_Attrib_Divisor (Index   : GL.Attributes.Attribute;
+                                    Divisor : UInt) with
+    Dynamic => "glVertexAttribDivisor", Wrapper => "GL.Attributes.Vertex_Attrib_Divisor";
    procedure Load_Matrix (Value : Types.Doubles.Matrix4) with
      Static => "glLoadMatrixd", Wrapper => "GL.Fixed.Matrix.Load_Matrix";
    procedure Mult_Matrix (Factor : Types.Doubles.Matrix4) with

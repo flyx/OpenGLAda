@@ -15,8 +15,27 @@ package GL.Attributes is
                                         Kind   : Numeric_Type;
                                         Stride, Offset : Size);
 
+   procedure Set_Vertex_Attrib_Pointer (Index          : Attribute;
+                                        Count          : Component_Count;
+                                        Kind           : Numeric_Type;
+                                        Normalized     : Boolean;
+                                        Stride, Offset : Size);
+
+   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
+                                         Count          : Component_Count;
+                                         Kind           : Numeric_Type;
+                                         Stride_In_Bytes, Offset_In_Bytes : Size);
+
+   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
+                                         Count          : Component_Count;
+                                         Kind           : Numeric_Type;
+                                         Normalized     : Boolean;
+                                         Stride_In_Bytes, Offset_In_Bytes : Size);
+
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute);
    procedure Disable_Vertex_Attrib_Array (Index : Attribute);
+   procedure Vertex_Attrib_Divisor (Index   : Attribute;
+                                    Divisor : UInt);
 
    procedure Set_Short (Index : Attribute; Value          : Short);
    procedure Set_Short (Index : Attribute; V1, V2         : Short);

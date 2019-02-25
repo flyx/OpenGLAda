@@ -53,6 +53,102 @@ package body GL.Attributes is
       Raise_Exception_On_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;
 
+   procedure Set_Vertex_Attrib_Pointer (Index          : Attribute;
+                                        Count          : Component_Count;
+                                        Kind           : Numeric_Type;
+                                        Normalized     : Boolean;
+                                        Stride, Offset : Size) is
+   begin
+      case Kind is
+         when Single_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * Single'Size / System.Storage_Unit,
+                                       Offset * Single'Size / System.Storage_Unit);
+         when Double_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * Double'Size / System.Storage_Unit,
+                                       Offset * Double'Size / System.Storage_Unit);
+         when UInt_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * UInt'Size / System.Storage_Unit,
+                                       Offset * UInt'Size / System.Storage_Unit);
+         when UByte_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * UByte'Size / System.Storage_Unit,
+                                       Offset * UByte'Size / System.Storage_Unit);
+         when UShort_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * UShort'Size / System.Storage_Unit,
+                                       Offset * UShort'Size / System.Storage_Unit);
+         when Int_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * Int'Size / System.Storage_Unit,
+                                       Offset * Int'Size / System.Storage_Unit);
+         when Byte_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * Byte'Size / System.Storage_Unit,
+                                       Offset * Byte'Size / System.Storage_Unit);
+         when Short_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
+                                       Stride * Short'Size / System.Storage_Unit,
+                                       Offset * Short'Size / System.Storage_Unit);
+      end case;
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Vertex_Attrib_Pointer;
+
+   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
+                                         Count          : Component_Count;
+                                         Kind           : Numeric_Type;
+                                         Stride_In_Bytes, Offset_In_Bytes : Size) is
+   begin
+      case Kind is
+         when Single_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.False,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when Double_Type =>
+            API.Vertex_AttribL_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when UInt_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when UByte_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when UShort_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when Int_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when Byte_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+         when Short_Type =>
+            API.Vertex_AttribI_Pointer (Index, Count, Kind,
+                                       Stride_In_Bytes,
+                                       Offset_In_Bytes);
+      end case;
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Vertex_Attrib_Pointer2;
+
+   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
+                                         Count          : Component_Count;
+                                         Kind           : Numeric_Type;
+                                         Normalized     : Boolean;
+                                         Stride_In_Bytes, Offset_In_Bytes : Size) is
+   begin
+      API.Vertex_Attrib_Pointer (Index, Count, Kind,
+                                 Low_Level.Bool (Normalized),
+                                 Stride_In_Bytes, Offset_In_Bytes);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Vertex_Attrib_Pointer2;
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute) is
    begin
       API.Enable_Vertex_Attrib_Array (Index);
@@ -64,6 +160,13 @@ package body GL.Attributes is
       API.Disable_Vertex_Attrib_Array (Index);
       Raise_Exception_On_OpenGL_Error;
    end Disable_Vertex_Attrib_Array;
+
+   procedure Vertex_Attrib_Divisor (Index   : Attribute;
+                                    Divisor : UInt) is
+   begin
+      API.Vertex_Attrib_Divisor (Index, Divisor);
+      Raise_Exception_On_OpenGL_Error;
+   end Vertex_Attrib_Divisor;
 
    procedure Set_Short (Index : Attribute; Value : Short) is
    begin
