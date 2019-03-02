@@ -37,6 +37,7 @@ package GL.Types is
    type UInt_Array   is array (Size range <>) of aliased UInt;
    type Single_Array is array (Size range <>) of aliased Single;
 
+   pragma Convention (C, UShort_Array);
    pragma Convention (C, Int_Array);
    pragma Convention (C, UInt_Array);
    pragma Convention (C, Single_Array);

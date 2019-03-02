@@ -220,7 +220,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays";
    procedure Draw_Arrays_Instanced (Mode  : Connection_Mode;
      First : Size; Count : Size; Instances : Size) with
-     Dynamic  => "glDrawArraysInstanced",
+     Dynamic => "glDrawArraysInstanced",
      Wrapper => "GL.Objects.Vertex_Arrays.Draw_Arrays_Instanced";
    procedure Draw_Elements (Mode       : Connection_Mode;
                             Count      : Size;
@@ -238,7 +238,7 @@ spec GL.API is
                                         Index_Type     : Unsigned_Numeric_Type;
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int) with
-	Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
+    Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
    procedure Primitive_Restart_Index (Index : UInt) with
     Dynamic => "glPrimitiveRestartIndex", Wrapper => "GL.Objects.Buffers.Primitive_Restart_Index";
    procedure Vertex_Attrib_Divisor (Index   : GL.Attributes.Attribute;

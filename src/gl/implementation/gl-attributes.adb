@@ -9,6 +9,7 @@ with GL.API.Shorts;
 with GL.API.Singles;
 with GL.API.UInts;
 with GL.Low_Level;
+with GL.Errors;
 
 package body GL.Attributes is
    procedure Set_Vertex_Attrib_Pointer (Index  : Attribute;
@@ -47,8 +48,8 @@ package body GL.Attributes is
                                        Offset * Byte'Size / System.Storage_Unit);
          when Short_Type =>
             API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride * Short'Size / System.Storage_Unit,
-                                       Offset * Short'Size / System.Storage_Unit);
+                                        Stride * Short'Size / System.Storage_Unit,
+                                        Offset * Short'Size / System.Storage_Unit);
       end case;
       Raise_Exception_On_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;
@@ -60,95 +61,50 @@ package body GL.Attributes is
                                         Stride, Offset : Size) is
    begin
       case Kind is
-         when Single_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * Single'Size / System.Storage_Unit,
-                                       Offset * Single'Size / System.Storage_Unit);
-         when Double_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * Double'Size / System.Storage_Unit,
-                                       Offset * Double'Size / System.Storage_Unit);
-         when UInt_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * UInt'Size / System.Storage_Unit,
-                                       Offset * UInt'Size / System.Storage_Unit);
-         when UByte_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * UByte'Size / System.Storage_Unit,
-                                       Offset * UByte'Size / System.Storage_Unit);
-         when UShort_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * UShort'Size / System.Storage_Unit,
-                                       Offset * UShort'Size / System.Storage_Unit);
-         when Int_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * Int'Size / System.Storage_Unit,
-                                       Offset * Int'Size / System.Storage_Unit);
-         when Byte_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * Byte'Size / System.Storage_Unit,
-                                       Offset * Byte'Size / System.Storage_Unit);
-         when Short_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.Bool (Normalized),
-                                       Stride * Short'Size / System.Storage_Unit,
-                                       Offset * Short'Size / System.Storage_Unit);
+         when Byte_Type | UByte_Type | Short_Type |
+              UShort_Type | Int_Type | UInt_Type |
+              Single_Type | Double_Type =>
+            API.Vertex_Attrib_Pointer (Index, Count, Kind,
+                                       Low_Level.Bool (Normalized),
+                                       Stride,
+                                       Offset);
+--           when others =>
+--              raise Errors.Invalid_Value_Error with "Unsupported Kind value";
       end case;
       Raise_Exception_On_OpenGL_Error;
    end Set_Vertex_Attrib_Pointer;
 
-   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
-                                         Count          : Component_Count;
-                                         Kind           : Numeric_Type;
-                                         Stride_In_Bytes, Offset_In_Bytes : Size) is
+   procedure Set_Vertex_Integer_Attrib_Pointer (Index  : Attribute;
+                                                Count  : Component_Count;
+                                                Kind   : Numeric_Type;
+                                                Stride, Offset : Size) is
    begin
       case Kind is
-         when Single_Type =>
-            API.Vertex_Attrib_Pointer (Index, Count, Kind, Low_Level.False,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when Double_Type =>
-            API.Vertex_AttribL_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when UInt_Type =>
+         when Byte_Type | UByte_Type | Short_Type |
+              UShort_Type | Int_Type | UInt_Type =>
             API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when UByte_Type =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when UShort_Type =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when Int_Type =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when Byte_Type =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
-         when Short_Type =>
-            API.Vertex_AttribI_Pointer (Index, Count, Kind,
-                                       Stride_In_Bytes,
-                                       Offset_In_Bytes);
+                                        Stride, Offset);
+           when others =>
+              raise Errors.Invalid_Value_Error with "Unsupported Kind value";
       end case;
       Raise_Exception_On_OpenGL_Error;
-   end Set_Vertex_Attrib_Pointer2;
+   end Set_Vertex_Integer_Attrib_Pointer;
 
-   procedure Set_Vertex_Attrib_Pointer2 (Index          : Attribute;
-                                         Count          : Component_Count;
-                                         Kind           : Numeric_Type;
-                                         Normalized     : Boolean;
-                                         Stride_In_Bytes, Offset_In_Bytes : Size) is
+   procedure Set_Vertex_Double_Attrib_Pointer (Index  : Attribute;
+                                               Count  : Component_Count;
+                                               Kind   : Numeric_Type;
+                                               Stride, Offset : Size) is
    begin
-      API.Vertex_Attrib_Pointer (Index, Count, Kind,
-                                 Low_Level.Bool (Normalized),
-                                 Stride_In_Bytes, Offset_In_Bytes);
+      case Kind is
+         when Double_Type =>
+            API.Vertex_AttribL_Pointer (Index, Count, Kind,
+                                        Stride, Offset);
+           when others =>
+              raise Errors.Invalid_Value_Error with "Unsupported Kind value";
+      end case;
       Raise_Exception_On_OpenGL_Error;
-   end Set_Vertex_Attrib_Pointer2;
+   end Set_Vertex_Double_Attrib_Pointer;
+
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute) is
    begin
       API.Enable_Vertex_Attrib_Array (Index);
