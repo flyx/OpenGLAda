@@ -67,6 +67,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       Array_Buffer.Bind (Vertex_Buffer);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                Kind   => Single_Type,
+                                               Normalized => False,
                                                Stride => 0, Offset => 0);
 
       GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);

@@ -8,6 +8,16 @@ with SOIL.API;
 package body SOIL is
    use type GL.Types.UInt;
 
+   function Input_Id (Texture : GL.Objects.Textures.Texture'Class)
+                      return GL.Types.UInt is
+   begin
+      if Texture.Initialized then
+         return Texture.Raw_Id;
+      else
+         return 0;
+      end if;
+   end Input_Id;
+
    procedure Load_File_To_Texture
      (File_Name : String;
       Texture   : in out GL.Objects.Textures.Texture'Class;
@@ -16,7 +26,7 @@ package body SOIL is
 
       Raw_Id : constant GL.Types.UInt
         := API.Load_OGL_Texture (Interfaces.C.To_C (File_Name),
-                                 Channels, Texture.Raw_Id, Flags);
+                                 Channels, Input_Id (Texture), Flags);
    begin
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
@@ -38,7 +48,7 @@ package body SOIL is
          Interfaces.C.To_C (Neg_Y_File),
          Interfaces.C.To_C (Pos_Z_File),
          Interfaces.C.To_C (Neg_Z_File), Channels,
-         Texture.Raw_Id, Flags);
+         Input_Id (Texture), Flags);
    begin
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
@@ -56,7 +66,7 @@ package body SOIL is
       Raw_Id : constant GL.Types.UInt
         := API.Load_OGL_Single_Cubemap (Interfaces.C.To_C (File_Name),
                                         Face_Order, Channels,
-                                        Texture.Raw_Id, Flags);
+                                        Input_Id (Texture), Flags);
    begin
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
@@ -73,7 +83,7 @@ package body SOIL is
 
       Raw_Id : constant GL.Types.UInt := API.Load_OGL_HDR_Texture
         (Interfaces.C.To_C (File_Name), Format, Bool (Rescale_To_Max),
-         Texture.Raw_Id, Flags);
+         Input_Id (Texture), Flags);
    begin
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;

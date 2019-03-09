@@ -64,7 +64,8 @@ package body My_Buffers is
                              Element_Buffer : in out tBuffer) is
         use GL.Objects.Buffers;
 
-        Stride : constant GL.Types.Size := GL.Types.Size (Vertex_Data.Vertex_Array_Size);
+        Stride : constant GL.Types.Size :=
+          GL.Types.Size (Vertex_Data.Vertex_Array_Size) * 4;
     begin
        Make_Buffer (GL.Objects.Buffers.Array_Buffer, Vertex_Buffer);
        Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data.Vertices, Static_Draw);
@@ -75,11 +76,12 @@ package body My_Buffers is
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
                                                  Kind   => GL.Types.Single_Type,
+                                                 Normalized => False,
                                                  Stride => Stride, Offset => 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, GL.Types.Single_Type,
-                                                 Stride, 3);
+                                                 False, Stride, 3);
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
 
     exception

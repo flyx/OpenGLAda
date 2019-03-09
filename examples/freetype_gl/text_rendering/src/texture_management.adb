@@ -114,7 +114,7 @@ package body Texture_Management is
       Num_Triangles  : constant GL.Types.Int := 2;
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
-      Stride         : constant GL.Types.Int := 0;
+      Stride         : constant GL.Types.Int := 0 * 4;
       Blend_State    : constant GL.Toggles.Toggle_State :=
         GL.Toggles.State (GL.Toggles.Blend);
       Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
@@ -178,6 +178,7 @@ package body Texture_Management is
          Array_Buffer.Bind (Vertex_Buffer);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
+                                                  Normalized => False,
                                                   Stride => Stride, Offset => 0);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);

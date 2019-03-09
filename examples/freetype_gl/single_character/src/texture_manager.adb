@@ -29,7 +29,7 @@ package body Texture_Manager is
       use GL.Objects.Buffers;
       use GL.Types;
       Num_Triangles : constant Int := 2;
-      Stride        : constant Int := 4;
+      Stride        : constant Int := 4 * 4;
       X_Pos         : constant Single := X;
       Y_Pos         : constant Single := Y;
       Width         : Single;
@@ -53,6 +53,7 @@ package body Texture_Manager is
       Utilities.Load_Vertex_Buffer (Array_Buffer, Vertex_Data, Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Triangles,
                                                Kind   => GL.Types.Single_Type,
+                                               Normalized => False,
                                                Stride => Stride, Offset => 0);
    end Setup_Buffer;
 

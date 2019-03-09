@@ -48,9 +48,9 @@ package Vertex_Data is
       Blue  : Single;
    end record;
 
-   Stride        : constant Int := 6;
-   Vertex_Offset : constant Int := 0;
-   Colour_Offset : constant Int := 3;
+   Stride        : constant Int := 6 * 4;
+   Vertex_Offset : constant Int := 0 * 4;
+   Colour_Offset : constant Int := 3 * 4;
    Num_Elements       : constant Int := Num_Quad_Vertices + 48 * Stride; --  192 = 48 * 4
    Vertex_Buffer_Data : Maths.Vector6_Array (1 .. Num_Vertices);
    Quad_Element_Array : Int_Array (1 .. Num_Elements);

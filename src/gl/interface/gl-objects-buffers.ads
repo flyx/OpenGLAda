@@ -61,45 +61,29 @@ package GL.Objects.Buffers is
                             Index_Type : Unsigned_Numeric_Type;
                             Element_Offset : Natural := 0);
 
---     Draw_Elements_Instanced behaves identically to Draw_Elements except
---     that primcount instances of the set of elements are executed and the
---     value of the internal counter instanceID advances for each iteration.
---     instanceID is an internal 32-bit integer counter that may be read by
---     a vertex shader as gl_InstanceID.
+   --  Draw_Elements_Instanced behaves identically to Draw_Elements except
+   --  that primcount instances of the set of elements are executed and the
+   --  value of the internal counter instanceID advances for each iteration.
+   --  instanceID is an internal 32-bit integer counter that may be read by
+   --  a vertex shader as gl_InstanceID.
    procedure Draw_Elements_Instanced (Mode           : Connection_Mode;
                                       Count          : UInt;
                                       Index_Type     : Unsigned_Numeric_Type;
                                       Element_Offset : UInt := 0;
                                       Instance_Count : UInt := 0);
 
---     Draw_Elements_Base_Vertex allows the indices in the element array
---     buffer to be interpreted relative to some base index. For example,
---     multiple versions of a model (say, frames of an animation) can be stored in
---     a single set of vertex buffers at different offsets within the buffer.
---     Draw_Elements_Base_Vertex can then be used to draw any frame of that
---     animation by simply specifying the first index that corresponds to that
---     frame. The same set of indices can be used to reference every frame.
+   --  Draw_Elements_Base_Vertex allows the indices in the element array
+   --  buffer to be interpreted relative to some base index. For example,
+   --  multiple versions of a model (say, frames of an animation) can be stored
+   --  in a single set of vertex buffers at different offsets within the buffer.
+   --  Draw_Elements_Base_Vertex can then be used to draw any frame of that
+   --  animation by simply specifying the first index that corresponds to that
+   --  frame. The same set of indices can be used to reference every frame.
    procedure Draw_Elements_Base_Vertex (Mode           : Connection_Mode;
                                         Count          : UInt;
                                         Index_Type     : Unsigned_Numeric_Type;
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int);
-
---     Draw_Arrays_Instanced behaves identically to glDrawArrays except that
---     primcount instances of the range of elements are executed and the value
---     of the internal counter instanceID advances for each iteration. instanceID
---     is an internal 32-bit integer counter that may be read by a vertex shader as
---     gl_InstanceID.
-   procedure Draw_Arrays_Instanced (Mode : Connection_Mode; First : Int;
-                                    Count : Types.Size;
-                                    Prim_Count : Types.Size);
-
---  Specifies the vertex array element index used to indicate that a new
---  primitive should be started during rendering. When processing of
---  vertex-array element indices encounters a value that matches index, no
---  vertex data is processed, the current graphics primitive is terminated, and
---  a new one of the identical type is started from the next vertex.
-   procedure Primitive_Restart_Index (Index : UInt);
 
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
