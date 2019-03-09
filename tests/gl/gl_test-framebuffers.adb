@@ -107,6 +107,7 @@ begin
          Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(others => True));
 
+      GL.Objects.Textures.Set_Active_Unit (0);
       GL.Toggles.Enable (GL.Toggles.Texture_2D);
 
       -- don't let the color affect the texture rendering
@@ -124,6 +125,8 @@ begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 1.0));
          Token.Add_Vertex (Vector2'(-1.0, 1.0));
       end;
+
+      GL.Toggles.Disable (GL.Toggles.Texture_2D);
 
       GL.Flush;
 
