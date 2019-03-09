@@ -35,6 +35,7 @@ begin
    while GL_Test.Display_Backend.Window_Opened loop
       GL.Buffers.Clear ((others => True));
 
+      GL.Objects.Textures.Set_Active_Unit (0);
       GL.Toggles.Enable (GL.Toggles.Texture_2D);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Texture);
       declare
@@ -49,6 +50,7 @@ begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(1.0, 0.0));
          Token.Add_Vertex (Vector2'(1.0, -1.0));
       end;
+      GL.Toggles.Disable (GL.Toggles.Texture_2D);
 
       GL_Test.Display_Backend.Swap_Buffers;
 

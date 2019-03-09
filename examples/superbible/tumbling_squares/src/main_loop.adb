@@ -114,6 +114,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
                                                  Kind   => GL.Types.Single_Type,
+                                                 Normalized => False,
                                                  Stride => 0, Offset => 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
 

@@ -80,7 +80,7 @@ package body GL.Text is
       Load_Vectors (GL.Objects.Buffers.Array_Buffer, Square,
                     GL.Objects.Buffers.Static_Draw);
       GL.Attributes.Set_Vertex_Attrib_Pointer
-        (0, 2, GL.Types.Single_Type, 0, 0);
+        (0, 2, GL.Types.Single_Type, False, 0, 0);
 
       Object.Info_Id := Object.Id.Uniform_Location ("character_info");
       Object.Texture_Id := Object.Id.Uniform_Location ("text_sampler");

@@ -139,7 +139,7 @@ package body SOIL.Images is
                                         Object.Reference.Width,
                                         Object.Reference.Height,
                                         Object.Reference.Channels,
-                                        Texture.Raw_Id, Flags);
+                                        Input_Id (Texture), Flags);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;
       end if;
@@ -159,7 +159,7 @@ package body SOIL.Images is
                                                Object.Reference.Width,
                                                Object.Reference.Height,
                                                Object.Reference.Channels,
-                                               Face_Order, Texture.Raw_Id,
+                                               Face_Order, Input_Id (Texture),
                                                Flags);
       if Raw_Id = 0 then
          raise SOIL_Error with Last_Error;

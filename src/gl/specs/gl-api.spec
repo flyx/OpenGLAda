@@ -1127,12 +1127,12 @@ spec GL.API is
      (Index : Attributes.Attribute; Size : Component_Count;
       N_Type : Numeric_Type; Stride : Size; Pointer : Int) with
      Dynamic => "glVertexAttribIPointer",
-     Wrapper => "GL.Attributes.Set_Vertex_Attrib_Pointer";
+     Wrapper => "GL.Attributes.Set_Vertex_Integer_Attrib_Pointer";
    procedure Vertex_AttribL_Pointer
      (Index : Attributes.Attribute; Size : Component_Count;
       N_Type :Numeric_Type; Stride : Size; Pointer : Int) with
      Dynamic => "glVertexAttribLPointer",
-     Wrapper => "GL.Attributes.Set_Vertex_Attrib_Pointer";
+     Wrapper => "GL.Attributes.Set_Vertex_Double_Attrib_Pointer";
    procedure Enable_Vertex_Attrib_Array (Index : Attributes.Attribute) with
      Dynamic => "glEnableVertexAttribArray",
      Wrapper => "GL.Attributes.Enable_Vertex_Attrib_Array";

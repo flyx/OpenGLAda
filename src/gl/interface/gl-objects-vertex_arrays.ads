@@ -14,8 +14,15 @@ package GL.Objects.Vertex_Arrays is
 
    function Current_Array_Object return Vertex_Array_Object;
 
-   -- bind this object to unbind the current array object.
+   --  bind this object to unbind the current array object.
    Null_Array_Object : constant Vertex_Array_Object;
+
+   --  Specifies the vertex array element index used to indicate that a new
+   --  primitive should be started during rendering. When processing of
+   --  vertex-array element indices encounters a value that matches index, no
+   --  vertex data is processed, the current graphics primitive is terminated,
+   --  and a new one of the identical type is started from the next vertex.
+   procedure Set_Primitive_Restart_Index (Index : UInt);
 private
    type Vertex_Array_Object is new GL_Object with null record;
 
