@@ -240,7 +240,8 @@ spec GL.API is
                                         Base_Vertex    : Int) with
      Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
    procedure Primitive_Restart_Index (Index : UInt) with
-     Dynamic => "glPrimitiveRestartIndex", Wrapper => "GL.Objects.Buffers.Primitive_Restart_Index";
+     Dynamic => "glPrimitiveRestartIndex",
+     Wrapper => "GL.Objects.Vertex_Arrays.Set_Primitive_Restart_Index";
    procedure Vertex_Attrib_Divisor (Index   : GL.Attributes.Attribute;
                                     Divisor : UInt) with
      Dynamic => "glVertexAttribDivisor", Wrapper => "GL.Attributes.Vertex_Attrib_Divisor";
