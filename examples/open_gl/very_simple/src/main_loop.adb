@@ -58,7 +58,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Position_Location := GL.Objects.Programs.Attrib_Location
           (Rendering_Program, "position");
         GL.Attributes.Set_Vertex_Attrib_Pointer
-          (Position_Location, 2, GL.Types.Single_Type, 0, 0);
+          (Position_Location, 2, GL.Types.Single_Type, False, 0, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (Position_Location);
 
         Utilities.Show_Shader_Program_Data (Rendering_Program);

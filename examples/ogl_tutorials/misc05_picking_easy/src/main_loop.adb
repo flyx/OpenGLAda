@@ -161,7 +161,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
          --  First attribute buffer : vertices
          GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-         GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (0, 3, Single_Type, False, 0, 0);
          --  Index Buffer
          GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
          GL.Objects.Buffers.Draw_Elements (Triangles, Vertex_Count, UInt_Type, 0);
@@ -216,7 +217,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
             GL.Uniforms.Set_Single (Picking_Colour_ID, R, G, B, 1.0);
 
             GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-            GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+            GL.Attributes.Set_Vertex_Attrib_Pointer
+              (0, 3, Single_Type, False, 0, 0);
 
             GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
             GL.Objects.Buffers.Draw_Elements (Mode       => Triangles,

@@ -42,7 +42,7 @@ procedure Text_Test.Basic is
       Array_Buffer.Bind (Buffer1);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Vectors (Array_Buffer, Square, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, Single_Type, False, 0, 0);
    end Load_Data;
 
    procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is

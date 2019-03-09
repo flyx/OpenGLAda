@@ -92,11 +92,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => 3,
                                                  Kind   => Single_Type,
+                                                 Normalized => False,
                                                  Stride => Vertex_Data.Stride,
                                                  Offset => Vertex_Data.Vertex_Offset);
 
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type,
+        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False,
                                                  Vertex_Data.Stride,
                                                  Vertex_Data.Colour_Offset);
 

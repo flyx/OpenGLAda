@@ -148,21 +148,6 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Base_Vertex;
 
-   procedure Draw_Arrays_Instanced (Mode : Connection_Mode; First : Int;
-                                    Count : Types.Size;
-                                    Prim_Count : Types.Size)
-   is
-   begin
-      API.Draw_Arrays_Instanced (Mode, First, Count, Prim_Count);
-      Raise_Exception_On_OpenGL_Error;
-   end Draw_Arrays_Instanced;
-
-   procedure Primitive_Restart_Index (Index : UInt) is
-   begin
-      API.Primitive_Restart_Index (Index);
-      Raise_Exception_On_OpenGL_Error;
-   end Primitive_Restart_Index;
-
    procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion

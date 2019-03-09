@@ -22,8 +22,9 @@ package GL.Attributes is
                                         Stride, Offset : Size);
    pragma Obsolescent
      (Entity => Set_Vertex_Attrib_Pointer,
-      Message => "This function is deprecated for compatibility reasons. Use " &
-     "another Set_Vertex_Float_Pointer, Set_Vertex_Integer_Attrib_Pointer, Set_Vertex_Double_Attrib_Pointer");
+      Message => "This subroutine is deprecated. Use the other" &
+        "Set_Vertex_Attrib_Pointer, Set_Vertex_Integer_Attrib_Pointer, or " &
+        "Set_Vertex_Double_Attrib_Pointer");
    
    -- Stride - bytes count
    -- Offset - bytes count
