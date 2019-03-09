@@ -2,4 +2,4 @@ target
 tmp
 *.wixobj
 *.wixpdb
-OpenGLAda.msi
+*.msi
