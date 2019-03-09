@@ -9,7 +9,6 @@ private with GL.API.Singles;
 private with GL.API.UInts;
 private with GL.API;
 procedure GL.Load_Function_Pointers is
-   pragma Preelaborate;
    use GL.API;
    generic
       type Function_Reference is private;

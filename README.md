@@ -36,12 +36,18 @@ bindings to the following OpenGL-related libraries:
 OpenGLAda supports MacOSX, Windows and X11-based systems. API documentation can
 be found on the [project's homepage][4].
 
+## Windows Installer
+
+There is an installer available for Windows + GNAT Community in the
+[repository's *releases* section][21] which includes all optional dependencies
+except FTGL (because that binding is deprecated).
+
 ## Prerequisites
 
 In order to build OpenGLAda, you need to have:
 
  * A GNAT compiler¹. Compilers known to work well with OpenGLAda are
-   [GnuAda][12], [AdaCore GNAT GPL 2017][1], and [TDM-GCC][17]. More information
+   [GnuAda][12], [GNAT Community 2018][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
    can get it from [here][16] (**NOTE: The gprbuild bundled in this zip is
@@ -68,8 +74,8 @@ To install OpenGLAda with all optional libraries, execute
     $ gprbuild [options] openglada.gpr
     $ gprinstall [options] openglada.gpr
 
-Where *[options]* is the set of scenario variables you want to use. The
-available variables are:
+Where *[options]* is the set of scenario variables you want to use (generally
+in the form of `-X`*name*`=`*value*`). The available variables are:
 
  * `Windowing_System`: Sets the backend windowing system. Used for GLFW and also
                        for system-dependent parts of the API (GLX, WGL, CGL):
@@ -198,3 +204,4 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [17]: http://tdm-gcc.tdragon.net/
  [19]: https://freetype.org/
  [20]: https://github.com/flyx/FreeTypeAda
+ [21]: https://github.com/flyx/OpenGLAda/releases

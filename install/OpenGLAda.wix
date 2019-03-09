@@ -9,7 +9,7 @@
              InstallerVersion="100" Languages="1033" Compressed="yes"
              SummaryCodepage="1252" />
     <Media Id="1" Cabinet="OpenGLAda.cab" EmbedCab="yes" />
-    <SetProperty Id="INSTALLDIR" Value="C:\GNAT\2018" After="AppSearch"/>
+    <Property Id="INSTALLDIR" Value="C:\GNAT\2018"/>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="INSTALLDIR" Name="GNAT" ComponentGuidGenerationSeed="005645a9-cb2e-43da-a920-68b7e8d3ae11">
         <Component Id="dummy" Guid="fd86164a-4408-496d-a3fb-633a56f1a955" KeyPath="yes" />
