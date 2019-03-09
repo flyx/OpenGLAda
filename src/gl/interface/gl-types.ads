@@ -32,10 +32,12 @@ package GL.Types is
    type Double is new C.double;
 
    -- array types
+   type UShort_Array is array (Size range <>) of aliased UShort;
    type Int_Array    is array (Size range <>) of aliased Int;
    type UInt_Array   is array (Size range <>) of aliased UInt;
    type Single_Array is array (Size range <>) of aliased Single;
 
+   pragma Convention (C, UShort_Array);
    pragma Convention (C, Int_Array);
    pragma Convention (C, UInt_Array);
    pragma Convention (C, Single_Array);
@@ -109,6 +111,9 @@ package GL.Types is
                                       One_Value    => 1.0);
 
    -- pointer types (for use with data transfer functions
+   package UShort_Pointers is new Interfaces.C.Pointers
+     (Size, UShort, UShort_Array, UShort'Last);
+
    package Int_Pointers is new Interfaces.C.Pointers
      (Size, Int, Int_Array, Int'Last);
 
