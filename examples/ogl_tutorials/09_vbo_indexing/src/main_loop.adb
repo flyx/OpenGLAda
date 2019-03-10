@@ -138,7 +138,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use Interfaces.C;
       use GL.Objects.Buffers;
       use GL.Types;
-      use Glfw.Input;
       Current_Time : constant Glfw.Seconds := Glfw.Time;
    begin
       Number_Of_Frames := Number_Of_Frames + 1;
@@ -155,15 +154,18 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  First attribute buffer : vertices
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (0, 3, Single_Type, False, 0, 0);
       --  Second attribute buffer : UVs
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (1, 2, Single_Type, False, 0, 0);
       --  Third attribute buffer : normals
       GL.Attributes.Enable_Vertex_Attrib_Array (2);
       GL.Objects.Buffers.Array_Buffer.Bind (Normals_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (2, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (2, 3, Single_Type, False, 0, 0);
 
       --  Index Buffer
       GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
@@ -190,11 +192,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     Render_Program  : out GL.Objects.Programs.Program;
                     Indices_Size    : out GL.Types.Size;
                     UV_Map          : out GL.Objects.Textures.Texture) is
-      use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;

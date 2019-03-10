@@ -37,7 +37,8 @@ package body Text_Management is
       Array_Buffer.Bind (Data_Buffer);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       Load_Vertex_Buffer (Array_Buffer, Square, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 2, GL.Types.Single_Type,
+                                               False, 0, 0);
    exception
       when others =>
          Put_Line ("An exception occurred in Texture_Management.Load_Data.");
@@ -52,7 +53,6 @@ package body Text_Management is
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                           Colour_ID      : GL.Uniforms.Uniform;
                           MVP_Matrix     : GL.Types.Singles.Matrix4) is
-      use GL.Objects.Buffers;
       use GL.Objects.Textures.Targets;
       use GL.Text;
       use GL.Types.Colors;
@@ -116,12 +116,6 @@ package body Text_Management is
                           Texture_ID, MVP_Matrix_ID, Dimensions_ID,
                           Colour_ID      : GL.Uniforms.Uniform;
                           MVP_Matrix     : GL.Types.Singles.Matrix4) is
-      use GL.Objects.Buffers;
-      use GL.Objects.Textures.Targets;
-      use GL.Text;
-      use GL.Types.Colors;
-      use GL.Types;
-      use GL.Types.Singles;
    begin
       for Index in Text_Data'Range loop
          Render_Text (Render_Program,

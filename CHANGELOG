@@ -1,4 +1,13 @@
-Upcoming:
+v0.7.0:
+ * Added missing functionality in:
+   - GL.Objects.Buffers (glBindBufferBase, glDrawElementsInstanced,
+                         texture buffer target)
+   - GL.Objects.Programs (transform feedback)
+ * Fixed memory leaks during C-string handling.
+ * Deprecated old GL.Attributes.Set_Vertex_Attrib_Pointer in favor for
+   new subroutines there that provide more control.
+ * Small fixes in tests so that they work on Windows again.
+ * Made it work with GNAT Community 2018.
  * Changed to SemVer versioning (added revision number)
  * Improvements to GL.Object system
  * Fixed problems in uniforms setter (#105)

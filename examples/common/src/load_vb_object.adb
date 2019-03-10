@@ -1,7 +1,7 @@
 
 with Interfaces.C.Pointers;
 
-with Ada.IO_Exceptions; use Ada.IO_Exceptions;
+with Ada.IO_Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -107,8 +107,6 @@ package body Load_VB_Object is
 
       Print_VBM_Object_Data ("VBM_Object", VBM_Object);
       declare
-         use Interfaces.C;
-         use Image_Data_Pointers;
          Raw_Data    : Image_Data (1 .. Total_Data_Size);
          --  Image_Data is an array of bytes
       begin
@@ -178,9 +176,7 @@ package body Load_VB_Object is
 
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                              Header : VBM_Header;
-                             Object : in out VB_Object) is
-      use GL.Objects.Buffers;
-      Material_Record     : VBM_Material;
+                             Object : in out VB_Object) is      Material_Record     : VBM_Material;
       Record_Count        : UInt := 0;
       Materials_Data_Size : UInt;
    begin
@@ -209,7 +205,6 @@ package body Load_VB_Object is
    procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                             Header : VBM_Header;
                             Object : in out VB_Object) is
-      use GL.Objects.Buffers;
       Texture_Record     : Material_Texture;
       Record_Count       : UInt := 0;
       Textures_Data_Size : UInt;
@@ -371,8 +366,10 @@ package body Load_VB_Object is
                Draw_Elements (Triangles, Int (Frame.Num_Vertices),
                               GL.Types.UInt_Type, Integer (Frame.First));
             else
-               Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
-                                          Int (Frame.Num_Vertices));
+              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type,
+                                                       False, 0, 0);
+              Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
+              GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
@@ -410,6 +407,7 @@ package body Load_VB_Object is
            (Index  => Attribute_Index,
             Count  => Int (Attribute_Data.Components),
             Kind   => Attribute_Data.Attribute_Type,
+            Normalized => False,
             Stride => 0, Offset => Data_Offset);
          GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
          Data_Offset := Data_Offset +

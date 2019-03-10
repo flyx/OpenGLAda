@@ -42,9 +42,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Render (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
-        use Maths;
         Window_Width  : Glfw.Size;
         Window_Height : Glfw.Size;
     begin
@@ -60,12 +58,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         --  First attribute buffer : vertices
         GL.Attributes.Enable_Vertex_Attrib_Array (0);
         Array_Buffer.Bind (Vertex_Buffer);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer
+          (0, 3, Single_Type, False, 0, 0);
 
         --  Second attribute buffer : Colours
         GL.Attributes.Enable_Vertex_Attrib_Array (1);
         Array_Buffer.Bind (Colour_Buffer);
-        GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+        GL.Attributes.Set_Vertex_Attrib_Pointer
+          (1, 3, Single_Type, False, 0, 0);
 
         GL.Objects.Vertex_Arrays.Draw_Arrays (Mode  => Triangles,
                                               First => 0,
@@ -120,7 +120,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     --  ------------------------------------------------------------------------
 
     procedure Setup (Window : in out Glfw.Windows.Window) is
-        use GL.Types.Singles;
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
     begin

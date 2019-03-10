@@ -45,7 +45,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         use Maths.Single_Math_Functions;
 
         Back_Colour   : constant Colors.Color := (1.0, 1.0, 1.0, 1.0);
-        Stride_Single : constant Size := 2;
+        Stride_Bytes  : constant Size := 8;
     begin
         Utilities.Clear_Background_Colour_And_Depth (Back_Colour);
         Fade_Factor := 0.5 * (1.0 + Sin (Single (Glfw.Time)));
@@ -64,7 +64,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
         GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
         GL.Attributes.Set_Vertex_Attrib_Pointer
-          (Position_Location, 2, GL.Types.Single_Type, Stride_Single, 0);
+          (Position_Location, 2, GL.Types.Single_Type, False, Stride_Bytes, 0);
         GL.Attributes.Enable_Vertex_Attrib_Array (Position_Location);
 
         GL.Objects.Buffers.Element_Array_Buffer.Bind (Element_Buffer);
@@ -80,9 +80,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
 
     procedure Setup_Graphic is
         use Ada.Strings.Unbounded;
-        use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-        use GL.Objects.Textures;
         use Program_Loader;
         Images  : constant My_Buffers.tImage_Sources (1 .. 2) :=
                     (To_Unbounded_String ("src/hello1.tga"),

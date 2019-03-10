@@ -134,8 +134,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Utilities.Load_Vertex_Sub_Buffer
         (Array_Buffer, Vertex_Data_Bytes, Vertex_Data.Vertex_Colours);
 
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 4, Single_Type, 4, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (0, 4, Single_Type, False, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer
+        (1, 4, Single_Type, False, 4 * 4, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
 

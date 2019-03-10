@@ -675,7 +675,6 @@ package body Specs is
             Put_Line (Target, "private with " & To_String (Spec_Data.Name) & ";");
          end loop;
          Put_Line (Target, "procedure GL.Load_Function_Pointers is");
-         Put_Line (Target, "   pragma Preelaborate;");
          Put_Line (Target, "   use GL.API;");
          Put_Line (Target, "   generic");
          Put_Line (Target, "      type Function_Reference is private;");

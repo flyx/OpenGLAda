@@ -288,4 +288,6 @@ package body GL.Buffers is
                                       Depth_Value, Stencil_Value);
       Raise_Exception_On_OpenGL_Error;
    end Clear_Depth_And_Stencil_Buffer;
+
+
 end GL.Buffers;

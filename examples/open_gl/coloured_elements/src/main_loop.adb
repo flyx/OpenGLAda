@@ -31,8 +31,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Render is
         use GL.Types;
         Back_Colour   : constant Colors.Color := (0.0, 0.6, 0.6, 1.0);
-        Stride   : constant Int := 5;
-        Skip     : constant Int := 3;
+        Stride   : constant Int := 5 * 4;
+        Skip     : constant Int := 3 * 4;
     begin
         Utilities.Clear_Background_Colour (Back_Colour);
 
@@ -41,13 +41,13 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
           (Shader_Program, "position");
         GL.Attributes.Enable_Vertex_Attrib_Array (Position_Location);
         GL.Attributes.Set_Vertex_Attrib_Pointer (Position_Location,
-             2, Single_Type, Stride, 0);
+             2, Single_Type, False, Stride, 0);
 
         Colour_Location := GL.Objects.Programs.Attrib_Location
           (Shader_Program, "colour");
         GL.Attributes.Enable_Vertex_Attrib_Array (Colour_Location);
         GL.Attributes.Set_Vertex_Attrib_Pointer
-          (Colour_Location, 3, Single_Type, Stride, Skip);
+          (Colour_Location, 3, Single_Type, False, Stride, Skip);
 
         GL.Objects.Buffers.Draw_Elements (GL.Types.Triangles, 3, UInt_Type);
     exception
@@ -61,7 +61,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
     procedure Setup_Graphic is
         use GL.Objects.Buffers;
         use GL.Objects.Shaders;
-        use GL.Types;
         use Program_Loader;
     begin
         Vertex_Array.Initialize_Id;

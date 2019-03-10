@@ -52,7 +52,6 @@ package body Texture_Management is
    --  ------------------------------------------------------------------------
 
    procedure Initialize_Font_Data (Font_File : String) is
-      use GL.Types;
       theLibrary : FT.Library_Reference;
       Face_Ptr   : FT.Faces.Face_Reference;
    begin
@@ -111,12 +110,11 @@ package body Texture_Management is
       use GL.Objects.Textures.Targets;
       use GL.Types.Colors;
       use GL.Types;
-      use FT.Faces;
 
       Num_Triangles  : constant GL.Types.Int := 2;
       Num_Vertices   : constant GL.Types.Int := Num_Triangles * 3; -- Two triangles
       Num_Components : constant GL.Types.Int := 4;                 -- Coords vector size;
-      Stride         : constant GL.Types.Int := 0;
+      Stride         : constant GL.Types.Int := 0 * 4;
       Blend_State    : constant GL.Toggles.Toggle_State :=
         GL.Toggles.State (GL.Toggles.Blend);
       Src_Alpha_Blend : constant  GL.Blending.Blend_Factor :=
@@ -180,6 +178,7 @@ package body Texture_Management is
          Array_Buffer.Bind (Vertex_Buffer);
          GL.Attributes.Set_Vertex_Attrib_Pointer (Index  => 0, Count  => Num_Components,
                                                   Kind   => GL.Types.Single_Type,
+                                                  Normalized => False,
                                                   Stride => Stride, Offset => 0);
 
          GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, Num_Vertices);
@@ -255,7 +254,6 @@ package body Texture_Management is
 
    procedure Setup_Font (theLibrary : FT.Library_Reference;
                          Face_Ptr   : out FT.Faces.Face_Reference; Font_File : String) is
-      use GL.Types;
    begin
       FT.Faces.New_Face (theLibrary, Font_File, 0, Face_Ptr);
       --  Set pixel size to 48 x 48

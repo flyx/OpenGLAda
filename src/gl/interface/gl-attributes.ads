@@ -10,13 +10,42 @@ package GL.Attributes is
 
    type Attribute is new UInt;
 
+   -- This function is deprecated for compatibility reasons. Use:
+   -- 1. Set_Vertex_Attrib_Pointer (other)
+   -- 2. Set_Vertex_Integer_Attrib_Pointer 
+   -- 3. Set_Vertex_Double_Attrib_Pointer 
+   -- Stride - count of components
+   -- Offset - count of components
    procedure Set_Vertex_Attrib_Pointer (Index  : Attribute;
                                         Count  : Component_Count;
                                         Kind   : Numeric_Type;
                                         Stride, Offset : Size);
-
+   pragma Obsolescent
+     (Entity => Set_Vertex_Attrib_Pointer,
+      Message => "This subroutine is deprecated. Use the other" &
+        "Set_Vertex_Attrib_Pointer, Set_Vertex_Integer_Attrib_Pointer, or " &
+        "Set_Vertex_Double_Attrib_Pointer");
+   
+   -- Stride - bytes count
+   -- Offset - bytes count
+   procedure Set_Vertex_Attrib_Pointer (Index          : Attribute;
+                                        Count          : Component_Count;
+                                        Kind           : Numeric_Type;
+                                        Normalized     : Boolean;
+                                        Stride, Offset : Size);
+   procedure Set_Vertex_Integer_Attrib_Pointer (Index  : Attribute;
+                                                Count  : Component_Count;
+                                                Kind   : Numeric_Type;
+                                                Stride, Offset : Size);
+   procedure Set_Vertex_Double_Attrib_Pointer (Index  : Attribute;
+                                               Count  : Component_Count;
+                                               Kind   : Numeric_Type;
+                                               Stride, Offset : Size);
+   
    procedure Enable_Vertex_Attrib_Array  (Index : Attribute);
    procedure Disable_Vertex_Attrib_Array (Index : Attribute);
+   procedure Vertex_Attrib_Divisor (Index   : Attribute;
+                                    Divisor : UInt);
 
    procedure Set_Short (Index : Attribute; Value          : Short);
    procedure Set_Short (Index : Attribute; V1, V2         : Short);

@@ -46,19 +46,19 @@ procedure GL_Test.OpenGL3 is
       Array1.Bind;
       Array_Buffer.Bind (Buffer1);
       Load_Vectors (Array_Buffer, Triangle1, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       Array_Buffer.Bind (Buffer2);
       Load_Colors (Array_Buffer, Color_Array, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
 
       -- Second vertex array object: Only vertices
       Array2.Bind;
       Array_Buffer.Bind (Buffer3);
       Load_Vectors (Array_Buffer, Triangle2, Static_Draw);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
    end Load_Data;
 
