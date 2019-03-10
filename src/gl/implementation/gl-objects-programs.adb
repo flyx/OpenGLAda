@@ -184,8 +184,8 @@ package body GL.Objects.Programs is
    end End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object :  Program; Index, Buffer_Size, Length, V_Length : Integer;
-      V_Type : Buffer_Mode; Name : String) is
+     (Object :  Program; Index, Buffer_Size : Integer; Length, V_Length : out Integer;
+      V_Type : out Buffer_Mode; Name : out String) is
    begin
       API.Get_Transform_Feedback_Varying
         (Object.Reference.GL_Id, Int (Index), Size (Buffer_Size), Size (Length),

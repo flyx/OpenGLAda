@@ -1162,7 +1162,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Get_Transform_Feedback_Varying
     (Program :  UInt; Index : Int; Buffer_Size : Size;
-     Length : Size; V_Length : Size; V_Type : GL.Objects.Programs.Buffer_Mode;
+     Length : out Size; V_Length : out Size; V_Type : out GL.Objects.Programs.Buffer_Mode;
      Name : Interfaces.C.char_array) with
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
