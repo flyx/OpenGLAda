@@ -159,10 +159,10 @@ package body GL.Objects.Programs is
       return Program_Buffer_Mode_Param;
    end Transform_Feedback_Buffer_Mode;
 
-   function Transform_Feedback_Varyings (Object : Program) return Size is
+   function Transform_Feedback_Varyings_Size (Object : Program) return Size is
    begin
       return Program_Size_Param (Object, Enums.Transform_Feedback_Varyings);
-   end Transform_Feedback_Varyings;
+   end Transform_Feedback_Varyings_Size;
 
    function Transform_Feedback_Varying_Max_Length (Object : Program)
                                                    return Size is
