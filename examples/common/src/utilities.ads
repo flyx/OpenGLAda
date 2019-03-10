@@ -3,6 +3,7 @@ with GL.Objects.Buffers;
 with GL.Objects.Programs;
 with GL.Types;
 with GL.Types.Colors;
+with GL.Uniforms;
 
 with Glfw.Windows;
 
@@ -57,6 +58,9 @@ package Utilities is
    procedure Print_Vector (Name : String; aVector : GL.Types.Ints.Vector3);
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector3);
    procedure Print_Vector (Name : String; aVector : GL.Types.Singles.Vector4);
+   procedure Set_Uniform_Location (Shader_Program : GL.Objects.Programs.Program;
+                                   Location       : String;
+                                   theUniform     : in out GL.Uniforms.Uniform);
    procedure Show_Shader_Info_Log (aProgram : GL.Objects.Programs.Program);
    procedure Show_Shader_Program_Data (aProgram : GL.Objects.Programs.Program);
    procedure Show_GL_Data;
