@@ -72,7 +72,7 @@ package GL.Objects.Programs is
    procedure End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object : Program; Index : Integer; Length, V_Length : out Size;
+     (Object : Program; Index : Int; Length, V_Length : out Size;
       V_Type : out Buffer_Mode; Name : out String);
 
    procedure Transform_Feedback_Varyings
