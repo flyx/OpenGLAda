@@ -371,7 +371,7 @@ private package GL.API is
    pragma Convention (StdCall, T171);
    type T172 is access procedure (P1 : Connection_Mode);
    pragma Convention (StdCall, T172);
-   type T173 is access procedure (P1 : UInt; P2 : Int; P3 : Size; P4 : out Size; P5 : out Size; P6 : out GL.Objects.Programs.Buffer_Mode; P7 : Interfaces.C.char_array);
+   type T173 is access procedure (P1 : UInt; P2 : Int; P3 : Size; P4 : out Size; P5 : out Size; P6 : out GL.Objects.Programs.Buffer_Mode; P7 : out Interfaces.C.char_array);
    pragma Convention (StdCall, T173);
    type T174 is access procedure (P1 : UInt; P2 : Size; P3 : Low_Level.Char_Access_Array; P4 : GL.Objects.Programs.Buffer_Mode);
    pragma Convention (StdCall, T174);
