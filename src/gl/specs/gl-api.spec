@@ -1163,7 +1163,7 @@ spec GL.API is
    procedure Get_Transform_Feedback_Varying
     (Program :  UInt; Index : Int; Buffer_Size : Size;
      Length : out Size; V_Length : out Size; V_Type : out GL.Objects.Programs.Buffer_Mode;
-     Name : Interfaces.C.char_array) with
+     Name : out Interfaces.C.char_array) with
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";
    procedure Transform_Feedback_Varyings
