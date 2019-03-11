@@ -303,9 +303,9 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
 
-         GL.Attributes.Set_Vertex_Attrib_Pointer
+         GL.Attributes.Set_Vertex_Double_Attrib_Pointer
            (0, 4, Single_Type, Int (PV_Buffer_Size), 0);
-         GL.Attributes.Set_Vertex_Attrib_Pointer
+         GL.Attributes.Set_Vertex_Double_Attrib_Pointer
            (1, 3, Single_Type, Int (PV_Buffer_Size), Int (Vec4_Size));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
@@ -320,7 +320,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_VAO.Bind;
       Array_Buffer.Bind (Geometry_VBO);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Double_Attrib_Pointer (0, 4, Single_Type, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       Utilities.Clear_Background_Colour_And_Depth (Background);
