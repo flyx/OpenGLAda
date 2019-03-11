@@ -3,8 +3,8 @@
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 velocity;
 
-out vec4 position_out;  //  transform feedback varyings
-out vec3 velocity_out;  //  transform feedback varyings
+out vec4 position1;  //  transform feedback varyings
+out vec3 velocity1;  //  transform feedback varyings
 
 uniform mat4 model_matrix;
 uniform mat4 projection_matrix;
@@ -90,7 +90,7 @@ void main(void)
         new_position = vec4(-new_position.x * 0.3, position.y + 80.0, 0.0, 1.0);
         new_velocity *= vec3(0.2, 0.1, -0.3);
         }
-  //  velocity_out = new_velocity * 0.9999;
- //   position_out = new_position;
+    velocity1 = new_velocity * 0.9999;
+    position1 = new_position;
     gl_Position = projection_matrix * (model_matrix * position);
     }
