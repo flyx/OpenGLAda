@@ -153,8 +153,8 @@ package body GL.Objects.Programs is
    function Transform_Feedback_Buffer_Mode (Object : Program)
                                             return Buffer_Mode is
       Program_Buffer_Mode_Param : constant Buffer_Mode :=
-        Buffer_Mode'Enum_Val
-          (Program_Int_Param (Object, Enums.Transform_Feedback_Buffer_Mode));
+                                    Buffer_Mode'Enum_Val
+                                      (Program_Int_Param (Object, Enums.Transform_Feedback_Buffer_Mode));
    begin
       return Program_Buffer_Mode_Param;
    end Transform_Feedback_Buffer_Mode;
@@ -193,18 +193,20 @@ package body GL.Objects.Programs is
       if Buffer_Size > 1 then
          V_Length := Transform_Feedback_Varyings_Size (Object);
          if  V_Length > 0 and then
-            Transform_Feedback_Varying_Max_Length (Object) > 0 then
+           Transform_Feedback_Varying_Max_Length (Object) > 0 then
             API.Get_Transform_Feedback_Varying
-                (Object.Reference.GL_Id, Index, Buffer_Size,
-                 Length, V_Length, V_Type, C_Name);
+              (Object.Reference.GL_Id, Index, Buffer_Size,
+               Length, V_Length, V_Type, C_Name);
             Raise_Exception_On_OpenGL_Error;
-            Name (Name'First .. Name'First + Integer (Length) - 1) := Interfaces.C.To_Ada (C_Name);
+            Name (Name'First .. Name'First + Integer (Length) - 1) :=
+              Interfaces.C.To_Ada (C_Name);
          else
-            raise Constraint_Error with "Max_Length or V_Length is 0";
+            raise Constraint_Error with
+              "Get_Transform_Feedback_Varying, Max_Length or V_Length is 0";
          end if;
       else
          raise Constraint_Error with
-                 "String must have at least one character";
+           "Get_Transform_Feedback_Varying, String must have at least one character";
       end if;
    end Get_Transform_Feedback_Varying;
 
@@ -214,18 +216,18 @@ package body GL.Objects.Programs is
       use type Interfaces.C.char;
 
       Parameter_Buffer : Interfaces.C.char_array :=
-        Interfaces.C.To_C (Varyings);
-      Pointer_Array : Low_Level.Char_Access_Array
+                           Interfaces.C.To_C (Varyings);
+      Pointer_Array    : Low_Level.Char_Access_Array
         (1 .. Parameter_Buffer'Length / 2);
-        -- cannot be longer than this if every name has a length of at least 1
-      Pointer_Count : Size := 0;
+      -- cannot be longer than this if every name has a length of at least 1
+      Pointer_Count    : Size := 0;
       Recent_Was_Comma : Boolean := True;
    begin
       for Pos in Parameter_Buffer'First .. Parameter_Buffer'Last - 1 loop
          if Parameter_Buffer (Pos) = ',' then
             if Recent_Was_Comma then
                raise Constraint_Error with
-                 "every varying name must have at least one character";
+                 "Get_Transform_Feedback_Varying, every varying name must have at least one character";
             end if;
             Parameter_Buffer (Pos) := Interfaces.C.nul;
             Recent_Was_Comma := True;
@@ -359,8 +361,8 @@ package body GL.Objects.Programs is
    end Uniform_Location;
 
    procedure Bind_Attrib_Location (Subject : Program;
-                                   Index : Attributes.Attribute;
-                                   Name : String) is
+                                   Index   : Attributes.Attribute;
+                                   Name    : String) is
    begin
       API.Bind_Attrib_Location (Subject.Reference.GL_Id, Index,
                                 Interfaces.C.To_C (Name));
@@ -394,7 +396,7 @@ package body GL.Objects.Programs is
 
    procedure Bind_Frag_Data_Location
      (Object : Program; Color_Number : Buffers.Draw_Buffer_Index;
-      Name : String) is
+      Name   : String) is
    begin
       API.Bind_Frag_Data_Location
         (Object.Reference.GL_Id, Color_Number, C.To_C (Name));
