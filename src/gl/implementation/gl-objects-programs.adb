@@ -184,15 +184,17 @@ package body GL.Objects.Programs is
    end End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object :  Program; Index, Buffer_Size : Integer; Length, V_Length : out Integer;
+     (Object :  Program; Index : Integer; Length, V_Length : out Integer;
       V_Type : out Buffer_Mode; Name : in out String) is
-      C_Name : Interfaces.C.char_array (1 .. Interfaces.C.size_t (Buffer_Size));
+      use Interfaces.C;
+      Buffer_Size : constant Interfaces.C.size_t := Name'Length + 1;
+      C_Name : Interfaces.C.char_array (1 .. Buffer_Size);
    begin
       API.Get_Transform_Feedback_Varying
-        (Object.Reference.GL_Id, Int (Index), Size (Buffer_Size), Size (Length),
-         Size (V_Length), V_Type, C_Name);
+        (Object.Reference.GL_Id, GL.Types.Int (Index), Size (Buffer_Size),
+         Size (Length), Size (V_Length), V_Type, C_Name);
       Raise_Exception_On_OpenGL_Error;
-      Name (Name'First .. Name'First + Length - 1) := Interfaces.C.To_Ada (C_Name);
+      Name (Name'First .. Name'First + Length - 1) := To_Ada (C_Name);
     end Get_Transform_Feedback_Varying;
 
    procedure Transform_Feedback_Varyings
