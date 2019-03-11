@@ -2,7 +2,7 @@
 --  This version of DDS loading procedure only supports compressed
 --  DDS files.
 
-with Ada.IO_Exceptions; use Ada.IO_Exceptions;
+with Ada.IO_Exceptions;
 with Ada.Streams.Stream_IO;
 with Ada.Text_IO; use Ada.Text_IO;
 
@@ -50,7 +50,6 @@ procedure Load_DDS (File_Name  : String;
     procedure Load_DDS_Data (Data_Stream   : Ada.Streams.Stream_IO.Stream_Access;
                              Header        : DDS_Header;
                              theTexture    : out GL.Objects.Textures.Texture) is
-        use Ada.Streams.Stream_IO;
         use GL.Objects.Textures;
         use GL.Pixels;
         use GL.Types;
