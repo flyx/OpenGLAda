@@ -152,7 +152,7 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array2 (Name : String; anArray : GL.Types.Singles.Vector2_Array) is
-    begin
+   begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
          Print_Singles_Vector2 ("", anArray (Index));
@@ -174,7 +174,7 @@ package body Utilities is
    --  ------------------------------------------------------------------------
 
    procedure Print_GL_Array3 (Name : String; anArray : GL.Types.Ints.Vector3_Array) is
-    begin
+   begin
       Put_Line (Name & ": ");
       for Index in anArray'First .. anArray'Last loop
          Print_Ints_Vector3 ("", anArray (Index));

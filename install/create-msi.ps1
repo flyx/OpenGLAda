@@ -13,8 +13,8 @@ $candle = "${env:WIX}bin\candle.exe"
 $light = "${env:WIX}bin\light.exe"
 
 if (-Not ($wixonly -or $skipdownloads)) {
-  Remove-Item -Path $tmp -Recurse
-  Remove-Item -Path $target -Recurse
+  Remove-Item -Path $tmp -Recurse -ErrorAction Ignore
+  Remove-Item -Path $target -Recurse -ErrorAction Ignore
 
   mkdir -Force $tmp
   mkdir -Force "$target\lib"
@@ -25,17 +25,17 @@ if (-Not ($wixonly -or $skipdownloads)) {
 
   # GLFW
 
-  $glfw_url = "https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.bin.WIN32.zip"
-  $glfw_destination = "$tmp\glfw-3.2.1.bin.WIN32.zip"
+  $glfw_url = "https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.bin.WIN64.zip"
+  $glfw_destination = "$tmp\glfw-3.2.1.bin.WIN64.zip"
   Invoke-WebRequest -Uri $glfw_url -OutFile $glfw_destination
   $zip = [IO.Compression.ZipFile]::OpenRead($glfw_destination)
-  $zip.Entries | where {$_.FullName -eq "glfw-3.2.1.bin.WIN32/lib-mingw/libglfw3.a"} | `
+  $zip.Entries | where {$_.FullName -eq "glfw-3.2.1.bin.WIN64/lib-mingw-w64/libglfw3.a"} | `
       foreach {[IO.Compression.ZipFileExtensions]::ExtractToFile($_, "$target\lib\libglfw3.a", $true)}
   $zip.Dispose()
 
   # FreeType
 
-  $freetype_url = "https://github.com/ubawurinna/freetype-windows-binaries/raw/1089f5da22ddbdebbd72bfffab971e3159dad7cc/win32/freetype.dll"
+  $freetype_url = "https://github.com/ubawurinna/freetype-windows-binaries/raw/master/win64/freetype.dll"
   $freetype_destination = "$target\lib\freetype.dll"
   Invoke-WebRequest -Uri $freetype_url -OutFile $freetype_destination -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::FireFox
 }
@@ -47,11 +47,11 @@ if (-Not $wixonly) {
                 "-XFreeType_Linker_Param=-l:freetype.dll", "-XGLFW_Linker_Param=-l:libglfw3.a")
 
   $env:LD_LIBRARY_PATH = "$target\lib"
-  $project = "..\opengl-full.gpr"
+  $project = "..\openglada.gpr"
 
   &"gprclean" $scenario $project
   &"gprbuild" -p $scenario $project
-  &"gprinstall" -p --prefix=target $scenario $project
+  &"gprinstall" -p --prefix=target -m $scenario $project
 }
 
 # Create file lists for WiX
@@ -83,5 +83,5 @@ $heatArgs = @("-ag", "-scom", "-sreg", "-sfrag", "-srd")
 &$light -ext WixUIExtension OpenGLAda.wixobj CoreFragments.wixobj FreetypeFragments.wixobj `
         GlfwFragments.wixobj SoilFragments.wixobj TextFragments.wixobj `
         CoreIncludes.wixobj FreetypeIncludes.wixobj `
-        GlfwIncludes.wixobj SoilIncludes.wixobj TextIncludes.wixobj -o OpenGLAda-win32.msi `
+        GlfwIncludes.wixobj SoilIncludes.wixobj TextIncludes.wixobj -o OpenGLAda-win64.msi `
         -dWixUILicenseRtf="$PSScriptRoot\license.rtf"

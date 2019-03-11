@@ -74,7 +74,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
    procedure Setup  (Window  : in out Glfw.Windows.Window) is
       use GL.Objects.Programs;
       use GL.Objects.Shaders;
-      use GL.Types;
       use Program_Loader;
 
       Window_Width    : Glfw.Size;

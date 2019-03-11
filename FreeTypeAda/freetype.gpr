@@ -27,7 +27,7 @@ library project FreeType is
    end Builder;
 
    package Compiler is
-      Base_Switches := ("-gnat05", "-gnatwa", "-gnatwl",
+      Base_Switches := ("-gnat12", "-gnatwa", "-gnatwl",
                         "-gnaty3abcefhiklmNprt", "-fstack-check");
       case Mode is
          when "debug" =>

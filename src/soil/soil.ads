@@ -112,4 +112,10 @@ private
 
    function Last_Error return String;
    pragma Inline (Last_Error);
+
+   --  returns the ID of the given texture, or 0 if the texture is not
+   --  initialized.
+   function Input_Id (Texture : GL.Objects.Textures.Texture'Class)
+                      return GL.Types.UInt;
+   pragma Inline (Input_Id);
 end SOIL;

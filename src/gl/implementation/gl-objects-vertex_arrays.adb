@@ -32,6 +32,12 @@ package body GL.Objects.Vertex_Arrays is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Arrays_Instanced;
 
+   procedure Set_Primitive_Restart_Index (Index : UInt) is
+   begin
+      API.Primitive_Restart_Index (Index);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Primitive_Restart_Index;
+
    overriding
    procedure Internal_Create_Id (Object : Vertex_Array_Object; Id : out UInt) is
       pragma Unreferenced (Object);

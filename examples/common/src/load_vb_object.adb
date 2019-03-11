@@ -367,8 +367,10 @@ package body Load_VB_Object is
                Draw_Elements (Triangles, Int (Frame.Num_Vertices),
                               GL.Types.UInt_Type, Integer (Frame.First));
             else
-               Vertex_Arrays.Draw_Arrays (Triangles, Int (Frame.First),
-                                          Int (Frame.Num_Vertices));
+              GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type,
+                                                       False, 0, 0);
+              Vertex_Arrays.Draw_Arrays (Triangles, 0, Int (Frame.Num_Vertices));
+              GL.Attributes.Disable_Vertex_Attrib_Array (0);
             end if;
          end if;
          Vertex_Arrays.Null_Array_Object.Bind;
@@ -406,6 +408,7 @@ package body Load_VB_Object is
            (Index  => Attribute_Index,
             Count  => Int (Attribute_Data.Components),
             Kind   => Attribute_Data.Attribute_Type,
+            Normalized => False,
             Stride => 0, Offset => Data_Offset);
          GL.Attributes.Enable_Vertex_Attrib_Array (Attribute_Index);
          Data_Offset := Data_Offset +

@@ -5,3 +5,7 @@ bin
 .#*#
 *~
 *.exe
+gnatinspect.db
+src/gl/generated/WrapperList.md
+*.dll
+*-loc.xml

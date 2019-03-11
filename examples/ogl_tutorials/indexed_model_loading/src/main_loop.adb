@@ -93,7 +93,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       use GL.Objects.Buffers;
       use GL.Types;
       use GL.Types.Singles;
-      use Glfw.Input;
       Model_Matrix      : constant Singles.Matrix4 := GL.Types.Singles.Identity4;
       View_Matrix       : Singles.Matrix4;
       Projection_Matrix : Singles.Matrix4;
@@ -108,11 +107,11 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
       --  First attribute buffer : vertices
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
       GL.Objects.Buffers.Array_Buffer.Bind (Vertex_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
       --  Second attribute buffer : UVs
       GL.Attributes.Enable_Vertex_Attrib_Array (1);
       GL.Objects.Buffers.Array_Buffer.Bind (UVs_Buffer);
-      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 2, Single_Type, False, 0, 0);
 
       --  Bind the texture in Texture Unit 0
       GL.Objects.Textures.Set_Active_Unit (0);
@@ -137,11 +136,8 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
                     Render_Program : out GL.Objects.Programs.Program;
                     Indices_Size   : out GL.Types.Int;
                     Sample_Texture : out GL.Objects.Textures.Texture) is
-      use GL.Objects.Buffers;
       use GL.Objects.Shaders;
-      use GL.Objects.Textures.Targets;
       use GL.Types;
-      use GL.Types.Singles;
       use Glfw.Input;
       Window_Width    : constant Glfw.Size := 1024;
       Window_Height   : constant Glfw.Size := 768;

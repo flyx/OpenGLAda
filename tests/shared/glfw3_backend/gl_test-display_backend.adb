@@ -17,7 +17,9 @@ package body GL_Test.Display_Backend is
       Object.Destroy;
    end Close_Requested;
 
-   Main_Window : constant not null access Test_Window := new Test_Window;
+   type Main_Window_Type is not null access Test_Window;
+
+   Main_Window : constant Main_Window_Type := new Test_Window;
 
    procedure Print_Error (Code : Glfw.Errors.Kind; Description : String) is
    begin
