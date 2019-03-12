@@ -308,18 +308,20 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          if index = VBO'First then
             Load_PV_Buffer;
          end if;
+     Put_Line ("Setup, Transform_Feedback_Buffers setup");
 
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
 
-         GL.Attributes.Set_Vertex_Double_Attrib_Pointer
-           (0, 4, Single_Type, Int (PV_Buffer_Size), 0);
-         GL.Attributes.Set_Vertex_Double_Attrib_Pointer
-           (1, 3, Single_Type, Int (PV_Buffer_Size), Int (Vec4_Size));
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (0, 4, Single_Type, True, Int (PV_Buffer_Size), 0);
+         GL.Attributes.Set_Vertex_Attrib_Pointer
+           (1, 3, Single_Type, True, Int (PV_Buffer_Size), Int (Vec4_Size));
          GL.Attributes.Enable_Vertex_Attrib_Array (0);
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
       end loop;
 
+     Put_Line ("Setup, intializing Geometry_VBO");
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
@@ -329,7 +331,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Render_VAO.Bind;
       Array_Buffer.Bind (Geometry_VBO);
-      GL.Attributes.Set_Vertex_Double_Attrib_Pointer (0, 4, Single_Type, 0, 0);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type, True, 0, 0);
       GL.Attributes.Enable_Vertex_Attrib_Array (0);
 
       Utilities.Clear_Background_Colour_And_Depth (Background);
@@ -342,6 +344,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
       end if;
       Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
+
+      Put_Line ("Leaving Setup");
       return VBM_Result;
 
    exception
