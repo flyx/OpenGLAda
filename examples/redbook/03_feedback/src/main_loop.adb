@@ -264,7 +264,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Put_Line ("V_Type: " & Buffer_Mode'Image (V_Type) & "   V_Length: " &
                   Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
 
-      GL.Objects.Programs.Use_Program  (Update_Program);
       Get_Transform_Feedback_Varying (Object   => Update_Program,
                                       Index    => 0,
                                       Length   => Name_Length,
