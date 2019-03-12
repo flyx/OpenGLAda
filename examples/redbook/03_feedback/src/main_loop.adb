@@ -217,9 +217,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       VBM_Result     : Boolean := False;
       Varyings       : constant String := "position1,velocity1";
       Varyings_2     : constant String := "world_space_position";
-      --  Commented out to allow debug of Transform_Feedback_Varyings problem
---        Name           : String (1 .. 30);
---        Length         : GL.Types.Size := 99;
+      Name           : String (1 .. 30);
+      Length         : GL.Types.Size := 99;
       V_Length       : GL.Types.Size := 99;
       Max_Length     : Int;
       V_Type         : Buffer_Mode;
@@ -260,17 +259,24 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       end if;
 
       V_Type := Transform_Feedback_Buffer_Mode (Update_Program);
-      V_Length := Int (Transform_Feedback_Varyings_Size (Update_Program));
+      V_Length := Transform_Feedback_Varyings_Size (Update_Program);
       Max_Length := Transform_Feedback_Varying_Max_Length (Update_Program);
       Put_Line ("V_Type: " & Buffer_Mode'Image (V_Type) & "   V_Length: " &
-                Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
-      --  Commented out to allow debug of Transform_Feedback_Varyings problem
---        Get_Transform_Feedback_Varying (Update_Program, 1, Length, V_Length,
---                                        V_Type, Name);
---        Put_Line ("Name, Length, V_Length, V_Type" & Name & Int'Image (Length) &
---                 Int'Image (V_Length) & Buffer_Mode'Image (V_Type));
+                  Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
+
+      Get_Transform_Feedback_Varying (Update_Program, 0, Length, V_Length,
+                                      V_Type, Name);
+      Put_Line ("Name: " & Name);
+      Put_Line ("Length: " & Int'Image (Length));
+      Put_Line ("V_Length" &  Int'Image (V_Length));
+      if V_Type = Interleaved_Attribs or V_Type = Separate_Attribs then
+         Put_Line ("V_Type: "  & Buffer_Mode'Image (V_Type));
+      else
+         Put_Line ("Setup, Get_Transform_Feedback_Varying returned an invalid Buffer_Mode value: "
+                  & Integer'Image (V_Type'Enum_Rep));
+      end if;
 
       Model_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Update_Program, "model_matrix");
@@ -308,7 +314,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          if index = VBO'First then
             Load_PV_Buffer;
          end if;
-     Put_Line ("Setup, Transform_Feedback_Buffers setup");
 
          VAO (index).Bind;
          Array_Buffer.Bind (VBO (index));
@@ -321,7 +326,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          GL.Attributes.Enable_Vertex_Attrib_Array (1);
       end loop;
 
-     Put_Line ("Setup, intializing Geometry_VBO");
       Geometry_VBO.Initialize_Id;
       Geometry_Texture.Initialize_Id;
       Texture_Buffer.Bind (Geometry_VBO);
@@ -344,8 +348,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
          Put_Line ("Main_Loop.Setup; Load_From_VBM failed.");
       end if;
       Load_VB_Object.Print_VBM_Object_Data ("Setup", VBM_Object);
-
-      Put_Line ("Leaving Setup");
       return VBM_Result;
 
    exception
