@@ -218,7 +218,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Varyings       : constant String := "position1,velocity1";
       Varyings_2     : constant String := "world_space_position";
       Name           : String (1 .. 30);
-      Length         : GL.Types.Size := 99;
+      Name_Length    : GL.Types.Size := 99;
       V_Length       : GL.Types.Size := 99;
       Max_Length     : Int;
       V_Type         : Buffer_Mode;
@@ -265,11 +265,15 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
                   Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
 
       GL.Objects.Programs.Use_Program  (Update_Program);
+      Get_Transform_Feedback_Varying (Object   => Update_Program,
+                                      Index    => 0,
+                                      Length   => Name_Length,
+                                      V_Length => V_Length,
+                                      V_Type   => V_Type,
+                                      Name     => Name);
 
-      Get_Transform_Feedback_Varying (Update_Program, 0, Length, V_Length,
-                                      V_Type, Name);
       Put_Line ("Name: " & Name);
-      Put_Line ("Length: " & Int'Image (Length));
+      Put_Line ("Length: " & Int'Image (Name_Length));
       Put_Line ("V_Length" &  Int'Image (V_Length));
       if V_Type = Interleaved_Attribs or V_Type = Separate_Attribs then
          Put_Line ("V_Type: "  & Buffer_Mode'Image (V_Type));
