@@ -216,7 +216,7 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       use Program_Loader;
       VBM_Result     : Boolean := False;
       Varyings       : constant String := "position1,velocity1";
-      Varyings_2     : constant String := "world_space_position";
+      Varyings_2     : constant String := "world_space_position1";
       Name           : String (1 .. 30);
       Name_Length    : GL.Types.Size := 99;
       V_Length       : GL.Types.Size := 99;
