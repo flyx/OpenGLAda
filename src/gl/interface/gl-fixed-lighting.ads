@@ -1,6 +1,8 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
+pragma Warnings (Off, "use of an anonymous access type allocator");
+
 with GL.Types.Colors;
 
 private with GL.Low_Level;

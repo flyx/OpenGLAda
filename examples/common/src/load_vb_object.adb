@@ -65,7 +65,7 @@ package body Load_VB_Object is
 
    --  ------------------------------------------------------------------------
 
-   procedure Load_From_VBM (File_Name : String; VBM_Object : in out VB_Object;
+   procedure Load_From_VBM (File_Name : String; VBM_Object : out VB_Object;
                             Vertex_Index, Normal_Index, Tex_Coord0_Index : Int;
                             Result : out Boolean) is
       use Ada.Streams.Stream_IO;
@@ -89,7 +89,6 @@ package body Load_VB_Object is
       Open (File_ID, In_File, File_Name);
       Data_Stream := Stream (File_ID);
 
---        VBM_Header'Read (Data_Stream, VBM_Object.Header);
       Load_VBM_Header (Data_Stream,  Header, Byte_Count);
       VBM_Object.Header := Header;
       --  Load attribute headers
@@ -177,7 +176,8 @@ package body Load_VB_Object is
 
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                              Header : VBM_Header;
-                             Object : in out VB_Object) is      Material_Record     : VBM_Material;
+                             Object : in out VB_Object) is
+      Material_Record     : VBM_Material;
       Record_Count        : UInt := 0;
       Materials_Data_Size : UInt;
    begin
@@ -355,7 +355,8 @@ package body Load_VB_Object is
          if Instances > 0 then
             if VBM_Object.Header.Num_Indices > 0 then
                Draw_Elements_Instanced (Triangles, Frame.Num_Vertices,
-                                        GL.Types.UInt_Type, Frame.First);
+                                        GL.Types.UInt_Type, Frame.First,
+                                        Instances);
             else
                Vertex_Arrays.Draw_Arrays_Instanced
                  (Triangles, Int (Frame.First), Int (Frame.Num_Vertices),
@@ -363,8 +364,8 @@ package body Load_VB_Object is
             end if;
          else
             if VBM_Object.Header.Num_Indices > 0 then
-               Put_Line ("Load_VB_Object.Render Num_Indices > 0");
-               null;
+               Draw_Elements (Triangles, Int (Frame.Num_Vertices),
+                              GL.Types.UInt_Type, Integer (Frame.First));
             else
               GL.Attributes.Set_Vertex_Attrib_Pointer (0, 4, Single_Type,
                                                        False, 0, 0);
