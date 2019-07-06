@@ -13,7 +13,8 @@ package body GL.Objects.Textures.With_1D_Loader is
                                  Width : Types.Size) is
    begin
       API.Tex_Image_1D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, 0, Pixels.Red,
+                        Width, 0,
+                        Format_For_Loading_Empty_Texture (Internal_Format),
                         Pixels.Data_Type'First,
                         Image_Source (System.Null_Address));
       Raise_Exception_On_OpenGL_Error;
