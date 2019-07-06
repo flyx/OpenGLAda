@@ -331,6 +331,19 @@ package body Utilities is
 
    --  ------------------------------------------------------------------------
 
+   procedure Set_Uniform_Location (Shader_Program : GL.Objects.Programs.Program;
+                                   Location       : String;
+                                   theUniform     : in out GL.Uniforms.Uniform) is
+   use GL.Uniforms;
+   begin
+      theUniform := GL.Objects.Programs.Uniform_Location (Shader_Program, Location);
+      if theUniform < 0 then
+         Put_Line ("Set_Uniform_Location, Uniform " & Location & " not found.");
+      end if;
+   end Set_Uniform_Location;
+
+   --  -------------------------------------------------------------------------
+
    procedure Show_Shader_Program_Data (aProgram : GL.Objects.Programs.Program) is
       use GL.Objects;
       Shaders_List        : constant Shaders.Lists.List :=

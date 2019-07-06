@@ -59,7 +59,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Vertex_Array.Bind;
         -- Point size is set in the vertex shader
         GL.Toggles.Enable (GL.Toggles.Vertex_Program_Point_Size);
-        Utilities.Show_Shader_Program_Data (Rendering_Program);
+--          Utilities.Show_Shader_Program_Data (Rendering_Program);
     end Setup_Graphic;
 
 --  ----------------------------------------------------------------------------

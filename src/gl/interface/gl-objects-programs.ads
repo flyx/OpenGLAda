@@ -62,7 +62,7 @@ package GL.Objects.Programs is
 
    function Transform_Feedback_Buffer_Mode (Object : Program) return Buffer_Mode;
 
-   function Transform_Feedback_Varyings (Object : Program) return Size;
+   function Transform_Feedback_Varyings_Size (Object : Program) return Size;
 
    function Transform_Feedback_Varying_Max_Length (Object : Program)
                                                    return Size;
@@ -72,8 +72,8 @@ package GL.Objects.Programs is
    procedure End_Transform_Feedback;
 
    procedure Get_Transform_Feedback_Varying
-     (Object : Program; Index, Buffer_Size, Length, V_Length : Integer;
-      V_Type : Buffer_Mode; Name : String);
+     (Object : Program; Index : Int; Length, V_Length : out Size;
+      V_Type : out Buffer_Mode; Name : out String);
 
    procedure Transform_Feedback_Varyings
      (Object : Program; Varyings : String; Mode : Buffer_Mode);
