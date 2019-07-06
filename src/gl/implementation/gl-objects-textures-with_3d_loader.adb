@@ -13,7 +13,8 @@ package body GL.Objects.Textures.With_3D_Loader is
                                  Width, Height, Depth : Types.Size) is
    begin
       API.Tex_Image_3D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, Depth, 0, Pixels.Red,
+                        Width, Height, Depth, 0,
+                        Format_For_Loading_Empty_Texture (Internal_Format),
                         Pixels.Data_Type'First,
                         Image_Source (System.Null_Address));
       Raise_Exception_On_OpenGL_Error;

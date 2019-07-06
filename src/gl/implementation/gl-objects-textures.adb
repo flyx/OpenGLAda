@@ -568,4 +568,14 @@ package body GL.Objects.Textures is
       return Natural (Count);
    end Texture_Unit_Count;
 
+   function Format_For_Loading_Empty_Texture
+     (Internal_Format : Pixels.Internal_Format) return Pixels.Data_Format is
+      use GL.Pixels;
+   begin
+      case Internal_Format is
+         when Depth_Component | Depth_Component16 | Depth_Component24 |
+              Depth_Component32 => return Depth_Component;
+         when others => return Red;
+      end case;
+   end Format_For_Loading_Empty_Texture;
 end GL.Objects.Textures;
