@@ -227,4 +227,7 @@ private
    overriding
    procedure Internal_Release_Id (Object : Texture; Id : UInt);
 
+   function Format_For_Loading_Empty_Texture
+     (Internal_Format : Pixels.Internal_Format) return Pixels.Data_Format;
+
 end GL.Objects.Textures;

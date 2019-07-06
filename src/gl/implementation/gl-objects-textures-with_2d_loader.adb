@@ -13,11 +13,10 @@ package body GL.Objects.Textures.With_2D_Loader is
                                  Width, Height   : Types.Size) is
    begin
       API.Tex_Image_2D (Texture_Proxy (Object).Kind, Level, Internal_Format,
-                        Width, Height, 0, Pixels.Red,
+                        Width, Height, 0,
+                        Format_For_Loading_Empty_Texture (Internal_Format),
                         Pixels.Data_Type'First,
                         Image_Source (System.Null_Address));
-      --raise Program_Error with "Kind => " & Texture_Proxy (Object).Kind'Img &
-      --  ", Type => " & Pixels.Data_Type'First'Img;
       Raise_Exception_On_OpenGL_Error;
    end Load_Empty_Texture;
 

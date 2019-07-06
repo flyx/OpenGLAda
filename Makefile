@@ -1,6 +1,7 @@
 GNATFLAGS ?=
 GLFW_VERSION ?=3
 GPRBUILD = gprbuild ${GNATFLAGS} -p
+GPRINSTALL = gprinstall -p
 
 WINDOWING_BACKEND := windows
 GENERATE_EXE := bin/generate.exe

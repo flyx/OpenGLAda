@@ -186,9 +186,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Model_Matrix_Buffer.Initialize_Id;
       Texture_Buffer.Bind (Model_Matrix_Buffer);
-      Allocate (Texture_Buffer,
-                               Long (Num_Instances * Singles.Matrix4'Size),
-                               Dynamic_Draw);
+      Allocate (Texture_Buffer, Long (Num_Instances * Singles.Matrix4'Size),
+                Dynamic_Draw);
 
       Allocate (Texture_Buffer, GL.Pixels.RGBA32F, Model_Matrix_Buffer);
       GL.Objects.Textures.Set_Active_Unit (0);
