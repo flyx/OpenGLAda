@@ -12,7 +12,8 @@ package body GL.Fixed.Lighting is
 
    function Light (Index : Light_Index) return Light_Object is
    begin
-      return Lights (Index).all;
+      return Light_Object'(Identifier => Toggles.Toggle'Val (
+                           Toggles.Toggle'Pos (Toggles.Light0) + Index));
    end Light;
 
    procedure Enable_Lighting is
@@ -194,7 +195,8 @@ package body GL.Fixed.Lighting is
       Raise_Exception_On_OpenGL_Error;
    end Set_Spot_Direction;
 
-   function Spot_Direction (Source : Light_Object) return Types.Singles.Vector3 is
+   function Spot_Direction (Source : Light_Object)
+                            return Types.Singles.Vector3 is
       Value : Singles.Vector3;
    begin
       API.Get_Light_Direction (Source.Identifier, Enums.Spot_Direction,

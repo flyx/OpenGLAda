@@ -1,8 +1,6 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-pragma Warnings (Off, "use of an anonymous access type allocator");
-
 with GL.Types.Colors;
 
 private with GL.Low_Level;
@@ -59,7 +57,8 @@ package GL.Fixed.Lighting is
    procedure Set_Specular (Source : Light_Object; Color : Colors.Color);
    function Specular (Source : Light_Object) return Colors.Color;
 
-   procedure Set_Position (Source : Light_Object; Position : Types.Singles.Vector4);
+   procedure Set_Position (Source : Light_Object;
+                           Position : Types.Singles.Vector4);
    function Position (Source : Light_Object) return Types.Singles.Vector4;
 
    procedure Set_Spot_Direction (Source : Light_Object;
@@ -72,16 +71,6 @@ package GL.Fixed.Lighting is
 
 private
    type Light_Object (Identifier : Toggles.Toggle) is tagged null record;
-
-   Lights : constant array (Light_Index) of access constant Light_Object :=
-      (0 => new Light_Object'(Identifier => Toggles.Light0),
-       1 => new Light_Object'(Identifier => Toggles.Light1),
-       2 => new Light_Object'(Identifier => Toggles.Light2),
-       3 => new Light_Object'(Identifier => Toggles.Light3),
-       4 => new Light_Object'(Identifier => Toggles.Light4),
-       5 => new Light_Object'(Identifier => Toggles.Light5),
-       6 => new Light_Object'(Identifier => Toggles.Light6),
-       7 => new Light_Object'(Identifier => Toggles.Light7));
 
    for Color_Control use (Single_Color            => 16#81F9#,
                           Separate_Specular_Color => 16#81FA#);
