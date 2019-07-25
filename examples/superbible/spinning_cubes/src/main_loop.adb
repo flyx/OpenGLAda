@@ -102,7 +102,7 @@ exception
         Rendering_Program :=
           Program_From ((Src ("src/shaders/vertex_shader.glsl", Vertex_Shader),
                          Src ("src/shaders/fragment_shader.glsl", Fragment_Shader)));
-        Utilities.Show_Shader_Program_Data (Rendering_Program);
+--          Utilities.Show_Shader_Program_Data (Rendering_Program);
 
         --  Get locations of shader programs matrix uniforms
         Model_View_Location :=
