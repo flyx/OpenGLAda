@@ -16,8 +16,10 @@ package GL.Objects.Buffers is
    type Buffer_Target (<>) is tagged limited private;
 
    type Buffer is new GL_Object with private;
+   type Transform_Buffer is new GL_Object with private;
 
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class);
+   procedure Bind_Transform_Feedback (Object : Transform_Buffer'Class);
    procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
                                Object : Buffer'Class);
 
@@ -84,12 +86,15 @@ package GL.Objects.Buffers is
                                         Index_Type     : Unsigned_Numeric_Type;
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int);
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode;
+                                      Object : Transform_Buffer);
 
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
                                   Offset, Length : Long_Size);
 
    type Texture_Buffer_Target is limited new Buffer_Target with private;
+   type Transform_Buffer_Target is limited new Buffer_Target with private;
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
                        Object : Buffer'Class);
@@ -100,7 +105,7 @@ package GL.Objects.Buffers is
    Pixel_Unpack_Buffer       : constant Buffer_Target;
    Uniform_Buffer            : constant Buffer_Target;
    Texture_Buffer            : constant Texture_Buffer_Target;
-   Transform_Feedback_Buffer : constant Buffer_Target;
+   Transform_Feedback_Buffer : constant Transform_Buffer_Target;
    Copy_Read_Buffer          : constant Buffer_Target;
    Copy_Write_Buffer         : constant Buffer_Target;
    Draw_Indirect_Buffer      : constant Buffer_Target;
@@ -121,14 +126,20 @@ private
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
      tagged limited null record;
    type Texture_Buffer_Target is limited new Buffer_Target with null record;
+   type Transform_Buffer_Target is limited new Buffer_Target with null record;
 
    type Buffer is new GL_Object with null record;
+   type Transform_Buffer is new GL_Object with null record;
 
    overriding
    procedure Internal_Create_Id (Object : Buffer; Id : out UInt);
+   overriding
+   procedure Internal_Create_Id (Object : Transform_Buffer; Id : out UInt);
 
    overriding
    procedure Internal_Release_Id (Object : Buffer; Id : UInt);
+   overriding
+   procedure Internal_Release_Id (Object : Transform_Buffer; Id : UInt);
 
    Array_Buffer              : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Array_Buffer);
@@ -142,8 +153,8 @@ private
      := Buffer_Target'(Kind => Low_Level.Enums.Uniform_Buffer);
    Texture_Buffer            : constant Texture_Buffer_Target
      := Texture_Buffer_Target'(Kind => Low_Level.Enums.Texture_Buffer);
-   Transform_Feedback_Buffer : constant Buffer_Target
-     := Buffer_Target'(Kind => Low_Level.Enums.Transform_Feedback_Buffer);
+   Transform_Feedback_Buffer : constant Transform_Buffer_Target
+     := Transform_Buffer_Target'(Kind => Low_Level.Enums.Transform_Feedback_Buffer);
    Copy_Read_Buffer          : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Copy_Read_Buffer);
    Copy_Write_Buffer         : constant Buffer_Target

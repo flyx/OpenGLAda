@@ -239,6 +239,9 @@ spec GL.API is
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int) with
      Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode; Buffer : UInt) with
+    Static  => "glDrawTransformFeedback",
+    Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback";
    procedure Primitive_Restart_Index (Index : UInt) with
      Dynamic => "glPrimitiveRestartIndex",
      Wrapper => "GL.Objects.Vertex_Arrays.Set_Primitive_Restart_Index";
@@ -807,10 +810,16 @@ spec GL.API is
 
    procedure Gen_Buffers (N : Size; Buffers : out UInt) with
      Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Initialize_Id";
+   procedure Gen_Transform_Feedbacks (N : Size; Buffers : out UInt) with
+     Dynamic => "glGenTransformFeedbacks", Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) with
      Dynamic => "glDeleteBuffers";
+   procedure Delete_Transform_Feedbacks (N : Size; Buffers : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteTransformFeedbacks";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
+   procedure Bind_Transform_Feedback (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
+     with Dynamic =>"glBindTransformFeedback", Wrapper => "GL.Objects.Buffers.Bind_Transform_Feedback";
    procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
     with Dynamic =>"glBindBufferBase", Wrapper => "GL.Objects.Buffers.Bind_Buffer_Base";
    procedure Buffer_Data

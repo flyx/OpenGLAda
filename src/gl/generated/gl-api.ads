@@ -491,6 +491,8 @@ private package GL.API is
    pragma Import (StdCall, Draw_Elements, "glDrawElements");
    Draw_Elements_Instanced : T73;
    Draw_Elements_Base_Vertex : T74;
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode; Buffer : UInt);
+   pragma Import (StdCall, Draw_Transform_Feedback, "glDrawTransformFeedback");
    Primitive_Restart_Index : T75;
    Vertex_Attrib_Divisor : T76;
    procedure Load_Matrix (Value : Types.Doubles.Matrix4);
@@ -676,8 +678,11 @@ private package GL.API is
    Invalidate_Tex_Image : T105;
    Invalidate_Tex_Sub_Image : T106;
    Gen_Buffers : T107;
+   Gen_Transform_Feedbacks : T107;
    Delete_Buffers : T108;
+   Delete_Transform_Feedbacks : T108;
    Bind_Buffer : T109;
+   Bind_Transform_Feedback : T109;
    Bind_Buffer_Base : T110;
    Buffer_Data : T111;
    Texture_Buffer_Data : T112;

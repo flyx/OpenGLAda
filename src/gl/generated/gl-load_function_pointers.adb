@@ -314,8 +314,11 @@ begin
    GL.API.Invalidate_Tex_Image := Load_T105 ("glInvalidateTexImage");
    GL.API.Invalidate_Tex_Sub_Image := Load_T106 ("glInvalidateTexSubImage");
    GL.API.Gen_Buffers := Load_T107 ("glGenBuffers");
+   GL.API.Gen_Transform_Feedbacks := Load_T107 ("glGenTransformFeedbacks");
    GL.API.Delete_Buffers := Load_T108 ("glDeleteBuffers");
+   GL.API.Delete_Transform_Feedbacks := Load_T108 ("glDeleteTransformFeedbacks");
    GL.API.Bind_Buffer := Load_T109 ("glBindBuffer");
+   GL.API.Bind_Transform_Feedback := Load_T109 ("glBindTransformFeedback");
    GL.API.Bind_Buffer_Base := Load_T110 ("glBindBufferBase");
    GL.API.Buffer_Data := Load_T111 ("glBufferData");
    GL.API.Texture_Buffer_Data := Load_T112 ("glTexBuffer");

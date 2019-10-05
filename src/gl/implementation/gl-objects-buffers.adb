@@ -29,6 +29,15 @@ package body GL.Objects.Buffers is
 
    Current_Buffers : Buffer_Maps.Map;
 
+   package Transform_Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+      (Key_Type     => Low_Level.Enums.Buffer_Kind,
+       Element_Type => Transform_Buffer'Class,
+       Hash         => Hash,
+       Equivalent_Keys => Low_Level.Enums."=");
+   use type Transform_Buffer_Maps.Cursor;
+
+   Current_Transform_Buffers : Transform_Buffer_Maps.Map;
+
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class) is
       Cursor : constant Buffer_Maps.Cursor
         := Current_Buffers.Find (Target.Kind);
@@ -45,6 +54,25 @@ package body GL.Objects.Buffers is
          end if;
       end if;
    end Bind;
+
+   procedure Bind_Transform_Feedback (Object : Transform_Buffer'Class) is
+      Target_Kind : constant GL.Low_Level.Enums.Buffer_Kind :=
+                        GL.Low_Level.Enums.Transform_Feedback;
+      Cursor : constant Transform_Buffer_Maps.Cursor
+        := Current_Transform_Buffers.Find (Target_Kind);
+   begin
+      if Cursor = Transform_Buffer_Maps.No_Element or else
+        Transform_Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
+        then
+         API.Bind_Transform_Feedback (Target_Kind, Object.Reference.GL_Id);
+         Raise_Exception_On_OpenGL_Error;
+         if Cursor = Transform_Buffer_Maps.No_Element then
+            Current_Transform_Buffers.Insert (Target_Kind, Object);
+         else
+            Current_Transform_Buffers.Replace_Element (Cursor, Object);
+         end if;
+      end if;
+   end Bind_Transform_Feedback;
 
    procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
                                Object : Buffer'Class) is
@@ -148,6 +176,14 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Base_Vertex;
 
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode;
+                                      Object : Transform_Buffer) is
+   begin
+      API.Draw_Transform_Feedback (Mode, Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Draw_Transform_Feedback;
+
+
    procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
@@ -226,10 +262,26 @@ package body GL.Objects.Buffers is
    end Internal_Create_Id;
 
    overriding
+   procedure Internal_Create_Id (Object : Transform_Buffer; Id : out UInt) is
+      pragma Unreferenced (Object);
+   begin
+      API.Gen_Transform_Feedbacks (1, Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Internal_Create_Id;
+
+   overriding
    procedure Internal_Release_Id (Object : Buffer; Id : UInt) is
       pragma Unreferenced (Object);
    begin
       API.Delete_Buffers (1, (1 => Id));
+      Raise_Exception_On_OpenGL_Error;
+   end Internal_Release_Id;
+
+   overriding
+   procedure Internal_Release_Id (Object : Transform_Buffer; Id : UInt) is
+      pragma Unreferenced (Object);
+   begin
+      API.Delete_Transform_Feedbacks (1, (1 => Id));
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 
