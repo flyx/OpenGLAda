@@ -371,6 +371,8 @@ spec GL.API is
      Static => "glRasterPos3dv", Wrapper => "GL.Raster.Set_Pos";
    procedure Raster_Pos2 (Value : Types.Doubles.Vector2) with
      Static => "glRasterPos2dv", Wrapper => "GL.Raster.Set_Pos";
+   procedure Set_Polygon_Offset (Factor, Units : Single) with
+    Static => "glPolygonOffset", Wrapper => "GL.Rasterization.Set_Polygon_Offset";
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --

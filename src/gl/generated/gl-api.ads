@@ -554,6 +554,8 @@ private package GL.API is
    pragma Import (StdCall, Raster_Pos3, "glRasterPos3dv");
    procedure Raster_Pos2 (Value : Types.Doubles.Vector2);
    pragma Import (StdCall, Raster_Pos2, "glRasterPos2dv");
+   procedure Set_Polygon_Offset (Factor, Units : Single);
+   pragma Import (StdCall, Set_Polygon_Offset, "glPolygonOffset");
    procedure Clear (Bits : Low_Level.Bitfield);
    pragma Import (StdCall, Clear, "glClear");
    procedure Draw_Buffer (Mode : Buffers.Explicit_Color_Buffer_Selector);

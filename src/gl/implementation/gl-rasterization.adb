@@ -59,6 +59,12 @@ package body GL.Rasterization is
       return Ret;
    end Polygon_Mode;
 
+   procedure Set_Polygon_Offset (Factor, Units : Single := 0.0) is
+   begin
+      API.Set_Polygon_Offset (Factor, Units);
+      Raise_Exception_On_OpenGL_Error;
+   end Set_Polygon_Offset;
+
    procedure Set_Point_Size (Value : Single) is
    begin
       API.Set_Point_Size (Value);
