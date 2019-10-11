@@ -185,7 +185,7 @@ package body GL.Objects.Programs is
 
    procedure Get_Transform_Feedback_Varying
      (Object :  Program; Index : Int; Length, V_Length : out Size;
-      V_Type : out Buffer_Mode; Name : out String) is
+      V_Type : out Active_Attribute; Name : out String) is
       use Interfaces.C;
       Buffer_Size : constant Size := Name'Length + 1;
       C_Name      : Interfaces.C.char_array (1 .. size_t (Buffer_Size + 1));
