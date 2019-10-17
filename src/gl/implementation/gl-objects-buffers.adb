@@ -183,6 +183,13 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Draw_Transform_Feedback;
 
+   procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode;
+                                      Object : Transform_Buffer;
+                                      Stream : UInt) is
+   begin
+      API.Draw_Transform_Feedback_Stream (Mode, Object.Reference.GL_Id, Stream);
+      Raise_Exception_On_OpenGL_Error;
+   end Draw_Transform_Feedback_Stream;
 
    procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer) is

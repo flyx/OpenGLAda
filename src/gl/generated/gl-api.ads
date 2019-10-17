@@ -493,6 +493,8 @@ private package GL.API is
    Draw_Elements_Base_Vertex : T74;
    procedure Draw_Transform_Feedback (Mode : Connection_Mode; Buffer : UInt);
    pragma Import (StdCall, Draw_Transform_Feedback, "glDrawTransformFeedback");
+   procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode; Buffer : UInt; Stream : UInt);
+   pragma Import (StdCall, Draw_Transform_Feedback_Stream, "glDrawTransformFeedbackStream");
    Primitive_Restart_Index : T75;
    Vertex_Attrib_Divisor : T76;
    procedure Load_Matrix (Value : Types.Doubles.Matrix4);

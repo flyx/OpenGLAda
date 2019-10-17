@@ -88,6 +88,9 @@ package GL.Objects.Buffers is
                                         Base_Vertex    : Int);
    procedure Draw_Transform_Feedback (Mode : Connection_Mode;
                                       Object : Transform_Buffer);
+   procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode;
+                                             Object : Transform_Buffer;
+                                             Stream : UInt);
 
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
