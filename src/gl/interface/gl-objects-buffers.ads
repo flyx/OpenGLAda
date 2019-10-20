@@ -13,6 +13,17 @@ package GL.Objects.Buffers is
                          Static_Draw, Static_Read, Static_Copy,
                          Dynamic_Draw, Dynamic_Read, Dynamic_Copy);
 
+   type Map_Bits is record
+      Read              : Boolean := False;
+      Write             : Boolean := False;
+      Invalidate_Range  : Boolean := False;
+      Invalidate_Buffer : Boolean := False;
+      Flush_Explicit    : Boolean := False;
+      Unsynchronized    : Boolean := False;
+      Persistent        : Boolean := False;
+      Coherent          : Boolean := False;
+   end record;
+
    type Buffer_Target (<>) is tagged limited private;
 
    type Buffer is new GL_Object with private;
@@ -39,6 +50,13 @@ package GL.Objects.Buffers is
       with package Pointers is new Interfaces.C.Pointers (<>);
    procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Map_Range (Target      : Buffer_Target'Class;
+                        Access_Type : Map_Bits;
+                        Offset, Size : Types.Size;
+                        Pointer : out Pointers.Pointer);
+
    procedure Unmap (Target : Buffer_Target);
 
    generic
@@ -125,6 +143,18 @@ private
                          Dynamic_Read => 16#88E9#,
                          Dynamic_Copy => 16#88EA#);
    for Buffer_Usage'Size use Low_Level.Enum'Size;
+
+   for Map_Bits use record
+      Read              at 0 range 0 .. 0;
+      Write             at 0 range 1 .. 1;
+      Invalidate_Range  at 0 range 2 .. 2;
+      Invalidate_Buffer at 0 range 3 .. 3;
+      Flush_Explicit    at 0 range 4 .. 4;
+      Unsynchronized    at 0 range 5 .. 5;
+      Persistent        at 0 range 6 .. 6;
+      Coherent          at 0 range 7 .. 7;
+   end record;
+   for Map_Bits'Size use Low_Level.Bitfield'Size;
 
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
      tagged limited null record;

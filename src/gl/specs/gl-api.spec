@@ -842,6 +842,11 @@ spec GL.API is
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
      Dynamic => "glMapBuffer", Wrapper => "GL.Objects.Buffers.Map";
+   function Map_Buffer_Range (Target : Low_Level.Enums.Buffer_Kind;
+                              Offset : Low_Level.IntPtr;
+                              Size   : Low_Level.SizeIPtr;
+                              Acc    : Low_Level.Bitfield) return System.Address with
+     Dynamic => "glMapBufferRange", Wrapper => "GL.Objects.Buffers.Map_Range";
    procedure Buffer_Pointer (Target : Low_Level.Enums.Buffer_Kind;
                              Pname  : Enums.Buffer_Pointer_Param;
                              Params : out System.Address) with

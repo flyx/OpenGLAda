@@ -200,6 +200,21 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Map;
 
+   procedure Map_Range (Target      : Buffer_Target'Class;
+                        Access_Type : Map_Bits;
+                        Offset, Size : Types.Size;
+                        Pointer : out Pointers.Pointer) is
+      function To_Pointer is new Ada.Unchecked_Conversion
+        (System.Address, Pointers.Pointer);
+      function To_BitField is new Ada.Unchecked_Conversion
+        (Map_Bits, GL.Low_Level.Bitfield);
+   begin
+      Pointer := To_Pointer
+        (API.Map_Buffer_Range (Target.Kind, Low_Level.IntPtr (Offset),
+         Low_Level.IntPtr (Size), To_BitField (Access_Type)));
+      Raise_Exception_On_OpenGL_Error;
+   end Map_Range;
+
    procedure Unmap (Target : Buffer_Target) is
    begin
       API.Unmap_Buffer (Target.Kind);
