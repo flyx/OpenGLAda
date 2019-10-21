@@ -422,4 +422,16 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Dispatch_Compute;
 
+   procedure Memory_Barrier (Barriers : Barrier_Kind) is
+      function To_BitField is new Ada.Unchecked_Conversion
+        (Barrier_Kind, GL.Low_Level.Bitfield);
+   begin
+      if Barriers.All_Barrier_Bits then
+         API.Memory_Barrier (16#FFFFFFFF#);
+      else
+         API.Memory_Barrier (To_BitField (Barriers));
+      end if;
+      Raise_Exception_On_OpenGL_Error;
+   end Memory_Barrier;
+
 end GL.Objects.Programs;

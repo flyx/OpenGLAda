@@ -29,6 +29,21 @@ package GL.Objects.Programs is
                              Float_Mat4x2_Type, Float_Mat4x3_Type,
                              Unsigned_Int_Vec2_Type,
                              Unsigned_Int_Vec3_Type, Unsigned_Int_Vec4_Type);
+   type Barrier_Kind is record
+      Vertex_Attribute_Array_Barrier_Bit : Boolean := False;
+      Element_Array_Barrier_Bit          : Boolean := False;
+      Uniform_Barrier_Bit                : Boolean := False;
+      Texture_Fetch_Barrier_Bit          : Boolean := False;
+      Shader_Image_Access_Barrier_Bit    : Boolean := False;
+      Command_Barrier_Bit                : Boolean := False;
+      Pixel_Buffer_Barrier_Bit           : Boolean := False;
+      Texture_Update_Barrier_Bit         : Boolean := False;
+      Buffer_Update_Barrier_Bit          : Boolean := False;
+      Framebuffer_Barrier_Bit            : Boolean := False;
+      Transform_Feedback_Barrier_Bit     : Boolean := False;
+      Atomic_Barrier_Bit                 : Boolean := False;
+      All_Barrier_Bits                   : Boolean := False;
+   end record;
 
    type Tessellation_Primitive_Mode is (Triangles, Quads, Isolines);
 
@@ -134,6 +149,7 @@ package GL.Objects.Programs is
    function Frag_Data_Location (Object : Program; Name : String)
                                 return Buffers.Draw_Buffer_Index;
    procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt);
+   procedure Memory_Barrier (Barriers : Barrier_Kind);
 
 private
    Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;
@@ -180,5 +196,22 @@ private
                              Unsigned_Int_Vec2_Type => 16#8DC6#,
                              Unsigned_Int_Vec3_Type => 16#8DC7#,
                              Unsigned_Int_Vec4_Type => 16#8DC8#);
+
+   for Barrier_Kind use record
+      Vertex_Attribute_Array_Barrier_Bit at 0 range 0 .. 0;
+      Element_Array_Barrier_Bit          at 0 range 1 .. 1;
+      Uniform_Barrier_Bit                at 0 range 2 .. 2;
+      Texture_Fetch_Barrier_Bit          at 0 range 3 .. 3;
+      Shader_Image_Access_Barrier_Bit    at 0 range 5 .. 5;
+      Command_Barrier_Bit                at 0 range 6 .. 6;
+      Pixel_Buffer_Barrier_Bit           at 0 range 7 .. 7;
+      Texture_Update_Barrier_Bit         at 0 range 8 .. 8;
+      Buffer_Update_Barrier_Bit          at 0 range 9 .. 9;
+      Framebuffer_Barrier_Bit            at 0 range 10 .. 10;
+      Transform_Feedback_Barrier_Bit     at 0 range 11 .. 11;
+      Atomic_Barrier_Bit                 at 0 range 12 .. 12;
+      All_Barrier_Bits                   at 0 range 13 .. 13;
+   end record;
+   for Barrier_Kind'Size use Low_Level.Bitfield'Size;
 
 end GL.Objects.Programs;
