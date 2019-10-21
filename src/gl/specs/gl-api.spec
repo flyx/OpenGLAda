@@ -1194,6 +1194,8 @@ spec GL.API is
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
+   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt) with
+     Static => "glDispatchCompute", Wrapper => "GL.Objects.Programs.Dispatch_Compute";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --

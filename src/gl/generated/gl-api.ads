@@ -771,6 +771,8 @@ private package GL.API is
    End_Transform_Feedback : T155;
    Get_Transform_Feedback_Varying : T174;
    Transform_Feedback_Varyings : T175;
+   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt);
+   pragma Import (StdCall, Dispatch_Compute, "glDispatchCompute");
    Set_Patch_Parameter_Int : T176;
    Set_Patch_Parameter_Float_Array : T177;
    procedure Depth_Range (Near, Far : Double);

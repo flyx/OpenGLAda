@@ -133,6 +133,7 @@ package GL.Objects.Programs is
    -- raises Unknown_Variable_Name if Name is not an out variable
    function Frag_Data_Location (Object : Program; Name : String)
                                 return Buffers.Draw_Buffer_Index;
+   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt);
 
 private
    Invalid_Index : constant Subroutine_Index_Type := 16#FFFFFFFF#;

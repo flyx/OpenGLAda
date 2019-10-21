@@ -416,4 +416,10 @@ package body GL.Objects.Programs is
       end if;
    end Frag_Data_Location;
 
+   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt) is
+   begin
+      API.Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z);
+      Raise_Exception_On_OpenGL_Error;
+   end Dispatch_Compute;
+
 end GL.Objects.Programs;
