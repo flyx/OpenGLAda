@@ -634,6 +634,8 @@ private package GL.API is
    pragma Import (StdCall, Gen_Textures, "glGenTextures");
    procedure Bind_Texture (Target : Low_Level.Enums.Texture_Kind; Texture : UInt);
    pragma Import (StdCall, Bind_Texture, "glBindTexture");
+   procedure Bind_Image_Texture (Unit : UInt; Texture : UInt; Level : Objects.Textures.Mipmap_Level; Layered : Boolean; Layer : Int; Acc : GL.Objects.Access_Kind; Format : Pixels.Internal_Format);
+   pragma Import (StdCall, Bind_Image_Texture, "glBindImageTexture");
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array);
    pragma Import (StdCall, Delete_Textures, "glDeleteTextures");
    function Is_Texture (Texture : UInt) return Boolean;

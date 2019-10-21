@@ -606,10 +606,15 @@ spec GL.API is
      Wrapper => "GL.Objects.Textures.Compressed";
    procedure Gen_Textures (N : Size; Textures : out UInt) with
      Static => "glGenTextures", Wrapper => "GL.Objects.Initialize_Id";
-
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
                            Texture : UInt) with
      Static => "glBindTexture", Wrapper => "GL.Objects.Textures.Bind";
+   procedure Bind_Image_Texture (Unit : UInt; Texture : UInt;
+                                 Level : Objects.Textures.Mipmap_Level;
+                                 Layered : Boolean; Layer : Int;
+                                 Acc : GL.Objects.Access_Kind;
+                                 Format : Pixels.Internal_Format) with
+     Static => "glBindImageTexture", Wrapper => "GL.Objects.Textures.Bind_Image";
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array) with
      Static => "glDeleteTextures";
    function Is_Texture (Texture : UInt) return Boolean with

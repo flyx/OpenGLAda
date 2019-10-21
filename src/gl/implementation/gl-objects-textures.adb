@@ -74,8 +74,8 @@ package body GL.Objects.Textures is
                        return Pixels.Channel_Data_Type is
       Ret : Pixels.Channel_Data_Type;
    begin
-        API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
-                                          Enums.Textures.Blue_Type, Ret);
+      API.Get_Tex_Level_Parameter_Type (Object.Kind, Level,
+                                        Enums.Textures.Blue_Type, Ret);
       Raise_Exception_On_OpenGL_Error;
       return Ret;
    end Blue_Type;
@@ -178,7 +178,7 @@ package body GL.Objects.Textures is
    end Raw_Kind;
 
    function Hash (Key : Low_Level.Enums.Texture_Kind)
-     return Ada.Containers.Hash_Type is
+                  return Ada.Containers.Hash_Type is
       function Value is new Ada.Unchecked_Conversion
         (Source => Low_Level.Enums.Texture_Kind, Target => Low_Level.Enum);
    begin
@@ -186,10 +186,10 @@ package body GL.Objects.Textures is
    end Hash;
 
    package Texture_Maps is new Ada.Containers.Indefinite_Hashed_Maps
-      (Key_Type     => Low_Level.Enums.Texture_Kind,
-       Element_Type => Texture'Class,
-       Hash         => Hash,
-       Equivalent_Keys => Low_Level.Enums."=");
+     (Key_Type        => Low_Level.Enums.Texture_Kind,
+      Element_Type    => Texture'Class,
+      Hash            => Hash,
+      Equivalent_Keys => Low_Level.Enums."=");
    use type Texture_Maps.Cursor;
 
    Current_Textures : Texture_Maps.Map;
@@ -200,7 +200,7 @@ package body GL.Objects.Textures is
    begin
       if Cursor = Texture_Maps.No_Element or else
         Texture_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
-        then
+      then
          API.Bind_Texture (Target.Kind, Object.Reference.GL_Id);
          Raise_Exception_On_OpenGL_Error;
          if Cursor = Texture_Maps.No_Element then
@@ -252,7 +252,7 @@ package body GL.Objects.Textures is
       Raise_Exception_On_OpenGL_Error;
    end Invalidate_Image;
 
-   procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
+   procedure Invalidate_Sub_Image (Object  : Texture; Level : Mipmap_Level;
                                    X, Y, Z : Int; Width, Height, Depth : Size)
    is
    begin
@@ -336,7 +336,7 @@ package body GL.Objects.Textures is
    end Maximum_LoD;
 
    procedure Set_Lowest_Mipmap_Level (Target : Texture_Target;
-                                      Level : Mipmap_Level) is
+                                      Level  : Mipmap_Level) is
    begin
       API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Base_Level, Level);
       Raise_Exception_On_OpenGL_Error;
@@ -352,7 +352,7 @@ package body GL.Objects.Textures is
    end Lowest_Mipmap_Level;
 
    procedure Set_Highest_Mipmap_Level (Target : Texture_Target;
-                                       Level : Mipmap_Level) is
+                                       Level  : Mipmap_Level) is
    begin
       API.Tex_Parameter_Int (Target.Kind, Enums.Textures.Max_Level, Level);
       Raise_Exception_On_OpenGL_Error;
@@ -435,7 +435,7 @@ package body GL.Objects.Textures is
    end Border_Color;
 
    procedure Set_Texture_Priority (Target : Texture_Target;
-                                   Value : Priority) is
+                                   Value  : Priority) is
    begin
       API.Tex_Parameter_Float (Target.Kind, Enums.Textures.Priority,
                                Single (Value));
@@ -485,7 +485,7 @@ package body GL.Objects.Textures is
    end Set_Compare_Function;
 
    function Current_Compare_Function (Target : Texture_Target)
-                                     return Compare_Function is
+                                      return Compare_Function is
       Value : Compare_Function;
    begin
       API.Get_Tex_Parameter_Comp_Func (Target.Kind, Enums.Textures.Compare_Func,
@@ -495,7 +495,7 @@ package body GL.Objects.Textures is
    end Current_Compare_Function;
 
    procedure Set_Depth_Texture_Mode (Target : Texture_Target;
-                                     Mode : Depth_Mode) is
+                                     Mode   : Depth_Mode) is
    begin
       API.Tex_Parameter_Depth_Mode (Target.Kind, Enums.Textures.Depth, Mode);
       Raise_Exception_On_OpenGL_Error;
@@ -510,7 +510,7 @@ package body GL.Objects.Textures is
       return Value;
    end Depth_Texture_Mode;
 
-   procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target;
+   procedure Toggle_Mipmap_Autoupdate (Target  : Texture_Target;
                                        Enabled : Boolean) is
    begin
       API.Tex_Parameter_Bool (Target.Kind, Enums.Textures.Generate_Mipmap,
@@ -542,8 +542,8 @@ package body GL.Objects.Textures is
 
    procedure Set_Active_Unit (Unit : Texture_Unit) is
       package Texture_Indexing is new Enums.Indexes
-         (Enums.Textures.Texture_Unit_Start_Rep,
-          Enums.Getter.Max_Combined_Texture_Image_Units);
+        (Enums.Textures.Texture_Unit_Start_Rep,
+         Enums.Getter.Max_Combined_Texture_Image_Units);
    begin
       API.Active_Texture (Texture_Indexing.Representation (Unit));
       Raise_Exception_On_OpenGL_Error;
@@ -551,14 +551,25 @@ package body GL.Objects.Textures is
 
    function Active_Unit return Texture_Unit is
       package Texture_Indexing is new Enums.Indexes
-         (Enums.Textures.Texture_Unit_Start_Rep,
-          Enums.Getter.Max_Combined_Texture_Image_Units);
+        (Enums.Textures.Texture_Unit_Start_Rep,
+         Enums.Getter.Max_Combined_Texture_Image_Units);
 
       Raw_Unit : aliased Int := Enums.Textures.Texture_Unit_Start_Rep;
    begin
       API.Get_Integer (Enums.Getter.Active_Texture, Raw_Unit'Access);
       return Texture_Indexing.Value (Raw_Unit);
    end Active_Unit;
+
+   procedure Bind_Image (Unit    : Texture_Unit; Tex : Texture;
+                         Level   : Objects.Textures.Mipmap_Level;
+                         Layered : Boolean; Layer : Int;
+                         Acc     : GL.Objects.Access_Kind;
+                         Format  : Pixels.Internal_Format) is
+   begin
+      API.Bind_Image_Texture (UInt (Unit), Raw_Id (Tex), Level,
+                               Layered, Layer, Acc, Format);
+      Raise_Exception_On_OpenGL_Error;
+   end Bind_Image;
 
    function Texture_Unit_Count return Natural is
       Count : aliased Int;
