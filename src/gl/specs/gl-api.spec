@@ -609,12 +609,6 @@ spec GL.API is
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
                            Texture : UInt) with
      Static => "glBindTexture", Wrapper => "GL.Objects.Textures.Bind";
-   procedure Bind_Image_Texture (Unit : UInt; Texture : UInt;
-                                 Level : Objects.Textures.Mipmap_Level;
-                                 Layered : Boolean; Layer : Int;
-                                 Acc : GL.Objects.Access_Kind;
-                                 Format : Pixels.Internal_Format) with
-     Dynamic => "glBindImageTexture", Wrapper => "GL.Objects.Textures.Bind_Image";
    procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array) with
      Static => "glDeleteTextures";
    function Is_Texture (Texture : UInt) return Boolean with
@@ -1194,11 +1188,6 @@ spec GL.API is
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
-   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt) with
-     Dynamic => "glDispatchCompute", Wrapper => "GL.Objects.Programs.Dispatch_Compute";
-   procedure Memory_Barrier (Barriers : Low_Level.Bitfield) with
-     Dynamic => "glMemoryBarrier", Wrapper => "GL.Objects.Programs.Memory_Barrier";
-
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --

@@ -560,17 +560,6 @@ package body GL.Objects.Textures is
       return Texture_Indexing.Value (Raw_Unit);
    end Active_Unit;
 
-   procedure Bind_Image (Unit    : Texture_Unit; Tex : Texture;
-                         Level   : Objects.Textures.Mipmap_Level;
-                         Layered : Boolean; Layer : Int;
-                         Acc     : GL.Objects.Access_Kind;
-                         Format  : Pixels.Internal_Format) is
-   begin
-      API.Bind_Image_Texture (UInt (Unit), Raw_Id (Tex), Level,
-                               Layered, Layer, Acc, Format);
-      Raise_Exception_On_OpenGL_Error;
-   end Bind_Image;
-
    function Texture_Unit_Count return Natural is
       Count : aliased Int;
    begin

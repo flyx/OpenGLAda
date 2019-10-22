@@ -416,22 +416,4 @@ package body GL.Objects.Programs is
       end if;
    end Frag_Data_Location;
 
-   procedure Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt) is
-   begin
-      API.Dispatch_Compute (Num_Groups_X, Num_Groups_Y, Num_Groups_Z);
-      Raise_Exception_On_OpenGL_Error;
-   end Dispatch_Compute;
-
-   procedure Memory_Barrier (Barriers : Barrier_Kind) is
-      function To_BitField is new Ada.Unchecked_Conversion
-        (Barrier_Kind, GL.Low_Level.Bitfield);
-   begin
-      if Barriers.All_Barrier_Bits then
-         API.Memory_Barrier (16#FFFFFFFF#);
-      else
-         API.Memory_Barrier (To_BitField (Barriers));
-      end if;
-      Raise_Exception_On_OpenGL_Error;
-   end Memory_Barrier;
-
 end GL.Objects.Programs;

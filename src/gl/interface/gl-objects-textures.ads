@@ -195,12 +195,6 @@ package GL.Objects.Textures is
    procedure Set_Active_Unit (Unit : Texture_Unit);
    function Active_Unit return Texture_Unit;
 
-   procedure Bind_Image (Unit    : Texture_Unit; Tex : Texture;
-                         Level   : Mipmap_Level;
-                         Layered : Boolean; Layer : Int;
-                         Acc     : GL.Objects.Access_Kind;
-                         Format  : Pixels.Internal_Format);
-
    function Texture_Unit_Count return Natural;
 
 private
