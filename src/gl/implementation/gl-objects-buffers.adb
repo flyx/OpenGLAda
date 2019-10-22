@@ -202,7 +202,8 @@ package body GL.Objects.Buffers is
 
    procedure Map_Range (Target      : Buffer_Target'Class;
                         Access_Type : Map_Bits;
-                        Offset, Size : Types.Size;
+                        Offset      : Int;
+                        Size        : Types.Size;
                         Pointer : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
@@ -211,7 +212,7 @@ package body GL.Objects.Buffers is
    begin
       Pointer := To_Pointer
         (API.Map_Buffer_Range (Target.Kind, Low_Level.IntPtr (Offset),
-         Low_Level.IntPtr (Size), To_BitField (Access_Type)));
+         Low_Level.SizeIPtr (Size), To_BitField (Access_Type)));
       Raise_Exception_On_OpenGL_Error;
    end Map_Range;
 

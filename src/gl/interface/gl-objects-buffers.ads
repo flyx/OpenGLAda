@@ -54,7 +54,8 @@ package GL.Objects.Buffers is
       with package Pointers is new Interfaces.C.Pointers (<>);
    procedure Map_Range (Target      : Buffer_Target'Class;
                         Access_Type : Map_Bits;
-                        Offset, Size : Types.Size;
+                        Offset      : Int;
+                        Size        : Types.Size;
                         Pointer : out Pointers.Pointer);
 
    procedure Unmap (Target : Buffer_Target);
