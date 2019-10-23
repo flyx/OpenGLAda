@@ -59,6 +59,8 @@ package GL.Objects.Buffers is
                         Pointer : out Pointers.Pointer);
 
    procedure Unmap (Target : Buffer_Target);
+   procedure Flush_Mapped_Buffer_Range (Target : Buffer_Target'Class;
+                                        Offset : Int; Size : Types.Size);
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);

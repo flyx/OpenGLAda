@@ -884,6 +884,11 @@ spec GL.API is
      (Buffer : UInt; Offset : Low_Level.IntPtr; Length : Low_Level.SizeIPtr)
      with Dynamic => "glInvalidateBufferSubData",
           Wrapper => "GL.Objects.Buffers.Invalidate_Sub_Data";
+   procedure Flush_Mapped_Buffer_Range
+    (Target : Low_Level.Enums.Buffer_Kind; Offset : Low_Level.IntPtr;
+     Length   : Low_Level.SizeIPtr) with
+    Dynamic => "glFlushMappedBufferRange",
+    Wrapper => "GL.Objects.Buffers.Flush_Mapped_Buffer_Range";
 
    -----------------------------------------------------------------------------
    --                           Vertex Array Objects                          --

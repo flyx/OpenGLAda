@@ -222,6 +222,14 @@ package body GL.Objects.Buffers is
       Raise_Exception_On_OpenGL_Error;
    end Unmap;
 
+   procedure Flush_Mapped_Buffer_Range (Target : Buffer_Target'Class;
+                                        Offset : Int; Size : Types.Size) is
+   begin
+      API.Flush_Mapped_Buffer_Range (Target.Kind, Low_Level.IntPtr (Offset),
+                                     Low_Level.SizeIPtr (Size));
+      Raise_Exception_On_OpenGL_Error;
+   end Flush_Mapped_Buffer_Range;
+
    function Pointer (Target : Buffer_Target'Class) return Pointers.Pointer is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
