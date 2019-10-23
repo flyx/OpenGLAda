@@ -50,6 +50,9 @@ package Maths is
    function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
                                 return GL.Types.Singles.Matrix4;
    function Radians (Angle : Degree) return Radian;
+   function Random_Float return Single;
+   function Random_Vector (Min_Magnitude, Max_Magnitude : Single)
+                           return Singles.Vector3;
    function Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3)
                              return Singles.Matrix4;
 

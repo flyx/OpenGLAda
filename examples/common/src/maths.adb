@@ -1,5 +1,6 @@
 
 with Ada.Numerics;
+with Ada.Numerics.Float_Random;
 
 with Quaternions;
 
@@ -13,6 +14,7 @@ package body Maths is
 
     Zero_Matrix4 : constant GL.Types.Singles.Matrix4 :=
                      (others => (others => 0.0));
+    Gen : Ada.Numerics.Float_Random.Generator;
 
     --  ------------------------------------------------------------------------
 
@@ -199,6 +201,31 @@ package body Maths is
     end Radians;
 
     --  ------------------------------------------------------------------------
+
+      function Random_Float return Single is
+        use Ada.Numerics.Float_Random;
+    begin
+        return 2.0 * Single (Random (Gen)) - 1.0;
+    end Random_Float;
+
+    --  ------------------------------------------------------------------------
+
+    function Random_Vector (Min_Magnitude, Max_Magnitude : Single)
+                            return Singles.Vector3 is
+      use Ada.Numerics.Float_Random;
+      use GL.Types.Singles;
+      R_Vector : Vector3 := (2.0 * Single (Random (Gen)) - 1.0,
+                             2.0 * Single (Random (Gen)) - 1.0,
+                             2.0 * Single (Random (Gen)) - 1.0);
+   begin
+      R_Vector := Maths.Normalized (R_Vector);
+      R_Vector := R_Vector * (Random_Float *
+                              (Max_Magnitude - Min_Magnitude) + Min_Magnitude);
+      return R_Vector;
+   end Random_Vector;
+
+   --  ------------------------------------------------------------------------
+
     --  Rotation_Matrix is based on "Quaternians and spatial rotation" by
     --  en.m.wikipedia.org, with the matrix transposed
 
