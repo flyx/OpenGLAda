@@ -20,8 +20,6 @@ package GL.Objects.Buffers is
       Invalidate_Buffer : Boolean := False;
       Flush_Explicit    : Boolean := False;
       Unsynchronized    : Boolean := False;
-      Persistent        : Boolean := False;
-      Coherent          : Boolean := False;
    end record;
 
    type Buffer_Target (<>) is tagged limited private;
@@ -154,8 +152,6 @@ private
       Invalidate_Buffer at 0 range 3 .. 3;
       Flush_Explicit    at 0 range 4 .. 4;
       Unsynchronized    at 0 range 5 .. 5;
-      Persistent        at 0 range 6 .. 6;
-      Coherent          at 0 range 7 .. 7;
    end record;
    for Map_Bits'Size use Low_Level.Bitfield'Size;
 
