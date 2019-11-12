@@ -243,6 +243,18 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
+   procedure Begin_Query (Target : GL.Low_Level.Enums.Query_Param; Id : UInt) is
+   begin
+      API.Begin_Query (Target, Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Begin_Query;
+
+   procedure End_Query (Target : GL.Low_Level.Enums.Query_Param) is
+   begin
+      API.End_Query (Target);
+      Raise_Exception_On_OpenGL_Error;
+   end End_Query;
+
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size is
       Ret : Size := 0;

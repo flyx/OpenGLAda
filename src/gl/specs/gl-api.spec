@@ -1104,7 +1104,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length",
      Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback",
-     Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
+     Wrapper => "GL.Objects.Programs.End_Transform_Feedback",
      Wrapper => "GL.Objects.Programs.Begin_Query",
      Wrapper => "GL.Objects.Programs.End_Query";
    procedure Attach_Shader (Program, Shader : UInt) with
@@ -1205,12 +1205,12 @@ spec GL.API is
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
-   procedure Begin_Query (Target : Enums.Query_Param, Id : UInt) with
-     Dynamic => "glBeginQuery,
+  procedure Begin_Query (Target : Low_Level.Enums.Query_Param; Id : UInt) with
+     Dynamic => "glBeginQuery",
      Wrapper => "GL.Objects.Programs.Begin_Query";
-   procedure End_Query (Target : Enums.Query_Param) with
+   procedure End_Query (Target : Low_Level.Enums.Query_Param) with
      Dynamic => "glEndQuery",
-     Wrapper => "GL.Objects.Programs.Query";
+     Wrapper => "GL.Objects.Programs.End_Query";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --

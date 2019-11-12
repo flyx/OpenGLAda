@@ -11,7 +11,7 @@ package body GL.Objects.Queries is
    procedure Internal_Create_Id (Object : Query_Object; Id : out UInt) is
       pragma Unreferenced (Object);
    begin
-      Gen_Vertex_Arrays (1, Id);
+      Gen_Query_Arrays (1, Id);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Create_Id;
 
