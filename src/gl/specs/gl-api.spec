@@ -1039,6 +1039,16 @@ spec GL.API is
      Wrapper => "GL.Objects.Framebuffers.Default_Fixed_Sample_Locations";
 
    -----------------------------------------------------------------------------
+   --                             Query Objects                              --
+   -----------------------------------------------------------------------------
+
+   procedure Gen_Query_Objects (N : Size; Queries : out UInt) with
+     Dynamic => "glGenQueries",
+     Wrapper => "GL.Objects.Initialize_Id";
+   procedure Delete_Queries (N : Size; Queries : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteQueries";
+
+   -----------------------------------------------------------------------------
    --                                 Shaders                                 --
    -----------------------------------------------------------------------------
 
@@ -1095,6 +1105,8 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varying_Max_Length",
      Wrapper => "GL.Objects.Programs.Begin_Transform_Feedback",
      Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
+     Wrapper => "GL.Objects.Programs.Begin_Query",
+     Wrapper => "GL.Objects.Programs.End_Query";
    procedure Attach_Shader (Program, Shader : UInt) with
      Dynamic => "glAttachShader", Wrapper => "GL.Objects.Programs.Attach";
    procedure Link_Program (Program : UInt) with
@@ -1193,6 +1205,12 @@ spec GL.API is
      Buffer_Mode : GL.Objects.Programs.Buffer_Mode) with
      Dynamic => "glTransformFeedbackVaryings",
      Wrapper => "GL.Objects.Programs.Transform_Feedback_Varyings";
+   procedure Begin_Query (Target : Enums.Query_Param, Id : UInt) with
+     Dynamic => "glBeginQuery,
+     Wrapper => "GL.Objects.Programs.Begin_Query";
+   procedure End_Query (Target : Enums.Query_Param) with
+     Dynamic => "glEndQuery",
+     Wrapper => "GL.Objects.Programs.Query";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --
