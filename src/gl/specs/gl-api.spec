@@ -1042,11 +1042,18 @@ spec GL.API is
    --                             Query Objects                              --
    -----------------------------------------------------------------------------
 
-   procedure Gen_Query_Objects (N : Size; Queries : out UInt) with
+   procedure Gen_Queries (N : Size; Queries : out UInt) with
      Dynamic => "glGenQueries",
      Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Queries (N : Size; Queries : Low_Level.UInt_Array) with
      Dynamic => "glDeleteQueries";
+   function Is_Query (Query : UInt) return Boolean with
+     Dynamic => "glIsQuery",
+     Wrapper => "GL.Objects.Queries.Is_Query";
+   procedure Get_Query_Object (Query : UInt; Pname : Low_Level.Enums.Query_Results;
+                               Params : out Int) with
+     Dynamic => "glGetQueryObjectuiv",
+     Wrapper => "GL.Objects.Programs.Get_Query_Object";
 
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --
@@ -1211,6 +1218,15 @@ spec GL.API is
    procedure End_Query (Target : Low_Level.Enums.Query_Param) with
      Dynamic => "glEndQuery",
      Wrapper => "GL.Objects.Programs.End_Query";
+  procedure Begin_Query_Indexed (Target : Low_Level.Enums.Query_Param; Index, Id : UInt) with
+     Dynamic => "glBeginQueryIndexed",
+     Wrapper => "GL.Objects.Programs.Begin_Query_Indexed";
+  procedure End_Query_Indexed (Target : Low_Level.Enums.Query_Param; Index : UInt) with
+     Dynamic => "glEndQueryIndexed",
+     Wrapper => "GL.Objects.Programs.End_Query_Indexed";
+  procedure Query_Counter (Id: UInt; Target : Low_Level.Enums.Query_Param) with
+     Dynamic => "glQueryCounter",
+     Wrapper => "GL.Objects.Programs.Query_Counter";
 
    -----------------------------------------------------------------------------
    --                              Tessellation                               --

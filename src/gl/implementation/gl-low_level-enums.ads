@@ -40,6 +40,7 @@ package GL.Low_Level.Enums is
 
    type Query_Param is (Time_Elapsed, Samples_Passed, Any_Samples_Passed,
                          Transform_Feedback_Primitives_Written);
+   type Query_Results is (Query_Result, Query_Result_Available);
 
 private
    for Texture_Kind use (Texture_1D       => 16#0DE0#,
@@ -120,5 +121,9 @@ private
                         Any_Samples_Passed                    => 16#8C2F#,
                         Transform_Feedback_Primitives_Written => 16#8C88#);
    for Query_Param'Size use Low_Level.Enum'Size;
+
+   for Query_Results use (Query_Result           => 16#8866#,
+                          Query_Result_Available => 16#8867#);
+   for Query_Results'Size use Low_Level.Enum'Size;
 
 end GL.Low_Level.Enums;

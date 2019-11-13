@@ -93,6 +93,17 @@ package GL.Objects.Programs is
 
    procedure End_Query (Target : GL.Low_Level.Enums.Query_Param);
 
+   procedure Begin_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
+                                  Index, Id : UInt);
+
+   procedure End_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
+                                Index : UInt);
+
+   procedure Query_Counter (Id : UInt; Target : Low_Level.Enums.Query_Param);
+
+   procedure Get_Query_Object
+     (Query : UInt; Pname : GL.Low_Level.Enums.Query_Results; Params : out Int);
+
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size;
    function Active_Subroutine_Uniforms (Object : Program;
