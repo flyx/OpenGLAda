@@ -204,7 +204,7 @@ package body GL.Objects.Buffers is
                         Access_Type : Map_Bits;
                         Offset      : Int;
                         Size        : Types.Size;
-                        Pointer : out Pointers.Pointer) is
+                        Pointer     : out Pointers.Pointer) is
       function To_Pointer is new Ada.Unchecked_Conversion
         (System.Address, Pointers.Pointer);
       function To_BitField is new Ada.Unchecked_Conversion
@@ -250,6 +250,20 @@ package body GL.Objects.Buffers is
                            Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Set_Sub_Data;
+
+   procedure Get_Sub_Data (Target : Buffer_Target'Class;
+                           Offset : Types.Size;
+                           Length : Types.Size;
+                           Data_Ptr : out Pointers.Pointer) is
+      function To_Pointer is new Ada.Unchecked_Conversion
+        (System.Address, Pointers.Pointer);
+      Data_Address : System.Address := System.Null_Address;
+   begin
+      API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
+         Low_Level.SizeIPtr (Length), Data_Address);
+      Raise_Exception_On_OpenGL_Error;
+      Data_Ptr := To_Pointer (Data_Address);
+   end Get_Sub_Data;
 
    function Access_Type (Target : Buffer_Target) return Access_Kind is
       Ret : Access_Kind := Access_Kind'First;

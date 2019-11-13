@@ -57,7 +57,7 @@ package GL.Objects.Buffers is
                         Access_Type : Map_Bits;
                         Offset      : Int;
                         Size        : Types.Size;
-                        Pointer : out Pointers.Pointer);
+                        Pointer     : out Pointers.Pointer);
 
    procedure Unmap (Target : Buffer_Target);
    procedure Flush_Mapped_Buffer_Range (Target : Buffer_Target'Class;
@@ -72,6 +72,13 @@ package GL.Objects.Buffers is
    procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
+
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Get_Sub_Data (Target : Buffer_Target'Class;
+                           Offset : Types.Size;
+                           Length : Types.Size;
+                           Data_Ptr : out Pointers.Pointer);
 
    function Access_Type (Target : Buffer_Target) return Access_Kind;
    function Mapped      (Target : Buffer_Target) return Boolean;

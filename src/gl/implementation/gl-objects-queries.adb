@@ -7,6 +7,48 @@ package body GL.Objects.Queries is
 
 --     Current_Object : Query_Object := Null_Array_Object;
 
+    procedure Begin_Query (Target : GL.Low_Level.Enums.Query_Param;
+                          Object : GL.Objects.Queries.Query_Object) is
+   begin
+      API.Begin_Query (Target, Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Begin_Query;
+
+   procedure End_Query (Target : GL.Low_Level.Enums.Query_Param) is
+   begin
+      API.End_Query (Target);
+      Raise_Exception_On_OpenGL_Error;
+   end End_Query;
+
+    procedure Begin_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
+                                   Index : UInt; Object : GL.Objects.Queries.Query_Object) is
+   begin
+      API.Begin_Query_Indexed (Target, Index, Object.Reference.GL_Id);
+      Raise_Exception_On_OpenGL_Error;
+   end Begin_Query_Indexed;
+
+   procedure End_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
+                                Index : UInt) is
+   begin
+      API.End_Query_Indexed (Target, Index);
+      Raise_Exception_On_OpenGL_Error;
+   end End_Query_Indexed;
+
+   procedure Get_Query_Object
+     (Object : GL.Objects.Queries.Query_Object; Pname : GL.Low_Level.Enums.Query_Results;
+      Params : out Int_Array) is
+   begin
+      API.Get_Query_Object (Object.Reference.GL_Id, Pname, Low_Level.Int_Array (Params));
+      Raise_Exception_On_OpenGL_Error;
+   end Get_Query_Object;
+
+   procedure Query_Counter (Object : GL.Objects.Queries.Query_Object;
+                            Target : Low_Level.Enums.Query_Param) is
+   begin
+      API.Query_Counter (Object.Reference.GL_Id, Target);
+      Raise_Exception_On_OpenGL_Error;
+   end Query_Counter;
+
    overriding
    procedure Internal_Create_Id (Object : Query_Object; Id : out UInt) is
       pragma Unreferenced (Object);
@@ -25,9 +67,7 @@ package body GL.Objects.Queries is
 
    function Is_Query (Query : UInt) return Boolean is
    begin
-      return API.Is_Query (Query);
-      Raise_Exception_On_OpenGL_Error;
-   end Is_Query;
+      return API.Is_Query (Query);   end Is_Query;
 --     function Current_Query_Object return Query_Object is
 --     begin
 --        return Current_Object;

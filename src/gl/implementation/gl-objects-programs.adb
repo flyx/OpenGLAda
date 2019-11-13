@@ -243,45 +243,6 @@ package body GL.Objects.Programs is
       Raise_Exception_On_OpenGL_Error;
    end Transform_Feedback_Varyings;
 
-   procedure Begin_Query (Target : GL.Low_Level.Enums.Query_Param; Id : UInt) is
-   begin
-      API.Begin_Query (Target, Id);
-      Raise_Exception_On_OpenGL_Error;
-   end Begin_Query;
-
-   procedure End_Query (Target : GL.Low_Level.Enums.Query_Param) is
-   begin
-      API.End_Query (Target);
-      Raise_Exception_On_OpenGL_Error;
-   end End_Query;
-
-    procedure Begin_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
-                                   Index, Id : UInt) is
-   begin
-      API.Begin_Query_Indexed (Target, Index, Id);
-      Raise_Exception_On_OpenGL_Error;
-   end Begin_Query_Indexed;
-
-   procedure End_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
-                                Index : UInt) is
-   begin
-      API.End_Query_Indexed (Target, Index);
-      Raise_Exception_On_OpenGL_Error;
-   end End_Query_Indexed;
-
-   procedure Get_Query_Object
-     (Query  : UInt; Pname : GL.Low_Level.Enums.Query_Results;
-      Params : out Int) is
-   begin
-      API.Get_Query_Object (Query, Pname, Params);
-      Raise_Exception_On_OpenGL_Error;
-   end Get_Query_Object;
-
-   procedure Query_Counter (Id : UInt; Target : Low_Level.Enums.Query_Param) is
-   begin
-      API.Query_Counter (Id, Target);
-      Raise_Exception_On_OpenGL_Error;
-   end Query_Counter;
 
 
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)

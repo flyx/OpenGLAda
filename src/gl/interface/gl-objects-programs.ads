@@ -7,7 +7,6 @@ with GL.Objects.Shaders.Lists;
 with GL.Uniforms;
 
 with GL.Low_Level;
-with GL.Low_Level.Enums;
 
 package GL.Objects.Programs is
    pragma Preelaborate;
@@ -89,22 +88,7 @@ package GL.Objects.Programs is
    procedure Transform_Feedback_Varyings
      (Object : Program; Varyings : String; Mode : Buffer_Mode);
 
-   procedure Begin_Query (Target : GL.Low_Level.Enums.Query_Param; Id : UInt);
-
-   procedure End_Query (Target : GL.Low_Level.Enums.Query_Param);
-
-   procedure Begin_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
-                                  Index, Id : UInt);
-
-   procedure End_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
-                                Index : UInt);
-
-   procedure Query_Counter (Id : UInt; Target : Low_Level.Enums.Query_Param);
-
-   procedure Get_Query_Object
-     (Query : UInt; Pname : GL.Low_Level.Enums.Query_Results; Params : out Int);
-
-   function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
+    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size;
    function Active_Subroutine_Uniforms (Object : Program;
                                         Shader : Shaders.Shader_Type)
