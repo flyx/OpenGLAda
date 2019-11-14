@@ -73,12 +73,9 @@ package GL.Objects.Buffers is
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
 
-   generic
-      with package Pointers is new Interfaces.C.Pointers (<>);
    procedure Get_Sub_Data (Target : Buffer_Target'Class;
-                           Offset : Types.Size;
-                           Length : Types.Size;
-                           Data_Ptr : out Pointers.Pointer);
+                           Offset : Types.Int;
+                           Data   : out Types.Single_Array);
 
    function Access_Type (Target : Buffer_Target) return Access_Kind;
    function Mapped      (Target : Buffer_Target) return Boolean;

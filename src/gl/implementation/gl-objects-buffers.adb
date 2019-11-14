@@ -172,7 +172,8 @@ package body GL.Objects.Buffers is
          when UInt_Type => Element_Bytes := 4;
       end case;
       API.Draw_Elements_Base_Vertex (Mode, Count, Index_Type,
-                                     UInt (Low_Level.IntPtr (Element_Bytes * Element_Offset)), Base_Vertex);
+                                     UInt (Low_Level.IntPtr (Element_Bytes * Element_Offset)),
+                                     Base_Vertex);
       Raise_Exception_On_OpenGL_Error;
    end Draw_Elements_Base_Vertex;
 
@@ -252,17 +253,16 @@ package body GL.Objects.Buffers is
    end Set_Sub_Data;
 
    procedure Get_Sub_Data (Target : Buffer_Target'Class;
-                           Offset : Types.Size;
-                           Length : Types.Size;
-                           Data_Ptr : out Pointers.Pointer) is
-      function To_Pointer is new Ada.Unchecked_Conversion
-        (System.Address, Pointers.Pointer);
-      Data_Address : System.Address := System.Null_Address;
+                           Offset : Types.Int;
+                           Data   : out Types.Single_Array) is
+      Array_Length  : constant Types.Size := Data'Length;
+      Data_Array   : Types.Single_Array (1 .. Array_Length);
+      Data_Address : constant System.Address := Data_Array'Address;
    begin
       API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
-         Low_Level.SizeIPtr (Length), Data_Address);
+         Low_Level.SizeIPtr (Array_Length), Data_Address);
       Raise_Exception_On_OpenGL_Error;
-      Data_Ptr := To_Pointer (Data_Address);
+      Data := Data_Array;
    end Get_Sub_Data;
 
    function Access_Type (Target : Buffer_Target) return Access_Kind is

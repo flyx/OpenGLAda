@@ -11,23 +11,24 @@ package GL.Objects.Queries is
    Default_Query : constant Query_Object;
 
    procedure Begin_Query (Target : GL.Low_Level.Enums.Query_Param;
-                          Object : GL.Objects.Queries.Query_Object);
+                          Object : Query_Object);
 
    procedure End_Query (Target : GL.Low_Level.Enums.Query_Param);
 
    procedure Begin_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
-                                  Index : UInt; Object : GL.Objects.Queries.Query_Object);
+                                  Index : UInt; Object : Query_Object);
 
    procedure End_Query_Indexed (Target : GL.Low_Level.Enums.Query_Param;
                                 Index : UInt);
 
-   procedure Query_Counter (Object : GL.Objects.Queries.Query_Object;
-                            Target : Low_Level.Enums.Query_Param);
-
-   procedure Get_Query_Object (Object : GL.Objects.Queries.Query_Object;
+   procedure Get_Query_Object (Object : Query_Object;
                                Pname : GL.Low_Level.Enums.Query_Results;
-                               Params : out Int_Array);
+                               Params : out UInt_Array);
 
+   function Is_Query (Query : Query_Object) return Boolean;
+
+   procedure Query_Counter (Object : Query_Object;
+                            Target : Low_Level.Enums.Query_Param);
 private
 
    type Query_Object is new GL_Object with null record;
@@ -37,9 +38,6 @@ private
 
    overriding
    procedure Internal_Release_Id (Object : Query_Object; Id : UInt);
-
-   function Is_Query (Query : UInt) return Boolean;
-
 
    Default_Query : constant Query_Object :=
                      Query_Object'(Ada.Finalization.Controlled with Reference =>
