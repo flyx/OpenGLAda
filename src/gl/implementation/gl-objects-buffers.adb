@@ -260,7 +260,7 @@ package body GL.Objects.Buffers is
       Data_Address : constant System.Address := Data_Array'Address;
    begin
       API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
-         Low_Level.SizeIPtr (Array_Length), Data_Address);
+         Low_Level.SizeIPtr (Data_Array'Size / 8), Data_Address);
       Raise_Exception_On_OpenGL_Error;
       Data := Data_Array;
    end Get_Sub_Data;
