@@ -255,8 +255,8 @@ package body GL.Objects.Buffers is
    procedure Get_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Int;
                            Data   : out Types.Single_Array) is
-      Array_Length  : constant Types.Size := Data'Length;
-      Data_Array   : Types.Single_Array (1 .. Array_Length);
+      Array_Length : constant Types.Size := Data'Length;
+      Data_Array   : Types.Single_Array (1 .. Array_Length) := (others => 88.0);
       Data_Address : constant System.Address := Data_Array'Address;
    begin
       API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),

@@ -23,7 +23,7 @@ package GL.Objects.Queries is
 
    procedure Get_Query_Object (Object : Query_Object;
                                Pname : GL.Low_Level.Enums.Query_Results;
-                               Params : out UInt_Array);
+                               Params : out UInt);
 
    function Is_Query (Query : Query_Object) return Boolean;
 

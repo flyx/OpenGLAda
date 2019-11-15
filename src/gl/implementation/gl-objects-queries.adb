@@ -36,9 +36,9 @@ package body GL.Objects.Queries is
 
    procedure Get_Query_Object
      (Object : Query_Object; Pname : GL.Low_Level.Enums.Query_Results;
-      Params : out UInt_Array) is
+      Params : out UInt) is
    begin
-      API.Get_Query_Object (Object.Reference.GL_Id, Pname, Low_Level.UInt_Array (Params));
+      API.Get_Query_Object (Object.Reference.GL_Id, Pname, Params);
       Raise_Exception_On_OpenGL_Error;
    end Get_Query_Object;
 
