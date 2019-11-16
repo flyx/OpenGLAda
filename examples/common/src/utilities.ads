@@ -23,6 +23,8 @@ package Utilities is
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Int_Pointers);
    procedure Load_Element_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.UInt_Pointers);
+   procedure Load_Singles_Buffer is new
+     GL.Objects.Buffers.Load_To_Buffer (GL.Types.Single_Pointers);
    procedure Load_Texture_Buffer is new
      GL.Objects.Buffers.Load_To_Buffer (GL.Types.Singles.Matrix4_Pointers);
    procedure Load_Vertex_Buffer is new
