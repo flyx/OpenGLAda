@@ -44,6 +44,7 @@ package Maths is
      (View_Angle : Degree; Width, Height, Z_Near, Z_Far : Single;
       Transform  : out Singles.Matrix4);
    function Length (V : Singles.Vector3) return Single;
+   function Norm (V : GL.Types.Singles.Vector3) return GL.Types.Single;
    function Normalized (V : Singles.Vector3) return Singles.Vector3;
    function Perspective_Matrix (View_Angle : Degree; Aspect, Near, Far : Single)
                                 return Singles.Matrix4;

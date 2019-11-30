@@ -146,6 +146,13 @@ package body Maths is
 
     --  ------------------------------------------------------------------------
 
+    function Norm (V : GL.Types.Singles.Vector3) return GL.Types.Single is
+    begin
+        return Length (V);
+    end Norm;
+
+    --  ------------------------------------------------------------------------
+
     function Normalized (V : Singles.Vector3) return Singles.Vector3 is
         use GL;
         L : constant Single := Length (V);
