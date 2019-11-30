@@ -88,10 +88,6 @@ package GL.Objects.Programs is
    procedure Transform_Feedback_Varyings
      (Object : Program; Varyings : String; Mode : Buffer_Mode);
 
-   procedure Begin_Query (Target : GL.Enums.Query_Param, Id : UInt);
-
-   procedure End_Query (Target : GL.Enums.Query_Param);
-
    function Active_Subroutines (Object : Program; Shader : Shaders.Shader_Type)
                                 return Size;
    function Active_Subroutine_Uniforms (Object : Program;
