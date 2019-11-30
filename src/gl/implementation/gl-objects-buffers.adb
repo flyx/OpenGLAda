@@ -61,9 +61,7 @@ package body GL.Objects.Buffers is
       Cursor : constant Transform_Buffer_Maps.Cursor
         := Current_Transform_Buffers.Find (Target_Kind);
    begin
-      if Cursor = Transform_Buffer_Maps.No_Element or else
-        Transform_Buffer_Maps.Element (Cursor).Reference.GL_Id /= Object.Reference.GL_Id
-        then
+      if Cursor = Transform_Buffer_Maps.No_Element then
          API.Bind_Transform_Feedback (Target_Kind, Object.Reference.GL_Id);
          Raise_Exception_On_OpenGL_Error;
          if Cursor = Transform_Buffer_Maps.No_Element then
