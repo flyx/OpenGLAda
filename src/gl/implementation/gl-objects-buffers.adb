@@ -1,7 +1,7 @@
 --  part of OpenGLAda, (c) 2017 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with Ada.Containers.Indefinite_Hashed_Maps;
+with Ada.Containers.Indefinite_Ordered_Maps;
 with Ada.Unchecked_Conversion;
 
 with System;
@@ -12,28 +12,16 @@ with GL.Enums;
 package body GL.Objects.Buffers is
    use type Low_Level.Enums.Buffer_Kind;
 
-   function Hash (Key : Low_Level.Enums.Buffer_Kind)
-     return Ada.Containers.Hash_Type is
-      function Value is new Ada.Unchecked_Conversion
-        (Source => Low_Level.Enums.Buffer_Kind, Target => Low_Level.Enum);
-   begin
-      return Ada.Containers.Hash_Type (Value (Key));
-   end Hash;
-
-   package Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+   package Buffer_Maps is new Ada.Containers.Indefinite_Ordered_Maps
       (Key_Type     => Low_Level.Enums.Buffer_Kind,
-       Element_Type => Buffer'Class,
-       Hash         => Hash,
-       Equivalent_Keys => Low_Level.Enums."=");
+       Element_Type => Buffer'Class);
    use type Buffer_Maps.Cursor;
 
    Current_Buffers : Buffer_Maps.Map;
 
-   package Transform_Buffer_Maps is new Ada.Containers.Indefinite_Hashed_Maps
+   package Transform_Buffer_Maps is new Ada.Containers.Indefinite_Ordered_Maps
       (Key_Type     => Low_Level.Enums.Buffer_Kind,
-       Element_Type => Transform_Buffer'Class,
-       Hash         => Hash,
-       Equivalent_Keys => Low_Level.Enums."=");
+       Element_Type => Transform_Buffer'Class);
    use type Transform_Buffer_Maps.Cursor;
 
    Current_Transform_Buffers : Transform_Buffer_Maps.Map;
