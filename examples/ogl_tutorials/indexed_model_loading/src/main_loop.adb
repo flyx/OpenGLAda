@@ -162,7 +162,7 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Vertex_Shader),
          Program_Loader.Src ("src/shaders/Texture_Fragment_Shader.glsl",
            Fragment_Shader)));
-      Utilities.Show_Shader_Program_Data (Render_Program);
+--        Utilities.Show_Shader_Program_Data (Render_Program);
 
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MVP");
