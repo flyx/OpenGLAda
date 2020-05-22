@@ -21,10 +21,8 @@ package body Load_VB_Object is
    UShort_Size   : constant UInt := UShort'Size / 8;
 
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                           Header : VBM_Header;
                            Object : in out VB_Object);
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                             Header : VBM_Header;
                              Object : in out VB_Object);
    procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                             Header : VBM_Header;
@@ -34,8 +32,6 @@ package body Load_VB_Object is
                               Byte_Count    : in out UInt);
    procedure Set_Attribute_Pointers (VBM_Object : VB_Object;
                                      Vertex_Index, Normal_Index, Tex_Coord0_Index : Int);
---     function To_Vector4_Array (Raw_Data : Image_Data; Num_Vertices : UInt)
---                                return GL.Types.Singles.Vector4_Array;
 
    --  ------------------------------------------------------------------------
 
@@ -118,12 +114,12 @@ package body Load_VB_Object is
 
          Set_Attribute_Pointers (VBM_Object, Vertex_Index, Normal_Index,
                                  Tex_Coord0_Index);
-         Load_Indices (Data_Stream, VBM_Object.Header, VBM_Object);
+         Load_Indices (Data_Stream, VBM_Object);
 
          -- unbind the current array object
          GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
 
-         Load_Materials (Data_Stream, VBM_Object.Header, VBM_Object);
+         Load_Materials (Data_Stream, VBM_Object);
       end;  --  declare block
       Close (File_ID);
       Result := True;
@@ -141,9 +137,9 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Load_Indices (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                           Header : VBM_Header;
                            Object : in out VB_Object) is
       use GL.Objects.Buffers;
+      Header            : constant VBM_Header := Object.Header;
       Element_Size      : UInt;
       Element_Data_Size : UInt;
    begin
@@ -175,8 +171,8 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                             Header : VBM_Header;
                              Object : in out VB_Object) is
+      Header              : constant VBM_Header := Object.Header;
       Material_Record     : VBM_Material;
       Record_Count        : UInt := 0;
       Materials_Data_Size : UInt;
