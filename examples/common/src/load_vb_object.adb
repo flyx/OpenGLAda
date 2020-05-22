@@ -25,7 +25,6 @@ package body Load_VB_Object is
    procedure Load_Materials (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
                              Object : in out VB_Object);
    procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                            Header : VBM_Header;
                             Object : in out VB_Object);
    procedure Load_VBM_Header (Header_Stream : Ada.Streams.Stream_IO.Stream_Access;
                               Header        : out VBM_Header;
@@ -188,7 +187,7 @@ package body Load_VB_Object is
                Put_Line ("Load_Materials; EOF reached before Materials loading completed.");
             end if;
          end loop;
-         Load_Textures (Data_Stream, Header, Object);
+         Load_Textures (Data_Stream, Object);
       end if;
 
    exception
@@ -200,8 +199,8 @@ package body Load_VB_Object is
    --  ------------------------------------------------------------------------
 
    procedure Load_Textures (Data_Stream : Ada.Streams.Stream_IO.Stream_Access;
-                            Header : VBM_Header;
                             Object : in out VB_Object) is
+      Header             : constant VBM_Header := Object.Header;
       Texture_Record     : Material_Texture;
       Record_Count       : UInt := 0;
       Textures_Data_Size : UInt;
