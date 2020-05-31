@@ -1,0 +1,15 @@
+with  "../../common/common.gpr";
+with "../../../opengl.gpr";
+limited with "../../../opengl-glfw.gpr";
+
+project Particles is
+
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj/";
+   for Exec_Dir use ".";
+   for Main use ("particle_display.adb");
+
+   package Compiler renames OpenGL.Compiler;
+
+end Particles;
+

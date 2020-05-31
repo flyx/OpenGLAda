@@ -334,14 +334,14 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
          Vertex_Shader),
          Program_Loader.Src ("src/shaders/standard_fragment_shader.glsl",
            Fragment_Shader)));
-      Utilities.Show_Shader_Program_Data (Render_Program);
+--        Utilities.Show_Shader_Program_Data (Render_Program);
 
       Picking_Program := Program_Loader.Program_From
         ((Program_Loader.Src ("src/shaders/picking_vertex_shader.glsl",
          Vertex_Shader),
          Program_Loader.Src ("src/shaders/picking_fragment_shader.glsl",
            Fragment_Shader)));
-      Utilities.Show_Shader_Program_Data (Picking_Program);
+--        Utilities.Show_Shader_Program_Data (Picking_Program);
 
       MVP_Matrix_ID := GL.Objects.Programs.Uniform_Location
         (Render_Program, "MVP");

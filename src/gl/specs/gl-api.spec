@@ -239,6 +239,12 @@ spec GL.API is
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int) with
      Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode; Buffer : UInt) with
+    Static  => "glDrawTransformFeedback",
+    Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback";
+   procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode; Buffer : UInt; Stream : UInt) with
+    Static  => "glDrawTransformFeedbackStream",
+    Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback_Stream";
    procedure Primitive_Restart_Index (Index : UInt) with
      Dynamic => "glPrimitiveRestartIndex",
      Wrapper => "GL.Objects.Vertex_Arrays.Set_Primitive_Restart_Index";
@@ -368,6 +374,8 @@ spec GL.API is
      Static => "glRasterPos3dv", Wrapper => "GL.Raster.Set_Pos";
    procedure Raster_Pos2 (Value : Types.Doubles.Vector2) with
      Static => "glRasterPos2dv", Wrapper => "GL.Raster.Set_Pos";
+   procedure Set_Polygon_Offset (Factor, Units : Single) with
+    Static => "glPolygonOffset", Wrapper => "GL.Rasterization.Set_Polygon_Offset";
 
    -----------------------------------------------------------------------------
    --                                Buffers                                  --
@@ -598,7 +606,6 @@ spec GL.API is
      Wrapper => "GL.Objects.Textures.Compressed";
    procedure Gen_Textures (N : Size; Textures : out UInt) with
      Static => "glGenTextures", Wrapper => "GL.Objects.Initialize_Id";
-
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
                            Texture : UInt) with
      Static => "glBindTexture", Wrapper => "GL.Objects.Textures.Bind";
@@ -807,10 +814,16 @@ spec GL.API is
 
    procedure Gen_Buffers (N : Size; Buffers : out UInt) with
      Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Initialize_Id";
+   procedure Gen_Transform_Feedbacks (N : Size; Buffers : out UInt) with
+     Dynamic => "glGenTransformFeedbacks", Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) with
      Dynamic => "glDeleteBuffers";
+   procedure Delete_Transform_Feedbacks (N : Size; Buffers : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteTransformFeedbacks";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
+   procedure Bind_Transform_Feedback (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
+     with Dynamic =>"glBindTransformFeedback", Wrapper => "GL.Objects.Buffers.Bind_Transform_Feedback";
    procedure Bind_Buffer_Base (Target : Low_Level.Enums.Buffer_Kind; Index : UInt; Buffer : UInt)
     with Dynamic =>"glBindBufferBase", Wrapper => "GL.Objects.Buffers.Bind_Buffer_Base";
    procedure Buffer_Data
@@ -828,6 +841,11 @@ spec GL.API is
    function Map_Buffer (Target : Low_Level.Enums.Buffer_Kind;
                         Acc : Objects.Access_Kind) return System.Address with
      Dynamic => "glMapBuffer", Wrapper => "GL.Objects.Buffers.Map";
+   function Map_Buffer_Range (Target : Low_Level.Enums.Buffer_Kind;
+                              Offset : Low_Level.IntPtr;
+                              Size   : Low_Level.SizeIPtr;
+                              Acc    : Low_Level.Bitfield) return System.Address with
+     Dynamic => "glMapBufferRange", Wrapper => "GL.Objects.Buffers.Map_Range";
    procedure Buffer_Pointer (Target : Low_Level.Enums.Buffer_Kind;
                              Pname  : Enums.Buffer_Pointer_Param;
                              Params : out System.Address) with
@@ -866,6 +884,11 @@ spec GL.API is
      (Buffer : UInt; Offset : Low_Level.IntPtr; Length : Low_Level.SizeIPtr)
      with Dynamic => "glInvalidateBufferSubData",
           Wrapper => "GL.Objects.Buffers.Invalidate_Sub_Data";
+   procedure Flush_Mapped_Buffer_Range
+    (Target : Low_Level.Enums.Buffer_Kind; Offset : Low_Level.IntPtr;
+     Length   : Low_Level.SizeIPtr) with
+    Dynamic => "glFlushMappedBufferRange",
+    Wrapper => "GL.Objects.Buffers.Flush_Mapped_Buffer_Range";
 
    -----------------------------------------------------------------------------
    --                           Vertex Array Objects                          --
@@ -1161,7 +1184,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Programs.End_Transform_Feedback";
    procedure Get_Transform_Feedback_Varying
     (Program :  UInt; Index : Int; Buffer_Size : Size;
-     Length : out Size; V_Length : out Size; V_Type : out GL.Objects.Programs.Buffer_Mode;
+     Length : out Size; V_Length : out Size; V_Type : out GL.Objects.Programs.Active_Attribute;
      Name : in out Interfaces.C.char_array) with
      Dynamic => "glGetTransformFeedbackVarying",
      Wrapper => "GL.Objects.Programs.Get_Transform_Feedback_Varying";

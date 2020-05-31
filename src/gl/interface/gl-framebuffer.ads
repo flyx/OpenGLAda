@@ -17,7 +17,7 @@ package GL.Framebuffer is
                      Copy_Inverted, Or_Inverted, Nand, Set);
 
    subtype Read_Buffer_Selector is Buffers.Color_Buffer_Selector range
-     Buffers.Front_Left .. Buffers.Right;
+     Buffers.None .. Buffers.Right;
 
    -- this package provides functionality the works implicitly on the current
    -- framebuffer. for working with framebuffer objects,
