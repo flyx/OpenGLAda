@@ -20,6 +20,16 @@ package GL.Objects.Programs is
 
    type Program is new GL_Object with private;
 
+   type Active_Attribute is (Int_Type, Unsigned_Int_Type,
+                             Float_Vec2_Type, Float_Vec3_Type, Float_Vec4_Type,
+                             Int_Vec2_Type, Int_Vec3_Type, Int_Vec4_Type,
+                             Float_Mat2_Type, Float_Mat3_Type, Float_Mat4_Type,
+                             Float_Mat2x3_Type, Float_Mat2x4_Type,
+                             Float_Mat3x2_Type, Float_Mat3x4_Type,
+                             Float_Mat4x2_Type, Float_Mat4x3_Type,
+                             Unsigned_Int_Vec2_Type,
+                             Unsigned_Int_Vec3_Type, Unsigned_Int_Vec4_Type);
+
    type Tessellation_Primitive_Mode is (Triangles, Quads, Isolines);
 
    type Tessellation_Spacing is (Equal, Fractional_Odd, Fractional_Even);
@@ -73,7 +83,7 @@ package GL.Objects.Programs is
 
    procedure Get_Transform_Feedback_Varying
      (Object : Program; Index : Int; Length, V_Length : out Size;
-      V_Type : out Buffer_Mode; Name : out String);
+      V_Type : out Active_Attribute; Name : out String);
 
    procedure Transform_Feedback_Varyings
      (Object : Program; Varyings : String; Mode : Buffer_Mode);
@@ -148,5 +158,26 @@ private
    for Buffer_Mode use (Interleaved_Attribs => 16#8C8C#,
                         Separate_Attribs    => 16#8C8D#);
    for Buffer_Mode'Size use Low_Level.Enum'Size;
+
+   for Active_Attribute use (Int_Type               => 16#1404#,
+                             Unsigned_Int_Type      => 16#1405#,
+                             Float_Vec2_Type        => 16#8B50#,
+                             Float_Vec3_Type        => 16#8B51#,
+                             Float_Vec4_Type        => 16#8B52#,
+                             Int_Vec2_Type          => 16#8B53#,
+                             Int_Vec3_Type          => 16#8B54#,
+                             Int_Vec4_Type          => 16#8B55#,
+                             Float_Mat2_Type        => 16#8B5A#,
+                             Float_Mat3_Type        => 16#8B5C#,
+                             Float_Mat4_Type        => 16#8B5D#,
+                             Float_Mat2x3_Type      => 16#8B65#,
+                             Float_Mat2x4_Type      => 16#8B66#,
+                             Float_Mat3x2_Type      => 16#8B67#,
+                             Float_Mat3x4_Type      => 16#8B68#,
+                             Float_Mat4x2_Type      => 16#8B69#,
+                             Float_Mat4x3_Type      => 16#8B6A#,
+                             Unsigned_Int_Vec2_Type => 16#8DC6#,
+                             Unsigned_Int_Vec3_Type => 16#8DC7#,
+                             Unsigned_Int_Vec4_Type => 16#8DC8#);
 
 end GL.Objects.Programs;

@@ -221,7 +221,8 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       Name_Length    : GL.Types.Size := 99;
       V_Length       : GL.Types.Size := 99;
       Max_Length     : Int;
-      V_Type         : Buffer_Mode;
+      V_Type         : Active_Attribute;
+      Mode           : Buffer_Mode;
    begin
       VAO (1).Initialize_Id;
       VAO (1).Bind;
@@ -243,8 +244,6 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Link failed");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
-      else
-         Put_Line ("Setup, Update_Program Link ok");
       end if;
 
       GL.Objects.Programs.Use_Program  (Update_Program);
@@ -254,14 +253,12 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
       if not GL.Objects.Programs.Link_Status (Update_Program) then
          Put_Line ("Setup, Update_Program Transform_Feedback_Varyings Link failed.");
          Put_Line (GL.Objects.Programs.Info_Log (Update_Program));
-      else
-         Put_Line ("Setup, Update_Program Transform_Feedback_Varyings Link ok");
       end if;
 
-      V_Type := Transform_Feedback_Buffer_Mode (Update_Program);
+      Mode := Transform_Feedback_Buffer_Mode (Update_Program);
       V_Length := Transform_Feedback_Varyings_Size (Update_Program);
       Max_Length := Transform_Feedback_Varying_Max_Length (Update_Program);
-      Put_Line ("V_Type: " & Buffer_Mode'Image (V_Type) & "   V_Length: " &
+      Put_Line ("Mode: " & Buffer_Mode'Image (Mode) & "   V_Length: " &
                   Int'Image (V_Length) & "   Max Length: " & Int'Image (Max_Length));
 
       Get_Transform_Feedback_Varying (Object   => Update_Program,
@@ -273,9 +270,10 @@ procedure Main_Loop (Main_Window :  in out Glfw.Windows.Window) is
 
       Put_Line ("Name: " & Name);
       Put_Line ("Length: " & Int'Image (Name_Length));
-      Put_Line ("V_Length" &  Int'Image (V_Length));
-      if V_Type = Interleaved_Attribs or V_Type = Separate_Attribs then
-         Put_Line ("V_Type: "  & Buffer_Mode'Image (V_Type));
+      Put_Line ("V_Length:" &  Int'Image (V_Length));
+      Put_Line ("V_Type: " &  Active_Attribute'Image (V_Type));
+      if Mode = Interleaved_Attribs or Mode = Separate_Attribs then
+         Put_Line ("Mode: "  & Buffer_Mode'Image (Mode));
       else
          Put_Line ("Setup, Get_Transform_Feedback_Varying returned an invalid Buffer_Mode value: "
                   & Integer'Image (V_Type'Enum_Rep));

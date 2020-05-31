@@ -87,7 +87,6 @@ procedure Main_Loop (Main_Window : in out Glfw.Windows.Window) is
         Colour_Location := GL.Objects.Programs.Attrib_Location
           (Shader_Program, "colour");
 
-        Utilities.Show_Shader_Program_Data (Shader_Program);
     exception
         when others =>
             Put_Line ("An exception occurred in Setup_Graphic.");

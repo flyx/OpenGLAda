@@ -33,6 +33,8 @@ package Maths is
 
    function Cube_Root (Value : Single) return Single;
    function Degrees (Angle : Radian) return Degree;
+   function Frustum_Matrix (Left, Right, Bottom, Top, Near, Far : GL.Types.Single)
+                            return GL.Types.Singles.Matrix4;
    procedure Init_Lookat_Transform
      (Position, Target, Up : Singles.Vector3; Look_At : out Singles.Matrix4);
    procedure Init_Orthographic_Transform (Top, Bottom, Left, Right,
@@ -48,6 +50,9 @@ package Maths is
    function Perspective_Matrix (Top, Bottom, Left, Right, Near, Far : Single)
                                 return GL.Types.Singles.Matrix4;
    function Radians (Angle : Degree) return Radian;
+   function Random_Float return Single;
+   function Random_Vector (Min_Magnitude, Max_Magnitude : Single)
+                           return Singles.Vector3;
    function Rotation_Matrix (Angle : Degree; Axis : Singles.Vector3)
                              return Singles.Matrix4;
 
