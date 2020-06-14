@@ -240,11 +240,11 @@ spec GL.API is
                                         Base_Vertex    : Int) with
      Dynamic => "glDrawElementsBaseVertex", Wrapper => "GL.Objects.Buffers.Draw_Elements_Base_Vertex";
    procedure Draw_Transform_Feedback (Mode : Connection_Mode; Buffer : UInt) with
-    Static  => "glDrawTransformFeedback",
-    Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback";
+     Dynamic => "glDrawTransformFeedback",
+     Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback";
    procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode; Buffer : UInt; Stream : UInt) with
-    Static  => "glDrawTransformFeedbackStream",
-    Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback_Stream";
+     Dynamic => "glDrawTransformFeedbackStream",
+     Wrapper => "GL.Objects.Buffers.Draw_Transform_Feedback_Stream";
    procedure Primitive_Restart_Index (Index : UInt) with
      Dynamic => "glPrimitiveRestartIndex",
      Wrapper => "GL.Objects.Vertex_Arrays.Set_Primitive_Restart_Index";

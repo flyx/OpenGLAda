@@ -2,5 +2,6 @@
 aggregate project OpenGLAda is
    for Project_Files use
      ("opengl.gpr", "opengl-glfw.gpr", "opengl-text.gpr",
-      "opengl-images.gpr", "FreeTypeAda/freetype.gpr");
+      "opengl-images.gpr", "deps/FreeTypeAda/freetype.gpr",
+      "deps/gid/gid.gpr");
 end OpenGLAda;

@@ -18,10 +18,6 @@ bindings to the following OpenGL-related libraries:
    significant differences between these two, the most prominent being that
    GLFW 3 can handle multiple windows. You can set the desired GLFW version
    for the binding at compile time.
- * [SOIL][10] (`opengl-soil.gpr`): The *Simple OpenGL Image Library*. This is a
-   very tiny library for loading image files into OpenGL textures. It is public
-   domain. Because it's so tiny, it is linked directly into OpenGLAda. Its
-   source is included in the OpenGLAda sources.
  * [FTGL][11] (`opengl-ftgl.gpr`, **deprecated**): A library built on top of
    FreeType that provides an API to load TrueType fonts and render text with
    OpenGL. The Ada wrapper only provides basic functionality to load fonts and
@@ -32,8 +28,12 @@ bindings to the following OpenGL-related libraries:
    and OpenType fonts. OpenGLAda includes [FreeTypeAda][20], a wrapper for the
    FreeType library. The project `opengl-text.gpr` provides an original
    higher-level API for rendering text based on FreeTypeAda.
+ * [GID][10] (`opengl-images.gpr`): The *Generic Image Decoder*. This is an
+   original Ada library for loading common image formats, which is included in
+   OpenGLAda. The project `opengl-images.gpr` provides a simple subroutine to
+   generate OpenGL textures with GID.
 
-OpenGLAda supports MacOSX, Windows and X11-based systems. API documentation can
+OpenGLAda supports macOS, Windows and X11-based systems. API documentation can
 be found on the [project's homepage][4].
 
 ## Windows Installer
@@ -82,7 +82,7 @@ in the form of `-X`*name*`=`*value*`). The available variables are:
 
     - `x11`: X Windowing System (Linux, BSD, etc)
     - `windows`: Microsoft Windows
-    - `quartz`: Quartz Compositor (OS X)
+    - `quartz`: Quartz Compositor (macOS)
 
  * `mode`: May take one of the following values:
 
@@ -184,7 +184,7 @@ changes.
 ## License
 
 OpenGLAda is distributed under the terms of the [MIT License][7]. The Ada 2012
-logo that is used in the SOIL tests is distributed under the terms of the
+logo that is used in the images tests is distributed under the terms of the
 [CC BY-ND 3.0][8] license, the original author is [AdaCore][9].
 
  [1]: http://libre.adacore.com/
@@ -196,7 +196,7 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [7]: COPYING
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
- [10]: http://www.lonesock.net/soil.html
+ [10]: https://gen-img-dec.sourceforge.io/
  [11]: https://sourceforge.net/projects/ftgl/
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: http://flyx.github.io/OpenGLAda/setup.html
