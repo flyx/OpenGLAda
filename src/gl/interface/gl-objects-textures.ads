@@ -44,8 +44,8 @@ package GL.Objects.Textures is
    subtype Mipmap_Level is Int range 0 .. Int'Last;
 
    -- Pointer to the beginning of image data. This type is not opaque so that it
-   -- is possible to convert addresses from other sources to it. OpenGLAda
-   -- provides a wrapper for SOIL to create image sources to load textures from.
+   -- is possible to convert addresses from other sources to it.
+   -- OpenGLAda provides the opengl-images.gpr extension to load image data.
    type Image_Source is new System.Address;
 
    -----------------------------------------------------------------------------

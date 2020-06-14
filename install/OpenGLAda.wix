@@ -16,22 +16,27 @@
         <Directory Id="libFolder" Name="lib">
           <Directory Id="libOpenglFolder" Name="opengl" />
           <Directory Id="libOpenglGlfwFolder" Name="opengl.glfw" />
-          <Directory Id="libOpenglSoilFolder" Name="opengl.soil" />
+          <Directory Id="libOpenglImagesFolder" Name="opengl.images" />
           <Directory Id="libOpenglTextFolder" Name="opengl.text" />
           <Directory Id="libFreetypeFolder" Name="freetype" />
+          <Directory Id="libGIDFolder" Name="gid" />
           <Component Id="GlfwStaticLibrary" Guid="*">
             <File Id="GlfwStaticLibraryA" Name="libglfw3.a" DiskId="1" Source="$(var.lib)\libglfw3.a" KeyPath="yes" />
           </Component>
           <Component Id="FreetypeDynamicLibrary" Guid="*">
             <File Id="FreetypeDLL" Name="freetype.dll" DiskId="1" Source="$(var.lib)\freetype.dll" KeyPath="yes" />
           </Component>
+          <Component Id="GIDStaticLibrary" Guid="*">
+            <File Id="GIDStaticLibraryA" Name="libGID.a" DiskId="1" Source="$(var.lib)\libGID.a" KeyPath="yes" />
+          </Component>
         </Directory>
         <Directory Id="includeFolder" Name="include">
           <Directory Id="includeOpenglFolder" Name="opengl" />
           <Directory Id="includeOpenglGlfwFolder" Name="opengl.glfw" />
-          <Directory Id="includeOpenglSoilFolder" Name="opengl.soil" />
+          <Directory Id="includeOpenglImagesFolder" Name="opengl.images" />
           <Directory Id="includeOpenglTextFolder" Name="opengl.text" />
           <Directory Id="includeFreetypeFolder" Name="freetype" />
+          <Directory Id="includeGIDFolder" Name="gid" />
         </Directory>
         <Directory Id="shareFolder" Name="share">
           <Directory Id="gprFolder" Name="gpr">
@@ -41,14 +46,17 @@
             <Component Id="GlfwProject" Guid="*">
               <File Id="GlfwGPR" Name="opengl-glfw.gpr" DiskId="1" Source="$(var.gpr)\opengl-glfw.gpr" KeyPath="yes" />
             </Component>
-            <Component Id="SoilProject" Guid="*">
-              <File Id="SoilGPR" Name="opengl-soil.gpr" DiskId="1" Source="$(var.gpr)\opengl-soil.gpr" KeyPath="yes" />
+            <Component Id="ImagesProject" Guid="*">
+              <File Id="ImagesGPR" Name="opengl-images.gpr" DiskId="1" Source="$(var.gpr)\opengl-images.gpr" KeyPath="yes" />
             </Component>
             <Component Id="TextProject" Guid="*">
               <File Id="TextGPR" Name="opengl-text.gpr" DiskId="1" Source="$(var.gpr)\opengl-text.gpr" KeyPath="yes" />
             </Component>
             <Component Id="FreetypeProject" Guid="*">
               <File Id="FreetypeGPR" Name="freetype.gpr" DiskId="1" Source="$(var.gpr)\freetype.gpr" KeyPath="yes" />
+            </Component>
+            <Component Id="GIDProject" Guid="*">
+              <File Id="GIDGPR" Name="gid.gpr" DiskId="1" Source="$(var.gpr)\gid.gpr" KeyPath="yes" />
             </Component>
           </Directory>
         </Directory>
@@ -78,11 +86,11 @@
         <ComponentRef Id="GlfwStaticLibrary" />
         <ComponentRef Id="GlfwProject" />
       </Feature>
-      <Feature Id="SOIL" Title="SOIL" AllowAdvertise="no"
-               Description="Includes the SOIL library and an Ada  wrapper for it." Level="1">
-        <ComponentGroupRef Id="SoilLibFiles" />
-        <ComponentGroupRef Id="SoilIncludeFiles" />
-        <ComponentRef Id="SoilProject" />
+      <Feature Id="Images" Title="Images" AllowAdvertise="no"
+               Description="Includes the GID library and a simple API for loading images to textures." Level="1">
+        <ComponentGroupRef Id="ImagesLibFiles" />
+        <ComponentGroupRef Id="ImagesIncludeFiles" />
+        <ComponentRef Id="ImagesProject" />
       </Feature>
       <Feature Id="Text" Title="Text" AllowAdvertise="no"
                Description="Library for rendering text with FreeType. Includes the FreeType library and an Ada wrapper for it."
