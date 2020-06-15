@@ -18,29 +18,38 @@ bindings to the following OpenGL-related libraries:
    significant differences between these two, the most prominent being that
    GLFW 3 can handle multiple windows. You can set the desired GLFW version
    for the binding at compile time.
- * [FTGL][11] (`opengl-ftgl.gpr`, **deprecated**): A library built on top of
-   FreeType that provides an API to load TrueType fonts and render text with
-   OpenGL. The Ada wrapper only provides basic functionality to load fonts and
-   render text. As it does not include a wrapper to FreeType, the more low-level
-   functionality has been excluded. **This wrapper is not maintained anymore in
-   favor of the new FreeType wrapper.**
  * [FreeType][19] (`FreeTypeAda/freetype.gpr`): A library for loading TrueType
    and OpenType fonts. OpenGLAda includes [FreeTypeAda][20], a wrapper for the
    FreeType library. The project `opengl-text.gpr` provides an original
    higher-level API for rendering text based on FreeTypeAda.
  * [GID][10] (`opengl-images.gpr`): The *Generic Image Decoder*. This is an
    original Ada library for loading common image formats, which is included in
-   OpenGLAda. The project `opengl-images.gpr` provides a simple subroutine to
+   OpenGLAda. The project `opengl-images.gpr` provides simple subroutines to
    generate OpenGL textures with GID.
 
 OpenGLAda supports macOS, Windows and X11-based systems. API documentation can
 be found on the [project's homepage][4].
 
+### Migrating from C
+
+Compared to C, OpenGLAda provides the features of the following C libraries:
+
+ * OpenGL
+ * [GLEW][22]: OpenGLAda loads all post-OpenGL 1.1 subroutines dynamically via
+   pointers, so that available features may be queried at runtime.
+ * [GLUT][23]: Long deprecated, yet still referenced from articles about OpenGL.
+   OpenGLAda provides an optional wrapper for the GLFW library that provides
+   functionality similar to GLUT.
+   
+   Text rendering functionality superior to what GLUT provides are supplied by
+   `opengl-text.gpr` with the help of the FreeType library.
+ * [Image loading][24]: OpenGLAda includes the [GID][10] library for image
+   loading.
+
 ## Windows Installer
 
 There is an installer available for Windows + GNAT Community in the
-[repository's *releases* section][21] which includes all optional dependencies
-except FTGL (because that binding is deprecated).
+[repository's *releases* section][21] which includes all optional dependencies.
 
 ## Prerequisites
 
@@ -58,14 +67,13 @@ In order to build OpenGLAda, you need to have:
  * An OpenGL implementation (usually comes bundled with your graphics driver)
  * Optionally [GLFW][3] (OpenGLAda is pretty useless without the ability to
    create an OpenGL context.)
- * Optionally [FTGL][11] (**deprecated**)
  * Optionally [FreeType][19]
 
 ¹: You may also be able to build OpenGLAda with another Ada compiler and/or
 without using the `*.gpr` files. You just have to import the sources to your
 project and whichever build system you are using. I never used other Ada
 compilers apart from GNAT, so if I accidentally used some GNAT-specific features
-in the code, please drop me a message.
+in the code, open an issue.
 
 ## Installation
 
@@ -114,8 +122,8 @@ For example, a typical Windows installation would be
     $ gprbuild -XWindowing_System=windows -Xmode=release openglada.gpr
     $ gprinstall -XWindowing_System=windows -Xmode=release openglada.gpr
 
-Installing OpenGLAda makes its projects available to `gprbuild` and also to the
-GPS GUI. You can now import it like this:
+Installing OpenGLAda makes its projects available to `gprbuild` and also to
+GNAT Studio. You can now import it like this:
 
     with "opengl";
     with "opengl-glfw";
@@ -141,15 +149,12 @@ instead:
 
     $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows
     $ gprbuild -P opengl-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-text-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-images-test.gpr -XWindowing_System=windows
 
 The tests require GLFW, because they need to create windows. By default, they
 try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
-by executing:
-
-    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows -XGLFW_Version=2
-    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows -XGLFW_Version=2
-
-(Substitute `windows` with `x11` or `quartz` if needed.)
+by adding the parameter `-XGLFW_Version=2`.
 
 ## Examples
 
@@ -168,7 +173,7 @@ files in `src/gl/specs`. The syntax of the spec files is similar to Ada.
 The reason behind this is that all functionality newer than OpenGL 1.1 is not
 expected to be provided by the OpenGL implementation. Instead, function pointers
 to the implementations should be queried at runtime. This makes it possible for
-the user to provide a fallback in case some OpenGL functionality is not
+the library user to provide a fallback in case some OpenGL functionality is not
 available on the target system.
 
 The `generate` tool compiled from `src/generator` will take care of creating
@@ -197,7 +202,6 @@ logo that is used in the images tests is distributed under the terms of the
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
  [10]: https://gen-img-dec.sourceforge.io/
- [11]: https://sourceforge.net/projects/ftgl/
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: http://flyx.github.io/OpenGLAda/setup.html
  [16]: http://getadanow.com/#get_windows
@@ -205,3 +209,6 @@ logo that is used in the images tests is distributed under the terms of the
  [19]: https://freetype.org/
  [20]: https://github.com/flyx/FreeTypeAda
  [21]: https://github.com/flyx/OpenGLAda/releases
+ [22]: http://glew.sourceforge.net/
+ [23]: https://www.opengl.org/resources/libraries/glut/
+ [24]: https://www.khronos.org/opengl/wiki/Image_Libraries
