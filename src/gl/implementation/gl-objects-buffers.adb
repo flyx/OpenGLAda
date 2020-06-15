@@ -238,6 +238,16 @@ package body GL.Objects.Buffers is
                            Data (Data'First)'Address);
       Raise_Exception_On_OpenGL_Error;
    end Set_Sub_Data;
+   
+   procedure Get_Sub_Data (Target : Buffer_Target'Class;
+                           Offset : Types.Int;
+                           Data   : out Types.Single_Array) is
+   begin
+      Data := (others => <>);
+      API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
+        Low_Level.SizeIPtr (Data'Size / 8), Data'Address);
+      Raise_Exception_On_OpenGL_Error;
+   end Get_Sub_Data;
 
    function Access_Type (Target : Buffer_Target) return Access_Kind is
       Ret : Access_Kind := Access_Kind'First;

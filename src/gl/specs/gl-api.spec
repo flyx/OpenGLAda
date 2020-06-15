@@ -855,6 +855,11 @@ spec GL.API is
                               Size   : Low_Level.SizeIPtr;
                               Data   : System.Address) with
      Dynamic => "glBufferSubData", Wrapper => "GL.Objects.Buffers.Set_Sub_Data";
+   procedure Get_Buffer_Sub_Data (Target : Low_Level.Enums.Buffer_Kind;
+                                  Offset : Low_Level.IntPtr;
+                                  Size   : Low_Level.SizeIPtr;
+                                  Data   : System.Address) with
+     Dynamic => "glGetBufferSubData", Wrapper => "GL.Objects.Buffers.Get_Sub_Data";
    procedure Unmap_Buffer (Target : Low_Level.Enums.Buffer_Kind) with
      Dynamic => "glUnmapBuffer", Wrapper => "GL.Objects.Buffers.Unmap";
    procedure Get_Buffer_Parameter_Access_Kind
@@ -1037,6 +1042,37 @@ spec GL.API is
       Pname  : Enums.Framebuffer_Param; Params : out Low_Level.Bool) with
      Dynamic => "glGetFramebufferParameteriv",
      Wrapper => "GL.Objects.Framebuffers.Default_Fixed_Sample_Locations";
+
+   -----------------------------------------------------------------------------
+   --                             Query Objects                              --
+   -----------------------------------------------------------------------------
+
+   procedure Gen_Queries (N : Size; Queries : out UInt) with
+     Dynamic => "glGenQueries",
+     Wrapper => "GL.Objects.Initialize_Id";
+   procedure Delete_Queries (N : Size; Queries : Low_Level.UInt_Array) with
+     Dynamic => "glDeleteQueries";
+   function Is_Query (Query : UInt) return Boolean with
+     Dynamic => "glIsQuery", Wrapper => "GL.Objects.Queries.Is_Query";
+   procedure Get_Query_Object (Query : UInt; Pname : Low_Level.Enums.Query_Results;
+                               Params : out UInt) with
+     Dynamic => "glGetQueryObjectuiv",
+     Wrapper => "GL.Objects.Queries.Get_Query_Object";
+   procedure Begin_Query (Target : Low_Level.Enums.Query_Param; Id : UInt) with
+     Dynamic => "glBeginQuery",
+     Wrapper => "GL.Objects.Queries.Begin_Query";
+   procedure End_Query (Target : Low_Level.Enums.Query_Param) with
+     Dynamic => "glEndQuery",
+     Wrapper => "GL.Objects.Queries.End_Query";
+   procedure Begin_Query_Indexed (Target : Low_Level.Enums.Query_Param; Index, Id : UInt) with
+     Dynamic => "glBeginQueryIndexed",
+     Wrapper => "GL.Objects.Queries.Begin_Query_Indexed";
+   procedure End_Query_Indexed (Target : Low_Level.Enums.Query_Param; Index : UInt) with
+     Dynamic => "glEndQueryIndexed",
+     Wrapper => "GL.Objects.Queries.End_Query_Indexed";
+   procedure Query_Counter (Id: UInt; Target : Low_Level.Enums.Query_Param) with
+     Dynamic => "glQueryCounter",
+     Wrapper => "GL.Objects.Queries.Query_Counter";
 
    -----------------------------------------------------------------------------
    --                                 Shaders                                 --

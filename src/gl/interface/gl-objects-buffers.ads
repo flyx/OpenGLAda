@@ -21,6 +21,8 @@ package GL.Objects.Buffers is
       Invalidate_Buffer : Boolean := False;
       Flush_Explicit    : Boolean := False;
       Unsynchronized    : Boolean := False;
+      Persistent        : Boolean := False;
+      Coherent          : Boolean := False;
       Unused            : Boolean := False;
    end record;
    pragma Convention (C, Map_Bits);
@@ -57,7 +59,7 @@ package GL.Objects.Buffers is
                         Access_Type : Map_Bits;
                         Offset      : Int;
                         Size        : Types.Size;
-                        Pointer : out Pointers.Pointer);
+                        Pointer     : out Pointers.Pointer);
 
    procedure Unmap (Target : Buffer_Target);
    procedure Flush_Mapped_Buffer_Range (Target : Buffer_Target'Class;
@@ -72,6 +74,10 @@ package GL.Objects.Buffers is
    procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
+
+   procedure Get_Sub_Data (Target : Buffer_Target'Class;
+                           Offset : Types.Int;
+                           Data   : out Types.Single_Array);
 
    function Access_Type (Target : Buffer_Target) return Access_Kind;
    function Mapped      (Target : Buffer_Target) return Boolean;
@@ -155,7 +161,9 @@ private
       Invalidate_Buffer at 0 range 3 .. 3;
       Flush_Explicit    at 0 range 4 .. 4;
       Unsynchronized    at 0 range 5 .. 5;
-      Unused            at 0 range 6 .. 31;
+      Persistent        at 0 range 6 .. 6;
+      Coherent          at 0 range 7 .. 7;
+      Unused            at 0 range 8 .. 31;
    end record;
    for Map_Bits'Size use Low_Level.Bitfield'Size;
 

@@ -1,12 +1,14 @@
 v0.8.0
  * Fixed the binding of `glGetTransformFeedbackVarying`
  * Fixed error when creating an empty Depth_Component texture (#135)
+ * Added package:
+   - GL.Objects.Queries
  * Added missing functionality in:
    - GL.Rasterization (glPolygonOffset)
    - GL.Objects.Buffers (glDrawTransformFeedback, glDrawTransformFeedbackStream,
                          glGenTransformFeedbacks, glDeleteTransformFeedbacks,
                          glBindTransformFeedback, glMapBufferRange,
-                         glFlushMappedBufferRange)
+                         glFlushMappedBufferRange, glGetBufferSubData)
  * Removed SOIL since it doesn't compile on macOS Catalina and replaced it with
    GID. Added `opengl-images.gpr` to replace SOIL functionality.
 v0.7.0:
