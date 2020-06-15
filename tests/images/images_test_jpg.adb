@@ -1,7 +1,5 @@
---  part of OpenGLAda, (c) 2017 Felix Krause
+--  part of OpenGLAda, (c) 2020 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
-
-with Ada.Streams.Stream_IO;
 
 with GL.Buffers;
 with GL.Types.Colors;
@@ -20,22 +18,14 @@ procedure Images_Test_JPG is
    use GL.Types;
    use GL.Types.Doubles;
 
-   Input_File : Ada.Streams.Stream_IO.File_Type;
-   Input_Stream : Ada.Streams.Stream_IO.Stream_Access;
-
    Texture : GL.Objects.Textures.Texture;
 begin
    GL_Test.Display_Backend.Init;
    GL_Test.Display_Backend.Open_Window (1000, 498);
    
-   Ada.Streams.Stream_IO.Open (Input_File, Ada.Streams.Stream_IO.In_File, 
-     "../tests/images/ada2012-color.jpg");
-   Input_Stream := Ada.Streams.Stream_IO.Stream (Input_File);
+   GL.Images.Load_File_To_Texture
+     ("../tests/images/ada2012-color.jpg", Texture, GL.Pixels.RGB);
    
-   GL.Images.Load_Image_To_Texture (Input_Stream.all, Texture, GL.Pixels.RGB);
-
-   Ada.Streams.Stream_IO.Close (Input_File);
-
    Projection.Load_Identity;
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 

@@ -56,7 +56,7 @@ There is an installer available for Windows + GNAT Community in the
 In order to build OpenGLAda, you need to have:
 
  * A GNAT compiler¹. Compilers known to work well with OpenGLAda are
-   [GnuAda][12], [GNAT Community 2018][1], and [TDM-GCC][17]. More information
+   [GnuAda][12], [GNAT Community 2020][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
    can get it from [here][16] (**NOTE: The gprbuild bundled in this zip is
@@ -158,11 +158,7 @@ by adding the parameter `-XGLFW_Version=2`.
 
 ## Examples
 
-OpenGLAda comes bundled with a lot of examples. They have mostly been translated
-from C examples from OpenGL textbooks. They are located inside the `examples`
-folder. Each example has a separate `.gpr` file with which it can be built.
-
-Contributions of examples are always welcome.
+Examples are available in [this repository][11].
 
 ## Developer Documentation
 
@@ -202,6 +198,7 @@ logo that is used in the images tests is distributed under the terms of the
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
  [10]: https://gen-img-dec.sourceforge.io/
+ [11]: https://github.com/flyx/OpenGLAda-examples
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: http://flyx.github.io/OpenGLAda/setup.html
  [16]: http://getadanow.com/#get_windows

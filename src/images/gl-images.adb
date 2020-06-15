@@ -1,4 +1,5 @@
 with Ada.Calendar;
+with Ada.Streams.Stream_IO;
 with Ada.Unchecked_Deallocation;
 
 with GID;
@@ -203,4 +204,23 @@ package body GL.Images is
          end;
       end if;
    end Load_Image_To_Texture;
+   
+   procedure Load_File_To_Texture (
+     Path           : String;
+     Texture        : in out GL.Objects.Textures.Texture'Class;
+     Texture_Format : GL.Pixels.Internal_Format;
+     Try_TGA        : Boolean := False) is
+      use Ada.Streams.Stream_IO;
+        
+      Input_File   : File_Type;
+      Input_Stream : Stream_Access;
+   begin
+      Ada.Streams.Stream_IO.Open (Input_File, In_File, Path);
+      Input_Stream := Stream (Input_File);
+   
+      Load_Image_To_Texture
+        (Input_Stream.all, Texture, Texture_Format, Try_TGA);
+
+      Ada.Streams.Stream_IO.Close (Input_File);
+   end Load_File_To_Texture;
 end GL.Images;
