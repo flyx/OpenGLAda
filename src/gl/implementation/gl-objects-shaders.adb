@@ -96,7 +96,7 @@ package body GL.Objects.Shaders is
       API.Get_Shader_Type (Id, Enums.Shader_Type, Kind);
       Raise_Exception_On_OpenGL_Error;
       return Object : Shader (Kind) do
-         Object.Set_Raw_Id (Id);
+         Object.Set_Raw_Id (Id, False);
       end return;
    end Create_From_Id;
 
