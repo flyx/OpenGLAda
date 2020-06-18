@@ -25,11 +25,11 @@ if (-Not ($wixonly -or $skipdownloads)) {
 
   # GLFW
 
-  $glfw_url = "https://github.com/glfw/glfw/releases/download/3.2.1/glfw-3.2.1.bin.WIN64.zip"
-  $glfw_destination = "$tmp\glfw-3.2.1.bin.WIN64.zip"
+  $glfw_url = "https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip"
+  $glfw_destination = "$tmp\glfw-3.3.2.bin.WIN64.zip"
   Invoke-WebRequest -Uri $glfw_url -OutFile $glfw_destination
   $zip = [IO.Compression.ZipFile]::OpenRead($glfw_destination)
-  $zip.Entries | where {$_.FullName -eq "glfw-3.2.1.bin.WIN64/lib-mingw-w64/libglfw3.a"} | `
+  $zip.Entries | where {$_.FullName -eq "glfw-3.3.2.bin.WIN64/lib-mingw-w64/libglfw3.a"} | `
       foreach {[IO.Compression.ZipFileExtensions]::ExtractToFile($_, "$target\lib\libglfw3.a", $true)}
   $zip.Dispose()
 
@@ -69,7 +69,7 @@ $heatArgs = @("-ag", "-scom", "-sreg", "-sfrag", "-srd")
 &$heat dir $target\include\opengl.images -cg ImagesIncludeFiles $heatArgs -dr includeOpenglImagesFolder -out $tmp\ImagesIncludes.wxs -var var.includeOpenglImages
 &$heat dir $target\include\opengl.text -cg TextIncludeFiles $heatArgs -dr includeOpenglTextFolder -out $tmp\TextIncludes.wxs -var var.includeOpenglText
 &$heat dir $target\include\freetype -cg FreetypeIncludeFiles $heatArgs -dr includeFreetypeFolder -out $tmp\FreetypeIncludes.wxs -var var.includeFreetype
-&$heat dir $target\include\gid -cg GIDIncludeFiles $heatArgs -dr include GIDFolder -out $tmp\GIDIncludes.wxs -var var.includeGID
+&$heat dir $target\include\gid -cg GIDIncludeFiles $heatArgs -dr includeGIDFolder -out $tmp\GIDIncludes.wxs -var var.includeGID
 
 # Build the installer
 
