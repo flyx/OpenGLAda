@@ -9,6 +9,9 @@ permalink: glfw-v2.html
 
 # The GLFW 2.x Binding
 
+**Important:** The GLFW 2.x binding is not actively maintained and you are
+encouraged to switch to GLFW 3.
+
 This is a binding for the [GLFW][1] library, version `2.x`. Most subprograms
 map directly to the GLFW C API, so you can use the GLFW API documentation as
 guide. The binding has two primary subpackages:

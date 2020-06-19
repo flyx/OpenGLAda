@@ -17,7 +17,7 @@ testing whether you can link properly against the C libraries used.
 The following guides are available:
 
  * [Windows](setup/windows.html)
-   * [GNAT GPL 2017](setup/windows.html#gnat-gpl-2017)
+   * [GNAT Community 2020](setup/windows.html#gnat-community-2020)
    * [TDM-GCC 64bit](setup/windows.html#tdm-gcc-64bit)
  * [macOS](setup/macos.html)
    * [GNAT GPL 2017](setup/macos.html#gnat-gpl-2017)

@@ -7,7 +7,7 @@ permalink: index.html
 ## About
 
 **OpenGLAda** is a thick Ada binding for [OpenGL][5] and related C libraries
-([GLFW][4], [SOIL][6], [FreeType][7]). It enables you to create complex
+([GLFW][4], [FreeType][7]). It enables you to create complex
 graphical applications in Ada using the OpenGL industry standard.
 
 ## Highlights
@@ -21,7 +21,7 @@ graphical applications in Ada using the OpenGL industry standard.
  * Object-oriented design: All OpenGL objects are wrapped as tagged types. They
    are also reference-counted, so you do not need to worry about freeing memory
    yourself.
- * Cross-Platform: OpenGLAda supports MacOSX, Windows and X11-based operating
+ * Cross-Platform: OpenGLAda supports macOS, Windows and X11-based operating
    systems like Linux.
  * Structured: In contrast to the raw OpenGL library, OpenGLAda's functionality
    is structured into packages, so you have a better overview over the
@@ -32,9 +32,9 @@ graphical applications in Ada using the OpenGL industry standard.
    this feature completely at compile-time.)
  * Batteries included: Besides raw OpenGL, OpenGLAda also wraps [GLFW][4]
    (with separate bindings for version 2 and 3) for window creation and user
-   input, [SOIL][6] for loading images into textures, and [FreeType][7] for
-   using TrueType fonts with OpenGL. These additional bindings are optional; you
-   do not have to use them.
+   input and [FreeType][7] for text rendering with OpenGL. It includes the
+   [Generic Image Decoder][6] for loading image files into textures.
+   These additional libraries are optional; you do not have to use them.
 
 ## Getting the Code
 
@@ -56,11 +56,13 @@ bindings are:
  * [Globe3D](http://globe3d.sourceforge.net/): A 3D engine in Ada based on
    OpenGL. The included OpenGL binding is decent and up-to-date, but also rather
    thin.
+ * [Orka](https://orka-engine.netlify.app/): This project uses parts of
+   OpenGLAda. 
 
  [1]: https://github.com/flyx/OpenGLAda
  [2]: https://github.com/flyx/OpenGLAda/tags
  [3]: http://www.opensource.org/licenses/MIT
  [4]: http://www.glfw.org
  [5]: http://www.opengl.org/
- [6]: http://www.lonesock.net/soil.html
+ [6]: https://gen-img-dec.sourceforge.io/
  [7]: https://www.freetype.org/
