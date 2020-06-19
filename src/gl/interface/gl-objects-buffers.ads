@@ -3,6 +3,7 @@
 
 with Interfaces.C.Pointers;
 
+with GL.Low_Level;
 private with GL.Low_Level.Enums;
 with GL.Pixels;
 
@@ -13,11 +14,26 @@ package GL.Objects.Buffers is
                          Static_Draw, Static_Read, Static_Copy,
                          Dynamic_Draw, Dynamic_Read, Dynamic_Copy);
 
+   type Map_Bits is record
+      Read              : Boolean := False;
+      Write             : Boolean := False;
+      Invalidate_Range  : Boolean := False;
+      Invalidate_Buffer : Boolean := False;
+      Flush_Explicit    : Boolean := False;
+      Unsynchronized    : Boolean := False;
+      Persistent        : Boolean := False;
+      Coherent          : Boolean := False;
+      Unused            : Boolean := False;
+   end record;
+   pragma Convention (C, Map_Bits);
+
    type Buffer_Target (<>) is tagged limited private;
 
    type Buffer is new GL_Object with private;
+   type Transform_Buffer is new GL_Object with private;
 
    procedure Bind (Target : Buffer_Target; Object : Buffer'Class);
+   procedure Bind_Transform_Feedback (Object : Transform_Buffer'Class);
    procedure Bind_Buffer_Base (Target : Buffer_Target; Index : UInt;
                                Object : Buffer'Class);
 
@@ -37,7 +53,17 @@ package GL.Objects.Buffers is
       with package Pointers is new Interfaces.C.Pointers (<>);
    procedure Map (Target : Buffer_Target'Class; Access_Type : Access_Kind;
                   Pointer : out Pointers.Pointer);
+   generic
+      with package Pointers is new Interfaces.C.Pointers (<>);
+   procedure Map_Range (Target      : Buffer_Target'Class;
+                        Access_Type : Map_Bits;
+                        Offset      : Int;
+                        Size        : Types.Size;
+                        Pointer     : out Pointers.Pointer);
+
    procedure Unmap (Target : Buffer_Target);
+   procedure Flush_Mapped_Buffer_Range (Target : Buffer_Target'Class;
+                                        Offset : Int; Size : Types.Size);
 
    generic
       with package Pointers is new Interfaces.C.Pointers (<>);
@@ -48,6 +74,10 @@ package GL.Objects.Buffers is
    procedure Set_Sub_Data (Target : Buffer_Target'Class;
                            Offset : Types.Size;
                            Data   : Pointers.Element_Array);
+
+   procedure Get_Sub_Data (Target : Buffer_Target'Class;
+                           Offset : Types.Int;
+                           Data   : out Types.Single_Array);
 
    function Access_Type (Target : Buffer_Target) return Access_Kind;
    function Mapped      (Target : Buffer_Target) return Boolean;
@@ -84,12 +114,18 @@ package GL.Objects.Buffers is
                                         Index_Type     : Unsigned_Numeric_Type;
                                         Element_Offset : UInt;
                                         Base_Vertex    : Int);
+   procedure Draw_Transform_Feedback (Mode : Connection_Mode;
+                                      Object : Transform_Buffer);
+   procedure Draw_Transform_Feedback_Stream (Mode : Connection_Mode;
+                                             Object : Transform_Buffer;
+                                             Stream : UInt);
 
    procedure Invalidate_Data (Object : in out Buffer);
    procedure Invalidate_Sub_Data (Object : in out Buffer;
                                   Offset, Length : Long_Size);
 
    type Texture_Buffer_Target is limited new Buffer_Target with private;
+   type Transform_Buffer_Target is limited new Buffer_Target with private;
    procedure Allocate (Target : Texture_Buffer_Target;
                        Format : GL.Pixels.Internal_Format;
                        Object : Buffer'Class);
@@ -100,7 +136,7 @@ package GL.Objects.Buffers is
    Pixel_Unpack_Buffer       : constant Buffer_Target;
    Uniform_Buffer            : constant Buffer_Target;
    Texture_Buffer            : constant Texture_Buffer_Target;
-   Transform_Feedback_Buffer : constant Buffer_Target;
+   Transform_Feedback_Buffer : constant Transform_Buffer_Target;
    Copy_Read_Buffer          : constant Buffer_Target;
    Copy_Write_Buffer         : constant Buffer_Target;
    Draw_Indirect_Buffer      : constant Buffer_Target;
@@ -118,17 +154,36 @@ private
                          Dynamic_Copy => 16#88EA#);
    for Buffer_Usage'Size use Low_Level.Enum'Size;
 
+   for Map_Bits use record
+      Read              at 0 range 0 .. 0;
+      Write             at 0 range 1 .. 1;
+      Invalidate_Range  at 0 range 2 .. 2;
+      Invalidate_Buffer at 0 range 3 .. 3;
+      Flush_Explicit    at 0 range 4 .. 4;
+      Unsynchronized    at 0 range 5 .. 5;
+      Persistent        at 0 range 6 .. 6;
+      Coherent          at 0 range 7 .. 7;
+      Unused            at 0 range 8 .. 31;
+   end record;
+   for Map_Bits'Size use Low_Level.Bitfield'Size;
+
    type Buffer_Target (Kind : Low_Level.Enums.Buffer_Kind) is
      tagged limited null record;
    type Texture_Buffer_Target is limited new Buffer_Target with null record;
+   type Transform_Buffer_Target is limited new Buffer_Target with null record;
 
    type Buffer is new GL_Object with null record;
+   type Transform_Buffer is new GL_Object with null record;
 
    overriding
    procedure Internal_Create_Id (Object : Buffer; Id : out UInt);
+   overriding
+   procedure Internal_Create_Id (Object : Transform_Buffer; Id : out UInt);
 
    overriding
    procedure Internal_Release_Id (Object : Buffer; Id : UInt);
+   overriding
+   procedure Internal_Release_Id (Object : Transform_Buffer; Id : UInt);
 
    Array_Buffer              : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Array_Buffer);
@@ -142,8 +197,8 @@ private
      := Buffer_Target'(Kind => Low_Level.Enums.Uniform_Buffer);
    Texture_Buffer            : constant Texture_Buffer_Target
      := Texture_Buffer_Target'(Kind => Low_Level.Enums.Texture_Buffer);
-   Transform_Feedback_Buffer : constant Buffer_Target
-     := Buffer_Target'(Kind => Low_Level.Enums.Transform_Feedback_Buffer);
+   Transform_Feedback_Buffer : constant Transform_Buffer_Target
+     := Transform_Buffer_Target'(Kind => Low_Level.Enums.Transform_Feedback_Buffer);
    Copy_Read_Buffer          : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Copy_Read_Buffer);
    Copy_Write_Buffer         : constant Buffer_Target

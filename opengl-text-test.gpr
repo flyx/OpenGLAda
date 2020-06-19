@@ -12,4 +12,5 @@ project OpenGL.Text.Test is
    package Ide renames OpenGL.Ide;
    package Builder renames OpenGL.Builder;
    package Compiler renames OpenGL.Compiler;
+   package Binder renames OpenGL.Binder;
 end OpenGL.Text.Test;

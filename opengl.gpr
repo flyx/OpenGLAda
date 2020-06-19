@@ -11,9 +11,10 @@ library project OpenGL is
    --  * x11     : X Window System
    --  * quartz  : Quartz Compositor (OS X)
    type Windowing_System_Type is
-      ("windows", "x11", "quartz");
+     ("windows", "x11", "quartz");
+   -- has a default so that the project can be opened in GPS.
    Windowing_System : Windowing_System_Type
-     := external ("Windowing_System");
+     := external ("Windowing_System", "quartz");
 
    type Mode_Type is ("debug", "release");
    Mode : Mode_Type := external ("Mode", "debug");
@@ -91,5 +92,9 @@ library project OpenGL is
               ("-Wl,-framework,OpenGL,-framework,CoreFoundation");
       end case;
    end Linker;
+   
+   package Binder is
+      for Default_Switches ("ada") use ("-Es");
+   end Binder;
 
 end OpenGL;

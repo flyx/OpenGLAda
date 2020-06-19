@@ -10,7 +10,7 @@ package body GL.Objects.Shaders is
       C_Source : C.char_array := C.To_C (Source);
    begin
       API.Shader_Source (Subject.Reference.GL_Id, 1,
-                         (1 => C_Source (C_Source'First)'Unchecked_Access),
+                         (1 => C_Source (0)'Unchecked_Access),
                          (1 => Source'Length));
       Raise_Exception_On_OpenGL_Error;
    end Set_Source;
@@ -96,7 +96,7 @@ package body GL.Objects.Shaders is
       API.Get_Shader_Type (Id, Enums.Shader_Type, Kind);
       Raise_Exception_On_OpenGL_Error;
       return Object : Shader (Kind) do
-         Object.Set_Raw_Id (Id);
+         Object.Set_Raw_Id (Id, False);
       end return;
    end Create_From_Id;
 

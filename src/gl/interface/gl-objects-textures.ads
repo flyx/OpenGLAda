@@ -44,8 +44,8 @@ package GL.Objects.Textures is
    subtype Mipmap_Level is Int range 0 .. Int'Last;
 
    -- Pointer to the beginning of image data. This type is not opaque so that it
-   -- is possible to convert addresses from other sources to it. OpenGLAda
-   -- provides a wrapper for SOIL to create image sources to load textures from.
+   -- is possible to convert addresses from other sources to it.
+   -- OpenGLAda provides the opengl-images.gpr extension to load image data.
    type Image_Source is new System.Address;
 
    -----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ package GL.Objects.Textures is
    procedure Set_Magnifying_Filter (Target : Texture_Target;
                                     Filter : Magnifying_Function);
    function Magnifying_Filter (Target : Texture_Target)
-                              return Magnifying_Function;
+                               return Magnifying_Function;
 
    procedure Set_Minimum_LoD (Target : Texture_Target; Level : Double);
    function Minimum_LoD (Target : Texture_Target) return Double;
@@ -125,11 +125,11 @@ package GL.Objects.Textures is
    function Maximum_LoD (Target : Texture_Target) return Double;
 
    procedure Set_Lowest_Mipmap_Level (Target : Texture_Target;
-                                      Level : Mipmap_Level);
+                                      Level  : Mipmap_Level);
    function Lowest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level;
 
    procedure Set_Highest_Mipmap_Level (Target : Texture_Target;
-                                       Level : Mipmap_Level);
+                                       Level  : Mipmap_Level);
    function Highest_Mipmap_Level (Target : Texture_Target) return Mipmap_Level;
 
    procedure Set_X_Wrapping (Target : Texture_Target; Mode : Wrapping_Mode);
@@ -145,7 +145,7 @@ package GL.Objects.Textures is
    function Border_Color (Target : Texture_Target) return Colors.Color;
 
    procedure Set_Texture_Priority (Target : Texture_Target;
-                                   Value : Priority);
+                                   Value  : Priority);
    function Texture_Priority (Target : Texture_Target) return Priority;
 
    procedure Toggle_Compare_X_To_Texture (Target  : Texture_Target;
@@ -154,15 +154,15 @@ package GL.Objects.Textures is
                                           return Boolean;
 
    procedure Set_Compare_Function (Target : Texture_Target;
-                                   Func : Compare_Function);
+                                   Func   : Compare_Function);
    function Current_Compare_Function (Target : Texture_Target)
-                                     return Compare_Function;
+                                      return Compare_Function;
 
    procedure Set_Depth_Texture_Mode (Target : Texture_Target;
-                                     Mode : Depth_Mode);
+                                     Mode   : Depth_Mode);
    function Depth_Texture_Mode (Target : Texture_Target) return Depth_Mode;
 
-   procedure Toggle_Mipmap_Autoupdate (Target : Texture_Target;
+   procedure Toggle_Mipmap_Autoupdate (Target  : Texture_Target;
                                        Enabled : Boolean);
    function Mipmap_Autoupdate_Enabled (Target : Texture_Target) return Boolean;
 
@@ -185,7 +185,7 @@ package GL.Objects.Textures is
 
    procedure Invalidate_Image (Object : Texture; Level : Mipmap_Level);
 
-   procedure Invalidate_Sub_Image (Object : Texture; Level : Mipmap_Level;
+   procedure Invalidate_Sub_Image (Object  : Texture; Level : Mipmap_Level;
                                    X, Y, Z : Int; Width, Height, Depth : Size);
 
    -----------------------------------------------------------------------------
@@ -226,5 +226,8 @@ private
 
    overriding
    procedure Internal_Release_Id (Object : Texture; Id : UInt);
+
+   function Format_For_Loading_Empty_Texture
+     (Internal_Format : Pixels.Internal_Format) return Pixels.Data_Format;
 
 end GL.Objects.Textures;

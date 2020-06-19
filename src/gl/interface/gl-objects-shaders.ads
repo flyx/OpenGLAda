@@ -22,7 +22,9 @@ package GL.Objects.Shaders is
 
    function Info_Log (Subject : Shader) return String;
 
-   -- low-level
+   -- low-level. creates a Shader object linking to the given OpenGL ID.
+   -- doesn't take ownership of the ID and therefore doesn't automatically
+   -- delete it when the last reference vanishes.
    function Create_From_Id (Id : UInt) return Shader;
 private
    type Shader (Kind : Shader_Type) is new GL_Object with null record;

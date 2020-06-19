@@ -26,9 +26,9 @@ package GL.Low_Level.Enums is
 
    type Buffer_Kind is (Array_Buffer, Element_Array_Buffer, Pixel_Pack_Buffer,
                         Pixel_Unpack_Buffer, Uniform_Buffer, Texture_Buffer,
-                        Transform_Feedback_Buffer, Copy_Read_Buffer,
-                        Copy_Write_Buffer, Draw_Indirect_Buffer,
-                        Atomic_Counter_Buffer);
+                        Transform_Feedback_Buffer, Transform_Feedback,
+                        Copy_Read_Buffer, Copy_Write_Buffer,
+                        Draw_Indirect_Buffer, Atomic_Counter_Buffer);
 
    type Draw_Buffer_Index is (DB0, DB1, DB2, DB3, DB4, DB5, DB6, DB7,
       DB8, DB9, DB10, DB11, DB12, DB13, DB14, DB15);
@@ -37,6 +37,10 @@ package GL.Low_Level.Enums is
    type Only_Stencil_Buffer is (Stencil);
    type Only_Depth_Stencil_Buffer is (Depth_Stencil);
    type Only_Color_Buffer is (Color);
+   
+   type Query_Param is (Time_Elapsed, Samples_Passed, Any_Samples_Passed,
+                        Transform_Feedback_Primitives_Written);
+   type Query_Results is (Query_Result, Query_Result_Available);
 private
    for Texture_Kind use (Texture_1D       => 16#0DE0#,
                          Texture_2D       => 16#0DE1#,
@@ -74,6 +78,7 @@ private
                         Uniform_Buffer            => 16#8A11#,
                         Texture_Buffer            => 16#8C2A#,
                         Transform_Feedback_Buffer => 16#8C8E#,
+                        Transform_Feedback        => 16#8E22#,
                         Copy_Read_Buffer          => 16#8F36#,
                         Copy_Write_Buffer         => 16#8F37#,
                         Draw_Indirect_Buffer      => 16#8F3F#,
@@ -109,4 +114,14 @@ private
 
    for Only_Color_Buffer use (Color => 16#1800#);
    for Only_Color_Buffer'Size use Enum'Size;
+   
+   for Query_Param use (Time_Elapsed                          => 16#88BF#,
+                        Samples_Passed                        => 16#8914#,
+                        Any_Samples_Passed                    => 16#8C2F#,
+                        Transform_Feedback_Primitives_Written => 16#8C88#);
+   for Query_Param'Size use Low_Level.Enum'Size;
+   
+   for Query_Results use (Query_Result           => 16#8866#,
+                          Query_Result_Available => 16#8867#);
+   for Query_Results'Size use Low_Level.Enum'Size;
 end GL.Low_Level.Enums;

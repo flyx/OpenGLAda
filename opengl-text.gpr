@@ -1,5 +1,5 @@
 with "opengl";
-with "FreeTypeAda/freetype";
+with "deps/FreeTypeAda/freetype";
 
 library project OpenGL.Text is
    for Languages use ("ada");
@@ -10,4 +10,5 @@ library project OpenGL.Text is
 
    package Builder  renames OpenGL.Builder;
    package Compiler renames OpenGL.Compiler;
+   package Binder renames OpenGL.Binder;
 end OpenGL.Text;

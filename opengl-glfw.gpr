@@ -58,4 +58,6 @@ library project OpenGL.Glfw is
                "-lXrandr", "-lXinerama", "-lXi", "-ldl");
       end case;
    end Linker;
+   
+   package Binder renames OpenGL.Binder;
 end OpenGL.Glfw;

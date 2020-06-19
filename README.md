@@ -18,36 +18,47 @@ bindings to the following OpenGL-related libraries:
    significant differences between these two, the most prominent being that
    GLFW 3 can handle multiple windows. You can set the desired GLFW version
    for the binding at compile time.
- * [SOIL][10] (`opengl-soil.gpr`): The *Simple OpenGL Image Library*. This is a
-   very tiny library for loading image files into OpenGL textures. It is public
-   domain. Because it's so tiny, it is linked directly into OpenGLAda. Its
-   source is included in the OpenGLAda sources.
- * [FTGL][11] (`opengl-ftgl.gpr`, **deprecated**): A library built on top of
-   FreeType that provides an API to load TrueType fonts and render text with
-   OpenGL. The Ada wrapper only provides basic functionality to load fonts and
-   render text. As it does not include a wrapper to FreeType, the more low-level
-   functionality has been excluded. **This wrapper is not maintained anymore in
-   favor of the new FreeType wrapper.**
- * [FreeType][19] (`FreeTypeAda/freetype.gpr`): A library for loading TrueType
-   and OpenType fonts. OpenGLAda includes [FreeTypeAda][20], a wrapper for the
-   FreeType library. The project `opengl-text.gpr` provides an original
+ * [FreeType][19] (`deps/FreeTypeAda/freetype.gpr`): A library for loading
+   TrueType and OpenType fonts. OpenGLAda includes [FreeTypeAda][20], a wrapper
+   for the FreeType library. The project `opengl-text.gpr` provides an original
    higher-level API for rendering text based on FreeTypeAda.
+ * [GID][10] (`deps/gid/gid.gpr`): The *Generic Image Decoder*. This is an
+   original Ada library for loading common image formats, which is included in
+   OpenGLAda. The project `opengl-images.gpr` provides an original higher-level
+   API for generating OpenGL textures with GID.
 
-OpenGLAda supports MacOSX, Windows and X11-based systems. API documentation can
+OpenGLAda supports macOS, Windows and X11-based systems. API documentation can
 be found on the [project's homepage][4].
 
-## Windows Installer
+### Migrating from C
 
-There is an installer available for Windows + GNAT Community in the
-[repository's *releases* section][21] which includes all optional dependencies
-except FTGL (because that binding is deprecated).
+Compared to C, OpenGLAda provides the features of the following C libraries:
 
-## Prerequisites
+ * OpenGL
+ * [GLEW][22]: OpenGLAda loads all post-OpenGL 1.1 subroutines dynamically via
+   pointers, so that available features may be queried at runtime.
+ * [GLUT][23]: Long deprecated, yet still referenced from articles about OpenGL.
+   OpenGLAda provides an optional wrapper for the GLFW library that provides
+   functionality similar to GLUT.
+   
+   Text rendering functionality superior to what GLUT provides are supplied by
+   `opengl-text.gpr` with the help of the FreeType library.
+ * [Image loading][24]: OpenGLAda includes the [GID][10] library for image
+   loading.
+
+## Building & Installation
+
+### Windows
+
+There is an installer available for 64bit Windows + GNAT Community in the
+[repository's *releases* section][21] which includes all optional dependencies.
+
+### Prerequisites
 
 In order to build OpenGLAda, you need to have:
 
  * A GNAT compiler¹. Compilers known to work well with OpenGLAda are
-   [GnuAda][12], [GNAT Community 2018][1], and [TDM-GCC][17]. More information
+   [GnuAda][12], [GNAT Community 2020][1], and [TDM-GCC][17]. More information
    is available on the [GCC website][5].
  * [GPRBuild][2] (is bundled with AdaCore's GNAT distribution). TDM-GCC users
    can get it from [here][16] (**NOTE: The gprbuild bundled in this zip is
@@ -58,20 +69,19 @@ In order to build OpenGLAda, you need to have:
  * An OpenGL implementation (usually comes bundled with your graphics driver)
  * Optionally [GLFW][3] (OpenGLAda is pretty useless without the ability to
    create an OpenGL context.)
- * Optionally [FTGL][11] (**deprecated**)
  * Optionally [FreeType][19]
 
 ¹: You may also be able to build OpenGLAda with another Ada compiler and/or
 without using the `*.gpr` files. You just have to import the sources to your
 project and whichever build system you are using. I never used other Ada
 compilers apart from GNAT, so if I accidentally used some GNAT-specific features
-in the code, please drop me a message.
+in the code, open an issue.
 
-## Installation
+### Installation
 
 To install OpenGLAda with all optional libraries, execute
 
-    $ gprbuild [options] openglada.gpr
+    $ gprbuild -p [options] openglada.gpr
     $ gprinstall [options] openglada.gpr
 
 Where *[options]* is the set of scenario variables you want to use (generally
@@ -82,7 +92,7 @@ in the form of `-X`*name*`=`*value*`). The available variables are:
 
     - `x11`: X Windowing System (Linux, BSD, etc)
     - `windows`: Microsoft Windows
-    - `quartz`: Quartz Compositor (OS X)
+    - `quartz`: Quartz Compositor (macOS)
 
  * `mode`: May take one of the following values:
 
@@ -111,18 +121,18 @@ in the form of `-X`*name*`=`*value*`). The available variables are:
 
 For example, a typical Windows installation would be
 
-    $ gprbuild -XWindowing_System=windows -Xmode=release openglada.gpr
+    $ gprbuild -p -XWindowing_System=windows -Xmode=release openglada.gpr
     $ gprinstall -XWindowing_System=windows -Xmode=release openglada.gpr
 
-Installing OpenGLAda makes its projects available to `gprbuild` and also to the
-GPS GUI. You can now import it like this:
+Installing OpenGLAda makes its projects available to `gprbuild` and also to
+GNAT Studio. You can now import it like this:
 
     with "opengl";
     with "opengl-glfw";
     with "opengl-text";
     -- and so on
 
-**Note:** The projects file `openglada.gpr` is just an aggregate project used
+**Note:** The project file `openglada.gpr` is just an aggregate project used
 for installation. In your projects, depend on `opengl.gpr` and its child
 projects.
 
@@ -141,51 +151,75 @@ instead:
 
     $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows
     $ gprbuild -P opengl-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-text-test.gpr -XWindowing_System=windows
+    $ gprbuild -P opengl-images-test.gpr -XWindowing_System=windows
 
 The tests require GLFW, because they need to create windows. By default, they
 try to link against GLFW 3+. You can instead build the tests against GLFW 2.x
-by executing:
-
-    $ gprbuild -P opengl-test.gpr -XWindowing_System=windows -XGLFW_Version=2
-    $ gprbuild -P opengl-glfw-test.gpr -XWindowing_System=windows -XGLFW_Version=2
-
-(Substitute `windows` with `x11` or `quartz` if needed.)
+by adding the parameter `-XGLFW_Version=2`.
 
 ## Examples
 
-OpenGLAda comes bundled with a lot of examples. They have mostly been translated
-from C examples from OpenGL textbooks. They are located inside the `examples`
-folder. Each example has a separate `.gpr` file with which it can be built.
-
-Contributions of examples are always welcome.
+Examples are available in [this repository][11].
 
 ## Developer Documentation
 
-OpenGLAda autogenerates its API binding to OpenGL. The autogenerated source
-files are those in `src/gl/generated` and they are generated from the `*.spec`
-files in `src/gl/specs`. The syntax of the spec files is similar to Ada.
+I have written an article about the development of OpenGLAda on AdaCore's blog:
 
-The reason behind this is that all functionality newer than OpenGL 1.1 is not
-expected to be provided by the OpenGL implementation. Instead, function pointers
-to the implementations should be queried at runtime. This makes it possible for
-the user to provide a fallback in case some OpenGL functionality is not
-available on the target system.
+ * [Part 1][25]
+ * [Part 2][26]
 
-The `generate` tool compiled from `src/generator` will take care of creating
-both the API imports from OpenGL and the code for loading the function pointers
-at runtime. The tool is only necessary when adding OpenGL API functions to
-OpenGLAda and thus not of interest to the general user, since the autogenerated
-files are checked in to version control.
+### Binding Generation
 
-If you change the `*.spec` files, running `make generate` afterwards will
-update the autogenerated files. Be sure to check them in along with the spec
-changes.
+OpenGL implementations do not necessarily provide the newest OpenGL version,
+but possibly some older one with some functionality of the newer versions
+provided as extensions. For OpenGLAda, this means that most OpenGL functionality
+cannot be linked against via the library loader, since loading the library
+would immediately fail if any function is not available, even if the user never
+calls it. Most notoriously, Windows does not provide any OpenGL functionality
+newer than 1.1 via library loading.
+
+The remedy for this is that function pointers of newer OpenGL functions must
+be queried at runtime. This is a tedious process and similar for each function.
+For this reason, OpenGLAda uses a code generator to autogenerate the function
+pointer types and the code loading each function, as well as the code importing
+OpenGL 1.1 functions via library loading.
+
+The code generator can be found in `src/generator`. It processes the files found
+in `src/gl/specs` and creates the files found in `src/gl/generated`. The
+generator is a tool used at compile-time for building OpenGLAda and of no
+interest to the general user. The generated files are checked in to version
+control. The generator also generates the markdown file which is the base for
+the [function mapping list][27] on the website.
+
+The process of wrapping a new OpenGL function is:
+
+ * Add the function specification to one of the `*.spec` files in `src/gl/specs`.
+ * Run `make generate`, which builds the generator and generates the Ada code.
+ * Check in the newly generated code along with the changed spec.
+
+The `*.spec` files use a syntax similar to Ada.
+
+### Building the Windows Installer
+
+The Windows installer is generated with the [WiX Toolset][28]. You'll need its
+executables `heat.exe`, `candle.exe` and `light.exe` in your `PATH`. Executing
+the script `create-msi.ps1` in the `install` directory containing it will
+
+ * download binaries of the GLFW and FreeType libraries
+ * build OpenGLAda with GNAT
+ * install OpenGLAda in a temporary directory
+ * Build an MSI installer that will copy OpenGLAda's binaries as well as the
+   GLFW and FreeType libraries into the installation directory of a
+   GNAT Community installation.
 
 ## License
 
-OpenGLAda is distributed under the terms of the [MIT License][7]. The Ada 2012
-logo that is used in the SOIL tests is distributed under the terms of the
-[CC BY-ND 3.0][8] license, the original author is [AdaCore][9].
+OpenGLAda, as well as the included libraries FreeTypeAda and GID, are
+distributed under the terms of the [MIT License][7].
+
+The Ada 2012 logo that is used in the images tests is distributed under the
+terms of the [CC BY-ND 3.0][8] license, the original author is [AdaCore][9].
 
  [1]: http://libre.adacore.com/
  [2]: http://www.adacore.com/gnatpro/toolsuite/gprbuild/
@@ -196,8 +230,8 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [7]: COPYING
  [8]: http://creativecommons.org/licenses/by-nd/3.0/deed.en_GB
  [9]: http://www.ada2012.org/#the_logo
- [10]: http://www.lonesock.net/soil.html
- [11]: https://sourceforge.net/projects/ftgl/
+ [10]: https://gen-img-dec.sourceforge.io/
+ [11]: https://github.com/flyx/OpenGLAda-examples
  [12]: https://sourceforge.net/projects/gnuada/files/
  [13]: http://flyx.github.io/OpenGLAda/setup.html
  [16]: http://getadanow.com/#get_windows
@@ -205,3 +239,10 @@ logo that is used in the SOIL tests is distributed under the terms of the
  [19]: https://freetype.org/
  [20]: https://github.com/flyx/FreeTypeAda
  [21]: https://github.com/flyx/OpenGLAda/releases
+ [22]: http://glew.sourceforge.net/
+ [23]: https://www.opengl.org/resources/libraries/glut/
+ [24]: https://www.khronos.org/opengl/wiki/Image_Libraries
+ [25]: https://blog.adacore.com/the-road-to-a-thick-opengl-binding-for-ada
+ [26]: https://blog.adacore.com/the-road-to-a-thick-opengl-binding-for-ada-part-2
+ [27]: https://flyx.github.io/OpenGLAda/mapping.html
+ [28]: https://wixtoolset.org/
