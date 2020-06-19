@@ -1,6 +1,10 @@
 v0.8.0
+ * __Breaking change__: Removed SOIL since it doesn't compile on macOS Catalina
+   and replaced it with GID. Added `opengl-images.gpr` to replace SOIL
+   functionality.
+ * __Breaking change__: Removed the long-deprecated FTGL binding.
  * Fixed the binding of `glGetTransformFeedbackVarying`
- * Fixed error when creating an empty Depth_Component texture (#135)
+ * Fixed a bug when creating an empty Depth_Component texture (#135)
  * Added package:
    - GL.Objects.Queries
  * Added missing functionality in:
@@ -9,8 +13,8 @@ v0.8.0
                          glGenTransformFeedbacks, glDeleteTransformFeedbacks,
                          glBindTransformFeedback, glMapBufferRange,
                          glFlushMappedBufferRange, glGetBufferSubData)
- * Removed SOIL since it doesn't compile on macOS Catalina and replaced it with
-   GID. Added `opengl-images.gpr` to replace SOIL functionality.
+ 
+ * Fixed a bug when querying shaders from a program object (#129).
 v0.7.0:
  * Added missing functionality in:
    - GL.Objects.Buffers (glBindBufferBase, glDrawElementsInstanced,
