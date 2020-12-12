@@ -994,6 +994,13 @@ spec GL.API is
       Texture : UInt; Level : Objects.Textures.Mipmap_Level) with
      Dynamic => "glFramebufferTexture",
      Wrapper => "GL.Objects.Framebuffers.Attach_Texture";
+   procedure Framebuffer_Texture_2D
+     (Target : Low_Level.Enums.Framebuffer_Kind;
+      Attachment : Objects.Framebuffers.Attachment_Point;
+      Texture_Target : Low_Level.Enums.Texture_Kind;
+      Texture : UInt; Level : Objects.Textures.Mipmap_Level) with
+     Dynamic => "glFramebufferTexture2D",
+     Wrapper => "GL.Objects.Framebuffers.Attach_Texture_2D";
    procedure Framebuffer_Texture_Layer
      (Target : Low_Level.Enums.Framebuffer_Kind;
       Attachment : Objects.Framebuffers.Attachment_Point; Texture : UInt;

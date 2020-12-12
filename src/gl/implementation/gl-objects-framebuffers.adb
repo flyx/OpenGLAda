@@ -34,6 +34,16 @@ package body GL.Objects.Framebuffers is
       Raise_Exception_On_OpenGL_Error;
    end Attach_Texture;
 
+   procedure Attach_Texture_2D (Target :  Framebuffer_Target;
+                                Attachment : Attachment_Point;
+                                Tex_Target : GL.Low_Level.Enums.Texture_Kind;
+                                Object : Textures.Texture'Class) is
+   begin
+      API.Framebuffer_Texture_2D (Target.Kind, Attachment, Tex_Target,
+                                  Object.Raw_Id, 0);
+      Raise_Exception_On_OpenGL_Error;
+   end Attach_Texture_2D;
+
    procedure Attach_Texture_Layer (Target : Framebuffer_Target;
                                    Attachment : Attachment_Point;
                                    Object : Textures.Texture'Class;

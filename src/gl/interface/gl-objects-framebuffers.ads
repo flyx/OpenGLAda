@@ -5,7 +5,7 @@ with GL.Buffers;
 with GL.Objects.Renderbuffers;
 with GL.Objects.Textures;
 
-private with GL.Low_Level.Enums;
+with GL.Low_Level.Enums;
 
 package GL.Objects.Framebuffers is
    pragma Preelaborate;
@@ -30,6 +30,7 @@ package GL.Objects.Framebuffers is
    type Attachment_List is array (Positive range <>) of Attachment_Point;
 
    type Framebuffer_Target (<>) is tagged limited private;
+   type Framebuffer_Texture_Target (<>) is tagged limited private;
 
    function Status (Target : Framebuffer_Target) return Framebuffer_Status;
 
@@ -41,6 +42,11 @@ package GL.Objects.Framebuffers is
                              Attachment : Attachment_Point;
                              Object : Textures.Texture'Class;
                              Level  : Textures.Mipmap_Level);
+
+   procedure Attach_Texture_2D (Target :  Framebuffer_Target;
+                                Attachment : Attachment_Point;
+                                Tex_Target : GL.Low_Level.Enums.Texture_Kind;
+                                Object : Textures.Texture'Class);
 
    procedure Attach_Texture_Layer (Target : Framebuffer_Target;
                                    Attachment : Attachment_Point;
@@ -144,6 +150,8 @@ private
    procedure Internal_Release_Id (Object : Framebuffer; Id : UInt);
 
    type Framebuffer_Target (Kind : Low_Level.Enums.Framebuffer_Kind) is
+     tagged limited null record;
+   type Framebuffer_Texture_Target (Kind : Low_Level.Enums.Texture_Kind) is
      tagged limited null record;
 
    Read_Target  : constant Framebuffer_Target :=
