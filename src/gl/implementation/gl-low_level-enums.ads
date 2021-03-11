@@ -28,7 +28,8 @@ package GL.Low_Level.Enums is
                         Pixel_Unpack_Buffer, Uniform_Buffer, Texture_Buffer,
                         Transform_Feedback_Buffer, Transform_Feedback,
                         Copy_Read_Buffer, Copy_Write_Buffer,
-                        Draw_Indirect_Buffer, Atomic_Counter_Buffer);
+                        Draw_Indirect_Buffer, Shader_Storage_Buffer,
+                        Atomic_Counter_Buffer);
 
    type Draw_Buffer_Index is (DB0, DB1, DB2, DB3, DB4, DB5, DB6, DB7,
       DB8, DB9, DB10, DB11, DB12, DB13, DB14, DB15);
@@ -82,6 +83,7 @@ private
                         Copy_Read_Buffer          => 16#8F36#,
                         Copy_Write_Buffer         => 16#8F37#,
                         Draw_Indirect_Buffer      => 16#8F3F#,
+                        Shader_Storage_Buffer     => 16#90D2#,
                         Atomic_Counter_Buffer     => 16#92C0#);
    for Buffer_Kind'Size use Enum'Size;
 

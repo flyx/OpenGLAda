@@ -140,6 +140,7 @@ package GL.Objects.Buffers is
    Copy_Read_Buffer          : constant Buffer_Target;
    Copy_Write_Buffer         : constant Buffer_Target;
    Draw_Indirect_Buffer      : constant Buffer_Target;
+   Shader_Storage_Buffer     : constant Buffer_Target;
    Atomic_Counter_Buffer     : constant Buffer_Target;
 
 private
@@ -205,6 +206,8 @@ private
      := Buffer_Target'(Kind => Low_Level.Enums.Copy_Write_Buffer);
    Draw_Indirect_Buffer      : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Draw_Indirect_Buffer);
+   Shader_Storage_Buffer     : constant Buffer_Target
+     := Buffer_Target'(Kind => Low_Level.Enums.Shader_Storage_Buffer);
    Atomic_Counter_Buffer     : constant Buffer_Target
      := Buffer_Target'(Kind => Low_Level.Enums.Atomic_Counter_Buffer);
 end GL.Objects.Buffers;
