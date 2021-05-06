@@ -1,0 +1,27 @@
+name = "openglada"
+version = "0.8.0"
+description = "Thick Ada binding for OpenGL and GLFW"
+website = "http://flyx.github.io/OpenGLAda/"
+authors = ["Felix Krause <contact@flyx.org>"]
+executables = ["gl_test-opengl3", "gl_test-context", "gl_test-vbos", "gl_test-shaders", "gl_test-framebuffers", "gl_test-immediate"]
+licenses = "MIT"
+maintainers = ["Felix Krause <contact@flyx.org>"]
+maintainers-logins = ["flyx"]
+tags = ["opengl", "glfw", "binding"]
+
+project-files = ["opengl.gpr", "opengl-glfw.gpr", "opengl-test.gpr"]
+
+[[depends-on]]
+[depends-on."case(os)".linux]
+libglfw3 = "^3"
+libx11 = "^1"
+
+[gpr-externals]
+Auto_Exceptions = ["enabled", "disabled"]
+GLFW_Version = ["2", "3"]
+Mode = ["debug", "release"]
+
+[gpr-set-externals."case(os)"]
+linux   = { Windowing_System = "x11" }
+macos   = { Windowing_System = "quartz" }
+windows = { Windowing_System = "windows" }
