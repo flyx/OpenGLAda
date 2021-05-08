@@ -418,7 +418,7 @@ package body GL.Objects.Textures is
 
    procedure Set_Border_Color (Target : Texture_Target; Color : Colors.Color) is
 
-      Raw : constant Low_Level.Single_Array := Helpers.Float_Array (Color);
+      Raw : constant Single_Array := Helpers.Float_Array (Color);
    begin
       API.Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                 Raw);
@@ -426,7 +426,7 @@ package body GL.Objects.Textures is
    end Set_Border_Color;
 
    function Border_Color (Target : Texture_Target) return Colors.Color is
-      Raw : Low_Level.Single_Array (1 .. 4);
+      Raw : Single_Array (1 .. 4);
    begin
       API.Get_Tex_Parameter_Floats (Target.Kind, Enums.Textures.Border_Color,
                                     Raw);

@@ -129,23 +129,24 @@ package body Specs is
 
       procedure Gen_Copy_Item (Start : Token) is
          Previous_Was_Id : Boolean := True;
-         Content : Unbounded_String := To_Unbounded_String (Start.Content);
+         Content : Unbounded_String;
       begin
          loop
             declare
                Cur : constant Token := Next (T);
             begin
-               exit when Paren_Depth (T) = 0 and Cur.Kind = Delimiter and
-                 Cur.Content = ";";
-               if Previous_Was_Id and Cur.Kind = Identifier then
-                  Content := Content & ' ';
+               if Paren_Depth (T) = 0 and Cur.Kind = Delimiter and
+                 Cur.Content = ";" then
+                  Content := To_Unbounded_String
+                    (Input_Substring (T, Start, Cur));
+                  exit;
                end if;
-               Content := Content & Cur.Content;
                Previous_Was_Id := Cur.Kind = Identifier;
             end;
          end loop;
          Data.Items.Append (Body_Item'(Kind => Copy,
-           To_Copy => Content & ";"));
+           To_Copy => Content));
+         Data.Wrappers.Append (String_Lists.Empty_Vector);
       end Gen_Copy_Item;
 
       procedure Gen_Subprogram_Item (Start : Token) is
@@ -402,7 +403,7 @@ package body Specs is
                              To_String (GL_Name) & """!";
                         end if;
 
-                        Data.Items.Replace_Element (Symbol_To_Index.Element (Pos),
+                        Data.Items.Replace_Element (Item_Pos,
                           Body_Item'(
                              Kind => Static,
                              S_Name => To_Unbounded_String (Name),
@@ -458,6 +459,9 @@ package body Specs is
             if Wrapper_Pos = 0 then
                Data.Wrappers.Append (Wrappers);
             else
+               if Natural (Data.Wrappers.Length) < Wrapper_Pos then
+                  Wrong_Token (Cur, "Wrapper_Pos invalid:" & Wrapper_Pos'Img & ", length = " & Natural (Data.Wrappers.Length)'Img);
+               end if;
                Data.Wrappers.Replace_Element (Wrapper_Pos,
                  String_Lists."&" (Data.Wrappers.Element (Wrapper_Pos),
                                    Wrappers));
@@ -609,6 +613,13 @@ package body Specs is
       for Use_Item of Data.Uses loop
          Put_Line (Target, "   use " & Use_Item & ";");
       end loop;
+      
+      for Item of Data.Items loop
+         if Item.Kind = Copy then
+            Put_Line (Target, "   " & To_String (Item.To_Copy));
+         end if;
+      end loop;
+      
       if Is_Root then
          declare
             Sig_Id : Positive := 1;
@@ -629,10 +640,11 @@ package body Specs is
             end loop;
          end;
       end if;
+      
       for Item of Data.Items loop
          case Item.Kind is
          when Copy =>
-            Put_Line (Target, "   " & To_String (Item.To_Copy));
+            null;
          when Static =>
             declare
                Sub_Name : constant String := To_String (Item.S_Name);
@@ -796,7 +808,10 @@ package body Specs is
             declare
                Item : constant Body_Item := Data.Items.Element (Index);
                GL_Name : constant String := To_String (
-                 if Item.Kind = Static then Item.S_GL_Name else Item.D_GL_Name);
+                 case Item.Kind is
+                    when Static => Item.S_GL_Name,
+                    when Dynamic => Item.D_GL_Name,
+                    when Copy => Item.To_Copy);
                Wrappers : constant String_Lists.Vector :=
                  Data.Wrappers.Element (Index);
             begin

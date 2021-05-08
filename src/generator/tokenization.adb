@@ -120,7 +120,8 @@ package body Tokenization is
       Object.Prev_Column := Object.Cur_Column;
 
       if I > Object.Input'Length then
-         return Token'(Kind => Stream_End, Length => 0, Content => "");
+         return Token'(Kind => Stream_End, Length => 0,
+                       Start => Object.Pos, Content => "");
       end if;
 
       Cur := Next_Char;
@@ -134,7 +135,8 @@ package body Tokenization is
                   Skip (not Newlines);
                   return Ret : constant Token :=
                      Token'(Kind => Comment, Length => I - Object.Pos - 2,
-                           Content => Object.Input (Object.Pos + 2 .. I - 1)) do
+                            Start => Object.Pos + 2,
+                            Content => Object.Input (Object.Pos + 2 .. I - 1)) do
                      Update_Pos;
                   end return;
                else
@@ -144,12 +146,14 @@ package body Tokenization is
                      for J in 1 .. 10 loop
                         if Compound_Delimiters (J) = Possible_Compound then
                            Cur := Next_Char; -- properly advace I/line/column
-                           Update_Pos;
-                           return Token'(Kind => Delimiter, Length => 2,
-                                         Content => Possible_Compound);
+                           return Ret : constant Token :=
+                             Token'(Kind => Delimiter, Length => 2,
+                                    Start => Object.Pos,
+                                    Content => Possible_Compound) do
+                              Update_Pos;
+                           end return;
                         end if;
                      end loop;
-                     Update_Pos;
                      if Cur = '(' then
                         Object.Depth := Object.Depth + 1;
                      elsif Cur = ')' then
@@ -158,14 +162,20 @@ package body Tokenization is
                         end if;
                         Object.Depth := Object.Depth - 1;
                      end if;
-                     return Token'(Kind => Delimiter, Length => 1,
-                                    Content => (1 => Cur));
+                     return Ret : constant Token :=
+                       Token'(Kind => Delimiter, Length => 1, Start => Object.Pos,
+                              Content => (1 => Cur)) do
+                        Update_Pos;
+                     end return;
                   end;
                end if;
             end;
          else
-            Update_Pos;
-            return Token'(Kind => Delimiter, Length => 1, Content => (1 => Cur));
+            return Ret : constant Token :=
+              Token'(Kind => Delimiter, Length => 1,
+                     Start => Object.Pos, Content => (1 => Cur)) do
+               Update_Pos;
+            end return;               
          end if;
       elsif Cur = '"' then
          while I <= Object.Input'Length loop
@@ -178,9 +188,10 @@ package body Tokenization is
                      goto continue;
                   end if;
                end if;
-               return Ret : constant Token := Token'(Kind => String_Literal,
-                 Length => I - Object.Pos - 2,
-                 Content => Object.Input (Object.Pos + 1 .. I - 2)) do
+               return Ret : constant Token :=
+                 Token'(Kind => String_Literal, Length => I - Object.Pos - 2,
+                        Start => Object.Pos + 1,
+                        Content => Object.Input (Object.Pos + 1 .. I - 2)) do
                   Update_Pos;
                end return;
             end if;
@@ -188,10 +199,11 @@ package body Tokenization is
          raise Tokenization_Error with "Unclosed string literal";
       else
          Skip (not (Separators or Single_Delimiters));
-         return Ret : Token := Token'(Kind => Identifier,
-           Length => I - Object.Pos,
-           Content => Object.Input (Object.Pos .. I - 1),
-           Id => <>) do
+         return Ret : Token :=
+           Token'(Kind => Identifier, Length => I - Object.Pos,
+                  Start => Object.Pos,
+                  Content => Object.Input (Object.Pos .. I - 1),
+                  Id => <>) do
             Ret.Id := Id (Object, Ret.Content);
             Update_Pos;
          end return;
@@ -215,6 +227,9 @@ package body Tokenization is
       end if;
    end To_String;
 
+   function Input_Substring (Object : Tokenizer; From, To : Token) return String is
+     (Object.Input (From.Start .. To.Start + To.Content'Length - 1));
+
    function Is_Keyword (Id : Symbol_Id) return Boolean is
      (Id < Keyword_Wrapper);
 
@@ -223,20 +238,22 @@ package body Tokenization is
       case T.Kind is
       when Identifier =>
          return Token'(Kind => Identifier, Length => T.Length,
-           Content => T.Content, Id => T.Id);
+            Start => T.Start, Content => T.Content, Id => T.Id);
       when Numeric_Literal =>
          return Token'(Kind => Numeric_Literal, Length => T.Length,
-                       Content => T.Content);
+                       Start => T.Start, Content => T.Content);
       when String_Literal =>
          return Token'(Kind => String_Literal, Length => T.Length,
-                       Content => T.Content);
+                       Start => T.Start, Content => T.Content);
       when Delimiter =>
          return Token'(Kind => Delimiter, Length => T.Length,
-                       Content => T.Content);
+                       Start => T.Start, Content => T.Content);
       when Comment =>
-         return Token'(Kind => Comment, Length => T.Length, Content => T.Content);
+         return Token'(Kind => Comment, Length => T.Length,
+                       Start => T.Start, Content => T.Content);
       when Stream_End =>
-         return Token'(Kind => Stream_End, Length => 0, Content => "");
+         return Token'(Kind => Stream_End, Length => 0,
+                       Start => T.Start, Content => "");
       end case;
    end Copy;
 

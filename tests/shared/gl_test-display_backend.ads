@@ -6,7 +6,7 @@ package GL_Test.Display_Backend is
    -- only exposes most basic functionality, not intended for usage outside
    -- tests.
 
-   procedure Init;
+   procedure Init (Debugging : Boolean := False);
 
    procedure Open_Window (Width, Height : Natural; Depth_Bits : Natural := 0);
 

@@ -1,0 +1,166 @@
+--  part of OpenGLAda, (c) 2017 Felix Krause
+--  released under the terms of the MIT license, see the file "COPYING"
+
+with Ada.Text_IO.Text_Streams;
+
+with GL.Attributes;
+with GL.Buffers;
+with GL.Debug;
+with GL.Files;
+with GL.Objects.Buffers;
+with GL.Objects.Shaders;
+with GL.Objects.Programs;
+with GL.Objects.Vertex_Arrays;
+with GL.Toggles;
+with GL.Types.Colors;
+
+with GL_Test.Display_Backend;
+
+procedure GL_Test.Debugging is
+   use GL.Buffers;
+   use GL.Types;
+   use GL.Objects.Vertex_Arrays;
+
+   procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
+     (Singles.Vector3_Pointers);
+
+   procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
+     (Colors.Basic_Color_Pointers);
+
+   procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
+                        Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
+      use GL.Objects.Buffers;
+
+      Triangle1 : constant Singles.Vector3_Array
+        := ((-0.3,  0.5, -1.0),
+            (-0.8, -0.5, -1.0),
+            (0.2, -0.5, -1.0));
+      Triangle2 : constant Singles.Vector3_Array
+        := ((-0.2,  0.5, -1.0),
+            (0.3, -0.5, -1.0),
+            (0.8,  0.5, -1.0));
+      Color_Array : constant Colors.Basic_Color_Array
+        := ((1.0, 0.0, 0.0),
+            (0.0, 1.0, 0.0),
+            (0.0, 0.0, 1.0));
+   begin
+      -- First vertex array object: Colored vertices
+      Array1.Bind;
+      Array_Buffer.Bind (Buffer1);
+      Load_Vectors (Array_Buffer, Triangle1, Static_Draw);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+
+      Array_Buffer.Bind (Buffer2);
+      Load_Colors (Array_Buffer, Color_Array, Static_Draw);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (1, 3, Single_Type, False, 0, 0);
+      GL.Attributes.Enable_Vertex_Attrib_Array (1);
+
+      -- Second vertex array object: Only vertices
+      Array2.Bind;
+      Array_Buffer.Bind (Buffer3);
+      Load_Vectors (Array_Buffer, Triangle2, Static_Draw);
+      GL.Attributes.Set_Vertex_Attrib_Pointer (0, 3, Single_Type, False, 0, 0);
+      GL.Attributes.Enable_Vertex_Attrib_Array (0);
+   end Load_Data;
+
+   procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is
+      Vertex_Shader   : GL.Objects.Shaders.Shader
+        (Kind => GL.Objects.Shaders.Vertex_Shader);
+      Fragment_Shader : GL.Objects.Shaders.Shader
+        (Kind => GL.Objects.Shaders.Fragment_Shader);
+   begin
+      Vertex_Shader.Initialize_Id;
+      Fragment_Shader.Initialize_Id;
+      Program.Initialize_Id;
+
+      -- load shader sources and compile shaders
+      GL.Files.Load_Shader_Source_From_File
+        (Vertex_Shader, "../tests/gl/gl_test-opengl3-vertex.glsl");
+      GL.Files.Load_Shader_Source_From_File
+        (Fragment_Shader, "../tests/gl/gl_test-opengl3-fragment.glsl");
+
+      Vertex_Shader.Compile;
+      Fragment_Shader.Compile;
+
+      if not Vertex_Shader.Compile_Status then
+         Ada.Text_IO.Put_Line ("Compilation of vertex shader failed. log:");
+         Ada.Text_IO.Put_Line (Vertex_Shader.Info_Log);
+      end if;
+
+      if not Fragment_Shader.Compile_Status then
+         Ada.Text_IO.Put_Line ("Compilation of fragment shader failed. log:");
+         Ada.Text_IO.Put_Line (Fragment_Shader.Info_Log);
+      end if;
+
+      -- set up program
+      Program.Attach (Vertex_Shader);
+      Program.Attach (Fragment_Shader);
+      Program.Bind_Attrib_Location (0, "in_Position");
+      Program.Bind_Attrib_Location (1, "in_Color");
+      Program.Link;
+      if not Program.Link_Status then
+         Ada.Text_IO.Put_Line ("Program linking failed. Log:");
+         Ada.Text_IO.Put_Line (Program.Info_Log);
+         return;
+      end if;
+      Program.Use_Program;
+   end Load_Shaders;
+
+   Program : GL.Objects.Programs.Program;
+
+   Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffers.Buffer;
+   Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+      
+   Logger : aliased GL.Debug.Stream_Logger;
+begin
+   Display_Backend.Init (True);
+   Display_Backend.Configure_Minimum_OpenGL_Version (Major => 4, Minor => 3);
+   Display_Backend.Open_Window (Width => 500, Height => 500);
+   
+   Logger.Set_Stream (Ada.Text_IO.Text_Streams.Stream (Ada.Text_IO.Standard_Output));
+   GL.Toggles.Enable (GL.Toggles.Debug_Output);
+   GL.Debug.Message_Callback (Logger'Access);
+
+   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 1,
+                            GL.Debug.Notification, "Initialized GLFW window");
+
+   Vector_Buffer1.Initialize_Id;
+   Vector_Buffer2.Initialize_Id;
+   Color_Buffer.Initialize_Id;
+   Array1.Initialize_Id;
+   Array2.Initialize_Id;
+   
+   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 2,
+                            GL.Debug.Notification, "Initialized objects");
+
+   Load_Shaders (Program);
+   
+   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 3,
+                            GL.Debug.Notification, "Loaded shaders");
+
+   Load_Data (Array1, Array2, Vector_Buffer1, Color_Buffer, Vector_Buffer2);
+
+   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 4,
+                            GL.Debug.Notification, "Loaded data");
+
+   while Display_Backend.Window_Opened loop
+      Clear (Buffer_Bits'(Color => True, Depth => True, others => False));
+
+      Array1.Bind;
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
+
+      Array2.Bind;
+      GL.Attributes.Set_Single (1, 1.0, 0.0, 0.0);
+      GL.Objects.Vertex_Arrays.Draw_Arrays (Triangles, 0, 3);
+
+      GL.Objects.Vertex_Arrays.Null_Array_Object.Bind;
+
+      GL.Flush;
+      Display_Backend.Swap_Buffers;
+
+      Display_Backend.Poll_Events;
+   end loop;
+
+   Display_Backend.Shutdown;
+end GL_Test.Debugging;
