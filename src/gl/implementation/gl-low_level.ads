@@ -31,12 +31,6 @@ package GL.Low_Level is
    -- breaks linking on Windows with StdCall convention (possibly a GNAT bug).
    subtype Bitfield is C.unsigned;
 
-   type Single_Array is array (Positive range <>) of aliased Single;
-   type Double_Array is array (Positive range <>) of aliased Double;
-
-   type Int_Array  is array (Positive range <>) of aliased Int;
-   type UInt_Array is array (Positive range <>) of aliased UInt;
-
    -- These types totally are not pointers. No idea why they are named like this.
    subtype IntPtr is C.long;
    subtype SizeIPtr is C.long;
@@ -51,10 +45,6 @@ private
    for Bool use (False => 0, True => 1);
    for Bool'Size use C.unsigned_char'Size;
 
-   pragma Convention (C, Single_Array);
-   pragma Convention (C, Double_Array);
-   pragma Convention (C, Int_Array);
-   pragma Convention (C, UInt_Array);
    pragma Convention (C, Size_Access);
    pragma Convention (C, Bool_Access);
    pragma Convention (C, Char_Access_Array);

@@ -6,7 +6,10 @@ with Glfw.Events.Keys;
 
 package body GL_Test.Display_Backend is
 
-   procedure Init renames Glfw.Init;
+   procedure Init (Debugging : Boolean := False) is
+   begin
+      Glfw.Init;
+   end Init;
 
    procedure Open_Window (Width, Height : Natural; Depth_Bits : Natural := 0) is
    begin

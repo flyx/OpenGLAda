@@ -8,29 +8,30 @@ package GL.Toggles is
 
    type Toggle_State is (Disabled, Enabled);
 
-   type Toggle is (Point_Smooth, Line_Smooth, Line_Stipple, Polygon_Smooth, Polygon_Stipple,
-                   Cull_Face, Lighting, Color_Material,
+   type Toggle is (Point_Smooth, Line_Smooth, Line_Stipple, Polygon_Smooth,
+                   Polygon_Stipple, Cull_Face, Lighting, Color_Material,
                    Fog, Depth_Test, Stencil_Test, Normalize, Alpha_Test, Dither,
-                   Blend, Index_Logic_Op, Color_Logic_Op, Scissor_Test, Texture_Gen_S,
-                   Texture_Gen_T, Texture_Gen_R, Texture_Gen_Q,
-                   Auto_Normal,
-                   Map1_Color_4, Map1_Index,
-                   Map1_Normal, Map1_Texture_Coord_1, Map1_Texture_Coord_2,
+                   Blend, Index_Logic_Op, Color_Logic_Op, Scissor_Test,
+                   Texture_Gen_S, Texture_Gen_T, Texture_Gen_R, Texture_Gen_Q,
+                   Auto_Normal, Map1_Color_4, Map1_Index, Map1_Normal,
+                   Map1_Texture_Coord_1, Map1_Texture_Coord_2,
                    Map1_Texture_Coord_3, Map1_Texture_Coord_4,
                    Map1_Vertex_3, Map1_Vertex_4, Map2_Color_4, Map2_Index,
                    Map2_Normal, Map2_Texture_Coord_1, Map2_Texture_Coord_2,
                    Map2_Texture_Coord_3, Map2_Texture_Coord_4, Map2_Vertex_3,
-                   Map2_Vertex_4, Texture_1D, Texture_2D, Polygon_Offset_Point, Polygon_Offset_Line,
-                   Clip_Plane_0, Clip_Plane_1,
+                   Map2_Vertex_4, Texture_1D, Texture_2D, Polygon_Offset_Point,
+                   Polygon_Offset_Line, Clip_Plane_0, Clip_Plane_1,
                    Clip_Plane_2, Clip_Plane_3, Clip_Plane_4, Clip_Plane_5,
-                   Light0, Light1, Light2, Light3, Light4, Light5, Light6, Light7,
-                   Convolution_1D, Convolution_2D, Separable_2D, Histogram,
-                   Minmax, Polygon_Offset_Fill, Rescale_Normal, Texture_3D, Multisample,
-                   Sample_Alpha_To_Coverage, Sample_Alpha_To_One,
-                   Sample_Coverage, Color_Table, Post_Convolution_Color_Table,
-                   Post_Color_Matrix_Color_Table, Color_Sum, Texture_Cube_Map,
-                   Vertex_Program_Point_Size, Vertex_Program_Two_Side, Point_Sprite,
-                   Rasterizer_Discard, Primitive_Restart);
+                   Light0, Light1, Light2, Light3, Light4, Light5, Light6,
+                   Light7, Convolution_1D, Convolution_2D, Separable_2D,
+                   Histogram, Minmax, Polygon_Offset_Fill, Rescale_Normal,
+                   Texture_3D, Multisample, Sample_Alpha_To_Coverage,
+                   Sample_Alpha_To_One, Sample_Coverage, Color_Table,
+                   Post_Convolution_Color_Table, Post_Color_Matrix_Color_Table,
+                   Debug_Output_Synchronous, Color_Sum, Texture_Cube_Map,
+                   Vertex_Program_Point_Size, Vertex_Program_Two_Side,
+                   Point_Sprite, Rasterizer_Discard, Primitive_Restart,
+                   Debug_Output);
 
    procedure Enable (Subject : Toggle);
    procedure Disable (Subject : Toggle);
@@ -111,13 +112,15 @@ private
                    Color_Table              => 16#80D0#,
                    Post_Convolution_Color_Table  => 16#80D1#,
                    Post_Color_Matrix_Color_Table => 16#80D2#,
+                   Debug_Output_Synchronous  => 16#8242#,
                    Color_Sum                 => 16#8458#,
                    Texture_Cube_Map          => 16#8513#,
                    Vertex_Program_Point_Size => 16#8642#,
                    Vertex_Program_Two_Side   => 16#8643#,
                    Point_Sprite              => 16#8861#,
                    Rasterizer_Discard        => 16#8C89#,
-                   Primitive_Restart         => 16#8F9D#);
+                   Primitive_Restart         => 16#8F9D#,
+                   Debug_Output              => 16#92E0#);
    for Toggle'Size use Low_Level.Enum'Size;
 
 end GL.Toggles;

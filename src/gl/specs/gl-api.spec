@@ -2,6 +2,7 @@ with GL.Attributes;
 with GL.Blending;
 with GL.Buffers;
 with GL.Culling;
+with GL.Debug;
 with GL.Enums.Getter;
 with GL.Enums.Textures;
 with GL.Errors;
@@ -27,9 +28,56 @@ with System;
 spec GL.API is
    use GL.Types;
 
-   function Get_Error return Errors.Error_Code is Static ("glGetError");
    procedure Flush with Static => "glFlush", Wrapper => "GL.Flush";
    procedure Finish with Static => "glFinish", Wrapper => "GL.Finish";
+   
+   -----------------------------------------------------------------------------
+   --                           Errors & Debugging                            --
+   -----------------------------------------------------------------------------
+   
+   type Debug_Proc is access procedure
+     (Source     : Debug.Message_Source;
+      M_Type     : Debug.Message_Type;
+      ID         : UInt;
+      Severity   : Debug.Message_Severity;
+      Length     : Size;
+      Message    : Interfaces.C.Strings.chars_ptr;
+      User_Param : System.Address);
+   pragma Convention (C, Debug_Proc);
+
+   function Get_Error return Errors.Error_Code with Static => "glGetError";
+   procedure Debug_Message_Insert (Source   : Debug.Message_Source;
+                                   M_Type   : Debug.Message_Type;
+                                   ID       : UInt;
+                                   Severity : Debug.Message_Severity;
+                                   Size     : Size;
+                                   Message  : in out String) with
+     Dynamic => "glDebugMessageInsert", Wrapper => "GL.Debug.Message_Insert";
+   procedure Push_Debug_Group (Source  : Debug.Message_Source;
+                               ID      : UInt;
+                               Length  : Size;
+                               Message : in out String) with
+     Dynamic => "glPushDebugGroup", Wrapper => "GL.Debug.Push_Group";
+   procedure Pop_Debug_Group with
+     Dynamic => "glPopDebugGroup", Wrapper => "GL.Debug.Pop_Group";
+   procedure Debug_Message_Control
+     (Source   : Debug.Message_Source_Restriction;
+      M_Type   : Debug.Message_Type_Restriction;
+      Severity : Debug.Message_Severity_Restriction;
+      Count    : Size;
+      IDs      : UInt_Array;
+      Enabled  : Low_Level.Bool) with
+     Dynamic => "glDebugMessageControl", Wrapper => "GL.Debug.Message_Control";
+   function Get_Debug_Message_Log
+     (Count : UInt; Buf_Size : Size; Source : out Debug.Message_Source;
+      Types : out Debug.Message_Type; IDs : out UInt;
+      Severities : out Debug.Message_Severity; Lengths : out Size;
+      Messag_Log : in out String) return UInt with
+     Dynamic => "glGetDebugMessageLog", Wrapper => "GL.Debug.Next_Message";
+   procedure Debug_Message_Callback
+     (Callback : Debug_Proc; User_Param : System.Address) with
+     Dynamic => "glDebugMessageCallback",
+     Wrapper => "GL.Debug.Message_Callback";
 
    -----------------------------------------------------------------------------
    --                           Parameter Getters                             --
@@ -109,7 +157,7 @@ spec GL.API is
      Wrapper => "GL.Fixed.Lighting.Diffuse",
      Wrapper => "GL.Fixed.Lighting.Specular";
    function Get_String (Name : Enums.Getter.String_Parameter)
-                        return C.Strings.chars_ptr is Static ("glGetString");
+                        return C.Strings.chars_ptr with Static => "glGetString";
    function Get_String_I (Name  : Enums.Getter.String_Parameter;
                           Index : UInt) return C.Strings.chars_ptr is
      Dynamic ("glGetStringi");
@@ -505,7 +553,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Textures.Toggle_Mipmap_Autoupdate";
    procedure Tex_Parameter_Floats (Target     : Low_Level.Enums.Texture_Kind;
                                    Param_Name : Enums.Textures.Parameter;
-                                   Values     : Low_Level.Single_Array) with
+                                   Values     : Single_Array) with
      Static  => "glTexParameterfv",
      Wrapper => "GL.Objects.Textures.Set_Border_Color";
    procedure Get_Tex_Parameter_Float (Target     : Low_Level.Enums.Texture_Kind;
@@ -518,7 +566,7 @@ spec GL.API is
    procedure Get_Tex_Parameter_Floats
      (Target     : Low_Level.Enums.Texture_Kind;
       Param_Name : Enums.Textures.Parameter;
-      Values     : in out Low_Level.Single_Array) with
+      Values     : in out Single_Array) with
      Static  => "glGetTexParameterfv",
      Wrapper => "GL.Objects.Textures.Border_Color";
    procedure Get_Tex_Parameter_Int (Target     : Low_Level.Enums.Texture_Kind;
@@ -531,7 +579,7 @@ spec GL.API is
      Wrapper => "GL.Objects.Textures.Highest_Mipmap_Level";
    procedure Get_Tex_Parameter_Ints (Target     : Low_Level.Enums.Texture_Kind;
                                      Param_Name : Enums.Textures.Parameter;
-                                     Values     : in out Low_Level.Int_Array)
+                                     Values     : in out Int_Array)
      with Static => "glGetTexParameteriv";
    procedure Get_Tex_Parameter_Wrap_Mode
      (Target     : Low_Level.Enums.Texture_Kind;
@@ -609,7 +657,7 @@ spec GL.API is
    procedure Bind_Texture (Target  : Low_Level.Enums.Texture_Kind;
                            Texture : UInt) with
      Static => "glBindTexture", Wrapper => "GL.Objects.Textures.Bind";
-   procedure Delete_Textures (N : Size; Textures : Low_Level.UInt_Array) with
+   procedure Delete_Textures (N : Size; Textures : UInt_Array) with
      Static => "glDeleteTextures";
    function Is_Texture (Texture : UInt) return Boolean with
      Static => "glIsTexture", Wrapper => "GL.Objects.Textures.Is_Texture";
@@ -751,7 +799,7 @@ spec GL.API is
      Wrapper => "GL.Fixed.Textures.Set_Alpha_Source";
    procedure Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
                           Param_Name : Enums.Textures.Env_Parameter;
-                          Value      : Low_Level.Single_Array) with
+                          Value      : Single_Array) with
      Static => "glTexEnvfv", Wrapper => "GL.Fixed.Textures.Set_Env_Color";
    procedure Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
                            Param_Name : Enums.Textures.Env_Parameter;
@@ -785,7 +833,7 @@ spec GL.API is
           Wrapper => "GL.Fixed.Textures.Alpha_Source";
    procedure Get_Tex_Env_Arr (Target     : Enums.Textures.Env_Target;
                               Param_Name : Enums.Textures.Env_Parameter;
-                              Value      : in out Low_Level.Single_Array) with
+                              Value      : in out Single_Array) with
      Static => "glGetTexEnvfv", Wrapper => "GL.Fixed.Textures.Env_Color";
    procedure Get_Tex_Env_Bool (Target     : Enums.Textures.Env_Target;
                                Param_Name : Enums.Textures.Env_Parameter;
@@ -816,9 +864,9 @@ spec GL.API is
      Dynamic => "glGenBuffers", Wrapper => "GL.Objects.Initialize_Id";
    procedure Gen_Transform_Feedbacks (N : Size; Buffers : out UInt) with
      Dynamic => "glGenTransformFeedbacks", Wrapper => "GL.Objects.Initialize_Id";
-   procedure Delete_Buffers (N : Size; Buffers : Low_Level.UInt_Array) with
+   procedure Delete_Buffers (N : Size; Buffers : UInt_Array) with
      Dynamic => "glDeleteBuffers";
-   procedure Delete_Transform_Feedbacks (N : Size; Buffers : Low_Level.UInt_Array) with
+   procedure Delete_Transform_Feedbacks (N : Size; Buffers : UInt_Array) with
      Dynamic => "glDeleteTransformFeedbacks";
    procedure Bind_Buffer (Target : Low_Level.Enums.Buffer_Kind; Buffer : UInt)
      with Dynamic =>"glBindBuffer", Wrapper => "GL.Objects.Buffers.Bind";
@@ -902,7 +950,7 @@ spec GL.API is
    procedure Gen_Vertex_Arrays (N : Size; Arrays : out UInt) with
      Dynamic => "glGenVertexArrays",
      Wrapper => "GL.Objects.Initialize_Id";
-   procedure Delete_Vertex_Arrays (N : Size; Arrays : Low_Level.UInt_Array)
+   procedure Delete_Vertex_Arrays (N : Size; Arrays : UInt_Array)
      with Dynamic => "glDeleteVertexArrays";
    procedure Bind_Vertex_Array (Arr : UInt) with
      Dynamic => "glBindVertexArray", Wrapper => "GL.Objects.Vertex_Arrays.Bind";
@@ -915,7 +963,7 @@ spec GL.API is
      Dynamic => "glGenRenderbuffers",
      Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Renderbuffers
-     (N : Size; Renderbuffers : Low_Level.UInt_Array) with
+     (N : Size; Renderbuffers : UInt_Array) with
      Dynamic => "glDeleteBuffers";
    procedure Renderbuffer_Storage
      (Target : Low_Level.Enums.Renderbuffer_Kind;
@@ -971,7 +1019,7 @@ spec GL.API is
      Dynamic => "glGenFramebuffers",
      Wrapper => "GL.Objects.Initialize_Id";
    procedure Delete_Framebuffers
-     (N : Size; Framebuffers : Low_Level.UInt_Array) with
+     (N : Size; Framebuffers : UInt_Array) with
      Dynamic => "glDeleteFramebuffers";
    procedure Bind_Framebuffer
      (Target : Low_Level.Enums.Framebuffer_Kind; Framebuffer : UInt) with
@@ -1050,7 +1098,7 @@ spec GL.API is
    procedure Gen_Queries (N : Size; Queries : out UInt) with
      Dynamic => "glGenQueries",
      Wrapper => "GL.Objects.Initialize_Id";
-   procedure Delete_Queries (N : Size; Queries : Low_Level.UInt_Array) with
+   procedure Delete_Queries (N : Size; Queries : UInt_Array) with
      Dynamic => "glDeleteQueries";
    function Is_Query (Query : UInt) return Boolean with
      Dynamic => "glIsQuery", Wrapper => "GL.Objects.Queries.Is_Query";
@@ -1091,7 +1139,7 @@ spec GL.API is
    procedure Delete_Shader (Shader : UInt) with Dynamic => "glDeleteShader";
    procedure Shader_Source
      (Shader : UInt; Count : Size;
-      Str : Low_Level.Char_Access_Array; Length : Low_Level.Int_Array) with
+      Str : Low_Level.Char_Access_Array; Length : Int_Array) with
      Dynamic => "glShaderSource", Wrapper => "GL.Objects.Shaders.Set_Source";
    procedure Get_Shader_Source (Shader : UInt; Buffer_Size : Size;
                                 Length : out Size; Value : in out String) with
@@ -1239,7 +1287,7 @@ spec GL.API is
      Dynamic => "glPatchParameteri",
      Wrapper => "GL.Tessellation.Set_Patch_Vertices";
    procedure Set_Patch_Parameter_Float_Array
-     (Pname : Enums.Patch_Parameter_Float_Array; Value : Types.Single_Array)
+     (Pname : Enums.Patch_Parameter_Float_Array; Value : Single_Array)
      with Dynamic => "glPatchParameterfv",
           Wrapper => "GL.Tessellation.Set_Patch_Default_Inner_Level",
           Wrapper => "GL.Tessellation.Set_Patch_Default_Outer_Level";

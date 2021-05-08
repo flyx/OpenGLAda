@@ -31,10 +31,13 @@ package body GL_Test.Display_Backend is
       Glfw.Errors.Set_Callback (Print_Error'Access);
    end Enable_Print_Errors;
 
-   procedure Init is
+   procedure Init (Debugging : Boolean := False) is
    begin
       Enable_Print_Errors;
       Glfw.Init;
+      if Debugging then
+         Glfw.Windows.Hints.Set_Debug_Context (True);
+      end if;
    end Init;
 
    procedure Open_Window (Width, Height : Natural; Depth_Bits : Natural := 0) is

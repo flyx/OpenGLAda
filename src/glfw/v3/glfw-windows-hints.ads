@@ -11,9 +11,17 @@ package Glfw.Windows.Hints is
    -- Window related
    -----------------------------------------------------------------------------
 
-   procedure Set_Resizable (Value : Boolean);
-   procedure Set_Visible   (Value : Boolean);
-   procedure Set_Decorated (Value : Boolean);
+   procedure Set_Resizable     (Value : Boolean);
+   procedure Set_Visible       (Value : Boolean);
+   procedure Set_Decorated     (Value : Boolean);
+   procedure Set_Focused       (Value : Boolean);
+   procedure Set_Auto_Iconify  (Value : Boolean);
+   procedure Set_Floating      (Value : Boolean);
+   procedure Set_Maximized     (Value : Boolean);
+   procedure Set_Center_Cursor (Value : Boolean);
+   procedure Set_Transparent_Framebuffer (Value : Boolean);
+   procedure Set_Focus_On_Show (Value : Boolean);
+   procedure Set_Scale_To_Monitor (Value : Boolean);
 
    -----------------------------------------------------------------------------
    -- Framebuffer related
@@ -33,6 +41,12 @@ package Glfw.Windows.Hints is
    procedure Set_Samples (Value : Natural);
 
    procedure Set_SRGB_Capable (Value : Boolean);
+
+   procedure Set_Doublebuffer (Value : Boolean);
+
+   -----------------------------------------------------------------------------
+   -- Monitor related
+   -----------------------------------------------------------------------------
 
    procedure Set_Refresh_Rate (Value : Natural);
 

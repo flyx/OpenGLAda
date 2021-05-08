@@ -211,13 +211,13 @@ private package Glfw.API is
    pragma Import (Convention => C, Entity => Default_Window_Hints,
                   External_Name => "glfwDefaultWindowHints");
 
-   procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : C.int);
-   procedure Window_Hint (Target : Glfw.Enums.Window_Hint; Info : Bool);
-   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+   procedure Window_Hint (Target : Glfw.Enums.Window_Info; Info : C.int);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Info; Info : Bool);
+   procedure Window_Hint (Target : Glfw.Enums.Window_Info;
                           Info   : Windows.Context.OpenGL_Profile_Kind);
-   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+   procedure Window_Hint (Target : Glfw.Enums.Window_Info;
                           Info   : Windows.Context.API_Kind);
-   procedure Window_Hint (Target : Glfw.Enums.Window_Hint;
+   procedure Window_Hint (Target : Glfw.Enums.Window_Info;
                           Info   : Glfw.Windows.Context.Robustness_Kind);
    pragma Import (Convention => C, Entity => Window_Hint,
                   External_Name => "glfwWindowHint");

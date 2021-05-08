@@ -14,6 +14,7 @@ package Tokenization is
 
    type Token (Length : Natural; Kind : Token_Kind) is limited record
       Content : String (1 .. Length);
+      Start   : Positive;
       case Kind is
       when Identifier =>
          Id : Symbol_Id;
@@ -33,6 +34,8 @@ package Tokenization is
    function Column (Object : Tokenizer) return Positive;
 
    function To_String (T : Token) return String;
+   
+   function Input_Substring (Object: Tokenizer; From, To : Token) return String;
 
    function Is_Keyword (Id : Symbol_Id) return Boolean;
 

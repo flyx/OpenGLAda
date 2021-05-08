@@ -23,6 +23,46 @@ package body Glfw.Windows.Hints is
       API.Window_Hint (Enums.Decorated, Bool (Value));
    end Set_Decorated;
 
+   procedure Set_Focused (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Focused, Bool (Value));
+   end Set_Focused;
+
+   procedure Set_Auto_Iconify (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Auto_Iconify, Bool (Value));
+   end Set_Auto_Iconify;
+
+   procedure Set_Floating (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Floating, Bool (Value));
+   end Set_Floating;
+
+   procedure Set_Maximized (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Maximized, Bool (Value));
+   end Set_Maximized;
+
+   procedure Set_Center_Cursor (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Center_Cursor, Bool (Value));
+   end Set_Center_Cursor;
+
+   procedure Set_Transparent_Framebuffer (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Transparent_Framebuffer, Bool (Value));
+   end Set_Transparent_Framebuffer;
+
+   procedure Set_Focus_On_Show (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Focus_On_Show, Bool (Value));
+   end Set_Focus_On_Show;
+
+   procedure Set_Scale_To_Monitor (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Scale_To_Monitor, Bool (Value));
+   end Set_Scale_To_Monitor;
+
    procedure Set_Color_Bits (Red, Green, Blue, Alpha : Natural) is
    begin
       API.Window_Hint (Enums.Red_Bits, Interfaces.C.int (Red));
@@ -68,6 +108,11 @@ package body Glfw.Windows.Hints is
    begin
       API.Window_Hint (Enums.SRGB_Capable, Bool (Value));
    end Set_SRGB_Capable;
+
+   procedure Set_Doublebuffer (Value : Boolean) is
+   begin
+      API.Window_Hint (Enums.Doublebuffer, Bool (Value));
+   end Set_Doublebuffer;
 
    procedure Set_Refresh_Rate (Value : Natural) is
    begin
