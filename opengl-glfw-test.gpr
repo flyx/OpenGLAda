@@ -3,15 +3,9 @@ with "opengl-glfw";
 
 project OpenGL.Glfw.Test is
 
-   case OpenGL.Glfw.GLFW_Version is
-      when "2" =>
-         for Source_Dirs use ("tests/glfw2");
-         for Main use ("glfw_test-display.adb", "glfw_test-joystick.adb");
-      when "3" =>
-         for Source_Dirs use ("tests/glfw3");
-         for Main use ("glfw_test-monitors.adb", "glfw_test-windows.adb",
-                       "glfw_test-clipboard.adb", "glfw_test-mouse.adb");
-   end case;
+   for Source_Dirs use ("tests/glfw3");
+   for Main use ("glfw_test-monitors.adb", "glfw_test-windows.adb",
+                 "glfw_test-clipboard.adb", "glfw_test-mouse.adb");
 
    for Object_Dir use "obj";
    for Library_Dir use "lib";
@@ -22,4 +16,3 @@ project OpenGL.Glfw.Test is
    package Compiler renames OpenGL.Compiler;
    package Binder renames OpenGL.Binder;
 end OpenGL.Glfw.Test;
-

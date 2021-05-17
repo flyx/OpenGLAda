@@ -1,0 +1,13 @@
+name = "openglada_glfw"
+description = "GLFW binding for use with OpenGLAda"
+version = "0.9.0"
+website = "http://flyx.github.io/OpenGLAda/"
+authors = ["Felix Krause"]
+licenses = "MIT"
+maintainers = ["Felix Krause <contact@flyx.org>"]
+maintainers-logins = ["flyx"]
+project_files = ["opengl-glfw.gpr"]
+
+[[depends-on]]
+openglada = "^0.9.0"
+libglfw3 = "^3"

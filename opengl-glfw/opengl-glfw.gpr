@@ -1,0 +1,51 @@
+with "opengl";
+
+library project OpenGL.Glfw is
+   for Languages use ("ada");
+
+   for Library_Name use "GlfwAda";
+   for Library_Kind use OpenGL'Library_Kind;
+
+   GLFW_Sources := ("src");
+
+   -- Most tests need a GLFW window. An abstraction layer is provided
+   -- so that the test work with GLFW 2 and 3. Test project can reference
+   -- this variable in order to include the appropriate sources for
+   -- the defined GLFW version.
+   Shared_Test_Sources := ("tests/shared");
+
+   Default_GLFW_Linker_Param := "";
+   case OpenGL.Windowing_System is
+      when "windows" =>
+         Default_GLFW_Linker_Param := "-lglfw3";
+      when "x11" | "quartz" =>
+         Default_GLFW_Linker_Param := "-lglfw";
+   end case;
+
+   GLFW_Lib := external ("GLFW_Linker_Param", Default_GLFW_Linker_Param);
+
+   for Source_Dirs use GLFW_Sources;
+   for Object_Dir use "obj";
+   for Library_Dir use "lib";
+
+   package Ide renames OpenGL.Ide;
+   package Builder renames OpenGL.Builder;
+   package Compiler renames OpenGL.Compiler;
+
+   package Linker is
+      case OpenGL.Windowing_System is
+         when "quartz" =>
+            for Linker_Options use
+              (GLFW_Lib, "-Wl,-framework,Cocoa,-framework,IOKit");
+         when "windows" =>
+            for Linker_Options use (GLFW_Lib, "-lwinmm", "-lgdi32");
+         when "x11" =>
+	      --  -lX11 is already set in opengl.gpr
+            for Linker_Options use
+              (GLFW_Lib, "-pthread", "-lm", "-lXcursor", "-lXxf86vm",
+               "-lXrandr", "-lXinerama", "-lXi", "-ldl");
+      end case;
+   end Linker;
+
+   package Binder renames OpenGL.Binder;
+end OpenGL.Glfw;

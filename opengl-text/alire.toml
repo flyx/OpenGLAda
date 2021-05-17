@@ -1,0 +1,16 @@
+name = "openglada_text"
+description = "Text rendering library for OpenGLAda"
+version = "0.9.0"
+website = "http://flyx.github.io/OpenGLAda/"
+authors = ["Felix Krause"]
+licenses = "MIT"
+maintainers = ["Felix Krause <contact@flyx.org>"]
+maintainers-logins = ["flyx"]
+project_files = ["opengl-text.gpr"]
+
+[[depends-on]]
+openglada = "^0.9.0"
+freetypeada = "~0.1.0"
+
+[environment]
+GPR_PROJECT_PATH.append = "opengl:opengl-glfw:opengl-images:opengl-text"

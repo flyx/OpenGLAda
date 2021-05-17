@@ -1,0 +1,21 @@
+name = "openglada"
+description = "Thick Ada binding for OpenGL"
+version = "0.9.0"
+website = "http://flyx.github.io/OpenGLAda/"
+authors = ["Felix Krause"]
+licenses = "MIT"
+maintainers = ["Felix Krause <contact@flyx.org>"]
+maintainers-logins = ["flyx"]
+project-files = ["opengl.gpr"]
+
+[depends-on."case(os)".linux]
+libx11 = "^1"
+
+[gpr-externals]
+Auto_Exceptions = ["enabled", "disabled"]
+Mode = ["debug", "release"]
+
+[gpr-set-externals."case(os)"]
+linux = { Windowing_System = "x11" }
+macos = { Windowing_System = "quartz" }
+windows = { Windowing_System = "windows" }

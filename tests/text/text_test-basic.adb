@@ -111,7 +111,7 @@ begin
 
    GL.Text.Create (Rendering_Program);
    Renderer.Create (Rendering_Program,
-                    "../tests/ftgl/SourceCodePro-Regular.ttf", 0, 96);
+                    "../tests/text/texgyreadventor-regular.otf", 0, 96);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
    Text_Image := Renderer.To_Texture

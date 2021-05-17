@@ -34,7 +34,8 @@ procedure GL_Test.VBOs is
    type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
 
    package Colored_Pointers is new Interfaces.C.Pointers
-     (Size, Colored_Vertex, Colored_Vertices, Colored_Vertex'(others => <>));
+     (Size, Colored_Vertex, Colored_Vertices, Colored_Vertex'(
+        Vertex => <>, Color => <>));
 
    procedure Load_Colored_Vertex is new GL.Objects.Buffers.Load_To_Buffer
       (Colored_Pointers);

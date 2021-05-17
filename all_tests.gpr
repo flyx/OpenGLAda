@@ -1,0 +1,5 @@
+aggregate project All_Tests is
+   for Project_Files use
+     ("opengl-test.gpr", "opengl-glfw-test.gpr", "opengl-text-test.gpr",
+      "opengl-images-test.gpr");
+end All_Tests;

@@ -6,6 +6,7 @@ bin
 *~
 *.exe
 gnatinspect.db
-src/gl/generated/WrapperList.md
+opengl/generated/WrapperList.md
 *.dll
 *-loc.xml
+alire
