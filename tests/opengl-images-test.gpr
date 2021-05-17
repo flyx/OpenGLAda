@@ -7,7 +7,7 @@ project OpenGL.Images.Test is
    for Object_Dir use "obj";
    for Exec_Dir use "bin";
 
-   for Source_Dirs use OpenGL.Glfw.Shared_Test_Sources & "tests/images";
+   for Source_Dirs use ("src/shared", "src/images");
    for Main use ("images_test_jpg.adb", "images_test_png.adb");
 
    package Ide renames OpenGL.Ide;

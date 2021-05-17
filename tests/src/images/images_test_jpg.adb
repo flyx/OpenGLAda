@@ -1,7 +1,6 @@
 --  part of OpenGLAda, (c) 2020 Felix Krause
 --  released under the terms of the MIT license, see the file "COPYING"
 
-with GL.Blending;
 with GL.Buffers;
 with GL.Types.Colors;
 with GL.Fixed.Matrix;
@@ -14,7 +13,7 @@ with GL.Types;
 
 with GL_Test.Display_Backend;
 
-procedure Images_Test_PNG is
+procedure Images_Test_JPG is
    use GL.Fixed.Matrix;
    use GL.Types;
    use GL.Types.Doubles;
@@ -23,18 +22,14 @@ procedure Images_Test_PNG is
 begin
    GL_Test.Display_Backend.Init;
    GL_Test.Display_Backend.Open_Window (1000, 498);
-   
+
    GL.Images.Load_File_To_Texture
-     ("../tests/images/ada2012-black.png", Texture, GL.Pixels.RGBA);
-   
+     ("../ada2012-color.jpg", Texture, GL.Pixels.RGB);
+
    Projection.Load_Identity;
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 
    GL.Buffers.Set_Color_Clear_Value (Colors.Color'(1.0, 0.0, 0.0, 1.0));
-   
-   GL.Toggles.Enable (GL.Toggles.Blend);
-   GL.Blending.Set_Blend_Func
-     (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 
    while GL_Test.Display_Backend.Window_Opened loop
       GL.Buffers.Clear ((others => True));
@@ -62,4 +57,4 @@ begin
    end loop;
 
    GL_Test.Display_Backend.Shutdown;
-end Images_Test_PNG;
+end Images_Test_JPG;

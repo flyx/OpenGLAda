@@ -56,9 +56,9 @@ procedure Text_Test.Basic is
       Program.Initialize_Id;
 
       GL.Files.Load_Shader_Source_From_File
-        (Vertex_Shader, "../tests/text/text_test-basic-vertex.glsl");
+        (Vertex_Shader, "../src/text/text_test-basic-vertex.glsl");
       GL.Files.Load_Shader_Source_From_File
-        (Fragment_Shader, "../tests/text/text_test-basic-fragment.glsl");
+        (Fragment_Shader, "../src/text/text_test-basic-fragment.glsl");
 
       Vertex_Shader.Compile;
       Fragment_Shader.Compile;
@@ -111,7 +111,7 @@ begin
 
    GL.Text.Create (Rendering_Program);
    Renderer.Create (Rendering_Program,
-                    "../tests/text/texgyreadventor-regular.otf", 0, 96);
+                    "../texgyreadventor-regular.otf", 0, 96);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
    Text_Image := Renderer.To_Texture

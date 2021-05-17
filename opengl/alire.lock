@@ -3,42 +3,4 @@
 [solution]
 [solution.context]
 solved = true
-[[solution.state]]
-crate = "gid"
-fulfilment = "solved"
-pinned = false
-transitivity = "direct"
-versions = "*"
-[solution.state.release]
-authors = [
-"Gautier de Montmollin",
-]
-description = "Decoding a broad variety of image formats"
-licenses = "MIT"
-maintainers = [
-"fabien.chouteau@gmail.com",
-]
-maintainers-logins = [
-"zertovitch",
-"Fabien-Chouteau",
-]
-name = "gid"
-project-files = [
-"gid.gpr",
-]
-version = "9.0.0"
-[solution.state.release.gpr-externals]
-Build_Mode = [
-"Debug",
-"Fast_but_checked",
-"Fast",
-"Small",
-"Smallest",
-"Profiling",
-]
-[solution.state.release.origin]
-hashes = [
-"sha512:17722960f65382ce49dfde2ebe24b2adf1cd007ea9f170ec51d35c4a654ac78ddc3c1ba500e764e0c793d6f6aabb2c82a804a5570deb36a199f5b216c2c372e7",
-]
-url = "https://sourceforge.net/projects/gen-img-dec/files/gid_009.zip"
 

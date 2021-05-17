@@ -3,7 +3,7 @@ with "opengl-glfw";
 
 project OpenGL.Glfw.Test is
 
-   for Source_Dirs use ("tests/glfw3");
+   for Source_Dirs use ("src/glfw3");
    for Main use ("glfw_test-monitors.adb", "glfw_test-windows.adb",
                  "glfw_test-clipboard.adb", "glfw_test-mouse.adb");
 
