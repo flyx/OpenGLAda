@@ -1,4 +1,5 @@
 v0.9.0
+ * __Breaking change__: Removed GLFW 2.x binding.
  * Alire support: Project now supplies several Alire Crates.
  * Added package:
    - GL.Debug
