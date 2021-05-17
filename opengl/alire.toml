@@ -8,6 +8,7 @@ maintainers = ["Felix Krause <contact@flyx.org>"]
 maintainers-logins = ["flyx"]
 project-files = ["opengl.gpr"]
 
+[[depends-on]]
 [depends-on."case(os)".linux]
 libx11 = "^1"
 
