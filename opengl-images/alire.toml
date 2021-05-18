@@ -7,6 +7,7 @@ licenses = "MIT"
 maintainers = ["Felix Krause <contact@flyx.org>"]
 maintainers-logins = ["flyx"]
 project-files = ["opengl-images.gpr"]
+tags = ["opengl", "rendering", "graphics"]
 
 [[depends-on]]
 gid = "^9.0.0"
