@@ -38,8 +38,42 @@ commit = "4fd90f573dc83a9b23e462520a60eb6a8dd92878"
 url = "git+https://github.com/flyx/FreeTypeAda.git"
 [[solution.state]]
 crate = "openglada"
-fulfilment = "missed"
+fulfilment = "solved"
 pinned = false
 transitivity = "direct"
 versions = "~0.9.0"
+[solution.state.release]
+authors = [
+"Felix Krause",
+]
+description = "Thick Ada binding for OpenGL"
+licenses = "MIT"
+maintainers = [
+"Felix Krause <contact@flyx.org>",
+]
+maintainers-logins = [
+"flyx",
+]
+name = "openglada"
+project-files = [
+"opengl.gpr",
+]
+version = "0.9.0"
+website = "http://flyx.github.io/OpenGLAda/"
+[solution.state.release.gpr-externals]
+Auto_Exceptions = [
+"enabled",
+"disabled",
+]
+Mode = [
+"debug",
+"release",
+]
+[solution.state.release.gpr-set-externals]
+Windowing_System = "quartz"
+[solution.state.release.origin]
+hashes = [
+"sha512:4deb7effa92ea06c1fc9595700223b8169a85c15c4caf78221d2cfa95205260b5ba6d132d070b3f25d07549a6c9a8cde3b6405631a7d1ff487af8292c44a10e2",
+]
+url = "https://github.com/flyx/OpenGLAda/releases/download/v0.9.0/openglada-0.9.0.tgz"
 
