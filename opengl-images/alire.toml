@@ -10,4 +10,4 @@ project-files = ["opengl-images.gpr"]
 
 [[depends-on]]
 gid = "^9.0.0"
-openglada = "^0.9.0"
+openglada = "~0.9.0"

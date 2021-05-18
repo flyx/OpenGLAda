@@ -3,4 +3,16 @@
 [solution]
 [solution.context]
 solved = true
+[[solution.state]]
+crate = "libglfw3"
+fulfilment = "hinted"
+pinned = false
+transitivity = "direct"
+versions = "^3"
+[[solution.state]]
+crate = "openglada"
+fulfilment = "missed"
+pinned = false
+transitivity = "direct"
+versions = "^0.9.0"
 

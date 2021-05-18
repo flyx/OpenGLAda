@@ -6,8 +6,8 @@ authors = ["Felix Krause"]
 licenses = "MIT"
 maintainers = ["Felix Krause <contact@flyx.org>"]
 maintainers-logins = ["flyx"]
-project_files = ["opengl-glfw.gpr"]
+project-files = ["opengl-glfw.gpr"]
 
 [[depends-on]]
-openglada = "^0.9.0"
+openglada = "~0.9.0"
 libglfw3 = "^3"
