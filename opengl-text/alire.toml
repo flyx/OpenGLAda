@@ -12,5 +12,3 @@ project-files = ["opengl-text.gpr"]
 openglada = "~0.9.0"
 freetypeada = "~0.1.0"
 
-[environment]
-GPR_PROJECT_PATH.append = "opengl:opengl-glfw:opengl-images:opengl-text"
