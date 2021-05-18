@@ -3,4 +3,43 @@
 [solution]
 [solution.context]
 solved = true
+[[solution.state]]
+crate = "freetypeada"
+fulfilment = "solved"
+pinned = false
+transitivity = "direct"
+versions = "~0.1.0"
+[solution.state.release]
+authors = [
+"Felix Krause",
+]
+description = "Thick binding to the FreeType library"
+licenses = "MIT"
+maintainers = [
+"Felix Krause <contact@flyx.org>",
+]
+maintainers-logins = [
+"flyx",
+]
+name = "freetypeada"
+project-files = [
+"freetype.gpr",
+]
+tags = [
+"fonts",
+"rendering",
+]
+version = "0.1.0"
+website = "https://github.com/flyx/FreeTypeAda"
+[solution.state.release.gpr-set-externals]
+FreeType_Linker_Param = "-lfreetype"
+[solution.state.release.origin]
+commit = "4fd90f573dc83a9b23e462520a60eb6a8dd92878"
+url = "git+https://github.com/flyx/FreeTypeAda.git"
+[[solution.state]]
+crate = "openglada"
+fulfilment = "missed"
+pinned = false
+transitivity = "direct"
+versions = "~0.9.0"
 

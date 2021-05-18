@@ -8,7 +8,7 @@ crate = "gid"
 fulfilment = "solved"
 pinned = false
 transitivity = "direct"
-versions = "*"
+versions = "^9.0.0"
 [solution.state.release]
 authors = [
 "Gautier de Montmollin",
@@ -41,4 +41,10 @@ hashes = [
 "sha512:17722960f65382ce49dfde2ebe24b2adf1cd007ea9f170ec51d35c4a654ac78ddc3c1ba500e764e0c793d6f6aabb2c82a804a5570deb36a199f5b216c2c372e7",
 ]
 url = "https://sourceforge.net/projects/gen-img-dec/files/gid_009.zip"
+[[solution.state]]
+crate = "openglada"
+fulfilment = "missed"
+pinned = false
+transitivity = "direct"
+versions = "~0.9.0"
 
