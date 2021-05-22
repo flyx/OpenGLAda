@@ -30,16 +30,23 @@ graphical applications in Ada using the OpenGL industry standard.
    OpenGL call whether an error flag has been set, and raises the corresponding
    exception if that's the case. This makes debugging easier. (You can turn off
    this feature completely at compile-time.)
- * Batteries included: Besides raw OpenGL, OpenGLAda also wraps [GLFW][4]
-   (with separate bindings for version 2 and 3) for window creation and user
-   input and [FreeType][7] for text rendering with OpenGL. It includes the
-   [Generic Image Decoder][6] for loading image files into textures.
-   These additional libraries are optional; you do not have to use them.
+ * Batteries included: Besides raw OpenGL, OpenGLAda also wraps [GLFW 3][4]
+   for window creation and user input and [FreeType][7] for text rendering with
+   OpenGL. It includes the [Generic Image Decoder][6] for loading image files
+   into textures. These additional libraries are optional; you do not have to
+   use them.
 
-## Getting the Code
+## Setting it up
 
-You can get the code from the [public GitHub repository][1]. Releases are
-available as [tags][2] of the git repository.
+The preferred way to use OpenGLAda in your project is to use [Alire][8].
+OpenGLAda provides the following Alire crates:
+
+ * `openglada`: Core
+ * `openglada_glfw`: GLFW binding
+ * `openglada_images`: Image loading
+ * `openglada_text`: Text rendering
+
+You can also fetch releases of these crates from the [GitHub repository][2].
 
 ## License
 
@@ -57,12 +64,13 @@ bindings are:
    OpenGL. The included OpenGL binding is decent and up-to-date, but also rather
    thin.
  * [Orka](https://orka-engine.netlify.app/): This project uses parts of
-   OpenGLAda. 
+   OpenGLAda.
 
  [1]: https://github.com/flyx/OpenGLAda
- [2]: https://github.com/flyx/OpenGLAda/tags
+ [2]: https://github.com/flyx/OpenGLAda/releases
  [3]: http://www.opensource.org/licenses/MIT
  [4]: http://www.glfw.org
  [5]: http://www.opengl.org/
  [6]: https://gen-img-dec.sourceforge.io/
  [7]: https://www.freetype.org/
+ [8]: https://alire.ada.dev

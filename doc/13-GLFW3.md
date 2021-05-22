@@ -12,6 +12,8 @@ permalink: glfw-v3.html
 This is a binding for the [GLFW][3] library, version 3 and above.
 It is feature-complete (as of GLFW 3.0.3), meaning that it wraps
 all functionality available in the GLFW API.
+To use it, you will need to include the project `opengl-glfw.gpr`.
+This project is provided by the Alire crate `openglada_glfw`.
 
 Before using any GLFW functionality, you have to call `GLFW.Init`.
 When you're done with GLFW, you should call `GLFW.Shutdown` (this

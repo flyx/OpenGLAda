@@ -6,6 +6,9 @@ permalink: setup.html
 
 # Setup Instructions
 
+_This section is deprecated since setup should now be done via [Alire](https://alire.ada.dev)._
+_It is kept here as guidance for people who do not want to use Alire._
+
 This section is for people having problems setting up OpenGLAda in their
 environment. Please not that while each guide has been tested at least once,
 they are not tested continuously. If you encounter any error while following one

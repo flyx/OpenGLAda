@@ -19,6 +19,8 @@ OpenGL, you have to consult the
 [OpenGL Reference Pages](http://www.opengl.org/sdk/docs/man/). This documentation only
 describes how OpenGL features are wrapped by OpenGLAda.
 
+You can discover where a specific OpenGL function is available in OpenGLAda by searching it in the [mapping index][2].
+
 ## OpenGL Versions
 
 OpenGLAda aims to provide the feature set of OpenGL 4.5, but is not complete
@@ -68,8 +70,11 @@ when you create a Window so typically, you do not have to worry about it.
 
 ## Getting Started
 
-If you want to see OpenGLAda in action, go to the `examples` folder and have a
-look at the provided examples. They give you an idea of how to use the API. In
-particular, the examples under `examples/superbible` may be interesting since
-they are taken from http://www.openglsuperbible.com which teaches the reader to
+If you want to see OpenGLAda in action, check out the [OpenGLAda examples][1].
+They give you an idea of how to use the API.
+In particular, the examples under `superbible` may be interesting since they
+are taken from http://www.openglsuperbible.com which teaches the reader to
 use modern OpenGL 4.5 features.
+
+ [1]: https://github.com/flyx/OpenGLAda-examples
+ [2]: /mapping.html
