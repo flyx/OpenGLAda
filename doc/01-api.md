@@ -77,4 +77,4 @@ are taken from http://www.openglsuperbible.com which teaches the reader to
 use modern OpenGL 4.5 features.
 
  [1]: https://github.com/flyx/OpenGLAda-examples
- [2]: /mapping.html
+ [2]: mapping.html

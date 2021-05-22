@@ -26,7 +26,7 @@
 				<div id="main-nav">
 					<h3>Navigation</h3>
 					<ul>
-						{% assign sorted_pages = site.pages | sort:"name" | where_exp: "page", "page.ext != 'css'" %}
+						{% assign sorted_pages = site.html_pages | sort:"name" %}
 						{% for p in sorted_pages %}
 							<li{% if p.navclass %} class="{{p.navclass}}"{% endif %}>
 								<a {% if p.url == page.url %}class="active"{% endif %}href="{{ site.baseurl }}{{ p.url }}">
