@@ -56,9 +56,12 @@ private package Glfw.Enums is
                         Scale_To_Monitor       => 16#2200C#);
    for Window_Info'Size use Interfaces.C.int'Size;
 
-   type Input_Toggle is (Mouse_Cursor);
-   for Input_Toggle use (Mouse_Cursor         => 16#33001#);
+   type Input_Toggle is (Mouse_Cursor, Raw_Mouse_Motion);
+   for Input_Toggle use (Mouse_Cursor         => 16#33001#,
+                         Raw_Mouse_Motion     => 16#33005#);
    for Input_Toggle'Size use Interfaces.C.int'Size;
+   subtype Cursor_Toggle is Input_Toggle range Mouse_Cursor .. Mouse_Cursor;
+   subtype Bool_Toggle is Input_Toggle range Raw_Mouse_Motion .. Raw_Mouse_Motion;
 
    type Joystick_ID is (
       Joystick_1, Joystick_2, Joystick_3, Joystick_4, Joystick_5,

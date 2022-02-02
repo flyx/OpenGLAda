@@ -246,6 +246,12 @@ package body Glfw.Windows is
       API.Set_Cursor_Pos (Object.Handle, X, Y);
    end Set_Cursor_Pos;
 
+   procedure Set_Raw_Mouse_Motion (Object : not null access Window;
+                                   Value  : Boolean) is
+   begin
+      API.Set_Input_Mode (Object.Handle, Enums.Raw_Mouse_Motion, Bool (Value));
+   end Set_Raw_Mouse_Motion;
+
    procedure Get_Position (Object : not null access Window;
                            X, Y : out Coordinate) is
    begin
