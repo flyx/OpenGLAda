@@ -16,6 +16,8 @@ package Glfw.Input.Mouse is
    subtype Coordinate is Interfaces.C.double;
    subtype Scroll_Offset is Interfaces.C.double;
 
+   function Raw_Motion_Supported return Boolean;
+
 private
    for Button'Size use Interfaces.C.int'Size;
 
