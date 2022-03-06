@@ -7,7 +7,8 @@ package GL.Objects.Shaders is
    pragma Preelaborate;
 
    type Shader_Type is (Fragment_Shader, Vertex_Shader, Geometry_Shader,
-                        Tess_Evaluation_Shader, Tess_Control_Shader);
+                        Tess_Evaluation_Shader, Tess_Control_Shader,
+                        Compute_Shader);
 
    type Shader (Kind : Shader_Type) is new GL_Object with private;
 
@@ -39,7 +40,8 @@ private
                         Vertex_Shader          => 16#8B31#,
                         Geometry_Shader        => 16#8DD9#,
                         Tess_Evaluation_Shader => 16#8E87#,
-                        Tess_Control_Shader    => 16#8E88#);
+                        Tess_Control_Shader    => 16#8E88#,
+                        Compute_Shader         => 16#91B9#);
    for Shader_Type'Size use Low_Level.Enum'Size;
 
 end GL.Objects.Shaders;
