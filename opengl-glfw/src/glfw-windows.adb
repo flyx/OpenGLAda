@@ -294,6 +294,15 @@ package body Glfw.Windows is
         (Bool'(API.Get_Window_Attrib (Object.Handle, Enums.Iconified)));
    end Iconified;
 
+   procedure Set_Iconification (Object : not null access Window; Value : in Boolean) is
+   begin
+      if Value then
+         API.Iconify_Window (Object.Handle);
+      else
+         API.Restore_Window (Object.Handle);
+      end if;
+   end Set_Iconification;
+
    function Focused (Object : not null access Window) return Boolean is
    begin
       return Boolean

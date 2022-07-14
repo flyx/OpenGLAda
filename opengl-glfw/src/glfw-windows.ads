@@ -82,6 +82,8 @@ package Glfw.Windows is
 
    function Visible   (Object : not null access Window) return Boolean;
    function Iconified (Object : not null access Window) return Boolean;
+   procedure Set_Iconification (Object : not null access Window; Value : in Boolean);
+
    function Focused   (Object : not null access Window) return Boolean;
 
    function Should_Close (Object : not null access Window) return Boolean;
