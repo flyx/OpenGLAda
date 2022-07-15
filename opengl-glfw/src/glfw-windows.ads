@@ -59,6 +59,9 @@ package Glfw.Windows is
    procedure Set_Cursor_Mode (Object : not null access Window;
                               Mode   : Input.Mouse.Cursor_Mode);
 
+   procedure Set_Raw_Mouse_Motion (Object : not null access Window;
+                                   Value  : Boolean);
+
    procedure Get_Cursor_Pos (Object : not null access Window;
                              X, Y   : out Input.Mouse.Coordinate);
    procedure Set_Cursor_Pos (Object : not null access Window;
