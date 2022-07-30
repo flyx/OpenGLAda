@@ -11,4 +11,4 @@ tags = ["opengl", "glfw", "binding", "gui"]
 
 [[depends-on]]
 openglada = "~0.9.0"
-libglfw3 = "^3"
+libglfw3 = "^3.3"
