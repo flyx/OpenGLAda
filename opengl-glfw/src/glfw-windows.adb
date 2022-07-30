@@ -2,6 +2,7 @@
 --  released under the terms of the MIT license, see the file "COPYING"
 
 with Ada.Unchecked_Conversion;
+with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
 with GL;
@@ -276,6 +277,15 @@ package body Glfw.Windows is
       API.Set_Window_Size (Object.Handle, Width, Height);
    end Set_Size;
 
+   procedure Set_Icon (Object : not null access Window;
+                       Icon : Glfw_Icon'Class) is
+   begin
+      if Icon.Data.Pixels = null then
+         raise Operation_Exception;
+      end if;
+      API.Set_Window_Icon (Object.Handle, 1, Icon.Data'Address); -- Only a single icon is supported for now
+   end Set_Icon;
+
    procedure Get_Framebuffer_Size (Object : not null access Window;
                                    Width, Height : out Size) is
    begin
@@ -360,8 +370,6 @@ package body Glfw.Windows is
       end case;
    end Disable_Callback;
 
-
-
    procedure Get_OpenGL_Version (Object : not null access Window;
                                  Major, Minor, Revision : out Natural) is
       Value : Interfaces.C.int;
@@ -373,5 +381,41 @@ package body Glfw.Windows is
       Value := API.Get_Window_Attrib (Object.Handle, Enums.Context_Revision);
       Revision := Natural (Value);
    end Get_OpenGL_Version;
+
+   -- Instantiations
+   procedure Free is new Ada.Unchecked_Deallocation (Byte_Array, Byte_Array_Ref);
+
+   procedure Generic_Conversion (Source : in Image_Type; Target : in out Glfw_Icon) is
+
+      use type Size;
+
+      Height : constant Size := Source'Length (1);
+      Width  : constant Size := Source'Length (2);
+
+      Pixels : Byte_Array (1 .. Height * Height * 4); -- 4 bytes per pixel
+      for Pixels'Address use Source'Address;
+
+   begin
+
+      if Target.Data.Pixels /= null then
+         Free (Target.Data.Pixels);
+      end if;
+
+      Target.Data := (
+         Width  => Width,
+         Height => Height,
+         Pixels => new Byte_Array'(Pixels)
+      );
+
+   end Generic_Conversion;
+
+   overriding procedure Finalize (Icon : in out Glfw_Icon) is
+   begin
+
+      if Icon.Data.Pixels /= null then
+         Free (Icon.Data.Pixels);
+      end if;
+
+   end Finalize;
 
 end Glfw.Windows;

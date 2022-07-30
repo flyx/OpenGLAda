@@ -269,6 +269,12 @@ private package Glfw.API is
    pragma Import (Convention => C, Entity => Set_Window_Size,
                   External_Name => "glfwSetWindowSize");
 
+   procedure Set_Window_Icon (Window : System.Address;
+                              Count  : Interfaces.C.int;
+                              Images : System.Address);
+   pragma Import (Convention => C, Entity => Set_Window_Icon,
+                  External_Name => "glfwSetWindowIcon");
+
    procedure Get_Framebuffer_Size (Window : System.Address;
                                    Width, Height : out Size);
    pragma Import (Convention => C, Entity => Get_Framebuffer_Size,
