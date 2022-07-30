@@ -82,6 +82,8 @@ package Glfw.Windows is
    procedure Set_Icon (Object : not null access Window;
                        Icon : Glfw_Icon'Class);
 
+   procedure Clear_Icon (Object : not null access Window);
+
    procedure Get_Framebuffer_Size (Object : not null access Window;
                                    Width, Height : out Size);
 

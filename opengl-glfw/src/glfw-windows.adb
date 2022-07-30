@@ -286,6 +286,11 @@ package body Glfw.Windows is
       API.Set_Window_Icon (Object.Handle, 1, Icon.Data'Address); -- Only a single icon is supported for now
    end Set_Icon;
 
+   procedure Clear_Icon (Object : not null access Window) is
+   begin
+      API.Set_Window_Icon (Object.Handle, 0, System.Null_Address);
+   end Clear_Icon;
+
    procedure Get_Framebuffer_Size (Object : not null access Window;
                                    Width, Height : out Size) is
    begin
