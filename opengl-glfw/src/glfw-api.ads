@@ -5,6 +5,7 @@ with Interfaces.C.Strings;
 with Interfaces.C.Pointers;
 with System;
 
+with GL.Types;
 with Glfw.Input.Keys;
 with Glfw.Input.Mouse;
 with Glfw.Input.Joysticks;
@@ -47,6 +48,15 @@ private package Glfw.API is
       Size : Interfaces.C.unsigned;
    end record;
    pragma Convention (C, Raw_Gamma_Ramp);
+
+   type Image_Data is record
+      Width, Height : Interfaces.C.int;
+      Pixels : access GL.Types.UByte_Array;
+   end record;
+   pragma Convention (C, Image_Data);
+
+   type Image_Data_Array is array (Positive range <>) of aliased Image_Data;
+   pragma Convention (C, Image_Data_Array);
 
    -----------------------------------------------------------------------------
    -- Callbacks
@@ -271,7 +281,7 @@ private package Glfw.API is
 
    procedure Set_Window_Icon (Window : System.Address;
                               Count  : Interfaces.C.int;
-                              Images : System.Address);
+                              Images : Image_Data_Array);
    pragma Import (Convention => C, Entity => Set_Window_Icon,
                   External_Name => "glfwSetWindowIcon");
 

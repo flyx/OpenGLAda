@@ -32,12 +32,14 @@ package GL.Types is
    type Double is new C.double;
 
    -- array types
+   type UByte_Array  is array (Size range <>) of aliased UByte;
    type UShort_Array is array (Size range <>) of aliased UShort;
    type Int_Array    is array (Size range <>) of aliased Int;
    type UInt_Array   is array (Size range <>) of aliased UInt;
    type Single_Array is array (Size range <>) of aliased Single;
    type Double_Array is array (Size range <>) of aliased Double;
 
+   pragma Convention (C, UByte_Array);
    pragma Convention (C, UShort_Array);
    pragma Convention (C, Int_Array);
    pragma Convention (C, UInt_Array);

@@ -4,13 +4,14 @@
 with Ada.Unchecked_Conversion;
 with System.Address_To_Access_Conversions;
 
-with GL;
 with Glfw.API;
 with Glfw.Enums;
 with Glfw.Windows.Context;
 
 package body Glfw.Windows is
    package Conv is new System.Address_To_Access_Conversions (Window'Class);
+
+   function Convert (Icons : Image_Array) return API.Image_Data_Array;
 
    procedure Raw_Position_Callback (Raw  : System.Address;
                                     X, Y : Interfaces.C.int);
@@ -292,12 +293,12 @@ package body Glfw.Windows is
       if Count = 0 then
          raise Operation_Exception;
       end if;
-      API.Set_Window_Icon (Object.Handle, Count, Convert (Icons)(1)'Address); -- Guaranteed to have at least one element
+      API.Set_Window_Icon (Object.Handle, Count, Convert (Icons));
    end Set_Icon;
 
    procedure Clear_Icon (Object : not null access Window) is
    begin
-      API.Set_Window_Icon (Object.Handle, 0, System.Null_Address);
+      API.Set_Window_Icon (Object.Handle, 0, (1 .. 0 => <>));
    end Clear_Icon;
 
    procedure Get_Framebuffer_Size (Object : not null access Window;
@@ -396,9 +397,9 @@ package body Glfw.Windows is
       Revision := Natural (Value);
    end Get_OpenGL_Version;
 
-   function Convert (Icons : Image_Array) return Image_Data_Array is
+   function Convert (Icons : Image_Array) return API.Image_Data_Array is
       Icon   : Image;
-      Result : Image_Data_Array (Icons'Range);
+      Result : API.Image_Data_Array (Icons'Range);
    begin
       for I in Icons'Range loop
          Icon := Icons (I);

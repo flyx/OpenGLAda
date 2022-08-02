@@ -3,6 +3,7 @@
 
 with System;
 
+with GL.Types;
 with Glfw.Input.Mouse;
 with Glfw.Input.Keys;
 with Glfw.Monitors;
@@ -14,12 +15,9 @@ package Glfw.Windows is
    type Window is tagged private;
    type Window_Reference is not null access all Window;
 
-   type Pixel_Data is array (Size range <>) of aliased Interfaces.C.unsigned_char;
-   type Pixel_Data_Ref is access all Pixel_Data;
-
    type Image is record
       Width, Height : Positive;
-      Pixels : Pixel_Data_Ref;
+      Pixels : access GL.Types.UByte_Array;
    end record;
 
    type Image_Array is array (Positive range <>) of Image;
@@ -155,17 +153,7 @@ private
       Handle : System.Address := System.Null_Address;
    end record;
 
-   type Image_Data is record
-      Width, Height : Interfaces.C.int;
-      Pixels : Pixel_Data_Ref;
-   end record;
-   pragma Convention (C, Image);
-
-   type Image_Data_Array is array (Positive range <>) of aliased Image_Data;
-
    function Window_Ptr (Raw : System.Address)
                         return not null access Window'Class;
-
-   function Convert (Icons : Image_Array) return Image_Data_Array;
 
 end Glfw.Windows;
