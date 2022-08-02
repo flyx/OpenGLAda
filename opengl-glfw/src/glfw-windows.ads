@@ -14,7 +14,15 @@ package Glfw.Windows is
    type Window is tagged private;
    type Window_Reference is not null access all Window;
 
-   type Glfw_Icon is tagged limited private;
+   type Pixel_Data is array (Size range <>) of aliased Interfaces.C.unsigned_char;
+   type Pixel_Data_Ref is access all Pixel_Data;
+
+   type Image is record
+      Width, Height : Positive;
+      Pixels : Pixel_Data_Ref;
+   end record;
+
+   type Image_Array is array (Positive range <>) of Image;
 
    Creation_Error : exception;
 
@@ -80,7 +88,10 @@ package Glfw.Windows is
                        Width, Height : Size);
 
    procedure Set_Icon (Object : not null access Window;
-                       Icon : Glfw_Icon'Class);
+                       Icon : Image);
+
+   procedure Set_Icon (Object : not null access Window;
+                       Icons : Image_Array);
 
    procedure Clear_Icon (Object : not null access Window);
 
@@ -138,38 +149,23 @@ package Glfw.Windows is
    procedure Character_Entered (Object : not null access Window;
                                 Char   : Wide_Wide_Character) is null;
 
-   -- Loading from arbitrary image types to the Glfw icon type.
-   -- The image data (Pixel_Type) is 32-bit, little-endian, non-premultiplied RGBA,
-   -- i.e. eight bits per channel with the red channel first.
-   generic
-      type Pixel_Type is private;
-      type Size_Type  is (<>);
-      type Image_Type is array (Size_Type range <>, Size_Type range <>) of Pixel_Type;
-   procedure Generic_Conversion (Source : in Image_Type; Target : in out Glfw_Icon);
-
 private
 
    type Window is new Ada.Finalization.Controlled with record
       Handle : System.Address := System.Null_Address;
    end record;
 
-   type Byte_Array is array (Size range <>) of Interfaces.C.unsigned_char;
-   type Byte_Array_Ref is access Byte_Array;
-
-   type Icon_Data is record
-      Width  : Size;
-      Height : Size;
-      Pixels : Byte_Array_Ref;
-   end record
-   with Convention => C;
-
-   type Glfw_Icon is new Ada.Finalization.Limited_Controlled with record
-      Data : Icon_Data;
+   type Image_Data is record
+      Width, Height : Interfaces.C.int;
+      Pixels : Pixel_Data_Ref;
    end record;
+   pragma Convention (C, Image);
 
-   overriding procedure Finalize (Icon : in out Glfw_Icon);
+   type Image_Data_Array is array (Positive range <>) of aliased Image_Data;
 
    function Window_Ptr (Raw : System.Address)
                         return not null access Window'Class;
+
+   function Convert (Icons : Image_Array) return Image_Data_Array;
 
 end Glfw.Windows;

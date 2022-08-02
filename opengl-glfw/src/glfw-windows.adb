@@ -2,7 +2,6 @@
 --  released under the terms of the MIT license, see the file "COPYING"
 
 with Ada.Unchecked_Conversion;
-with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 
 with GL;
@@ -278,12 +277,22 @@ package body Glfw.Windows is
    end Set_Size;
 
    procedure Set_Icon (Object : not null access Window;
-                       Icon : Glfw_Icon'Class) is
+                       Icon : Image) is
    begin
-      if Icon.Data.Pixels = null then
+      Object.Set_Icon (
+         Image_Array'(1 .. 1 => Icon)
+      );
+   end Set_Icon;
+
+   procedure Set_Icon (Object : not null access Window;
+                       Icons : Image_Array) is
+      use type Size;
+      Count : constant Size := Icons'Length;
+   begin
+      if Count = 0 then
          raise Operation_Exception;
       end if;
-      API.Set_Window_Icon (Object.Handle, 1, Icon.Data'Address); -- Only a single icon is supported for now
+      API.Set_Window_Icon (Object.Handle, Count, Convert (Icons)(1)'Address); -- Guaranteed to have at least one element
    end Set_Icon;
 
    procedure Clear_Icon (Object : not null access Window) is
@@ -387,40 +396,19 @@ package body Glfw.Windows is
       Revision := Natural (Value);
    end Get_OpenGL_Version;
 
-   -- Instantiations
-   procedure Free is new Ada.Unchecked_Deallocation (Byte_Array, Byte_Array_Ref);
-
-   procedure Generic_Conversion (Source : in Image_Type; Target : in out Glfw_Icon) is
-
-      use type Size;
-
-      Height : constant Size := Source'Length (1);
-      Width  : constant Size := Source'Length (2);
-
-      Pixels : Byte_Array (1 .. Height * Height * 4); -- 4 bytes per pixel
-      for Pixels'Address use Source'Address;
-
+   function Convert (Icons : Image_Array) return Image_Data_Array is
+      Icon   : Image;
+      Result : Image_Data_Array (Icons'Range);
    begin
-
-      if Target.Data.Pixels /= null then
-         Free (Target.Data.Pixels);
-      end if;
-
-      Target.Data := (
-         Width  => Width,
-         Height => Height,
-         Pixels => new Byte_Array'(Pixels)
-      );
-
-   end Generic_Conversion;
-
-   overriding procedure Finalize (Icon : in out Glfw_Icon) is
-   begin
-
-      if Icon.Data.Pixels /= null then
-         Free (Icon.Data.Pixels);
-      end if;
-
-   end Finalize;
+      for I in Icons'Range loop
+         Icon := Icons (I);
+         Result (I) := (
+            Width  => Interfaces.C.int (Icon.Width),
+            Height => Interfaces.C.int (Icon.Height),
+            Pixels => Icon.Pixels
+         );
+      end loop;
+      return Result;
+   end Convert;
 
 end Glfw.Windows;
