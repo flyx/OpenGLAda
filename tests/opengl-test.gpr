@@ -11,7 +11,7 @@ project OpenGL.Test is
 
    for Main use ("gl_test-vbos", "gl_test-immediate", "gl_test-shaders",
                  "gl_test-opengl3", "gl_test-context", "gl_test-framebuffers",
-                 "gl_test-debugging");
+                 "gl_test-debugging", "gl_test-compute");
 
    package Ide renames OpenGL.Ide;
    package Builder renames OpenGL.Builder;
