@@ -4,6 +4,10 @@ title : Home
 permalink: index.html
 ---
 
+**Project Status:** I do not have the time and energy to maintain this project anymore.
+Both this project and the corresponding Alire crates are unmaintained.
+I would be okay with someone taking over the project, feel free to [contact me](https://flyx.org) about it.
+
 ## About
 
 **OpenGLAda** is a thick Ada binding for [OpenGL][5] and related C libraries
