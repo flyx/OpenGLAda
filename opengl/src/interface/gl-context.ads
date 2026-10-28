@@ -13,7 +13,7 @@ package GL.Context is
    type String_List is array (Positive range <>) of
      Ada.Strings.Unbounded.Unbounded_String;
 
-   Null_String_List : constant String_List := (2 .. 1 => <>);
+   Null_String_List : constant String_List := [2 .. 1 => <>];
 
    -- these two require OpenGL 3:
    function Major_Version return Int;

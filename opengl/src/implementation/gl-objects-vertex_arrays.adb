@@ -50,7 +50,7 @@ package body GL.Objects.Vertex_Arrays is
    procedure Internal_Release_Id (Object : Vertex_Array_Object; Id : UInt) is
       pragma Unreferenced (Object);
    begin
-      API.Delete_Vertex_Arrays (1, (1 => Id));
+      API.Delete_Vertex_Arrays (1, [1 => Id]);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 

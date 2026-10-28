@@ -64,14 +64,14 @@ package GL.Algebra is
    type Matrix3 is new Matrices3.Matrix;
    type Matrix4 is new Matrices4.Matrix;
 
-   Identity2 : constant Matrix2 := ((One_Value, Null_Value), (Null_Value, One_Value));
-   Identity3 : constant Matrix3 := ((One_Value, Null_Value, Null_Value),
-                                    (Null_Value, One_Value, Null_Value),
-                                    (Null_Value, Null_Value, One_Value));
-   Identity4 : constant Matrix4 := ((One_Value, Null_Value, Null_Value, Null_Value),
-                                    (Null_Value, One_Value, Null_Value, Null_Value),
-                                    (Null_Value, Null_Value, One_Value, Null_Value),
-                                    (Null_Value, Null_Value, Null_Value, One_Value));
+   Identity2 : constant Matrix2 := [[One_Value, Null_Value], [Null_Value, One_Value]];
+   Identity3 : constant Matrix3 := [[One_Value, Null_Value, Null_Value],
+                                    [Null_Value, One_Value, Null_Value],
+                                    [Null_Value, Null_Value, One_Value]];
+   Identity4 : constant Matrix4 := [[One_Value, Null_Value, Null_Value, Null_Value],
+                                    [Null_Value, One_Value, Null_Value, Null_Value],
+                                    [Null_Value, Null_Value, One_Value, Null_Value],
+                                    [Null_Value, Null_Value, Null_Value, One_Value]];
 
    -----------------------------------------------------------------------------
    --                               Array types                               --
@@ -99,18 +99,18 @@ package GL.Algebra is
    -----------------------------------------------------------------------------
 
    package Vector2_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Vector2, Vector2_Array, Vector2'(others => <>));
+     (Index_Type, Vector2, Vector2_Array, Vector2'[others => <>]);
    package Vector3_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Vector3, Vector3_Array, Vector3'(others => <>));
+     (Index_Type, Vector3, Vector3_Array, Vector3'[others => <>]);
    package Vector4_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Vector4, Vector4_Array, Vector4'(others => <>));
+     (Index_Type, Vector4, Vector4_Array, Vector4'[others => <>]);
 
    package Matrix2_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Matrix2, Matrix2_Array, Matrix2'(others => (others => <>)));
+     (Index_Type, Matrix2, Matrix2_Array, Matrix2'(others => [others => <>]));
    package Matrix3_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Matrix3, Matrix3_Array, Matrix3'(others => (others => <>)));
+     (Index_Type, Matrix3, Matrix3_Array, Matrix3'(others => [others => <>]));
    package Matrix4_Pointers is new Interfaces.C.Pointers
-     (Index_Type, Matrix4, Matrix4_Array, Matrix4'(others => (others => <>)));
+     (Index_Type, Matrix4, Matrix4_Array, Matrix4'(others => [others => <>]));
 
    function Cross_Product (Left, Right : Vector3) return Vector3;
 end GL.Algebra;

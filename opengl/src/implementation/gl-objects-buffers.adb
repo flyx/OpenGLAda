@@ -139,7 +139,7 @@ package body GL.Objects.Buffers is
                                       Element_Offset : UInt := 0;
                                       Instance_Count : UInt := 0) is
       Element_Bytes : constant array (Unsigned_Numeric_Type) of UInt :=
-        (UByte_Type => 1, UShort_Type => 2, UInt_Type => 4);
+        [UByte_Type => 1, UShort_Type => 2, UInt_Type => 4];
    begin
       API.Draw_Elements_Instanced (Mode, Int (Count), Index_Type,
                 Low_Level.IntPtr (Element_Bytes (Index_Type) * Element_Offset),
@@ -243,7 +243,7 @@ package body GL.Objects.Buffers is
                            Offset : Types.Int;
                            Data   : out Types.Single_Array) is
    begin
-      Data := (others => <>);
+      Data := [others => <>];
       API.Get_Buffer_Sub_Data (Target.Kind, Low_Level.IntPtr (Offset),
         Low_Level.SizeIPtr (Data'Size / 8), Data'Address);
       Raise_Exception_On_OpenGL_Error;
@@ -302,7 +302,7 @@ package body GL.Objects.Buffers is
    procedure Internal_Release_Id (Object : Buffer; Id : UInt) is
       pragma Unreferenced (Object);
    begin
-      API.Delete_Buffers (1, (1 => Id));
+      API.Delete_Buffers (1, [1 => Id]);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 
@@ -310,7 +310,7 @@ package body GL.Objects.Buffers is
    procedure Internal_Release_Id (Object : Transform_Buffer; Id : UInt) is
       pragma Unreferenced (Object);
    begin
-      API.Delete_Transform_Feedbacks (1, (1 => Id));
+      API.Delete_Transform_Feedbacks (1, [1 => Id]);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 
