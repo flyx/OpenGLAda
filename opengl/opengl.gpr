@@ -71,7 +71,7 @@ library project OpenGL is
    end Builder;
 
    package Compiler is
-      Base_Switches := ("-gnat12", "-gnatwa", "-gnatwl", "-gnatwe", "-gnatwV",
+      Base_Switches := ("-gnat2022", "-gnatwa", "-gnatwl", "-gnatwe", "-gnatwV",
                         "-fstack-check", "-gnaty3abcefhiklmNprt");
       case Mode is
          when "debug" =>
