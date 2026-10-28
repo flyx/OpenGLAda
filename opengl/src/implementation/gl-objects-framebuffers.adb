@@ -208,7 +208,7 @@ package body GL.Objects.Framebuffers is
    procedure Internal_Release_Id (Object : Framebuffer; Id : UInt) is
       pragma Unreferenced (Object);
    begin
-      API.Delete_Framebuffers (1, (1 => Id));
+      API.Delete_Framebuffers (1, [1 => Id]);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 
@@ -236,10 +236,10 @@ package body GL.Objects.Framebuffers is
      (Kind : Low_Level.Enums.Framebuffer_Kind) return Framebuffer_Kind_Array is
    begin
       case Kind is
-         when Low_Level.Enums.Read => return (1 => Low_Level.Enums.Read);
-         when Low_Level.Enums.Draw => return (1 => Low_Level.Enums.Draw);
+         when Low_Level.Enums.Read => return [1 => Low_Level.Enums.Read];
+         when Low_Level.Enums.Draw => return [1 => Low_Level.Enums.Draw];
          when Low_Level.Enums.Read_Draw =>
-            return (1 => Low_Level.Enums.Draw, 2 => Low_Level.Enums.Read);
+            return [1 => Low_Level.Enums.Draw, 2 => Low_Level.Enums.Read];
       end case;
    end Backend_Framebuffer_Targets;
    pragma Inline (Backend_Framebuffer_Targets);

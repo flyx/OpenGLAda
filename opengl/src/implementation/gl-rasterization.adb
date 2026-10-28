@@ -22,7 +22,7 @@ package body GL.Rasterization is
    end Line_Width;
 
    function Aliased_Line_Width_Range return Line_Width_Range is
-      Ret : Singles.Vector2 := (others => <>);
+      Ret : Singles.Vector2 := [others => <>];
    begin
       API.Get_Single_Vec2 (Enums.Getter.Aliased_Line_Width_Range, Ret);
       Raise_Exception_On_OpenGL_Error;
@@ -30,7 +30,7 @@ package body GL.Rasterization is
    end Aliased_Line_Width_Range;
 
    function Smooth_Line_Width_Range  return Line_Width_Range is
-      Ret : Singles.Vector2 := (others => <>);
+      Ret : Singles.Vector2 := [others => <>];
    begin
       API.Get_Single_Vec2 (Enums.Getter.Smooth_Line_Width_Range, Ret);
       Raise_Exception_On_OpenGL_Error;

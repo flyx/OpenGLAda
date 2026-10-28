@@ -36,8 +36,8 @@ package body GL.Files is
       File_String_IO.Close (File);
       Raw_Contents.all (C.size_t (File_Size + 1)) := C.nul;
       API.Shader_Source (Object.Raw_Id, 1,
-                         (1 => Raw_Contents (1)'Unchecked_Access),
-                         (1 => File_Size));
+                         [1 => Raw_Contents (1)'Unchecked_Access],
+                         [1 => File_Size]);
       Free (Raw_Contents);
       Raise_Exception_On_OpenGL_Error;
    end Load_Shader_Source_From_File;

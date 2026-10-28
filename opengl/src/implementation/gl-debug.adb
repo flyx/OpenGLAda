@@ -98,8 +98,12 @@ package body GL.Debug is
       if Receiver = null then
          GL.API.Debug_Message_Callback (null, System.Null_Address);
       else
+		  declare
+			  Recv : constant Conv.Object_Pointer := Conv.Object_Pointer (Receiver);
+		  begin
          GL.API.Debug_Message_Callback
-           (Call_Message_Receiver'Access, Conv.To_Address (Receiver));
+           (P1 => Call_Message_Receiver'Access, P2 => Conv.To_Address (Recv));
+	  		end;
       end if;
    end Message_Callback;
 

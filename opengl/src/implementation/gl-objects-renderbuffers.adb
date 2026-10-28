@@ -160,7 +160,7 @@ package body GL.Objects.Renderbuffers is
    procedure Internal_Release_Id (Object : Renderbuffer; Id : UInt) is
       pragma Unreferenced (Object);
    begin
-      API.Delete_Renderbuffers (1, (1 => Id));
+      API.Delete_Renderbuffers (1, [1 => Id]);
       Raise_Exception_On_OpenGL_Error;
    end Internal_Release_Id;
 end GL.Objects.Renderbuffers;

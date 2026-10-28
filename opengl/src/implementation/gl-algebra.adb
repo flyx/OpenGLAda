@@ -35,9 +35,9 @@ package body GL.Algebra is
 
    function Cross_Product (Left, Right : Vector3) return Vector3 is
    begin
-      return (Left (Y) * Right (Z) - Left (Z) * Right (Y),
+      return [Left (Y) * Right (Z) - Left (Z) * Right (Y),
               Left (Z) * Right (X) - Left (X) * Right (Z),
-              Left (X) * Right (Y) - Left (Y) * Right (X));
+              Left (X) * Right (Y) - Left (Y) * Right (X)];
    end Cross_Product;
 
 end GL.Algebra;

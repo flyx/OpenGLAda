@@ -7,7 +7,6 @@ package GL.Raster is
    -- Obsolete as of OpenGL 3. Supplied here to support some older 3rd party
    -- functionality like Bitmap and Pixmap fonts of FTGL
 
-   use GL.Types;
    use GL.Types.Doubles;
 
    procedure Set_Pos (Position : Vector2);
