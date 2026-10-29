@@ -103,6 +103,10 @@ spec GL.API is
      Static => "glGetFloatv";
    procedure Get_Integer (Name   : Enums.Getter.Parameter;
                           Target : access Int) with Static => "glGetIntegerv";
+   procedure Get_Integer_Indexed (Name   : Enums.Getter.Parameter;
+                                  Index  : UInt;
+                                  Target : access Int) with
+     Dynamic => "glGetIntegeri_v";
    procedure Get_Int_Vec4 (Name   : Enums.Getter.Parameter;
                            Target : in out Ints.Vector4) with
      Static => "glGetIntegerv";
@@ -1300,4 +1304,24 @@ spec GL.API is
      Static => "glDepthRange", Wrapper => "GL.Window.Set_Depth_Range";
    procedure Viewport (X, Y : Int; Width, Height : Size) with
      Static => "glViewport", Wrapper => "GL.Window.Set_Viewport";
+
+   -----------------------------------------------------------------------------
+   --                             Compute Shaders                             --
+   -----------------------------------------------------------------------------
+
+   procedure Dispatch_Compute
+     (Num_Groups_X, Num_Groups_Y, Num_Groups_Z : UInt) with
+     Dynamic => "glDispatchCompute",
+     Wrapper => "GL.Compute.Dispatch_Compute";
+
+   -----------------------------------------------------------------------------
+   --                             Memory Barriers                             --
+   -----------------------------------------------------------------------------
+
+   procedure Memory_Barrier (Bits : Low_Level.Bitfield) with
+     Dynamic => "glMemoryBarrier",
+     Wrapper => "GL.Memory.Barrier";
+   procedure Memory_Barrier_By_Region (Bits : Low_Level.Bitfield) with
+     Dynamic => "glMemoryBarrierByRegion",
+     Wrapper => "GL.Memory.Barrier_By_Region";
 end GL.API;
