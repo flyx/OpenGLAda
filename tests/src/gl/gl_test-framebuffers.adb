@@ -72,7 +72,7 @@ begin
       Clear (Buffer_Bits'(others => True));
 
       declare
-         Token : Input_Token := Start (Quads);
+         Token : constant Input_Token := Start (Quads);
       begin
          Set_Color (Colors.Color'(1.0, 0.0, 0.0, 1.0));
          Token.Add_Vertex (Vector3'(-0.5, -0.5, -0.5));
@@ -114,7 +114,7 @@ begin
       GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Decal);
 
       declare
-         Token : Input_Token := Start (Quads);
+         Token : constant Input_Token := Start (Quads);
       begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 0.0));
          Token.Add_Vertex (Vector2'(-1.0, -1.0));

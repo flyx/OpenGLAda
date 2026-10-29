@@ -71,7 +71,7 @@ procedure Glfw_Test.Mouse is
            (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 
          declare
-            Token : GL.Immediate.Input_Token
+            Token : constant GL.Immediate.Input_Token
               := GL.Immediate.Start (GL.Types.Quads);
          begin
             Token.Add_Vertex (Vector2'(Object.Start_X, Object.Start_Y));
@@ -123,7 +123,7 @@ procedure Glfw_Test.Mouse is
          Object.Color (A) := 1.0;
       end if;
       if not Colored then
-         Object.Color := (0.1, 0.1, 0.1, Object.Color (A));
+         Object.Color := [0.1, 0.1, 0.1, Object.Color (A)];
       end if;
       Object.Get_Cursor_Pos (X, Y);
       Object.Start_X := GL.Types.Double (X);

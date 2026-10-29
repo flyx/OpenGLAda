@@ -94,7 +94,7 @@ begin
       Clear (Buffer_Bits'(Color => True, others => False));
 
       declare
-         Token : Input_Token := Start (Quads);
+         Token : constant Input_Token := Start (Quads);
       begin
          Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
          Token.Add_Vertex (Doubles.Vector4'(0.7, 0.7, 0.0, 1.0));

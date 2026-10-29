@@ -27,7 +27,7 @@ begin
 
       for I in 1 .. 12 loop
          declare
-            Token : Input_Token := Start (Line_Strip);
+            Token : constant Input_Token := Start (Line_Strip);
          begin
             Set_Color (Colors.Color'(1.0, 0.0, 0.0, 0.0));
             Token.Add_Vertex (Vector4'(0.1, 0.4, 0.0, 1.0));

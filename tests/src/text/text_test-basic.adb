@@ -33,10 +33,10 @@ procedure Text_Test.Basic is
       use GL.Objects.Buffers;
 
       Square : constant Singles.Vector2_Array
-        := ((0.0, 0.0),
-            (1.0, 0.0),
-            (0.0, 1.0),
-            (1.0, 1.0));
+        := [[0.0, 0.0],
+            [1.0, 0.0],
+            [0.0, 1.0],
+            [1.0, 1.0]];
    begin
       Array1.Bind;
       Array_Buffer.Bind (Buffer1);
@@ -118,14 +118,14 @@ begin
      (Text, Width, Y_Min, Y_Max, GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
    GL.Objects.Textures.Set_Active_Unit (0);
    GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
-   Transformation := Matrix4'((1.0, 0.0, 0.0, 0.0),
-                              (0.0, 1.0, 0.0, 0.0),
-                              (0.0, 0.0, 1.0, 0.0),
-                              (-1.0, 0.0, 0.0, 1.0)) *
-                     Matrix4'((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
-                              (0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0),
-                              (0.0, 0.0, 1.0, 0.0),
-                              (0.0, 0.0, 0.0, 1.0));
+   Transformation := Matrix4'([1.0, 0.0, 0.0, 0.0],
+                              [0.0, 1.0, 0.0, 0.0],
+                              [0.0, 0.0, 1.0, 0.0],
+                              [-1.0, 0.0, 0.0, 1.0]) *
+                     Matrix4'([2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0],
+                              [0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0],
+                              [0.0, 0.0, 1.0, 0.0],
+                              [0.0, 0.0, 0.0, 1.0]);
 
    Ada.Text_IO.Put_Line ("Rendered text to texture");
 

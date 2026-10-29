@@ -38,7 +38,7 @@ begin
       GL.Toggles.Enable (GL.Toggles.Texture_2D);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Texture);
       declare
-         Token : GL.Immediate.Input_Token := GL.Immediate.Start (Quads);
+         Token : constant GL.Immediate.Input_Token := GL.Immediate.Start (Quads);
       begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 0.0));
          Token.Add_Vertex (Vector2'(-1.0, -1.0));

@@ -32,17 +32,17 @@ procedure GL_Test.Debugging is
       use GL.Objects.Buffers;
 
       Triangle1 : constant Singles.Vector3_Array
-        := ((-0.3,  0.5, -1.0),
-            (-0.8, -0.5, -1.0),
-            (0.2, -0.5, -1.0));
+        := [[-0.3,  0.5, -1.0],
+            [-0.8, -0.5, -1.0],
+            [0.2, -0.5, -1.0]];
       Triangle2 : constant Singles.Vector3_Array
-        := ((-0.2,  0.5, -1.0),
-            (0.3, -0.5, -1.0),
-            (0.8,  0.5, -1.0));
+        := [[-0.2,  0.5, -1.0],
+            [0.3, -0.5, -1.0],
+            [0.8,  0.5, -1.0]];
       Color_Array : constant Colors.Basic_Color_Array
-        := ((1.0, 0.0, 0.0),
-            (0.0, 1.0, 0.0),
-            (0.0, 0.0, 1.0));
+        := [[1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0]];
    begin
       -- First vertex array object: Colored vertices
       Array1.Bind;
