@@ -24,7 +24,7 @@ begin
    GL_Test.Display_Backend.Open_Window (1000, 498);
 
    GL.Images.Load_File_To_Texture
-     ("../ada2012-color.jpg", Texture, GL.Pixels.RGB);
+     ("./ada2012-color.jpg", Texture, GL.Pixels.RGB);
 
    Projection.Load_Identity;
    Projection.Apply_Orthogonal (-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
