@@ -10,3 +10,8 @@ opengl/generated/WrapperList.md
 *.dll
 *-loc.xml
 alire
+opengl/config
+opengl-glfw/config
+opengl-images/config
+opengl-text/config
+tests/config
