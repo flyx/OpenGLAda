@@ -27,22 +27,18 @@ procedure GL_Test.Debugging is
    procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
      (Colors.Basic_Color_Pointers);
 
-   procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
-                        Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
+   procedure Load_Data
+     (Array1, Array2            : Vertex_Array_Object;
+      Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer)
+   is
       use GL.Objects.Buffers;
 
-      Triangle1 : constant Singles.Vector3_Array
-        := [[-0.3,  0.5, -1.0],
-            [-0.8, -0.5, -1.0],
-            [0.2, -0.5, -1.0]];
-      Triangle2 : constant Singles.Vector3_Array
-        := [[-0.2,  0.5, -1.0],
-            [0.3, -0.5, -1.0],
-            [0.8,  0.5, -1.0]];
-      Color_Array : constant Colors.Basic_Color_Array
-        := [[1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0]];
+      Triangle1   : constant Singles.Vector3_Array    :=
+        [[-0.3, 0.5, -1.0], [-0.8, -0.5, -1.0], [0.2, -0.5, -1.0]];
+      Triangle2   : constant Singles.Vector3_Array    :=
+        [[-0.2, 0.5, -1.0], [0.3, -0.5, -1.0], [0.8, 0.5, -1.0]];
+      Color_Array : constant Colors.Basic_Color_Array :=
+        [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
    begin
       -- First vertex array object: Colored vertices
       Array1.Bind;
@@ -65,10 +61,10 @@ procedure GL_Test.Debugging is
    end Load_Data;
 
    procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is
-      Vertex_Shader   : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Vertex_Shader);
-      Fragment_Shader : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Fragment_Shader);
+      Vertex_Shader   :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Vertex_Shader);
+      Fragment_Shader :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Fragment_Shader);
    begin
       Vertex_Shader.Initialize_Id;
       Fragment_Shader.Initialize_Id;
@@ -111,38 +107,43 @@ procedure GL_Test.Debugging is
 
    Vector_Buffer1, Vector_Buffer2, Color_Buffer : GL.Objects.Buffers.Buffer;
    Array1, Array2 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
-      
+
    Logger : aliased GL.Debug.Stream_Logger;
 begin
    Display_Backend.Init (True);
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 4, Minor => 3);
    Display_Backend.Open_Window (Width => 500, Height => 500);
-   
-   Logger.Set_Stream (Ada.Text_IO.Text_Streams.Stream (Ada.Text_IO.Standard_Output));
+
+   Logger.Set_Stream
+     (Ada.Text_IO.Text_Streams.Stream (Ada.Text_IO.Standard_Output));
    GL.Toggles.Enable (GL.Toggles.Debug_Output);
    GL.Debug.Message_Callback (Logger'Access);
 
-   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 1,
-                            GL.Debug.Notification, "Initialized GLFW window");
+   GL.Debug.Message_Insert
+     (GL.Debug.Application, GL.Debug.Other, 1, GL.Debug.Notification,
+      "Initialized GLFW window");
 
    Vector_Buffer1.Initialize_Id;
    Vector_Buffer2.Initialize_Id;
    Color_Buffer.Initialize_Id;
    Array1.Initialize_Id;
    Array2.Initialize_Id;
-   
-   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 2,
-                            GL.Debug.Notification, "Initialized objects");
+
+   GL.Debug.Message_Insert
+     (GL.Debug.Application, GL.Debug.Other, 2, GL.Debug.Notification,
+      "Initialized objects");
 
    Load_Shaders (Program);
-   
-   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 3,
-                            GL.Debug.Notification, "Loaded shaders");
+
+   GL.Debug.Message_Insert
+     (GL.Debug.Application, GL.Debug.Other, 3, GL.Debug.Notification,
+      "Loaded shaders");
 
    Load_Data (Array1, Array2, Vector_Buffer1, Color_Buffer, Vector_Buffer2);
 
-   GL.Debug.Message_Insert (GL.Debug.Application, GL.Debug.Other, 4,
-                            GL.Debug.Notification, "Loaded data");
+   GL.Debug.Message_Insert
+     (GL.Debug.Application, GL.Debug.Other, 4, GL.Debug.Notification,
+      "Loaded data");
 
    while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, Depth => True, others => False));

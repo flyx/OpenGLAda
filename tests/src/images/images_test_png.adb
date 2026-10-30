@@ -22,7 +22,7 @@ procedure Images_Test_PNG is
    Texture : GL.Objects.Textures.Texture;
 begin
    GL_Test.Display_Backend.Init;
-   GL_Test.Display_Backend.Open_Window (1000, 498);
+   GL_Test.Display_Backend.Open_Window (1_000, 498);
 
    GL.Images.Load_File_To_Texture
      ("./ada2012-black.png", Texture, GL.Pixels.RGBA);
@@ -43,14 +43,15 @@ begin
       GL.Toggles.Enable (GL.Toggles.Texture_2D);
       GL.Objects.Textures.Targets.Texture_2D.Bind (Texture);
       declare
-         Token : constant GL.Immediate.Input_Token := GL.Immediate.Start (Quads);
+         Token : constant GL.Immediate.Input_Token :=
+           GL.Immediate.Start (Quads);
       begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 0.0));
          Token.Add_Vertex (Vector2'(-1.0, -1.0));
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 1.0));
-         Token.Add_Vertex (Vector2'(-1.0,  1.0));
+         Token.Add_Vertex (Vector2'(-1.0, 1.0));
          GL.Immediate.Set_Texture_Coordinates (Vector2'(1.0, 1.0));
-         Token.Add_Vertex (Vector2'(1.0,  1.0));
+         Token.Add_Vertex (Vector2'(1.0, 1.0));
          GL.Immediate.Set_Texture_Coordinates (Vector2'(1.0, 0.0));
          Token.Add_Vertex (Vector2'(1.0, -1.0));
       end;

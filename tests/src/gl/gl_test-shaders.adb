@@ -19,10 +19,10 @@ procedure GL_Test.Shaders is
    use GL.Fixed.Matrix;
    use GL.Immediate;
 
-   Vertex_Shader   : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Vertex_Shader);
-   Fragment_Shader : GL.Objects.Shaders.Shader
-     (Kind => GL.Objects.Shaders.Fragment_Shader);
+   Vertex_Shader   :
+     GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Vertex_Shader);
+   Fragment_Shader :
+     GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Fragment_Shader);
    Program         : GL.Objects.Programs.Program;
 begin
    Display_Backend.Init;
@@ -67,14 +67,14 @@ begin
    declare
       use type GL.Objects.Shaders.Lists.Cursor;
 
-      List : constant GL.Objects.Shaders.Lists.List
-        := Program.Attached_Shaders;
-      Cursor : GL.Objects.Shaders.Lists.Cursor := List.First;
+      List   : constant GL.Objects.Shaders.Lists.List :=
+        Program.Attached_Shaders;
+      Cursor : GL.Objects.Shaders.Lists.Cursor        := List.First;
    begin
       while Cursor /= GL.Objects.Shaders.Lists.No_Element loop
          declare
-            Shader : constant GL.Objects.Shaders.Shader
-              := GL.Objects.Shaders.Lists.Element (Cursor);
+            Shader : constant GL.Objects.Shaders.Shader :=
+              GL.Objects.Shaders.Lists.Element (Cursor);
          begin
             Ada.Text_IO.Put_Line ("----------------------------");
             Ada.Text_IO.Put_Line ("Kind: " & Shader.Kind'Img);

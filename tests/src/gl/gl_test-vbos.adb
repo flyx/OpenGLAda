@@ -20,7 +20,7 @@ procedure GL_Test.VBOs is
    use GL.Types.Doubles;
    use GL.Types;
    use GL;
-	
+
    procedure Load_Index is new GL.Objects.Buffers.Load_To_Buffer
      (Int_Pointers);
 
@@ -34,11 +34,11 @@ procedure GL_Test.VBOs is
    type Colored_Vertices is array (Size range <>) of aliased Colored_Vertex;
 
    package Colored_Pointers is new Interfaces.C.Pointers
-     (Size, Colored_Vertex, Colored_Vertices, Colored_Vertex'(
-        Vertex => <>, Color => <>));
+     (Size, Colored_Vertex, Colored_Vertices,
+      Colored_Vertex'(Vertex => <>, Color => <>));
 
    procedure Load_Colored_Vertex is new GL.Objects.Buffers.Load_To_Buffer
-      (Colored_Pointers);
+     (Colored_Pointers);
 
 begin
    Display_Backend.Init;
@@ -54,31 +54,26 @@ begin
       use GL.Buffers;
 
       Cube : constant Colored_Vertices :=
-        [([0.9,  0.9,  0.9], [0.0, 0.0, 0.0, 0.0]),
-         ([0.9,  0.9, -0.9], [1.0, 0.0, 0.0, 0.0]),
-         ([0.9, -0.9, -0.9], [1.0, 1.0, 0.0, 0.0]),
-         ([0.9, -0.9,  0.9], [0.0, 1.0, 0.0, 0.0]),
-         ([-0.9,  0.9,  0.9], [0.0, 1.0, 0.0, 0.0]),
-         ([-0.9,  0.9, -0.9], [0.0, 1.0, 1.0, 0.0]),
-         ([-0.9, -0.9, -0.9], [1.0, 1.0, 1.0, 0.0]),
-         ([-0.9, -0.9,  0.9], [0.0, 1.0, 1.0, 0.0])
-			];
+        [([0.9, 0.9, 0.9], [0.0, 0.0, 0.0, 0.0]),
+        ([0.9, 0.9, -0.9], [1.0, 0.0, 0.0, 0.0]),
+        ([0.9, -0.9, -0.9], [1.0, 1.0, 0.0, 0.0]),
+        ([0.9, -0.9, 0.9], [0.0, 1.0, 0.0, 0.0]),
+        ([-0.9, 0.9, 0.9], [0.0, 1.0, 0.0, 0.0]),
+        ([-0.9, 0.9, -0.9], [0.0, 1.0, 1.0, 0.0]),
+        ([-0.9, -0.9, -0.9], [1.0, 1.0, 1.0, 0.0]),
+        ([-0.9, -0.9, 0.9], [0.0, 1.0, 1.0, 0.0])];
 
       Indexes : constant Int_Array :=
-        [0, 3, 2, 1,
-         4, 5, 6, 7,
-         0, 1, 5, 4,
-         2, 3, 7, 6,
-         0, 3, 7, 4,
-         1, 5, 6, 2];
+        [0, 3, 2, 1, 4, 5, 6, 7, 0, 1, 5, 4, 2, 3, 7, 6, 0, 3, 7, 4, 1, 5, 6,
+        2];
 
-      Cube_Buffer, Index_Buffer  : Buffer;
+      Cube_Buffer, Index_Buffer : Buffer;
 
       Rotator : Double := 0.0;
 
       Cur_Seconds  : Ada.Calendar.Day_Duration;
       Last_Seconds : Ada.Calendar.Day_Duration := 0.0;
-      Frame_Count  : Natural := 0;
+      Frame_Count  : Natural                   := 0;
    begin
       Cube_Buffer.Initialize_Id;
       Index_Buffer.Initialize_Id;
