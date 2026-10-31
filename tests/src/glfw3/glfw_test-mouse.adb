@@ -46,10 +46,9 @@ procedure Glfw_Test.Mouse is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : constant Glfw.Windows.Window_Reference
-        := Glfw.Windows.Window (Object.all)'Access;
+
    begin
-      Upcast.Init (Width, Height, Title, Monitor, Share);
+      Glfw.Windows.Window (Object.all)'Access.Init (Width, Height, Title, Monitor, Share);
       Object.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
       Object.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Button);
    end Init;
@@ -140,7 +139,7 @@ begin
    Glfw.Init;
    Enable_Print_Errors;
 
-   My_Window'Access.Init (800, 600, Base_Title);
+   Init (My_Window'Access, 800, 600, Base_Title);
    Glfw.Windows.Context.Make_Current (My_Window'Access);
 
    Projection.Load_Identity;

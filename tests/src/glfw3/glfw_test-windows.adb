@@ -28,10 +28,8 @@ procedure Glfw_Test.Windows is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : constant Glfw.Windows.Window_Reference
-        := Glfw.Windows.Window (Object.all)'Access;
    begin
-      Upcast.Init (Width, Height, Title, Monitor, Share);
+      Glfw.Windows.Window (Object.all)'Access.Init (Width, Height, Title, Monitor, Share);
       Object.Enable_Callback (Glfw.Windows.Callbacks.Key);
    end Init;
 

@@ -25,10 +25,8 @@ procedure Glfw_Test.Clipboard is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : constant Glfw.Windows.Window_Reference
-        := Glfw.Windows.Window (Object.all)'Access;
    begin
-      Upcast.Init (Width, Height, Title, Monitor, Share);
+      Glfw.Windows.Window (Object.all)'Access.Init (Width, Height, Title, Monitor, Share);
       Glfw.Windows.Clipboard.Set
         (Object, "Unfocus to change clipboard contents to window title");
       Object.Enable_Callback (Glfw.Windows.Callbacks.Focus);
