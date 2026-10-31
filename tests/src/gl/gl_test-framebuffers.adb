@@ -3,11 +3,12 @@
 
 with Ada.Text_IO;
 
-with GL.Buffers;         use GL.Buffers;
-with GL.Immediate;       use GL.Immediate;
-with GL.Fixed.Matrix;    use GL.Fixed.Matrix; use GL.Fixed;
+with GL.Buffers;      use GL.Buffers;
+with GL.Immediate;    use GL.Immediate;
+with GL.Fixed.Matrix; use GL.Fixed.Matrix;
+use GL.Fixed;
 with GL.Fixed.Textures;
-with GL.Types.Colors;    use GL.Types;
+with GL.Types.Colors; use GL.Types;
 with GL.Objects.Textures.Targets;
 with GL.Objects.Renderbuffers;
 with GL.Objects.Framebuffers;
@@ -57,11 +58,12 @@ begin
       GL.Objects.Framebuffers.Read_And_Draw_Target.Attach_Renderbuffer
         (GL.Objects.Framebuffers.Depth_Attachment, Depth_Buffer);
 
-      if GL.Objects.Framebuffers.Read_And_Draw_Target.Status
-        /= GL.Objects.Framebuffers.Complete then
+      if GL.Objects.Framebuffers.Read_And_Draw_Target.Status /=
+        GL.Objects.Framebuffers.Complete
+      then
          Ada.Text_IO.Put_Line
            ("Error: Framebuffer status is " &
-              GL.Objects.Framebuffers.Read_And_Draw_Target.Status'Img);
+            GL.Objects.Framebuffers.Read_And_Draw_Target.Status'Img);
          return;
       end if;
 
@@ -72,7 +74,7 @@ begin
       Clear (Buffer_Bits'(others => True));
 
       declare
-         Token : Input_Token := Start (Quads);
+         Token : constant Input_Token := Start (Quads);
       begin
          Set_Color (Colors.Color'(1.0, 0.0, 0.0, 1.0));
          Token.Add_Vertex (Vector3'(-0.5, -0.5, -0.5));
@@ -103,8 +105,8 @@ begin
 
    GL.Window.Set_Viewport (0, 0, 500, 500);
 
-   while not Display_Backend.Escape_Pressed and
-         Display_Backend.Window_Opened loop
+   while not Display_Backend.Escape_Pressed and Display_Backend.Window_Opened
+   loop
       Clear (Buffer_Bits'(others => True));
 
       GL.Objects.Textures.Set_Active_Unit (0);
@@ -114,7 +116,7 @@ begin
       GL.Fixed.Textures.Set_Tex_Function (GL.Fixed.Textures.Decal);
 
       declare
-         Token : Input_Token := Start (Quads);
+         Token : constant Input_Token := Start (Quads);
       begin
          GL.Immediate.Set_Texture_Coordinates (Vector2'(0.0, 0.0));
          Token.Add_Vertex (Vector2'(-1.0, -1.0));

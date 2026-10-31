@@ -41,12 +41,14 @@ procedure GL_Test.Context is
          end loop;
       end;
       begin
-         Put_Line ("Primary shading language version: " &
-                   GL.Context.Primary_Shading_Language_Version);
+         Put_Line
+           ("Primary shading language version: " &
+            GL.Context.Primary_Shading_Language_Version);
       exception
          when others =>
-            Put_Line ("OpenGL version too old for querying " &
-                      "Primary shading language version");
+            Put_Line
+              ("OpenGL version too old for querying " &
+               "Primary shading language version");
             return;
       end;
       begin
@@ -60,18 +62,19 @@ procedure GL_Test.Context is
                   Version : constant String := To_String (List (I));
                begin
                   Put_Line ("  " & Version);
-                  if not GL.Context.Supports_Shading_Language_Version
-                    (Version)
+                  if not GL.Context.Supports_Shading_Language_Version (Version)
                   then
-                     Put_Line ("!!! Supports_Shading_Language_Version " &
-                               "returns false (should not happen)");
+                     Put_Line
+                       ("!!! Supports_Shading_Language_Version " &
+                        "returns false (should not happen)");
                   end if;
                end;
             end loop;
          end;
       exception
          when others =>
-            Put_Line ("OpenGL version too old for querying supported versions");
+            Put_Line
+              ("OpenGL version too old for querying supported versions");
       end;
    end Display_Context_Information;
 
@@ -82,7 +85,7 @@ begin
      ("Getting information without request for OpenGL version.");
 
    -- create a window so we have a context
-   Display_Backend.Open_Window (Width  => 500, Height => 500);
+   Display_Backend.Open_Window (Width => 500, Height => 500);
 
    Display_Context_Information;
    Ada.Text_IO.New_Line;
@@ -94,7 +97,7 @@ begin
 
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 2, Minor => 1);
 
-   Display_Backend.Open_Window (Width  => 500, Height => 500);
+   Display_Backend.Open_Window (Width => 500, Height => 500);
 
    Display_Context_Information;
 
@@ -105,7 +108,7 @@ begin
 
    Display_Backend.Configure_Minimum_OpenGL_Version (Major => 3, Minor => 2);
 
-   Display_Backend.Open_Window (Width  => 500, Height => 500);
+   Display_Backend.Open_Window (Width => 500, Height => 500);
 
    Display_Context_Information;
 

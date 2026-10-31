@@ -28,15 +28,13 @@ procedure Text_Test.Basic is
    procedure Load_Vectors is new GL.Objects.Buffers.Load_To_Buffer
      (Singles.Vector2_Pointers);
 
-   procedure Load_Data (Array1  : Vertex_Array_Object;
-                        Buffer1 : GL.Objects.Buffers.Buffer) is
+   procedure Load_Data
+     (Array1 : Vertex_Array_Object; Buffer1 : GL.Objects.Buffers.Buffer)
+   is
       use GL.Objects.Buffers;
 
-      Square : constant Singles.Vector2_Array
-        := ((0.0, 0.0),
-            (1.0, 0.0),
-            (0.0, 1.0),
-            (1.0, 1.0));
+      Square : constant Singles.Vector2_Array :=
+        [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]];
    begin
       Array1.Bind;
       Array_Buffer.Bind (Buffer1);
@@ -46,10 +44,10 @@ procedure Text_Test.Basic is
    end Load_Data;
 
    procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is
-      Vertex_Shader   : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Vertex_Shader);
-      Fragment_Shader : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Fragment_Shader);
+      Vertex_Shader   :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Vertex_Shader);
+      Fragment_Shader :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Fragment_Shader);
    begin
       Vertex_Shader.Initialize_Id;
       Fragment_Shader.Initialize_Id;
@@ -87,17 +85,18 @@ procedure Text_Test.Basic is
    Program : GL.Objects.Programs.Program;
 
    Vector_Buffer1 : GL.Objects.Buffers.Buffer;
-   Array1 : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
+   Array1         : GL.Objects.Vertex_Arrays.Vertex_Array_Object;
 
    Width, Y_Min, Y_Max : GL.Text.Pixel_Difference;
-   Text : constant String := "The quick bröwn füx jumpß over the lazy 💩dog.";
-   Text_Image : GL.Objects.Textures.Texture;
-   Rendering_Program : GL.Text.Shader_Program_Reference;
-   Renderer : GL.Text.Renderer_Reference;
-   Texture_ID : GL.Uniforms.Uniform;
-   Transformation : GL.Types.Singles.Matrix4;
-   Transformation_ID : GL.Uniforms.Uniform;
-   Dimensions_ID : GL.Uniforms.Uniform;
+   Text                : constant String :=
+     "The quick bröwn füx jumpß over the lazy 💩dog.";
+   Text_Image          : GL.Objects.Textures.Texture;
+   Rendering_Program   : GL.Text.Shader_Program_Reference;
+   Renderer            : GL.Text.Renderer_Reference;
+   Texture_ID          : GL.Uniforms.Uniform;
+   Transformation      : GL.Types.Singles.Matrix4;
+   Transformation_ID   : GL.Uniforms.Uniform;
+   Dimensions_ID       : GL.Uniforms.Uniform;
 
    use GL.Types.Singles;
    use type GL.Text.Pixel_Difference;
@@ -110,22 +109,23 @@ begin
    Ada.Text_IO.Put_Line ("Text: """ & Text & """");
 
    GL.Text.Create (Rendering_Program);
-   Renderer.Create (Rendering_Program,
-                    "../texgyreadventor-regular.otf", 0, 96);
+   Renderer.Create
+     (Rendering_Program, "../texgyreadventor-regular.otf", 0, 96);
    Renderer.Calculate_Dimensions (Text, Width, Y_Min, Y_Max);
 
-   Text_Image := Renderer.To_Texture
-     (Text, Width, Y_Min, Y_Max, GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
+   Text_Image :=
+     Renderer.To_Texture
+       (Text, Width, Y_Min, Y_Max, GL.Types.Colors.Color'(1.0, 0.0, 0.0, 1.0));
    GL.Objects.Textures.Set_Active_Unit (0);
    GL.Objects.Textures.Targets.Texture_2D.Bind (Text_Image);
-   Transformation := Matrix4'((1.0, 0.0, 0.0, 0.0),
-                              (0.0, 1.0, 0.0, 0.0),
-                              (0.0, 0.0, 1.0, 0.0),
-                              (-1.0, 0.0, 0.0, 1.0)) *
-                     Matrix4'((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
-                              (0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0),
-                              (0.0, 0.0, 1.0, 0.0),
-                              (0.0, 0.0, 0.0, 1.0));
+   Transformation :=
+     Matrix4'
+       ([1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0],
+        [-1.0, 0.0, 0.0, 1.0]) *
+     Matrix4'
+       ([2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0],
+        [0.0, 2.0 / GL.Types.Single (Width), 0.0, 0.0], [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0]);
 
    Ada.Text_IO.Put_Line ("Rendered text to texture");
 
@@ -136,13 +136,13 @@ begin
 
    Load_Shaders (Program);
    Program.Use_Program;
-   Texture_ID := Program.Uniform_Location ("texSampler");
+   Texture_ID        := Program.Uniform_Location ("texSampler");
    Transformation_ID := Program.Uniform_Location ("transformation");
-   Dimensions_ID := Program.Uniform_Location ("dimensions");
+   Dimensions_ID     := Program.Uniform_Location ("dimensions");
    GL.Uniforms.Set_Int (Texture_ID, 0);
    GL.Uniforms.Set_Single (Transformation_ID, Transformation);
-   GL.Uniforms.Set_Single (Dimensions_ID, GL.Types.Single (Width),
-                           GL.Types.Single (Y_Max - Y_Min));
+   GL.Uniforms.Set_Single
+     (Dimensions_ID, GL.Types.Single (Width), GL.Types.Single (Y_Max - Y_Min));
 
    Ada.Text_IO.Put_Line ("Loaded shaders");
 
@@ -152,8 +152,8 @@ begin
 
    GL.Buffers.Set_Color_Clear_Value (Colors.Color'(0.0, 0.2, 0.7, 1.0));
    GL.Toggles.Enable (GL.Toggles.Blend);
-   GL.Blending.Set_Blend_Func (GL.Blending.Src_Alpha,
-                               GL.Blending.One_Minus_Src_Alpha);
+   GL.Blending.Set_Blend_Func
+     (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
    while Display_Backend.Window_Opened loop
       Clear (Buffer_Bits'(Color => True, others => False));
 

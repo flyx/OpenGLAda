@@ -25,22 +25,18 @@ procedure GL_Test.OpenGL3 is
    procedure Load_Colors is new GL.Objects.Buffers.Load_To_Buffer
      (Colors.Basic_Color_Pointers);
 
-   procedure Load_Data (Array1, Array2            : Vertex_Array_Object;
-                        Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer) is
+   procedure Load_Data
+     (Array1, Array2            : Vertex_Array_Object;
+      Buffer1, Buffer2, Buffer3 : GL.Objects.Buffers.Buffer)
+   is
       use GL.Objects.Buffers;
 
-      Triangle1 : constant Singles.Vector3_Array
-        := ((-0.3,  0.5, -1.0),
-            (-0.8, -0.5, -1.0),
-            (0.2, -0.5, -1.0));
-      Triangle2 : constant Singles.Vector3_Array
-        := ((-0.2,  0.5, -1.0),
-            (0.3, -0.5, -1.0),
-            (0.8,  0.5, -1.0));
-      Color_Array : constant Colors.Basic_Color_Array
-        := ((1.0, 0.0, 0.0),
-            (0.0, 1.0, 0.0),
-            (0.0, 0.0, 1.0));
+      Triangle1   : constant Singles.Vector3_Array    :=
+        [[-0.3, 0.5, -1.0], [-0.8, -0.5, -1.0], [0.2, -0.5, -1.0]];
+      Triangle2   : constant Singles.Vector3_Array    :=
+        [[-0.2, 0.5, -1.0], [0.3, -0.5, -1.0], [0.8, 0.5, -1.0]];
+      Color_Array : constant Colors.Basic_Color_Array :=
+        [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
    begin
       -- First vertex array object: Colored vertices
       Array1.Bind;
@@ -63,10 +59,10 @@ procedure GL_Test.OpenGL3 is
    end Load_Data;
 
    procedure Load_Shaders (Program : out GL.Objects.Programs.Program) is
-      Vertex_Shader   : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Vertex_Shader);
-      Fragment_Shader : GL.Objects.Shaders.Shader
-        (Kind => GL.Objects.Shaders.Fragment_Shader);
+      Vertex_Shader   :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Vertex_Shader);
+      Fragment_Shader :
+        GL.Objects.Shaders.Shader (Kind => GL.Objects.Shaders.Fragment_Shader);
    begin
       Vertex_Shader.Initialize_Id;
       Fragment_Shader.Initialize_Id;

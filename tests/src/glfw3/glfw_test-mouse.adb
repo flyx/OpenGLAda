@@ -46,10 +46,9 @@ procedure Glfw_Test.Mouse is
                    Title   : String;
                    Monitor : Glfw.Monitors.Monitor := Glfw.Monitors.No_Monitor;
                    Share   : access Glfw.Windows.Window'Class := null) is
-      Upcast : constant Glfw.Windows.Window_Reference
-        := Glfw.Windows.Window (Object.all)'Access;
+
    begin
-      Upcast.Init (Width, Height, Title, Monitor, Share);
+      Glfw.Windows.Window (Object.all)'Access.Init (Width, Height, Title, Monitor, Share);
       Object.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Position);
       Object.Enable_Callback (Glfw.Windows.Callbacks.Mouse_Button);
    end Init;
@@ -71,7 +70,7 @@ procedure Glfw_Test.Mouse is
            (GL.Blending.Src_Alpha, GL.Blending.One_Minus_Src_Alpha);
 
          declare
-            Token : GL.Immediate.Input_Token
+            Token : constant GL.Immediate.Input_Token
               := GL.Immediate.Start (GL.Types.Quads);
          begin
             Token.Add_Vertex (Vector2'(Object.Start_X, Object.Start_Y));
@@ -123,7 +122,7 @@ procedure Glfw_Test.Mouse is
          Object.Color (A) := 1.0;
       end if;
       if not Colored then
-         Object.Color := (0.1, 0.1, 0.1, Object.Color (A));
+         Object.Color := [0.1, 0.1, 0.1, Object.Color (A)];
       end if;
       Object.Get_Cursor_Pos (X, Y);
       Object.Start_X := GL.Types.Double (X);
@@ -140,7 +139,7 @@ begin
    Glfw.Init;
    Enable_Print_Errors;
 
-   My_Window'Access.Init (800, 600, Base_Title);
+   Init (My_Window'Access, 800, 600, Base_Title);
    Glfw.Windows.Context.Make_Current (My_Window'Access);
 
    Projection.Load_Identity;

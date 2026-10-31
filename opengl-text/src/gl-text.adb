@@ -22,7 +22,7 @@ package body GL.Text is
       Fragment_Shader :
         GL.Objects.Shaders.Shader (GL.Objects.Shaders.Fragment_Shader);
       Square : constant GL.Types.Singles.Vector2_Array :=
-        ((0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0));
+        [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]];
       LF : constant Character := Character'Val (10);
    begin
       Object.Id.Initialize_Id;
@@ -246,11 +246,11 @@ package body GL.Text is
       X_Offset : Pixel_Difference := 0;
       Height : constant Pixel_Difference := Y_Max - Y_Min;
       Transformation : constant GL.Types.Singles.Matrix4 :=
-        ((1.0, 0.0, 0.0, 0.0), (0.0, 1.0, 0.0, 0.0), (0.0, 0.0, 1.0, 0.0),
-         (-1.0, -1.0, 0.0, 1.0)) *
-          ((2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0),
-           (0.0, 2.0 / GL.Types.Single (Height), 0.0, 0.0),
-           (0.0, 0.0, 1.0, 0.0), (0.0, 0.0, 0.0, 1.0));
+        [[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0],
+         [-1.0, -1.0, 0.0, 1.0]] *
+          [[2.0 / GL.Types.Single (Width), 0.0, 0.0, 0.0],
+           [0.0, 2.0 / GL.Types.Single (Height), 0.0, 0.0],
+           [0.0, 0.0, 1.0, 0.0], [0.0, 0.0, 0.0, 1.0]];
       Old_X, Old_Y : GL.Types.Int;
       Old_Width, Old_Height : GL.Types.Size;
    begin
@@ -279,7 +279,7 @@ package body GL.Text is
       GL.Uniforms.Set_Single (Object.Data.Program.Transform_Id, Transformation);
       Object.Data.Program.Square_Array.Bind;
       GL.Objects.Buffers.Array_Buffer.Bind (Object.Data.Program.Square_Buffer);
-      GL.Buffers.Set_Color_Clear_Value ((0.0, 0.0, 0.0, 1.0));
+      GL.Buffers.Set_Color_Clear_Value ([0.0, 0.0, 0.0, 1.0]);
       GL.Buffers.Clear ((Color => True, others => False));
       while Char_Position <= Content'Last loop
          UTF8.Read (Content, Char_Position, Code_Point);

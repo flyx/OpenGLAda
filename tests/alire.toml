@@ -20,3 +20,13 @@ executables = ["bin/gl_test-context", "bin/gl_test-debugging",
 [[depends-on]]
 gid = "^9.0.0"
 freetypeada = "~0.1.0"
+openglada = "*"
+openglada_glfw = "*"
+openglada_images = "*"
+openglada_text = "*"
+
+[[pins]]
+openglada = {path ="../opengl/"}
+openglada_glfw = {path = "../opengl-glfw/"}
+openglada_images = {path = "../opengl-images/"}
+openglada_text = {path = "../opengl-text/"}

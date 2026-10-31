@@ -38,7 +38,7 @@ package body GL.Images is
          end Set_X_Y;
          
          procedure Put_Pixel (R, G, B, A : Component) is
-            Input : constant array (Types.Int'(0) .. Types.Int'(3)) of Component := (R, G, B, A);
+            Input : constant array (Types.Int'(0) .. Types.Int'(3)) of Component := [R, G, B, A];
          begin
             for I in 0 .. Num_Components - 1 loop
                Data (Cur_Pos + I) := Input (I);
